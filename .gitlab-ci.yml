@@ -9,7 +9,7 @@ stages:
   - production
 
 build:
-  image: node:latest
+  image: node:lts
   stage: build
   script:
     - npm install -g cnpm --registry=https://registry.npm.taobao.org
@@ -23,9 +23,11 @@ build:
       - dist/
 
 test:
-  image: node:latest
+  image: node:lts-alpine
   stage: test
   script:
+    - sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
+    - apk --update add openjdk7-jre
     - npm install -g cnpm --registry=https://registry.npm.taobao.org
     - cnpm install -D
     #####
