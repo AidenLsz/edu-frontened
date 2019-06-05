@@ -17,6 +17,7 @@ build:
     #####
     # build scripts (such as webpack) goes here
     ###
+    - npm run build
   artifacts:
     paths:
       - dist/
@@ -30,6 +31,7 @@ test:
     #####
     # test scripts (such as jest) goes here
     ###
+    - npm run test
 
 staging:
   stage: staging
