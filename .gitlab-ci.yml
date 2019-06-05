@@ -1,0 +1,75 @@
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - build
+  - test
+  - staging
+  - production
+
+build:
+  image: node:latest
+  stage: build
+  script:
+    - npm install -g cnpm --registry=https://registry.npm.taobao.org
+    - cnpm install
+    #####
+    # build scripts (such as webpack) goes here
+    ###
+  artifacts:
+    paths:
+      - dist/
+
+test:
+  image: node:latest
+  stage: test
+  script:
+    - npm install -g cnpm --registry=https://registry.npm.taobao.org
+    - cnpm install -D
+    #####
+    # test scripts (such as jest) goes here
+    ###
+
+staging:
+  stage: staging
+  image: registry.git.bdaa.dev:4567/yxonic/bdaa-deploy-image:v2.14.0
+  before_script:
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+    - export HELM_HOST=10.8.1.1:44134
+    - helm init --client-only --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
+    - helm version
+  script:
+    - docker build -t ${CI_REGISTRY_IMAGE} .
+    - docker push ${CI_REGISTRY_IMAGE}
+    - helm del --purge $KUBE_NAMESPACE-staging || true
+    - helm install chart -n $KUBE_NAMESPACE-staging --namespace $KUBE_NAMESPACE --set "nameOverride=$KUBE_NAMESPACE,ingress.enabled=true,ingress.hosts[0].host=$KUBE_NAMESPACE-staging.deploy.bdaa.dev,ingress.hosts[0].paths[0]=/,image.repository=${CI_REGISTRY_IMAGE},image.tag=latest,image.pullPolicy=Always,pullSecretName=pull-secret-staging,dockercfg=$(cat /root/.docker/config.json | base64 | tr -d '\n')"
+  environment:
+    name: staging
+    url: https://$CI_PROJECT_NAME-$CI_PROJECT_ID-staging.deploy.bdaa.dev
+  only:
+    refs:
+      - master
+    kubernetes: active
+
+production:
+  stage: production
+  image: registry.git.bdaa.dev:4567/yxonic/bdaa-deploy-image:v2.14.0
+  before_script:
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+    - export HELM_HOST=10.8.1.1:44134
+    - helm init --client-only --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
+    - helm version
+  script:
+    - docker build -t ${CI_REGISTRY_IMAGE}:stable .
+    - docker push ${CI_REGISTRY_IMAGE}:stable
+    - helm del --purge $KUBE_NAMESPACE-production || true
+    - helm install chart -n $KUBE_NAMESPACE-production --namespace $KUBE_NAMESPACE --set "nameOverride=$KUBE_NAMESPACE,ingress.enabled=true,ingress.hosts[0].host=$KUBE_NAMESPACE.deploy.bdaa.dev,ingress.hosts[0].paths[0]=/,image.repository=${CI_REGISTRY_IMAGE},image.tag=stable,image.pullPolicy=Always,pullSecretName=pull-secret,dockercfg=$(cat /root/.docker/config.json | base64 | tr -d '\n')"
+  environment:
+    name: production
+    url: https://$KUBE_NAMESPACE.deploy.bdaa.dev
+  when: manual
+  only:
+    refs:
+      - master
+    kubernetes: active
