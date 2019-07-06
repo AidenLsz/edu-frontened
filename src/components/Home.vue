@@ -1,7 +1,6 @@
 <template>
   <!--todo: polish the format-->
   <div class="home">
-
     <div class="title">
       <h1>
         BASE-KG
@@ -26,8 +25,8 @@
 
     <div class="description">
       <!--todo: 格式优化一下，两边留一些空隙出来，字体颜色也换一下-->
-      大数据分析与应用安徽省重点实验室
-      （Anhui Province Key Laboratory of Big Data Analysis and Application），
+      大数据分析与应用安徽省重点实验室 （Anhui Province Key Laboratory of Big
+      Data Analysis and Application），
       学科领域为电子信息，由中国科学技术大学、科大讯飞股份有限公司（以下简称科大讯飞公司）
       和安徽广电传媒产业集团有限责任公司（以下简称安徽广电集团）三方共建。
       其中，作为依托单位的中国科学技术大学，是我省乃至我国大数据分析与应用方向的优势研究单位；
@@ -40,33 +39,32 @@
   </div>
 </template>
 <script>
-  export default {
-    name: 'Home',
-    data() {
-      return {}
-    }
+export default {
+  name: "Home",
+  data() {
+    return {};
   }
+};
 </script>
 <style scoped>
-  .el-carousel__item h3 {
-    color: #475669;
-    font-size: 14px;
-    opacity: 0.75;
-    line-height: 200px;
-    margin: 0;
-  }
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 14px;
+  opacity: 0.75;
+  line-height: 200px;
+  margin: 0;
+}
 
-  .el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
-  }
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
 
-  .el-carousel__item:nth-child(2n+1) {
-    background-color: #d3dce6;
-  }
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
+}
 
-  .description {
-    width: 60%;
-    margin: auto;
-  }
-
+.description {
+  width: 60%;
+  margin: auto;
+}
 </style>

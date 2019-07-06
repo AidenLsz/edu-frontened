@@ -7,16 +7,21 @@
       @select="handleSelect"
       background-color="#545c64"
       text-color="#fff"
-      active-text-color="#ffd04b">
+      active-text-color="#ffd04b"
+    >
       <el-menu-item index="1">
         <router-link to="/" :underline="false">
           首页
         </router-link>
       </el-menu-item>
       <el-submenu index="2">
-        <template slot="title">API</template>
+        <template slot="title"
+          >API</template
+        >
         <el-submenu index="2-1">
-          <template slot="title">试题检索</template>
+          <template slot="title"
+            >试题检索</template
+          >
           <el-menu-item index="2-4-1">
             <router-link to="/exercise" :underline="false">
               知识单元识别
@@ -45,45 +50,44 @@
         </el-link>
       </el-menu-item>
     </el-menu>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'App'
-  }
+export default {
+  name: "App"
+};
 </script>
 
 <style>
-  #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-  }
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
 
-  a {
-    text-decoration: none;
-    color: #ffffff;
-  }
+a {
+  text-decoration: none;
+  color: #ffffff;
+}
 
-  a:link {
-    text-decoration: none;
-  }
+a:link {
+  text-decoration: none;
+}
 
-  a:visited {
-    text-decoration: none;
-  }
+a:visited {
+  text-decoration: none;
+}
 
-  a:hover {
-    text-decoration: none;
-  }
+a:hover {
+  text-decoration: none;
+}
 
-  a:active {
-    text-decoration: none;
-  }
-
+a:active {
+  text-decoration: none;
+}
 </style>
