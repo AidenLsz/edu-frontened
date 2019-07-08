@@ -78,7 +78,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .result {
   border: 1px solid #a6a9ad;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
