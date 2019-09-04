@@ -5,7 +5,9 @@
     </h1>
     <form @submit.prevent="submit">
       <el-row type="flex" class="row-bg" justify="center">
-        <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
+        <el-col :span="22">
+          <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
+        </el-col>
         <el-button type="submit" value="提交" @click="submit">检索</el-button>
       </el-row>
     </form>
@@ -101,87 +103,8 @@ export default {
             hide_symbol: null,
             lock_symbol: null
           },
-          // {
-          //   id: this.neighbors_groups.concept[0].name,
-          //   desc: "this is "+this.neighbors_groups.concept[0].name,
-          //   type: 1,
-          //   hidden: false,
-          //   lock: false,
-          //   hide_symbol: null,
-          //   lock_symbol: null
-          // },
-          // {
-          //   id: this.neighbors_groups.concept[1].name,
-          //   desc: "this is "+this.neighbors_groups.concept[1].name,
-          //   type: 1,
-          //   hidden: false,
-          //   lock: false,
-          //   hide_symbol: null,
-          //   lock_symbol: null
-          // },
-          // {
-          //   id: this.neighbors_groups.concept[2].name,
-          //   desc: "this is "+this.neighbors_groups.concept[2].name,
-          //   type: 1,
-          //   hidden: false,
-          //   lock: false,
-          //   hide_symbol: null,
-          //   lock_symbol: null
-          // },
-          // {
-          //   id: this.neighbors_groups.concept[3].name,
-          //   desc: "this is "+this.neighbors_groups.concept[3].name,
-          //   type: 1,
-          //   hidden: false,
-          //   lock: false,
-          //   hide_symbol: null,
-          //   lock_symbol: null
-          // },
-
-          // {
-          //   id: "node3",
-          //   desc: "this is node3",
-          //   type: 0,
-          //   hidden: false,
-          //   lock: false,
-          //   hide_symbol: null,
-          //   lock_symbol: null
-          // },
-          // {
-          //   id: "node4",
-          //   desc: "this is node4",
-          //   type: 1,
-          //   hidden: false,
-          //   lock: false,
-          //   hide_symbol: null,
-          //   lock_symbol: null
-          // },
-          // {
-          //   id: "node5",
-          //   desc: "this is node5",
-          //   type: 0,
-          //   hidden: false,
-          //   lock: false,
-          //   hide_symbol: null,
-          //   lock_symbol: null
-          // },
-          // {
-          //   id: "node6",
-          //   desc: "this is node6",
-          //   type: 1,
-          //   hidden: false,
-          //   lock: false,
-          //   hide_symbol: null,
-          //   lock_symbol: null
-          // }
         ],
         links: [
-          // { source: this.node.name, target: this.neighbors_groups.concept[0].name, width: 5, curved: false },
-          // { source: this.node.name, target: this.neighbors_groups.concept[1].name, width: 5, curved: false },
-          // { source: this.node.name, target: this.neighbors_groups.concept[2].name, width: 5, curved: false },
-          // { source: this.node.name, target: this.neighbors_groups.concept[3].name, width: 5, curved: false },
-          // { source: "node3", target: "node4", width: 5, curved: false },
-          // { source: "node5", target: "node6", width: 5, curved: false }
         ]
       };
       var maxLength = this.neighbors_groups.concept.length;
@@ -697,6 +620,17 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.ku {
+  background-color: #99cccc;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+.ku h1 {
+  color: #fff;
+  font-size: 42px;
+  padding-top: 18px;
+  padding-bottom: 8px;
+}
 .result {
   border: 1px solid #a6a9ad;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
@@ -705,6 +639,8 @@ export default {
   padding-right: 5%;
   padding-top: 5%;
   height: 800px;
+  background-color: #fff;
+  margin-left: 20px;
 }
 
 .graph {
@@ -714,6 +650,8 @@ export default {
   padding-right: 5%;
   padding-top: 5%;
   height: 800px;
+  background-color: #fff;
+  margin-right: 20px;
 }
 
 .el-row {

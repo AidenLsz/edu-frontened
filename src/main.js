@@ -8,6 +8,13 @@ import router from "./router";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import VueResource from "vue-resource";
+//引入jQuery
+import $ from 'jquery'
+//引入bootstrap
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import '../node_modules/bootstrap/dist/js/bootstrap.min.js';
+
+import 'animate.css'
 
 Vue.config.productionTip = false;
 Vue.prototype.backendIP = "https://kg-edu-backend-44.deploy.bdaa.pro/v1";

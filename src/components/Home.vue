@@ -1,70 +1,265 @@
 <template>
   <!--todo: polish the format-->
   <div class="home">
-    <div class="title">
-      <h1>
-        BASE-KG
-      </h1>
-    </div>
-
-    <div class="sub title">
-      <h2>
-        教育领域专用知识图谱
-      </h2>
-    </div>
-
-    <div class="carousel show">
-      <!--todo: 插入图片替代掉数字-->
-      <!--todo: 格式优化一下，现在长宽比有点奇怪-->
-      <el-carousel :interval="4000" type="card" height="200px">
-        <el-carousel-item v-for="item in 8" :key="item">
-          <h3 class="medium">{{ item }}</h3>
-        </el-carousel-item>
-      </el-carousel>
-    </div>
-
-    <div class="description">
-      <!--todo: 格式优化一下，两边留一些空隙出来，字体颜色也换一下-->
-      大数据分析与应用安徽省重点实验室 （Anhui Province Key Laboratory of Big
-      Data Analysis and Application），
-      学科领域为电子信息，由中国科学技术大学、科大讯飞股份有限公司（以下简称科大讯飞公司）
-      和安徽广电传媒产业集团有限责任公司（以下简称安徽广电集团）三方共建。
-      其中，作为依托单位的中国科学技术大学，是我省乃至我国大数据分析与应用方向的优势研究单位；
-      同时，作为共建单位的科大讯飞公司和安徽广电集团，不仅拥有规模庞大的大数据云平台以及优质数据资源，
-      而且具有丰富的大数据技术产业化经验；更为重要的是，经过多年的合作，
-      共建三方已经形成了强强联合、优势互补的稳定合作局面，围绕大数据分析与应用方向，
-      建立了大数据产学研合作平台，在科研平台、产业平台和数据平台三个方面都拥有良好的科研和产业环境。
-      实验室建设地点为中国科学技术大学科技实验楼西楼，建设项目负责人陈恩红教授，联系电话0551-63601558。
-    </div>
+    <section class="slider-area slider-bg" data-background="/static/bg0.png">
+      <div class="container">
+          <div class="row justify-content-center">
+              <div class="col-lg-10">
+                  <div class="slider-content text-center">
+                      <h2 class="wow fadeInUp" data-wow-delay=".2s">BASE-KG</h2>
+                      <p class="wow fadeInUp" data-wow-delay=".4s">教育领域专用知识图谱</p>
+                      <!--<a href="#" class="btn wow fadeInUp" data-wow-delay=".6s">Register now</a> -->
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
+    <!-- features-area -->
+    <section class="features-area features-mt">
+        <div class="container">
+            <div class="row no-gutters">
+                <div class="col-lg-4 col-md-6">
+                    <div class="single-features">
+                        <div class="features-icon mb-25">
+                            <img src="../assets/icon/features_icon01.png" alt="icon">
+                        </div>
+                        <div class="features-content">
+                            <h4>知识单元检索</h4>
+                            <p><p>介绍+例子<br />
+                              例如检索：三角函数，函数<br /><br /></p>
+                            <div class="features-more">
+                                <router-link to="/ku" :underline="false">前往检索 <i class="el-icon-d-arrow-right"></i></router-link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="single-features green">
+                        <div class="features-icon mb-25">
+                            <img src="../assets/icon/features_icon02.png" alt="icon">
+                        </div>
+                        <div class="features-content">
+                            <h4>试题检索</h4>
+                            <p><p>介绍+例子<br />
+                              例如检索：三角函数，函数<br /><br /></p>
+                            <div class="features-more">
+                                <router-link to="/exercise" :underline="false">前往检索 <i class="el-icon-d-arrow-right"></i></router-link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="single-features red">
+                        <div class="features-icon mb-25">
+                            <img src="../assets/icon/features_icon03.png" alt="icon">
+                        </div>
+                        <div class="features-content">
+                            <h4>知识单元检索</h4>
+                            <p><p>介绍+例子<br />
+                              例如检索：三角函数，函数<br /><br /></p>
+                            <div class="features-more">
+                                <router-link to="/ku" :underline="false">前往检索 <i class="el-icon-d-arrow-right"></i></router-link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- features-area-end -->
+    <!-- about-area -->
+    <section class="about-area">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-xl-6 col-lg-6 wow fadeInLeft" data-wow-delay=".3s">
+                    <div class="about-image">
+                        <img src="../assets/kg1.png" alt="img">
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 wow fadeInRight" data-wow-delay=".3s">
+                    <div class="about-content">
+                        <h2><span>教育知识图谱</span></h2>
+                        <p>知识图谱一种大规模语义网络，以实体或者概念作为节点，通过语义关系相连接。
+                           通过发掘实体之间的关联，将半结构化、非结构化的数据整合，知识图谱可以帮助机器
+                           理解数据、解释现象、知识推理，从而发掘深层关系、实现智慧搜索与智能交互。</p>
+                        <p> 将交互学科涉及的知识点及其相互关系的建立就需要耗费专业教师大量的时间，以及对应题目的知识点标注，这些工作无穷无尽且、效率低下、耗资昂贵且准确率不高。<br>
+                        通过知识图谱将多源异构数据整合，构建出简单易用的学科知识图谱，帮助教师掌握动态、关联的学科信息，有助于因材施教，提高教研效率。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- cta-area -->
+    <section class="cta-area wow fadeInUp" data-wow-delay=".4s">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-9 col-lg-9">
+                    <div class="section-title text-center">
+                        <h2>关于我们</h2>
+                    </div>
+                    <div class="cta-content text-center">
+                        <p>大数据分析与应用安徽省重点实验室（Anhui Province Key Laboratory of Big Data Analysis 
+                          and Application），学科领域为电子信息，由中国科学技术大学、科大讯飞股份有限公司（以下简称科
+                          大讯飞公司）和安徽广电传媒产业集团有限责任公司（以下简称安徽广电集团）三方共建。 其中，作为依
+                          托单位的中国科学技术大学，是我省乃至我国大数据分析与应用方向的优势研究单位；同时，作为共建单
+                          位的科大讯飞公司和安徽广电集团，不仅拥有规模庞大的大数据云平台以及优质数据资源，而且具有丰富
+                          的大数据技术产业化经验；更为重要的是，经过多年的合作，共建三方已经形成了强强联合、优势互补的
+                          稳定合作局面，围绕大数据分析与应用方向，建立了大数据产学研合作平台，在科研平台、产业平台和数
+                          据平台三个方面都拥有良好的科研和产业环境。</p>
+                        <!-- <a href="#" class="btn ">了解更多</a> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- cta-area-end -->
   </div>
 </template>
 <script>
+import {WOW} from 'wowjs'
 export default {
   name: "Home",
   data() {
     return {};
+  },
+  mounted() {
+    // data - background
+    $("[data-background]").each(function () {
+      $(this).css("background-image", "url(" + $(this).attr("data-background") + ")")
+    })
   }
 };
 </script>
 <style scoped lang="scss">
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 14px;
-  opacity: 0.75;
-  line-height: 200px;
-  margin: 0;
+.slider-bg {
+  position: relative;
+  min-height: 653px;
+  background-position: center;
+  background-size: cover;
+  z-index: 1;
 }
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
+.slider-bg::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
 }
-
-.el-carousel__item:nth-child(2n + 1) {
-  background-color: #d3dce6;
-}
-
-.description {
-  width: 60%;
+.sticky-menu {
+  left: 0;
   margin: auto;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  box-shadow: 0 0 60px 0 rgba(0, 0, 0, .07);
+  z-index: 9999;
+  background: #fff;
+  -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
+  animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
+  -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
+}
+.slider-content h2 {
+  font-size: 48px;
+  color: #fff;
+  line-height: 1.2;
+  margin-top: 80px;
+}
+
+.slider-content p {
+  font-size: 30px;
+  color: #fff;
+  margin-top: 10px;
+}
+/* 4. features */
+.single-features {
+  background: #3877f2;
+  padding: 50px 35px;
+  overflow: hidden;
+  transition: .3s linear;
+  transform: translateY(0);
+  padding-bottom: 45px;
+  box-shadow: 0px 20px 60px 0px rgba(15, 14, 77, 0.2);
+}
+.features-icon {
+  margin-bottom: 25px;
+  margin-left: -250px;
+
+}
+.features-content h4 {
+  font-size: 30px;
+  color: #fff;
+  margin-bottom: 10px;
+  margin-left: -130px;
+}
+.features-content p {
+  color: #fff;
+  margin-bottom: 15px;
+}
+.features-more {
+  overflow: hidden;
+}
+.features-content a {
+  color: #fff;
+  font-family: 'Helvetica';
+  margin-left: -340px;
+}
+.features-content a i {
+  position: relative;
+  top: 3px;
+  font-size: 20px;
+  margin-left: 5px;
+}
+.single-features:hover .features-content a {
+  margin-left: -170px;
+}
+.single-features.green {
+  background: #a8c95a;
+}
+.single-features.red {
+  background: #f15b5b;
+}
+.single-features:hover {
+  transform: translateY(-10px);
+}
+.features-mt {
+  position: relative;
+  z-index: 1;
+  margin-top: -356px;
+  opacity: .9;
+  padding-bottom: 140px;
+}
+/* 5. about */
+.about-area {
+  padding-top: 150px;
+  padding-bottom: 150px;
+}
+.about-content h2 {
+  font-size: 40px;
+  line-height: 1.3;
+  margin-bottom: 22px;
+  font-family: 'Helvetica';
+}
+.section-title h2 {
+  color: #0772ff;
+}
+.about-content h2 span {
+  color: #0772ff;
+}
+.about-content p {
+  margin-bottom: 30px;
+  padding-right: 20px;
+}
+.about-content p:last-child {
+  margin-bottom: 0;
+  padding-right: 0;
+}
+.cta-area {
+  padding-top: 150px;
+  padding-bottom: 150px;
+}
+.about-image {
+  margin-left: -130px;
 }
 </style>
