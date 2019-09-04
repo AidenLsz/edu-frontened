@@ -39,6 +39,8 @@
     "copy-webpack-plugin": "^4.0.1",
     "cross-spawn": "^5.0.1",
     "css-loader": "^0.28.0",
+    "d3": "^5.9.7",
+    "d3-tip": "^0.9.1",
     "eslint": "5.16.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-config-standard": "^10.2.1",

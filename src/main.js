@@ -10,7 +10,7 @@ import "element-ui/lib/theme-chalk/index.css";
 import VueResource from "vue-resource";
 
 Vue.config.productionTip = false;
-Vue.prototype.backendIP = "https://kg-edu-backend-44.deploy.bdaa.dev/v1";
+Vue.prototype.backendIP = "https://kg-edu-backend-44.deploy.bdaa.pro/v1";
 
 Vue.use(ElementUI);
 Vue.use(VueResource);
