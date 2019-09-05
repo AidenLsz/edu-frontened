@@ -90,6 +90,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.exercise {
+  background-color: #99cc99;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+h1,
+h2 {
+  color: #fff;
+}
 .result {
   border: 1px solid #a6a9ad;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
@@ -98,6 +107,7 @@ export default {
   padding-right: 5%;
   padding-top: 5%;
   height: 600px;
+  background-color: #fff;
 }
 
 .el-row {
