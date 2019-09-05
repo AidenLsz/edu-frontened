@@ -52,7 +52,7 @@
       </el-col>
       <el-col :span="12">
         <div class="graph">
-          <button class="reset">Reset View</button>
+          <!-- <button class="reset">Reset View</button> -->
           <svg width="650" height="600"></svg>
         </div>
       </el-col>
@@ -85,7 +85,7 @@ export default {
         .then(function(data) {
           this.node = data.data.node;
           this.neighbors_groups = data.data.neighbors_groups;
-          console.log(data);
+          // console.log(data);
           //console.log(this.neighbors_groups.concept[5]);
 
           //生成图
@@ -122,7 +122,7 @@ export default {
            source: this.node.name, target: this.neighbors_groups.concept[i].name, width: 5, curved: false 
         }      
       };
-      console.log(this.neighbors_groups.concept.length);
+      //console.log(this.neighbors_groups.concept.length);
       let selectedNode;
       let nodeSize = 25;
       let button_flag = 0;
@@ -145,13 +145,16 @@ export default {
         .append("g")
         .attr("class", "nodes")
         .selectAll("circle");
+      //添加文字
+      let text = svg.append("g").selectAll("text");
+
 
       // setup the tool tip
       var tool_tip = d3Tip()
         .attr("class", "d3-tip")
         .offset([-8, 0])
         .html(function(d) {
-          return "<h2>" + d.id + "</h2><p>" + d.desc + "</p>";
+          return "<p>" + d.desc + "</p>";
         });
       svg.call(tool_tip);
 
@@ -289,8 +292,8 @@ export default {
           d.hide_symbol = null;
           return null;
         })
-        .attr("width", 19)
-        .attr("height", 19);
+        .attr("width", 20)
+        .attr("height", 20);
 
       lock_symbol = lock_symbol.data(state.nodes, function(d) {
         return d.id;
@@ -303,22 +306,22 @@ export default {
           d.lock_symbol = null;
           return null;
         })
-        .attr("width", 19)
-        .attr("height", 19);
+        .attr("width", 20)
+        .attr("height", 20);
 
       let currentTransform = "";
   
-      function zoomed() {
-        currentTransform = d3.event.transform;
-        svg.attr("transform", currentTransform);
-      }
+      // function zoomed() {
+      //   currentTransform = d3.event.transform;
+      //   svg.attr("transform", currentTransform);
+      // }
 
-      let zoom = d3
-        .zoom()
-        .scaleExtent([1 / 8, 2])
-        .on("zoom", zoomed);
+      // let zoom = d3
+      //   .zoom()
+      //   .scaleExtent([1 / 8, 2])
+      //   .on("zoom", zoomed);
 
-      svg.call(zoom);
+      // svg.call(zoom);
 
       function ticked() {
         return function() {
@@ -327,6 +330,11 @@ export default {
             // Hide the link.
             .attr("display", function(d) {
               return d.source.hidden || d.target.hidden ? "none" : "";
+            });
+
+          text
+            .attr("transform", function(d){
+              return "translate(" + d.x + "," + d.y + ")";
             });
 
           node
@@ -349,7 +357,7 @@ export default {
           // add the symbol
           hide_symbol
             .attr("x", function(d) {
-              return d.x + 13;
+              return d.x + 26;
             })
             .attr("y", function(d) {
               return d.y - 20;
@@ -359,7 +367,7 @@ export default {
               return d.x - 9.5;
             })
             .attr("y", function(d) {
-              return d.y + 19;
+              return d.y + 29;
             });
 
           if (button_flag) {
@@ -409,14 +417,14 @@ export default {
       simulation.nodes(state.nodes).on("tick", ticked());
       simulation.force("link").links(state.links);
 
-      function reset() {
-        svg
-          .transition()
-          .duration(750)
-          .call(zoom.transform, d3.zoomIdentity);
-      }
+      // function reset() {
+      //   svg
+      //     .transition()
+      //     .duration(750)
+      //     .call(zoom.transform, d3.zoomIdentity);
+      // }
 
-      d3.select("button").on("click", reset);
+      // d3.select("button").on("click", reset);
 
       function drag_started(d) {
         if (!d3.event.active) simulation.alphaTarget(0.3).restart();
@@ -483,6 +491,47 @@ export default {
 
       // update nodes and links
       function updateStates() {
+        //加文字开始
+        text = text.data(state.nodes)
+        .enter()
+        .append("text")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "middle")
+        .style('fill',"#fff")
+        .style('font-size', "12px")
+        .attr('x',function(d){
+        var re_en = /[a-zA-Z]+/g;
+        //如果是全英文，不换行
+        if(d.id.match(re_en)){
+          d3.select(this).append('tspan')
+            .attr('x',0)
+            .attr('y',0)
+            .text(function(){return d.id;});
+        }
+        //如果小于3个字符，不换行
+        else if(d.id.length<=3){
+          d3.select(this).append('tspan')
+            .attr('x',0)
+            .attr('y',0)
+            .text(function(){return d.id;});
+        }else{
+          var top=d.id.substring(0,3);
+          var bot=d.id.substring(3,d.id.length);
+
+          d3.select(this).text(function(){return '';});
+
+          d3.select(this).append('tspan')
+            .attr('x',0)
+            .attr('y',-7)
+            .text(function(){return top;});
+
+          d3.select(this).append('tspan')
+            .attr('x',0)
+            .attr('y',14)
+            .text(function(){return bot;});
+        }
+      });
+    //加文字结束
         node = node.data(state.nodes, function(d) {
           return d.id;
         });
@@ -568,50 +617,6 @@ export default {
         simulation.force("link").links(state.links);
         simulation.alpha(0.5).restart();
       }
-
-      function addNode(id, desc, type, x, y) {
-        var node = {
-          id: id,
-          desc: desc,
-          type: type,
-          selected: true,
-          hidden: false
-        };
-        if (x && y) {
-          node.x = x;
-          node.y = y;
-        } else {
-          node.x = width / 2;
-          node.y = height / 2;
-        }
-        selectedNode.selected = false;
-        selectedNode = node;
-        state.nodes.push(node);
-        nodeMap[id] = node;
-      }
-
-      function addLink(source, target, width) {
-        let sNode = nodeMap[source];
-        let tNode = nodeMap[target];
-        var ind = -1;
-        var targetList = linkList[target];
-        if (targetList) {
-          for (var i = 0; i < targetList.length; i++) {
-            let e = targetList[i];
-            if (e.target == source) ind = i;
-          }
-        }
-        var link = {
-          source: source,
-          target: target,
-          width: width,
-          curved: ind != -1
-        };
-        state.links.push(link);
-        if (!linkList[source]) linkList[source] = [];
-        linkList[source].push(link);
-        if (ind != -1) linkList[target][ind].curved = true;
-      }
       updateStates();
       });    
     }
@@ -642,8 +647,8 @@ export default {
   background-color: #fff;
   margin-left: 20px;
 }
-
 .graph {
+  border: 1px solid #a6a9ad;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   padding-left: 5%;
@@ -653,29 +658,24 @@ export default {
   background-color: #fff;
   margin-right: 20px;
 }
-
 .el-row {
   margin-bottom: 20px;
   & :last-child {
     margin-bottom: 0;
   }
 }
-
 .label {
   line-height: 35px;
   margin: 10px;
   display: flex;
   flex-wrap: wrap;
 }
-
 .title {
   text-align: left;
 }
-
 .el-tag {
   margin-left: 10px;
 }
-
 .el-col {
   border-radius: 4px;
 }
@@ -687,18 +687,21 @@ export default {
   stroke: #999;
   stroke-opacity: 0.6;
 }
-
 marker {
   fill: #999;
   opacity: 0.6;
 }
-
 .nodes circle {
   stroke: #fff;
   stroke-width: 3px;
   r: 25px;
 }
-
+text {
+  pointer-events: none;
+}
+image {
+  pointer-events: none;
+}
 .d3-tip {
     line-height: 1;
     width: 20%;
@@ -707,7 +710,7 @@ marker {
     color: #fff;
     border-radius: 4px;
     font-size: 10px;
-  }
+}
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
     box-sizing: border-box;

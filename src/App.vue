@@ -90,16 +90,16 @@ export default {
       }
     });
     // scrollToTop
-    $.scrollUp({
-      scrollName: 'scrollUp',
-      topDistance: '300',
-      topSpeed: 300,
-      animation: 'fade',
-      animationInSpeed: 200,
-      animationOutSpeed: 200,
-      scrollText: '<i class="el-icon-arrow-up"></i>',
-      activeOverlay: false,
-    });
+    // $.scrollUp({
+    //   scrollName: 'scrollUp',
+    //   topDistance: '300',
+    //   topSpeed: 300,
+    //   animation: 'fade',
+    //   animationInSpeed: 200,
+    //   animationOutSpeed: 200,
+    //   scrollText: '<i class="el-icon-arrow-up"></i>',
+    //   activeOverlay: false,
+    // });
   }
 };
 </script>
