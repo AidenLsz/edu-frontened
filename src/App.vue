@@ -6,23 +6,31 @@
           <div class="row align-items-center">
             <div class="col-lg-2">
               <div class="logo">
-                <img src="./assets/logo.png" alt="Logo">
+                <img src="./assets/logo.png" alt="Logo" />
               </div>
             </div>
             <div class="col-lg-10">
-                <div class="main-menu text-right">
-                    <nav id="mobile-menu">
-                        <ul>
-                            <li><router-link to="/" :underline="false">首页</router-link></li>
-                            <li class="drop-down">
-                              <a href="">API</a>
-                              <!--实现下拉菜单-->
-                            </li>
-                            <li><a href="http://bigdata.ustc.edu.cn/" target="_blank"
-                              :underline="false">实验室主页</a></li>
-                        </ul>
-                    </nav>
-                </div>
+              <div class="main-menu text-right">
+                <nav id="mobile-menu">
+                  <ul>
+                    <li>
+                      <router-link to="/" :underline="false">首页</router-link>
+                    </li>
+                    <li class="drop-down">
+                      <a href="">API</a>
+                      <!--实现下拉菜单-->
+                    </li>
+                    <li>
+                      <a
+                        href="http://bigdata.ustc.edu.cn/"
+                        target="_blank"
+                        :underline="false"
+                        >实验室主页</a
+                      >
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
           </div>
         </div>
@@ -31,57 +39,58 @@
     <router-view />
     <!-- footer -->
     <footer>
-        <div class="footer-wrap theme-bg">
-            <div class="container">
-                <div class="row justify-content-between">
-                    <div class="col-lg-4">
-                        <div class="footer-widget">
-                            <div class="footer-trext">
-                                <p>Copyright © 大数据分析与应用安徽省重点实验室</p>
-                            </div>
-                            <div class="footer-contact">
-                                <ul>
-                                    <li>
-                                        <i class="el-icon-phone"></i>
-                                        <span>0551-63601558</span>
-                                    </li>
-                                    <li>
-                                        <i class="el-icon-location"></i>
-                                        <span>安徽省合肥市</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="footer-widget">
-                            <div class="footer-trext">
-                                <p>友情链接</p>
-                            </div>
-                            <div class="fw-link">
-                                <ul>
-                                    <li><a href="#">中国科学技术大学</a></li>
-                                    <!--<li><a href="#">科大讯飞</a></li>
+      <div class="footer-wrap theme-bg">
+        <div class="container">
+          <div class="row justify-content-between">
+            <div class="col-lg-4">
+              <div class="footer-widget">
+                <div class="footer-trext">
+                  <p>Copyright © 大数据分析与应用安徽省重点实验室</p>
+                </div>
+                <div class="footer-contact">
+                  <ul>
+                    <li>
+                      <i class="el-icon-phone"></i>
+                      <span>0551-63601558</span>
+                    </li>
+                    <li>
+                      <i class="el-icon-location"></i>
+                      <span>安徽省合肥市</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="footer-widget">
+                <div class="footer-trext">
+                  <p>友情链接</p>
+                </div>
+                <div class="fw-link">
+                  <ul>
+                    <li><a href="#">中国科学技术大学</a></li>
+                    <!--<li><a href="#">科大讯飞</a></li>
                                     <li><a href="#">安徽广电信息网络股份有限公司</a></li>
                                     <li><a href="#">中科大计算机科学与技术学院</a></li>
                                     <li><a href="#">陈恩红实验室主页</a></li> -->
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                  </ul>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </footer>
     <!-- footer-end -->
   </div>
 </template>
 
 <script>
+import $ from "jquery";
 export default {
   name: "App",
   mounted() {
-    $(window).on('scroll', function () {
+    $(window).on("scroll", function() {
       var scroll = $(window).scrollTop();
       if (scroll < 250) {
         $("#header-sticky").removeClass("sticky-menu");
@@ -125,7 +134,7 @@ export default {
 .main-menu ul li a {
   display: block;
   color: #666666;
-  opacity: .8;
+  opacity: 0.8;
   padding: 36px 0;
   font-size: 16px;
   font-weight: 700;
@@ -148,7 +157,7 @@ export default {
   width: 0;
   height: 2px;
   background: #ffb607;
-  transition: .3s;
+  transition: 0.3s;
 }
 .main-menu ul > li:hover > a::before {
   width: 100%;
@@ -161,7 +170,7 @@ export default {
   width: 100%;
   height: 2px;
   background: #ffb607;
-  transition: .3s;
+  transition: 0.3s;
 }
 .sticky-menu {
   left: 0;
@@ -169,7 +178,7 @@ export default {
   position: fixed;
   top: 0;
   width: 100%;
-  box-shadow: 0 0 60px 0 rgba(0, 0, 0, .07);
+  box-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.07);
   z-index: 9999;
   background: #fff;
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
@@ -189,7 +198,7 @@ export default {
 }
 .footer-contact ul li {
   color: #a6a6b5;
-  font-family: 'Helvetica';
+  font-family: "Helvetica";
   margin-bottom: 10px;
   font-size: 12px;
   list-style: none;
@@ -218,7 +227,7 @@ export default {
 }
 /* scrollUp */
 #scrollUp {
-  background: #FFB607;
+  background: #ffb607;
   height: 40px;
   width: 40px;
   right: 50px;
