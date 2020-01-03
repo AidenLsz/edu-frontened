@@ -1,59 +1,141 @@
 <template>
   <div class="ku">
-    <h1>
-      知识单元检索
-    </h1>
-    <form @submit.prevent="submit">
-      <el-row type="flex" class="row-bg" justify="center">
-        <el-col :span="22">
-          <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
-        </el-col>
-        <el-button type="submit" value="提交" @click="submit">检索</el-button>
-      </el-row>
-    </form>
+    <!-- header -->
     <el-row>
-      <el-col :span="12">
+      <el-col :span="6">
+        <div class="logo">
+          <img src="../assets/title_ku.png" alt="logo" />
+        </div>
+      </el-col>
+      <el-col :span="14">
+        <form @submit.prevent="submit" style="margin-top: 20px;">
+          <el-row type="flex" class="row-bg" justify="center">
+            <el-col :span="22">
+              <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
+            </el-col>
+            <el-button type="submit" value="提交" @click="submit"
+              >检索</el-button
+            >
+          </el-row>
+        </form>
+      </el-col>
+    </el-row>
+    <!-- main -->
+    <el-row>
+      <el-col :span="7">
         <div class="result">
           <el-row type="flex" justify="start">
-            <h4>知识单元名称</h4>
+            <h5 style="color: #ff9900;">知识单元名称</h5>
           </el-row>
           <el-row type="flex" justify="start" class="title">
             {{ node.name }}
             {{ node.type }}
           </el-row>
           <el-divider></el-divider>
-          <el-row
-            v-for="(entities, group, group_index) in neighbors_groups"
-            :key="group_index"
-          >
-            <el-row type="flex" justify="start"
-              ><h4>{{ group }}</h4></el-row
-            >
+          <el-row type="flex" justify="start">
+            <el-col :span="24">
+              <el-row>
+                <h5 style="color: #ff9900; float: left;">知识关系</h5>
+              </el-row>
 
-            <el-row class="label" type="flex" justify="start">
-              <el-popover
-                placement="top-start"
-                v-for="(entity, index) in entities"
-                :key="index"
-                :title="entity.name"
-                width="200"
-                trigger="hover"
-                :content="entity.annotation"
+              <el-tabs
+                value="bk"
+                @tab-click="dataSource"
+                type="card"
+                ref="ss"
+                style="height: 200px; margin-top: -10px; margin-left: 10px;"
               >
-                <el-tag slot="reference">{{ entity.name }}</el-tag>
-              </el-popover>
-            </el-row>
+                <el-tab-pane label="百科" name="bk">
+                  <el-row
+                    v-for="(entities, group, group_index) in neighbors_groups"
+                    :key="group_index"
+                  >
+                    <el-row
+                      v-if="group == 'concept'"
+                      class="label"
+                      type="flex"
+                      justify="start"
+                    >
+                      <el-popover
+                        placement="top-start"
+                        v-for="(entity, index) in entities"
+                        :key="index"
+                        :title="entity.name"
+                        width="200"
+                        trigger="hover"
+                        :content="entity.annotation"
+                      >
+                        <el-tag slot="reference">{{ entity.name }}</el-tag>
+                      </el-popover>
+                    </el-row>
+                  </el-row>
+                </el-tab-pane>
 
-            <el-row>
-              <el-divider></el-divider>
-            </el-row>
+                <el-tab-pane label="人教版" name="rjb" id="rjb" ref="rjb">
+                  <el-row
+                    v-for="(entities, group, group_index) in neighbors_groups"
+                    :key="group_index"
+                  >
+                    <el-row
+                      v-if="group == 'knowledge point'"
+                      class="label"
+                      type="flex"
+                      justify="start"
+                    >
+                      <el-popover
+                        placement="top-start"
+                        v-for="(entity, index) in entities"
+                        :key="index"
+                        :title="entity.name"
+                        width="200"
+                        trigger="hover"
+                        :content="entity.annotation"
+                      >
+                        <el-tag slot="reference">{{ entity.name }}</el-tag>
+                      </el-popover>
+                    </el-row>
+                  </el-row>
+                </el-tab-pane>
+
+                <el-tab-pane
+                  label="人教版新"
+                  name="rjb_new"
+                  id="rjb_new"
+                  ref="rjb_new"
+                >
+                  <el-row
+                    v-for="(entities, group, group_index) in neighbors_groups"
+                    :key="group_index"
+                  >
+                    <el-row
+                      v-if="group == 'kp2.0'"
+                      class="label"
+                      type="flex"
+                      justify="start"
+                    >
+                      <el-popover
+                        placement="top-start"
+                        v-for="(entity, index) in entities"
+                        :key="index"
+                        :title="entity.name"
+                        width="200"
+                        trigger="hover"
+                        :content="entity.annotation"
+                      >
+                        <el-tag slot="reference">{{ entity.name }}</el-tag>
+                      </el-popover>
+                    </el-row>
+                  </el-row>
+                </el-tab-pane>
+              </el-tabs>
+            </el-col>
           </el-row>
         </div>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="17">
         <div class="graph">
           <!-- <button class="reset">Reset View</button> -->
-          <svg width="650" height="600"></svg>
+          <svg width="930" height="760"></svg>
         </div>
       </el-col>
     </el-row>
@@ -70,24 +152,43 @@ export default {
   data() {
     return {
       ku_name: "",
+      ku_type: "concept",
       node: "",
-      neighbors_groups: {}
+      neighbors_groups: {},
+      sour:"",
+      sourceLabel: ['百科', '人教版']
     };
   },
+  watch:{
+    sour(val) {
+      this.submit();
+    }
+  },
   methods: {
+    dataSource(tab, event) {
+      this.sour = tab.name;
+      //黄小青师兄12月提供数据
+      if(this.sour == 'rjb_new'){
+        this.ku_type = "kp2.0";
+      }
+      if(this.sour == 'bk' || this.sour == 'rjb'){
+        this.ku_type = 'concept';
+      }
+      return tab.name;
+    },
     submit() {
       this.$http
         .post(
           this.backendIP + "/api/ku",
-          { ku_name: this.ku_name, ku_type: "concept" },
+          { ku_name: this.ku_name, ku_type: this.ku_type },
           { emulateJSON: true }
         )
         .then(function(data) {
           this.node = data.data.node;
           this.neighbors_groups = data.data.neighbors_groups;
-          // console.log(data);
+          console.log(this.neighbors_groups);
           //console.log(this.neighbors_groups.concept[5]);
-
+          
           //生成图
           //先清空画布
           d3.selectAll("svg > *").remove();
@@ -107,8 +208,35 @@ export default {
         links: [
         ]
       };
-      var maxLength = this.neighbors_groups.concept.length;
-      for(var i = 0; i < maxLength; i++){
+      console.log(this.neighbors_groups)
+      if(this.neighbors_groups.concept){
+        var concept_length = this.neighbors_groups.concept.length;
+      }
+      if(this.neighbors_groups['knowledge point']){
+        var kp_length = this.neighbors_groups['knowledge point'].length;
+      }
+      
+
+      
+    if(this.sour == "rjb" && (this.neighbors_groups['knowledge point']) ){
+        //显示知识点的图
+      for(var i = 0; i < kp_length; i++){
+        state.nodes[i+1] =  {
+            id: this.neighbors_groups['knowledge point'][i].name,
+            desc: "this is "+this.neighbors_groups['knowledge point'][i].name,
+            type: 1,
+            hidden: false,
+            lock: false,
+            hide_symbol: null,
+            lock_symbol: null
+          };
+        state.links[i] = {
+           source: this.node.name, target: this.neighbors_groups['knowledge point'][i].name, width: 5, curved: false 
+        }      
+      };
+    }else if(this.sour == "bk" && this.neighbors_groups.concept) {
+      //显示概念的图
+      for(var i = 0; i < concept_length; i++){
         state.nodes[i+1] =  {
             id: this.neighbors_groups.concept[i].name,
             desc: "this is "+this.neighbors_groups.concept[i].name,
@@ -121,8 +249,24 @@ export default {
         state.links[i] = {
            source: this.node.name, target: this.neighbors_groups.concept[i].name, width: 5, curved: false 
         }      
-      };
-      //console.log(this.neighbors_groups.concept.length);
+      };  
+    } else if(this.sour == 'rjb_new' && this.neighbors_groups['kp2.0']){
+      //显示最新人教版
+      for(var i = 0; i < this.neighbors_groups['kp2.0'].length; i++){
+        state.nodes[i+1] =  {
+            id: this.neighbors_groups['kp2.0'][i].name,
+            desc: "this is "+this.neighbors_groups['kp2.0'][i].name,
+            type: 1,
+            hidden: false,
+            lock: false,
+            hide_symbol: null,
+            lock_symbol: null
+          };
+        state.links[i] = {
+           source: this.node.name, target: this.neighbors_groups['kp2.0'][i].name, width: 5, curved: false 
+        }      
+      };      
+    }
       let selectedNode;
       let nodeSize = 25;
       let button_flag = 0;
@@ -137,16 +281,17 @@ export default {
       let svg = d3.select("svg");
       let width = +svg.attr("width");
       let height = +svg.attr("height");
-      let link = svg
+      let g = svg.append("g").attr("class", "everything");
+      let link = g
         .append("g")
         .attr("class", "links")
         .selectAll("line");
-      let node = svg
+      let node = g
         .append("g")
         .attr("class", "nodes")
         .selectAll("circle");
       //添加文字
-      let text = svg.append("g").selectAll("text");
+      let text = g.append("g").selectAll("text");
 
 
       // setup the tool tip
@@ -195,7 +340,7 @@ export default {
         .outerRadius(nodeSize * 2.5);
 
       let pieData = d3.pie()([60, 60, 20, 20, 20]);
-      let pies = svg
+      let pies = g
         .append("g")
         .attr("class", "pie button")
         .selectAll("whatever")
@@ -272,11 +417,11 @@ export default {
           }
         });
 
-      let lock_symbol = svg
+      let lock_symbol = g
         .append("g")
         .attr("class", "lock_symbol")
         .selectAll("lock_symbol");
-      let hide_symbol = svg
+      let hide_symbol = g
         .append("g")
         .attr("class", "hide_symbol")
         .selectAll("hide_symbol");
@@ -311,17 +456,17 @@ export default {
 
       let currentTransform = "";
   
-      // function zoomed() {
-      //   currentTransform = d3.event.transform;
-      //   svg.attr("transform", currentTransform);
-      // }
+      function zoomed() {
+        currentTransform = d3.event.transform;
+        g.attr("transform", currentTransform);
+      }
 
-      // let zoom = d3
-      //   .zoom()
-      //   .scaleExtent([1 / 8, 2])
-      //   .on("zoom", zoomed);
-
-      // svg.call(zoom);
+      let zoom = d3
+        .zoom()
+        .scaleExtent([1 / 8, 1.5])
+        .on("zoom", zoomed);
+      //svg.call(zoom);
+      zoom(svg);
 
       function ticked() {
         return function() {
@@ -404,7 +549,8 @@ export default {
               else return 0.8;
             })
             .distance(function(d) {
-              return (d.target.id.length+2)*(d.target.id.length+2)*6;
+              //控制节点间距离
+              return (d.target.id.length%6+2)*40;
             })
             .id(function(d) {
               return d.id;
@@ -626,35 +772,40 @@ export default {
 
 <style scoped lang="scss">
 .ku {
-  background-color: #99cccc;
-  margin-left: 50px;
-  margin-right: 50px;
+  /*background-color: #0a1612;*/
+  background: url("/static/sub_bg.png") no-repeat;
+
 }
-.ku h1 {
+/*.ku h1 {
   color: #fff;
-  font-size: 42px;
+  font-size: 38px;
   padding-top: 18px;
   padding-bottom: 8px;
-}
-.result {
-  border: 1px solid #a6a9ad;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  padding-left: 5%;
-  padding-right: 5%;
-  padding-top: 5%;
-  height: 800px;
-  background-color: #fff;
+}*/
+.logo {
+  margin-top: 15px;
   margin-left: 20px;
 }
-.graph {
-  border: 1px solid #a6a9ad;
+.result {
+  border: 1px solid #fff;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  border-radius: 3px;
   padding-left: 5%;
   padding-right: 5%;
   padding-top: 5%;
-  height: 800px;
+  height: 780px;
+  background-color: #fff;
+  margin-left: 20px;
+  border-right: 14px solid #fff;
+}
+.graph {
+  border: 1px solid #fff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+/*  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 5%;*/
+  height: 780px;
   background-color: #fff;
   margin-right: 20px;
 }
@@ -672,12 +823,46 @@ export default {
 }
 .title {
   text-align: left;
+  font-weight: bold;
+  font-size: 22px;
+  color: #0a1612;
 }
 .el-tag {
   margin-left: 10px;
 }
 .el-col {
   border-radius: 4px;
+}
+</style>
+
+<style type="text/css">
+ .el-tabs__item {
+    color: #0a1612!important;
+    font-weight: 900!important;
+} 
+ .el-tabs__item.is-active {
+    background-color: #0a1612!important;
+    color: #fff!important;
+    font-weight: 900!important;
+} 
+.el-button {
+  background-color: #ffd700!important;
+  color: #1a2930!important;
+  border-color: #ffd700!important;
+}
+.el-button:hover {
+  background-color: #ff9900!important;
+  color: #1a2930!important;
+  border-color: #0a1612!important;
+}
+.el-button:focus {
+  outline: none!important;
+
+}
+.el-tag {
+  background-color: #fff!important;
+  color: #000!important;
+  border-color: #c5c1c0!important;
 }
 </style>
 
