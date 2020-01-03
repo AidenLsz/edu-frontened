@@ -137,8 +137,13 @@ export default {
         type: "warning"
       })
         .then(() => {
-          // 添加删除的请求
-          // ........
+          this.$http
+            .put(this.backendIP + `/api/del_node/${row._id}`, {
+              emulateJSON: true
+            })
+            .then(function(data) {
+              this.getNodes();
+            });
           this.$message({
             type: "sucess",
             message: "删除成功！"
