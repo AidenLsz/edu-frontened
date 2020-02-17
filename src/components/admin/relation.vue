@@ -123,18 +123,22 @@ export default {
     },
     // 编辑
     editSubmit() {
-      axios
-        .put(this.backendIP + `/api/sourceName/${this._id}`, {
-          source_name: this.editForm.sourceName
-        })
-        .then(res => {
+      this.$http
+        .put(
+          this.backendIP + `/api/sourceName/${this._id}`,
+          { source_name: this.editForm.sourceName },
+          { emulateJSON: true }
+        )
+        .then(function(data) {
           this.getNodes();
         });
-      axios
-        .put(this.backendIP + `/api/targetName/${this._id}`, {
-          target_name: this.editForm.targetName
-        })
-        .then(res => {
+      this.$http
+        .put(
+          this.backendIP + `/api/targetName/${this._id}`,
+          { target_name: this.editForm.targetName },
+          { emulateJSON: true }
+        )
+        .then(function(data) {
           this.getNodes();
         });
       this.dialogFormVisible = false;
@@ -150,8 +154,13 @@ export default {
         type: "warning"
       })
         .then(() => {
-          // 添加删除的请求
-          // ........
+          this.$http
+            .put(this.backendIP + `/api/del_edge/${row._id}`, {
+              emulateJSON: true
+            })
+            .then(function(data) {
+              this.getNodes();
+            });
           this.$message({
             type: "sucess",
             message: "删除成功！"
