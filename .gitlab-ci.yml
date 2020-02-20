@@ -41,20 +41,29 @@ test:
 
 staging:
   stage: staging
-  image: registry.git.bdaa.pro:4567/yxonic/bdaa-deploy-image:v2.14.0
+  image: registry.git.bdaa.pro:4567/yxonic/bdaa-deploy-image:v3.0.2
   before_script:
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
-    - export HELM_HOST=10.8.1.1:44134
-    - helm init --client-only --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
+    - helm repo add stable https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
     - helm version
   script:
     - docker build -t ${CI_REGISTRY_IMAGE} .
     - docker push ${CI_REGISTRY_IMAGE}
-    - helm del --purge $KUBE_NAMESPACE-staging || true
-    - helm install chart -n $KUBE_NAMESPACE-staging --namespace $KUBE_NAMESPACE --set "nameOverride=$KUBE_NAMESPACE,ingress.enabled=true,ingress.hosts[0].host=$KUBE_NAMESPACE-staging.deploy.bdaa.pro,ingress.hosts[0].paths[0]=/,image.repository=${CI_REGISTRY_IMAGE},image.tag=latest,image.pullPolicy=Always,pullSecretName=pull-secret-staging,dockercfg=$(cat /root/.docker/config.json | base64 | tr -d '\n')"
+    - helm uninstall $KUBE_NAMESPACE || true
+    - >
+      helm install $KUBE_NAMESPACE chart --namespace $KUBE_NAMESPACE
+      --set "nameOverride=$KUBE_NAMESPACE"
+      --set "ingress.enabled=true"
+      --set "ingress.hosts[0].host=$KUBE_NAMESPACE.env.bdaa.pro"
+      --set "ingress.hosts[0].paths[0]=/"
+      --set "image.repository=${CI_REGISTRY_IMAGE}"
+      --set "image.tag=latest"
+      --set "image.pullPolicy=Always"
+      --set "pullSecretName=pull-secret"
+      --set "dockercfg=$(cat /root/.docker/config.json | base64 | tr -d '\n')"
   environment:
     name: staging
-    url: https://$CI_PROJECT_NAME-$CI_PROJECT_ID-staging.deploy.bdaa.pro
+    url: https://$KUBE_NAMESPACE.env.bdaa.pro
   only:
     refs:
       - master
@@ -62,20 +71,28 @@ staging:
 
 production:
   stage: production
-  image: registry.git.bdaa.pro:4567/yxonic/bdaa-deploy-image:v2.14.0
+  image: registry.git.bdaa.pro:4567/yxonic/bdaa-deploy-image:v3.0.2
   before_script:
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
-    - export HELM_HOST=10.8.1.1:44134
-    - helm init --client-only --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
-    - helm version
+    - helm repo add stable https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
   script:
     - docker build -t ${CI_REGISTRY_IMAGE}:stable .
     - docker push ${CI_REGISTRY_IMAGE}:stable
-    - helm del --purge $KUBE_NAMESPACE-production || true
-    - helm install chart -n $KUBE_NAMESPACE-production --namespace $KUBE_NAMESPACE --set "nameOverride=$KUBE_NAMESPACE,ingress.enabled=true,ingress.hosts[0].host=$KUBE_NAMESPACE.deploy.bdaa.pro,ingress.hosts[0].paths[0]=/,image.repository=${CI_REGISTRY_IMAGE},image.tag=stable,image.pullPolicy=Always,pullSecretName=pull-secret,dockercfg=$(cat /root/.docker/config.json | base64 | tr -d '\n')"
+    - helm uninstall $KUBE_NAMESPACE || true
+    - >
+      helm install $KUBE_NAMESPACE chart --namespace $KUBE_NAMESPACE
+      --set "nameOverride=$KUBE_NAMESPACE"
+      --set "ingress.enabled=true"
+      --set "ingress.hosts[0].host=$KUBE_NAMESPACE.env.bdaa.pro"
+      --set "ingress.hosts[0].paths[0]=/"
+      --set "image.repository=${CI_REGISTRY_IMAGE}"
+      --set "image.tag=stable"
+      --set "image.pullPolicy=Always"
+      --set "pullSecretName=pull-secret"
+      --set "dockercfg=$(cat /root/.docker/config.json | base64 | tr -d '\n')"
   environment:
     name: production
-    url: https://$KUBE_NAMESPACE.deploy.bdaa.pro
+    url: https://$KUBE_NAMESPACE.env.bdaa.pro
   when: manual
   only:
     refs:
