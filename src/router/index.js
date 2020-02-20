@@ -5,6 +5,7 @@ import Exercise from "@/components/Exercise";
 import Home from "@/components/Home";
 import Login from "@/components/Login";
 import Admin from "@/components/Admin";
+import Estimate from "@/components/Estimate";
 
 Vue.use(Router);
 
@@ -25,6 +26,11 @@ const router = new Router({
       path: "/exercise",
       name: "Exercise",
       component: Exercise
+    },
+    {
+      path: "/estimate",
+      name: "Estimate",
+      component: Estimate 
     },
     {
       path: "/login",
