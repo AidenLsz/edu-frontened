@@ -24,13 +24,19 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                           <el-dropdown-item>
-                            <router-link to="/ku" :underline="false">知识单元检索</router-link>
+                            <router-link to="/ku" :underline="false"
+                              >知识单元检索</router-link
+                            >
                           </el-dropdown-item>
                           <el-dropdown-item>
-                            <router-link to="/exercise" :underline="false">试题检索</router-link>
+                            <router-link to="/exercise" :underline="false"
+                              >试题检索</router-link
+                            >
                           </el-dropdown-item>
                           <el-dropdown-item>
-                            <router-link to="/estimate" :underline="false">试题难度评估</router-link>
+                            <router-link to="/estimate" :underline="false"
+                              >试题难度评估</router-link
+                            >
                           </el-dropdown-item>
                         </el-dropdown-menu>
                       </el-dropdown>
@@ -265,12 +271,12 @@ export default {
 }
 </style>
 <style>
-  .el-dropdown-menu__item:hover {
-    color: #000!important;
-    background-color: #ffd700!important;
-  }
-  .el-dropdown-menu__item a {
-    color: #1a2930;
-    text-decoration: none;
-  }
+.el-dropdown-menu__item:hover {
+  color: #000 !important;
+  background-color: #ffd700 !important;
+}
+.el-dropdown-menu__item a {
+  color: #1a2930;
+  text-decoration: none;
+}
 </style>

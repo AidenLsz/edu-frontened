@@ -30,7 +30,7 @@ const router = new Router({
     {
       path: "/estimate",
       name: "Estimate",
-      component: Estimate 
+      component: Estimate
     },
     {
       path: "/login",
