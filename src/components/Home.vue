@@ -7,63 +7,11 @@
           <div class="col-lg-10">
             <div class="slider-content text-center">
               <h2 class="wow fadeInUp" data-wow-delay=".2s">BASE-KG</h2>
-              <!--               <p class="wow fadeInUp" data-wow-delay=".4s">
-                教育领域专用知识图谱
-              </p> -->
-              <!--<a href="#" class="btn wow fadeInUp" data-wow-delay=".6s">Register now</a> -->
             </div>
           </div>
         </div>
       </div>
     </section>
-    <!-- features-area -->
-    <section class="features-area features-mt">
-      <div class="container">
-        <div class="row no-gutters">
-          <div class="col-lg-4 col-md-6 ku">
-            <div class="single-features">
-              <div class="features-icon mb-25">
-                <img src="../assets/icon/features_icon01.png" alt="icon" />
-              </div>
-              <div class="features-content">
-                <h4>知识单元检索</h4>
-                <p></p>
-                <p>
-                  查询知识点的知识关系<br />
-                  例如检索：三角函数，函数<br /><br />
-                </p>
-                <div class="features-more">
-                  <router-link to="/ku" :underline="false"
-                    >前往检索 <i class="el-icon-d-arrow-right"></i
-                  ></router-link>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 exercise">
-            <div class="single-features green">
-              <div class="features-icon mb-25">
-                <img src="../assets/icon/features_icon02.png" alt="icon" />
-              </div>
-              <div class="features-content">
-                <h4>试题检索</h4>
-                <p></p>
-                <p>
-                  查询试题文本中包含的所有知识点关系<br />
-                  例如检索：求此函数的振幅、周期<br /><br />
-                </p>
-                <div class="features-more">
-                  <router-link to="/exercise" :underline="false"
-                    >前往检索 <i class="el-icon-d-arrow-right"></i
-                  ></router-link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- features-area-end -->
     <!-- about-area -->
     <section class="about-area">
       <div class="container">
@@ -180,66 +128,6 @@ export default {
   font-size: 30px;
   color: #fff;
   margin-top: 10px;
-}
-/* 4. features */
-.ku {
-  margin: 0px 120px;
-}
-.single-features {
-  background: #233237;
-  padding: 50px 35px;
-  overflow: hidden;
-  transition: 0.3s linear;
-  transform: translateY(0);
-  padding-bottom: 45px;
-  box-shadow: 0px 20px 60px 0px rgba(15, 14, 77, 0.2);
-}
-.features-icon {
-  margin-bottom: 25px;
-  margin-left: -250px;
-}
-.features-content h4 {
-  font-size: 30px;
-  color: #fff;
-  margin-bottom: 10px;
-  margin-left: -130px;
-}
-.features-content p {
-  color: #fff;
-  margin-bottom: 15px;
-}
-.features-more {
-  overflow: hidden;
-}
-.features-content a {
-  color: #fff;
-  font-family: "Helvetica";
-  margin-left: -340px;
-}
-.features-content a i {
-  position: relative;
-  top: 3px;
-  font-size: 20px;
-  margin-left: 5px;
-}
-.single-features:hover .features-content a {
-  margin-left: -170px;
-}
-.single-features.green {
-  background: #984b43;
-}
-/*.single-features.red {
-  background: #f15b5b;
-}*/
-.single-features:hover {
-  transform: translateY(-10px);
-}
-.features-mt {
-  position: relative;
-  z-index: 1;
-  margin-top: -356px;
-  opacity: 0.95;
-  padding-bottom: 140px;
 }
 /* 5. about */
 .about-area {
