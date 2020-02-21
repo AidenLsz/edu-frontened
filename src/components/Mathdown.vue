@@ -85,14 +85,14 @@ export default {
     },
     renderTex(input, output) {
       output.innerHTML = "";
-      MathJax.texReset();
-      let options = MathJax.getMetricsFor(output);
+      window.MathJax.texReset();
+      let options = window.MathJax.getMetricsFor(output);
       options.display = true;
-      MathJax.tex2svgPromise(input, options)
+      window.MathJax.tex2svgPromise(input, options)
         .then(function(node) {
           output.appendChild(node);
-          MathJax.startup.document.clear();
-          MathJax.startup.document.updateDocument();
+          window.MathJax.startup.document.clear();
+          window.MathJax.startup.document.updateDocument();
         })
         .catch(function(err) {
           output
