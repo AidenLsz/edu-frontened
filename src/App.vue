@@ -17,7 +17,29 @@
                       <router-link to="/" :underline="false">首页</router-link>
                     </li>
                     <li class="drop-down">
-                      <a href="">API</a>
+                      <!-- <router-link to="/estimate">试题评估</router-link> -->
+                      <el-dropdown>
+                        <span class="el-dropdown-link">
+                          API<i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item>
+                            <router-link to="/ku" :underline="false"
+                              >知识单元检索</router-link
+                            >
+                          </el-dropdown-item>
+                          <el-dropdown-item>
+                            <router-link to="/exercise" :underline="false"
+                              >试题检索</router-link
+                            >
+                          </el-dropdown-item>
+                          <el-dropdown-item>
+                            <router-link to="/estimate" :underline="false"
+                              >试题难度评估</router-link
+                            >
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </el-dropdown>
                       <!--实现下拉菜单-->
                     </li>
                     <li>
@@ -239,5 +261,22 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.el-dropdown-link {
+  cursor: pointer;
+  color: #1a2930;
+  opacity: 0.8;
+  font-size: 18px;
+  font-weight: 900;
+}
+</style>
+<style>
+.el-dropdown-menu__item:hover {
+  color: #000 !important;
+  background-color: #ffd700 !important;
+}
+.el-dropdown-menu__item a {
+  color: #1a2930;
+  text-decoration: none;
 }
 </style>
