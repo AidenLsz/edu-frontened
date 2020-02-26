@@ -1,33 +1,31 @@
 <template>
   <div class="estimate">
     <div class="panel">
-      <!-- header -->
       <el-row>
-        <el-col :span="6">
-          <div class="logo">
-            <el-dropdown @command="handleCommand">
-              <el-button ref="attribute">
-                试题属性（默认自动检测）
-              </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="默认检测">默认检测</el-dropdown-item>
-                <el-dropdown-item command="数学">数学</el-dropdown-item>
-                <el-dropdown-item command="英语">英语</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
+        <el-col :span="4">
+          <el-select v-model="value_id" placeholder="自动检测学科">
+            <el-option
+              v-for="item in options"
+              :key="item.value_id"
+              :label="item.label"
+              :value="item.value_id"
+            >
+            </el-option>
+          </el-select>
         </el-col>
-        <el-col :span="6" :offset="10">
-          <div>
-            <el-row type="flex" justify="start">
-              <h5 style="color: #ff9900;">难度预估结果：</h5>
-              <h5>{{ estimate_value }}</h5>
-            </el-row>
-          </div>
+        <el-col :span="8" style="margin-top: 10px;">
+          <el-checkbox-group v-model="checkList">
+            <el-checkbox label="主要知识点"></el-checkbox>
+            <el-checkbox label="次要知识点"></el-checkbox>
+            <el-checkbox label="难度"></el-checkbox>
+          </el-checkbox-group>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="submit" value="提交" @click="submit"
+            >评估
+          </el-button>
         </el-col>
       </el-row>
-      <!-- header -->
-      <!-- main -->
       <el-row>
         <el-col :span="11">
           <div class="input_content">
@@ -35,18 +33,14 @@
               <el-row type="flex" class="row-bg" justify="center">
                 <el-input
                   type="textarea"
-                  :rows="24"
+                  :rows="14"
                   v-model="content"
                   placeholder="请输入内容"
-                ></el-input>
+                >
+                </el-input>
               </el-row>
               <el-row>
-                <el-col :span="4">
-                  <el-button type="submit" value="提交" @click="submit"
-                    >评估
-                  </el-button>
-                </el-col>
-                <el-col :span="6" :offset="12">
+                <el-col :span="6">
                   <div id="wrapper">
                     <div class="upload-btn">
                       <label>
@@ -78,7 +72,30 @@
           </div>
         </el-col>
       </el-row>
-      <!-- main -->
+      <el-divider></el-divider>
+      <el-row>
+        <el-col :span="3">
+          <h6 style="color: #0a1612;">难度预估结果：</h6>
+        </el-col>
+        <el-col :span="10">
+          <div class="result" v-if="show_result">
+            <el-col :span="12" :offset="6">
+              <el-row v-for="item in checkList" :key="item">
+                <h6>{{ item }}</h6>
+              </el-row>
+            </el-col>
+            <el-col :span="6">
+              <el-row
+                v-for="value in estimate_value"
+                :key="value"
+                style="margin-bottom: 15px; margin-top: -8px;"
+              >
+                <el-tag>{{ value }}</el-tag>
+              </el-row>
+            </el-col>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
@@ -91,11 +108,24 @@ export default {
   data() {
     return {
       content: "",
-      estimate_value: 1,
+      estimate_value: [],
       src: [],
       isShow: false,
+      show_result: false,
       order: 0,
-      filelists: []
+      filelists: [],
+      checkList: [],
+      options: [
+        {
+          value_id: "1",
+          label: "数学"
+        },
+        {
+          value_id: "2",
+          label: "英语"
+        }
+      ],
+      value_id: ""
     };
   },
   watch: {
@@ -105,18 +135,18 @@ export default {
   },
   methods: {
     submit() {
-      this.$http
-        .post()
-        // 改
-        // this.backendIP + "/api/surface",
-        // { exercise_text: this.exercise_text, entity_type: this.entity_type },
-        // { emulateJSON: true }
-        .then(function(data) {
-          // 加
-        });
-    },
-    handleCommand(command) {
-      this.$refs.attribute.$el.innerText = command;
+      this.estimate_value = ["1", "0", "1"];
+      this.show_result = true;
+      console.log(this.estimate_value);
+      // this.$http
+      //   .post()
+      // 改
+      // this.backendIP + "/api/surface",
+      // { exercise_text: this.exercise_text, entity_type: this.entity_type },
+      // { emulateJSON: true }
+      // .then(function(data) {
+      // 加
+      // });
     },
     uploadImg(e) {
       let _this = this;
@@ -145,6 +175,7 @@ export default {
 .estimate {
   background: url("/static/sub_bg.png") no-repeat;
   padding: 20px 20px 20px 20px;
+  background-size: cover;
 }
 .panel {
   background-color: #fff;
@@ -153,8 +184,8 @@ export default {
   border-radius: 4px;
   padding-left: 5%;
   padding-right: 5%;
-  padding-top: 5%;
-  height: 780px;
+  padding-top: 3%;
+  height: 1200px;
 }
 .logo {
   margin-left: 50px;
@@ -162,7 +193,8 @@ export default {
 .format_content {
   margin-top: 20px;
   border: 1px solid #999;
-  height: 570px;
+  height: 350px;
+  overflow: scroll;
 }
 .el-row {
   margin-bottom: 20px;
@@ -195,17 +227,17 @@ export default {
   font-weight: 900 !important;
 }
 .el-button {
-  background-color: #ffd700 !important;
-  color: #1a2930 !important;
-  border-color: #ffd700 !important;
+  background-color: #1a2930;
+  color: #fff;
+  border-color: #1a2930;
 }
 .el-button:hover {
-  background-color: #ff9900 !important;
-  color: #fff !important;
-  border-color: #fff !important;
+  background-color: #008080;
+  color: #fff;
+  border-color: #fff;
 }
 .el-button:focus {
-  outline: none !important;
+  outline: none;
 }
 .el-tag {
   background-color: #fff !important;
@@ -310,5 +342,17 @@ input[type="file"] {
   opacity: 0;
   filter: alpha(opacity=0);
   cursor: pointer;
+}
+.el-dropdown-menu__item:hover {
+  background-color: #fff !important;
+}
+.el-checkbox__input.is-checked + .el-checkbox__label {
+  color: #1a2930;
+}
+.el-select-dropdown__item.selected {
+  color: #1a2930;
+}
+.el-select-dropdown__item.hover {
+  background-color: #ff9999;
 }
 </style>

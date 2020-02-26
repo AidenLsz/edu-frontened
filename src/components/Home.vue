@@ -8,9 +8,56 @@
             <div class="slider-content text-center">
               <h2 class="wow fadeInUp" data-wow-delay=".2s">BASE-KG</h2>
             </div>
+            <div class="search-area">
+              <form @submit.prevent="submit" style="margin-top: 20px;">
+                <el-row type="flex" class="row-bg" justify="center">
+                  <el-col :span="22">
+                    <el-input
+                      v-model="ku_name"
+                      placeholder="三角函数"
+                    ></el-input>
+                  </el-col>
+                  <el-button type="submit" value="提交" @click="submit"
+                    >检索</el-button
+                  >
+                </el-row>
+              </form>
+            </div>
           </div>
         </div>
       </div>
+    </section>
+    <section class="link-area">
+      <!-- 试题检索卡片跳转 -->
+      <el-row style="padding-bottom: 70px;">
+        <h2>KNOWLEDGE GRAPHS</h2>
+      </el-row>
+      <el-row>
+        <el-col :span="8" :offset="2">
+          <el-card class="link-card" shadow="hover">
+            <p>
+              试题知识点搜索介绍试题知识点搜索介绍试题知识点搜索介绍
+              试题知识点搜索介绍试题知识点搜索介绍试题知识点搜索介绍
+              试题知识点搜索介绍试题知识点搜索介绍试题知识点搜索介绍
+            </p>
+            <router-link to="/exercise">
+              <el-button round style="margin-top: 20px;">立即体验</el-button>
+            </router-link>
+          </el-card>
+        </el-col>
+        <el-col :span="8" :offset="4">
+          <el-card class="link-card" shadow="hover">
+            <p>
+              试题难度搜索介绍试题难度搜索介绍试题难度搜索介绍
+              试题难度搜索介绍试题难度搜索介绍试题难度搜索介绍
+              试题难度搜索介绍试题难度搜索介绍试题难度搜索介绍
+            </p>
+            <router-link to="/exercise">
+              <el-button round style="margin-top: 20px;">立即体验</el-button>
+            </router-link>
+          </el-card>
+        </el-col>
+      </el-row>
     </section>
     <!-- about-area -->
     <section class="about-area">
@@ -74,7 +121,9 @@ import $ from "jquery";
 export default {
   name: "Home",
   data() {
-    return {};
+    return {
+      ku_name: "三角函数"
+    };
   },
   mounted() {
     // data - background
@@ -84,6 +133,11 @@ export default {
         "url(" + $(this).attr("data-background") + ")"
       );
     });
+  },
+  methods: {
+    submit() {
+      this.$router.push({ path: "/ku", query: { name: this.ku_name } });
+    }
   }
 };
 </script>
@@ -160,5 +214,21 @@ export default {
 }
 .about-image {
   margin-left: -130px;
+}
+.search-area {
+  padding-top: 150px;
+}
+.link-area {
+  padding-top: 200px;
+  padding-bottom: 150px;
+}
+.link-card {
+  height: 200px;
+}
+a {
+  text-decoration: none;
+}
+.router-link-active {
+  text-decoration: none;
 }
 </style>
