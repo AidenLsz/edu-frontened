@@ -18,11 +18,11 @@ import "animate.css";
 
 Vue.config.productionTip = false;
 
-// Vue.prototype.backendIP =
-//   "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
+Vue.prototype.backendIP =
+  "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
 
 // 测试
-Vue.prototype.backendIP = "http://127.0.0.1:8001";
+// Vue.prototype.backendIP = "http://127.0.0.1:8001";
 
 Vue.use(ElementUI);
 Vue.use(VueResource);

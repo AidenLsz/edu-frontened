@@ -135,19 +135,20 @@ export default {
   },
   methods: {
     submit() {
+      console.log(this.filelists);
       this.show_result = true;
-      let param = new FormData()
-      //console.log(this.filelists)
+      let param = new FormData();
       for (var i = 0; i < this.filelists.length; i++) {
-        param.append('file[]', this.filelists[i])
+        param.append("file[]", this.filelists[i]);
       }
-      //console.log(param.getAll('file[]'))
       let config = {
-        headers: {'Content-Type': 'multipart/form-data'}
-      }
+        headers: { "Content-Type": "multipart/form-data" }
+      };
       this.$http
         .post(
-          this.backendIP + "/api/estimate", param, config,
+          this.backendIP + "/api/estimate",
+          param,
+          config,
           { estimate_content: this.content, estimate_subject: this.value_id },
           { emulateJSON: true }
         )
@@ -174,6 +175,13 @@ export default {
 
     forkImage(index) {
       this.src.splice(index, 1);
+      // 文件列表去除empty
+      for (var i = 0; i < this.filelists.length; i++) {
+        if (typeof this.filelists[i] === "undefined") {
+          this.filelists.splice(i, 1);
+          i = i - 1;
+        }
+      }
       this.filelists.splice(index, 1);
     }
   }

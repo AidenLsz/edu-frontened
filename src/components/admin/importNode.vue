@@ -230,7 +230,6 @@ export default {
       if (this.collection_name && this.fileList.length != 0) { //eslint-disable-line
         formData.append("collection_name", this.collection_name);
         formData.append("file", this.fileList[0].raw);
-        
         let config = {
           headers: {
             "Content-Type": "multipart/form-data;charset=utf-8"
