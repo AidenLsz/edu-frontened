@@ -15,9 +15,8 @@
         </el-col>
         <el-col :span="8" style="margin-top: 10px;">
           <el-checkbox-group v-model="checkList">
-            <el-checkbox label="主要知识点"></el-checkbox>
-            <el-checkbox label="次要知识点"></el-checkbox>
             <el-checkbox label="难度"></el-checkbox>
+            <el-checkbox label="知识点"></el-checkbox>
           </el-checkbox-group>
         </el-col>
         <el-col :span="2">
@@ -46,6 +45,7 @@
                       <label>
                         <input
                           type="file"
+                          name="file"
                           @change="uploadImg"
                           accept="image/png, image/jpeg"
                           multiple
@@ -85,12 +85,11 @@
               </el-row>
             </el-col>
             <el-col :span="6">
-              <el-row
-                v-for="value in estimate_value"
-                :key="value"
-                style="margin-bottom: 15px; margin-top: -8px;"
-              >
-                <el-tag>{{ value }}</el-tag>
+              <el-row style="margin-bottom: 15px; margin-top: -8px;">
+                <el-tag>{{ result1 }}</el-tag>
+              </el-row>
+              <el-row style="margin-bottom: 15px; margin-top: -8px;">
+                <el-tag>{{ result2 }}</el-tag>
               </el-row>
             </el-col>
           </div>
@@ -108,7 +107,8 @@ export default {
   data() {
     return {
       content: "",
-      estimate_value: [],
+      result1: "",
+      result2: "",
       src: [],
       isShow: false,
       show_result: false,
@@ -130,23 +130,31 @@ export default {
   },
   watch: {
     src(now, old) {
-      console.log("-------");
+      console.log("-----");
     }
   },
   methods: {
     submit() {
-      this.estimate_value = ["1", "0", "1"];
       this.show_result = true;
-      console.log(this.estimate_value);
-      // this.$http
-      //   .post()
-      // 改
-      // this.backendIP + "/api/surface",
-      // { exercise_text: this.exercise_text, entity_type: this.entity_type },
-      // { emulateJSON: true }
-      // .then(function(data) {
-      // 加
-      // });
+      let param = new FormData()
+      //console.log(this.filelists)
+      for (var i = 0; i < this.filelists.length; i++) {
+        param.append('file[]', this.filelists[i])
+      }
+      //console.log(param.getAll('file[]'))
+      let config = {
+        headers: {'Content-Type': 'multipart/form-data'}
+      }
+      this.$http
+        .post(
+          this.backendIP + "/api/estimate", param, config,
+          { estimate_content: this.content, estimate_subject: this.value_id },
+          { emulateJSON: true }
+        )
+        .then(function(data) {
+          this.result1 = data.data.diff_result1;
+          this.result2 = data.data.diff_result2;
+        });
     },
     uploadImg(e) {
       let _this = this;
@@ -166,6 +174,7 @@ export default {
 
     forkImage(index) {
       this.src.splice(index, 1);
+      this.filelists.splice(index, 1);
     }
   }
 };
@@ -238,6 +247,9 @@ export default {
 }
 .el-button:focus {
   outline: none;
+  background-color: #008080;
+  color: #fff;
+  border-color: #fff;
 }
 .el-tag {
   background-color: #fff !important;

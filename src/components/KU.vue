@@ -862,6 +862,9 @@ export default {
   border-color: #fff;
 }
 .el-button:focus {
+  background-color: #008080;
+  color: #fff;
+  border-color: #fff;
   outline: none;
 }
 .el-tag {
