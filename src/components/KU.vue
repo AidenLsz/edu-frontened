@@ -25,7 +25,7 @@
       <el-col :span="7">
         <div class="result">
           <el-row type="flex" justify="start">
-            <h5 style="color: #ff9900;">知识单元名称</h5>
+            <h5 style="color: #0a1612;">知识单元名称</h5>
           </el-row>
           <el-row type="flex" justify="start" class="title">
             {{ node.name }}
@@ -35,7 +35,7 @@
           <el-row type="flex" justify="start">
             <el-col :span="24">
               <el-row>
-                <h5 style="color: #ff9900; float: left;">知识关系</h5>
+                <h5 style="color: #0a1612; float: left;">知识关系</h5>
               </el-row>
 
               <el-tabs
@@ -158,6 +158,12 @@ export default {
       sour:"",
       sourceLabel: ['百科', '人教版']
     };
+  },
+  mounted() {
+    if(this.$route.query.name){
+      this.ku_name = this.$route.query.name;
+      this.submit();
+    }
   },
   watch:{
     sour(val) {
@@ -839,25 +845,27 @@ export default {
  .el-tabs__item {
     color: #0a1612!important;
     font-weight: 900!important;
-} 
+}
  .el-tabs__item.is-active {
     background-color: #0a1612!important;
     color: #fff!important;
     font-weight: 900!important;
-} 
+}
 .el-button {
-  background-color: #ffd700!important;
-  color: #1a2930!important;
-  border-color: #ffd700!important;
+  background-color: #1a2930;
+  color: #fff;
+  border-color: #1a2930;
 }
 .el-button:hover {
-  background-color: #ff9900!important;
-  color: #1a2930!important;
-  border-color: #0a1612!important;
+  background-color: #008080;
+  color: #fff;
+  border-color: #fff;
 }
 .el-button:focus {
-  outline: none!important;
-
+  background-color: #008080;
+  color: #fff;
+  border-color: #fff;
+  outline: none;
 }
 .el-tag {
   background-color: #fff!important;
@@ -888,30 +896,30 @@ image {
   pointer-events: none;
 }
 .d3-tip {
-    line-height: 1;
-    width: 20%;
-    padding: 6px;
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    border-radius: 4px;
-    font-size: 10px;
+  line-height: 1;
+  width: 20%;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 10px;
 }
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
-    box-sizing: border-box;
-    display: inline;
-    font-size: 10px;
-    width: 100%;
-    line-height: 1;
-    color: rgba(0, 0, 0, 0.8);
-    content: "\25BC";
-    position: absolute;
-    text-align: center;
-  } 
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
 /* Style northward tooltips specifically */
 .d3-tip.n:after {
-    margin: -2px 0 0 0;
-    top: 100%;
-    left: 0;
-  } 
+  margin: -2px 0 0 0;
+  top: 100%;
+  left: 0;
+}
 </style>

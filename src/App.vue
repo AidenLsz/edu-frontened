@@ -149,17 +149,22 @@ export default {
   opacity: 0.8;
   padding: 36px 0;
   font-size: 18px;
-  font-weight: 900;
+  font-weight: 700;
   position: relative;
   margin-bottom: -20px;
+  text-decoration: none;
 }
 .main-menu ul li:hover > a {
-  color: #ffd700;
+  color: #000;
   opacity: 1;
+  font-weight: 900;
+  text-decoration: none;
 }
 .main-menu ul li.active > a {
   color: #ffd700;
   opacity: 1;
+  font-weight: 900;
+  text-decoration: none;
 }
 .main-menu ul > li > a::before {
   content: "";
@@ -271,10 +276,9 @@ export default {
 }
 </style>
 <style>
-.el-dropdown-menu__item:hover {
-  color: #000 !important;
-  background-color: #ffd700 !important;
-}
+/*.el-dropdown-menu__item:hover {
+  background-color: #ffffdd;
+}*/
 .el-dropdown-menu__item a {
   color: #1a2930;
   text-decoration: none;

@@ -28,7 +28,7 @@
       <el-col :span="7">
         <div class="result">
           <el-row type="flex" justify="start">
-            <h5 style="color: #ff9900;">试题文本</h5>
+            <h5 style="color: #0a1612;">试题文本</h5>
           </el-row>
           <el-row type="flex" justify="start" class="title">
             {{ raw_text }}
@@ -37,7 +37,7 @@
           <el-row type="flex" justify="start">
             <el-col :span="24">
               <el-row>
-                <h5 style="color: #ff9900; float: left;">知识点</h5>
+                <h5 style="color: #0a1612; float: left;">知识点</h5>
               </el-row>
               <el-tabs
                 value="bk"
@@ -158,6 +158,7 @@ export default {
       exercise_text: "",
       raw_text: "",
       entities_groups: {},
+      neighbors_groups: {},
       entity_type: "concept",
       graph: {},
       sour: ""
@@ -902,16 +903,6 @@ export default {
     background-color: #0a1612!important;
     color: #fff!important;
     font-weight: 900!important;
-} 
-.el-button {
-  background-color: #ffd700!important;
-  color: #1a2930!important;
-  border-color: #ffd700!important;
-}
-.el-button:hover {
-  background-color: #ff9900!important;
-  color: #fff!important;
-  border-color: #0a1612!important;
 }
 .el-button:focus {
   outline: none!important;
