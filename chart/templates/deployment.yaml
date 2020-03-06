@@ -3,31 +3,31 @@ kind: Deployment
 metadata:
   name: {{ include "chart.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "chart.name" . }}
-    helm.sh/chart: {{ include "chart.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- include "chart.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "chart.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "chart.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "chart.selectorLabels" . | nindent 8 }}
     spec:
       imagePullSecrets:
-        - name: {{ .Values.pullSecretName }}
+        - name: {{ include "chart.fullname" . }}
+      serviceAccountName: {{ include "chart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.image.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
