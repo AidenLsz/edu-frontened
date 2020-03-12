@@ -40,19 +40,19 @@
                 <h5 style="color: #0a1612; float: left;">知识点</h5>
               </el-row>
               <el-tabs
-                value="bk"
+                value="rjb_new"
                 @tab-click="dataSource"
                 type="card"
                 ref="ss"
                 style="height: 200px; margin-top: -10px; margin-left: 0px;"
               >
-                <el-tab-pane label="百科" name="bk">
+                <!--<el-tab-pane label="百科" name="bk">
                   <el-row
                     v-for="(entities, group, group_index) in entities_groups"
                     :key="group_index"
                   >
                     <el-row v-if="group_index == 0" type="flex" justify="start">
-                      <!-- <h4>{{ group }}</h4> -->
+                      
                     </el-row>
                     <el-row
                       v-if="group_index == 0"
@@ -80,7 +80,7 @@
                     :key="group_index"
                   >
                     <el-row v-if="group_index == 0" type="flex" justify="start">
-                      <!-- <h4 ref="h">{{ group }}</h4> -->
+                      
                     </el-row>
                     <el-row
                       v-if="group_index == 0"
@@ -101,13 +101,17 @@
                       </el-popover>
                     </el-row>
                   </el-row>
-                </el-tab-pane>
+                </el-tab-pane> -->
                 <el-tab-pane
                   label="人教版新"
                   name="rjb_new"
                   id="rjb_new"
                   ref="rjb_new"
                 >
+                  <el-checkbox-group v-model="checkList">
+                    <el-checkbox label="前驱后继"></el-checkbox>
+                    <el-checkbox label="共同学习"></el-checkbox>
+                  </el-checkbox-group>
                   <el-row
                     v-for="(entities, group, group_index) in neighbors_groups"
                     :key="group_index"
@@ -161,11 +165,15 @@ export default {
       neighbors_groups: {},
       entity_type: "concept",
       graph: {},
-      sour: ""
+      sour: "",
+      checkList: []
     };
   },
   watch:{
     sour(val) {
+      this.submit();
+    },
+    checkList(val) {
       this.submit();
     }
   },
