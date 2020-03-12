@@ -5,10 +5,10 @@
         <el-col :span="4">
           <el-select v-model="value_id" placeholder="自动检测学科">
             <el-option
-              v-for="item in options"
-              :key="item.value_id"
-              :label="item.label"
-              :value="item.value_id"
+              v-for="subject in options"
+              :key="subject.value_id"
+              :label="subject.label"
+              :value="subject.value_id"
             >
             </el-option>
           </el-select>
@@ -79,17 +79,19 @@
         </el-col>
         <el-col :span="10">
           <div class="result" v-if="show_result">
-            <el-col :span="12" :offset="6">
-              <el-row v-for="item in checkList" :key="item">
-                <h6>{{ item }}</h6>
+            <el-col :span="4">
+              <el-row v-for="attribute in checkList" :key="attribute">
+                <h6>{{ attribute }}</h6>
+                <!-- <el-tag>{{ result_difficulty }}</el-tag> -->
               </el-row>
             </el-col>
             <el-col :span="6">
-              <el-row style="margin-bottom: 15px; margin-top: -8px;">
-                <el-tag>{{ result1 }}</el-tag>
-              </el-row>
-              <el-row style="margin-bottom: 15px; margin-top: -8px;">
-                <el-tag>{{ result2 }}</el-tag>
+              <el-row
+                v-for="result in results"
+                :key="result"
+                style="margin-bottom: 15px; margin-top: -8px;"
+              >
+                <el-tag>{{ result }}</el-tag>
               </el-row>
             </el-col>
           </div>
@@ -107,8 +109,8 @@ export default {
   data() {
     return {
       content: "",
-      result1: "",
-      result2: "",
+      results: [],
+      result_knowledge_point: "",
       src: [],
       isShow: false,
       show_result: false,
@@ -129,14 +131,17 @@ export default {
     };
   },
   watch: {
-    src(now, old) {
-      console.log("-----");
+    // src(now, old) {},
+    checkList(now, old) {
+      this.show_result = false;
     }
   },
   methods: {
     submit() {
-      console.log(this.filelists);
+      // console.log(this.filelists);
+      this.results = [];
       this.show_result = true;
+      // 上传图片
       let param = new FormData();
       for (var i = 0; i < this.filelists.length; i++) {
         param.append("file[]", this.filelists[i]);
@@ -144,18 +149,38 @@ export default {
       let config = {
         headers: { "Content-Type": "multipart/form-data" }
       };
-      this.$http
-        .post(
-          this.backendIP + "/api/estimate",
-          param,
-          config,
-          { estimate_content: this.content, estimate_subject: this.value_id },
-          { emulateJSON: true }
-        )
-        .then(function(data) {
-          this.result1 = data.data.diff_result1;
-          this.result2 = data.data.diff_result2;
-        });
+      if (this.checkList.length === 2) {
+        this.checkList[0] = "难度";
+        this.checkList[1] = "知识点";
+      }
+      if (this.checkList.indexOf("难度") > -1) {
+        // 难度属性接口
+        this.$http
+          .post(
+            this.backendIP + "/api/difficulty",
+            param,
+            config,
+            { estimate_content: this.content, estimate_subject: this.value_id },
+            { emulateJSON: true }
+          )
+          .then(function(data) {
+            this.results.push(data.data.difficulty);
+          });
+      }
+      if (this.checkList.indexOf("知识点") > -1) {
+        // 知识点属性接口
+        this.$http
+          .post(
+            this.backendIP + "/api/kp",
+            param,
+            config,
+            { estimate_content: this.content, estimate_subject: this.value_id },
+            { emulateJSON: true }
+          )
+          .then(function(data) {
+            this.results.push(data.data.knowledge_point);
+          });
+      }
     },
     uploadImg(e) {
       let _this = this;

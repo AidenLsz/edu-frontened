@@ -156,10 +156,10 @@ export default {
   data() {
     return {
       ku_name: "",
-      ku_type: "concept",
+      ku_type: "kp2.0",
       node: "",
       neighbors_groups: {},
-      sour:"",
+      sour:"rjb_new",
       sourceLabel: ['百科', '人教版'],
       checkList: []
     };
@@ -180,14 +180,14 @@ export default {
   },
   methods: {
     dataSource(tab, event) {
-      this.sour = tab.name;
+      this.sour = "rjb_new";
       //黄小青师兄12月提供数据
-      if(this.sour == 'rjb_new'){
-        this.ku_type = "kp2.0";
-      }
-      if(this.sour == 'bk' || this.sour == 'rjb'){
-        this.ku_type = 'concept';
-      }
+      // if(this.sour == 'rjb_new'){
+      //   this.ku_type = "kp2.0";
+      // }
+      // if(this.sour == 'bk' || this.sour == 'rjb'){
+      //   this.ku_type = 'concept';
+      // }
       return tab.name;
     },
     submit() {
@@ -798,11 +798,12 @@ export default {
             return d.width;
           })
           .style("stroke", function(d){
-            if(d.index < pre_len){
+            if(d.index < directed_len){
               return "#ff0000";
             }
-            else if(d.index >= pre_len && d.index < directed_len)
-              return "#00ff00";
+            else {
+              return "#000000";
+            }
           });
 
         simulation.nodes(state.nodes);
