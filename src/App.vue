@@ -28,11 +28,11 @@
                               >知识单元检索</router-link
                             >
                           </el-dropdown-item>
-                          <el-dropdown-item>
+                          <!--<el-dropdown-item>
                             <router-link to="/exercise" :underline="false"
                               >试题检索</router-link
                             >
-                          </el-dropdown-item>
+                          </el-dropdown-item> -->
                           <el-dropdown-item>
                             <router-link to="/estimate" :underline="false"
                               >试题难度评估</router-link
