@@ -288,11 +288,11 @@ export default {
           };
         if(i < pre_len){
           state.links[i] = {
-           source: this.neighbors_groups['kp2.0'][i].name, target: this.node.name, width: 4, curved: false 
+           source: this.neighbors_groups['kp2.0'][i].name, target: this.node.name, width: 3, curved: false 
           }
         }else {
           state.links[i] = {
-           source: this.node.name, target: this.neighbors_groups['kp2.0'][i].name, width: 4, curved: false 
+           source: this.node.name, target: this.neighbors_groups['kp2.0'][i].name, width: 3, curved: false 
           }
         }
         
@@ -308,7 +308,7 @@ export default {
       let nodeMap = { node1: state.nodes[0] };
       let linkList = { node1: [state.links[0]], node2: [] };
 
-      let colorScale = d3.scaleOrdinal(d3.schemeAccent);
+      let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
       let svg = d3.select("svg");
       let width = +svg.attr("width");
       let height = +svg.attr("height");
@@ -341,12 +341,12 @@ export default {
         .attr("viewBox", "0 -5 10 10")
         .attr("refX", 4)
         .attr("refY", 0)
-        .attr("markerWidth", 2)
-        .attr("markerHeight", 2)
+        .attr("markerWidth", 3)
+        .attr("markerHeight", 3)
         .attr("orient", "auto")
         .append("path")
         .attr("d", "M0,-4L8,0L0,4")
-        .style("fill", "#333");
+        .style("fill", "#66b3ff");
 
       svg
         .append("defs")
@@ -386,7 +386,7 @@ export default {
           return null;
         })
         .attr("fill", function(d, i) {
-          return colorScale(i + 2);
+          return colorScale(i + 1);
         })
         .attr("opacity", 0.8)
         .on("mouseover", function(d, i) {
@@ -444,7 +444,7 @@ export default {
             console.log("unlock");
           } else {
             // Change the color of the node
-            selectedNode.style("fill", colorScale(index + 2));
+            selectedNode.style("fill", colorScale(index + 1));
             console.log("change the color");
           }
         });
@@ -799,7 +799,7 @@ export default {
           })
           .style("stroke", function(d){
             if(d.index < directed_len){
-              return "#ff0000";
+              return "#66b3ff";
             }
             else {
               return "#000000";
@@ -923,7 +923,7 @@ export default {
 }
 marker {
   fill: #999;
-  opacity: 1;
+  opacity: 0.8;
 }
 .nodes circle {
   stroke: #fff;
