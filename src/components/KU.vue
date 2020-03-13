@@ -386,7 +386,7 @@ export default {
           return null;
         })
         .attr("fill", function(d, i) {
-          return colorScale(i + 1);
+          return colorScale(i);
         })
         .attr("opacity", 0.8)
         .on("mouseover", function(d, i) {
@@ -444,7 +444,7 @@ export default {
             console.log("unlock");
           } else {
             // Change the color of the node
-            selectedNode.style("fill", colorScale(index + 1));
+            selectedNode.style("fill", colorScale(index));
             console.log("change the color");
           }
         });
