@@ -112,7 +112,6 @@ import $ from "jquery";
 export default {
   name: "App",
   mounted() {
-    console.log(process.env.KUBE_NAMESPACE);
     $(window).on("scroll", function() {
       var scroll = $(window).scrollTop();
       if (scroll < 250) {
