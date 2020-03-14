@@ -206,10 +206,6 @@ export default {
             var suc_len = data.data.suc_len;
             var undirected_len = data.data.undirected_len;
             var directed_len = pre_len + suc_len;
-            console.log(pre_len);
-            console.log(suc_len);
-            console.log("directed_len:"+directed_len);
-            console.log("undirected_len"+undirected_len);
           }
           // 动态添加边属性
           // this.neighbors_groups['kp2.0']
