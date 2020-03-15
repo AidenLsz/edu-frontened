@@ -18,11 +18,11 @@ import "animate.css";
 
 Vue.config.productionTip = false;
 
-if ("BACKEND_URL" in process.env) {
-  Vue.prototype.backendIP = process.env.BACKEND_URL;
-} else {
+if (process.env.BACKEND_URL == "DEFAULT_BACKEND_URL") {
   Vue.prototype.backendIP =
     "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
+} else {
+  Vue.prototype.backendIP = process.env.BACKEND_URL;
 }
 // Vue.prototype.backendIP =
 //   "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
