@@ -29,7 +29,7 @@
           </el-row>
           <el-row type="flex" justify="start" class="title">
             {{ node.name }}
-            {{ node.type }}
+            <!-- {{ node.type }} -->
           </el-row>
           <el-divider></el-divider>
           <el-row type="flex" justify="start">
@@ -39,13 +39,13 @@
               </el-row>
 
               <el-tabs
-                value="bk"
+                value="rjb_new"
                 @tab-click="dataSource"
                 type="card"
                 ref="ss"
                 style="height: 200px; margin-top: -10px; margin-left: 10px;"
               >
-                <el-tab-pane label="百科" name="bk">
+                <!--<el-tab-pane label="百科" name="bk">
                   <el-row
                     v-for="(entities, group, group_index) in neighbors_groups"
                     :key="group_index"
@@ -69,9 +69,9 @@
                       </el-popover>
                     </el-row>
                   </el-row>
-                </el-tab-pane>
+                </el-tab-pane> -->
 
-                <el-tab-pane label="人教版" name="rjb" id="rjb" ref="rjb">
+                <!--<el-tab-pane label="人教版" name="rjb" id="rjb" ref="rjb">
                   <el-row
                     v-for="(entities, group, group_index) in neighbors_groups"
                     :key="group_index"
@@ -95,7 +95,7 @@
                       </el-popover>
                     </el-row>
                   </el-row>
-                </el-tab-pane>
+                </el-tab-pane> -->
 
                 <el-tab-pane
                   label="人教版新"
@@ -103,6 +103,10 @@
                   id="rjb_new"
                   ref="rjb_new"
                 >
+                  <el-checkbox-group v-model="checkList">
+                    <el-checkbox label="前驱后继"></el-checkbox>
+                    <el-checkbox label="共同学习"></el-checkbox>
+                  </el-checkbox-group>
                   <el-row
                     v-for="(entities, group, group_index) in neighbors_groups"
                     :key="group_index"
@@ -152,11 +156,12 @@ export default {
   data() {
     return {
       ku_name: "",
-      ku_type: "concept",
+      ku_type: "kp2.0",
       node: "",
       neighbors_groups: {},
-      sour:"",
-      sourceLabel: ['百科', '人教版']
+      sour:"rjb_new",
+      sourceLabel: ['百科', '人教版'],
+      checkList: []
     };
   },
   mounted() {
@@ -168,35 +173,45 @@ export default {
   watch:{
     sour(val) {
       this.submit();
+    },
+    checkList(val) {
+      this.submit();
     }
   },
   methods: {
     dataSource(tab, event) {
-      this.sour = tab.name;
+      this.sour = "rjb_new";
       //黄小青师兄12月提供数据
-      if(this.sour == 'rjb_new'){
-        this.ku_type = "kp2.0";
-      }
-      if(this.sour == 'bk' || this.sour == 'rjb'){
-        this.ku_type = 'concept';
-      }
+      // if(this.sour == 'rjb_new'){
+      //   this.ku_type = "kp2.0";
+      // }
+      // if(this.sour == 'bk' || this.sour == 'rjb'){
+      //   this.ku_type = 'concept';
+      // }
       return tab.name;
     },
     submit() {
       this.$http
         .post(
           this.backendIP + "/api/ku",
-          { ku_name: this.ku_name, ku_type: this.ku_type },
+          { ku_name: this.ku_name, ku_type: this.ku_type, ku_edge_type: this.checkList },
           { emulateJSON: true }
         )
         .then(function(data) {
           this.node = data.data.node;
           this.neighbors_groups = data.data.neighbors_groups;
-          console.log(this.neighbors_groups);
-          //console.log(this.neighbors_groups.concept[5]);
-          
-          //生成图
-          //先清空画布
+          // 改线条颜色
+          if(this.ku_type == "kp2.0"){
+            var pre_len = data.data.pre_len;
+            var suc_len = data.data.suc_len;
+            var undirected_len = data.data.undirected_len;
+            var directed_len = pre_len + suc_len;
+          }
+          // 动态添加边属性
+          // this.neighbors_groups['kp2.0']
+
+          // 生成图
+          // 先清空画布
           d3.selectAll("svg > *").remove();
           
           let state = {
@@ -214,7 +229,6 @@ export default {
         links: [
         ]
       };
-      console.log(this.neighbors_groups)
       if(this.neighbors_groups.concept){
         var concept_length = this.neighbors_groups.concept.length;
       }
@@ -268,9 +282,17 @@ export default {
             hide_symbol: null,
             lock_symbol: null
           };
-        state.links[i] = {
-           source: this.node.name, target: this.neighbors_groups['kp2.0'][i].name, width: 5, curved: false 
-        }      
+        if(i < pre_len){
+          state.links[i] = {
+           source: this.neighbors_groups['kp2.0'][i].name, target: this.node.name, width: 3, curved: false 
+          }
+        }else {
+          state.links[i] = {
+           source: this.node.name, target: this.neighbors_groups['kp2.0'][i].name, width: 3, curved: false 
+          }
+        }
+        
+        console.log(state.links[i]);    
       };      
     }
       let selectedNode;
@@ -282,8 +304,7 @@ export default {
       let nodeMap = { node1: state.nodes[0] };
       let linkList = { node1: [state.links[0]], node2: [] };
 
-      let colorScale = d3.scaleOrdinal(d3.schemeAccent);
-
+      let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
       let svg = d3.select("svg");
       let width = +svg.attr("width");
       let height = +svg.attr("height");
@@ -314,13 +335,14 @@ export default {
         .append("marker")
         .attr("id", "straight")
         .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 0)
+        .attr("refX", 4)
         .attr("refY", 0)
-        .attr("markerWidth", 4)
-        .attr("markerHeight", 4)
+        .attr("markerWidth", 3)
+        .attr("markerHeight", 3)
         .attr("orient", "auto")
         .append("path")
-        .attr("d", "M0,-4L8,0L0,4");
+        .attr("d", "M0,-4L8,0L0,4")
+        .style("fill", "#66b3ff");
 
       svg
         .append("defs")
@@ -360,7 +382,7 @@ export default {
           return null;
         })
         .attr("fill", function(d, i) {
-          return colorScale(i + 2);
+          return colorScale(i);
         })
         .attr("opacity", 0.8)
         .on("mouseover", function(d, i) {
@@ -418,7 +440,7 @@ export default {
             console.log("unlock");
           } else {
             // Change the color of the node
-            selectedNode.style("fill", colorScale(index + 2));
+            selectedNode.style("fill", colorScale(index));
             console.log("change the color");
           }
         });
@@ -760,9 +782,24 @@ export default {
           .append("path")
           .attr("transform", currentTransform)
           .merge(link)
-          .attr("marker-end", "url(#straight)")
+          .attr("marker-end", function(d){
+            if(d.index < directed_len){
+              return "url(#straight)";
+            } else {
+              return "";
+            }
+            
+          })
           .attr("stroke-width", function(d) {
             return d.width;
+          })
+          .style("stroke", function(d){
+            if(d.index < directed_len){
+              return "#66b3ff";
+            }
+            else {
+              return "#000000";
+            }
           });
 
         simulation.nodes(state.nodes);
@@ -882,7 +919,7 @@ export default {
 }
 marker {
   fill: #999;
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .nodes circle {
   stroke: #fff;
