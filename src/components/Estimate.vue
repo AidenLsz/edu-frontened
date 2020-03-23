@@ -3,12 +3,23 @@
     <div class="panel">
       <el-row>
         <el-col :span="4">
-          <el-select v-model="subject_id" placeholder="自动检测学科">
+          <el-select v-model="subject_id" placeholder="选择学科">
             <el-option
               v-for="subject in options"
               :key="subject.value_id"
               :label="subject.label"
               :value="subject.value_id"
+            >
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-select v-model="type_id" placeholder="选择题型">
+            <el-option
+              v-for="type in type_options"
+              :key="type.value_id"
+              :label="type.label"
+              :value="type.value_id"
             >
             </el-option>
           </el-select>
@@ -132,6 +143,7 @@ export default {
       order: 0,
       filelists: [],
       checkList: [],
+      // 学科选择属性
       options: [
         {
           value_id: "1", // 学科值
@@ -143,6 +155,8 @@ export default {
         }
       ],
       subject_id: "",
+      type_options: [], // 题型选择属性
+      type_id: "",
       marks: {
         0: "易",
         1: "难"
@@ -153,6 +167,40 @@ export default {
   watch: {
     checkList(now, old) {
       this.show_result = false;
+    },
+    subject_id() {
+      if (this.subject_id === "1") {
+        this.type_options = [
+          {
+            value_id: "1", // 数学题型值
+            label: "选择" // 数学题型名
+          },
+          {
+            value_id: "2",
+            label: "填空"
+          },
+          {
+            value_id: "3",
+            label: "解答"
+          },        
+        ]
+      }
+      if (this.subject_id === "2") {
+        this.type_options = [
+          {
+            value_id: "1", // 英语题型值
+            label: "选择" // 英语题型名
+          },
+          {
+            value_id: "2",
+            label: "完形填空"
+          },
+          {
+            value_id: "3",
+            label: "阅读理解"
+          },        
+        ]
+      }
     }
   },
   methods: {
