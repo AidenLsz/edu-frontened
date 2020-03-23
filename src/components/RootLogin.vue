@@ -5,7 +5,7 @@
       label-width="100px"
       class="demo-ruleForm login-container"
     >
-      <h4 class="title">后台管理系统登录</h4>
+      <h4 class="title">用户登录</h4>
       <el-form-item prop="account" class="contain">
         <el-input
           type="text"
@@ -44,7 +44,7 @@ export default {
     login(formName) {
       this.$http
         .post(
-          this.backendIP + "/api/login",
+          this.backendIP + "/api/root_login",
           {
             user: this.account,
             password: this.pass
@@ -55,7 +55,8 @@ export default {
           console.log(data.data);
           if (data.data == 1) { //eslint-disable-line
             sessionStorage.user = this.account;
-            this.$router.push({ path: "/admin" });
+            this.$router.push({ path: "/ku" });
+            location.reload();
           } else {
             alert("登录失败");
           }

@@ -3,7 +3,7 @@
     <div class="panel">
       <el-row>
         <el-col :span="4">
-          <el-select v-model="value_id" placeholder="自动检测学科">
+          <el-select v-model="subject_id" placeholder="自动检测学科">
             <el-option
               v-for="subject in options"
               :key="subject.value_id"
@@ -73,29 +73,44 @@
         </el-col>
       </el-row>
       <el-divider></el-divider>
-      <el-row>
-        <el-col :span="3">
-          <h6 style="color: #0a1612;">难度预估结果：</h6>
-        </el-col>
-        <el-col :span="10">
+      <el-row v-loading="loading">
+        <el-row type="flex" justify="start">
+          <h6 style="color: #0a1612;">预估结果：</h6>
+        </el-row>
+        <el-row>
           <div class="result" v-if="show_result">
-            <el-col :span="4">
-              <el-row v-for="attribute in checkList" :key="attribute">
-                <h6>{{ attribute }}</h6>
-                <!-- <el-tag>{{ result_difficulty }}</el-tag> -->
-              </el-row>
-            </el-col>
-            <el-col :span="6">
-              <el-row
-                v-for="result in results"
-                :key="result"
-                style="margin-bottom: 15px; margin-top: -8px;"
-              >
-                <el-tag>{{ result }}</el-tag>
-              </el-row>
-            </el-col>
+            <el-row
+              type="flex"
+              justify="start"
+              v-if="checkList.indexOf('难度') > -1"
+            >
+              <el-col :span="6">
+                <span>难度：</span>
+                <el-tag>{{ difficulty_result }}</el-tag>
+              </el-col>
+              <el-col :span="6">
+                <el-slider
+                  v-model="difficulty_result"
+                  :max="1"
+                  disabled
+                  :marks="marks"
+                  style="margin-top: -8px;"
+                >
+                </el-slider>
+              </el-col>
+            </el-row>
+            <el-row
+              type="flex"
+              justify="start"
+              v-if="checkList.indexOf('知识点') > -1"
+            >
+              <el-col :span="6">
+                <span>知识点：</span>
+                <el-tag>{{ kp_result }}</el-tag>
+              </el-col>
+            </el-row>
           </div>
-        </el-col>
+        </el-row>
       </el-row>
     </div>
   </div>
@@ -108,10 +123,10 @@ export default {
   name: "estimate",
   data() {
     return {
-      content: "",
-      results: [],
-      result_knowledge_point: "",
-      src: [],
+      content: "", // 用户输入试题文本
+      difficulty_result: "", // 难度预估返回值
+      kp_result: "", // 知识点返回值
+      src: [], // 图片数组
       isShow: false,
       show_result: false,
       order: 0,
@@ -119,29 +134,33 @@ export default {
       checkList: [],
       options: [
         {
-          value_id: "1",
-          label: "数学"
+          value_id: "1", // 学科值
+          label: "数学" // 学科名
         },
         {
           value_id: "2",
           label: "英语"
         }
       ],
-      value_id: ""
+      subject_id: "",
+      marks: {
+        0: "易",
+        1: "难"
+      },
+      loading: false
     };
   },
   watch: {
-    // src(now, old) {},
     checkList(now, old) {
       this.show_result = false;
     }
   },
   methods: {
+    // 提交评估按钮，向后端发送请求
     submit() {
-      // console.log(this.filelists);
-      this.results = [];
+      document.documentElement.scrollTop = 380;
+      this.loading = true;
       this.show_result = true;
-      // 上传图片
       let param = new FormData();
       for (var i = 0; i < this.filelists.length; i++) {
         param.append("file[]", this.filelists[i]);
@@ -149,39 +168,36 @@ export default {
       let config = {
         headers: { "Content-Type": "multipart/form-data" }
       };
+      param.append("estimate_content", this.content);
+      param.append("estimate_subject", this.subject_id);
       if (this.checkList.length === 2) {
         this.checkList[0] = "难度";
         this.checkList[1] = "知识点";
       }
       if (this.checkList.indexOf("难度") > -1) {
-        // 难度属性接口
+        // 请求难度属性接口
         this.$http
-          .post(
-            this.backendIP + "/api/difficulty",
-            param,
-            config,
-            { estimate_content: this.content, estimate_subject: this.value_id },
-            { emulateJSON: true }
-          )
+          .post(this.backendIP + "/api/difficulty", param, config, {
+            emulateJSON: true
+          })
           .then(function(data) {
-            this.results.push(data.data.difficulty);
+            this.difficulty_result = data.data.difficulty;
+            this.loading = false;
           });
       }
       if (this.checkList.indexOf("知识点") > -1) {
-        // 知识点属性接口
+        // 请求知识点属性接口
         this.$http
-          .post(
-            this.backendIP + "/api/kp",
-            param,
-            config,
-            { estimate_content: this.content, estimate_subject: this.value_id },
-            { emulateJSON: true }
-          )
+          .post(this.backendIP + "/api/kp", param, config, {
+            emulateJSON: true
+          })
           .then(function(data) {
-            this.results.push(data.data.knowledge_point);
+            this.kp_result = data.data.knowledge_point;
+            this.loading = false;
           });
       }
     },
+    // 处理用户上传图片，存入图片数组
     uploadImg(e) {
       let _this = this;
       let length = e.target.files.length;
@@ -197,10 +213,8 @@ export default {
       }
       _this.order = _this.order + length;
     },
-
     forkImage(index) {
       this.src.splice(index, 1);
-      // 文件列表去除empty
       for (var i = 0; i < this.filelists.length; i++) {
         if (typeof this.filelists[i] === "undefined") {
           this.filelists.splice(i, 1);

@@ -50,6 +50,12 @@
                         >实验室主页</a
                       >
                     </li>
+                    <button v-if="root" class="text-btn" @click="logout_root">
+                      退出
+                    </button>
+                    <button v-else class="text-btn" @click="login_root">
+                      登录
+                    </button>
                   </ul>
                 </nav>
               </div>
@@ -92,9 +98,6 @@
                   <ul>
                     <li><a href="#">中国科学技术大学</a></li>
                     <li><a href="#">科大讯飞</a></li>
-                    <!-- <li><a href="#">安徽广电信息网络股份有限公司</a></li>
-                                    <li><a href="#">中科大计算机科学与技术学院</a></li>
-                                    <li><a href="#">陈恩红实验室主页</a></li>  -->
                   </ul>
                 </div>
               </div>
@@ -111,7 +114,14 @@
 import $ from "jquery";
 export default {
   name: "App",
+  data() {
+    return {
+      root: false // root用户
+    };
+  },
   mounted() {
+    this.root = sessionStorage.user === "root";
+    console.log(this.root);
     $(window).on("scroll", function() {
       var scroll = $(window).scrollTop();
       if (scroll < 250) {
@@ -120,6 +130,16 @@ export default {
         $("#header-sticky").addClass("sticky-menu");
       }
     });
+  },
+  methods: {
+    login_root() {
+      this.$router.push({ path: "/root" });
+    },
+    // 测试退出函数
+    logout_root() {
+      sessionStorage.clear();
+      location.reload();
+    }
   }
 };
 </script>
@@ -270,17 +290,26 @@ export default {
 .el-dropdown-link {
   cursor: pointer;
   color: #1a2930;
-  opacity: 0.8;
   font-size: 18px;
   font-weight: 900;
 }
 </style>
 <style>
-/*.el-dropdown-menu__item:hover {
-  background-color: #ffffdd;
-}*/
+.el-dropdown-menu__item {
+  background: #1a2930;
+}
+.el-dropdown-menu {
+  background: #1a2930;
+  border: #1a2930;
+}
 .el-dropdown-menu__item a {
-  color: #1a2930;
+  color: #ccc;
   text-decoration: none;
+}
+.text-btn {
+  background: transparent;
+  color: #1a2930;
+  border: 0px;
+  margin-left: 30px;
 }
 </style>
