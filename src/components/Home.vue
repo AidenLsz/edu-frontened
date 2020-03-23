@@ -136,7 +136,10 @@ export default {
   },
   methods: {
     submit() {
-      this.$router.push({ path: "/ku", query: { name: this.ku_name } });
+      this.$router.push({
+        name: "Knowledge Unit",
+        params: { name: this.ku_name }
+      });
     }
   }
 };
@@ -230,5 +233,21 @@ a {
 }
 .router-link-active {
   text-decoration: none;
+}
+.el-button {
+  background-color: #1a2930;
+  color: #fff;
+  border-color: #1a2930;
+}
+.el-button:hover {
+  background-color: #008080;
+  color: #fff;
+  border-color: #fff;
+}
+.el-button:focus {
+  background-color: #008080;
+  color: #fff;
+  border-color: #fff;
+  outline: none;
 }
 </style>

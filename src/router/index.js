@@ -6,6 +6,7 @@ import Home from "@/components/Home";
 import Login from "@/components/Login";
 import Admin from "@/components/Admin";
 import Estimate from "@/components/Estimate";
+import RootLogin from "@/components/RootLogin";
 
 Vue.use(Router);
 
@@ -36,6 +37,11 @@ const router = new Router({
       path: "/login",
       name: "Login",
       component: Login
+    },
+    {
+      path: "/root",
+      name: "Root",
+      component: RootLogin
     },
     {
       path: "/admin",

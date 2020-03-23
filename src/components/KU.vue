@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 <template>
   <div class="ku">
     <!-- header -->
@@ -21,7 +22,7 @@
       </el-col>
     </el-row>
     <!-- main -->
-    <el-row>
+    <el-row v-loading="loading">
       <el-col :span="7">
         <div class="result">
           <el-row type="flex" justify="start">
@@ -45,68 +46,60 @@
                 ref="ss"
                 style="height: 200px; margin-top: -10px; margin-left: 10px;"
               >
-                <!--<el-tab-pane label="百科" name="bk">
-                  <el-row
-                    v-for="(entities, group, group_index) in neighbors_groups"
-                    :key="group_index"
-                  >
-                    <el-row
-                      v-if="group == 'concept'"
-                      class="label"
-                      type="flex"
-                      justify="start"
-                    >
-                      <el-popover
-                        placement="top-start"
-                        v-for="(entity, index) in entities"
-                        :key="index"
-                        :title="entity.name"
-                        width="200"
-                        trigger="hover"
-                        :content="entity.annotation"
-                      >
-                        <el-tag slot="reference">{{ entity.name }}</el-tag>
-                      </el-popover>
-                    </el-row>
-                  </el-row>
-                </el-tab-pane> -->
-
-                <!--<el-tab-pane label="人教版" name="rjb" id="rjb" ref="rjb">
-                  <el-row
-                    v-for="(entities, group, group_index) in neighbors_groups"
-                    :key="group_index"
-                  >
-                    <el-row
-                      v-if="group == 'knowledge point'"
-                      class="label"
-                      type="flex"
-                      justify="start"
-                    >
-                      <el-popover
-                        placement="top-start"
-                        v-for="(entity, index) in entities"
-                        :key="index"
-                        :title="entity.name"
-                        width="200"
-                        trigger="hover"
-                        :content="entity.annotation"
-                      >
-                        <el-tag slot="reference">{{ entity.name }}</el-tag>
-                      </el-popover>
-                    </el-row>
-                  </el-row>
-                </el-tab-pane> -->
-
                 <el-tab-pane
                   label="人教版新"
                   name="rjb_new"
                   id="rjb_new"
                   ref="rjb_new"
                 >
-                  <el-checkbox-group v-model="checkList">
-                    <el-checkbox label="前驱后继"></el-checkbox>
-                    <el-checkbox label="共同学习"></el-checkbox>
-                  </el-checkbox-group>
+                  <el-row type="flex" justufy="start" :gutter="40">
+                    <el-checkbox-group v-model="checkList">
+                      <el-col :span="6">
+                        <el-checkbox label="前驱后继">前驱后继</el-checkbox>
+                      </el-col>
+                      <el-col :span="1">
+                        <h6>{{ directed_len }}</h6>
+                      </el-col>
+                      <el-col :span="6">
+                        <el-checkbox label="共同学习">共同学习</el-checkbox>
+                      </el-col>
+                      <el-col :span="1">
+                        <h6>{{ undirected_len }}</h6>
+                      </el-col>
+                    </el-checkbox-group>
+                  </el-row>
+                  <el-row
+                    v-for="(entities, group, group_index) in neighbors_groups"
+                    :key="group_index"
+                  >
+                    <el-row
+                      v-if="group == 'kp2.0'"
+                      class="label"
+                      type="flex"
+                      justify="start"
+                    >
+                      <el-popover
+                        placement="top-start"
+                        v-for="(entity, index) in entities"
+                        :key="index"
+                        :title="entity.name"
+                        width="200"
+                        trigger="hover"
+                        :content="entity.annotation"
+                      >
+                        <el-tag slot="reference">{{ entity.name }}</el-tag>
+                      </el-popover>
+                    </el-row>
+                  </el-row>
+                </el-tab-pane>
+                <!-- 尝试加考试院数据 -->
+                <el-tab-pane
+                  v-if="root_view"
+                  label="考试院"
+                  name="root_data"
+                  id="root_data"
+                  ref="root_data"
+                >
                   <el-row
                     v-for="(entities, group, group_index) in neighbors_groups"
                     :key="group_index"
@@ -139,7 +132,13 @@
       <el-col :span="17">
         <div class="graph">
           <!-- <button class="reset">Reset View</button> -->
-          <svg width="930" height="760"></svg>
+          <Graph
+            :node="node"
+            :neighbors_groups="neighbors_groups"
+            :inward_arrow="inward_arrow"
+            :outward_arrow="outward_arrow"
+          ></Graph>
+          <!-- <svg width="930" height="760"></svg> -->
         </div>
       </el-col>
     </el-row>
@@ -147,30 +146,36 @@
 </template>
 
 <script>
-/* eslint-disable */
-import * as d3 from 'd3'
-import d3Tip from "d3-tip"
-
+import Graph from "./Graph.vue";
 export default {
+  components: { Graph },
   name: "KU",
   data() {
     return {
       ku_name: "",
       ku_type: "kp2.0",
-      node: "",
+      node: {},
       neighbors_groups: {},
-      sour:"rjb_new",
-      sourceLabel: ['百科', '人教版'],
-      checkList: []
+      sour: "rjb_new",
+      sourceLabel: ["百科", "人教版"],
+      checkList: ["前驱后继", "共同学习"],
+      directed_len: "",
+      undirected_len: "",
+      inward_arrow: 0,
+      outward_arrow: 0,
+      root_view: false,
+      loading: false
     };
   },
   mounted() {
-    if(this.$route.query.name){
-      this.ku_name = this.$route.query.name;
+    this.root_view = sessionStorage.user === "root";
+    console.log(this.root_view);
+    if (this.$route.params.name) {
+      this.ku_name = this.$route.params.name;
       this.submit();
     }
   },
-  watch:{
+  watch: {
     sour(val) {
       this.submit();
     },
@@ -181,633 +186,49 @@ export default {
   methods: {
     dataSource(tab, event) {
       this.sour = "rjb_new";
-      //黄小青师兄12月提供数据
-      // if(this.sour == 'rjb_new'){
-      //   this.ku_type = "kp2.0";
-      // }
-      // if(this.sour == 'bk' || this.sour == 'rjb'){
-      //   this.ku_type = 'concept';
-      // }
       return tab.name;
     },
+    // 测试退出函数
+    logout_root() {
+      sessionStorage.clear();
+      location.reload();
+    },
+    /**
+     * 提交
+     */
     submit() {
+      this.loading = true;
       this.$http
         .post(
           this.backendIP + "/api/ku",
-          { ku_name: this.ku_name, ku_type: this.ku_type, ku_edge_type: this.checkList },
+          {
+            ku_name: this.ku_name,
+            ku_type: this.ku_type,
+            ku_edge_type: this.checkList
+          },
           { emulateJSON: true }
         )
         .then(function(data) {
           this.node = data.data.node;
           this.neighbors_groups = data.data.neighbors_groups;
-          // 改线条颜色
-          if(this.ku_type == "kp2.0"){
-            var pre_len = data.data.pre_len;
-            var suc_len = data.data.suc_len;
-            var undirected_len = data.data.undirected_len;
-            var directed_len = pre_len + suc_len;
-          }
-          // 动态添加边属性
-          // this.neighbors_groups['kp2.0']
-
-          // 生成图
-          // 先清空画布
-          d3.selectAll("svg > *").remove();
-          
-          let state = {
-          nodes: [
+          this.inward_arrow = data.data.pre_len;
+          this.outward_arrow = data.data.suc_len;
+          this.loading = false;
+        });
+      this.$http
+        .post(
+          this.backendIP + "/api/ku",
           {
-            id: this.node.name,
-            desc: "this is "+this.node.name,
-            type: 0,
-            hidden: false,
-            lock: false,
-            hide_symbol: null,
-            lock_symbol: null
+            ku_name: this.ku_name,
+            ku_type: this.ku_type,
+            ku_edge_type: ["前驱后继", "共同学习"]
           },
-        ],
-        links: [
-        ]
-      };
-      if(this.neighbors_groups.concept){
-        var concept_length = this.neighbors_groups.concept.length;
-      }
-      if(this.neighbors_groups['knowledge point']){
-        var kp_length = this.neighbors_groups['knowledge point'].length;
-      }
-      
-
-      
-    if(this.sour == "rjb" && (this.neighbors_groups['knowledge point']) ){
-        //显示知识点的图
-      for(var i = 0; i < kp_length; i++){
-        state.nodes[i+1] =  {
-            id: this.neighbors_groups['knowledge point'][i].name,
-            desc: "this is "+this.neighbors_groups['knowledge point'][i].name,
-            type: 1,
-            hidden: false,
-            lock: false,
-            hide_symbol: null,
-            lock_symbol: null
-          };
-        state.links[i] = {
-           source: this.node.name, target: this.neighbors_groups['knowledge point'][i].name, width: 5, curved: false 
-        }      
-      };
-    }else if(this.sour == "bk" && this.neighbors_groups.concept) {
-      //显示概念的图
-      for(var i = 0; i < concept_length; i++){
-        state.nodes[i+1] =  {
-            id: this.neighbors_groups.concept[i].name,
-            desc: "this is "+this.neighbors_groups.concept[i].name,
-            type: 1,
-            hidden: false,
-            lock: false,
-            hide_symbol: null,
-            lock_symbol: null
-          };
-        state.links[i] = {
-           source: this.node.name, target: this.neighbors_groups.concept[i].name, width: 5, curved: false 
-        }      
-      };  
-    } else if(this.sour == 'rjb_new' && this.neighbors_groups['kp2.0']){
-      //显示最新人教版
-      for(var i = 0; i < this.neighbors_groups['kp2.0'].length; i++){
-        state.nodes[i+1] =  {
-            id: this.neighbors_groups['kp2.0'][i].name,
-            desc: "this is "+this.neighbors_groups['kp2.0'][i].name,
-            type: 1,
-            hidden: false,
-            lock: false,
-            hide_symbol: null,
-            lock_symbol: null
-          };
-        if(i < pre_len){
-          state.links[i] = {
-           source: this.neighbors_groups['kp2.0'][i].name, target: this.node.name, width: 3, curved: false 
-          }
-        }else {
-          state.links[i] = {
-           source: this.node.name, target: this.neighbors_groups['kp2.0'][i].name, width: 3, curved: false 
-          }
-        }
-        
-        console.log(state.links[i]);    
-      };      
-    }
-      let selectedNode;
-      let nodeSize = 25;
-      let button_flag = 0;
-      let hide_flag = 0;
-      let arcSize = 0;
-
-      let nodeMap = { node1: state.nodes[0] };
-      let linkList = { node1: [state.links[0]], node2: [] };
-
-      let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-      let svg = d3.select("svg");
-      let width = +svg.attr("width");
-      let height = +svg.attr("height");
-      let g = svg.append("g").attr("class", "everything");
-      let link = g
-        .append("g")
-        .attr("class", "links")
-        .selectAll("line");
-      let node = g
-        .append("g")
-        .attr("class", "nodes")
-        .selectAll("circle");
-      //添加文字
-      let text = g.append("g").selectAll("text");
-
-
-      // setup the tool tip
-      var tool_tip = d3Tip()
-        .attr("class", "d3-tip")
-        .offset([-8, 0])
-        .html(function(d) {
-          return "<p>" + d.desc + "</p>";
-        });
-      svg.call(tool_tip);
-
-      svg
-        .append("defs")
-        .append("marker")
-        .attr("id", "straight")
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 4)
-        .attr("refY", 0)
-        .attr("markerWidth", 3)
-        .attr("markerHeight", 3)
-        .attr("orient", "auto")
-        .append("path")
-        .attr("d", "M0,-4L8,0L0,4")
-        .style("fill", "#66b3ff");
-
-      svg
-        .append("defs")
-        .append("marker")
-        .attr("id", "curved")
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 0)
-        .attr("refY", 0)
-        .attr("markerWidth", 4)
-        .attr("markerHeight", 4)
-        .attr("orient", "auto")
-        .append("path")
-        .attr("d", "M0,-4L8,0L0,4");
-
-      let arc_generator = d3
-        .arc()
-        .innerRadius(nodeSize * 1.1)
-        .outerRadius(nodeSize * 2);
-
-      let arc_bigger = d3
-        .arc()
-        .innerRadius(nodeSize * 1.1)
-        .outerRadius(nodeSize * 2.5);
-
-      let pieData = d3.pie()([60, 60, 20, 20, 20]);
-      let pies = g
-        .append("g")
-        .attr("class", "pie button")
-        .selectAll("whatever")
-        .data(pieData)
-        .enter();
-
-      let pie_gs = pies.append("path");
-
-      pie_gs
-        .attr("d", function(d) {
-          return null;
-        })
-        .attr("fill", function(d, i) {
-          return colorScale(i);
-        })
-        .attr("opacity", 0.8)
-        .on("mouseover", function(d, i) {
-          if (button_flag) {
-            d3.select(this)
-              .transition()
-              .duration(200)
-              .attr("d", arc_bigger(d))
-              .attr("opacity", 0.6);
-          }
-        })
-        .on("mouseout", function(d, i) {
-          if (button_flag) {
-            d3.select(this)
-              .transition()
-              .duration(200)
-              .attr("d", arc_generator(d))
-              .attr("opacity", 0.8);
-          }
-        })
-        .on("click", function(d, index) {
-          button_flag = 0;
-          hide_flag = 0;
-          pie_gs
-            .attr("d", function() {
-              return null;
-            })
-            .interrupt();
-          hide_symbol
-            .attr("xlink:href", function(d) {
-              d.hide_symbol = null;
-              return null;
-            })
-            .interrupt();
-          lock_symbol
-            .attr("xlink:href", function(d) {
-              d.lock_symbol = null;
-              return null;
-            })
-            .interrupt();
-          if (index == 0) {
-            // Hide the node
-            hide_flag = 1;
-            selectedNode.each(function(d) {
-              d.hidden = true;
-            });
-            hide_flag = 0;
-            console.log("hide");
-          } else if (index == 1) {
-            // unlock the node; default to lock
-            selectedNode.each(function(d) {
-              d.fx = null;
-              d.fy = null;
-            });
-            console.log("unlock");
-          } else {
-            // Change the color of the node
-            selectedNode.style("fill", colorScale(index));
-            console.log("change the color");
-          }
-        });
-
-      let lock_symbol = g
-        .append("g")
-        .attr("class", "lock_symbol")
-        .selectAll("lock_symbol");
-      let hide_symbol = g
-        .append("g")
-        .attr("class", "hide_symbol")
-        .selectAll("hide_symbol");
-      // add the symbol of each button
-      hide_symbol = hide_symbol.data(state.nodes, function(d) {
-        return d.id;
-      });
-      hide_symbol.exit().remove();
-      hide_symbol = hide_symbol
-        .enter()
-        .append("image")
-        .attr("xlink:href", function(d) {
-          d.hide_symbol = null;
-          return null;
-        })
-        .attr("width", 20)
-        .attr("height", 20);
-
-      lock_symbol = lock_symbol.data(state.nodes, function(d) {
-        return d.id;
-      });
-      lock_symbol.exit().remove();
-      lock_symbol = lock_symbol
-        .enter()
-        .append("image")
-        .attr("xlink:href", function(d) {
-          d.lock_symbol = null;
-          return null;
-        })
-        .attr("width", 20)
-        .attr("height", 20);
-
-      let currentTransform = "";
-  
-      function zoomed() {
-        currentTransform = d3.event.transform;
-        g.attr("transform", currentTransform);
-      }
-
-      let zoom = d3
-        .zoom()
-        .scaleExtent([1 / 8, 1.5])
-        .on("zoom", zoomed);
-      //svg.call(zoom);
-      zoom(svg);
-
-      function ticked() {
-        return function() {
-          link
-            .attr("d", getPath)
-            // Hide the link.
-            .attr("display", function(d) {
-              return d.source.hidden || d.target.hidden ? "none" : "";
-            });
-
-          text
-            .attr("transform", function(d){
-              return "translate(" + d.x + "," + d.y + ")";
-            });
-
-          node
-            .attr("cx", function(d) {
-              if (d.lock) {
-                d.fx = d.x;
-              }
-              return d.x;
-            })
-            .attr("cy", function(d) {
-              if (d.lock) {
-                d.fy = d.y;
-              }
-              return d.y;
-            })
-            // Hide the node.
-            .attr("display", function(d) {
-              return d.hidden ? "none" : "";
-            });
-          // add the symbol
-          hide_symbol
-            .attr("x", function(d) {
-              return d.x + 26;
-            })
-            .attr("y", function(d) {
-              return d.y - 20;
-            });
-          lock_symbol
-            .attr("x", function(d) {
-              return d.x - 9.5;
-            })
-            .attr("y", function(d) {
-              return d.y + 29;
-            });
-
-          if (button_flag) {
-            pie_gs.attr("transform", function() {
-              return (
-                "translate(" +
-                selectedNode.attr("cx") +
-                "," +
-                selectedNode.attr("cy") +
-                ")"
-              );
-            });
-          }
-        };
-      }
-      // force simulation
-      let simulation = d3
-        .forceSimulation()
-        // Remove the charge of hidden nodes.
-        .force(
-          "charge",
-          d3.forceManyBody().strength(function(d) {
-            if (d.hidden) return 0;
-            else return -25;
-          })
+          { emulateJSON: true }
         )
-        // Change the strength of link force for hidden nodes.
-        .force(
-          "link",
-          d3
-            .forceLink()
-            .strength(function(d) {
-              if (d.source.hidden || d.target.hidden) return 0;
-              else return 0.8;
-            })
-            .distance(function(d) {
-              //控制节点间距离
-              return (d.target.id.length%6+2)*40;
-            })
-            .id(function(d) {
-              return d.id;
-            })
-        )
-        .force("center", d3.forceCenter(width / 2, height / 2))
-        .velocityDecay(0.2)
-        .on("tick", ticked);
-
-      simulation.nodes(state.nodes).on("tick", ticked());
-      simulation.force("link").links(state.links);
-
-      // function reset() {
-      //   svg
-      //     .transition()
-      //     .duration(750)
-      //     .call(zoom.transform, d3.zoomIdentity);
-      // }
-
-      // d3.select("button").on("click", reset);
-
-      function drag_started(d) {
-        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        d.fy = d.y;
-      }
-
-      function dragged(d) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-      }
-
-      function drag_ended(d, i) {
-        if (!d3.event.active) simulation.alphaTarget(0);
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-      }
-
-      function getPath(d) {
-        var r = 30;
-        if (d.target.selected) {
-          r = 40;
-        }
-        var dx = d.target.x - d.source.x;
-        var dy = d.target.y - d.source.y;
-        var dr = Math.sqrt(dx * dx + dy * dy);
-        var pathLength = Math.sqrt(dx * dx + dy * dy);
-        var offsetX = (dx * r) / pathLength;
-        var offsetY = (dy * r) / pathLength;
-        if (d.curved) {
-          var sinx = r / 2 / dr;
-          var cosx = Math.sqrt(1 - sinx * sinx);
-          var diffX = dx * cosx + dy * sinx;
-          var diffY = dy * cosx - dx * sinx;
-          var tx = d.source.x + diffX - offsetX;
-          var ty = d.source.y + diffY - offsetY;
-          return (
-            "M" +
-            d.source.x +
-            "," +
-            d.source.y +
-            "A" +
-            dr +
-            "," +
-            dr +
-            " 0 0,1 " +
-            tx +
-            "," +
-            ty
-          );
-        } else {
-          return (
-            "M" +
-            d.source.x +
-            "," +
-            d.source.y +
-            "L" +
-            (d.target.x - offsetX) +
-            "," +
-            (d.target.y - offsetY)
-          );
-        }
-      }
-
-      // update nodes and links
-      function updateStates() {
-        //加文字开始
-        text = text.data(state.nodes)
-        .enter()
-        .append("text")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "middle")
-        .style('fill',"#fff")
-        .style('font-size', "12px")
-        .attr('x',function(d){
-        var re_en = /[a-zA-Z]+/g;
-        //如果是全英文，不换行
-        if(d.id.match(re_en)){
-          d3.select(this).append('tspan')
-            .attr('x',0)
-            .attr('y',0)
-            .text(function(){return d.id;});
-        }
-        //如果小于3个字符，不换行
-        else if(d.id.length<=3){
-          d3.select(this).append('tspan')
-            .attr('x',0)
-            .attr('y',0)
-            .text(function(){return d.id;});
-        }else{
-          var top=d.id.substring(0,3);
-          var bot=d.id.substring(3,d.id.length);
-
-          d3.select(this).text(function(){return '';});
-
-          d3.select(this).append('tspan')
-            .attr('x',0)
-            .attr('y',-7)
-            .text(function(){return top;});
-
-          d3.select(this).append('tspan')
-            .attr('x',0)
-            .attr('y',14)
-            .text(function(){return bot;});
-        }
-      });
-    //加文字结束
-        node = node.data(state.nodes, function(d) {
-          return d.id;
+        .then(function(data) {
+          this.directed_len = "(" + data.data.pre_len + data.data.suc_len + ")";
+          this.undirected_len = "(" + data.data.undirected_len + ")";
         });
-        node.exit().remove();
-        node = node
-          .enter()
-          .append("circle")
-          .attr("transform", currentTransform)
-          .merge(node)
-          .attr("class", function(d) {
-            return d.selected ? "selected" : "";
-          })
-          .attr("fill", function(d) {
-            return colorScale(d.type);
-          })
-          .call(
-            d3
-              .drag()
-              .on("start", drag_started)
-              .on("drag", dragged)
-              .on("end", drag_ended)
-          )
-          .on("click", function(d) {
-            if (hide_flag == 0) {
-              if (button_flag) {
-                button_flag = 0;
-                hide_symbol
-                  .attr("xlink:href", function(d) {
-                    d.hide_symbol = null;
-                    return null;
-                  })
-                  .interrupt();
-                lock_symbol
-                  .attr("xlink:href", function(d) {
-                    d.lock_symbol = null;
-                    return null;
-                  })
-                  .interrupt();
-                pie_gs
-                  .attr("d", function() {
-                    return null;
-                  })
-                  .interrupt();
-              } else {
-                selectedNode = d3.select(this);
-                button_flag = 1;
-                selectedNode.each(function(d) {
-                  d.hide_symbol = "/static/hide.png";
-                  d.lock_symbol = "/static/unlock.png";
-                });
-                hide_symbol.attr("xlink:href", function(d) {
-                  return d.hide_symbol;
-                });
-                lock_symbol.attr("xlink:href", function(d) {
-                   return d.lock_symbol;
-                });
-                //console.log(selectedNode);
-                pie_gs
-                  .attr("d", function(d) {
-                    return arc_generator(d);
-                  })
-                  .attr("transform", d3.select(this).attr("transform"));
-              }
-            }
-          })
-          .on("mouseover", tool_tip.show)
-          .on("mouseout", tool_tip.hide);
-        link = link.data(state.links, function(d) {
-          return d.source + d.target;
-        });
-        link.exit().remove();
-        link = link
-          .enter()
-          .append("path")
-          .attr("transform", currentTransform)
-          .merge(link)
-          .attr("marker-end", function(d){
-            if(d.index < directed_len){
-              return "url(#straight)";
-            } else {
-              return "";
-            }
-            
-          })
-          .attr("stroke-width", function(d) {
-            return d.width;
-          })
-          .style("stroke", function(d){
-            if(d.index < directed_len){
-              return "#66b3ff";
-            }
-            else {
-              return "#000000";
-            }
-          });
-
-        simulation.nodes(state.nodes);
-        simulation.force("link").links(state.links);
-        simulation.alpha(0.5).restart();
-      }
-      updateStates();
-      });    
     }
   }
 };
@@ -817,14 +238,13 @@ export default {
 .ku {
   /*background-color: #0a1612;*/
   background: url("/static/sub_bg.png") no-repeat;
-
 }
-/*.ku h1 {
-  color: #fff;
-  font-size: 38px;
-  padding-top: 18px;
-  padding-bottom: 8px;
-}*/
+.ku h6 {
+  color: #666;
+  font-size: 12px;
+  padding-top: 3px;
+  padding-bottom: 0px;
+}
 .logo {
   margin-top: 15px;
   margin-left: 20px;
@@ -845,7 +265,7 @@ export default {
   border: 1px solid #fff;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 3px;
-/*  padding-left: 5%;
+  /*  padding-left: 5%;
   padding-right: 5%;
   padding-top: 5%;*/
   height: 780px;
@@ -879,14 +299,14 @@ export default {
 </style>
 
 <style type="text/css">
- .el-tabs__item {
-    color: #0a1612!important;
-    font-weight: 900!important;
+.el-tabs__item {
+  color: #0a1612 !important;
+  font-weight: 900 !important;
 }
- .el-tabs__item.is-active {
-    background-color: #0a1612!important;
-    color: #fff!important;
-    font-weight: 900!important;
+.el-tabs__item.is-active {
+  background-color: #0a1612 !important;
+  color: #fff !important;
+  font-weight: 900 !important;
 }
 .el-button {
   background-color: #1a2930;
@@ -905,9 +325,9 @@ export default {
   outline: none;
 }
 .el-tag {
-  background-color: #fff!important;
-  color: #000!important;
-  border-color: #c5c1c0!important;
+  background-color: #fff !important;
+  color: #000 !important;
+  border-color: #c5c1c0 !important;
 }
 </style>
 
@@ -958,5 +378,17 @@ image {
   margin: -2px 0 0 0;
   top: 100%;
   left: 0;
+}
+.el-dropdown-menu__item:hover {
+  background-color: #fff !important;
+}
+.el-checkbox__input.is-checked + .el-checkbox__label {
+  color: #1a2930;
+}
+.el-select-dropdown__item.selected {
+  color: #1a2930;
+}
+.el-select-dropdown__item.hover {
+  background-color: #ff9999;
 }
 </style>
