@@ -297,16 +297,16 @@ export default {
 <style>
 .el-dropdown-menu__item:focus,
 .el-dropdown-menu__item:not(.is-disable):hover {
-  background-color: #1a2930;
-  color: #fff;
+  background-color: #1a2930 !important;
+  color: #fff !important;
 }
 .el-dropdown-menu__item a {
-  color: #1a2930;
-  text-decoration: none;
+  color: #1a2930 !important;
+  text-decoration: none !important;
 }
-.el-dropdown-menu__item a:hover {
-  color: #fff;
-  text-decoration: none;
+.el-dropdown-menu__item:hover a {
+  color: #fff !important;
+  text-decoration: none !important;
 }
 .text-btn {
   background: transparent;
