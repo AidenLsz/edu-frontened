@@ -164,7 +164,7 @@ export default {
       loading: false
     };
   },
-  updated: {
+  watch: {
     checkList(now, old) {
       this.show_result = false;
     },
@@ -172,15 +172,15 @@ export default {
       if (this.subject_id === "1") {
         this.type_options = [
           {
-            value_id: "1", // 数学题型值
+            value_id: "1-1", // 数学题型值
             label: "选择" // 数学题型名
           },
           {
-            value_id: "2",
+            value_id: "1-2",
             label: "填空"
           },
           {
-            value_id: "3",
+            value_id: "1-3",
             label: "解答"
           },        
         ]
@@ -188,15 +188,15 @@ export default {
       if (this.subject_id === "2") {
         this.type_options = [
           {
-            value_id: "1", // 英语题型值
+            value_id: "2-1", // 英语题型值
             label: "选择" // 英语题型名
           },
           {
-            value_id: "2",
+            value_id: "2-2",
             label: "完形填空"
           },
           {
-            value_id: "3",
+            value_id: "2-3",
             label: "阅读理解"
           },        
         ]
@@ -216,8 +216,9 @@ export default {
       let config = {
         headers: { "Content-Type": "multipart/form-data" }
       };
-      param.append("estimate_content", this.content);
-      param.append("estimate_subject", this.subject_id);
+      param.append("estimate_content", this.content); // 后端接收estimate_content字段
+      param.append("estimate_subject", this.subject_id); // 后端接收estimate_subject字段
+      param.append("exercise_type", this.type_id); // 后端接收exercise_type字段
       if (this.checkList.length === 2) {
         this.checkList[0] = "难度";
         this.checkList[1] = "知识点";
