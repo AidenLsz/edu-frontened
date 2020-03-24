@@ -164,7 +164,7 @@ export default {
       loading: false
     };
   },
-  watch: {
+  updated: {
     checkList(now, old) {
       this.show_result = false;
     },

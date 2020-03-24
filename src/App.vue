@@ -295,15 +295,17 @@ export default {
 }
 </style>
 <style>
-.el-dropdown-menu__item {
-  background: #1a2930;
-}
-.el-dropdown-menu {
-  background: #1a2930;
-  border: #1a2930;
+.el-dropdown-menu__item:focus,
+.el-dropdown-menu__item:not(.is-disable):hover {
+  background-color: #1a2930;
+  color: #fff;
 }
 .el-dropdown-menu__item a {
-  color: #ccc;
+  color: #1a2930;
+  text-decoration: none;
+}
+.el-dropdown-menu__item a:hover {
+  color: #fff;
   text-decoration: none;
 }
 .text-btn {
