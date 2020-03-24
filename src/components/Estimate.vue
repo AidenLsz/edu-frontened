@@ -182,8 +182,8 @@ export default {
           {
             value_id: "1-3",
             label: "解答"
-          },        
-        ]
+          }
+        ];
       }
       if (this.subject_id === "2") {
         this.type_options = [
@@ -198,8 +198,8 @@ export default {
           {
             value_id: "2-3",
             label: "阅读理解"
-          },        
-        ]
+          }
+        ];
       }
     }
   },
