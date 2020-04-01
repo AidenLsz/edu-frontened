@@ -146,11 +146,11 @@ export default {
       // 学科选择属性
       options: [
         {
-          value_id: "1", // 学科值
+          value_id: "math", // 学科值
           label: "数学" // 学科名
         },
         {
-          value_id: "2",
+          value_id: "english",
           label: "英语"
         }
       ],
@@ -169,34 +169,34 @@ export default {
       this.show_result = false;
     },
     subject_id() {
-      if (this.subject_id === "1") {
+      if (this.subject_id === "math") {
         this.type_options = [
           {
-            value_id: "1-1", // 数学题型值
+            value_id: "selection_test", // 数学题型值
             label: "选择" // 数学题型名
           },
           {
-            value_id: "1-2",
+            value_id: "fill_test",
             label: "填空"
           },
           {
-            value_id: "1-3",
+            value_id: "answer_test",
             label: "解答"
           }
         ];
       }
-      if (this.subject_id === "2") {
+      if (this.subject_id === "english") {
         this.type_options = [
           {
-            value_id: "2-1", // 英语题型值
+            value_id: "selection_test", // 英语题型值
             label: "选择" // 英语题型名
           },
           {
-            value_id: "2-2",
+            value_id: "cloze_test",
             label: "完形填空"
           },
           {
-            value_id: "2-3",
+            value_id: "read_understand_test",
             label: "阅读理解"
           }
         ];
@@ -262,6 +262,7 @@ export default {
       }
       _this.order = _this.order + length;
     },
+    // 删除图片并保持图片数组顺序
     forkImage(index) {
       this.src.splice(index, 1);
       for (var i = 0; i < this.filelists.length; i++) {
@@ -278,9 +279,9 @@ export default {
 
 <style scoped lang="scss">
 .estimate {
-  background: url("/static/sub_bg.png") no-repeat;
-  padding: 20px 20px 20px 20px;
-  background-size: cover;
+  background: url("/static/sub_bg.png");
+  background-size: 100%;
+  padding: 20px 20px 0px 20px;
 }
 .panel {
   background-color: #fff;
@@ -355,53 +356,6 @@ export default {
 </style>
 
 <style>
-.links path {
-  fill: none;
-  stroke: #999;
-  stroke-opacity: 0.6;
-}
-marker {
-  fill: #999;
-  opacity: 0.6;
-}
-.nodes circle {
-  stroke: #fff;
-  stroke-width: 3px;
-  r: 25px;
-}
-text {
-  pointer-events: none;
-}
-image {
-  pointer-events: none;
-}
-.d3-tip {
-  line-height: 1;
-  width: 20%;
-  padding: 6px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 4px;
-  font-size: 10px;
-}
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-  box-sizing: border-box;
-  display: inline;
-  font-size: 10px;
-  width: 100%;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
-  content: "\25BC";
-  position: absolute;
-  text-align: center;
-}
-/* Style northward tooltips specifically */
-.d3-tip.n:after {
-  margin: -2px 0 0 0;
-  top: 100%;
-  left: 0;
-}
 .img-list-item {
   position: relative;
   margin: auto;

@@ -26,7 +26,7 @@ if (process.env.BACKEND_URL === "DEFAULT_BACKEND_URL") {
 }
 
 // 测试
-// Vue.prototype.backendIP = "http://127.0.0.1:8003";
+// Vue.prototype.backendIP = "http://127.0.0.1:8001";
 
 Vue.use(ElementUI);
 Vue.use(VueResource);

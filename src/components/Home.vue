@@ -8,7 +8,7 @@
             <div class="slider-content text-center">
               <h2 class="wow fadeInUp" data-wow-delay=".2s">BASE-KG</h2>
             </div>
-            <!-- <div class="search-area">
+            <div class="search-area">
               <form @submit.prevent="submit" style="margin-top: 20px;">
                 <el-row type="flex" class="row-bg" justify="center">
                   <el-col :span="22">
@@ -22,7 +22,7 @@
                   >
                 </el-row>
               </form>
-            </div> -->
+            </div>
           </div>
         </div>
       </div>

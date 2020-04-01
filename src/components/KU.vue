@@ -237,7 +237,8 @@ export default {
 <style scoped lang="scss">
 .ku {
   /*background-color: #0a1612;*/
-  background: url("/static/sub_bg.png") no-repeat;
+  background: url("/static/sub_bg.png") repeat;
+  background-size: 100%;
 }
 .ku h6 {
   color: #666;
