@@ -131,14 +131,12 @@
       </el-col>
       <el-col :span="17">
         <div class="graph">
-          <!-- <button class="reset">Reset View</button> -->
           <Graph
             :node="node"
             :neighbors_groups="neighbors_groups"
             :inward_arrow="inward_arrow"
             :outward_arrow="outward_arrow"
           ></Graph>
-          <!-- <svg width="930" height="760"></svg> -->
         </div>
       </el-col>
     </el-row>
@@ -266,9 +264,6 @@ export default {
   border: 1px solid #fff;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 3px;
-  /*  padding-left: 5%;
-  padding-right: 5%;
-  padding-top: 5%;*/
   height: 780px;
   background-color: #fff;
   margin-right: 20px;
