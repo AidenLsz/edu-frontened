@@ -56,10 +56,10 @@
                       >
                     </li>
                     <button v-if="root" class="text-btn" @click="logout_root">
-                      退出
+                      退出(neea_kg)
                     </button>
                     <button v-else class="text-btn" @click="login_root">
-                      登录
+                      登录(neea_kg)
                     </button>
                   </ul>
                 </nav>

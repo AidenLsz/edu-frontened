@@ -18,15 +18,15 @@ import "animate.css";
 
 // Vue.config.productionTip = false;
 
-// if (process.env.BACKEND_URL === "DEFAULT_BACKEND_URL") {
-//   Vue.prototype.backendIP =
-//     "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
-// } else {
-//   Vue.prototype.backendIP = process.env.BACKEND_URL;
-// }
+if (process.env.BACKEND_URL === "DEFAULT_BACKEND_URL") {
+  Vue.prototype.backendIP =
+    "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
+} else {
+  Vue.prototype.backendIP = process.env.BACKEND_URL;
+}
 
 // 测试
-Vue.prototype.backendIP = "http://127.0.0.1:8001";
+// Vue.prototype.backendIP = "http://127.0.0.1:8001";
 
 Vue.use(ElementUI);
 Vue.use(VueResource);

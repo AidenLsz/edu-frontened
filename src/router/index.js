@@ -83,6 +83,16 @@ const router = new Router({
           path: "/bulkImport",
           name: "bulkImport",
           component: () => import("@/components/admin/bulkImport.vue")
+        },
+        {
+          path: "/importExercise",
+          name: "importExercise",
+          component: () => import("@/components/admin/importExercise.vue")
+        },
+        {
+          path: "/checkExercise",
+          name: "checkExercise",
+          component: () => import("@/components/admin/checkExercise.vue")
         }
       ]
     },
@@ -107,7 +117,9 @@ router.beforeEach((to, from, next) => {
     "relation",
     "importNode",
     "importEdge",
-    "bulkImport"
+    "bulkImport",
+    "importExercise",
+    "checkExercise"
   ];
   if (route.indexOf(to.name) >= 0) {
     if (!sessionStorage.user) {
