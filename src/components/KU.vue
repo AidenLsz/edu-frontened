@@ -195,6 +195,9 @@ export default {
      * 提交
      */
     submit() {
+      if (this.ku_name.length === 0) {
+        return;
+      }
       this.loading = true;
       this.$http
         .post(

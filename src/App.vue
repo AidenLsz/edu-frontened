@@ -59,7 +59,10 @@
                       退出(neea_kg)
                     </button>
                     <button v-else class="text-btn" @click="login_root">
-                      登录(neea_kg)
+                      用户登录
+                    </button>
+                    <button class="text-btn" @click="login_admin">
+                      数据管理
                     </button>
                   </ul>
                 </nav>
@@ -139,6 +142,9 @@ export default {
   methods: {
     login_root() {
       this.$router.push({ path: "/root" });
+    },
+    login_admin() {
+      this.$router.push({ path: "/admin" });
     },
     // 测试退出函数
     logout_root() {
@@ -299,7 +305,7 @@ export default {
   font-weight: 900;
 }
 </style>
-<style>
+<style scoped>
 .el-dropdown-menu__item:focus,
 .el-dropdown-menu__item:not(.is-disable):hover {
   background-color: #1a2930 !important;
@@ -318,5 +324,7 @@ export default {
   color: #1a2930;
   border: 0px;
   margin-left: 30px;
+  margin-right: -35px;
+  font-size: 14px;
 }
 </style>
