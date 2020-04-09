@@ -1,30 +1,75 @@
 <template>
   <div class="exercise">
     <!-- header -->
-    <el-row>
+    <el-row style="padding-top: 15px;" v-if="simpleInput">
       <el-col :span="6">
         <div class="logo">
           <img src="../assets/title_exercise.png" alt="logo" />
         </div>
       </el-col>
       <el-col :span="14">
-        <form @submit.prevent="submit" style="margin-top: 20px;">
-          <el-row type="flex" class="row-bg" justify="center">
-            <el-col :span="22">
+        <el-row type="flex" justify="center">
+          <el-col :span="22">
+            <el-input v-model="exercise_text" placeholder="请输入内容">
+              <template slot="append">
+                <span style="cursor:pointer" @click="changeInput">
+                  切换多格式输入
+                </span>
+              </template>
+            </el-input>
+          </el-col>
+          <el-button type="submit" value="提交" @click="submit"
+            >检索
+          </el-button>
+        </el-row>
+      </el-col>
+    </el-row>
+    <el-row v-if="!simpleInput" type="flex" justify="center">
+      <el-col :span="3" style="margin-top: 100px;">
+        <img src="../assets/title_exercise.png" alt="logo" />
+      </el-col>
+      <el-col
+        :span="18"
+        style="margin-top: 20px; margin-bottom: -20px;"
+        v-if="!simpleInput"
+      >
+        <el-row>
+          <el-tabs type="border-card">
+            <el-tab-pane label="多格式文本">
               <el-input
-                v-model="exercise_text"
+                type="textarea"
+                :rows="8"
+                v-model="content"
                 placeholder="请输入内容"
-              ></el-input>
-            </el-col>
-            <el-button type="submit" value="提交" @click="submit"
-              >检索</el-button
-            >
-          </el-row>
-        </form>
+              >
+              </el-input>
+            </el-tab-pane>
+            <el-tab-pane label="LaTex预览">
+              <div style="height:180px; overflow-y:scroll;">
+                <Mathdown :content="content"></Mathdown>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+          <button style="position: absolute;left:250px;top:5px;">
+            上传图片
+          </button>
+          <span
+            style="cursor:pointer;position:absolute;right:5px;top:12px;font-size:12px;"
+            @click="changeInput"
+          >
+            切换简单输入
+          </span>
+          <el-button
+            size="small"
+            style="position:absolute; right:90px; top:5px;"
+          >
+            检索
+          </el-button>
+        </el-row>
       </el-col>
     </el-row>
     <!-- main -->
-    <el-row type="flex" justify="center">
+    <el-row type="flex" justify="center" style="border-top: 10px solid #111;">
       <el-col :span="22">
         <div class="result">
           <el-row type="flex" justify="start">
@@ -83,7 +128,9 @@
 
 <script>
 /* eslint-disable */
+import Mathdown from "./Mathdown.vue";
 export default {
+  components: { Mathdown },
   name: "exercise",
   data() {
     return {
@@ -91,7 +138,9 @@ export default {
       raw_text: "",
       entities_groups: {},
       entity_type: "kp2.0",
-      sour: ""
+      sour: "",
+      content: "",
+      simpleInput: true
     };
   },
   watch:{
@@ -107,6 +156,9 @@ export default {
         this.entity_type = "kp2.0";
       }
       return tab.name;
+    },
+    changeInput() {
+      this.simpleInput = !this.simpleInput;
     },
     submit() {
       this.$http
@@ -131,8 +183,7 @@ export default {
   background-size: 100%;
 }
 .logo {
-  margin-top: 15px;
-  margin-left: 20px;
+  margin-left: 70px;
 }
 .result {
   border: 1px solid #fff;
@@ -176,8 +227,21 @@ export default {
     color: #fff!important;
     font-weight: 900!important;
 }
+.el-button {
+  background-color: #1a2930;
+  color: #fff;
+  border-color: #1a2930;
+}
+.el-button:hover {
+  background-color: #008080;
+  color: #fff;
+  border-color: #fff;
+}
 .el-button:focus {
-  outline: none!important;
+  background-color: #008080;
+  color: #fff;
+  border-color: #fff;
+  outline: none;
 }
 .el-tag {
   background-color: #fff!important;
