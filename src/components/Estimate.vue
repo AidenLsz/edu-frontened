@@ -51,19 +51,11 @@
               </el-row>
               <el-row>
                 <el-col :span="6">
-                  <div id="wrapper">
-                    <div class="upload-btn">
-                      <label>
-                        <input
-                          type="file"
-                          name="file"
-                          @change="uploadImg"
-                          accept="image/png, image/jpeg"
-                          multiple
-                        />点击这里上传图片
-                      </label>
-                    </div>
-                  </div>
+                  <UploadImg
+                    :src="src"
+                    :filelists="filelists"
+                    @uploadImg="imgInfo"
+                  ></UploadImg>
                 </el-col>
               </el-row>
             </form>
@@ -77,7 +69,7 @@
               v-for="(item, index) in src"
               :key="index"
             >
-              <img v-if="isShow" :src="item" class="common" />
+              <img :src="item" class="common" />
               <i class="del-img" @click="forkImage(index)"></i>
             </div>
           </div>
@@ -129,8 +121,9 @@
 
 <script>
 import Mathdown from "./Mathdown.vue";
+import UploadImg from "./UploadImg.vue";
 export default {
-  components: { Mathdown },
+  components: { Mathdown, UploadImg },
   name: "estimate",
   data() {
     return {
@@ -138,7 +131,6 @@ export default {
       difficulty_result: "", // 难度预估返回值
       kp_result: "", // 知识点返回值
       src: [], // 图片数组
-      isShow: false,
       show_result: false,
       order: 0,
       filelists: [],
@@ -246,22 +238,27 @@ export default {
           });
       }
     },
-    // 处理用户上传图片，存入图片数组
-    uploadImg(e) {
-      let _this = this;
-      let length = e.target.files.length;
-      if (!e || !window.FileReader) return; // 看支持不支持FileReader
-      for (var i = _this.order; i < _this.order + length; i++) {
-        let reader = new FileReader();
-        _this.filelists[i] = e.target.files[i - _this.order];
-        reader.readAsDataURL(_this.filelists[i]); // 转换
-        reader.onloadend = function() {
-          _this.src.push(this.result);
-          _this.isShow = true;
-        };
-      }
-      _this.order = _this.order + length;
+    imgInfo(e) {
+      this.src = e.src;
+      this.filelists = e.filelists;
+      console.log(e.src);
+      console.log(e.filelists);
     },
+    // 处理用户上传图片，存入图片数组
+    // uploadImg(e) {
+    //   let _this = this;
+    //   let length = e.target.files.length;
+    //   if (!e || !window.FileReader) return; // 看支持不支持FileReader
+    //   for (var i = _this.order; i < _this.order + length; i++) {
+    //     let reader = new FileReader();
+    //     _this.filelists[i] = e.target.files[i - _this.order];
+    //     reader.readAsDataURL(_this.filelists[i]); // 转换
+    //     reader.onloadend = function() {
+    //       _this.src.push(this.result);
+    //     };
+    //   }
+    //   _this.order = _this.order + length;
+    // },
     // 删除图片并保持图片数组顺序
     forkImage(index) {
       this.src.splice(index, 1);
@@ -272,6 +269,10 @@ export default {
         }
       }
       this.filelists.splice(index, 1);
+      document.getElementsByTagName("input").value = "";
+      console.log(this.src);
+      console.log(this.filelists);
+      console.log(document.getElementsByTagName("input").value);
     }
   }
 };
