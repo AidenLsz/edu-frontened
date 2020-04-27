@@ -95,7 +95,7 @@ export default {
           };
         }
 
-        console.log(state.links[i]);
+        // console.log(state.links[i]);
       }
 
       let selectedNode;
