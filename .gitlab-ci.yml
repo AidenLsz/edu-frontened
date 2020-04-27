@@ -6,7 +6,7 @@ stages:
 - build
 - test
 - review
-- production
+- product
 
 build:
   image: node:lts
@@ -74,8 +74,8 @@ stop_review:
     name: review/${CI_COMMIT_REF_NAME}
     action: stop
 
-production:
-  stage: production
+product:
+  stage: product
   image: registry.git.bdaa.pro:4567/yxonic/bdaa-deploy-image:v3.0.2
   before_script:
   - helm repo add stable http://mirror.azure.cn/kubernetes/charts
