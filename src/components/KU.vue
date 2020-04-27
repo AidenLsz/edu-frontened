@@ -131,14 +131,12 @@
       </el-col>
       <el-col :span="17">
         <div class="graph">
-          <!-- <button class="reset">Reset View</button> -->
           <Graph
             :node="node"
             :neighbors_groups="neighbors_groups"
             :inward_arrow="inward_arrow"
             :outward_arrow="outward_arrow"
           ></Graph>
-          <!-- <svg width="930" height="760"></svg> -->
         </div>
       </el-col>
     </el-row>
@@ -197,6 +195,9 @@ export default {
      * 提交
      */
     submit() {
+      if (this.ku_name.length === 0) {
+        return;
+      }
       this.loading = true;
       this.$http
         .post(
@@ -237,7 +238,8 @@ export default {
 <style scoped lang="scss">
 .ku {
   /*background-color: #0a1612;*/
-  background: url("/static/sub_bg.png") no-repeat;
+  background: url("/static/sub_bg.png") repeat;
+  background-size: 100%;
 }
 .ku h6 {
   color: #666;
@@ -265,9 +267,6 @@ export default {
   border: 1px solid #fff;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 3px;
-  /*  padding-left: 5%;
-  padding-right: 5%;
-  padding-top: 5%;*/
   height: 780px;
   background-color: #fff;
   margin-right: 20px;
@@ -328,67 +327,5 @@ export default {
   background-color: #fff !important;
   color: #000 !important;
   border-color: #c5c1c0 !important;
-}
-</style>
-
-<style>
-.links path {
-  fill: none;
-  stroke: #999;
-  stroke-opacity: 0.6;
-}
-marker {
-  fill: #999;
-  opacity: 0.8;
-}
-.nodes circle {
-  stroke: #fff;
-  stroke-width: 3px;
-  r: 25px;
-}
-text {
-  pointer-events: none;
-}
-image {
-  pointer-events: none;
-}
-.d3-tip {
-  line-height: 1;
-  width: 20%;
-  padding: 6px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 4px;
-  font-size: 10px;
-}
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-  box-sizing: border-box;
-  display: inline;
-  font-size: 10px;
-  width: 100%;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
-  content: "\25BC";
-  position: absolute;
-  text-align: center;
-}
-/* Style northward tooltips specifically */
-.d3-tip.n:after {
-  margin: -2px 0 0 0;
-  top: 100%;
-  left: 0;
-}
-.el-dropdown-menu__item:hover {
-  background-color: #fff !important;
-}
-.el-checkbox__input.is-checked + .el-checkbox__label {
-  color: #1a2930;
-}
-.el-select-dropdown__item.selected {
-  color: #1a2930;
-}
-.el-select-dropdown__item.hover {
-  background-color: #ff9999;
 }
 </style>

@@ -3,12 +3,23 @@
     <div class="panel">
       <el-row>
         <el-col :span="4">
-          <el-select v-model="subject_id" placeholder="自动检测学科">
+          <el-select v-model="subject_id" placeholder="选择学科">
             <el-option
               v-for="subject in options"
               :key="subject.value_id"
               :label="subject.label"
               :value="subject.value_id"
+            >
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-select v-model="type_id" placeholder="选择题型">
+            <el-option
+              v-for="type in type_options"
+              :key="type.value_id"
+              :label="type.label"
+              :value="type.value_id"
             >
             </el-option>
           </el-select>
@@ -40,19 +51,11 @@
               </el-row>
               <el-row>
                 <el-col :span="6">
-                  <div id="wrapper">
-                    <div class="upload-btn">
-                      <label>
-                        <input
-                          type="file"
-                          name="file"
-                          @change="uploadImg"
-                          accept="image/png, image/jpeg"
-                          multiple
-                        />点击这里上传图片
-                      </label>
-                    </div>
-                  </div>
+                  <UploadImg
+                    :src="src"
+                    :filelists="filelists"
+                    @uploadImg="imgInfo"
+                  ></UploadImg>
                 </el-col>
               </el-row>
             </form>
@@ -66,7 +69,7 @@
               v-for="(item, index) in src"
               :key="index"
             >
-              <img v-if="isShow" :src="item" class="common" />
+              <img :src="item" class="common" />
               <i class="del-img" @click="forkImage(index)"></i>
             </div>
           </div>
@@ -118,8 +121,9 @@
 
 <script>
 import Mathdown from "./Mathdown.vue";
+import UploadImg from "./UploadImg.vue";
 export default {
-  components: { Mathdown },
+  components: { Mathdown, UploadImg },
   name: "estimate",
   data() {
     return {
@@ -127,22 +131,24 @@ export default {
       difficulty_result: "", // 难度预估返回值
       kp_result: "", // 知识点返回值
       src: [], // 图片数组
-      isShow: false,
       show_result: false,
       order: 0,
       filelists: [],
       checkList: [],
+      // 学科选择属性
       options: [
         {
-          value_id: "1", // 学科值
+          value_id: "math", // 学科值
           label: "数学" // 学科名
         },
         {
-          value_id: "2",
+          value_id: "english",
           label: "英语"
         }
       ],
       subject_id: "",
+      type_options: [], // 题型选择属性
+      type_id: "",
       marks: {
         0: "易",
         1: "难"
@@ -153,6 +159,40 @@ export default {
   watch: {
     checkList(now, old) {
       this.show_result = false;
+    },
+    subject_id() {
+      if (this.subject_id === "math") {
+        this.type_options = [
+          {
+            value_id: "selection_test", // 数学题型值
+            label: "选择" // 数学题型名
+          },
+          {
+            value_id: "fill_test",
+            label: "填空"
+          },
+          {
+            value_id: "answer_test",
+            label: "解答"
+          }
+        ];
+      }
+      if (this.subject_id === "english") {
+        this.type_options = [
+          {
+            value_id: "selection_test", // 英语题型值
+            label: "选择" // 英语题型名
+          },
+          {
+            value_id: "cloze_test",
+            label: "完形填空"
+          },
+          {
+            value_id: "read_understand_test",
+            label: "阅读理解"
+          }
+        ];
+      }
     }
   },
   methods: {
@@ -168,8 +208,9 @@ export default {
       let config = {
         headers: { "Content-Type": "multipart/form-data" }
       };
-      param.append("estimate_content", this.content);
-      param.append("estimate_subject", this.subject_id);
+      param.append("estimate_content", this.content); // 后端接收estimate_content字段
+      param.append("estimate_subject", this.subject_id); // 后端接收estimate_subject字段
+      param.append("exercise_type", this.type_id); // 后端接收exercise_type字段
       if (this.checkList.length === 2) {
         this.checkList[0] = "难度";
         this.checkList[1] = "知识点";
@@ -197,22 +238,28 @@ export default {
           });
       }
     },
-    // 处理用户上传图片，存入图片数组
-    uploadImg(e) {
-      let _this = this;
-      let length = e.target.files.length;
-      if (!e || !window.FileReader) return; // 看支持不支持FileReader
-      for (var i = _this.order; i < _this.order + length; i++) {
-        let reader = new FileReader();
-        _this.filelists[i] = e.target.files[i - _this.order];
-        reader.readAsDataURL(_this.filelists[i]); // 转换
-        reader.onloadend = function() {
-          _this.src.push(this.result);
-          _this.isShow = true;
-        };
-      }
-      _this.order = _this.order + length;
+    imgInfo(e) {
+      this.src = e.src;
+      this.filelists = e.filelists;
+      console.log(e.src);
+      console.log(e.filelists);
     },
+    // 处理用户上传图片，存入图片数组
+    // uploadImg(e) {
+    //   let _this = this;
+    //   let length = e.target.files.length;
+    //   if (!e || !window.FileReader) return; // 看支持不支持FileReader
+    //   for (var i = _this.order; i < _this.order + length; i++) {
+    //     let reader = new FileReader();
+    //     _this.filelists[i] = e.target.files[i - _this.order];
+    //     reader.readAsDataURL(_this.filelists[i]); // 转换
+    //     reader.onloadend = function() {
+    //       _this.src.push(this.result);
+    //     };
+    //   }
+    //   _this.order = _this.order + length;
+    // },
+    // 删除图片并保持图片数组顺序
     forkImage(index) {
       this.src.splice(index, 1);
       for (var i = 0; i < this.filelists.length; i++) {
@@ -222,6 +269,10 @@ export default {
         }
       }
       this.filelists.splice(index, 1);
+      document.getElementsByTagName("input").value = "";
+      console.log(this.src);
+      console.log(this.filelists);
+      console.log(document.getElementsByTagName("input").value);
     }
   }
 };
@@ -229,9 +280,9 @@ export default {
 
 <style scoped lang="scss">
 .estimate {
-  background: url("/static/sub_bg.png") no-repeat;
-  padding: 20px 20px 20px 20px;
-  background-size: cover;
+  background: url("/static/sub_bg.png");
+  background-size: 100%;
+  padding: 20px 20px 0px 20px;
 }
 .panel {
   background-color: #fff;
@@ -306,53 +357,6 @@ export default {
 </style>
 
 <style>
-.links path {
-  fill: none;
-  stroke: #999;
-  stroke-opacity: 0.6;
-}
-marker {
-  fill: #999;
-  opacity: 0.6;
-}
-.nodes circle {
-  stroke: #fff;
-  stroke-width: 3px;
-  r: 25px;
-}
-text {
-  pointer-events: none;
-}
-image {
-  pointer-events: none;
-}
-.d3-tip {
-  line-height: 1;
-  width: 20%;
-  padding: 6px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 4px;
-  font-size: 10px;
-}
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-  box-sizing: border-box;
-  display: inline;
-  font-size: 10px;
-  width: 100%;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
-  content: "\25BC";
-  position: absolute;
-  text-align: center;
-}
-/* Style northward tooltips specifically */
-.d3-tip.n:after {
-  margin: -2px 0 0 0;
-  top: 100%;
-  left: 0;
-}
 .img-list-item {
   position: relative;
   margin: auto;

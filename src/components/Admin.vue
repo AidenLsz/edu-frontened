@@ -85,6 +85,10 @@
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
+          <el-menu-item index="3" @click="goTo('/importExercise')">
+            <i class="el-icon-setting"></i>
+            <span slot="title">录题校对功能</span>
+          </el-menu-item>
         </el-menu>
       </aside>
       <section class="content-container">

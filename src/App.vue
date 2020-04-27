@@ -28,14 +28,19 @@
                               >知识单元检索</router-link
                             >
                           </el-dropdown-item>
-                          <!--<el-dropdown-item>
+                          <el-dropdown-item>
                             <router-link to="/exercise" :underline="false"
                               >试题检索</router-link
                             >
-                          </el-dropdown-item> -->
+                          </el-dropdown-item>
                           <el-dropdown-item>
                             <router-link to="/estimate" :underline="false"
                               >试题难度评估</router-link
+                            >
+                          </el-dropdown-item>
+                          <el-dropdown-item>
+                            <router-link to="/similarity" :underline="false"
+                              >相似题评估</router-link
                             >
                           </el-dropdown-item>
                         </el-dropdown-menu>
@@ -51,10 +56,13 @@
                       >
                     </li>
                     <button v-if="root" class="text-btn" @click="logout_root">
-                      退出
+                      退出(neea_kg)
                     </button>
                     <button v-else class="text-btn" @click="login_root">
-                      登录
+                      用户登录
+                    </button>
+                    <button class="text-btn" @click="login_admin">
+                      数据管理
                     </button>
                   </ul>
                 </nav>
@@ -134,6 +142,9 @@ export default {
   methods: {
     login_root() {
       this.$router.push({ path: "/root" });
+    },
+    login_admin() {
+      this.$router.push({ path: "/admin" });
     },
     // 测试退出函数
     logout_root() {
@@ -294,22 +305,26 @@ export default {
   font-weight: 900;
 }
 </style>
-<style>
-.el-dropdown-menu__item {
-  background: #1a2930;
-}
-.el-dropdown-menu {
-  background: #1a2930;
-  border: #1a2930;
+<style scoped>
+.el-dropdown-menu__item:focus,
+.el-dropdown-menu__item:not(.is-disable):hover {
+  background-color: #1a2930 !important;
+  color: #fff !important;
 }
 .el-dropdown-menu__item a {
-  color: #ccc;
-  text-decoration: none;
+  color: #1a2930 !important;
+  text-decoration: none !important;
+}
+.el-dropdown-menu__item:hover a {
+  color: #fff !important;
+  text-decoration: none !important;
 }
 .text-btn {
   background: transparent;
   color: #1a2930;
   border: 0px;
   margin-left: 30px;
+  margin-right: -35px;
+  font-size: 14px;
 }
 </style>
