@@ -6,7 +6,7 @@ stages:
 - build
 - test
 - review
-- product
+- production
 
 build:
   image: node:lts
@@ -74,8 +74,8 @@ stop_review:
     name: review/${CI_COMMIT_REF_NAME}
     action: stop
 
-product:
-  stage: product
+production:
+  stage: production
   image: registry.git.bdaa.pro:4567/yxonic/bdaa-deploy-image:v3.0.2
   before_script:
   - helm repo add stable http://mirror.azure.cn/kubernetes/charts
@@ -100,7 +100,7 @@ product:
     --set "dockercfg=$(cat /root/.docker/config.json | base64 | tr -d '\n')"
     --set "ingress.annotations=null"
   environment:
-    name: product
+    name: production
     url: https://$KUBE_NAMESPACE.env.bdaa.pro
   only:
     refs:
