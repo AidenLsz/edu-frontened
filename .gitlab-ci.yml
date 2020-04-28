@@ -100,7 +100,7 @@ product:
     --set "dockercfg=$(cat /root/.docker/config.json | base64 | tr -d '\n')"
     --set "ingress.annotations=null"
   environment:
-    name: production
+    name: product
     url: https://$KUBE_NAMESPACE.env.bdaa.pro
   only:
     refs:
