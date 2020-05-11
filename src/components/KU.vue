@@ -9,12 +9,12 @@
         </div>
       </el-col>
       <el-col :span="14">
-        <form @submit.prevent="submit" style="margin-top: 20px;">
+        <form @submit.prevent="submit(ku_name)" style="margin-top: 20px;">
           <el-row type="flex" class="row-bg" justify="center">
             <el-col :span="22">
               <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
             </el-col>
-            <el-button type="submit" value="提交" @click="submit"
+            <el-button type="submit" value="提交" @click="submit(ku_name)"
               >检索</el-button
             >
           </el-row>
@@ -26,11 +26,19 @@
       <el-col :span="7">
         <div class="result">
           <el-row type="flex" justify="start">
-            <h5 style="color: #0a1612;">知识单元名称</h5>
+            <h5 style="color: #0a1612;">知识单元简介</h5>
           </el-row>
           <el-row type="flex" justify="start" class="title">
             {{ node.name }}
             <!-- {{ node.type }} -->
+          </el-row>
+          <el-row type="flex" justify="start" class="content">
+            <el-col>
+              {{ (node.description || "").split("...")[0] }}
+              <a v-bind:href="url" target="_blank" :underline="false">
+                more>>
+              </a>
+            </el-col>
           </el-row>
           <el-divider></el-divider>
           <el-row type="flex" justify="start">
@@ -83,11 +91,31 @@
                         v-for="(entity, index) in entities"
                         :key="index"
                         :title="entity.name"
-                        width="200"
+                        width="300"
                         trigger="hover"
-                        :content="entity.annotation"
                       >
-                        <el-tag slot="reference">{{ entity.name }}</el-tag>
+                        <el-tag size="mini">{{
+                          (entity.annotation || "").split(";")[0].split("-")[1]
+                        }}</el-tag>
+                        <el-tag size="mini">{{
+                          (entity.annotation || "").split(";")[1].split("-")[1]
+                        }}</el-tag>
+                        <el-tag size="mini">{{
+                          (entity.annotation || "").split(";")[2].split("-")[1]
+                        }}</el-tag>
+                        <el-tag size="mini">{{
+                          (entity.annotation || "").split(";")[3].split("-")[1]
+                        }}</el-tag>
+                        <h6>
+                          {{
+                            entity.annotation
+                              .split("description")[1]
+                              .split("...")[0]
+                          }}
+                        </h6>
+                        <el-tag slot="reference" @click="submit(entity.name)">{{
+                          entity.name
+                        }}</el-tag>
                       </el-popover>
                     </el-row>
                   </el-row>
@@ -162,7 +190,8 @@ export default {
       inward_arrow: 0,
       outward_arrow: 0,
       root_view: false,
-      loading: false
+      loading: false,
+      url: ""
     };
   },
   mounted() {
@@ -170,15 +199,15 @@ export default {
     console.log(this.root_view);
     if (this.$route.params.name) {
       this.ku_name = this.$route.params.name;
-      this.submit();
+      this.submit(this.ku_name);
     }
   },
   watch: {
     sour(val) {
-      this.submit();
+      this.submit(this.ku_name);
     },
     checkList(val) {
-      this.submit();
+      this.submit(this.ku_name);
     }
   },
   methods: {
@@ -194,10 +223,13 @@ export default {
     /**
      * 提交
      */
-    submit() {
+    submit(name) {
       if (this.ku_name.length === 0) {
         return;
       }
+      if (name !== undefined) this.ku_name = name;
+      this.url =
+        "https://baike.baidu.com/search/word?word=" + encodeURI(this.ku_name);
       this.loading = true;
       this.$http
         .post(
@@ -288,6 +320,10 @@ export default {
   font-weight: bold;
   font-size: 22px;
   color: #0a1612;
+}
+.content {
+  text-align: left;
+  text-indent: 2em;
 }
 .el-tag {
   margin-left: 10px;
