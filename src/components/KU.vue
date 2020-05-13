@@ -35,7 +35,12 @@
           <el-row type="flex" justify="start" class="content">
             <el-col>
               {{ (node.description || "").split("...")[0] }}
-              <a v-bind:href="url" target="_blank" :underline="false">
+              <a
+                v-if="ku_name.length > 0"
+                v-bind:href="url"
+                target="_blank"
+                :underline="false"
+              >
                 more>>
               </a>
             </el-col>
@@ -46,7 +51,6 @@
               <el-row>
                 <h5 style="color: #0a1612; float: left;">知识关系</h5>
               </el-row>
-
               <el-tabs
                 value="rjb_new"
                 @tab-click="dataSource"
