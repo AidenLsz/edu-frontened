@@ -2,13 +2,13 @@
   <div>
     <el-row>
       <el-col :span="21">
-        <fieldManager src="knowledge_point"></fieldManager>
+        <fieldManager src="kp2.0"></fieldManager>
       </el-col>
       <el-col :span="3">
-        <InsertOne collection="node_copy" field="knowledge_point"></InsertOne>
+        <InsertOne collection="node_copy" field="kp2.0"></InsertOne>
       </el-col>
     </el-row>
-    <ShowNode src="knowledge_point" field="knowledge_point"></ShowNode>
+    <ShowNode src="kp2.0" field="kp2.0"></ShowNode>
   </div>
 </template>
 <script>

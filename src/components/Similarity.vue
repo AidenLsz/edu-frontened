@@ -6,40 +6,60 @@
       </el-row>
       <el-row>
         <el-col :span="11">
-          <div class="input_content">
-            <form @submit.prevent="submit" style="margin-top: 20px;">
-              <el-row type="flex" class="row-bg" justify="center">
-                <el-input
-                  type="textarea"
-                  :rows="18"
-                  v-model="content_1"
-                  placeholder="请输入试题1内容"
-                >
-                </el-input>
-              </el-row>
-            </form>
-          </div>
+          <el-tabs type="border-card" id="tabs">
+            <el-tab-pane label="试题1">
+              <el-input
+                type="textarea"
+                :rows="14"
+                v-model="content_1"
+                placeholder="请输入内容"
+              >
+              </el-input>
+            </el-tab-pane>
+            <el-tab-pane label="LaTex预览">
+              <div style="height:305px; overflow-y:scroll;">
+                <Mathdown :content="content_1"></Mathdown>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
         </el-col>
         <el-col :span="11" :offset="1">
-          <div class="input_content">
-            <form @submit.prevent="submit" style="margin-top: 20px;">
-              <el-row type="flex" class="row-bg" justify="center">
-                <el-input
-                  type="textarea"
-                  :rows="18"
-                  v-model="content_2"
-                  placeholder="请输入试题2内容"
-                >
-                </el-input>
-              </el-row>
-            </form>
-          </div>
+          <el-tabs type="border-card" id="tabs">
+            <el-tab-pane label="试题2">
+              <el-input
+                type="textarea"
+                :rows="14"
+                v-model="content_2"
+                placeholder="请输入内容"
+              >
+              </el-input>
+            </el-tab-pane>
+            <el-tab-pane label="LaTex预览">
+              <div style="height:305px; overflow-y:scroll;">
+                <Mathdown :content="content_2"></Mathdown>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
         </el-col>
       </el-row>
-      <el-row type="flex" justify="start" v-if="show_result">
-        <span>结果：</span>
-        <el-tag>{{ similarity_result }}</el-tag>
-      </el-row>
+      <div id="result" v-if="show_result">
+        <el-row type="flex" justify="start">
+          <h6 style="color: #0a1612;">结果：</h6>
+        </el-row>
+        <el-row>
+          <el-col :span="11">
+            <el-card class="box-card">
+              <div slot="header" style="text-align:left;">
+                <span>属性1</span>
+              </div>
+              <div style="text-align:left;">
+                <el-tag effect="plain" id="tag">{{ similarity_result }}</el-tag>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="11" :offset="2"> </el-col>
+        </el-row>
+      </div>
     </div>
   </div>
 </template>
@@ -86,7 +106,7 @@ export default {
 
 <style scoped lang="scss">
 .similarity {
-  background: url("/static/sub_bg.png");
+  background: url("../assets/sub_bg.png");
   background-size: 100%;
   padding: 20px 20px 0px 20px;
 }
@@ -121,23 +141,8 @@ export default {
   font-size: 22px;
   color: #0a1612;
 }
-.el-tag {
-  margin-left: 10px;
-}
 .el-col {
   border-radius: 4px;
-}
-</style>
-
-<style type="text/css">
-.el-tabs__item {
-  color: #0a1612 !important;
-  font-weight: 900 !important;
-}
-.el-tabs__item.is-active {
-  background-color: #0a1612 !important;
-  color: #fff !important;
-  font-weight: 900 !important;
 }
 .el-button {
   background-color: #1a2930;
@@ -155,7 +160,18 @@ export default {
   color: #fff;
   border-color: #fff;
 }
-.el-tag {
+</style>
+<style scoped>
+#tabs /deep/ .el-tabs__item {
+  color: #0a1612;
+  font-weight: 900;
+}
+#tabs /deep/ .el-tabs__item.is-active {
+  background-color: #0a1612;
+  color: #fff;
+  font-weight: 900;
+}
+#tag /deep/ .el-tag {
   background-color: #fff !important;
   color: #000 !important;
   border-color: #c5c1c0 !important;

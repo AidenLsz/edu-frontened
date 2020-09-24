@@ -23,7 +23,7 @@
     </el-row>
     <!-- main -->
     <el-row v-loading="loading">
-      <el-col :span="7">
+      <el-col :span="9">
         <div class="result">
           <el-row type="flex" justify="start">
             <h5 style="color: #0a1612;">知识单元简介</h5>
@@ -41,7 +41,6 @@
                 target="_blank"
                 :underline="false"
               >
-                more>>
               </a>
             </el-col>
           </el-row>
@@ -57,6 +56,7 @@
                 type="card"
                 ref="ss"
                 style="height: 200px; margin-top: -10px; margin-left: 10px;"
+                id="tabs"
               >
                 <el-tab-pane
                   label="人教版新"
@@ -65,7 +65,7 @@
                   ref="rjb_new"
                 >
                   <el-row type="flex" justufy="start" :gutter="40">
-                    <el-checkbox-group v-model="checkList">
+                    <el-checkbox-group v-model="checkList" id="checkbox">
                       <el-col :span="6">
                         <el-checkbox label="前驱后继">前驱后继</el-checkbox>
                       </el-col>
@@ -161,7 +161,7 @@
           </el-row>
         </div>
       </el-col>
-      <el-col :span="17">
+      <el-col :span="15">
         <div class="graph">
           <Graph
             :node="node"
@@ -207,15 +207,15 @@ export default {
     }
   },
   watch: {
-    sour(val) {
+    sour() {
       this.submit(this.ku_name);
     },
-    checkList(val) {
+    checkList() {
       this.submit(this.ku_name);
     }
   },
   methods: {
-    dataSource(tab, event) {
+    dataSource(tab) {
       this.sour = "rjb_new";
       return tab.name;
     },
@@ -246,11 +246,17 @@ export default {
           { emulateJSON: true }
         )
         .then(function(data) {
-          this.node = data.data.node;
-          this.neighbors_groups = data.data.neighbors_groups;
-          this.inward_arrow = data.data.pre_len;
-          this.outward_arrow = data.data.suc_len;
-          this.loading = false;
+          if (data.data.node === null) {
+            this.loading = false;
+            alert("输入知识点不存在！");
+          } else {
+            this.node = data.data.node;
+            console.log(data.data.node);
+            this.neighbors_groups = data.data.neighbors_groups;
+            this.inward_arrow = data.data.pre_len;
+            this.outward_arrow = data.data.suc_len;
+            this.loading = false;
+          }
         });
       this.$http
         .post(
@@ -273,8 +279,7 @@ export default {
 
 <style scoped lang="scss">
 .ku {
-  /*background-color: #0a1612;*/
-  background: url("/static/sub_bg.png") repeat;
+  background: url("../assets/sub_bg.png") repeat;
   background-size: 100%;
 }
 .ku h6 {
@@ -294,7 +299,7 @@ export default {
   padding-left: 5%;
   padding-right: 5%;
   padding-top: 5%;
-  height: 780px;
+  height: 850px;
   background-color: #fff;
   margin-left: 20px;
   border-right: 14px solid #fff;
@@ -303,7 +308,7 @@ export default {
   border: 1px solid #fff;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 3px;
-  height: 780px;
+  height: 850px;
   background-color: #fff;
   margin-right: 20px;
 }
@@ -337,16 +342,7 @@ export default {
 }
 </style>
 
-<style type="text/css">
-.el-tabs__item {
-  color: #0a1612 !important;
-  font-weight: 900 !important;
-}
-.el-tabs__item.is-active {
-  background-color: #0a1612 !important;
-  color: #fff !important;
-  font-weight: 900 !important;
-}
+<style scoped type="text/css">
 .el-button {
   background-color: #1a2930;
   color: #fff;
@@ -363,9 +359,22 @@ export default {
   border-color: #fff;
   outline: none;
 }
+#tabs /deep/ .el-tabs__item {
+  color: #0a1612;
+  font-weight: 900;
+}
+#tabs /deep/ .el-tabs__item.is-active {
+  background-color: #0a1612;
+  color: #fff;
+  font-weight: 900;
+}
+#checkbox /deep/ .el-checkbox__input.is-checked + .el-checkbox__label {
+  color: #1a2930;
+}
 .el-tag {
-  background-color: #fff !important;
-  color: #000 !important;
-  border-color: #c5c1c0 !important;
+  margin-left: 10px;
+  background-color: #fff;
+  color: #000;
+  border-color: #c5c1c0;
 }
 </style>

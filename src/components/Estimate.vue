@@ -13,7 +13,7 @@
             </el-option>
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="4" :offset="1">
           <el-select v-model="type_id" placeholder="选择题型">
             <el-option
               v-for="type in type_options"
@@ -24,16 +24,16 @@
             </el-option>
           </el-select>
         </el-col>
-        <el-col :span="8" style="margin-top: 10px;">
-          <el-checkbox-group v-model="checkList">
+      </el-row>
+      <el-row type="flex" justify="start">
+        <el-col :span="2.5">
+          <span>预测属性勾选：</span>
+        </el-col>
+        <el-col :span="5">
+          <el-checkbox-group v-model="checkList" id="checkbox">
             <el-checkbox label="难度"></el-checkbox>
             <el-checkbox label="知识点"></el-checkbox>
           </el-checkbox-group>
-        </el-col>
-        <el-col :span="2">
-          <el-button type="submit" value="提交" @click="submit"
-            >评估
-          </el-button>
         </el-col>
       </el-row>
       <el-row>
@@ -43,7 +43,7 @@
               <el-row type="flex" class="row-bg" justify="center">
                 <el-input
                   type="textarea"
-                  :rows="14"
+                  :rows="8"
                   v-model="content"
                   placeholder="请输入内容"
                 >
@@ -61,18 +61,25 @@
             </form>
           </div>
         </el-col>
-        <el-col :span="12" :offset="1">
-          <div class="format_content">
-            <Mathdown :content="content"></Mathdown>
-            <div
-              class="img-list-item"
-              v-for="(item, index) in src"
-              :key="index"
-            >
-              <img :src="item" class="common" />
-              <i class="del-img" @click="forkImage(index)"></i>
+        <el-col :span="11" :offset="2">
+          <el-row>
+            <div class="format_content">
+              <Mathdown :content="content"></Mathdown>
+              <div
+                class="img-list-item"
+                v-for="(item, index) in src"
+                :key="index"
+              >
+                <img :src="item" class="common" />
+                <i class="del-img" @click="forkImage(index)"></i>
+              </div>
             </div>
-          </div>
+          </el-row>
+          <el-row type="flex" justify="end">
+            <el-button type="submit" value="提交" @click="submit"
+              >评估
+            </el-button>
+          </el-row>
         </el-col>
       </el-row>
       <el-divider></el-divider>
@@ -80,40 +87,35 @@
         <el-row type="flex" justify="start">
           <h6 style="color: #0a1612;">预估结果：</h6>
         </el-row>
-        <el-row>
-          <div class="result" v-if="show_result">
-            <el-row
-              type="flex"
-              justify="start"
-              v-if="checkList.indexOf('难度') > -1"
-            >
-              <el-col :span="6">
-                <span>难度：</span>
-                <el-tag>{{ difficulty_result }}</el-tag>
-              </el-col>
-              <el-col :span="6">
-                <el-slider
-                  v-model="difficulty_result"
-                  :max="1"
-                  disabled
-                  :marks="marks"
-                  style="margin-top: -8px;"
-                >
-                </el-slider>
-              </el-col>
-            </el-row>
-            <el-row
-              type="flex"
-              justify="start"
+
+        <div class="result" v-if="show_result">
+          <el-row>
+            <el-col :span="11" v-if="checkList.indexOf('难度') > -1">
+              <el-card class="box-card">
+                <div slot="header" style="text-align:left;">
+                  <span>难度</span>
+                </div>
+                <div style="text-align:left;">
+                  <el-tag effect="plain">{{ difficulty_result }}</el-tag>
+                </div>
+              </el-card>
+            </el-col>
+            <el-col
+              :span="11"
+              :offset="2"
               v-if="checkList.indexOf('知识点') > -1"
             >
-              <el-col :span="6">
-                <span>知识点：</span>
-                <el-tag>{{ kp_result }}</el-tag>
-              </el-col>
-            </el-row>
-          </div>
-        </el-row>
+              <el-card class="box-card">
+                <div slot="header" style="text-align:left;">
+                  <span>知识点</span>
+                </div>
+                <div style="text-align:left;">
+                  <el-tag effect="plain">{{ kp_result }}</el-tag>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+        </div>
       </el-row>
     </div>
   </div>
@@ -134,7 +136,7 @@ export default {
       show_result: false,
       order: 0,
       filelists: [],
-      checkList: [],
+      checkList: ["难度", "知识点"],
       // 学科选择属性
       options: [
         {
@@ -157,7 +159,7 @@ export default {
     };
   },
   watch: {
-    checkList(now, old) {
+    checkList() {
       this.show_result = false;
     },
     subject_id() {
@@ -198,7 +200,10 @@ export default {
   methods: {
     // 提交评估按钮，向后端发送请求
     submit() {
-      document.documentElement.scrollTop = 380;
+      if (this.checkList.length === 0) {
+        return;
+      }
+      document.documentElement.scrollTop = 200;
       this.loading = true;
       this.show_result = true;
       let param = new FormData();
@@ -244,21 +249,6 @@ export default {
       console.log(e.src);
       console.log(e.filelists);
     },
-    // 处理用户上传图片，存入图片数组
-    // uploadImg(e) {
-    //   let _this = this;
-    //   let length = e.target.files.length;
-    //   if (!e || !window.FileReader) return; // 看支持不支持FileReader
-    //   for (var i = _this.order; i < _this.order + length; i++) {
-    //     let reader = new FileReader();
-    //     _this.filelists[i] = e.target.files[i - _this.order];
-    //     reader.readAsDataURL(_this.filelists[i]); // 转换
-    //     reader.onloadend = function() {
-    //       _this.src.push(this.result);
-    //     };
-    //   }
-    //   _this.order = _this.order + length;
-    // },
     // 删除图片并保持图片数组顺序
     forkImage(index) {
       this.src.splice(index, 1);
@@ -280,7 +270,7 @@ export default {
 
 <style scoped lang="scss">
 .estimate {
-  background: url("/static/sub_bg.png");
+  background: url("../assets/sub_bg.png");
   background-size: 100%;
   padding: 20px 20px 0px 20px;
 }
@@ -300,7 +290,7 @@ export default {
 .format_content {
   margin-top: 20px;
   border: 1px solid #999;
-  height: 350px;
+  height: 180px;
   overflow: scroll;
 }
 .el-row {
@@ -323,16 +313,7 @@ export default {
 }
 </style>
 
-<style type="text/css">
-.el-tabs__item {
-  color: #0a1612 !important;
-  font-weight: 900 !important;
-}
-.el-tabs__item.is-active {
-  background-color: #0a1612 !important;
-  color: #fff !important;
-  font-weight: 900 !important;
-}
+<style scoped type="text/css">
 .el-button {
   background-color: #1a2930;
   color: #fff;
@@ -349,14 +330,9 @@ export default {
   color: #fff;
   border-color: #fff;
 }
-.el-tag {
-  background-color: #fff !important;
-  color: #000 !important;
-  border-color: #c5c1c0 !important;
-}
 </style>
 
-<style>
+<style scoped>
 .img-list-item {
   position: relative;
   margin: auto;
@@ -409,13 +385,13 @@ input[type="file"] {
 .el-dropdown-menu__item:hover {
   background-color: #fff !important;
 }
-.el-checkbox__input.is-checked + .el-checkbox__label {
+#checkbox /deep/ .el-checkbox__input.is-checked + .el-checkbox__label {
   color: #1a2930;
 }
 .el-select-dropdown__item.selected {
   color: #1a2930;
 }
 .el-select-dropdown__item.hover {
-  background-color: #ff9999;
+  background-color: #9cd6f1;
 }
 </style>

@@ -6,7 +6,7 @@
           <div class="row align-items-center">
             <div class="col-lg-2">
               <div class="logo">
-                <img src="./assets/logo.png" alt="Logo" />
+                <img src="./assets/kglogo.png" alt="Logo" />
               </div>
             </div>
             <div class="col-lg-10">
@@ -35,12 +35,17 @@
                           </el-dropdown-item>
                           <el-dropdown-item>
                             <router-link to="/estimate" :underline="false"
-                              >试题难度评估</router-link
+                              >试题属性预估</router-link
                             >
                           </el-dropdown-item>
                           <el-dropdown-item>
                             <router-link to="/similarity" :underline="false"
-                              >相似题评估</router-link
+                              >相似题预估</router-link
+                            >
+                          </el-dropdown-item>
+                          <el-dropdown-item>
+                            <router-link to="/inputMarked" :underline="false"
+                              >试题录入</router-link
                             >
                           </el-dropdown-item>
                         </el-dropdown-menu>
@@ -55,15 +60,24 @@
                         >实验室主页</a
                       >
                     </li>
-                    <button v-if="root" class="text-btn" @click="logout_root">
-                      退出(neea_kg)
-                    </button>
-                    <button v-else class="text-btn" @click="login_root">
-                      用户登录
-                    </button>
-                    <button class="text-btn" @click="login_admin">
-                      数据管理
-                    </button>
+                    <li>
+                      <router-link to="/admin" :underline="false" v-if="isAdmin"
+                        >数据管理</router-link
+                      >
+                    </li>
+                    <el-dropdown trigger="hover" v-if="username">
+                      <span class="el-dropdown-link user-inner">
+                        {{ username }}
+                        <i class="el-icon-arrow-down el-icon--right"></i>
+                      </span>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="logout"
+                          >退出登录</el-dropdown-item
+                        >
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                    <button v-else class="text-btn" @click="login">登录</button>
+                    <button class="text-btn" @click="register">注册</button>
                   </ul>
                 </nav>
               </div>
@@ -124,15 +138,24 @@ export default {
   name: "App",
   data() {
     return {
-      root: false // root用户
+      root: false, // root用户
+      isAdmin: false,
+      username: "",
     };
   },
   mounted() {
-    this.root = sessionStorage.user === "root";
-    console.log(this.root);
-    $(window).on("scroll", function() {
+    var user = sessionStorage.getItem("user");
+    if (user) {
+      this.username = user;
+    }
+    if (this.username === "advanced" || this.username === "admin") {
+      this.isAdmin = true;
+    }
+    // this.root = this.username === "root";
+    // console.log(this.root);
+    $(window).on("scroll", function () {
       var scroll = $(window).scrollTop();
-      if (scroll < 250) {
+      if (scroll < 700) {
         $("#header-sticky").removeClass("sticky-menu");
       } else {
         $("#header-sticky").addClass("sticky-menu");
@@ -140,22 +163,34 @@ export default {
     });
   },
   methods: {
-    login_root() {
-      this.$router.push({ path: "/root" });
+    login() {
+      this.$router.push({ path: "/login" });
+    },
+    register() {
+      this.$router.push({ path: "/register" });
     },
     login_admin() {
       this.$router.push({ path: "/admin" });
     },
     // 测试退出函数
-    logout_root() {
-      sessionStorage.clear();
-      location.reload();
-    }
-  }
+    logout() {
+      var _this = this;
+      this.$confirm("确认退出吗？", "提示", {
+        // type:'warning'
+      })
+        .then(() => {
+          sessionStorage.removeItem("user");
+          this.username = "";
+          this.isAdmin = false;
+          _this.$router.push("/");
+        })
+        .catch(() => {});
+    },
+  },
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .menu-area {
   margin-top: -60px;
   padding-bottom: -10px;
@@ -326,5 +361,11 @@ export default {
   margin-left: 30px;
   margin-right: -35px;
   font-size: 14px;
+}
+.user-inner {
+  cursor: pointer;
+  color: #1a2930;
+  margin-right: -23px;
+  padding-left: 45px;
 }
 </style>
