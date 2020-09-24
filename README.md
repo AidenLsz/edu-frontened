@@ -1,4 +1,4 @@
-# 4
+# kg-edu-frontend
 
 ## Project setup
 ```
