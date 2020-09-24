@@ -30,7 +30,7 @@ test:
   - npm config set unsafe-perm true
   - npm install -g cnpm --registry=https://registry.npm.taobao.org
   - cnpm install -D
-  - npm run unit
+  - npm run test
 
 review:
   stage: review
