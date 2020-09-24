@@ -20,7 +20,7 @@
     "default-passive-events": "^2.0.0",
     "mathjax": "^3.0.0",
     "popper.js": "^1.15.1",
-    "vue": "^2.5.2",
+    "vue": "^2.6.10",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1"
   },
