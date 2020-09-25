@@ -20,7 +20,7 @@
     "default-passive-events": "^2.0.0",
     "mathjax": "^3.0.0",
     "popper.js": "^1.15.1",
-    "vue": "^2.6.10",
+    "vue": "^2.5.2",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1"
   },
@@ -37,7 +37,7 @@
     "less-loader": "^7.0.1",
     "node-sass": "^4.9.2",
     "vue-cli-plugin-element": "~1.0.1",
-    "vue-template-compiler": "^2.6.11",
+    "vue-template-compiler": "^2.5.2",
     "vue-loader": "^13.3.0",
     "autoprefixer": "^9.8.6",
     "babel-core": "^6.26.3",
