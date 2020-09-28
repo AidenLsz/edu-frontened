@@ -34,7 +34,7 @@
         v-if="!simpleInput"
       >
         <el-row>
-          <el-tabs type="border-card">
+          <el-tabs type="border-card" id="tabs">
             <el-tab-pane label="多格式文本">
               <el-input
                 type="textarea"
@@ -47,12 +47,23 @@
             <el-tab-pane label="LaTex预览">
               <div style="height:180px; overflow-y:scroll;">
                 <Mathdown :content="content"></Mathdown>
+                <div
+                  class="img-list-item"
+                  v-for="(item, index) in src"
+                  :key="index"
+                >
+                  <img :src="item" class="common" />
+                  <i class="del-img" @click="forkImage(index)"></i>
+                </div>
               </div>
             </el-tab-pane>
           </el-tabs>
-          <button style="position: absolute;left:250px;top:5px;">
-            上传图片
-          </button>
+          <UploadImg
+            style="position: absolute;left:250px;top:0px;"
+            :src="src"
+            :filelists="filelists"
+            @uploadImg="imgInfo"
+          ></UploadImg>
           <span
             style="cursor:pointer;position:absolute;right:5px;top:12px;font-size:12px;"
             @click="changeInput"
@@ -89,6 +100,7 @@
                 @tab-click="dataSource"
                 type="card"
                 style="height: 200px; margin-top: -10px; margin-left: 0px;"
+                id="tabs"
               >
                 <el-tab-pane label="人教版新" name="rjb_new">
                   <el-row
@@ -112,7 +124,9 @@
                         trigger="hover"
                         :content="entity.annotation"
                       >
-                        <el-tag slot="reference">{{ entity.name }}</el-tag>
+                        <el-tag slot="reference" id="tag">{{
+                          entity.name
+                        }}</el-tag>
                       </el-popover>
                     </el-row>
                   </el-row>
@@ -129,8 +143,9 @@
 <script>
 /* eslint-disable */
 import Mathdown from "./Mathdown.vue";
+import UploadImg from "./UploadImg.vue";
 export default {
-  components: { Mathdown },
+  components: { Mathdown, UploadImg },
   name: "exercise",
   data() {
     return {
@@ -140,7 +155,9 @@ export default {
       entity_type: "kp2.0",
       sour: "",
       content: "",
-      simpleInput: true
+      simpleInput: true,
+      src: [], // 图片数组
+      filelists: []
     };
   },
   watch:{
@@ -159,6 +176,27 @@ export default {
     },
     changeInput() {
       this.simpleInput = !this.simpleInput;
+    },
+    imgInfo(e) {
+      this.src = e.src;
+      this.filelists = e.filelists;
+      console.log(e.src);
+      console.log(e.filelists);
+    },
+   // 删除图片并保持图片数组顺序
+    forkImage(index) {
+      this.src.splice(index, 1);
+      for (var i = 0; i < this.filelists.length; i++) {
+        if (typeof this.filelists[i] === "undefined") {
+          this.filelists.splice(i, 1);
+          i = i - 1;
+        }
+      }
+      this.filelists.splice(index, 1);
+      document.getElementsByTagName("input").value = "";
+      console.log(this.src);
+      console.log(this.filelists);
+      console.log(document.getElementsByTagName("input").value);
     },
     submit() {
       this.$http
@@ -179,7 +217,7 @@ export default {
 
 <style scoped lang="scss">
 .exercise {
-  background: url("/static/sub_bg.png") repeat;
+  background: url("../assets/sub_bg.png") repeat;
   background-size: 100%;
 }
 .logo {
@@ -217,16 +255,7 @@ export default {
 }
 </style>
 
-<style type="text/css">
- .el-tabs__item {
-    color: #0a1612!important;
-    font-weight: 900!important;
-} 
- .el-tabs__item.is-active {
-    background-color: #0a1612!important;
-    color: #fff!important;
-    font-weight: 900!important;
-}
+<style scoped type="text/css">
 .el-button {
   background-color: #1a2930;
   color: #fff;
@@ -243,9 +272,45 @@ export default {
   border-color: #fff;
   outline: none;
 }
-.el-tag {
-  background-color: #fff!important;
-  color: #000!important;
-  border-color: #c5c1c0!important;
+.img-list-item {
+  position: relative;
+  margin: auto;
+  display: inline-block;
+}
+.img-list-item img {
+  width: 200px;
+  height: 200px;
+  box-sizing: border-box;
+  vertical-align: middle;
+  border: 0;
+}
+.img-list-item i.del-img {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.1);
+  background-image: url(../assets/delete.jpeg);
+  background-size: 10px;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  position: relative;
+  top: 0;
+  right: 0;
+}
+</style>
+<style scoped>
+#tabs /deep/ .el-tabs__item {
+  color: #0a1612;
+  font-weight: 900;
+}
+#tabs /deep/ .el-tabs__item.is-active {
+  background-color: #0a1612;
+  color: #fff;
+  font-weight: 900;
+}
+#tag /deep/ .el-tag {
+  background-color: #fff !important;
+  color: #000 !important;
+  border-color: #c5c1c0 !important;
 }
 </style>

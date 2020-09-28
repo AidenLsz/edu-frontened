@@ -157,7 +157,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .fieldtag {
   margin: 5px 0px;
   float: left;

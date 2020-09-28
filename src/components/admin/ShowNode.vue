@@ -1,14 +1,5 @@
 <template>
-  <div>
-    <el-row>
-      <el-col :span="21">
-        <fieldManager src="edge"></fieldManager>
-      </el-col>
-      <el-col :span="3">
-        <InsertOne collection="edge_copy" field="edge"></InsertOne>
-      </el-col>
-    </el-row>
-
+  <div v-loading="loading">
     <!-- 列表 -->
     <el-table
       :data="
@@ -23,7 +14,6 @@
       border
       style="width: 100%"
       @selection-change="handleSelectionChange"
-      v-loading="loading"
     >
       <el-table-column type="selection"> </el-table-column>
       <el-table-column type="index"> </el-table-column>
@@ -32,6 +22,8 @@
         :key="index"
         :prop="item"
         :label="item"
+        show-overflow-tooltip
+        id="table"
       >
       </el-table-column>
       <el-table-column align="right" fixed="right" width="200">
@@ -86,11 +78,18 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-import fieldManager from "./fieldManager.vue";
-import InsertOne from "./InsertOne.vue";
 export default {
-  components: { fieldManager, InsertOne },
+  name: "ShowNode",
+  props: {
+    src: {
+      type: String,
+      default: ""
+    },
+    field: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {
       loading: true,
@@ -102,17 +101,20 @@ export default {
       pagesize: 10,
       dialogFormVisible: false,
       editForm: {},
-      formLabelWidth: "120px",
+      formLabelWidth: "90px",
       fieldName: [],
       rules: {
-        source_name: [
-          { required: true, message: "请输入知识点名称", trigger: "blur" }
+        area: [
+          { required: true, message: "请输入学科", trigger: "blur" },
+          {
+            type: "enum",
+            enum: ["数学", "英语", "语文", "物理", "化学"],
+            message: "请输入正确的学科名，如 ‘数学’",
+            trigger: "blur"
+          }
         ],
-        target_name: [
+        name: [
           { required: true, message: "请输入知识点名称", trigger: "blur" }
-        ],
-        type: [
-          { required: true, message: "请输入知识关系属性", trigger: "blur" }
         ],
         verified: [
           {
@@ -121,6 +123,15 @@ export default {
             message: "请输入 true 或 false",
             trigger: "blur"
           }
+        ],
+        version: [
+          { required: true, message: "请输入教科书版本", trigger: "blur" }
+        ],
+        grade: [
+          { required: true, message: "请输入教科书版本", trigger: "blur" }
+        ],
+        chapter: [
+          { required: true, message: "请输入教科书版本", trigger: "blur" }
         ]
       }
     };
@@ -134,20 +145,22 @@ export default {
       this.$http
         .post(this.backendIP + "/api/fields", {}, { emulateJSON: true })
         .then(function(data) {
-          this.fieldName = data.data.edge;
+          this.fieldName = data.data[this.field];
+          console.log(this.fieldName);
         });
     },
     getNodes() {
-      axios({ method: "GET", url: this.backendIP + "/api/list_edge" }).then(
-        result => {
-          this.lists = result.data;
+      this.$http
+        .post(
+          this.backendIP + "/api/list_data",
+          { nodeType: this.src },
+          { emulateJSON: true }
+        )
+        .then(function(data) {
+          this.lists = data.data;
           this.total = this.lists.length;
           this.loading = false;
-        },
-        error => {
-          console.error(error);
-        }
-      );
+        });
     },
     // 显示编辑界面
     handleEdit: function(index, row) {
@@ -168,7 +181,7 @@ export default {
           }
           this.$http
             .put(
-              this.backendIP + `/api/editEdge/${this._id}`,
+              this.backendIP + `/api/editNode/${this._id}`,
               { name: editlist, fieldName: this.fieldName },
               { emulateJSON: true }
             )
@@ -197,7 +210,7 @@ export default {
       })
         .then(() => {
           this.$http
-            .put(this.backendIP + `/api/del_edge/${row._id}`, {
+            .put(this.backendIP + `/api/del_node/${row._id}`, {
               emulateJSON: true
             })
             .then(function() {
@@ -221,5 +234,9 @@ export default {
   }
 };
 </script>
-
-<style></style>
+<style>
+.el-tooltip__popper {
+  max-width: 30%;
+  line-height: 30px;
+}
+</style>

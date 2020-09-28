@@ -36,15 +36,19 @@
           unique-opend
           :collapse="collapsed"
         >
-          <el-submenu index="1">
+          <!-- <el-menu-item index="1" @click="goTo('/eduData')">
+            <i class="el-icon-message"></i>
+            <span slot="title">图谱数据</span>
+          </el-menu-item> -->
+          <el-submenu index="8" v-if="advanced_view">
             <template slot="title">
               <i class="el-icon-message"></i>
-              <span>查看修改数据</span>
+              <span>图谱数据</span>
             </template>
             <el-menu-item-group>
               <el-submenu index="1-1" :class="collapsed ? '' : 'menu-kp'">
                 <template slot="title">
-                  知识单元
+                  <span style="font-weight: bold;">知识单元</span>
                 </template>
                 <el-menu-item
                   index="1-1-1"
@@ -58,17 +62,36 @@
                   @click="goTo('/knowledgePoint')"
                   >来自教科书
                 </el-menu-item>
+                <el-menu-item
+                  index="1-1-3"
+                  :class="collapsed ? '' : 'menu-rjb-new'"
+                  @click="goTo('/KPNew')"
+                  >来自人教版新
+                </el-menu-item>
               </el-submenu>
               <el-menu-item
                 index="1-2"
                 :class="collapsed ? '' : 'menu-relation'"
                 @click="goTo('/relation')"
-                >知识关系
+                ><span style="margin-left: 25px; font-weight: bold;"
+                  >知识关系</span
+                >
               </el-menu-item>
+              <el-submenu index="1-3" :class="collapsed ? '' : 'menu-kp'">
+                <template slot="title">
+                  <span style="font-weight: bold;">习题数据</span>
+                </template>
+                <el-menu-item
+                  index="1-3-1"
+                  :class="collapsed ? '' : 'menu-bk'"
+                  @click="goTo('/neeaNode')"
+                  >知识结构
+                </el-menu-item>
+              </el-submenu>
             </el-menu-item-group>
           </el-submenu>
 
-          <el-submenu index="2">
+          <el-submenu index="2" v-if="advanced_view">
             <template slot="title">
               <i class="el-icon-menu"></i>
               <span>数据批量导入</span>
@@ -85,16 +108,16 @@
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-menu-item index="3" @click="goTo('/importExercise')">
+          <el-menu-item index="3" @click="goTo('/checkExercise')">
             <i class="el-icon-setting"></i>
-            <span slot="title">录题校对功能</span>
+            <span slot="title">试题校对</span>
           </el-menu-item>
         </el-menu>
       </aside>
       <section class="content-container">
         <div style="height: 550px;">
           <el-col :span="24" class="contentwrapper">
-            <router-view></router-view>
+            <router-view v-if="isRouterAlive"></router-view>
           </el-col>
         </div>
       </section>
@@ -103,11 +126,18 @@
 </template>
 <script>
 export default {
+  provide() {
+    return {
+      reload: this.reload
+    };
+  },
   data() {
     return {
       logo: "后台管理系统",
       collapsed: false,
-      username: ""
+      username: "",
+      isRouterAlive: true,
+      advanced_view: false
     };
   },
   mounted() {
@@ -115,13 +145,22 @@ export default {
     if (user) {
       this.username = user;
     }
+    if (this.username === "user") {
+      this.advanced_view = false;
+    } else {
+      this.advanced_view = true;
+    }
   },
   methods: {
-    goTo(path) {
-      this.$router.replace(path);
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function() {
+        this.isRouterAlive = true;
+      });
     },
-    handleopen(key, keyPath) {},
-    handleclose(key, keyPath) {},
+    goTo(path) {
+      this.$router.push(path);
+    },
     logout: function() {
       var _this = this;
       this.$confirm("确认退出吗？", "提示", {
@@ -140,7 +179,7 @@ export default {
   }
 };
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 .navigator {
   width: 100%;
   .top {
@@ -159,16 +198,16 @@ export default {
     }
   }
   .logo {
-    padding-left: 140px;
+    padding-left: 60px;
   }
   .logo-width {
-    width: 260px;
+    width: 165px;
   }
   .logo-collapse-width {
     width: 60px;
   }
   .tools {
-    padding: 0px 23px;
+    padding-left: 20px;
     width: 14px;
     height: 30px;
     line-height: 30px;
@@ -194,17 +233,5 @@ export default {
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
-}
-.menu-kp {
-  margin-left: -20px;
-}
-.menu-bk {
-  margin-left: 30px;
-}
-.menu-rjb {
-  margin-left: 37px;
-}
-.menu-relation {
-  margin-left: 2px;
 }
 </style>

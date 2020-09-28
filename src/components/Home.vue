@@ -1,12 +1,13 @@
 <template>
   <!--todo: polish the format-->
   <div class="home">
-    <section class="slider-area slider-bg" data-background="/static/bg6.png">
+    <section class="slider-area slider-bg" >
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-10">
             <div class="slider-content text-center">
-              <h2 class="wow fadeInUp" data-wow-delay=".2s">BASE-KG</h2>
+              <h2 class="wow fadeInUp">BASE-KG</h2>
+              <h1 style="color: #fff; margin-top:20px;">教育知识图谱</h1>
             </div>
             <div class="search-area">
               <form @submit.prevent="submit" style="margin-top: 20px;">
@@ -33,27 +34,25 @@
         <h2>KNOWLEDGE GRAPHS</h2>
       </el-row>
       <el-row>
-        <el-col :span="8" :offset="2">
+        <el-col :span="10" :offset="1">
           <el-card class="link-card" shadow="hover">
             <p>
-              试题知识点搜索介绍试题知识点搜索介绍试题知识点搜索介绍
-              试题知识点搜索介绍试题知识点搜索介绍试题知识点搜索介绍
-              试题知识点搜索介绍试题知识点搜索介绍试题知识点搜索介绍
+              <span class="card_title">BDAA知识点搜索引擎</span><br />
+              BDAA知识点搜索引擎致力于让用户更便捷、全面地获取知识点信息。可以瞬间找到相关知识点的描述内容和关联信息。
             </p>
-            <router-link to="/exercise">
-              <el-button round style="margin-top: 20px;">立即体验</el-button>
+            <router-link to="/ku">
+              <el-button round style="margin-top: 150px;">立即体验</el-button>
             </router-link>
           </el-card>
         </el-col>
-        <el-col :span="8" :offset="4">
+        <el-col :span="10" :offset="2">
           <el-card class="link-card" shadow="hover">
             <p>
-              试题难度搜索介绍试题难度搜索介绍试题难度搜索介绍
-              试题难度搜索介绍试题难度搜索介绍试题难度搜索介绍
-              试题难度搜索介绍试题难度搜索介绍试题难度搜索介绍
+              <span class="card_title">试题属性标注（如难度、考察知识点）</span
+              ><br />试题属性标注（如难度、考察知识点）是众多试题相关任务如试卷的组卷、学生答题记录的分析等的基础。一直以来是教育领域专家的关注点，也是众多教育领域人工智能技术的重要数据支撑。以往试题属性只能通过命题专家凭借积累的经验对试题的属性进行手动标注，但难以有效地对试题在语义以及更深的层面进行理解与属性判断，特别是很难应对大批量的试题标注任务。为有效解决这一问题，我们提供了一套基于人工智能技术的试题属性自动标注API，可以对试题进行自动难度预估、考察知识点识别等功能。
             </p>
             <router-link to="/exercise">
-              <el-button round style="margin-top: 20px;">立即体验</el-button>
+              <el-button round style="margin-top: 30px;">立即体验</el-button>
             </router-link>
           </el-card>
         </el-col>
@@ -116,7 +115,6 @@
   </div>
 </template>
 <script>
-// import { WOW } from "wowjs";
 import $ from "jquery";
 export default {
   name: "Home",
@@ -144,8 +142,10 @@ export default {
   }
 };
 </script>
-<style scoped lang="scss">
+<style scoped>
 .slider-bg {
+  background: url("../assets/bg0.png");
+  background-size: 100%;
   position: relative;
   min-height: 653px;
   background-position: center;
@@ -219,14 +219,22 @@ export default {
   margin-left: -130px;
 }
 .search-area {
-  padding-top: 150px;
+  padding-top: 100px;
 }
 .link-area {
   padding-top: 200px;
   padding-bottom: 150px;
 }
 .link-card {
-  height: 200px;
+  height: 360px;
+  overflow: inherit;
+  background-color: #1a2930;
+  color: #fff;
+}
+.card_title {
+  font-weight: 900;
+  font-size: 17px;
+  color: #eeffbb;
 }
 a {
   text-decoration: none;
@@ -235,19 +243,19 @@ a {
   text-decoration: none;
 }
 .el-button {
-  background-color: #1a2930;
+  background-color: #008080;
   color: #fff;
-  border-color: #1a2930;
+  border-color: #008080;
 }
 .el-button:hover {
-  background-color: #008080;
+  background-color: #666;
   color: #fff;
-  border-color: #fff;
+  border-color: #666;
 }
 .el-button:focus {
-  background-color: #008080;
+  background-color: #666;
   color: #fff;
-  border-color: #fff;
+  border-color: #666;
   outline: none;
 }
 </style>

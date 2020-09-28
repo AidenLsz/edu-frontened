@@ -2,13 +2,12 @@
   <div>
     <el-row>
       <el-col :span="21">
-        <fieldManager src="edge"></fieldManager>
+        <fieldManager src="neea_node"></fieldManager>
       </el-col>
       <el-col :span="3">
-        <InsertOne collection="edge_copy" field="edge"></InsertOne>
+        <InsertOne collection="node_copy" field="neea_node"></InsertOne>
       </el-col>
     </el-row>
-
     <!-- 列表 -->
     <el-table
       :data="
@@ -105,22 +104,15 @@ export default {
       formLabelWidth: "120px",
       fieldName: [],
       rules: {
-        source_name: [
-          { required: true, message: "请输入知识点名称", trigger: "blur" }
+        attribute: [
+          { required: true, message: "请输入知识结构属性", trigger: "blur" }
         ],
-        target_name: [
-          { required: true, message: "请输入知识点名称", trigger: "blur" }
+        name: [
+          { required: true, message: "请输入知识结构名称", trigger: "blur" }
         ],
-        type: [
-          { required: true, message: "请输入知识关系属性", trigger: "blur" }
-        ],
-        verified: [
-          {
-            type: "enum",
-            enum: ["false", "true"],
-            message: "请输入 true 或 false",
-            trigger: "blur"
-          }
+        index: [{ required: true, message: "请输入索引", trigger: "blur" }],
+        checked: [
+          { required: true, message: "请输入校对人姓名", trigger: "blur" }
         ]
       }
     };
@@ -134,11 +126,12 @@ export default {
       this.$http
         .post(this.backendIP + "/api/fields", {}, { emulateJSON: true })
         .then(function(data) {
-          this.fieldName = data.data.edge;
+          this.fieldName = data.data.neea_node;
+          console.log(this.fieldName);
         });
     },
     getNodes() {
-      axios({ method: "GET", url: this.backendIP + "/api/list_edge" }).then(
+      axios({ method: "GET", url: this.backendIP + "/api/list_neea" }).then(
         result => {
           this.lists = result.data;
           this.total = this.lists.length;
@@ -155,32 +148,25 @@ export default {
       for (var i = 0; i < this.fieldName.length; i++) {
         this.$set(this.editForm, this.fieldName[i], row[this.fieldName[i]]);
       }
-      this._id = row._id;
+      this._id = row._id.$oid;
+      console.log(row._id.$oid);
     },
     // 编辑
-    editSubmit(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          console.log("submit");
-          var editlist = [];
-          for (var i = 0; i < this.fieldName.length; i++) {
-            editlist.push(this.editForm[this.fieldName[i]]);
-          }
-          this.$http
-            .put(
-              this.backendIP + `/api/editEdge/${this._id}`,
-              { name: editlist, fieldName: this.fieldName },
-              { emulateJSON: true }
-            )
-            .then(function() {
-              this.getNodes();
-            });
-          this.dialogFormVisible = false;
-        } else {
-          console.log("error submit!");
-          return false;
-        }
-      });
+    editSubmit() {
+      var editlist = [];
+      for (var i = 0; i < this.fieldName.length; i++) {
+        editlist.push(this.editForm[this.fieldName[i]]);
+      }
+      this.$http
+        .put(
+          this.backendIP + `/api/edit_neea_node/${this._id}`,
+          { name: editlist, fieldName: this.fieldName },
+          { emulateJSON: true }
+        )
+        .then(function() {
+          this.getNodes();
+        });
+      this.dialogFormVisible = false;
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -190,6 +176,7 @@ export default {
     },
     // 删除
     handleDelete(index, row) {
+      this._id = row._id.$oid;
       this.$confirm("此操作将永久删除该文件，是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -197,7 +184,7 @@ export default {
       })
         .then(() => {
           this.$http
-            .put(this.backendIP + `/api/del_edge/${row._id}`, {
+            .put(this.backendIP + `/api/del_neea_node/${this._id}`, {
               emulateJSON: true
             })
             .then(function() {

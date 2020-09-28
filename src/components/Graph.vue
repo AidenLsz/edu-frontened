@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import * as d3 from "d3";
+var d3 = require("d3");
 import d3Tip from "d3-tip";
 export default {
   name: "Graph",
@@ -176,14 +176,14 @@ export default {
       let pieGs = pies.append("path");
 
       pieGs
-        .attr("d", function(d) {
+        .attr("d", function() {
           return null;
         })
         .attr("fill", function(d, i) {
           return colorScale(i);
         })
         .attr("opacity", 0.8)
-        .on("mouseover", function(d, i) {
+        .on("mouseover", function(d) {
           if (buttonFlag) {
             d3.select(this)
               .transition()
@@ -192,7 +192,7 @@ export default {
               .attr("opacity", 0.6);
           }
         })
-        .on("mouseout", function(d, i) {
+        .on("mouseout", function(d) {
           if (buttonFlag) {
             d3.select(this)
               .transition()
@@ -408,7 +408,7 @@ export default {
         d.fy = d3.event.y;
       }
 
-      function dragEnded(d, i) {
+      function dragEnded(d) {
         if (!d3.event.active) simulation.alphaTarget(0);
         d.fx = d3.event.x;
         d.fy = d3.event.y;
@@ -540,7 +540,7 @@ export default {
               .on("drag", dragged)
               .on("end", dragEnded)
           )
-          .on("click", function(d) {
+          .on("click", function() {
             if (hideFlag === 0) {
               if (buttonFlag) {
                 buttonFlag = 0;
@@ -565,8 +565,8 @@ export default {
                 selectedNode = d3.select(this);
                 buttonFlag = 1;
                 selectedNode.each(function(d) {
-                  d.hideSymbol = "/static/hide.png";
-                  d.lockSymbol = "/static/unlock.png";
+                  d.hideSymbol = require("../assets/hide.png");
+                  d.lockSymbol = require("../assets/unlock.png");
                 });
                 hideSymbol.attr("xlink:href", function(d) {
                   return d.hideSymbol;
@@ -574,7 +574,7 @@ export default {
                 lockSymbol.attr("xlink:href", function(d) {
                   return d.lockSymbol;
                 });
-                // console.log(selectedNode);
+              
                 pieGs
                   .attr("d", function(d) {
                     return arcGenerator(d);
