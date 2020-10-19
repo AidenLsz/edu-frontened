@@ -165,7 +165,6 @@ export default {
     del_image_0(){
       this.src_0.splice(this.index_0, 1);
       this.images_0.splice(this.index_0, 1);
-      console.log(this.images_0);
     },
     del_image_1(){
       this.src_1.splice(this.index_1, 1);
