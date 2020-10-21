@@ -138,8 +138,8 @@ export default {
         param.append("file1", this.images_0[i]);
       }
 
-      for (var i = 0; i < this.images_1.length; i++) {
-        param.append("file2", this.images_1[i]);
+      for (var j = 0; j < this.images_1.length; j++) {
+        param.append("file2", this.images_1[j]);
       }
 
       param.append("content_1", this.content_1); // 后端接收content1字段
@@ -170,10 +170,10 @@ export default {
       this.src_1.splice(this.index_1, 1);
       this.images_1.splice(this.index_1, 1);
     },
-    change_index_0: function(key1, key2){
+    change_index_0: function(key1){
       this.index_0 = key1;
     },
-    change_index_1: function(key1, key2){
+    change_index_1: function(key1){
       this.index_1 = key1;
     }
   }
