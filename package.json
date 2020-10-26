@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "npm run serve",
     "serve": "vue-cli-service serve --mode test",
-    "test": "vue-cli-service build --mode production",
     "build": "vue-cli-service build --mode production",
     "lint": "vue-cli-service lint"
   },
@@ -114,5 +113,10 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "jest": {
+    "testPathIgnorePatterns": [
+      "node_modules/"
+    ]
+  }
 }
