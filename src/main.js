@@ -10,14 +10,14 @@ Vue.use(VueResource);
 
 Vue.config.productionTip = false
 
-if (process.env.NODE_ENV === 'production') {
-  if (process.env.VUE_APP_FLAG === 'pro') {
+if (process.env.NODE_ENV === "production") {
+  if (process.env.BACKEND_URL === "DEFAULT_BACKEND_URL") {
       //production 生产环境
       Vue.prototype.backendIP = "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
 
   } else {
       //test 测试环境
-      Vue.prototype.backendIP = "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
+      Vue.prototype.backendIP = process.env.BACKEND_URL;
   }
 } else {
   //dev 开发环境
