@@ -11,6 +11,7 @@ Vue.use(VueResource);
 Vue.config.productionTip = false
 
 if (process.env.NODE_ENV === "production") {
+  
   if (process.env.VUE_APP_URL === "DEFAULT_BACKEND_URL") {
       //production 生产环境
       Vue.prototype.backendIP = "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
