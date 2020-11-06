@@ -91,7 +91,7 @@
                 <span>属性1</span>
               </div>
               <div style="text-align:left;">
-                <el-tag effect="plain" id="tag">{{ similarity_result }}</el-tag>
+                <el-tag v-for="(item, index) in similarity_result" :key="index" effect="plain" id="tag">{{ item }}</el-tag>
               </div>
             </el-card>
           </el-col>
