@@ -76,7 +76,7 @@
             </div>
           </el-row>
           <el-row type="flex" justify="end">
-            <el-button type="submit" value="提交" @click="submit"
+            <el-button type="submit" value="提交" @click="submit" :disabled="Estimate_Check()"
               >评估
             </el-button>
           </el-row>
@@ -90,7 +90,7 @@
 
         <div class="result" v-if="show_result">
           <el-row>
-            <el-col :span="11" v-if="checkList.indexOf('难度') > -1">
+            <el-col :span="7" v-if="checkList.indexOf('难度') > -1">
               <el-card class="box-card">
                 <div slot="header" style="text-align:left;">
                   <span>难度</span>
@@ -101,8 +101,8 @@
               </el-card>
             </el-col>
             <el-col
-              :span="11"
-              :offset="2"
+              :span="7"
+              :offset="1"
               v-if="checkList.indexOf('知识点') > -1"
             >
               <el-card class="box-card">
@@ -110,8 +110,20 @@
                   <span>知识点</span>
                 </div>
                 <div style="text-align:left;">
-                  <el-tag effect="plain">{{ kp_result }}</el-tag>
+                  <el-tag v-for="(item, index) in kp_result" :key="index" effect="plain">{{ item }}</el-tag>
                 </div>
+              </el-card>
+            </el-col>
+            <el-col
+              :span="8"
+              :offset="1"
+              v-if="checkList.indexOf('知识点') > -1"
+            >
+              <el-card class="box-card">
+                <div slot="header" style="text-align:left;">
+                  <span>知识树状结构</span>
+                </div>
+                <el-tree :data="kp_layer" :props="defaultProps"></el-tree>
               </el-card>
             </el-col>
           </el-row>
@@ -132,6 +144,11 @@ export default {
       content: "", // 用户输入试题文本
       difficulty_result: "", // 难度预估返回值
       kp_result: "", // 知识点返回值
+      kp_layer: "",
+      defaultProps: {
+        label: "label",
+        children: "children"
+      },
       src: [], // 图片数组
       show_result: false,
       order: 0,
@@ -238,7 +255,9 @@ export default {
             emulateJSON: true
           })
           .then(function(data) {
-            this.kp_result = data.data.knowledge_point;
+            console.log(data);
+            this.kp_result = data.data.knowledge_point.kp;
+            this.kp_layer = data.data.knowledge_point.kp_layer;
             this.loading = false;
           });
       }
@@ -263,6 +282,13 @@ export default {
       console.log(this.src);
       console.log(this.filelists);
       console.log(document.getElementsByTagName("input").value);
+    },
+    Estimate_Check(){
+      if(this.subject_id == "" || this.type_id == "" || this.content == ""){
+        return true
+      }else{
+        return false
+      }
     }
   }
 };
