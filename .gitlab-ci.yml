@@ -9,7 +9,7 @@ stages:
 - production
 
 build:
-  image: node:lts
+  image: node:12
   stage: build
   before_script:
   - if [ $CI_COMMIT_BRANCH="master" ]; then sed -i "s%DEFAULT_BACKEND_URL%$BACKEND_URL%g" .env.production;fi
@@ -24,7 +24,7 @@ build:
     - dist/
 
 test:
-  image: node:lts
+  image: node:12
   stage: test
   script:
   - npm config set unsafe-perm true
