@@ -119,6 +119,7 @@
                 </div>
                 <div style="text-align:left;" v-if="subject_id != 'math'">
                   <el-tag class="kp_tag" effect="plain">暂不支持数学题目以外的知识点查询</el-tag>
+
                 </div>
               </el-card>
             </el-col>
@@ -133,6 +134,7 @@
                 </div>
                 <el-tree :data="kp_layer" :props="defaultProps" v-if="subject_id == 'math'"></el-tree>
                 <el-tag class="kp_tag" effect="plain" v-if="subject_id != 'math'">暂不支持数学题目以外的知识点结构查询</el-tag>
+
               </el-card>
             </el-col>
           </el-row>
