@@ -1,5 +1,258 @@
 <template>
+
   <div class="exercise">
+
+    <el-dialog width="80%" :visible.sync="helper_dialog" @close="helper_dialog = false; latex_now = ''; temp_latex = ''">
+      <el-container style="height: 430px;">
+        <el-header style="height: 30px; font-size: 20px; font-weight: bold">
+          快速公式助手
+        </el-header>
+        <el-container style="height: 400px;" direction="horizontal">
+          
+          <el-aside width="25%" style="margin: 5px">
+            <el-select style="height: 10px;" v-model="latex_now" placeholder="请选择">
+              <el-option
+                v-for="(item, index) in latex"
+                :key="index"
+                :label="item.name"
+                :value="item.name">
+              </el-option>
+            </el-select>
+            <el-divider></el-divider>
+            <div style="padding-top: -10px;" >常见数学希腊符号表（首字母可大写）</div><br/>
+            <el-table max-height="160px" :show-header="false" :data="symbols" style="font-size: 3px">
+              <el-table-column
+                prop="col1"
+                align="center"
+                width="70">
+              </el-table-column>
+              <el-table-column
+                prop="col2"
+                align="center"
+                width="70">
+              </el-table-column>
+              <el-table-column
+                prop="col3"
+                align="center"
+                width="70">
+              </el-table-column>
+              <el-table-column
+                prop="col4"
+                align="center"
+                width="70">
+              </el-table-column>
+            </el-table>
+            <p style="text-align: left; padding-left: 30px;padding-top: 20px ; height: 30px">复制格式：{{ temp_latex }}</p>
+            <Mathdown :content="'效果展示：'+temp_latex" style="text-align: left; padding-left: 30px; padding-top: 20px; height: 30px"></Mathdown>
+          </el-aside>
+
+          <el-main width="75%" style="margin: 5px; margin-left: 15px">
+            
+            <!-- 指数用DIV -->
+            <div v-if="latex_now=='指数'">
+              <el-form>
+                <el-row :span="24">
+                  <el-col :span="6">
+                    <el-form-item label="底数">
+                      <el-input v-model="latex.指数.param1" placeholder="请输入底数"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row :span="24">
+                  <el-col :span="6">
+                    <el-form-item label="指数">
+                      <el-input v-model="latex.指数.param2" placeholder="请输入指数"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-divider></el-divider>
+                <el-row :span="24">
+                  <el-col :span="6">
+                    <el-form-item>
+                      <el-button @click="Update_Exp()">点击刷新</el-button>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form> 
+            </div>
+
+            <!-- 对数用DIV -->
+            <div v-if="latex_now=='对数'">
+              <el-form>
+                <el-row>
+                  <el-col :span="9">
+                    <el-form-item label="特殊底数">
+                      <el-radio-group v-model="latex.对数.param1">
+                        <el-radio label="e">e</el-radio>
+                        <el-radio label="10">10</el-radio>
+                      </el-radio-group>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="4">
+                    <el-form-item label="底数">
+                      <el-input v-model="latex.对数.param1" placeholder="请输入底数"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="4" :offset="1">
+                    <el-form-item label="指数">
+                      <el-input v-model="latex.对数.param2" placeholder="请输入指数"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-divider></el-divider>
+                <el-row :span="24">
+                  <el-col :span="9">
+                    <el-form-item>
+                      <el-button @click="Update_Log()">刷新</el-button>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+            </div>
+
+            <!-- 三角函数用DIV -->
+            <div v-if="latex_now=='三角函数'">
+              <el-form >
+                <el-row :span="24" >
+                  <el-col :span="24">
+                    <el-form-item label="请选择三角函数类型">
+                      <el-radio-group style="width: 800px; text-align: left; padding-top: 10px" v-model="latex.三角函数.param1">
+                        <el-row :span="24" >
+                          <el-col :span="4">
+                            <el-radio label="\sin">正弦sin</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="\cos">余弦cos</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="\tan">正切tan</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="\cot">余切cot</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="\sec">正割sec</el-radio>
+                          </el-col>                       
+                        </el-row>
+                        <el-row>
+                          <el-col :span="4">
+                            <el-radio label="\csc">余割csc</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="\arcsin">反正弦arcsin</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="\arccos">反余弦arccos</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="\arctan">反正切arctan</el-radio>
+                          </el-col>
+                        </el-row>
+                        <el-row>
+                          <el-col :span="4">
+                            <el-radio label="\sinh">双曲正弦sinh</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="\cosh">双曲余弦cosh</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="\tanh">双曲正切tanh</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="\coth">双曲余切coth</el-radio>
+                          </el-col>
+                        </el-row> 
+                      </el-radio-group>               
+                    </el-form-item>     
+                  </el-col>
+                </el-row>
+                <el-row :span="24">
+                  <el-col :span="9">
+                    <el-form-item label="参数">
+                      <el-input v-model="latex.三角函数.param2" placeholder="请输入参数"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-divider></el-divider>
+                <el-row :span="24">
+                  <el-col :span="9">
+                    <el-form-item>
+                      <el-button @click="Update_Triangle()">刷新</el-button>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+              
+            </div>
+
+            <div v-if="latex_now == '绝对值'">
+              <el-form>
+                <el-row :span="24">
+                  <el-col :span="6">
+                    <el-form-item label="参数">
+                      <el-input v-model="latex.绝对值.param" placeholder="请输入参数"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-divider></el-divider>
+                <el-row :span="24">
+                  <el-col :span="6">
+                    <el-form-item>
+                      <el-button @click="Update_Absolute()">点击刷新</el-button>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+            </div>
+
+            <div v-if="latex_now == '最值'">
+              <el-form>
+                <el-row :span="24" >
+                  <el-col :span="24">
+                    <el-form-item label="请选择最值类型">
+                      <el-radio-group style="width: 800px; text-align: left; padding-top: 10px" v-model="latex.最值.param1">
+                        <el-row :span="24" >
+                          <el-col :span="3">
+                            <el-radio label="min">最小</el-radio>
+                          </el-col>
+                          <el-col :span="3" :offset="1">
+                            <el-radio label="max">最大</el-radio>
+                          </el-col>
+                          <el-col :span="3" :offset="1">
+                            <el-radio label="sup">上确界</el-radio>
+                          </el-col>
+                          <el-col :span="3" :offset="1">
+                            <el-radio label="inf">下确界</el-radio>
+                          </el-col>                      
+                        </el-row>
+                      </el-radio-group>               
+                    </el-form-item>     
+                  </el-col>
+                </el-row>
+                <el-row :span="24">
+                  <el-col :span="9">
+                    <el-form-item label="参数">
+                      <el-input v-model="latex.最值.param2" placeholder="请输入参数，多个参数请用英文逗号分隔"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-divider></el-divider>
+                <el-row :span="24">
+                  <el-col :span="9">
+                    <el-form-item>
+                      <el-button @click="Update_MinMax()">刷新</el-button>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>   
+            </div>
+          </el-main>
+        </el-container>
+      </el-container>
+    </el-dialog>
+
     <!-- header -->
     <el-row style="padding-top: 15px;" v-if="simpleInput">
       <el-col :span="6">
@@ -24,7 +277,7 @@
         </el-row>
       </el-col>
     </el-row>
-    <el-row v-if="!simpleInput" type="flex" justify="center">
+    <!-- <el-row v-if="!simpleInput" type="flex" justify="center">
       <el-col :span="3" style="margin-top: 100px;">
         <img src="../assets/title_exercise.png" alt="logo" />
       </el-col>
@@ -78,6 +331,17 @@
           </el-button>
         </el-row>
       </el-col>
+    </el-row> -->
+    <el-row style="padding-top: 15px;" v-if="!simpleInput" type="flex" justify="center">
+      <el-col :span="2">
+        <el-row style="margin-top: 40px;"><img src="../assets/title_exercise.png" alt="logo" /></el-row>
+        <el-row>
+          <el-button @click="helper_dialog = true">快速公式助手</el-button>           
+        </el-row>
+        <el-row><el-button @click="changeInput">切换简单输入</el-button></el-row>
+        <el-row><el-button>检索</el-button></el-row>
+      </el-col>
+      <el-col :span="18"><mavon-editor v-model="content" @imgAdd="New_Img_In" @imgDel="Del_Img" /></el-col>
     </el-row>
     <!-- main -->
     <el-row type="flex" justify="center" style="border-top: 10px solid #111;">
@@ -156,13 +420,92 @@ export default {
       sour: "",
       content: "",
       simpleInput: true,
+      // 老版本用到的UploadImg方法，我们这里暂时保留防止万一出问题需要还原
       src: [], // 图片数组
-      filelists: []
+      filelists: [],
+      // 新版本用的mavon-editor带来的自带回调函数用的json格式
+      // name: 图片名
+      // info: base64转换后的数据段
+      image_infos: [],
+      // 记录当前是否打开数学助手对话框
+      helper_dialog: false,
+      // 记录当前应当显示的LaTex公式的结果
+      temp_latex: "$2^3$",
+      // 记录当前应当显示哪一个LaTex公式的对话框的变量
+      latex_now: "",
+      // 保存所有快速生成LaTex文本参数的Json段
+      latex: {
+        "指数":{
+          name: "指数",
+          param1: "",
+          param2: ""
+        },
+        "对数": {
+          name: "对数",
+          param1: "",
+          param2: ""
+        },
+        "三角函数": {
+          name: "三角函数",
+          param1: "",
+          param2: ""
+        },
+        "绝对值": {
+          name: "绝对值",
+          param: ""
+        },
+        "最值": {
+          name: "最值",
+          param1: "",
+          param2: ""
+        }
+      },
+      // 保存显示数学希腊符号的符号段
+      symbols: [
+        {
+          'col1': "\\alpha",
+          'col2': "\\beta",
+          'col3': "\\gamma",
+          'col4': "\\delta"
+        },
+        {
+          'col1': "\\epsilon",
+          'col2': "\\zeta",
+          'col3': "\\eta",
+          'col4': "\\theta"
+        },{
+          'col1': "\\iota ",
+          'col2': "\\kappa",
+          'col3': "\\lambda",
+          'col4': "\\mu"
+        },{
+          'col1': "\\nu",
+          'col2': "\\omicron",
+          'col3': "\\xi",
+          'col4': "\\pi"
+        },{
+          'col1': "\\rho",
+          'col2': "\\sigma",
+          'col3': "\\tau",
+          'col4': "\\upsilon"
+        },{
+          'col1': "\\phi",
+          'col2': "\\chi",
+          'col3': "\\psi",
+          'col4': "\\omega"
+        }
+      ]
     };
   },
   watch:{
     sour(val) {
       this.submit();
+    },
+    latex_now(newVal, oldVal){
+      if(newVal != oldVal){
+        this.temp_latex = "";
+        this.latex_now = newVal;
+      }
     }
   },
   methods: {
@@ -210,7 +553,66 @@ export default {
           this.raw_text = data.data.raw_text;
           this.entities_groups = data.data.entities_groups;
       });    
-    }
+    },
+    New_Img_In(imgname, img){
+      this.image_infos.push(
+        {
+          "name": img.name,
+          "info": img.miniurl
+        }
+      );
+      console.log(this.image_infos);
+    },
+    Del_Img(imgname){
+      for(var i = 0; i < this.image_infos.length; i++){
+        if(this.image_infos[i].name == imgname[1].name){
+          this.image_infos.splice(i, 1)
+          break;
+        }
+      }
+    },
+    // 参数
+    Update_Exp(){
+      this.temp_latex = "$" + this.latex.指数.param1 + "^{" + this.latex.指数.param2 + "}$";
+    },
+    // 对数
+    Update_Log(){
+      if(this.latex.对数.param1 == 'e'){
+        this.temp_latex = "$\ln" + this.latex.对数.param2 + "$";
+      }else if(this.latex.对数.param1 == '10'){
+        this.temp_latex = "$\lg" + this.latex.对数.param2 + "$";
+      }else{
+        this.temp_latex = "$\log_{" + this.latex.对数.param1 + "}" + this.latex.对数.param2 + "$";
+      }
+    },
+    // 三角函数
+    Update_Triangle(){
+      this.temp_latex = "$" + this.latex.三角函数.param1 + " " + this.latex.三角函数.param2 + "$";
+    },
+    // 绝对值
+    Update_Absolute(){
+      this.temp_latex = "$|" + this.latex.绝对值.param + "|$";
+    },
+    // 最值
+    Update_MinMax(){
+      if( this.latex.最值.param1 == 'min' && this.latex.最值.param2.indexOf(',') != -1 ){
+        this.temp_latex = "$\min(" + this.latex.最值.param2 + ")$";
+      }else if( this.latex.最值.param1 == 'max' && this.latex.最值.param2.indexOf(',') != -1 ){
+        this.temp_latex = "$\max(" + this.latex.最值.param2 + ")$";
+      }else if( this.latex.最值.param1 == 'min' && this.latex.最值.param2.indexOf(',') == -1 ){
+        this.temp_latex = "$\min " + this.latex.最值.param2 + "$";
+      }else if( this.latex.最值.param1 == 'max' && this.latex.最值.param2.indexOf(',') == -1 ){
+        this.temp_latex = "$\max " + this.latex.最值.param2 + "$";
+      }else if( this.latex.最值.param1 == 'sup' && this.latex.最值.param2.indexOf(',') == -1 ){
+        this.temp_latex = "$\sup " + this.latex.最值.param2 + "$";
+      }else if( this.latex.最值.param1 == 'inf' && this.latex.最值.param2.indexOf(',') == -1 ){
+        this.temp_latex = "$\inf " + this.latex.最值.param2 + "$";
+      }else if( this.latex.最值.param1 == 'sup' && this.latex.最值.param2.indexOf(',') != -1 ){
+        this.temp_latex = "上确界不支持多参数";
+      }else if( this.latex.最值.param1 == 'inf' && this.latex.最值.param2.indexOf(',') != -1 ){
+        this.temp_latex = "下确界不支持多参数";
+      }
+    },
   }
 };
 </script>
