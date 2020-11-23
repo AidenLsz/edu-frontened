@@ -42,7 +42,7 @@
                 width="70">
               </el-table-column>
             </el-table>
-            <p style="text-align: left; padding-left: 30px;padding-top: 20px ; height: 30px">复制格式：{{ temp_latex }}</p>
+            <p style="text-align: left; padding-left: 30px;padding-top: 20px ; height: 50px">复制格式：{{ temp_latex }}</p>
             <Mathdown :content="'效果展示：'+temp_latex" style="text-align: left; padding-left: 30px; padding-top: 20px; height: 30px"></Mathdown>
           </el-aside>
 
@@ -131,7 +131,7 @@
                         </el-row>
                         <el-row>
                           <el-col :span="4">
-                            <el-radio label="oint">闭合曲线/面</el-radio>
+                            <el-radio label="oint">闭合曲线 / 面符号</el-radio>
                           </el-col>
                           <el-col :span="4" :offset="1">
                             <el-radio label="cap">交集(A,B...)</el-radio>
@@ -197,7 +197,7 @@
                   </el-col>
                 </el-row>
                 <el-row :span="24" v-if="latex.常用符号及格式提示.param1 != ''">
-                  <el-col :span="9">
+                  <el-col :span="24">
                     <el-form-item>
                       <el-button @click="Update_Default()">点击刷新</el-button>
                     </el-form-item>
@@ -206,6 +206,89 @@
               </el-form>
               <el-divider></el-divider>
               <el-link href="https://www.cnblogs.com/wanghai0666/p/13950679.html" target="_blank">更多常见符号对照表</el-link>
+            </div>
+
+            <!-- 各类括号的使用方法的DIV -->
+            <div v-if="latex_now == '各类括号的使用方法'">
+              <el-row>
+                <el-col :span="4" style="text-align: left; font-weight: bold">
+                  各类括号的使用方法
+                </el-col>
+                <el-col :span="24" style="margin: 10px">
+                </el-col>
+                <el-col :span="24" style="text-align: left; padding-left: 20px">
+                  基础表示方式： ( ) 、 [ ]  和 | 表示符号本身，使用  \{ \} 来表示  { } 。
+                </el-col>
+              </el-row>
+              <el-divider></el-divider>
+              <el-form >
+                <el-row :span="24" >
+                  <el-col :span="24">
+                    <el-form-item label="点击查看示例结果">
+                      <el-radio-group style="width: 800px; text-align: left; padding-top: 10px" v-model="temp_latex">
+                        <el-row :span="24" >
+                          <el-col :span="4">
+                            <el-radio label="$\left( \frac{a}{b} \right)$">圆 / 小括号</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="$\left[ \frac{a}{b} \right]$">方 / 中括号</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="$\left\{ \frac{a}{b} \right\}$">花 / 大括号</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="$\left \langle \frac{a}{b} \right \rangle$">角括号</el-radio>
+                          </el-col>                  
+                        </el-row>
+                        <el-row :span="24" >
+                          <el-col :span="4">
+                            <el-radio label="$\left| \frac{a}{b} \right|$">绝对值 / 单竖线</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="$\left \| \frac{a}{b} \right \|$">范 / 双竖线</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="$\left \lfloor \frac{a}{b} \right \rfloor$">取整</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="$\left \lceil \frac{c}{d} \right \rceil$">取顶</el-radio>
+                          </el-col> 
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="$\left / \frac{a}{b} \right \backslash$">斜线与反斜线</el-radio>
+                          </el-col>                 
+                        </el-row>
+                        <el-row :span="24" >
+                          <el-col :span="4">
+                            <el-radio label="$\left \uparrow \frac{a}{b} \right \downarrow$">箭头（单线）</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="$\left \Uparrow \frac{a}{b} \right \Downarrow$">箭头（双线）</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="$\left \updownarrow \frac{a}{b} \right \Updownarrow$">混合双向箭头</el-radio>
+                          </el-col>              
+                        </el-row>
+                        <el-row :span="24" >
+                          <el-col :span="4">
+                            <el-radio label="$\left[ 0,1 \right)$">括号混合</el-radio>
+                          </el-col>
+                          <el-col :span="6" :offset="1">
+                            <el-radio label="$\left \{\frac{a}{b} \right.$">单左括号（注意右侧补齐）</el-radio>
+                          </el-col>
+                          <el-col :span="6" :offset="1">
+                            <el-radio label="$\left. \frac{a}{b} \right \}$">单右括号（注意左侧补齐）</el-radio>
+                          </el-col>                  
+                        </el-row>
+                        <el-row :span="24" >
+                          <el-col :span="8">
+                            <el-radio label="$\Bigg ( \bigg [ \Big \{ \big \langle \left | \| \frac{a}{b} \| \right | \big \rangle \Big \} \bigg ] \Bigg )$">括号大小控制示例</el-radio>
+                          </el-col>                  
+                        </el-row>
+                      </el-radio-group>               
+                    </el-form-item>     
+                  </el-col>
+                </el-row>
+              </el-form>
             </div>
 
             <!-- 指数用DIV -->
@@ -217,9 +300,7 @@
                       <el-input v-model="latex.指数.param1" placeholder="请输入底数"></el-input>
                     </el-form-item>
                   </el-col>
-                </el-row>
-                <el-row :span="24">
-                  <el-col :span="6">
+                  <el-col :span="6" :offset="1">
                     <el-form-item label="指数">
                       <el-input v-model="latex.指数.param2" placeholder="请输入指数"></el-input>
                     </el-form-item>
@@ -340,27 +421,6 @@
                   <el-col :span="9">
                     <el-form-item>
                       <el-button @click="Update_Triangle()">刷新</el-button>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-              </el-form>
-            </div>
-
-            <!-- 绝对值用DIV -->
-            <div v-if="latex_now == '绝对值'">
-              <el-form>
-                <el-row :span="24">
-                  <el-col :span="6">
-                    <el-form-item label="参数">
-                      <el-input v-model="latex.绝对值.param" placeholder="请输入参数"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-divider></el-divider>
-                <el-row :span="24">
-                  <el-col :span="6">
-                    <el-form-item>
-                      <el-button @click="Update_Absolute()">点击刷新</el-button>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -525,7 +585,7 @@
                             <el-radio label="hom">同态</el-radio>
                           </el-col>
                           <el-col :span="3" :offset="1">
-                            <el-radio label="len">向量长度</el-radio>
+                            <el-radio label="len">范</el-radio>
                           </el-col>
                           <el-col :span="3" :offset="1">
                             <el-radio label="arg">角度</el-radio>
@@ -983,6 +1043,9 @@ export default {
           param3: "",
           param4: ""
         },
+        "各类括号的使用方法": {
+          name: "各类括号的使用方法"
+        },
         "指数":{
           name: "指数",
           param1: "",
@@ -997,10 +1060,6 @@ export default {
           name: "三角函数",
           param1: "",
           param2: ""
-        },
-        "绝对值": {
-          name: "绝对值",
-          param: ""
         },
         "最值": {
           name: "最值",
@@ -1212,10 +1271,6 @@ export default {
     // 三角函数
     Update_Triangle(){
       this.temp_latex = "$" + this.latex.三角函数.param1 + " " + this.latex.三角函数.param2 + "$";
-    },
-    // 绝对值
-    Update_Absolute(){
-      this.temp_latex = "$|" + this.latex.绝对值.param + "|$";
     },
     // 最值
     Update_MinMax(){
