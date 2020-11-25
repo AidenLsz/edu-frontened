@@ -7,7 +7,7 @@
         <el-main>
         <el-container style="margin-top: -20px; height: 390px">
           <el-aside width="25%" style="height: 390px;">
-            <el-select v-model="latex_now" placeholder="请选择">
+            <el-select v-model="latex_now" placeholder="请选择数学元素的大致类型">
                 <el-option
                   v-for="(item, index) in latex"
                   :key="index"
@@ -16,7 +16,7 @@
                 </el-option>
             </el-select>
             <el-divider></el-divider>
-            <div style="padding-top: -10px;" >常见数学希腊符号表（首字母可大写）</div><br/>
+            <div style="padding-top: -10px;" >常见数学希腊符号表</div><br/>
             <el-table max-height="260px" :show-header="false" :data="symbols" style="font-size: 15px">
                 <el-table-column
                   prop="col1"
@@ -869,7 +869,8 @@
       <el-col :span="2">
         <el-row style="margin-top: 40px;"><img src="../assets/title_exercise.png" alt="logo" /></el-row>
         <el-row>
-          <el-button @click="helper_dialog = true">快速公式助手</el-button>           
+          <el-popover ref="hint" placement="top" content="提供LaTex格式的数学公式元素的辅助输入功能。注：显示区使用KaTex进行解析，可能和LaTex结果显示上有差异，但LaTex格式无误。" width="300" trigger="hover"></el-popover>
+          <el-button v-popover:hint @click="helper_dialog = true">快速公式助手</el-button>
         </el-row>
         <el-row><el-button @click="changeInput">切换简单输入</el-button></el-row>
         <!-- 临时先注释掉，等之后后台搞定了图片转换LaTex的方法之后，再来处理这一块 -->
@@ -978,20 +979,23 @@ export default {
         "各类括号的使用方法": {
           name: "各类括号的使用方法"
         },
-        "指数":{
-          name: "指数",
+        "三角函数": {
+          name: "三角函数",
+        },
+        "分数": {
+          name: "分数",
+        },
+        "微分及导数": {
+          name: "微分及导数",
         },
         "对数": {
           name: "对数",
         },
-        "三角函数": {
-          name: "三角函数",
+        "指数":{
+          name: "指数",
         },
         "最值": {
           name: "最值",
-        },
-        "分数": {
-          name: "分数",
         },
         "极限": {
           name: "极限",
@@ -999,14 +1003,11 @@ export default {
         "投射": {
           name: "投射",
         },
-        "微分及导数": {
-          name: "微分及导数",
+        "模运算及开根号": {
+          name: "模运算及开根号",
         },
         "类字母符号与常数": {
           name: "类字母符号与常数"
-        },
-        "模运算及开根号": {
-          name: "模运算及开根号",
         }
       },
       // 记录当前应当显示的LaTex公式的结果
@@ -1800,6 +1801,7 @@ export default {
       var Input = document.getElementById('copy_input');
       Input.select();
       document.execCommand("Copy");
+      this.$message('已复制');
     },
     Insert_To_Content_Tail(){
       this.content = this.content + this.temp_latex;
