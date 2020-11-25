@@ -3,9 +3,11 @@
   <div class="exercise">
 
     <el-dialog width="80%" :visible.sync="helper_dialog" title="快速公式助手" @close="helper_dialog = false; latex_now = ''; temp_latex = ''">
-      <el-container style="height: 500px;">
+      <el-container>
+      <el-aside style="height: 510px; width: 90%;">
+      <el-container>
         <el-main>
-        <el-container style="margin-top: -20px; height: 390px">
+        <el-container style="margin-top: -20px; height: 370px">
           <el-aside width="25%" style="height: 390px;">
             <el-select v-model="latex_now" placeholder="请选择数学元素的大致类型">
                 <el-option
@@ -17,26 +19,26 @@
             </el-select>
             <el-divider></el-divider>
             <div style="padding-top: -10px;" >常见数学希腊符号表</div><br/>
-            <el-table max-height="260px" :show-header="false" :data="symbols" style="font-size: 15px">
+            <el-table max-height="240px" :show-header="false" :data="symbols" style="font-size: 15px">
                 <el-table-column
                   prop="col1"
                   align="center"
-                  width="40">
+                  width="30">
                 </el-table-column>
                 <el-table-column
                   prop="col2"
                   align="left"
-                  width="100">
+                  width="90">
                 </el-table-column>
                 <el-table-column
                   prop="col3"
                   align="center"
-                  width="40">
+                  width="30">
                 </el-table-column>
                 <el-table-column
                   prop="col4"
                   align="left"
-                  width="100">
+                  width="90">
                 </el-table-column>
             </el-table>           
           </el-aside>
@@ -47,41 +49,19 @@
             <div v-if="latex_now == '' || latex_now == '常用符号及格式提示'">
               <el-row>
                 <el-col :span="4" style="text-align: left; font-weight: bold">
-                  格式提示
+                  格式样例
                 </el-col>
               </el-row>
-              <el-form >
-                <el-row :span="24" >
-                  <el-col :span="24">
-                    <el-form-item label="点击查看常用输入格式结果">
-                      <el-radio-group style="width: 800px; text-align: left; padding-top: 10px" v-model="temp_latex">
-                        <el-row :span="24" >
-                          <el-col :span="6">
-                            <el-radio label="$a^2$">上标 例：a^2</el-radio>
-                          </el-col>
-                          <el-col :span="6" :offset="1">
-                            <el-radio label="$a_2$">下标 例：a_2</el-radio>
-                          </el-col>
-                          <el-col :span="6" :offset="1">
-                            <el-radio label="$a^{a+b}$">组合上标 例：a^{a+b}</el-radio>
-                          </el-col>                   
-                        </el-row>
-                        <el-row>
-                          <el-col :span="6">
-                            <el-radio label="$a_{a+b}$">组合上标 例：a_{a+b}</el-radio>
-                          </el-col>
-                          <el-col :span="6" :offset="1">
-                            <el-radio label="$a_2^3$">组合上下标 例：a_2^3</el-radio>
-                          </el-col>
-                          <el-col :span="6" :offset="1">
-                            <el-radio label="${}_1^2a_3^4$">前置上下标 例：{}_1^2a_3^4</el-radio>
-                          </el-col>
-                        </el-row>
-                      </el-radio-group>               
-                    </el-form-item>     
-                  </el-col>
-                </el-row>
-              </el-form>
+              <el-row :span="24" >
+                <el-col :span="7" style="text-align: left">上标：a^2</el-col>
+                <el-col :span="7" :offset="1" style="text-align: left">下标：a_2</el-col>
+                <el-col :span="7" :offset="1" style="text-align: left">组合上标：a^{a+b}</el-col>                   
+              </el-row>
+              <el-row>
+                <el-col :span="7" style="text-align: left">组合下标：a_{a+b}</el-col>
+                <el-col :span="7" :offset="1" style="text-align: left">组合上下标：a_2^3</el-col>
+                <el-col :span="7" :offset="1" style="text-align: left">前置上下标：{}_1^2a_3^4</el-col>
+              </el-row>
               <el-divider></el-divider>
               <el-row>
                 <el-col :span="4" style="text-align: left; font-weight: bold">
@@ -91,8 +71,14 @@
               <el-form >
                 <el-row :span="24" >
                   <el-col :span="24">
-                    <el-form-item label="请选择常用符号类型">
-                      <el-radio-group style="width: 800px; text-align: left; padding-top: 10px" v-model="temp_param_type">
+                    <el-form-item label="请选择常用符号类型，向下卷动查看更多">
+                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
+                        <el-row :span="24" >
+                          <el-col :span="4">
+                            <el-radio label="calc">公式输入</el-radio>
+                          </el-col>                     
+                        </el-row>
+                        <el-divider></el-divider>
                         <el-row :span="24" >
                           <el-col :span="4">
                             <el-radio label="sum">求和（格式1）</el-radio>
@@ -105,6 +91,9 @@
                           </el-col>
                           <el-col :span="4" :offset="1">
                             <el-radio label="mmul">求积（格式2）</el-radio>
+                          </el-col>
+                          <el-col :span="4" :offset="1">
+                            <el-radio label="frac">分式</el-radio>
                           </el-col>                      
                         </el-row>
                         <el-row>
@@ -126,7 +115,7 @@
                         </el-row>
                         <el-row>
                           <el-col :span="4">
-                            <el-radio label="oint">闭合曲线 / 面符号</el-radio>
+                            <el-radio label="oint">闭合曲线/面符号</el-radio>
                           </el-col>
                           <el-col :span="4" :offset="1">
                             <el-radio label="cap">交集(A,B...)</el-radio>
@@ -145,52 +134,6 @@
                     </el-form-item>     
                   </el-col>
                 </el-row>
-                <el-row :span="24" v-if="temp_param_type == 'sum' ||
-                                        temp_param_type == 'msum' ||
-                                        temp_param_type == 'mul' ||
-                                        temp_param_type == 'mmul' ||
-                                        temp_param_type == 'cmul' ||
-                                        temp_param_type == 'mcmul' ||
-                                        temp_param_type == 'bcap' ||
-                                        temp_param_type == 'bcup' ">
-                  <el-col :span="6">
-                    <el-form-item label="变量">
-                      <el-input v-model="temp_param_1" placeholder="请输入变量"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="6" :offset="1">
-                    <el-form-item label="变量起始值">
-                      <el-input v-model="temp_param_2" placeholder="请输入变量起始值"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="6" :offset="1">
-                    <el-form-item label="变量目标值">
-                      <el-input v-model="temp_param_3" placeholder="请输入变量目标值"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row :span="24" v-if="temp_param_type == 'int' ||
-                                        temp_param_type == 'iint' ||
-                                        temp_param_type == 'iiint'">
-                  <el-col :span="6">
-                    <el-form-item label="上限">
-                      <el-input v-model="temp_param_1" placeholder="请输入上限"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="6" :offset="1">
-                    <el-form-item label="下限">
-                      <el-input v-model="temp_param_2" placeholder="请输入下限"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row :span="24" v-if="temp_param_type == 'cap' ||
-                                        temp_param_type == 'cup'">
-                  <el-col :span="18">
-                    <el-form-item label="变量">
-                      <el-input v-model="temp_param_1" placeholder="请输入至少两个变量，并用英文逗号分隔变量"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
               </el-form>
               <el-divider></el-divider>
               <el-link href="https://www.cnblogs.com/wanghai0666/p/13950679.html" target="_blank">更多常见符号对照表</el-link>
@@ -199,11 +142,11 @@
             <!-- 各类括号的使用方法的DIV -->
             <div v-if="latex_now == '各类括号的使用方法'">
               <el-row>
-                <el-col :span="4" style="text-align: left; font-weight: bold">
+                <el-col :span="8" style="text-align: left; font-weight: bold">
                   各类括号的使用方法
                 </el-col>
-                <el-col :span="24" style="margin: 10px">
-                </el-col>
+              </el-row>
+              <el-row>
                 <el-col :span="24" style="text-align: left; padding-left: 20px">
                   基础表示方式： ( ) 、 [ ]  和 | 表示符号本身，使用  \{ \} 来表示  { } 。
                 </el-col>
@@ -212,8 +155,8 @@
               <el-form >
                 <el-row :span="24" >
                   <el-col :span="24">
-                    <el-form-item label="点击查看示例结果">
-                      <el-radio-group style="width: 800px; text-align: left; padding-top: 10px" v-model="temp_latex">
+                    <el-form-item label="选择插入示例">
+                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_latex">
                         <el-row :span="24" >
                           <el-col :span="4">
                             <el-radio label="$\left( \frac{a}{b} \right)$">圆 / 小括号</el-radio>
@@ -261,10 +204,10 @@
                             <el-radio label="$\left[ 0,1 \right)$">括号混合</el-radio>
                           </el-col>
                           <el-col :span="6" :offset="1">
-                            <el-radio label="$\left \{\frac{a}{b} \right.$">单左括号（注意右侧补齐）</el-radio>
+                            <el-radio label="$\left \{\frac{a}{b} \right.$">单左括号（右侧补齐）</el-radio>
                           </el-col>
-                          <el-col :span="6" :offset="1">
-                            <el-radio label="$\left. \frac{a}{b} \right \}$">单右括号（注意左侧补齐）</el-radio>
+                          <el-col :span="6" :offset="4">
+                            <el-radio label="$\left. \frac{a}{b} \right \}$">单右括号（左侧补齐）</el-radio>
                           </el-col>                  
                         </el-row>
                         <el-row :span="24" >
@@ -281,20 +224,7 @@
 
             <!-- 指数用DIV -->
             <div v-if="latex_now == '指数'">
-              <el-form>
-                <el-row :span="24">
-                  <el-col :span="6">
-                    <el-form-item label="底数">
-                      <el-input v-model="temp_param_1" placeholder="请输入底数"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="6" :offset="1">
-                    <el-form-item label="指数">
-                      <el-input v-model="temp_param_2" placeholder="请输入指数"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-              </el-form> 
+               
             </div>
 
             <!-- 对数用DIV -->
@@ -310,18 +240,6 @@
                     </el-form-item>
                   </el-col>
                 </el-row>
-                <el-row>
-                  <el-col :span="4">
-                    <el-form-item label="底数">
-                      <el-input v-model="temp_param_1" placeholder="请输入底数"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="4" :offset="1">
-                    <el-form-item label="指数">
-                      <el-input v-model="temp_param_2" placeholder="请输入指数"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
               </el-form>
             </div>
 
@@ -331,7 +249,7 @@
                 <el-row :span="24" >
                   <el-col :span="24">
                     <el-form-item label="请选择三角函数类型">
-                      <el-radio-group style="width: 800px; text-align: left; padding-top: 10px" v-model="temp_param_type">
+                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
                         <el-row :span="24" >
                           <el-col :span="4">
                             <el-radio label="sin">正弦sin</el-radio>
@@ -381,13 +299,6 @@
                     </el-form-item>     
                   </el-col>
                 </el-row>
-                <el-row :span="24">
-                  <el-col :span="9">
-                    <el-form-item label="参数">
-                      <el-input v-model="temp_param_1" placeholder="请输入参数"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
               </el-form>
             </div>
 
@@ -397,7 +308,7 @@
                 <el-row :span="24" >
                   <el-col :span="24">
                     <el-form-item label="请选择最值类型">
-                      <el-radio-group style="width: 800px; text-align: left; padding-top: 10px" v-model="temp_param_type">
+                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
                         <el-row :span="24" >
                           <el-col :span="3">
                             <el-radio label="min">最小</el-radio>
@@ -416,13 +327,6 @@
                     </el-form-item>     
                   </el-col>
                 </el-row>
-                <el-row :span="24">
-                  <el-col :span="9">
-                    <el-form-item label="参数">
-                      <el-input v-model="temp_param_1" placeholder="请输入参数，多个参数请用英文逗号分隔"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
               </el-form>   
             </div>
 
@@ -432,7 +336,7 @@
                 <el-row>
                   <el-col :span="24">
                     <el-form-item label="请选择极限类型">
-                      <el-radio-group style="width: 800px; text-align: left; padding-top: 10px" v-model="temp_param_type">
+                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
                         <el-row :span="24" >
                           <el-col :span="3">
                             <el-radio label="lim">极限（无变量）</el-radio>
@@ -465,48 +369,6 @@
                     </el-form-item>     
                   </el-col>
                 </el-row>
-                <el-row :span="24" v-if=" temp_param_type != 'limft' ">
-                  <el-col :span="9">
-                    <el-form-item label="公式">
-                      <el-input v-model="temp_param_1" placeholder="请输入公式"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row :span="24" v-if=" temp_param_type == 'limft' ">
-                  <el-col :span="6">
-                    <el-form-item label="参数">
-                      <el-input v-model="temp_param_1" placeholder="请输入参数名，多个参数名请用英文逗号分隔"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="6" :offset="3">
-                    <el-form-item label="目标">
-                      <el-input v-model="temp_param_2" placeholder="请输入极限值，多个极限值请用英文逗号分隔"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="6" :offset="3">
-                    <el-form-item label="公式">
-                      <el-input v-model="temp_param_3" placeholder="请输入公式"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-              </el-form>
-            </div>
-
-            <!-- 分数用DIV -->
-            <div v-if="latex_now == '分数'">
-              <el-form>
-                <el-row :span="24">
-                  <el-col :span="11">
-                    <el-form-item label="分子部分">
-                      <el-input v-model="temp_param_1" placeholder="请输入分子部分"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="11" :offset="2">
-                    <el-form-item label="分母部分">
-                      <el-input v-model="temp_param_2" placeholder="请输入分母部分"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
               </el-form>
             </div>
 
@@ -516,7 +378,7 @@
                 <el-row>
                   <el-col :span="24">
                     <el-form-item label="请选择投射属性">
-                      <el-radio-group style="width: 800px; text-align: left; padding-top: 10px" v-model="temp_param_type">
+                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
                         <el-row :span="24" >
                           <el-col :span="3">
                             <el-radio label="pr">概率</el-radio>
@@ -535,13 +397,6 @@
                     </el-form-item>     
                   </el-col>
                 </el-row>
-                <el-row :span="24">
-                  <el-col :span="9">
-                    <el-form-item label="公式">
-                      <el-input v-model="temp_param_1" placeholder="请输入公式"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
               </el-form>
             </div>
 
@@ -551,7 +406,7 @@
                 <el-row>
                   <el-col :span="24">
                     <el-form-item label="请选择极限类型">
-                      <el-radio-group style="width: 800px; text-align: left; padding-top: 10px" v-model="temp_param_type">
+                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
                         <el-row :span="24" >
                           <el-col :span="4">
                             <el-radio label="dt">dx（格式1）</el-radio>
@@ -563,25 +418,27 @@
                             <el-radio label="partial">偏导元素</el-radio>
                           </el-col>
                           <el-col :span="4" :offset="1">
+                            <el-radio label="par">偏导</el-radio>
+                          </el-col> 
+                          <el-col :span="4" :offset="1">
                             <el-radio label="nabla">梯度元素</el-radio>
                           </el-col>                                         
                         </el-row>
                         <el-row :span="24" >
-                          <el-col :span="4">
+                          <el-col :span="6">
                             <el-radio label="par1h">dx/dy（格式1）</el-radio>
                           </el-col>
-                          <el-col :span="4" :offset="1">
+                          <el-col :span="6" :offset="4">
                             <el-radio label="par2h">dx/dy（格式2）</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
+                          </el-col> 
+                        </el-row>
+                        <el-row :span="24">
+                          <el-col :span="6">
                             <el-radio label="par1v">dx/dy（格式1 | 竖版）</el-radio>
                           </el-col>
-                          <el-col :span="4" :offset="1">
+                          <el-col :span="6" :offset="4">
                             <el-radio label="par2v">dx/dy（格式2 | 竖版）</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="par">偏导</el-radio>
-                          </el-col>                                         
+                          </el-col>                                        
                         </el-row>
                         <el-row :span="24" >
                           <el-col :span="4">
@@ -599,48 +456,6 @@
                         </el-row>
                       </el-radio-group>               
                     </el-form-item>     
-                  </el-col>
-                </el-row>
-                <el-row :span="24" v-if=" temp_param_type == 'dt' ||
-                                          temp_param_type == 'mdt' ||
-                                          temp_param_type == 'partial' ||
-                                          temp_param_type == 'nabla' ">
-                  <el-col :span="16">
-                    <el-form-item label="变量元素">
-                      <el-input v-model="temp_param_1" placeholder="请输入变量元素，多元素请用英文逗号分隔"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row :span="24" v-if=" temp_param_type == 'par1h' ||
-                                          temp_param_type == 'par2h' ||
-                                          temp_param_type == 'par1v' ||
-                                          temp_param_type == 'par2v' ||
-                                          temp_param_type == 'par' ">
-                  <el-col :span="10">
-                    <el-form-item label="变量1">
-                      <el-input v-model="temp_param_1" placeholder="请输入变量1，多个变量请用英文逗号分隔"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="10" :offset="1">
-                    <el-form-item label="变量2">
-                      <el-input v-model="temp_param_2" placeholder="请输入变量2，多个变量请用英文逗号分隔"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row :span="24" v-if=" temp_param_type == 'prime' ||
-                                          temp_param_type == 'backprime' ">
-                </el-row>
-                <el-row :span="24" v-if=" temp_param_type == 'deri' ||
-                                          temp_param_type == 'deridot' ">
-                  <el-col :span="10">
-                    <el-form-item label="变量元素">
-                      <el-input v-model="temp_param_1" placeholder="请输入变量元素"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="10" :offset="1">
-                    <el-form-item label="求导次数">
-                      <el-input v-model="temp_param_2" placeholder="请输入求导次数"></el-input>
-                    </el-form-item>
                   </el-col>
                 </el-row>
               </el-form>
@@ -717,7 +532,7 @@
                 <el-row :span="24" >
                   <el-col :span="24">
                     <el-form-item label="请选择运算类型">
-                      <el-radio-group style="width: 800px; text-align: left; padding-top: 10px" v-model="temp_param_type">
+                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
                         <el-row :span="24" >
                           <el-col :span="3">
                             <el-radio label="bmod">mod符号</el-radio>
@@ -739,41 +554,20 @@
                     </el-form-item>     
                   </el-col>
                 </el-row>
-
-                <el-row v-if="temp_param_type == 'bmod'"></el-row>
-                <el-row v-else-if="temp_param_type == 'pmod'">
-                  <el-col :span="4">
-                    <el-form-item label="参数">
-                      <el-input v-model="temp_param_1" placeholder="请输入参数"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row v-else>
-                  <el-col :span="4">
-                    <el-form-item label="参数1">
-                      <el-input v-model="temp_param_1" placeholder="请输入参数1"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="4" :offset="1">
-                    <el-form-item label="参数2">
-                      <el-input v-model="temp_param_2" placeholder="请输入参数2"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
               </el-form>
             </div>
           </el-main>
         </el-container>
         </el-main>
         <el-divider></el-divider>
-          <el-footer style="height: 40px">
+          <el-footer style="height: 30px">
             <el-row>
               <el-col :span="3" style="height: 40px; font-size: 16px; font-weight: bold">LaTex文本预览：</el-col>
               <el-col :span="6">
-                <el-input id="copy_input" style="text-align: left; font-size: 12px; height: 40px" :autosize="{minRows: 1, maxRows: 2}" type="textarea" resize="none" :readonly="true" :value="temp_latex"></el-input>
+                <el-input id="copy_input" style="text-align: left; font-size: 12px; height: 40px" :autosize="{minRows: 1, maxRows: 2}" type="textarea" resize="none" v-model="temp_latex_total"></el-input>
               </el-col>   
               <el-col :span="7" :offset="1">
-                <Mathdown :content="'效果展示：'+temp_latex" style="text-align: left; height: 40px; font-size: 16px; font-weight: bold"></Mathdown>
+                <Mathdown :content="'效果展示：' + temp_latex_total" style="text-align: left; height: 40px; font-size: 16px; font-weight: bold"></Mathdown>
               </el-col>
               <el-col :span="2" :offset="1" style="text-align: left; height: 40px; font-size: 16px; font-weight: bold; padding-top: 12px;">
                 <el-button size="small" @click="Copy_Input()">复制到粘贴板</el-button>
@@ -783,7 +577,252 @@
               </el-col>
             </el-row>
           </el-footer>
-        </el-container>
+      </el-container>
+      </el-aside>
+      <el-main style="height: 510px; width: 10%; padding: 0px">
+      <el-container>
+        <el-main v-if="latex_now == '常用符号及格式提示' || 
+                       latex_now == ''" 
+                 style="height: 440px;">
+            <el-row v-if="temp_param_type == 'sum' ||
+                          temp_param_type == 'msum' ||
+                          temp_param_type == 'mul' ||
+                          temp_param_type == 'mmul' ||
+                          temp_param_type == 'cmul' ||
+                          temp_param_type == 'mcmul' ||
+                          temp_param_type == 'bcap' ||
+                          temp_param_type == 'bcup' "> 
+                  <el-row>
+                    <span>变量名称</span>
+                  </el-row>               
+                  <el-row>
+                    <el-input rows="2" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" ></el-input>
+                  </el-row>
+                  <el-row>
+                    <span>变量起始值</span>
+                  </el-row>
+                  <el-row>
+                    <el-input rows="2" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" ></el-input>
+                  </el-row>
+                  <el-row>
+                    <span>变量目标值</span>
+                  </el-row>
+                  <el-row>
+                    <el-input rows="2" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_3" ></el-input>
+                  </el-row>
+            </el-row>
+            <el-row v-if="temp_param_type == 'int' ||
+                          temp_param_type == 'iint' ||
+                          temp_param_type == 'iiint'">
+              <el-row>
+                <span>积分上限</span>
+              </el-row>
+              <el-row>
+                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入上限"></el-input>
+              </el-row>
+              <el-row>
+                <span>积分下限</span>
+              </el-row>
+              <el-row>
+                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入下限"></el-input>
+              </el-row>
+            </el-row>
+            <el-row v-if="temp_param_type == 'cap' ||
+                          temp_param_type == 'cup'">
+              <el-row>
+                <span>交并变量</span>
+              </el-row>
+              <el-row>
+                <el-input rows="9" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入至少两个变量，并用英文逗号分隔变量"></el-input>
+              </el-row>
+            </el-row>
+            <el-row v-if="temp_param_type == 'frac' ">
+              <el-row>
+                <span>分子部分</span>
+              </el-row>
+              <el-row>
+                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入分子部分"></el-input>
+              </el-row>
+              <el-row>
+                <span>分母部分</span>
+              </el-row>
+              <el-row>
+                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入分母部分"></el-input>
+              </el-row>
+            </el-row>
+            <el-row v-if="temp_param_type == 'calc' ">
+              <el-row>
+                <span>公式部分</span>
+              </el-row>
+              <el-row>
+                <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="在此输入公式内容"></el-input>
+              </el-row>
+            </el-row>
+        </el-main>
+        <el-main v-else-if="latex_now == '指数'" style="height: 440px;">
+          <el-row>
+            <span>底数</span>
+          </el-row>
+          <el-row>
+            <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入底数"></el-input>
+          </el-row>
+          <el-row>
+            <span>指数</span>
+          </el-row>
+          <el-row>
+            <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入指数"></el-input>
+          </el-row>
+        </el-main>
+        <el-main v-else-if="latex_now == '对数'" style="height: 440px;">
+          <el-row>
+            <span>底数</span>
+          </el-row>
+          <el-row>
+            <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入底数"></el-input>
+          </el-row>
+          <el-row>
+            <span>指数</span>
+          </el-row>
+          <el-row>
+            <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入指数"></el-input>
+          </el-row>
+        </el-main>
+        <el-main v-else-if="latex_now == '三角函数'" style="height: 440px;">
+          <el-row>
+            <span>参数</span>
+          </el-row>
+          <el-row>
+            <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入参数"></el-input>
+          </el-row>
+        </el-main>
+        <el-main v-else-if="latex_now == '最值'" style="height: 440px;">
+          <el-row>
+            <span>参数</span>
+          </el-row>
+          <el-row>
+            <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入参数，多个参数请用英文逗号分隔"></el-input>
+          </el-row>
+        </el-main>
+        <el-main v-else-if="latex_now == '极限'" style="height: 440px;">
+            <el-row v-if="temp_param_type != 'limft'"> 
+              <el-row>
+                <span>公式</span>
+              </el-row>               
+              <el-row>
+                <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入公式"></el-input>
+              </el-row>
+            </el-row>
+            <el-row v-if="temp_param_type == 'limft'">
+              <el-row>
+                <span>参数</span>
+              </el-row>
+              <el-row>
+                <el-input rows="2" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入参数名，多个参数名请用英文逗号分隔"></el-input>
+              </el-row>
+              <el-row>
+                <span>目标</span>
+              </el-row>
+              <el-row>
+                <el-input rows="2" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入极限值，多个极限值请用英文逗号分隔"></el-input>
+              </el-row>
+              <el-row>
+                <span>公式</span>
+              </el-row>
+              <el-row>
+                <el-input rows="2" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_3" placeholder="请输入公式"></el-input>
+              </el-row>
+            </el-row>
+        </el-main>
+        <el-main v-else-if="latex_now == '投射'" style="height: 440px;">
+          <el-row>
+            <span>公式</span>
+          </el-row>
+          <el-row>
+            <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入公式"></el-input>
+          </el-row>
+        </el-main>
+        <el-main v-else-if="latex_now == '微分及导数'" style="height: 440px;">
+            <el-row v-if="temp_param_type == 'dt' ||
+                          temp_param_type == 'mdt' ||
+                          temp_param_type == 'partial' ||
+                          temp_param_type == 'nabla' "> 
+                  <el-row>
+                    <span>变量元素</span>
+                  </el-row>               
+                  <el-row>
+                    <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入变量元素，多元素请用英文逗号分隔"></el-input>
+                  </el-row>
+            </el-row>
+            <el-row v-if="temp_param_type == 'par1h' ||
+                          temp_param_type == 'par2h' ||
+                          temp_param_type == 'par1v' ||
+                          temp_param_type == 'par2v' ||
+                          temp_param_type == 'par'">
+              <el-row>
+                <span>变量1</span>
+              </el-row>
+              <el-row>
+                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入变量1，多个变量请用英文逗号分隔"></el-input>
+              </el-row>
+              <el-row>
+                <span>变量2</span>
+              </el-row>
+              <el-row>
+                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入变量2，多个变量请用英文逗号分隔"></el-input>
+              </el-row>
+            </el-row>
+            <el-row v-if="temp_param_type == 'prime' ||
+                          temp_param_type == 'backprime'">
+            </el-row>
+            <el-row v-if="temp_param_type == 'deri' ||
+                          temp_param_type == 'deridot'">
+              <el-row>
+                <span>变量元素</span>
+              </el-row>
+              <el-row>
+                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入变量元素"></el-input>
+              </el-row>
+              <el-row>
+                <span>求导次数</span>
+              </el-row>
+              <el-row>
+                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入求导次数"></el-input>
+              </el-row>
+            </el-row>
+        </el-main>
+        <el-main v-else-if="latex_now == '模运算及开根号'" style="height: 440px;">
+            <el-row v-if="temp_param_type == 'bmod'"> 
+            </el-row>
+            <el-row v-else-if="temp_param_type == 'pmod'"> 
+              <el-row>
+                <span>参数</span>
+              </el-row>               
+              <el-row>
+                <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入参数"></el-input>
+              </el-row>
+            </el-row>
+            <el-row v-else>
+              <el-row>
+                <span>参数1</span>
+              </el-row>
+              <el-row>
+                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入参数1"></el-input>
+              </el-row>
+              <el-row>
+                <span>参数2</span>
+              </el-row>
+              <el-row>
+                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入参数2"></el-input>
+              </el-row>
+            </el-row>
+        </el-main>
+
+        <el-footer>
+          <el-button size="mini" @click="Update_Temp_Latex_Total()">插入此元素</el-button>
+        </el-footer>
+      </el-container>
+      </el-main>
+      </el-container>
     </el-dialog>
 
     <!-- header -->
@@ -982,9 +1021,6 @@ export default {
         "三角函数": {
           name: "三角函数",
         },
-        "分数": {
-          name: "分数",
-        },
         "微分及导数": {
           name: "微分及导数",
         },
@@ -1010,10 +1046,12 @@ export default {
           name: "类字母符号与常数"
         }
       },
-      // 记录当前应当显示的LaTex公式的结果
+      // 记录当前元件应当显示的LaTex公式的结果
       temp_latex: "",
+      // 记录当前公式应当显示的LaTex公式的结果
+      temp_latex_total: "",
       // 进化模式，单格保存所有当前变量，用算法进行分类
-      temp_param_type: "",
+      temp_param_type: "calc",
       temp_param_1: "",
       temp_param_2: "",
       temp_param_3: "",
@@ -1221,6 +1259,9 @@ export default {
         this.temp_param_2 = "";
         this.temp_param_3 = "";
         this.latex_now = newVal;
+        if(newVal == '常用符号及格式提示'){
+          this.temp_param_type = 'calc';
+        }
       }
     },
     temp_param_type(newVal, oldVal){
@@ -1246,18 +1287,10 @@ export default {
         this.temp_param_3 = newVal;
         this.Param_Switch();
       }
+    },
+    temp_latex(newVal){
+      this.temp_latex = newVal;
     }
-    // },
-    // content(newVal, oldVal){
-    //   if(newVal == oldVal){
-    //     pass
-    //   }else{
-    //     console.log(this.$refs.mavoneditor.selectionStart);
-    //     this.$refs.test_copy.select();
-    //     document.execCommand("Copy");
-    //     this.content = newVal;
-    //   }
-    // }
   },
   methods: {
     dataSource(tab, event) {
@@ -1358,9 +1391,11 @@ export default {
       }else if( this.temp_param_type == 'inf' && this.temp_param_1.indexOf(',') == -1 ){
         this.temp_latex = "$\\inf " + this.temp_param_1 + "$";
       }else if( this.temp_param_type == 'sup' && this.temp_param_1.indexOf(',') != -1 ){
-        this.temp_latex = "上确界不支持多参数";
+        this.$message('上确界不支持多参数');
+        this.temp_param_1 = this.temp_param_1.substring(0, this.temp_param_1.length - 1);
       }else if( this.temp_param_type == 'inf' && this.temp_param_1.indexOf(',') != -1 ){
-        this.temp_latex = "下确界不支持多参数";
+        this.$message('下确界不支持多参数');
+        this.temp_param_1 = this.temp_param_1.substring(0, this.temp_param_1.length - 1);
       }
     },
     // 极限
@@ -1383,21 +1418,19 @@ export default {
         }
       }else if(this.temp_param_type == "limft"){
         if(this.temp_param_1 != "" && this.temp_param_2 != "" && this.temp_param_3 != ""){
+          var part1 = this.temp_param_1;
+          var part2 = this.temp_param_2;
           if(this.temp_param_1.indexOf(',') != -1){
-            this.temp_param_1 = "(" + this.temp_param_1 + ")"; 
+            part1 = "(" + this.temp_param_1 + ")"; 
           }
           if(this.temp_param_2.indexOf(',') != -1){
-            this.temp_param_2 = "(" + this.temp_param_2 + ")"; 
+            part2 = "(" + this.temp_param_2 + ")"; 
           }
-          this.temp_latex = "$\\lim_{" + this.temp_param_1 + " \\to " + this.temp_param_2 + "} " + this.temp_param_3 + "$";
+          this.temp_latex = "$\\lim_{" + part1 + " \\to " + part2 + "} " + this.temp_param_3 + "$";
         }else{
           this.temp_latex = "请填入完整参数"
         }
       }
-    },
-    // 分数
-    Update_Frac(){
-      this.temp_latex = "$\\frac{" + this.temp_param_1 + "}{" +  this.temp_param_2 + "}$"
     },
     // 投射
     Update_Perspective(){
@@ -1588,16 +1621,17 @@ export default {
       }else if(this.temp_param_type == 'deri'){
         
         if(this.temp_param_1.indexOf(',') != -1){
-          this.temp_latex = "请勿输入多个元素";
+          this.$message('请勿输入多个元素');
+          this.temp_param_1 = this.temp_param_1.substring(0, this.temp_param_1.length - 1);
         }else{
           var deri_count = parseInt(this.temp_param_2);
-          this.temp_latex = "$" + this.temp_param_1;
+          this.temp_latex = "$(" + this.temp_param_1;
           if(deri_count == 1){
-            this.temp_latex = this.temp_latex + "^\\prime";
+            this.temp_latex = this.temp_latex + "\')";
           }else if(deri_count == 2){
-            this.temp_latex = this.temp_latex + "\'\'"
+            this.temp_latex = this.temp_latex + "\'\')"
           }else if(deri_count > 2){
-            this.temp_latex = this.temp_latex + "^{(" + deri_count + ")}"
+            this.temp_latex = this.temp_latex + ")^{(" + deri_count + ")}"
           }
           this.temp_latex = this.temp_latex + "$";
         }
@@ -1605,13 +1639,14 @@ export default {
       }else if(this.temp_param_type == 'deridot'){
 
         if(this.temp_param_1.indexOf(',') != -1){
-          this.temp_latex = "请勿输入多个元素";
+          this.$message('请勿输入多个元素');
+          this.temp_param_1 = this.temp_param_1.substring(0, this.temp_param_1.length - 1);
         }else{
           var deri_count = parseInt(this.temp_param_2);
           if(deri_count == 1){
-            this.temp_latex = "$\\dot " + this.temp_param_1 + "$";
+            this.temp_latex = "$(\\dot " + this.temp_param_1 + ")$";
           }else if(deri_count == 2){
-            this.temp_latex = "$\\ddot " + this.temp_param_1 + "$";
+            this.temp_latex = "$(\\ddot " + this.temp_param_1 + ")$";
           }else if(deri_count > 2){
             this.temp_latex = "点格式不支持二阶以上的表示";
           }
@@ -1718,6 +1753,14 @@ export default {
       else if(this.temp_param_type == 'oint'){
         this.temp_latex = "$\\oint$"
       }
+      // 分式被移动到这里了
+      else if(this.temp_param_type == 'frac'){
+        this.temp_latex = "$\\frac{" + this.temp_param_1 + "}{" +  this.temp_param_2 + "}$"
+      }
+      // 插入公式
+      else if(this.temp_param_type == 'calc'){
+        this.temp_latex = "$" + this.temp_param_1 + "$";
+      }
     },
     // 上传Docx文件
     selectFile(e){
@@ -1780,9 +1823,6 @@ export default {
           case "最值":
             this.Update_MinMax();
             break;
-          case "分数":
-            this.Update_Frac();
-            break;
           case "极限":
             this.Update_Limit();
             break;
@@ -1804,9 +1844,13 @@ export default {
       this.$message('已复制');
     },
     Insert_To_Content_Tail(){
-      this.content = this.content + this.temp_latex;
-      this.temp_latex = '';
+      this.content = this.content + this.temp_latex_total;
+      this.temp_latex_total = '';
       this.$message('已插入文本末尾');
+    },
+    Update_Temp_Latex_Total(){
+      this.temp_latex_total = this.temp_latex_total + " " + this.temp_latex;
+      this.Param_Switch();
     }
   }
 };
