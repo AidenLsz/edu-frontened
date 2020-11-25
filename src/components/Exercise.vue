@@ -2,7 +2,7 @@
 
   <div class="exercise">
 
-    <el-dialog width="80%" :visible.sync="helper_dialog" title="快速公式助手" @close="helper_dialog = false; latex_now = ''; temp_latex = ''">
+    <el-dialog width="80%" :visible.sync="helper_dialog" title="快速公式助手" @close="Clear()">
       <el-container>
       <el-aside style="height: 510px; width: 90%;">
       <el-container>
@@ -1851,6 +1851,15 @@ export default {
     Update_Temp_Latex_Total(){
       this.temp_latex_total = this.temp_latex_total + " " + this.temp_latex;
       this.Param_Switch();
+    },
+    Clear(){
+      this.helper_dialog = false;
+      this.temp_latex = "";
+      this.temp_latex_total = "";
+      this.temp_param_type = "calc";
+      this.temp_param_1 = "";
+      this.temp_param_2 = "";
+      this.temp_param_3 = "";
     }
   }
 };
