@@ -2,827 +2,607 @@
 
   <div class="exercise">
 
-    <el-dialog width="80%" :visible.sync="helper_dialog" title="快速公式助手" @close="Clear()">
+    <el-dialog width="80%" height="500px" :visible.sync="helper_dialog" title="快速公式助手" @close="Clear()" top="2vh" style="background: rgba(225,225,225,0.3); ">
       <el-container>
-      <el-aside style="height: 510px; width: 90%;">
-      <el-container>
-        <el-main>
-        <el-container style="margin-top: -20px; height: 370px">
-          <el-aside width="25%" style="height: 390px;">
-            <el-select v-model="latex_now" placeholder="请选择数学元素的大致类型">
-                <el-option
-                  v-for="(item, index) in latex"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.name">
-                </el-option>
-            </el-select>
-            <el-divider></el-divider>
-            <div style="padding-top: -10px;" >常见数学希腊符号表</div><br/>
-            <el-table max-height="240px" :show-header="false" :data="symbols" style="font-size: 15px">
+        <el-aside width="22%" height="500px" style="box-shadow: 0px 0px 2px 2px #ddd; background: rgba(196,219,183,0.4); padding-top: 10px">
+          <el-row>
+            <el-col :span="11" :offset="1" style="text-align: left;">上标</el-col>
+            <el-col :span="11" :offset="1" style="text-align: left">a^2</el-col>  
+          </el-row>
+          <el-row>                
+            <el-col :span="11" :offset="1" style="text-align: left">下标</el-col>
+            <el-col :span="11" :offset="1" style="text-align: left">a_2</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="11" :offset="1" style="text-align: left">组合上标</el-col>
+            <el-col :span="11" :offset="1" style="text-align: left">a^{a+b}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="11" :offset="1" style="text-align: left">组合下标</el-col>
+            <el-col :span="11" :offset="1" style="text-align: left">a_{a+b}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="11" :offset="1" style="text-align: left">组合上下标</el-col>                   
+            <el-col :span="11" :offset="1" style="text-align: left">a_2^3</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="11" :offset="1" style="text-align: left">前置上下标</el-col>
+            <el-col :span="11" :offset="1" style="text-align: left">{}_1^2a_3^4</el-col>
+          </el-row>
+          <el-divider></el-divider>
+          <div style="padding-top: -10px;" >常见数学希腊符号表</div><br/>
+            <el-table max-height="230px" :show-header="false" :data="symbols" style="font-size: 15px;" >
                 <el-table-column
                   prop="col1"
                   align="center"
-                  width="30">
+                  width="35">
                 </el-table-column>
                 <el-table-column
                   prop="col2"
                   align="left"
-                  width="90">
+                  width="85">
                 </el-table-column>
                 <el-table-column
                   prop="col3"
                   align="center"
-                  width="30">
+                  width="35">
                 </el-table-column>
                 <el-table-column
                   prop="col4"
                   align="left"
-                  width="90">
+                  width="85">
                 </el-table-column>
-            </el-table>           
-          </el-aside>
-
-          <el-main width="75%" style="height: 390px;">
-            
-            <!-- 常用符号及格式提示用DIV -->
-            <div v-if="latex_now == '' || latex_now == '常用符号及格式提示'">
-              <el-row>
-                <el-col :span="4" style="text-align: left; font-weight: bold">
-                  格式样例
-                </el-col>
-              </el-row>
-              <el-row :span="24" >
-                <el-col :span="7" style="text-align: left">上标：a^2</el-col>
-                <el-col :span="7" :offset="1" style="text-align: left">下标：a_2</el-col>
-                <el-col :span="7" :offset="1" style="text-align: left">组合上标：a^{a+b}</el-col>                   
-              </el-row>
-              <el-row>
-                <el-col :span="7" style="text-align: left">组合下标：a_{a+b}</el-col>
-                <el-col :span="7" :offset="1" style="text-align: left">组合上下标：a_2^3</el-col>
-                <el-col :span="7" :offset="1" style="text-align: left">前置上下标：{}_1^2a_3^4</el-col>
-              </el-row>
-              <el-divider></el-divider>
-              <el-row>
-                <el-col :span="4" style="text-align: left; font-weight: bold">
-                  常用符号
-                </el-col>
-              </el-row>
-              <el-form >
-                <el-row :span="24" >
-                  <el-col :span="24">
-                    <el-form-item label="请选择常用符号类型，向下卷动查看更多">
-                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
-                        <el-row :span="24" >
-                          <el-col :span="4">
-                            <el-radio label="calc">公式输入</el-radio>
-                          </el-col>                     
-                        </el-row>
-                        <el-divider></el-divider>
-                        <el-row :span="24" >
-                          <el-col :span="4">
-                            <el-radio label="sum">求和（格式1）</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="msum">求和（格式2）</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="mul">求积（格式1）</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="mmul">求积（格式2）</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="frac">分式</el-radio>
-                          </el-col>                      
-                        </el-row>
-                        <el-row>
-                          <el-col :span="4">
-                            <el-radio label="cmul">上积（格式1）</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="mcmul">上积（格式2）</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="int">积分</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="iint">双重积分</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="iiint">三重积分</el-radio>
-                          </el-col>
-                        </el-row>
-                        <el-row>
-                          <el-col :span="4">
-                            <el-radio label="oint">闭合曲线/面符号</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="cap">交集(A,B...)</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="cup">并集(A,B...)</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="bcap">交集(A1~An)</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="bcup">并集(A1~An)</el-radio>
-                          </el-col>
-                        </el-row> 
-                      </el-radio-group>               
-                    </el-form-item>     
-                  </el-col>
-                </el-row>
-              </el-form>
-              <el-divider></el-divider>
-              <el-link href="https://www.cnblogs.com/wanghai0666/p/13950679.html" target="_blank">更多常见符号对照表</el-link>
-            </div>
-
-            <!-- 各类括号的使用方法的DIV -->
-            <div v-if="latex_now == '各类括号的使用方法'">
-              <el-row>
-                <el-col :span="8" style="text-align: left; font-weight: bold">
-                  各类括号的使用方法
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="24" style="text-align: left; padding-left: 20px">
-                  基础表示方式： ( ) 、 [ ]  和 | 表示符号本身，使用  \{ \} 来表示  { } 。
-                </el-col>
-              </el-row>
-              <el-divider></el-divider>
-              <el-form >
-                <el-row :span="24" >
-                  <el-col :span="24">
-                    <el-form-item label="选择插入示例">
-                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_latex">
-                        <el-row :span="24" >
-                          <el-col :span="4">
-                            <el-radio label="$\left( \frac{a}{b} \right)$">圆 / 小括号</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="$\left[ \frac{a}{b} \right]$">方 / 中括号</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="$\left\{ \frac{a}{b} \right\}$">花 / 大括号</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="$\left \langle \frac{a}{b} \right \rangle$">角括号</el-radio>
-                          </el-col>                  
-                        </el-row>
-                        <el-row :span="24" >
-                          <el-col :span="4">
-                            <el-radio label="$\left| \frac{a}{b} \right|$">绝对值 / 单竖线</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="$\left \| \frac{a}{b} \right \|$">范 / 双竖线</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="$\left \lfloor \frac{a}{b} \right \rfloor$">取整</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="$\left \lceil \frac{c}{d} \right \rceil$">取顶</el-radio>
-                          </el-col> 
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="$\left / \frac{a}{b} \right \backslash$">斜线与反斜线</el-radio>
-                          </el-col>                 
-                        </el-row>
-                        <el-row :span="24" >
-                          <el-col :span="4">
-                            <el-radio label="$\left \uparrow \frac{a}{b} \right \downarrow$">箭头（单线）</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="$\left \Uparrow \frac{a}{b} \right \Downarrow$">箭头（双线）</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="$\left \updownarrow \frac{a}{b} \right \Updownarrow$">混合双向箭头</el-radio>
-                          </el-col>              
-                        </el-row>
-                        <el-row :span="24" >
-                          <el-col :span="4">
-                            <el-radio label="$\left[ 0,1 \right)$">括号混合</el-radio>
-                          </el-col>
-                          <el-col :span="6" :offset="1">
-                            <el-radio label="$\left \{\frac{a}{b} \right.$">单左括号（右侧补齐）</el-radio>
-                          </el-col>
-                          <el-col :span="6" :offset="4">
-                            <el-radio label="$\left. \frac{a}{b} \right \}$">单右括号（左侧补齐）</el-radio>
-                          </el-col>                  
-                        </el-row>
-                        <el-row :span="24" >
-                          <el-col :span="8">
-                            <el-radio label="$\Bigg ( \bigg [ \Big \{ \big \langle \left | \| \frac{a}{b} \| \right | \big \rangle \Big \} \bigg ] \Bigg )$">括号大小控制示例</el-radio>
-                          </el-col>                  
-                        </el-row>
-                      </el-radio-group>               
-                    </el-form-item>     
-                  </el-col>
-                </el-row>
-              </el-form>
-            </div>
-
-            <!-- 指数用DIV -->
-            <div v-if="latex_now == '指数'">
-               
-            </div>
-
-            <!-- 对数用DIV -->
-            <div v-if="latex_now == '对数'">
-              <el-form>
-                <el-row>
-                  <el-col :span="9">
-                    <el-form-item label="特殊底数">
-                      <el-radio-group v-model="temp_param_1">
-                        <el-radio label="e">e</el-radio>
-                        <el-radio label="10">10</el-radio>
-                      </el-radio-group>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-              </el-form>
-            </div>
-
-            <!-- 三角函数用DIV -->
-            <div v-if="latex_now == '三角函数'">
-              <el-form >
-                <el-row :span="24" >
-                  <el-col :span="24">
-                    <el-form-item label="请选择三角函数类型">
-                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
-                        <el-row :span="24" >
-                          <el-col :span="4">
-                            <el-radio label="sin">正弦sin</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="cos">余弦cos</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="tan">正切tan</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="cot">余切cot</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="sec">正割sec</el-radio>
-                          </el-col>                       
-                        </el-row>
-                        <el-row>
-                          <el-col :span="4">
-                            <el-radio label="csc">余割csc</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="arcsin">反正弦arcsin</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="arccos">反余弦arccos</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="arctan">反正切arctan</el-radio>
-                          </el-col>
-                        </el-row>
-                        <el-row>
-                          <el-col :span="4">
-                            <el-radio label="sinh">双曲正弦sinh</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="cosh">双曲余弦cosh</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="tanh">双曲正切tanh</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="coth">双曲余切coth</el-radio>
-                          </el-col>
-                        </el-row> 
-                      </el-radio-group>               
-                    </el-form-item>     
-                  </el-col>
-                </el-row>
-              </el-form>
-            </div>
-
-            <!-- 最值用DIV -->
-            <div v-if="latex_now == '最值'">
-              <el-form>
-                <el-row :span="24" >
-                  <el-col :span="24">
-                    <el-form-item label="请选择最值类型">
-                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
-                        <el-row :span="24" >
-                          <el-col :span="3">
-                            <el-radio label="min">最小</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="max">最大</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="sup">上确界</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="inf">下确界</el-radio>
-                          </el-col>                      
-                        </el-row>
-                      </el-radio-group>               
-                    </el-form-item>     
-                  </el-col>
-                </el-row>
-              </el-form>   
-            </div>
-
-            <!-- 极限用DIV -->
-            <div v-if="latex_now == '极限'">
-              <el-form>
-                <el-row>
-                  <el-col :span="24">
-                    <el-form-item label="请选择极限类型">
-                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
-                        <el-row :span="24" >
-                          <el-col :span="3">
-                            <el-radio label="lim">极限（无变量）</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="limft">极限（有变量）</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="limsup">上极限</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="liminf">下极限</el-radio>
-                          </el-col>                                         
-                        </el-row>
-                        <el-row :span="24" >
-                          <el-col :span="3">
-                            <el-radio label="dim">维度</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="deg">多项式次数</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="det">行列式</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="ker">核（kernal）</el-radio>
-                          </el-col>                                         
-                        </el-row>
-                      </el-radio-group>               
-                    </el-form-item>     
-                  </el-col>
-                </el-row>
-              </el-form>
-            </div>
-
-            <!-- 投射用DIV -->
-            <div v-if="latex_now == '投射'">
-              <el-form>
-                <el-row>
-                  <el-col :span="24">
-                    <el-form-item label="请选择投射属性">
-                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
-                        <el-row :span="24" >
-                          <el-col :span="3">
-                            <el-radio label="pr">概率</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="hom">同态</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="len">范</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="arg">角度</el-radio>
-                          </el-col>                                         
-                        </el-row>
-                      </el-radio-group>               
-                    </el-form-item>     
-                  </el-col>
-                </el-row>
-              </el-form>
-            </div>
-
-            <!-- 微分及导数用DIV -->
-            <div v-if="latex_now == '微分及导数'">
-              <el-form>
-                <el-row>
-                  <el-col :span="24">
-                    <el-form-item label="请选择极限类型">
-                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
-                        <el-row :span="24" >
-                          <el-col :span="4">
-                            <el-radio label="dt">dx（格式1）</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="mdt">dx（格式2）</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="partial">偏导元素</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="par">偏导</el-radio>
-                          </el-col> 
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="nabla">梯度元素</el-radio>
-                          </el-col>                                         
-                        </el-row>
-                        <el-row :span="24" >
-                          <el-col :span="6">
-                            <el-radio label="par1h">dx/dy（格式1）</el-radio>
-                          </el-col>
-                          <el-col :span="6" :offset="4">
-                            <el-radio label="par2h">dx/dy（格式2）</el-radio>
-                          </el-col> 
-                        </el-row>
-                        <el-row :span="24">
-                          <el-col :span="6">
-                            <el-radio label="par1v">dx/dy（格式1 | 竖版）</el-radio>
-                          </el-col>
-                          <el-col :span="6" :offset="4">
-                            <el-radio label="par2v">dx/dy（格式2 | 竖版）</el-radio>
-                          </el-col>                                        
-                        </el-row>
-                        <el-row :span="24" >
-                          <el-col :span="4">
-                            <el-radio label="prime">导数符号</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="backprime">导数符号（反）</el-radio>
-                          </el-col>                                       
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="deri">导数</el-radio>
-                          </el-col>
-                          <el-col :span="4" :offset="1">
-                            <el-radio label="deridot">导数（点形式）</el-radio>
-                          </el-col>                                     
-                        </el-row>
-                      </el-radio-group>               
-                    </el-form-item>     
-                  </el-col>
-                </el-row>
-              </el-form>
-            </div>
-
-            <!-- 类字母符号与常数用DIV -->
-            <div v-if="latex_now == '类字母符号与常数'">
-              <el-row v-for="(item, index) in alnum_like" :key="index">
-                <el-col :span="1">
-                  {{ item.char1 }}
-                </el-col>
-                <el-col :span="4" style="text-align: left; padding-left: 15px">
-                  {{ item.str1 }}
-                </el-col>
-                <el-col :span="1" :offset="1">
-                  {{ item.char2 }}
-                </el-col>
-                <el-col :span="4" style="text-align: left; padding-left: 15px">
-                  {{ item.str2 }}
-                </el-col>
-                <el-col :span="1" :offset="1">
-                  {{ item.char3 }}
-                </el-col>
-                <el-col :span="4" style="text-align: left; padding-left: 15px">
-                  {{ item.str3 }}
-                </el-col>
-                <el-col :span="1" :offset="1">
-                  {{ item.char4 }}
-                </el-col>
-                <el-col :span="4" style="text-align: left; padding-left: 15px">
-                  {{ item.str4 }}
-                </el-col>
-              </el-row>
-            </div>
-
-            <!-- 模运算及开根号用DIV -->
-            <div v-if="latex_now == '模运算及开根号'">
-              <el-form>
-                <el-form-item label="特殊符号">
-                  <el-row>
-                    <el-col :span="1">
-                      ≡
-                    </el-col>
-                    <el-col :span="3" style="text-align: left; padding-left: 15px">
-                      \equiv
-                    </el-col>
-                    <el-col :span="1">
-                      ∣
-                    </el-col>
-                    <el-col :span="3" style="text-align: left; padding-left: 15px">
-                      \mid
-                    </el-col>
-                    <el-col :span="1">
-                      ∤
-                    </el-col>
-                    <el-col :span="3" style="text-align: left; padding-left: 15px">
-                      \nmid
-                    </el-col>
-                    <el-col :span="1">
-                      ∣
-                    </el-col>
-                    <el-col :span="3" style="text-align: left; padding-left: 15px">
-                      \shortmid
-                    </el-col>
-                    <el-col :span="1">
-                      
-                    </el-col>
-                    <el-col :span="3" style="text-align: left; padding-left: 15px">
-                      \nshortmid
+            </el-table> 
+        </el-aside>
+        <el-container width="78%" height="500px">
+          <el-header height="350px">
+            <el-tabs type="border-card" style="height: 340px; width: 102%; margin-left: -9px; background: rgba(196,219,183,0.4); box-shadow: 0px 0px 2px 2px #ddd;" v-model="latex_now" tab-position="top">
+              <el-tab-pane name="常用符号及格式提示" label="常用符号及格式提示">
+                <el-form >
+                  <el-row >
+                    <el-col :span="24">
+                      <el-form-item label="点击查看符号输入格式">
+                        <el-radio-group style="width: 95%; text-align: left; padding-top: 5px" v-model="temp_param_type">
+                          <el-row :span="24" >
+                            <el-col :span="4">
+                              <el-radio label="sum">求和（格式1）</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="msum">求和（格式2）</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="mul">求积（格式1）</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="mmul">求积（格式2）</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="frac">分式</el-radio>
+                            </el-col>                      
+                          </el-row>
+                          <el-row>
+                            <el-col :span="4">
+                              <el-radio label="cmul">上积（格式1）</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="mcmul">上积（格式2）</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="int">积分</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="iint">双重积分</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="iiint">三重积分</el-radio>
+                            </el-col>
+                          </el-row>
+                          <el-row>
+                            <el-col :span="4">
+                              <el-radio label="oint">闭合曲线/面符号</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="cap">交集(A,B...)</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="cup">并集(A,B...)</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="bcap">交集(A1~An)</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="bcup">并集(A1~An)</el-radio>
+                            </el-col>
+                          </el-row> 
+                        </el-radio-group>               
+                      </el-form-item>     
                     </el-col>
                   </el-row>
-                </el-form-item>
-               
-                <el-row :span="24" >
-                  <el-col :span="24">
-                    <el-form-item label="请选择运算类型">
-                      <el-radio-group style="width: 600px; text-align: left; padding-top: 10px" v-model="temp_param_type">
-                        <el-row :span="24" >
-                          <el-col :span="3">
-                            <el-radio label="bmod">mod符号</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="pmod">对 x 取余</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="gcd">最大公约数</el-radio>
-                          </el-col>
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="lcm">最小公倍数</el-radio>
-                          </el-col>   
-                          <el-col :span="3" :offset="1">
-                            <el-radio label="sqrt">开根号</el-radio>
-                          </el-col>               
-                        </el-row>
-                      </el-radio-group>               
-                    </el-form-item>     
+                </el-form>
+                <el-divider></el-divider>
+                <el-link href="https://www.cnblogs.com/wanghai0666/p/13950679.html" target="_blank">更多常见符号对照表</el-link>
+              </el-tab-pane>
+              <el-tab-pane name="各类括号的使用方法" label="各类括号的使用方法">
+                <el-row>
+                  <el-col :span="8" style="text-align: left; font-weight: bold">
+                    各类括号的使用方法
                   </el-col>
                 </el-row>
-              </el-form>
-            </div>
-          </el-main>
-        </el-container>
-        </el-main>
-        <el-divider></el-divider>
-          <el-footer style="height: 30px">
+                <el-row style="margin-bottom: -5px">
+                  <el-col :span="24" style="text-align: left; padding-left: 20px">
+                    基础表示方式： ( ) 、 [ ]  和 | 表示符号本身，使用  \{ \} 来表示  { } 。
+                  </el-col>
+                </el-row>
+                <el-divider></el-divider>
+                <el-form >
+                  <el-row style="margin-top: -15px" >
+                    <el-col :span="24">
+                      <el-form-item label="选择插入示例">
+                        <el-radio-group style="width: 95%; text-align: left; padding-top: 5px" v-model="temp_latex">
+                          <el-row :span="24" >
+                            <el-col :span="4">
+                              <el-radio label="$\left( \frac{a}{b} \right)$">圆 / 小括号</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="$\left[ \frac{a}{b} \right]$">方 / 中括号</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="$\left\{ \frac{a}{b} \right\}$">花 / 大括号</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="$\left \langle \frac{a}{b} \right \rangle$">角括号</el-radio>
+                            </el-col>                  
+                          </el-row>
+                          <el-row :span="24" >
+                            <el-col :span="4">
+                              <el-radio label="$\left| \frac{a}{b} \right|$">绝对值 / 单竖线</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="$\left \| \frac{a}{b} \right \|$">范 / 双竖线</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="$\left \lfloor \frac{a}{b} \right \rfloor$">取整</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="$\left \lceil \frac{c}{d} \right \rceil$">取顶</el-radio>
+                            </el-col> 
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="$\left / \frac{a}{b} \right \backslash$">斜线与反斜线</el-radio>
+                            </el-col>                 
+                          </el-row>
+                          <el-row :span="24" >
+                            <el-col :span="4">
+                              <el-radio label="$\left \uparrow \frac{a}{b} \right \downarrow$">箭头（单线）</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="$\left \Uparrow \frac{a}{b} \right \Downarrow$">箭头（双线）</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="$\left \updownarrow \frac{a}{b} \right \Updownarrow$">混合双向箭头</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="$\left[ 0,1 \right)$">括号混合</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="$\Bigg ( \bigg [ \Big \{ \big \langle \left | \| \frac{a}{b} \| \right | \big \rangle \Big \} \bigg ] \Bigg )$">括号大小控制示例</el-radio>
+                            </el-col>              
+                          </el-row>
+                          <el-row :span="24" >
+                            <el-col :span="6">
+                              <el-radio label="$\left \{\frac{a}{b} \right.$">单左括号（右侧补齐）</el-radio>
+                            </el-col>
+                            <el-col :span="6" :offset="4">
+                              <el-radio label="$\left. \frac{a}{b} \right \}$">单右括号（左侧补齐）</el-radio>
+                            </el-col>                  
+                          </el-row>
+                        </el-radio-group>               
+                      </el-form-item>     
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </el-tab-pane>
+              <el-tab-pane name="指数" label="指数">
+                按照左侧上标提示输入即可输入指数格式
+              </el-tab-pane>
+              <el-tab-pane name="对数" label="对数">
+                <el-form>
+                  <el-row>
+                    <el-col :span="15">
+                      <el-form-item label="选择底数">
+                        <el-radio-group v-model="temp_latex" style="width: 95%; text-align: left; padding-top: 5px">
+                          <el-row :span="24">
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="$\log {占位符}$">2</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="$\ln {占位符}$">e</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="$\lg {占位符}$">10</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="$\log_{占位符1} {占位符2}$">其他</el-radio>
+                            </el-col>
+                          </el-row>
+                        </el-radio-group>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </el-tab-pane>
+              <el-tab-pane name="三角函数" label="三角函数">
+                <el-form >
+                  <el-row >
+                    <el-col :span="24">
+                      <el-form-item label="请选择三角函数类型">
+                        <el-radio-group style="width: 95%; text-align: left; padding-top: 5px" v-model="temp_param_type">
+                          <el-row :span="24" >
+                            <el-col :span="4">
+                              <el-radio label="sin">正弦sin</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="cos">余弦cos</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="tan">正切tan</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="cot">余切cot</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="sec">正割sec</el-radio>
+                            </el-col>                       
+                          </el-row>
+                          <el-row>
+                            <el-col :span="4">
+                              <el-radio label="csc">余割csc</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="arcsin">反正弦arcsin</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="arccos">反余弦arccos</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="arctan">反正切arctan</el-radio>
+                            </el-col>
+                          </el-row>
+                          <el-row>
+                            <el-col :span="4">
+                              <el-radio label="sinh">双曲正弦sinh</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="cosh">双曲余弦cosh</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="tanh">双曲正切tanh</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="coth">双曲余切coth</el-radio>
+                            </el-col>
+                          </el-row> 
+                        </el-radio-group>               
+                      </el-form-item>     
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </el-tab-pane>
+              <el-tab-pane name="最值" label="最值">
+                <el-form>
+                  <el-row :span="24" >
+                    <el-col :span="24">
+                      <el-form-item label="请选择最值类型">
+                        <el-radio-group style="width: 95%; text-align: left; padding-top: 5px" v-model="temp_param_type">
+                          <el-row :span="24" >
+                            <el-col :span="3">
+                              <el-radio label="min">最小</el-radio>
+                            </el-col>
+                            <el-col :span="3" :offset="1">
+                              <el-radio label="max">最大</el-radio>
+                            </el-col>
+                            <el-col :span="3" :offset="1">
+                              <el-radio label="sup">上确界</el-radio>
+                            </el-col>
+                            <el-col :span="3" :offset="1">
+                              <el-radio label="inf">下确界</el-radio>
+                            </el-col>                      
+                          </el-row>
+                        </el-radio-group>               
+                      </el-form-item>     
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </el-tab-pane>
+              <el-tab-pane name="极限" label="极限">
+                <el-form>
+                  <el-row>
+                    <el-col :span="24">
+                      <el-form-item label="请选择极限类型">
+                        <el-radio-group style="width: 95%; text-align: left; padding-top: 5px" v-model="temp_param_type">
+                          <el-row :span="24" >
+                            <el-col :span="5">
+                              <el-radio label="lim">极限（无变量）</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="limft">极限（有变量）</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="limsup">上极限</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="liminf">下极限</el-radio>
+                            </el-col>                                         
+                          </el-row>
+                          <el-row :span="24" >
+                            <el-col :span="5">
+                              <el-radio label="dim">维度</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="deg">多项式次数</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="det">行列式</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="ker">核（kernal）</el-radio>
+                            </el-col>                                         
+                          </el-row>
+                        </el-radio-group>               
+                      </el-form-item>     
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </el-tab-pane>
+              <el-tab-pane name="投射" label="投射">
+                <el-form>
+                  <el-row>
+                    <el-col :span="15">
+                      <el-form-item label="请选择投射属性">
+                        <el-radio-group style="width: 95%; text-align: left; padding-top: 5px" v-model="temp_param_type">
+                          <el-row :span="24" >
+                            <el-col :span="5">
+                              <el-radio label="pr">概率</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="hom">同态</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="len">范</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="arg">角度</el-radio>
+                            </el-col>                                         
+                          </el-row>
+                        </el-radio-group>               
+                      </el-form-item>     
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </el-tab-pane>
+              <el-tab-pane name="微分及导数" label="微分及导数">
+                <el-form>
+                  <el-row>
+                    <el-col :span="24">
+                      <el-form-item label="请选择极限类型">
+                        <el-radio-group style="width: 95%; text-align: left; padding-top: 5px" v-model="temp_param_type">
+                          <el-row :span="24" >
+                            <el-col :span="4">
+                              <el-radio label="dt">dx（格式1）</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="mdt">dx（格式2）</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="partial">偏导元素</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="par">偏导</el-radio>
+                            </el-col> 
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="nabla">梯度元素</el-radio>
+                            </el-col>                                         
+                          </el-row>
+                          <el-row :span="24" >
+                            <el-col :span="6">
+                              <el-radio label="par1h">dx/dy（格式1）</el-radio>
+                            </el-col>
+                            <el-col :span="6" :offset="4">
+                              <el-radio label="par2h">dx/dy（格式2）</el-radio>
+                            </el-col> 
+                          </el-row>
+                          <el-row :span="24">
+                            <el-col :span="6">
+                              <el-radio label="par1v">dx/dy（格式1 | 竖版）</el-radio>
+                            </el-col>
+                            <el-col :span="6" :offset="4">
+                              <el-radio label="par2v">dx/dy（格式2 | 竖版）</el-radio>
+                            </el-col>                                        
+                          </el-row>
+                          <el-row :span="24" >
+                            <el-col :span="4">
+                              <el-radio label="prime">导数符号</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="backprime">导数符号（反）</el-radio>
+                            </el-col>                                       
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="deri">导数</el-radio>
+                            </el-col>
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="deridot1">导数（点形式 | 1阶）</el-radio>
+                            </el-col>  
+                            <el-col :span="4" :offset="1">
+                              <el-radio label="deridot2">导数（点形式 | 2阶）</el-radio>
+                            </el-col>                                    
+                          </el-row>
+                        </el-radio-group>               
+                      </el-form-item>     
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </el-tab-pane>
+              <el-tab-pane name="类字母符号与常数" label="类字母符号与常数">
+                <el-row v-for="(item, index) in alnum_like" :key="index">
+                  <el-col :span="1">
+                    {{ item.char1 }}
+                  </el-col>
+                  <el-col :span="4" style="text-align: left; padding-left: 15px">
+                    {{ item.str1 }}
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    {{ item.char2 }}
+                  </el-col>
+                  <el-col :span="4" style="text-align: left; padding-left: 15px">
+                    {{ item.str2 }}
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    {{ item.char3 }}
+                  </el-col>
+                  <el-col :span="4" style="text-align: left; padding-left: 15px">
+                    {{ item.str3 }}
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    {{ item.char4 }}
+                  </el-col>
+                  <el-col :span="4" style="text-align: left; padding-left: 15px">
+                    {{ item.str4 }}
+                  </el-col>
+                </el-row>
+              </el-tab-pane>
+              <el-tab-pane name="模运算及开根号" label="模运算及开根号">
+                <el-form>
+                  <el-form-item label="特殊符号">
+                    <el-row>
+                      <el-col :span="24">
+                        <el-row>
+                          <el-col :span="1" :offset="1">
+                            ≡
+                          </el-col>
+                          <el-col :span="3" style="text-align: left; padding-left: 15px">
+                            \equiv
+                          </el-col>
+                          <el-col :span="1">
+                            ∣
+                          </el-col>
+                          <el-col :span="3" style="text-align: left; padding-left: 15px">
+                            \mid
+                          </el-col>
+                          <el-col :span="1">
+                            ∤
+                          </el-col>
+                          <el-col :span="3" style="text-align: left; padding-left: 15px">
+                            \nmid
+                          </el-col>
+                          <el-col :span="1">
+                            ∣
+                          </el-col>
+                          <el-col :span="3" style="text-align: left; padding-left: 15px">
+                            \shortmid
+                          </el-col>
+                          <el-col :span="1">
+                            
+                          </el-col>
+                          <el-col :span="3" style="text-align: left; padding-left: 15px">
+                            \nshortmid
+                          </el-col>
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                  </el-form-item>
+                  <el-row style="margin-top: -20px">
+                    <el-col :span="24">
+                      <el-form-item label="请选择运算类型">
+                        <el-radio-group style="width: 95%; text-align: left; padding-top: 5px" v-model="temp_param_type">
+                          <el-row :span="24" >
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="bmod">mod符号</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="pmod">对 x 取余</el-radio>
+                            </el-col>      
+                          </el-row>
+                          <el-row>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="gcd">最大公约数</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="lcm">最小公倍数</el-radio>
+                            </el-col>
+                          </el-row>
+                          <el-row>   
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="surd">开根符号</el-radio>
+                            </el-col>
+                            <el-col :span="5" :offset="1">
+                              <el-radio label="sqrt">开根</el-radio>
+                            </el-col>               
+                          </el-row>
+                        </el-radio-group>               
+                      </el-form-item>     
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </el-tab-pane>
+            </el-tabs>
+          </el-header>
+          <el-main>
             <el-row>
-              <el-col :span="3" style="height: 40px; font-size: 16px; font-weight: bold">LaTex文本预览：</el-col>
-              <el-col :span="6">
-                <el-input id="copy_input" style="text-align: left; font-size: 12px; height: 40px" :autosize="{minRows: 1, maxRows: 2}" type="textarea" resize="none" v-model="temp_latex_total"></el-input>
-              </el-col>   
-              <el-col :span="7" :offset="1">
-                <Mathdown :content="'效果展示：' + temp_latex_total" style="text-align: left; height: 40px; font-size: 16px; font-weight: bold"></Mathdown>
+              <el-col :span="2" style="font-weight:bold">
+                <el-row style="margin-bottom: 6px; padding-top: 5px">当前元素</el-row>
+                <el-row>LaTex格式</el-row>
               </el-col>
-              <el-col :span="2" :offset="1" style="text-align: left; height: 40px; font-size: 16px; font-weight: bold; padding-top: 12px;">
-                <el-button size="small" @click="Copy_Input()">复制到粘贴板</el-button>
+              <el-col :span="8">
+                <el-input id="input_now" placeholder="当前元素的内容" type="textarea" rows="3" style="font-size: 14px; margin-left: 10px; margin-top: -10px;" resize="none" v-model="temp_latex"></el-input>
               </el-col>
-              <el-col :span="2" :offset="1" style="text-align: left; height: 40px; font-size: 16px; font-weight: bold; padding-top: 12px;">
-                <el-button size="small" @click="Insert_To_Content_Tail()">插入文本末尾</el-button>
+              <el-col :span="1" style="font-size:30px; padding-left: 22px; padding-top: 5px">
+                ⇒
+              </el-col>
+              <el-col :span="2" style="font-weight:bold">
+                <el-row style="margin-bottom: 6px; padding-top: 5px">效果</el-row>
+                <el-row>展示</el-row>
+              </el-col>
+              <el-col :span="8" v-if="temp_latex">
+                <Mathdown :content="temp_latex" :name = "show" style="border: 2px dashed black; height: 72px; margin-top: -10px"></Mathdown>
+              </el-col>
+              <el-col :span="8" v-else style="border: 2px dashed black; height: 72px; margin-top: -10px; padding-top: 24px">
+                <span>等待数据元素中...</span>
+              </el-col>
+              <el-col :span="2" :offset="1">
+                <button type="success" size="small" style="margin-top: 12px; margin-left: -18px" @click="Update_Temp_Latex_Total()">添加元素</button>
+              </el-col>
+            </el-row>
+          </el-main>
+          <el-footer height="87px">
+            <el-row>
+              <el-col :span="2" style="font-weight:bold">
+                <el-row style="margin-bottom: 6px; padding-top: 5px">插入公式</el-row>
+                <el-row>LaTex格式</el-row>
+              </el-col>
+              <el-col :span="8">
+                <el-input id="input_total" placeholder="本次操作生成的公式内容" type="textarea" rows="4" style="font-size: 14px; margin-left: 10px; margin-top: -18px" resize="none" v-model="temp_latex_total"></el-input>
+              </el-col>
+              <el-col :span="1" style="font-size:30px; padding-left: 22px; padding-top: 5px">
+                ⇒
+              </el-col>
+              <el-col :span="2" style="font-weight:bold">
+                <el-row style="margin-bottom: 6px; padding-top: 5px">效果</el-row>
+                <el-row>展示</el-row>
+              </el-col>
+              <el-col :span="8" v-if="temp_latex_total">
+                <Mathdown :content="temp_latex_total" :name = "total" style="border: 2px dashed red; height: 93px; margin-top: -18px"></Mathdown>
+              </el-col>
+              <el-col :span="8" v-else style="border: 2px dashed red; height: 93px; margin-top: -18px; padding-top: 33px">
+                <span>等待数据元素中...</span>
+              </el-col>
+              <el-col :span="2" :offset="1">
+                <el-row style="margin-bottom: 6px; padding-top: -5px"><button type="success" size="small" style="margin-left: -18px" @click="Copy_Input()">复制内容</button></el-row>
+                <el-row><button type="success" size="small" style="margin-left: -18px" @click="Insert_To_Content_Tail()">插入末尾</button></el-row>
               </el-col>
             </el-row>
           </el-footer>
+        </el-container>
       </el-container>
-      </el-aside>
-      <el-main style="height: 510px; width: 10%; padding: 0px">
-      <el-container>
-        <el-main v-if="latex_now == '常用符号及格式提示' || 
-                       latex_now == ''" 
-                 style="height: 440px;">
-            <el-row v-if="temp_param_type == 'sum' ||
-                          temp_param_type == 'msum' ||
-                          temp_param_type == 'mul' ||
-                          temp_param_type == 'mmul' ||
-                          temp_param_type == 'cmul' ||
-                          temp_param_type == 'mcmul' ||
-                          temp_param_type == 'bcap' ||
-                          temp_param_type == 'bcup' "> 
-                  <el-row>
-                    <span>变量名称</span>
-                  </el-row>               
-                  <el-row>
-                    <el-input rows="2" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" ></el-input>
-                  </el-row>
-                  <el-row>
-                    <span>变量起始值</span>
-                  </el-row>
-                  <el-row>
-                    <el-input rows="2" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" ></el-input>
-                  </el-row>
-                  <el-row>
-                    <span>变量目标值</span>
-                  </el-row>
-                  <el-row>
-                    <el-input rows="2" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_3" ></el-input>
-                  </el-row>
-            </el-row>
-            <el-row v-if="temp_param_type == 'int' ||
-                          temp_param_type == 'iint' ||
-                          temp_param_type == 'iiint'">
-              <el-row>
-                <span>积分上限</span>
-              </el-row>
-              <el-row>
-                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入上限"></el-input>
-              </el-row>
-              <el-row>
-                <span>积分下限</span>
-              </el-row>
-              <el-row>
-                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入下限"></el-input>
-              </el-row>
-            </el-row>
-            <el-row v-if="temp_param_type == 'cap' ||
-                          temp_param_type == 'cup'">
-              <el-row>
-                <span>交并变量</span>
-              </el-row>
-              <el-row>
-                <el-input rows="9" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入至少两个变量，并用英文逗号分隔变量"></el-input>
-              </el-row>
-            </el-row>
-            <el-row v-if="temp_param_type == 'frac' ">
-              <el-row>
-                <span>分子部分</span>
-              </el-row>
-              <el-row>
-                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入分子部分"></el-input>
-              </el-row>
-              <el-row>
-                <span>分母部分</span>
-              </el-row>
-              <el-row>
-                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入分母部分"></el-input>
-              </el-row>
-            </el-row>
-            <el-row v-if="temp_param_type == 'calc' ">
-              <el-row>
-                <span>公式部分</span>
-              </el-row>
-              <el-row>
-                <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="在此输入公式内容"></el-input>
-              </el-row>
-            </el-row>
-        </el-main>
-        <el-main v-else-if="latex_now == '指数'" style="height: 440px;">
-          <el-row>
-            <span>底数</span>
-          </el-row>
-          <el-row>
-            <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入底数"></el-input>
-          </el-row>
-          <el-row>
-            <span>指数</span>
-          </el-row>
-          <el-row>
-            <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入指数"></el-input>
-          </el-row>
-        </el-main>
-        <el-main v-else-if="latex_now == '对数'" style="height: 440px;">
-          <el-row>
-            <span>底数</span>
-          </el-row>
-          <el-row>
-            <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入底数"></el-input>
-          </el-row>
-          <el-row>
-            <span>指数</span>
-          </el-row>
-          <el-row>
-            <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入指数"></el-input>
-          </el-row>
-        </el-main>
-        <el-main v-else-if="latex_now == '三角函数'" style="height: 440px;">
-          <el-row>
-            <span>参数</span>
-          </el-row>
-          <el-row>
-            <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入参数"></el-input>
-          </el-row>
-        </el-main>
-        <el-main v-else-if="latex_now == '最值'" style="height: 440px;">
-          <el-row>
-            <span>参数</span>
-          </el-row>
-          <el-row>
-            <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入参数，多个参数请用英文逗号分隔"></el-input>
-          </el-row>
-        </el-main>
-        <el-main v-else-if="latex_now == '极限'" style="height: 440px;">
-            <el-row v-if="temp_param_type != 'limft'"> 
-              <el-row>
-                <span>公式</span>
-              </el-row>               
-              <el-row>
-                <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入公式"></el-input>
-              </el-row>
-            </el-row>
-            <el-row v-if="temp_param_type == 'limft'">
-              <el-row>
-                <span>参数</span>
-              </el-row>
-              <el-row>
-                <el-input rows="2" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入参数名，多个参数名请用英文逗号分隔"></el-input>
-              </el-row>
-              <el-row>
-                <span>目标</span>
-              </el-row>
-              <el-row>
-                <el-input rows="2" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入极限值，多个极限值请用英文逗号分隔"></el-input>
-              </el-row>
-              <el-row>
-                <span>公式</span>
-              </el-row>
-              <el-row>
-                <el-input rows="2" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_3" placeholder="请输入公式"></el-input>
-              </el-row>
-            </el-row>
-        </el-main>
-        <el-main v-else-if="latex_now == '投射'" style="height: 440px;">
-          <el-row>
-            <span>公式</span>
-          </el-row>
-          <el-row>
-            <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入公式"></el-input>
-          </el-row>
-        </el-main>
-        <el-main v-else-if="latex_now == '微分及导数'" style="height: 440px;">
-            <el-row v-if="temp_param_type == 'dt' ||
-                          temp_param_type == 'mdt' ||
-                          temp_param_type == 'partial' ||
-                          temp_param_type == 'nabla' "> 
-                  <el-row>
-                    <span>变量元素</span>
-                  </el-row>               
-                  <el-row>
-                    <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入变量元素，多元素请用英文逗号分隔"></el-input>
-                  </el-row>
-            </el-row>
-            <el-row v-if="temp_param_type == 'par1h' ||
-                          temp_param_type == 'par2h' ||
-                          temp_param_type == 'par1v' ||
-                          temp_param_type == 'par2v' ||
-                          temp_param_type == 'par'">
-              <el-row>
-                <span>变量1</span>
-              </el-row>
-              <el-row>
-                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入变量1，多个变量请用英文逗号分隔"></el-input>
-              </el-row>
-              <el-row>
-                <span>变量2</span>
-              </el-row>
-              <el-row>
-                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入变量2，多个变量请用英文逗号分隔"></el-input>
-              </el-row>
-            </el-row>
-            <el-row v-if="temp_param_type == 'prime' ||
-                          temp_param_type == 'backprime'">
-            </el-row>
-            <el-row v-if="temp_param_type == 'deri' ||
-                          temp_param_type == 'deridot'">
-              <el-row>
-                <span>变量元素</span>
-              </el-row>
-              <el-row>
-                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入变量元素"></el-input>
-              </el-row>
-              <el-row>
-                <span>求导次数</span>
-              </el-row>
-              <el-row>
-                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入求导次数"></el-input>
-              </el-row>
-            </el-row>
-        </el-main>
-        <el-main v-else-if="latex_now == '模运算及开根号'" style="height: 440px;">
-            <el-row v-if="temp_param_type == 'bmod'"> 
-            </el-row>
-            <el-row v-else-if="temp_param_type == 'pmod'"> 
-              <el-row>
-                <span>参数</span>
-              </el-row>               
-              <el-row>
-                <el-input rows="15" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入参数"></el-input>
-              </el-row>
-            </el-row>
-            <el-row v-else>
-              <el-row>
-                <span>参数1</span>
-              </el-row>
-              <el-row>
-                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_1" placeholder="请输入参数1"></el-input>
-              </el-row>
-              <el-row>
-                <span>参数2</span>
-              </el-row>
-              <el-row>
-                <el-input rows="6" type="textarea" resize="none" style="margin-left: -20px; width: 110px" v-model="temp_param_2" placeholder="请输入参数2"></el-input>
-              </el-row>
-            </el-row>
-        </el-main>
-
-        <el-footer>
-          <el-button size="mini" @click="Update_Temp_Latex_Total()">插入此元素</el-button>
-        </el-footer>
-      </el-container>
-      </el-main>
-      </el-container>
+      <!-- Mathdown组件需要命名name属性才能区别不同的组件，而且不能是纯数字，至少第一个不能是数字 -->
     </el-dialog>
 
     <!-- header -->
@@ -909,7 +689,7 @@
         <el-row style="margin-top: 40px;"><img src="../assets/title_exercise.png" alt="logo" /></el-row>
         <el-row>
           <el-popover ref="hint" placement="top" content="提供LaTex格式的数学公式元素的辅助输入功能。注：显示区使用KaTex进行解析，可能和LaTex结果显示上有差异，但LaTex格式无误。" width="300" trigger="hover"></el-popover>
-          <el-button v-popover:hint @click="helper_dialog = true">快速公式助手</el-button>
+          <el-button v-popover:hint @click="Open_Helper()">快速公式助手</el-button>
         </el-row>
         <el-row><el-button @click="changeInput">切换简单输入</el-button></el-row>
         <!-- 临时先注释掉，等之后后台搞定了图片转换LaTex的方法之后，再来处理这一块 -->
@@ -992,12 +772,17 @@ export default {
   name: "exercise",
   data() {
     return {
+      // 输入的简单文本
       exercise_text: "",
+      // 试题文本
       raw_text: "",
+      // 题目内容
       entities_groups: {},
       entity_type: "kp2.0",
       sour: "",
+      // Latex格式的内容
       content: "",
+      // 当前是否为简单输入格式
       simpleInput: true,
       // 老版本用到的UploadImg方法，我们这里暂时保留防止万一出问题需要还原
       src: [], // 图片数组
@@ -1009,7 +794,7 @@ export default {
       // 记录当前是否打开数学助手对话框
       helper_dialog: false,  
       // 记录当前应当显示哪一个LaTex公式的对话框的变量
-      latex_now: "",
+      latex_now: "常用符号及格式提示",
       // 保存所有快速生成LaTex文本参数的Json段
       latex: {
         "常用符号及格式提示":{
@@ -1050,11 +835,8 @@ export default {
       temp_latex: "",
       // 记录当前公式应当显示的LaTex公式的结果
       temp_latex_total: "",
-      // 进化模式，单格保存所有当前变量，用算法进行分类
-      temp_param_type: "calc",
-      temp_param_1: "",
-      temp_param_2: "",
-      temp_param_3: "",
+      // 进化模式，单格保存所有当前分类
+      temp_param_type: "",
       // 保存显示数学希腊符号的符号段
       symbols: [
         {
@@ -1255,9 +1037,6 @@ export default {
     latex_now(newVal, oldVal){
       if(newVal != oldVal){
         this.temp_latex = "";
-        this.temp_param_1 = "";
-        this.temp_param_2 = "";
-        this.temp_param_3 = "";
         this.latex_now = newVal;
         if(newVal == '常用符号及格式提示'){
           this.temp_param_type = 'calc';
@@ -1267,24 +1046,6 @@ export default {
     temp_param_type(newVal, oldVal){
       if(newVal != oldVal){
         this.temp_param_type = newVal;
-        this.Param_Switch();
-      }
-    },
-    temp_param_1(newVal, oldVal){
-      if(newVal != oldVal){
-        this.temp_param_1 = newVal;
-        this.Param_Switch();
-      }
-    },
-    temp_param_2(newVal, oldVal){
-      if(newVal != oldVal){
-        this.temp_param_2 = newVal;
-        this.Param_Switch();
-      }
-    },
-    temp_param_3(newVal, oldVal){
-      if(newVal != oldVal){
-        this.temp_param_3 = newVal;
         this.Param_Switch();
       }
     },
@@ -1358,255 +1119,99 @@ export default {
       }
       console.log(this.$refs.mavoneditor);
     },
-    // 参数
-    Update_Exp(){
-      this.temp_latex = "$(" + this.temp_param_1 + ")^{" + this.temp_param_2 + "}$";
-    },
-    // 对数
-    Update_Log(){
-      if(this.temp_param_1 == 'e'){
-        this.temp_latex = "$\\ln" + this.temp_param_2 + "$";
-      }else if(this.temp_param_1 == '10'){
-        this.temp_latex = "$\\lg" + this.temp_param_2 + "$";
-      }else{
-        this.temp_latex = "$\\log_{" + this.temp_param_1 + "}" + this.temp_param_2 + "$";
-      }
-    },
+
     // 三角函数
     Update_Triangle(){
-      this.temp_latex = "$\\" + this.temp_param_type+ " " + this.temp_param_1 + "$";
+      this.temp_latex = "$\\" + this.temp_param_type+ " { 变量符号 }$";
     },
     // 最值
     Update_MinMax(){
-      if( this.temp_param_type == 'min' && this.temp_param_1.indexOf(',') != -1 ){
-        this.temp_latex = "$\\min(" + this.temp_param_1 + ")$";
-      }else if( this.temp_param_type == 'max' && this.temp_param_1.indexOf(',') != -1 ){
-        this.temp_latex = "$\\max(" + this.temp_param_1 + ")$";
-      }else if( this.temp_param_type == 'min' && this.temp_param_1.indexOf(',') == -1 ){
-        this.temp_latex = "$\\min " + this.temp_param_1 + "$";
-      }else if( this.temp_param_type == 'max' && this.temp_param_1.indexOf(',') == -1 ){
-        this.temp_latex = "$\\max " + this.temp_param_1 + "$";
-      }else if( this.temp_param_type == 'sup' && this.temp_param_1.indexOf(',') == -1 ){
-        this.temp_latex = "$\\sup " + this.temp_param_1 + "$";
-      }else if( this.temp_param_type == 'inf' && this.temp_param_1.indexOf(',') == -1 ){
-        this.temp_latex = "$\\inf " + this.temp_param_1 + "$";
-      }else if( this.temp_param_type == 'sup' && this.temp_param_1.indexOf(',') != -1 ){
-        this.$message('上确界不支持多参数');
-        this.temp_param_1 = this.temp_param_1.substring(0, this.temp_param_1.length - 1);
-      }else if( this.temp_param_type == 'inf' && this.temp_param_1.indexOf(',') != -1 ){
-        this.$message('下确界不支持多参数');
-        this.temp_param_1 = this.temp_param_1.substring(0, this.temp_param_1.length - 1);
+      if( this.temp_param_type == 'min'){
+        this.temp_latex = "$\\min(占位符，多个元素用英文逗号分隔)$";
+      }else if( this.temp_param_type == 'max'){
+        this.temp_latex = "$\\max(占位符，多个元素用英文逗号分隔)$";
+      }else if( this.temp_param_type == 'sup'){
+        this.temp_latex = "$\\sup {占位符}$";
+      }else if( this.temp_param_type == 'inf'){
+        this.temp_latex = "$\\inf {占位符}$";
       }
     },
     // 极限
     Update_Limit(){
       if(this.temp_param_type != "limft"){
         if(this.temp_param_type == "lim"){
-          this.temp_latex = "$\\lim " + this.temp_param_1 + "$"
+          this.temp_latex = "$\\lim {变量占位符}$"
         }else if(this.temp_param_type == "limsup"){
-          this.temp_latex = "$\\limsup " + this.temp_param_1 + "$"
+          this.temp_latex = "$\\limsup {变量占位符}$"
         }else if(this.temp_param_type == "liminf"){
-          this.temp_latex = "$\\liminf " + this.temp_param_1 + "$"
+          this.temp_latex = "$\\liminf {变量占位符}$"
         }else if(this.temp_param_type == "dim"){
-          this.temp_latex = "$\\dim " + this.temp_param_1 + "$"
+          this.temp_latex = "$\\dim {变量占位符}$"
         }else if(this.temp_param_type == "deg"){
-          this.temp_latex = "$\\deg " + this.temp_param_1 + "$"
+          this.temp_latex = "$\\deg {变量占位符}$"
         }else if(this.temp_param_type == "det"){
-          this.temp_latex = "$\\det " + this.temp_param_1 + "$"
+          this.temp_latex = "$\\det {变量占位符}$"
         }else if(this.temp_param_type == "ker"){
-          this.temp_latex = "$\\ker " + this.temp_param_1 + "$"
+          this.temp_latex = "$\\ker {变量占位符}$"
         }
       }else if(this.temp_param_type == "limft"){
-        if(this.temp_param_1 != "" && this.temp_param_2 != "" && this.temp_param_3 != ""){
-          var part1 = this.temp_param_1;
-          var part2 = this.temp_param_2;
-          if(this.temp_param_1.indexOf(',') != -1){
-            part1 = "(" + this.temp_param_1 + ")"; 
-          }
-          if(this.temp_param_2.indexOf(',') != -1){
-            part2 = "(" + this.temp_param_2 + ")"; 
-          }
-          this.temp_latex = "$\\lim_{" + part1 + " \\to " + part2 + "} " + this.temp_param_3 + "$";
-        }else{
-          this.temp_latex = "请填入完整参数"
-        }
+        this.temp_latex = "$\\lim_{{变量名称} \\to {趋近目标}} {公式占位符}$";
       }
     },
     // 投射
     Update_Perspective(){
       if(this.temp_param_type == 'pr'){
-        this.temp_latex = "$\\Pr "+ this.temp_param_1 + "$";
+        this.temp_latex = "$\\Pr {变量占位符}$";
       }else if(this.temp_param_type == 'hom'){
-        this.temp_latex = "$\\hom "+ this.temp_param_1 + "$";
+        this.temp_latex = "$\\hom {变量占位符}$";
       }else if(this.temp_param_type == 'len'){
-        this.temp_latex = "$||"+ this.temp_param_1 + "||$";
+        this.temp_latex = "$||{变量占位符}||$";
       }else if(this.temp_param_type == 'arg'){
-        this.temp_latex = "$\\arg "+ this.temp_param_1 + "$";
+        this.temp_latex = "$\\arg {变量占位符}$";
       }
     },
     // 微分及导数
     Update_Deri_or_Diff(){
       if(this.temp_param_type == 'dt'){
-        if(this.temp_param_1.indexOf(',') != -1){
-          var temp_list = this.temp_param_1.split(",");
-          this.temp_latex = "$";
-          for(var i = 0; i < temp_list.length; i++){
-            this.temp_latex = this.temp_latex + "d" + temp_list[i] + " ";
-          }
-          this.temp_latex = this.temp_latex + "$";
-        }else{
-          this.temp_latex = "$d" + this.temp_param_1 + "$"
-        }
+        this.temp_latex = "$d{变量占位符}$";
       }else if(this.temp_param_type == 'mdt'){
-        if(this.temp_param_1.indexOf(',') != -1){
-          var temp_list = this.temp_param_1.split(",");
-          this.temp_latex = "$";
-          for(var i = 0; i < temp_list.length; i++){
-            this.temp_latex = this.temp_latex + "\\mathrm{d}" + temp_list[i] + " ";
-          }
-          this.temp_latex = this.temp_latex + "$";
-        }else{
-          this.temp_latex = "$\\mathrm{d}" + this.temp_param_1 + "$"
-        }
+        this.temp_latex = "$\\mathrm{d}{变量占位符}$";
       }else if(this.temp_param_type == 'partial'){
-        if(this.temp_param_1.indexOf(',') != -1){
-          var temp_list = this.temp_param_1.split(",");
-          this.temp_latex = "$";
-          for(var i = 0; i < temp_list.length; i++){
-            this.temp_latex = this.temp_latex + "\\partial " + temp_list[i] + " ";
-          }
-          this.temp_latex = this.temp_latex + "$";
-        }else{
-          this.temp_latex = "$\\partial " + this.temp_param_1 + "$"
-        }
+        this.temp_latex = "$\\partial {变量占位符}$";
       }else if(this.temp_param_type == 'nabla'){
-        if(this.temp_param_1.indexOf(',') != -1){
-          var temp_list = this.temp_param_1.split(",");
-          this.temp_latex = "$";
-          for(var i = 0; i < temp_list.length; i++){
-            this.temp_latex = this.temp_latex + "\\nabla " + temp_list[i] + " ";
-          }
-          this.temp_latex = this.temp_latex + "$";
-        }else{
-          this.temp_latex = "$\\nabla " + this.temp_param_1 + "$"
-        }
+        this.temp_latex = "$\\nabla {变量占位符}$";
       }else if(this.temp_param_type == 'par1h'){
 
-        var temp_param2 = "";
-        if(this.temp_param_1.indexOf(',') != -1){
-          var temp_list = this.temp_param_1.split(",");
-          for(var i = 0; i < temp_list.length; i++){
-            temp_param2 = temp_param2 + "d" + temp_list[i];
-          }
-        }else{
-          temp_param2 = "d" + this.temp_param_1
-        }
-
-        var temp_param3 = "";
-        if(this.temp_param_2.indexOf(',') != -1){
-          var temp_list = this.temp_param_2.split(",");
-          for(var i = 0; i < temp_list.length; i++){
-            temp_param3 = temp_param3 + "d" + temp_list[i];
-          }
-        }else{
-          temp_param3 = "d" + this.temp_param_2
-        }
+        var temp_param2 = "d{变量占位符1}";
+        var temp_param3 = "d{变量占位符2}";
         
         this.temp_latex = "$" + temp_param2 + "/" + temp_param3 + "$"
 
       }else if(this.temp_param_type == 'par2h'){
 
-        var temp_param2 = "";
-        if(this.temp_param_1.indexOf(',') != -1){
-          var temp_list = this.temp_param_1.split(",");
-          for(var i = 0; i < temp_list.length; i++){
-            temp_param2 = temp_param2 + "\\mathrm{d}" + temp_list[i];
-          }
-        }else{
-          temp_param2 = "\\mathrm{d}" + this.temp_param_1
-        }
-
-        var temp_param3 = "";
-        if(this.temp_param_2.indexOf(',') != -1){
-          var temp_list = this.temp_param_2.split(",");
-          for(var i = 0; i < temp_list.length; i++){
-            temp_param3 = temp_param3 + "\\mathrm{d}" + temp_list[i];
-          }
-        }else{
-          temp_param3 = "\\mathrm{d}" + this.temp_param_2
-        }
+        var temp_param2 = "\\mathrm{d}{变量占位符1}";
+        var temp_param3 = "\\mathrm{d}{变量占位符2}";
         
         this.temp_latex = "$" + temp_param2 + "/" + temp_param3 + "$"
 
       }else if(this.temp_param_type == 'par1v'){
 
-        var temp_param2 = "";
-        if(this.temp_param_1.indexOf(',') != -1){
-          var temp_list = this.temp_param_1.split(",");
-          for(var i = 0; i < temp_list.length; i++){
-            temp_param2 = temp_param2 + "d" + temp_list[i];
-          }
-        }else{
-          temp_param2 = "d" + this.temp_param_1
-        }
-
-        var temp_param3 = "";
-        if(this.temp_param_2.indexOf(',') != -1){
-          var temp_list = this.temp_param_2.split(",");
-          for(var i = 0; i < temp_list.length; i++){
-            temp_param3 = temp_param3 + "d" + temp_list[i];
-          }
-        }else{
-          temp_param3 = "d" + this.temp_param_2
-        }
+        var temp_param2 = "d{变量占位符1}";
+        var temp_param3 = "d{变量占位符2}";
         
         this.temp_latex = "$\\frac{" + temp_param2 + "}{" + temp_param3 + "}$"
 
       }else if(this.temp_param_type == 'par2v'){
 
-        var temp_param2 = "";
-        if(this.temp_param_1.indexOf(',') != -1){
-          var temp_list = this.temp_param_1.split(",");
-          for(var i = 0; i < temp_list.length; i++){
-            temp_param2 = temp_param2 + "\\mathrm{d}" + temp_list[i];
-          }
-        }else{
-          temp_param2 = "\\mathrm{d}" + this.temp_param_1
-        }
-
-        var temp_param3 = "";
-        if(this.temp_param_2.indexOf(',') != -1){
-          var temp_list = this.temp_param_2.split(",");
-          for(var i = 0; i < temp_list.length; i++){
-            temp_param3 = temp_param3 + "\\mathrm{d}" + temp_list[i];
-          }
-        }else{
-          temp_param3 = "\\mathrm{d}" + this.temp_param_2
-        }
+        var temp_param2 = "\\mathrm{d}{变量占位符1}";
+        var temp_param3 = "\\mathrm{d}{变量占位符2}";
         
         this.temp_latex = "$\\frac{" + temp_param2 + "}{" + temp_param3 + "}$"
 
       }else if(this.temp_param_type == 'par'){
         
-        var temp_param2 = "";
-        if(this.temp_param_1.indexOf(',') != -1){
-          var temp_list = this.temp_param_1.split(",");
-          for(var i = 0; i < temp_list.length; i++){
-            temp_param2 = temp_param2 + "\\partial " + temp_list[i];
-          }
-        }else{
-          temp_param2 = "\\partial " + this.temp_param_1
-        }
-
-        var temp_param3 = "";
-        if(this.temp_param_2.indexOf(',') != -1){
-          var temp_list = this.temp_param_2.split(",");
-          for(var i = 0; i < temp_list.length; i++){
-            temp_param3 = temp_param3 + "\\partial " + temp_list[i];
-          }
-        }else{
-          temp_param3 = "\\partial " + this.temp_param_2
-        }
+        var temp_param2 = "\\partial {变量占位符1}";
+        var temp_param3 = "\\partial {变量占位符2}";
         
         this.temp_latex = "$\\frac{" + temp_param2 + "}{" + temp_param3 + "}$"
 
@@ -1620,37 +1225,16 @@ export default {
 
       }else if(this.temp_param_type == 'deri'){
         
-        if(this.temp_param_1.indexOf(',') != -1){
-          this.$message('请勿输入多个元素');
-          this.temp_param_1 = this.temp_param_1.substring(0, this.temp_param_1.length - 1);
-        }else{
-          var deri_count = parseInt(this.temp_param_2);
-          this.temp_latex = "$(" + this.temp_param_1;
-          if(deri_count == 1){
-            this.temp_latex = this.temp_latex + "\')";
-          }else if(deri_count == 2){
-            this.temp_latex = this.temp_latex + "\'\')"
-          }else if(deri_count > 2){
-            this.temp_latex = this.temp_latex + ")^{(" + deri_count + ")}"
-          }
-          this.temp_latex = this.temp_latex + "$";
-        }
+        this.temp_latex = "${变量占位符}^{(次数占位符)}$"
 
-      }else if(this.temp_param_type == 'deridot'){
+      }else if(this.temp_param_type == 'deridot1'){
 
-        if(this.temp_param_1.indexOf(',') != -1){
-          this.$message('请勿输入多个元素');
-          this.temp_param_1 = this.temp_param_1.substring(0, this.temp_param_1.length - 1);
-        }else{
-          var deri_count = parseInt(this.temp_param_2);
-          if(deri_count == 1){
-            this.temp_latex = "$(\\dot " + this.temp_param_1 + ")$";
-          }else if(deri_count == 2){
-            this.temp_latex = "$(\\ddot " + this.temp_param_1 + ")$";
-          }else if(deri_count > 2){
-            this.temp_latex = "点格式不支持二阶以上的表示";
-          }
-        }
+        this.temp_latex = "$\\dot {变量占位符}$";
+
+      }else if(this.temp_param_type == 'deridot2'){
+
+        this.temp_latex = "$\\ddot {变量占位符}$";
+
       }
     },
     // 模运算及开根号
@@ -1658,96 +1242,54 @@ export default {
       if(this.temp_param_type == 'bmod'){
         this.temp_latex = "$\\bmod$"
       }else if(this.temp_param_type == 'pmod'){
-        if(this.temp_param_1.indexOf(',') == -1){
-          this.temp_latex = "$\\pmod{" + this.temp_param_1 + "}$";
-        }else{
-          this.temp_latex = "请勿输入多参数"
-        }
+        this.temp_latex = "$\\pmod {变量占位符}$";
       }else if(this.temp_param_type == 'gcd'){
-        if(this.temp_param_1.indexOf(',') == -1 && this.temp_param_2.indexOf(',') == -1){
-          this.temp_latex = "$\\gcd(" + this.temp_param_1 + "," + this.temp_param_2 + ")$";
-        }else{
-          this.temp_latex = "请勿输入多参数";
-        }
+        this.temp_latex = "$\\gcd (变量占位符，多个变量请用英文逗号分隔)$";
       }else if(this.temp_param_type == 'lcm'){
-        if(this.temp_param_1.indexOf(',') == -1 && this.temp_param_2.indexOf(',') == -1){
-          this.temp_latex = "$\\operatorname{lcm}(" + this.temp_param_1 + "," + this.temp_param_2 + ")$";
-        }else{
-          this.temp_latex = "请勿输入多参数";
-        }
-      }else if(this.temp_param_type == 'sqrt'){
-        if(this.temp_param_1.indexOf(',') == -1 && this.temp_param_2.indexOf(',') == -1){
-          if(this.temp_param_1 == "" && this.temp_param_2 == ""){
-            this.temp_latex = "$\\surd$";
-          }else if(this.temp_param_1 != "" && this.temp_param_2 == ""){
-            this.temp_latex = "$\\sqrt{" + this.temp_param_1 + "}$";
-          }else if(this.temp_param_1 == "" && this.temp_param_2 != ""){
-            this.temp_latex = "$\\sqrt[" + this.temp_param_2 + "]{}$";
-          }else if(this.temp_param_1 != "" && this.temp_param_2 != ""){
-            this.temp_latex = "$\\sqrt[" + this.temp_param_2 + "]{" + this.temp_param_1 + "}$";
-          }
-        }else{
-          this.temp_latex = "请勿输入多参数";
-        }
+        this.temp_latex = "$\\operatorname{lcm}(变量占位符，多个变量请用英文逗号分隔)$"
+      }else if(this.temp_param_type == 'sqrt'){  
+        this.temp_latex = "$\\sqrt[次数占位符]{开根项占位符}$";
+      }else if(this.temp_param_type == 'surd'){
+        this.temp_latex = "$\\surd$";
       }
     },
     // 默认页面
     Update_Default(){
       // 求和
       if(this.temp_param_type == 'sum'){
-        this.temp_latex = "$\\sum_{" + this.temp_param_1 + "=" + this.temp_param_2 + "}^" + this.temp_param_3 + "$"
+        this.temp_latex = "$\\sum_{变量名 = 起始值}^{目标值}$";
       }else if(this.temp_param_type == 'msum'){
-        this.temp_latex = "$\\begin{matrix} \\sum_{" + this.temp_param_1 + "=" + this.temp_param_2 + "}^" + this.temp_param_3 + " \\end{matrix}$"
+        this.temp_latex = "$\\begin{matrix} \\sum_{变量名 = 起始值}^{ 目标值 } \\end{matrix}$"
       }
       // 求积
       else if(this.temp_param_type == 'mul'){
-        this.temp_latex = "$\\prod_{" + this.temp_param_1 + "=" + this.temp_param_2 + "}^" + this.temp_param_3 + "$"
+        this.temp_latex = "$\\prod_{变量名 = 起始值}^{目标值}$"
       }else if(this.temp_param_type == 'mmul'){
-        this.temp_latex = "$\\begin{matrix} \\prod_{" + this.temp_param_1 + "=" + this.temp_param_2 + "}^" + this.temp_param_3 + " \\end{matrix}$"  
+        this.temp_latex = "$\\begin{matrix} \\prod_{变量名 = 起始值}^{目标值} \\end{matrix}$"  
       }
       // 上积
       else if(this.temp_param_type == 'cmul'){
-        this.temp_latex = "$\\coprod_{" + this.temp_param_1 + "=" + this.temp_param_2 + "}^" + this.temp_param_3 + "$"
+        this.temp_latex = "$\\coprod_{变量名 = 起始值}^{目标值}$"
       }else if(this.temp_param_type == 'mcmul'){
-        this.temp_latex = "$\\begin{matrix} \\coprod_{" + this.temp_param_1 + "=" + this.temp_param_2 + "}^" + this.temp_param_3 + " \\end{matrix}$"  
+        this.temp_latex = "$\\begin{matrix} \\coprod_{变量名 = 起始值}^{目标值} \\end{matrix}$"  
       }
       // 积分，二重积分，三重积分
       else if(this.temp_param_type == 'int'){
-        this.temp_latex = "$\\int_{" + this.temp_param_2 + "}^{" + this.temp_param_1 + "}$"
+        this.temp_latex = "$\\int_{区间下限}^{区间上限}$"
       }else if(this.temp_param_type == 'iint'){
-        this.temp_latex = "$\\iint_{" + this.temp_param_2 + "}^{" + this.temp_param_1 + "}$"
+        this.temp_latex = "$\\iint_{区间下限}^{区间上限}$"
       }else if(this.temp_param_type == 'iiint'){
-        this.temp_latex = "$\\iiint_{" + this.temp_param_2 + "}^{" + this.temp_param_1 + "}$"
+        this.temp_latex = "$\\iiint_{区间下限}^{区间上限}$"
       }
       // 交并集
       else if(this.temp_param_type == 'cap'){
-        var temp_list = this.temp_param_1.split(',');
-        if(temp_list.length < 2){
-          this.temp_latex = "请正确输入多个变量名称";
-          return
-        }else{
-          this.temp_latex = "$" + temp_list[0];
-          for(var j = 1; j < temp_list.length; j++){
-            this.temp_latex = this.temp_latex + " \\cap " + temp_list[j];
-          }
-          this.temp_latex = this.temp_latex + " $";
-        }
+        this.temp_latex = "$ 集合A \\cap 集合B \\cap 集合C $";
       }else if(this.temp_param_type == 'cup'){
-        var temp_list = this.temp_param_1.split(',');
-        if(temp_list.length < 2){
-          this.temp_latex = "请正确输入多个变量名称";
-          return
-        }else{
-          this.temp_latex = "$" + temp_list[0];
-          for(var j = 1; j < temp_list.length; j++){
-            this.temp_latex = this.temp_latex + " \\cup " + temp_list[j];
-          }
-          this.temp_latex = this.temp_latex + " $";
-        }
+        this.temp_latex = "$ 集合A \\cup 集合B \\cup 集合C $";
       }else if(this.temp_param_type == 'bcap'){
-        this.temp_latex = "$\\bigcap_{" + this.temp_param_2 + "}^{" + this.temp_param_3 + "} " + this.temp_param_1 + "$"
+        this.temp_latex = "$\\bigcap_{ 开始标记 }^{ 结束标记 } {集合名称} $"
       }else if(this.temp_param_type == 'bcup'){
-        this.temp_latex = "$\\bigcup_{" + this.temp_param_2 + "}^{" + this.temp_param_3 + "} " + this.temp_param_1 + "$"
+        this.temp_latex = "$\\bigcup_{ 开始标记 }^{ 结束标记 } {集合名称} $"
       }
       // 闭合曲线曲面积分符号
       else if(this.temp_param_type == 'oint'){
@@ -1755,11 +1297,7 @@ export default {
       }
       // 分式被移动到这里了
       else if(this.temp_param_type == 'frac'){
-        this.temp_latex = "$\\frac{" + this.temp_param_1 + "}{" +  this.temp_param_2 + "}$"
-      }
-      // 插入公式
-      else if(this.temp_param_type == 'calc'){
-        this.temp_latex = "$" + this.temp_param_1 + "$";
+        this.temp_latex = "$\\frac{ 分子部分 }{ 分母部分 }$"
       }
     },
     // 上传Docx文件
@@ -1811,12 +1349,6 @@ export default {
           case "":
             this.Update_Default();
             break;
-          case "指数":
-            this.Update_Exp();
-            break;
-          case "对数":
-            this.Update_Log();
-            break;
           case "三角函数":
             this.Update_Triangle();
             break;
@@ -1837,29 +1369,34 @@ export default {
             break;
         }
     },
+    // 复制到粘贴板
     Copy_Input(){
-      var Input = document.getElementById('copy_input');
+      var Input = document.getElementById('input_now');
       Input.select();
       document.execCommand("Copy");
       this.$message('已复制');
     },
+    // 插入至文本末尾
     Insert_To_Content_Tail(){
       this.content = this.content + this.temp_latex_total;
       this.temp_latex_total = '';
       this.$message('已插入文本末尾');
     },
+    // 拼合元素与待输入公式
     Update_Temp_Latex_Total(){
       this.temp_latex_total = this.temp_latex_total + " " + this.temp_latex;
-      this.Param_Switch();
     },
+    // 清除临时数据
     Clear(){
       this.helper_dialog = false;
+      this.latex_now = "常用符号及格式提示";
       this.temp_latex = "";
       this.temp_latex_total = "";
-      this.temp_param_type = "calc";
-      this.temp_param_1 = "";
-      this.temp_param_2 = "";
-      this.temp_param_3 = "";
+      this.temp_param_type = "";
+    },
+    // 打开对话框
+    Open_Helper(){
+      this.helper_dialog = true; 
     }
   }
 };
