@@ -11,8 +11,11 @@ import InputMarked from "@/components/InputMarked";
 import InputPaper from "@/components/InputPaper";
 import InputMarkedPreview from "@/components/InputMarkedPreview";
 import Register from "@/components/Register";
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 
 Vue.use(Router);
+Vue.use(mavonEditor);
 
 const router = new Router({
   mode: "history",
