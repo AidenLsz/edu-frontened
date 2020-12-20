@@ -129,6 +129,13 @@
           <el-radio v-model="number_radio" label="1">不连续</el-radio>
           <el-radio v-model="number_radio" label="2">连续</el-radio>
         </el-row>
+        <br/>
+        <br/>
+        <el-row>
+          <el-button @click="open_ComplexInput()">
+            复杂输入助手
+          </el-button>
+        </el-row>
       </el-col>
       <el-col :span="20">
         <el-row type="flex" justify="end">
@@ -225,6 +232,10 @@
               <div v-for="(item, index) in option_content" :key="index">
                 <el-card @mouseover.native="mouseOver($event)" shadow="hover">
                   <li style="margin-left:35px;">
+
+                    <el-button @click="option_moveup(index)">上浮</el-button>
+                    <el-button @click="option_movedown(index)">下移</el-button>
+
                     <el-form-item label="分值" label-width="100px">
                       <el-input
                         class="el-short_input__inner"
@@ -5386,6 +5397,24 @@ export default {
     },
     handleDelete() {
       // console.log(index, row);
+    },
+    option_moveup(index){
+      var option_now = this.option_content[index];
+      option_now.eno = option_now.eno - 1;
+      this.option_content[index-1].eno = this.option_content[index-1].eno + 1;
+      this.option_content.splice(index, 1);
+      this.option_content.splice(index-1, 0, option_now);
+
+    },
+    option_movedown(index){
+      var option_now = this.option_content[index];
+      option_now.eno = option_now.eno + 1;
+      this.option_content[index+1].eno = this.option_content[index+1].eno - 1;
+      this.option_content.splice(index, 1);
+      this.option_content.splice(index+1, 0, option_now);
+    },
+    open_ComplexInput(){
+      console.log("Open A CI Dialog.")
     }
   }
 };

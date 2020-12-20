@@ -915,7 +915,7 @@ export default {
       this.$emit("Update_CI", newVal);
     },
     image_infos(newVal){
-      this.$emit("Update_Image", newVal);
+      setTimeout(()=>{this.$emit("Update_Image", newVal)}, 10);
     }
   },
   methods: {
@@ -928,15 +928,12 @@ export default {
       return tab.name;
     },
     New_Img_In(imgname, img){
-      console.log(imgname);
-      console.log(img);
       this.image_infos.push(
         {
           "name": img.name,
           "info": img.miniurl
         }
       );
-      console.log(this.$refs.mavoneditor);
     },
     Del_Img(imgname){
       for(var i = 0; i < this.image_infos.length; i++){
@@ -945,7 +942,6 @@ export default {
           break;
         }
       }
-      console.log(this.$refs.mavoneditor);
     },
     // 三角函数
     Update_Triangle(){

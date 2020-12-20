@@ -35,8 +35,14 @@
             <el-checkbox label="知识点"></el-checkbox>
           </el-checkbox-group>
         </el-col>
+        <el-button type="submit" value="提交" @click="submit" :disabled="Estimate_Check()"
+              >评估
+            </el-button>
       </el-row>
       <el-row>
+        <ComplexInput @Update_CI="UCI" @Update_Image="UCII"></ComplexInput>
+      </el-row>
+      <!-- <el-row>
         <el-col :span="11">
           <div class="input_content">
             <form @submit.prevent="submit" style="margin-top: 20px;">
@@ -81,7 +87,7 @@
             </el-button>
           </el-row>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-divider></el-divider>
       <el-row v-loading="loading">
         <el-row type="flex" justify="start">
@@ -145,10 +151,12 @@
 </template>
 
 <script>
-import Mathdown from "./Mathdown.vue";
-import UploadImg from "./UploadImg.vue";
+
+// import Mathdown from "./Mathdown.vue";
+// import UploadImg from "./UploadImg.vue";
+import ComplexInput from "./ComplexInput.vue";
 export default {
-  components: { Mathdown, UploadImg },
+  components: { ComplexInput},
   name: "estimate",
   data() {
     return {
@@ -236,9 +244,11 @@ export default {
       this.loading = true;
       this.show_result = true;
       let param = new FormData();
-      for (var i = 0; i < this.filelists.length; i++) {
-        param.append("file[]", this.filelists[i]);
+      var temp_list = [];
+      for(var i = 0; i < this.filelists.length; i++){
+        temp_list.push(this.filelists[i])
       }
+      param.append("files", JSON.stringify(temp_list));
       let config = {
         headers: { "Content-Type": "multipart/form-data" }
       };
@@ -268,41 +278,48 @@ export default {
           })
           .then(function(data) {
             this.kp_result = data.data.knowledge_point.kp;
-            console.log(this.kp_result);
             this.kp_layer = data.data.knowledge_point.kp_layer;
             this.kp_priority = data.data.knowledge_point.kp_priority;
             this.loading = false;
           });
       }
     },
-    imgInfo(e) {
-      this.src = e.src;
-      this.filelists = e.filelists;
-      console.log(e.src);
-      console.log(e.filelists);
-    },
-    // 删除图片并保持图片数组顺序
-    forkImage(index) {
-      this.src.splice(index, 1);
-      for (var i = 0; i < this.filelists.length; i++) {
-        if (typeof this.filelists[i] === "undefined") {
-          this.filelists.splice(i, 1);
-          i = i - 1;
-        }
-      }
-      this.filelists.splice(index, 1);
-      document.getElementsByTagName("input").value = "";
-      console.log(this.src);
-      console.log(this.filelists);
-      console.log(document.getElementsByTagName("input").value);
-    },
+    // imgInfo(e) {
+    //   this.src = e.src;
+    //   this.filelists = e.filelists;
+    //   console.log(e.src);
+    //   console.log(e.filelists);
+    // },
+    // // 删除图片并保持图片数组顺序
+    // forkImage(index) {
+    //   this.src.splice(index, 1);
+    //   for (var i = 0; i < this.filelists.length; i++) {
+    //     if (typeof this.filelists[i] === "undefined") {
+    //       this.filelists.splice(i, 1);
+    //       i = i - 1;
+    //     }
+    //   }
+    //   this.filelists.splice(index, 1);
+    //   document.getElementsByTagName("input").value = "";
+    //   // console.log(this.src);
+    //   // console.log(this.filelists);
+    //   // console.log(document.getElementsByTagName("input").value);
+    // },
     Estimate_Check(){
       if(this.subject_id == "" || this.type_id == "" || this.content == ""){
         return true
       }else{
         return false
       }
-    }
+    },
+    // Update Complex Input，将组合输入的内容复制到当前搜索框应该具有的内容里
+    UCI(val){
+      this.content = val;
+    },
+    // Update Complex Input Image，将组合输入的内容的图片部分复制到当前页面的内容里，如果后续又要用到则进行调用
+    UCII(val){
+      this.filelists = val;
+    },
   }
 };
 </script>

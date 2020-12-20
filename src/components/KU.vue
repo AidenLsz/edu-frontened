@@ -10,14 +10,29 @@
       </el-col>
       <el-col :span="14">
         <form @submit.prevent="submit(ku_name)" style="margin-top: 20px;">
-          <el-row type="flex" class="row-bg" justify="center">
+          <el-row type="flex" class="row-bg" justify="center" v-if="!complex_input_flag">
+            <el-col :span="23">
+              <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
+            </el-col>
+            <el-button @click="Open_CI()">切换多格式输入</el-button>
+            <el-button type="submit" value="提交" @click="submit(ku_name)">检索</el-button>
+          </el-row>
+
+          <el-row type="flex" class="row-bg" justify="center" v-if="complex_input_flag">
+            <el-col :span="23">
+              <ComplexInput @Update_CI="UCI" @Update_Image="UCII" ref="CI"></ComplexInput>
+            </el-col>
+            <el-button @click="Close_CI()">切换简单输入</el-button>
+            <el-button type="submit" value="提交" @click="submit(ku_name)">检索</el-button>
+          </el-row>
+          <!-- <el-row type="flex" class="row-bg" justify="center">
             <el-col :span="22">
               <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
             </el-col>
             <el-button type="submit" value="提交" @click="submit(ku_name)"
               >检索</el-button
             >
-          </el-row>
+          </el-row> -->
         </form>
       </el-col>
     </el-row>
@@ -177,8 +192,9 @@
 
 <script>
 import Graph from "./Graph.vue";
+import ComplexInput from "./ComplexInput.vue";
 export default {
-  components: { Graph },
+  components: { Graph, ComplexInput },
   name: "KU",
   data() {
     return {
@@ -195,7 +211,9 @@ export default {
       outward_arrow: 0,
       root_view: false,
       loading: false,
-      url: ""
+      url: "",
+      image_infos: [],
+      complex_input_flag: false
     };
   },
   mounted() {
@@ -272,6 +290,23 @@ export default {
           this.directed_len = "(" + data.data.pre_len + data.data.suc_len + ")";
           this.undirected_len = "(" + data.data.undirected_len + ")";
         });
+    },
+    // Update Complex Input，将组合输入的内容复制到当前搜索框应该具有的内容里
+    UCI(val){
+      this.ku_name = val;
+    },
+    // Update Complex Input Image，将组合输入的内容的图片部分复制到当前页面的内容里，如果后续又要用到则进行调用
+    UCII(val){
+      this.image_infos = val;
+    },
+    // 打开组合输入的组件，并将当前存放的ku_name属性赋予组件，实现切换时的无缝效果，由于content发生改变时会自动
+    // 将内容返回给this.ku_name，所以关闭组合输入时无需考虑这一点
+    Open_CI(){
+      this.complex_input_flag = true;
+      setTimeout(()=>{this.$refs.CI.content = this.ku_name}, 10);
+    },
+    Close_CI(){
+      this.complex_input_flag = false;
     }
   }
 };
