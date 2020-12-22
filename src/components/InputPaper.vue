@@ -1,5 +1,10 @@
 <template>
   <div id="import_paper">
+
+  <el-dialog title="请自行复制结果至想要的输入框" :visible.sync="CI_Visible" @close="CI_Visible = false" width="85%">
+    <ComplexInput></ComplexInput>
+  </el-dialog>
+
     <el-row class="panel">
       <el-col :span="4">
         <el-row type="flex" justify="start">
@@ -133,7 +138,7 @@
         <br/>
         <el-row>
           <el-button @click="open_ComplexInput()">
-            复杂输入助手
+            组合输入助手
           </el-button>
         </el-row>
       </el-col>
@@ -203,15 +208,30 @@
                 v-model="chemistry_subtitle"
               ></el-input>
             </el-form-item>
+            <!-- 选择题显示控制 -->
             <el-form-item
               label="一、选择题"
               label-width="100px"
               v-if="option_content[0]"
             >
-              <el-input
-                v-model="option_subtitle"
-                placeholder="请输入题目说明"
-              ></el-input>
+              <el-row>
+                <el-col :span="2">
+                  <el-button 
+                    circle 
+                    size="mini" 
+                    @click="single_choice"><i class="el-icon-plus"></i></el-button>
+                  <el-button 
+                    circle 
+                    size="mini" 
+                    @click="deleteCard(option_content.length-1)"><i class="el-icon-minus"></i></el-button>
+                </el-col>
+                <el-col :span="22">
+                  <el-input
+                    v-model="option_subtitle"
+                    placeholder="请输入题目说明"
+                  ></el-input>
+                </el-col>
+              </el-row>
               <el-button
                 size="mini"
                 v-if="option_visible"
@@ -222,9 +242,10 @@
                 size="mini"
                 v-if="!option_visible"
                 @click="option_visible = true"
-                >展开选择题</el-button
+                >展开选择题（共{{option_content.length}}道）</el-button
               >
             </el-form-item>
+            <!-- 选择题部分 - 预览内容输入及渲染 -->
             <ol
               style="text-align:left; margin-left: -35px;"
               v-show="option_visible"
@@ -233,8 +254,8 @@
                 <el-card @mouseover.native="mouseOver($event)" shadow="hover">
                   <li style="margin-left:35px;">
 
-                    <el-button @click="option_moveup(index)">上浮</el-button>
-                    <el-button @click="option_movedown(index)">下移</el-button>
+                    <el-button @click="option_moveup(index)" :disabled="index == 0">上浮</el-button>
+                    <el-button @click="option_movedown(index)" :disabled="index == option_content.length - 1">下移</el-button>
 
                     <el-form-item label="分值" label-width="100px">
                       <el-input
@@ -284,7 +305,7 @@
                           style="margin-top:15px;"
                           :upload="upload"
                           :data="
-                            upload
+                            option_show_image[index][indexOp]
                               ? option_content[index].optionQuestion.image[
                                   indexOp
                                 ]
@@ -305,6 +326,16 @@
                           :key="indexOp"
                           style="margin-bottom:0px;"
                         >
+                        <el-button 
+                          circle 
+                          size="mini" 
+                          :disabled="indexOp == 0"
+                          @click="Option_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
+                        <el-button 
+                          circle 
+                          size="mini" 
+                          :disabled="indexOp == item.optionQuestion.option.length - 1"
+                          @click="Option_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
                           <el-input
                             type="textarea"
                             autosize
@@ -342,7 +373,7 @@
                             style="margin-top:-25px"
                             :upload="upload"
                             :data="
-                              upload
+                              option_show_option_image[index][indexOp]
                                 ? option_content[index].optionQuestion
                                     .option_images[indexOp]
                                 : ''
@@ -424,7 +455,7 @@
                           style="margin-top:5px;"
                           :upload="upload"
                           :data="
-                            upload
+                            option_show_analysis_image[index][indexOp]
                               ? option_content[index].optionQuestion
                                   .analysis_images[indexOp]
                               : ''
@@ -593,15 +624,31 @@
                 </el-card>
               </div>
             </ol>
+            <!-- 填空题显示控制 -->
             <el-form-item
-              label="二、填空题"
+              :label="Get_Fill_Label()"
               label-width="100px"
               v-if="fill_content[0]"
             >
-              <el-input
-                v-model="fill_subtitle"
-                placeholder="请输入题目说明"
-              ></el-input>
+              <el-row>
+                <el-col :span="2">
+                  <el-button 
+                    circle 
+                    size="mini" 
+                    @click="fill_in"><i class="el-icon-plus"></i></el-button>
+                  <el-button 
+                    circle 
+                    size="mini" 
+                    @click="deleteFillCard(fill_content.length-1)"><i class="el-icon-minus"></i></el-button>
+                </el-col>
+                <el-col :span="22">
+                  <el-input
+                    v-model="fill_subtitle"
+                    placeholder="请输入题目说明"
+                  ></el-input>
+                </el-col>
+              </el-row>
+              
               <el-button
                 size="mini"
                 v-if="fill_visible"
@@ -612,9 +659,10 @@
                 size="mini"
                 v-if="!fill_visible"
                 @click="fill_visible = !fill_visible"
-                >展开填空题</el-button
+                >展开填空题（共{{fill_content.length}}道）</el-button
               >
             </el-form-item>
+            <!-- 填空题部分 - 预览内容输入及渲染 -->
             <ol
               style="text-align:left; margin-left: -35px;"
               v-show="fill_visible"
@@ -626,6 +674,8 @@
                 :key="index"
               >
                 <li style="margin-left:35px;">
+                  <el-button @click="fill_moveup(index)" :disabled="index == 0">上浮</el-button>
+                  <el-button @click="fill_movedown(index)" :disabled="index == fill_content.length - 1">下移</el-button>
                   <el-form-item label="分值" label-width="100px">
                     <el-input
                       class="el-short_input__inner"
@@ -670,7 +720,7 @@
                         style="margin-top:10px;margin-bottom:5px;"
                         :upload="upload"
                         :data="
-                          upload
+                          fill_show_image[index][indexOp]
                             ? fill_content[index].fillQuestion.image[indexOp]
                             : ''
                         "
@@ -743,7 +793,7 @@
                         style="margin-top:5px"
                         :upload="upload"
                         :data="
-                          upload
+                          fill_show_analysis_image[index][indexOp]
                             ? fill_content[index].fillQuestion.analysis_images[
                                 indexOp
                               ]
@@ -870,15 +920,31 @@
                 </el-dialog>
               </el-card>
             </ol>
+            <!-- 解答题显示控制 -->
             <el-form-item
-              label="三、解答题"
+              :label="Get_Answer_Label()"
               label-width="100px"
               v-if="answer_content[0]"
             >
-              <el-input
-                v-model="answer_subtitle"
-                placeholder="请输入题目说明"
-              ></el-input>
+              <el-row>
+                <el-col :span="2">
+                  <el-button 
+                    circle 
+                    size="mini" 
+                    @click="answer_question"><i class="el-icon-plus"></i></el-button>
+                  <el-button 
+                    circle 
+                    size="mini" 
+                    @click="deleteAnswerCard(answer_content.length-1)"><i class="el-icon-minus"></i></el-button>
+                </el-col>
+                <el-col :span="22">
+                  <el-input
+                    v-model="answer_subtitle"
+                    placeholder="请输入题目说明"
+                  ></el-input>
+                </el-col>
+              </el-row>
+              
               <el-button
                 size="mini"
                 v-if="answer_visible"
@@ -889,9 +955,10 @@
                 size="mini"
                 v-if="!answer_visible"
                 @click="answer_visible = !answer_visible"
-                >展开解答题</el-button
+                >展开解答题（共{{answer_content.length}}道）</el-button
               >
             </el-form-item>
+            <!-- 解答题部分 - 预览内容输入及渲染 -->
             <ol
               style="text-align:left; margin-left: -35px;"
               v-show="answer_visible"
@@ -903,6 +970,8 @@
                 :key="index"
               >
                 <li style="margin-left:35px;">
+                  <el-button @click="answer_moveup(index)" :disabled="index==0">上浮</el-button>
+                  <el-button @click="answer_movedown(index)" :disabled="index == answer_content.length - 1">下移</el-button>
                   <el-form-item label="分值" label-width="100px">
                     <el-input
                       class="el-short_input__inner"
@@ -974,7 +1043,7 @@
                         style="margin-top:10px"
                         :upload="upload"
                         :data="
-                          upload
+                          answer_show_image[index][indexOp]
                             ? answer_content[index].answerQuestion.image[
                                 indexOp
                               ]
@@ -1062,6 +1131,16 @@
                         :key="indexOp"
                         style="margin-bottom: 10px"
                       >
+                      <el-button 
+                          circle 
+                          size="mini" 
+                          :disabled="indexOp == 0"
+                          @click="Answer_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
+                        <el-button 
+                          circle 
+                          size="mini" 
+                          :disabled="indexOp == item.answerQuestion.sub_questions.length - 1"
+                          @click="Answer_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
                         <el-form-item label="分值" label-width="50px">
                           <el-input
                             class="el-short_input__inner"
@@ -1112,7 +1191,7 @@
                             style="margin-top:15px"
                             :upload="upload"
                             :data="
-                              upload
+                              answer_show_option_image[index][indexOp]
                                 ? answer_content[index].answerQuestion
                                     .option_images[indexOp]
                                 : ''
@@ -1171,7 +1250,7 @@
                         style="margin-top:5px"
                         :upload="upload"
                         :data="
-                          upload
+                          answer_show_answer_image[index][indexAn]
                             ? answer_content[index].answerQuestion
                                 .answer_images[indexAn]
                             : ''
@@ -1231,7 +1310,7 @@
                         style="margin-top:5px"
                         :upload="upload"
                         :data="
-                          upload
+                          answer_show_analysis_image[index][indexOp]
                             ? answer_content[index].answerQuestion
                                 .analysis_images[indexOp]
                             : ''
@@ -1466,15 +1545,31 @@
                 </el-dialog>
               </el-card>
             </ol>
+            <!-- 非选择题显示控制 -->
             <el-form-item
-              label="三、非选择题"
+              :label="Get_Mix_Label()"
               label-width="100px"
               v-if="mix_content[0]"
             >
-              <el-input
-                v-model="mix_subtitle"
-                placeholder="请输入题目说明"
-              ></el-input>
+              <el-row>
+                <el-col :span="2">
+                  <el-button 
+                    circle 
+                    size="mini" 
+                    @click="mix_question"><i class="el-icon-plus"></i></el-button>
+                  <el-button 
+                    circle 
+                    size="mini" 
+                    @click="deleteMixCard(mix_content.length-1)"><i class="el-icon-minus"></i></el-button>
+                </el-col>
+                <el-col :span="22">
+                  <el-input
+                    v-model="mix_subtitle"
+                    placeholder="请输入题目说明"
+                  ></el-input>
+                </el-col>
+              </el-row>
+
               <el-button
                 size="mini"
                 v-if="mix_visible"
@@ -1485,9 +1580,10 @@
                 size="mini"
                 v-if="!mix_visible"
                 @click="mix_visible = !mix_visible"
-                >展开非选择题</el-button
+                >展开非选择题（共{{mix_content.length}}道）</el-button
               >
             </el-form-item>
+            <!-- 非选择题 - 预览内容输入及渲染 -->
             <ol
               style="text-align:left; margin-left: -35px;"
               v-show="mix_visible"
@@ -1499,6 +1595,8 @@
                 :key="index"
               >
                 <li style="margin-left:35px;">
+                  <el-button @click="mix_moveup(index)" :disabled="index == 0">上浮</el-button>
+                  <el-button @click="mix_movedown(index)" :disabled="index == mix_content.length - 1">下移</el-button>
                   <el-form-item label="分值" label-width="100px">
                     <el-input
                       class="el-short_input__inner"
@@ -1543,7 +1641,7 @@
                         style="margin-top:10px"
                         :upload="upload"
                         :data="
-                          upload
+                          mix_show_image[index][indexOp]
                             ? mix_content[index].mixQuestion.image[indexOp]
                             : ''
                         "
@@ -1554,22 +1652,37 @@
                   </el-form-item>
                   <ol type="i">
                     <el-form-item label-width="100px">
+
+                      <!-- 优先级最低的是选择题？？？ -->
                       <div
                         v-for="(sub_item, indexOp) in mix_content[index]
-                          .mixQuestion.mix_sub_questions"
-                        :key="indexOp + 'sub_'"
+                          .mixQuestion.mix_sub_choice_questions"
+                        :key="indexOp + 'sub_choice'"
                       >
                         <li
                           v-if="
-                            mix_content[index].mixQuestion.mix_sub_questions[0]
+                            mix_content[index].mixQuestion
+                              .mix_sub_choice_questions[0]
                           "
                         >
+                        <el-button 
+                          circle 
+                          size="mini" 
+                          :disabled="indexOp == 0"
+                          @click="Mix_Option_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
+                        <el-button 
+                          circle 
+                          size="mini" 
+                          :disabled="indexOp == mix_content[index].mixQuestion.mix_sub_choice_questions.length - 1"
+                          @click="Mix_Option_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
+
                           <el-form-item label="分值" label-width="50px">
                             <el-input
                               class="el-short_input__inner"
                               v-model="
                                 mix_content[index].mixQuestion
-                                  .mix_sub_questions[indexOp].sub_question.score
+                                  .mix_sub_choice_questions[indexOp].sub_choice
+                                  .score
                               "
                               placeholder="分值"
                             ></el-input>
@@ -1581,14 +1694,14 @@
                                 autosize
                                 v-model="
                                   mix_content[index].mixQuestion
-                                    .mix_sub_questions[indexOp].sub_question
-                                    .content
+                                    .mix_sub_choice_questions[indexOp]
+                                    .sub_choice.content
                                 "
                               ></el-input>
                               <i
                                 class="el-icon-circle-close"
                                 style="position: absolute;right:55px;top:10px;"
-                                @click="deleteMixSub(index, indexOp)"
+                                @click="deleteMixOption(index, indexOp)"
                               ></i>
                             </div>
                             <el-row type="flex" justify="end">
@@ -1599,7 +1712,7 @@
                                 round
                                 @click="
                                   showSubImage(
-                                    'sub_question',
+                                    'sub_choice',
                                     index,
                                     indexOp,
                                     true
@@ -1611,17 +1724,16 @@
                                 type="info"
                                 size="mini"
                                 v-if="
-                                  mix_content[index].mixQuestion.mix_sub_image[
-                                    indexOp
-                                  ] !== '' &&
+                                  mix_content[index].mixQuestion
+                                    .mix_sub_choice_image[indexOp] !== '' &&
                                     mix_content[index].mixQuestion
-                                      .mix_sub_image[indexOp].length > 0
+                                      .mix_sub_choice_image[indexOp].length > 0
                                 "
                                 style="float: right;margin-top:10px;"
                                 round
                                 @click="
                                   showSubImage(
-                                    'sub_question',
+                                    'sub_choice',
                                     index,
                                     indexOp,
                                     false
@@ -1632,28 +1744,28 @@
                             </el-row>
                             <div
                               v-for="(item, indexImg) in mix_content[index]
-                                .mixQuestion.mix_sub_image[indexOp]"
-                              :key="indexImg + 'img2'"
+                                .mixQuestion.mix_sub_choice_image[indexOp]"
+                              :key="indexImg + 'img_choice'"
                             >
                               <ImageViewer
                                 v-if="
-                                  mix_content[index].mixQuestion.mix_sub_image[
-                                    indexOp
-                                  ][indexImg]
+                                  mix_content[index].mixQuestion
+                                    .mix_sub_choice_image[indexOp][indexImg]
                                 "
                                 style="margin-top:15px;"
                                 :upload="upload"
                                 :data="
-                                  upload
+                                  mix_content[index].mixQuestion
+                                    .mix_sub_choice_image[indexOp][indexImg]
                                     ? mix_content[index].mixQuestion
-                                        .mix_sub_questions[indexOp].sub_question
-                                        .image[indexImg]
+                                        .mix_sub_choice_questions[indexOp]
+                                        .sub_choice.image[indexImg]
                                     : ''
                                 "
                                 @updateUpload="resetUpload()"
                                 @ImageBase64="
                                   saveBase64Sub(
-                                    'sub_question',
+                                    'sub_choice',
                                     $event,
                                     index,
                                     indexOp,
@@ -1663,8 +1775,111 @@
                               ></ImageViewer>
                             </div>
                           </el-form-item>
+                          <el-form-item label="选项" label-width="100px">
+                            <ol style="list-style-type: upper-alpha">
+                              <li
+                                v-for="(option, indexP) in sub_item.sub_choice
+                                  .option"
+                                :key="indexP + 'sub_op'"
+                              >
+
+                              <el-button 
+                                circle 
+                                size="mini" 
+                                :disabled="indexP == 0"
+                                @click="Mix_Option_Item_Opt_Move_Up(index, indexOp, indexP)"><i class="el-icon-arrow-up"></i></el-button>
+                              <el-button 
+                                circle 
+                                size="mini" 
+                                :disabled="indexP == mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option.length - 1"
+                                @click="Mix_Option_Item_Opt_Move_Down(index, indexOp, indexP)"><i class="el-icon-arrow-down"></i></el-button>
+
+                                <el-input
+                                  type="textarea"
+                                  autosize
+                                  v-model="sub_item.sub_choice.option[indexP]"
+                                  :placeholder="
+                                    '选项' + String.fromCharCode(65 + indexP)
+                                  "
+                                ></el-input>
+                                <i
+                                  class="el-icon-circle-close"
+                                  style="position: relative;left:700px;bottom:35px;"
+                                  @click="
+                                    deleteSubOption(index, indexOp, indexP)
+                                  "
+                                ></i>
+                                <el-button
+                                  type="info"
+                                  size="mini"
+                                  style="float: right;margin-top:10px;"
+                                  round
+                                  @click="
+                                    showSubOptionImage(
+                                      'sub_choice',
+                                      index,
+                                      indexOp,
+                                      indexP,
+                                      !mix_content[index].mixQuestion
+                                        .mix_sub_choice_option_image[indexOp][
+                                        indexP
+                                      ]
+                                    )
+                                  "
+                                  >{{
+                                    mix_content[index].mixQuestion
+                                      .mix_sub_choice_option_image[indexOp][
+                                      indexP
+                                    ]
+                                      ? "删除图片"
+                                      : "增加图片"
+                                  }}</el-button
+                                >
+                                <ImageViewer
+                                  v-if="
+                                    mix_content[index].mixQuestion
+                                      .mix_sub_choice_option_image[indexOp][
+                                      indexP
+                                    ]
+                                  "
+                                  style="margin-top:-25px"
+                                  :upload="upload"
+                                  :data="
+                                    mix_content[index].mixQuestion
+                                      .mix_sub_choice_option_image[indexOp][
+                                      indexP
+                                    ]
+                                      ? mix_content[index].mixQuestion
+                                          .mix_sub_choice_questions[indexOp]
+                                          .sub_choice.option_images[indexP]
+                                      : ''
+                                  "
+                                  @updateUpload="resetUpload()"
+                                  @ImageBase64="
+                                    saveBase64SubOption(
+                                      'sub_choice',
+                                      $event,
+                                      index,
+                                      indexOp,
+                                      indexP
+                                    )
+                                  "
+                                ></ImageViewer>
+                              </li>
+                            </ol>
+                            <el-button
+                              type="success"
+                              size="mini"
+                              round
+                              style="float: right;"
+                              @click="addSubOption(index, indexOp)"
+                              >添加选项</el-button
+                            >
+                          </el-form-item>
                         </li>
-                      </div>
+                      </div>                  
+
+                      <!-- 次级优先的是填空题？？？ -->
                       <div
                         v-for="(sub_item, indexOp) in mix_content[index]
                           .mixQuestion.mix_sub_fill_questions"
@@ -1676,6 +1891,16 @@
                               .mix_sub_fill_questions[0]
                           "
                         >
+                        <el-button 
+                          circle 
+                          size="mini" 
+                          :disabled="indexOp == 0"
+                          @click="Mix_Fill_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
+                        <el-button 
+                          circle 
+                          size="mini" 
+                          :disabled="indexOp == mix_content[index].mixQuestion.mix_sub_fill_questions.length - 1"
+                          @click="Mix_Fill_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
                           <el-form-item label="分值" label-width="50px">
                             <el-input
                               class="el-short_input__inner"
@@ -1790,7 +2015,8 @@
                                 style="margin-top:15px;"
                                 :upload="upload"
                                 :data="
-                                  upload
+                                  mix_content[index].mixQuestion
+                                    .mix_sub_fill_image[indexOp][indexImg]
                                     ? mix_content[index].mixQuestion
                                         .mix_sub_fill_questions[indexOp]
                                         .sub_fill.image[indexImg]
@@ -1903,24 +2129,34 @@
                           >
                         </li>
                       </div>
+
+                      <!-- 优先级最高的是小简答题？？？ -->
                       <div
                         v-for="(sub_item, indexOp) in mix_content[index]
-                          .mixQuestion.mix_sub_choice_questions"
-                        :key="indexOp + 'sub_choice'"
+                          .mixQuestion.mix_sub_questions"
+                        :key="indexOp + 'sub_'"
                       >
                         <li
                           v-if="
-                            mix_content[index].mixQuestion
-                              .mix_sub_choice_questions[0]
+                            mix_content[index].mixQuestion.mix_sub_questions[0]
                           "
                         >
+                        <el-button 
+                          circle 
+                          size="mini" 
+                          :disabled="indexOp == 0"
+                          @click="Mix_Answer_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
+                        <el-button 
+                          circle 
+                          size="mini" 
+                          :disabled="indexOp == mix_content[index].mixQuestion.mix_sub_questions.length - 1"
+                          @click="Mix_Answer_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
                           <el-form-item label="分值" label-width="50px">
                             <el-input
                               class="el-short_input__inner"
                               v-model="
                                 mix_content[index].mixQuestion
-                                  .mix_sub_choice_questions[indexOp].sub_choice
-                                  .score
+                                  .mix_sub_questions[indexOp].sub_question.score
                               "
                               placeholder="分值"
                             ></el-input>
@@ -1932,14 +2168,14 @@
                                 autosize
                                 v-model="
                                   mix_content[index].mixQuestion
-                                    .mix_sub_choice_questions[indexOp]
-                                    .sub_choice.content
+                                    .mix_sub_questions[indexOp].sub_question
+                                    .content
                                 "
                               ></el-input>
                               <i
                                 class="el-icon-circle-close"
                                 style="position: absolute;right:55px;top:10px;"
-                                @click="deleteMixOption(index, indexOp)"
+                                @click="deleteMixSub(index, indexOp)"
                               ></i>
                             </div>
                             <el-row type="flex" justify="end">
@@ -1950,7 +2186,7 @@
                                 round
                                 @click="
                                   showSubImage(
-                                    'sub_choice',
+                                    'sub_question',
                                     index,
                                     indexOp,
                                     true
@@ -1962,16 +2198,17 @@
                                 type="info"
                                 size="mini"
                                 v-if="
-                                  mix_content[index].mixQuestion
-                                    .mix_sub_choice_image[indexOp] !== '' &&
+                                  mix_content[index].mixQuestion.mix_sub_image[
+                                    indexOp
+                                  ] !== '' &&
                                     mix_content[index].mixQuestion
-                                      .mix_sub_choice_image[indexOp].length > 0
+                                      .mix_sub_image[indexOp].length > 0
                                 "
                                 style="float: right;margin-top:10px;"
                                 round
                                 @click="
                                   showSubImage(
-                                    'sub_choice',
+                                    'sub_question',
                                     index,
                                     indexOp,
                                     false
@@ -1982,27 +2219,30 @@
                             </el-row>
                             <div
                               v-for="(item, indexImg) in mix_content[index]
-                                .mixQuestion.mix_sub_choice_image[indexOp]"
-                              :key="indexImg + 'img_choice'"
+                                .mixQuestion.mix_sub_image[indexOp]"
+                              :key="indexImg + 'img2'"
                             >
                               <ImageViewer
                                 v-if="
-                                  mix_content[index].mixQuestion
-                                    .mix_sub_choice_image[indexOp][indexImg]
+                                  mix_content[index].mixQuestion.mix_sub_image[
+                                    indexOp
+                                  ][indexImg]
                                 "
                                 style="margin-top:15px;"
                                 :upload="upload"
                                 :data="
-                                  upload
+                                  mix_content[index].mixQuestion.mix_sub_image[
+                                    indexOp
+                                  ][indexImg]
                                     ? mix_content[index].mixQuestion
-                                        .mix_sub_choice_questions[indexOp]
-                                        .sub_choice.image[indexImg]
+                                        .mix_sub_questions[indexOp].sub_question
+                                        .image[indexImg]
                                     : ''
                                 "
                                 @updateUpload="resetUpload()"
                                 @ImageBase64="
                                   saveBase64Sub(
-                                    'sub_choice',
+                                    'sub_question',
                                     $event,
                                     index,
                                     indexOp,
@@ -2012,94 +2252,9 @@
                               ></ImageViewer>
                             </div>
                           </el-form-item>
-                          <el-form-item label="选项" label-width="100px">
-                            <ol style="list-style-type: upper-alpha">
-                              <li
-                                v-for="(option, indexP) in sub_item.sub_choice
-                                  .option"
-                                :key="indexP + 'sub_op'"
-                              >
-                                <el-input
-                                  type="textarea"
-                                  autosize
-                                  v-model="sub_item.sub_choice.option[indexP]"
-                                  :placeholder="
-                                    '选项' + String.fromCharCode(65 + indexP)
-                                  "
-                                ></el-input>
-                                <i
-                                  class="el-icon-circle-close"
-                                  style="position: relative;left:700px;bottom:35px;"
-                                  @click="
-                                    deleteSubOption(index, indexOp, indexP)
-                                  "
-                                ></i>
-                                <el-button
-                                  type="info"
-                                  size="mini"
-                                  style="float: right;margin-top:10px;"
-                                  round
-                                  @click="
-                                    showSubOptionImage(
-                                      'sub_choice',
-                                      index,
-                                      indexOp,
-                                      indexP,
-                                      !mix_content[index].mixQuestion
-                                        .mix_sub_choice_option_image[indexOp][
-                                        indexP
-                                      ]
-                                    )
-                                  "
-                                  >{{
-                                    mix_content[index].mixQuestion
-                                      .mix_sub_choice_option_image[indexOp][
-                                      indexP
-                                    ]
-                                      ? "删除图片"
-                                      : "增加图片"
-                                  }}</el-button
-                                >
-                                <ImageViewer
-                                  v-if="
-                                    mix_content[index].mixQuestion
-                                      .mix_sub_choice_option_image[indexOp][
-                                      indexP
-                                    ]
-                                  "
-                                  style="margin-top:-25px"
-                                  :upload="upload"
-                                  :data="
-                                    upload
-                                      ? mix_content[index].mixQuestion
-                                          .mix_sub_choice_questions[indexOp]
-                                          .sub_choice.option_images[indexP]
-                                      : ''
-                                  "
-                                  @updateUpload="resetUpload()"
-                                  @ImageBase64="
-                                    saveBase64SubOption(
-                                      'sub_choice',
-                                      $event,
-                                      index,
-                                      indexOp,
-                                      indexP
-                                    )
-                                  "
-                                ></ImageViewer>
-                              </li>
-                            </ol>
-                            <el-button
-                              type="success"
-                              size="mini"
-                              round
-                              style="float: right;"
-                              @click="addSubOption(index, indexOp)"
-                              >添加选项</el-button
-                            >
-                          </el-form-item>
                         </li>
                       </div>
+
                     </el-form-item>
                   </ol>
                   <el-form-item
@@ -2147,7 +2302,7 @@
                         style="margin-top:5px"
                         :upload="upload"
                         :data="
-                          upload
+                          mix_show_answer_image[index][indexAn]
                             ? mix_content[index].mixQuestion.answer_images[
                                 indexAn
                               ]
@@ -2204,7 +2359,7 @@
                         style="margin-top:5px"
                         :upload="upload"
                         :data="
-                          upload
+                          mix_show_analysis_image[index][indexOp]
                             ? mix_content[index].mixQuestion.analysis_images[
                                 indexOp
                               ]
@@ -2626,6 +2781,8 @@
             </ol>
           </el-form>
         </el-row>
+
+        <!-- 全卷预览结果 - 非连续序号 -->
         <el-dialog
           v-if="number_radio === '1'"
           :title="paper_title"
@@ -2634,7 +2791,8 @@
           style="text-align:left;"
         >
           <div>{{ score_info }}</div>
-          <div>{{ "一、选择题" + option_subtitle }}</div>
+          <!-- 选择题内容部分 -->
+          <div v-if="option_content.length > 0">{{ "一、选择题" + option_subtitle }}</div>
           <ol v-if="option_content[0]">
             <div v-for="(item, index) in option_content" :key="index">
               <li>
@@ -2719,8 +2877,9 @@
               </li>
             </div>
           </ol>
-          <div v-if="default_subject == 'math'">
-            {{ "二、填空题" + fill_subtitle }}
+          <!-- 数学专属 - 填空题内容部分 -->
+          <div v-if="default_subject == 'math' && fill_content.length > 0">
+            {{ Get_Fill_Label() + fill_subtitle }}
           </div>
           <ol v-if="fill_content[0]">
             <div v-for="(item, index) in fill_content" :key="index">
@@ -2779,8 +2938,9 @@
               </li>
             </div>
           </ol>
-          <div v-if="default_subject == 'math'">
-            {{ "三、解答题" + answer_subtitle }}
+          <!-- 数学专属 - 解答题内容部分 -->
+          <div v-if="default_subject == 'math' && answer_content.length > 0">
+            {{ Get_Answer_Label() + answer_subtitle }}
           </div>
           <ol v-if="answer_content[0]">
             <div v-for="(item, index) in answer_content" :key="index">
@@ -2928,8 +3088,9 @@
               </li>
             </div>
           </ol>
-          <div v-if="default_subject !== 'math'">
-            {{ "三、非选择题" + mix_subtitle }}
+          <!-- 其他课程专属 - 混合题型内容部分 -->
+          <div v-if="default_subject !== 'math' && mix_content.length > 0">
+            {{ Get_Mix_Label() + mix_subtitle }}
           </div>
           <ol v-if="mix_content[0]">
             <div v-for="(item, index) in mix_content" :key="index">
@@ -3270,11 +3431,14 @@
               </li>
             </div>
           </ol>
+          <!-- 全卷预览底部部分 -->
           <span slot="footer" class="dialog-footer">
             <el-button type="primary" @click="isview = false">确 定</el-button>
           </span>
         </el-dialog>
-        <!-- 连续序号 -->
+
+        <!-- 全卷预览部分 - 连续序号 -->
+        <!-- 实际上是利用原生的列表来给题目做序号部分的渲染，所以实际上是嵌套的而不是独立的 -->
         <el-dialog
           v-if="number_radio === '2'"
           :title="paper_title"
@@ -3283,7 +3447,8 @@
           style="text-align:left;"
         >
           <div>{{ score_info }}</div>
-          <div>{{ "一、选择题" + option_subtitle }}</div>
+          <!-- 选择题内容部分 -->
+          <div v-if="option_content.length > 0">{{ "一、选择题" + option_subtitle }}</div>
           <ol>
             <div v-for="(item, index) in option_content" :key="index + 'xu'">
               <li>
@@ -3367,8 +3532,10 @@
                 </div>
               </li>
             </div>
-            <div v-if="default_subject == 'math'" style="margin-left:-40px;">
-              {{ "二、填空题" + fill_subtitle }}
+            
+            <!-- 填空题内容部分 -->
+            <div v-if="default_subject == 'math' && fill_content.length > 0" style="margin-left:-40px;">
+              {{ Get_Fill_Label() + fill_subtitle }}
             </div>
             <div v-for="(item, index) in fill_content" :key="index + 'xu'">
               <li>
@@ -3425,11 +3592,11 @@
                 </div>
               </li>
             </div>
-
-            <div v-if="default_subject == 'math'" style="margin-left:-40px;">
-              {{ "三、解答题" + answer_subtitle }}
+            
+            <!-- 解答题内容部分 -->
+            <div v-if="default_subject == 'math' && answer_content.length > 0" style="margin-left:-40px;">
+              {{ Get_Answer_Label() + answer_subtitle }}
             </div>
-
             <div v-for="(item, index) in answer_content" :key="index + 'xu'">
               <li>
                 <Mathdown
@@ -3574,8 +3741,10 @@
                 </div>
               </li>
             </div>
-            <div v-if="default_subject !== 'math'" style="margin-left:-40px;">
-              {{ "三、非选择题" + mix_subtitle }}
+
+            <!-- 非选择题部分 -->
+            <div v-if="default_subject !== 'math' && mix_content.length > 0" style="margin-left:-40px;">
+              {{ Get_Mix_Label() + mix_subtitle }}
             </div>
             <div v-for="(item, index) in mix_content" :key="index + 'xu'">
               <li>
@@ -3915,6 +4084,7 @@
               </li>
             </div>
           </ol>
+          <!-- 连续序号的底端部分 -->
           <span slot="footer" class="dialog-footer">
             <el-button type="primary" @click="isview = false">确 定</el-button>
           </span>
@@ -3928,8 +4098,9 @@ import Mathdown from "./Mathdown.vue";
 import FileSaver from "file-saver";
 import ImageViewer from "./ViewImage.vue";
 import Vue from "vue";
+import ComplexInput from "./ComplexInput.vue"
 export default {
-  components: { Mathdown, ImageViewer },
+  components: { Mathdown, ImageViewer, ComplexInput},
   data() {
     return {
       number_radio: "1",
@@ -3977,6 +4148,7 @@ export default {
       fill_visible: true,
       answer_visible: true,
       mix_visible: true,
+      CI_Visible: false,
       subjects: [
         {
           value: "math",
@@ -4067,11 +4239,13 @@ export default {
     preview() {
       this.isview = true;
     },
+    // 读取Json格式的数据
     loadJsonFromFile(file, fileList) {
       this.uploadFileName = file;
       this.upload_files = fileList;
       this.loadDataFromFile();
     },
+    // 从读取到的数据当中提取对应的格式信息
     loadDataFromFile() {
       if (this.upload_files && this.upload_files.length > 0) {
         const file = this.upload_files[0];
@@ -4080,6 +4254,7 @@ export default {
           try {
             this.upload = true;
             // reset all variables
+            // 初始化所有内容字段
             this.option_content = [];
             this.fill_content = [];
             this.answer_content = [];
@@ -4111,8 +4286,13 @@ export default {
             const document = JSON.parse(e.target.result);
             this.paper_title = document["paper_title"];
             this.chemistry_subtitle = document["chemistry_subtitle"];
+            
+            // 遍历Json内容中的题目部分，以题型为基本区分单位
             for (let questions of document["questions"]) {
               switch (questions["type"]) {
+
+                // 如果是选择题的情况
+
                 case "option":
                   this.option_show_image = [];
                   this.option_show_option_image = [];
@@ -4157,7 +4337,10 @@ export default {
                   }
                   this.option_subtitle = questions["subtitle"];
                   break;
-                case "fill":
+
+                // 如果是填空题的情况
+
+                case "fill":             
                   this.fill_show_image = [];
                   this.fill_show_analysis_image = [];
                   for (let question of questions["questions"]) {
@@ -4187,6 +4370,9 @@ export default {
                   }
                   this.fill_subtitle = questions["subtitle"];
                   break;
+
+                // 如果是解答题的情况
+
                 case "answer":
                   this.answer_show_image = [];
                   this.answer_show_option_image = [];
@@ -4260,6 +4446,9 @@ export default {
                   }
                   this.answer_subtitle = questions["subtitle"];
                   break;
+
+                // 如果是混合题型的情况
+
                 case "mix":
                   this.mix_show_image = [];
                   this.mix_show_option_image = [];
@@ -4360,6 +4549,7 @@ export default {
         reader.readAsText(file.raw);
       }
     },
+    // 导出Json格式的文件
     output() {
       // save json file to local
       const data = {};
@@ -4375,7 +4565,9 @@ export default {
         data["type"] = "biology";
       }
       data["info"] = { global_eno: false };
+
       data["questions"] = [];
+
       let option = {};
       option["type"] = "option";
       option["subtitle"] = this.option_subtitle;
@@ -4460,6 +4652,8 @@ export default {
       //     );
       //   });
     },
+
+    // 处理单选题内容
     single_choice() {
       this.option_content.push({
         optionQuestion: {
@@ -4479,6 +4673,8 @@ export default {
       this.option_show_option_image.push([false, false, false, false]);
       this.option_show_analysis_image.push([]);
     },
+
+    // 添加填空题内容
     fill_in() {
       this.fill_content.push({
         fillQuestion: {
@@ -4495,6 +4691,8 @@ export default {
       this.fill_view.push(false);
       this.fill_show_analysis_image.push([]);
     },
+
+    // 添加解答题内容
     answer_question() {
       this.answer_content.push({
         answerQuestion: {
@@ -4522,6 +4720,8 @@ export default {
       this.answer_show_analysis_image.push([]);
       this.answer_show_answer_image.push([]);
     },
+
+    // 添加非选择题内容
     mix_question() {
       this.mix_content.push({
         mixQuestion: {
@@ -4557,14 +4757,19 @@ export default {
       this.mix_show_analysis_image.push([]);
       this.mix_show_answer_image.push([]);
     },
+
     mouseOver() {
       // console.log(e.currentTarget.firstElementChild);
     },
+
+    // 给选择题添加选项
     addOption(index) {
       this.option_content[index].optionQuestion.option.push("");
       this.option_content[index].optionQuestion.option_images.push("");
       this.option_show_option_image[index].push(false);
     },
+
+    // 给混合题型的选择小题添加选项
     addSubOption(index, indexOp) {
       
       this.mix_content[index].mixQuestion.mix_sub_choice_questions[
@@ -4579,6 +4784,8 @@ export default {
         indexOp
       ].push(false);
     },
+
+    // 单题预览
     viewQuestion(type, index) {
       switch (type) {
         case "option":
@@ -4595,6 +4802,8 @@ export default {
           break;
       }
     },
+
+    // 关闭单题预览
     hideQuestionView(type, index) {
       switch (type) {
         case "option":
@@ -4611,6 +4820,8 @@ export default {
           break;
       }
     },
+
+    // 显示答案
     showAnswer(type, index, data) {
       switch (type) {
         case "option":
@@ -4639,6 +4850,8 @@ export default {
           break;
       }
     },
+
+    // 显示答案解析
     showAnswerAnalysis(type, index, data) {
       switch (type) {
         case "option":
@@ -4652,11 +4865,15 @@ export default {
           Vue.set(this.answer_show_answer_analysis, index, data);
       }
     },
+
+    // 添加解答题小题
     addAnswerOption(index) {
       this.answer_content[index].answerQuestion.sub_questions.push("小题");
       this.answer_content[index].answerQuestion.option_images.push("");
       this.answer_show_option_image[index].push(false);
     },
+
+    // 添加混合题型的小题（实际上就是解答题）
     addMixSub(index) {
       this.mix_content[index].mixQuestion.mix_sub_questions.push({
         sub_question: {
@@ -4667,6 +4884,8 @@ export default {
       });
       this.mix_content[index].mixQuestion.mix_sub_image.push([]);
     },
+
+    // 添加混合题型的选择题小题
     addMixOption(index) {
       this.mix_content[index].mixQuestion.mix_sub_choice_questions.push({
         sub_choice: {
@@ -4686,6 +4905,8 @@ export default {
         false
       ]);
     },
+
+    // 添加混合体型的填空题小题
     addMixFill(index) {
       this.mix_content[index].mixQuestion.mix_sub_fill_questions.push({
         sub_fill: {
@@ -4705,15 +4926,21 @@ export default {
       this.mix_content[index].mixQuestion.mix_sub_fill_image.push([]);
       // this.mix_content[index].mixQuestion.mix_sub_fill_table.push([]);
     },
+
+    // 给混合题型的填空题小题的回答区添加占位符
     addSubFillPlaceHolder(index, indexOp) {
       
       this.mix_content[index].mixQuestion.mix_sub_fill_questions[
         indexOp
       ].sub_fill.content += "________";
     },
+
+    // 给填空题小题的回答区添加占位符
     addFillPlaceHolder(index) {
       this.fill_content[index].fillQuestion.content += "________";
     },
+
+    // 删除某种题型的某道小题
     deleteCard(index) {
       this.option_content.splice(index, 1);
     },
@@ -4726,6 +4953,8 @@ export default {
     deleteMixCard(index) {
       this.mix_content.splice(index, 1);
     },
+
+    // 清空所有题目内容
     deleteAllCard() {
       this.option_content = [];
       this.fill_content = [];
@@ -4752,6 +4981,8 @@ export default {
       this.mix_show_analysis_image = [];
       this.mix_show_answer_image = [];
     },
+
+    // 删除答案
     deleteAnswer(type, index) {
       switch (type) {
         case "option":
@@ -4772,6 +5003,8 @@ export default {
           break;
       }
     },
+
+    // 删除答案解析
     deleteAnswerAnalysis(type, index) {
       switch (type) {
         case "option":
@@ -4800,6 +5033,8 @@ export default {
           break;
       }
     },
+
+    // 删除选择题某个小题的某个选项
     deleteOption(index, indexOp) {
       this.option_content[index].optionQuestion.option.splice(indexOp, 1);
       this.option_content[index].optionQuestion.option_images.splice(
@@ -4807,6 +5042,8 @@ export default {
         1
       );
     },
+
+    // 删除混合题型的选择小题的某个选项
     deleteSubOption(index, indexOp, indexP) {
       
       this.mix_content[index].mixQuestion.mix_sub_choice_questions[
@@ -4817,27 +5054,37 @@ export default {
         indexOp
       ].sub_choice.option_images.splice(indexP, 1);
     },
+
+    // 删除简答题的某个小题
     deleteAnswerOption(index, indexOp) {
       this.answer_content[index].answerQuestion.sub_questions.splice(
         indexOp,
         1
       );
     },
+
+    // 删除混合题型的选择题小题
     deleteMixOption(index, indexOp) {
       this.mix_content[index].mixQuestion.mix_sub_choice_questions.splice(
         indexOp,
         1
       );
     },
+
+    // 删除混合题型的填空题小题
     deleteMixFill(index, indexOp) {
       this.mix_content[index].mixQuestion.mix_sub_fill_questions.splice(
         indexOp,
         1
       );
     },
+
+    // 删除混合题型的简答题小题
     deleteMixSub(index, indexOp) {
       this.mix_content[index].mixQuestion.mix_sub_questions.splice(indexOp, 1);
     },
+
+    // 将各类数据转化成base64结构进行保存
     saveBase64Option(type, base64, index, indexOp) {
       switch (type) {
         case "option":
@@ -4983,8 +5230,11 @@ export default {
           break;
       }
     },
+
+    // 显示不同种类题型搭配的图片
     showOptionImage(type, index, indexOp, value) {
       // add option_images to options of option/answer question
+      // 但是要注意，这是替换性质的，而不是添加性质的
       switch (type) {
         case "option":
           this.option_show_option_image[index].splice(indexOp, 1, value);
@@ -4996,6 +5246,7 @@ export default {
           this.mix_show_option_image[index].splice(indexOp, 1, value);
           break;
       }
+      // 删除模式下会重新替换为空字符串
       if (value === false) {
         switch (type) {
           case "option":
@@ -5022,6 +5273,8 @@ export default {
         }
       }
     },
+
+    // 一个道理，但是应用于混合题型
     showSubOptionImage(type, index, indexOp, indexP, value) {
       // add option_images to options of option/answer question
       switch (type) {
@@ -5043,6 +5296,8 @@ export default {
         }
       }
     },
+
+    // 关于答案内容的图片
     showAnswerImage(type, index, value) {
       // add images to answer of answer question
       if (value === true) {
@@ -5078,6 +5333,8 @@ export default {
         }
       }
     },
+
+    // 关于答案解析内容的图片
     showAnalysisImage(type, index, value) {
       // add option_images to analysis of option/fill/answer question
       if (value === true) {
@@ -5138,6 +5395,8 @@ export default {
         }
       }
     },
+
+    // 添加图片或删除图片，针对选择，填空，简答题
     showImage(type, index, value) {
       // add images to option/fill/answer questions
       if (value === true) {
@@ -5192,6 +5451,8 @@ export default {
         }
       }
     },
+
+    // 同理，针对小题
     showSubImage(type, index, indexOp, value) {
       // add sub_images to mix questions
       if (value === true) {
@@ -5263,9 +5524,12 @@ export default {
         }
       }
     },
+
+    // 重置上传标记
     resetUpload() {
       this.upload = false;
     },
+
     // 表格
     showTable(type, index, value) {
       // add option_images to options of option/answer question
@@ -5398,23 +5662,564 @@ export default {
     handleDelete() {
       // console.log(index, row);
     },
+    // 对选择，填空，解答题的顺序和标号进行控制，配合渲染机制达成调整题目序号的效果
+    // 但是对于内部的部分不具有调整功能
+    // 注意图片分为三部分，一部分是题目可能附带的图片，一部分是选项内附带的图片，最后一部分是答案分析那边附带的图片
+    // 而选项那边的图片本身还要分为是否允许显示和显示内容两部分，需要依次处理
     option_moveup(index){
+
       var option_now = this.option_content[index];
       option_now.eno = option_now.eno - 1;
       this.option_content[index-1].eno = this.option_content[index-1].eno + 1;
       this.option_content.splice(index, 1);
       this.option_content.splice(index-1, 0, option_now);
 
+      var img_boolean = this.option_show_option_image[index];
+      this.option_show_option_image.splice(index, 1);
+      this.option_show_option_image.splice(index - 1, 0, img_boolean);
+
+      var con_img_boolean = this.option_show_image[index];
+      this.option_show_image.splice(index, 1);
+      this.option_show_image.splice(index - 1, 0, con_img_boolean);
+
+      var ana_img_boolean = this.option_show_analysis_image[index];
+      this.option_show_analysis_image.splice(index, 1);
+      this.option_show_analysis_image.splice(index - 1, 0, ana_img_boolean);
+
     },
     option_movedown(index){
+
       var option_now = this.option_content[index];
       option_now.eno = option_now.eno + 1;
       this.option_content[index+1].eno = this.option_content[index+1].eno - 1;
       this.option_content.splice(index, 1);
       this.option_content.splice(index+1, 0, option_now);
+
+      var img_boolean = this.option_show_option_image[index];
+      this.option_show_option_image.splice(index, 1);
+      this.option_show_option_image.splice(index + 1, 0, img_boolean);
+
+      var con_img_boolean = this.option_show_image[index];
+      this.option_show_image.splice(index, 1);
+      this.option_show_image.splice(index + 1, 0, con_img_boolean);
+
+      var ana_img_boolean = this.option_show_analysis_image[index];
+      this.option_show_analysis_image.splice(index, 1);
+      this.option_show_analysis_image.splice(index + 1, 0, ana_img_boolean);
+
     },
+    fill_moveup(index){
+
+      var fill_now = this.fill_content[index];
+      fill_now.eno = fill_now.eno - 1;
+      this.fill_content[index-1].eno = this.fill_content[index-1].eno + 1;
+      this.fill_content.splice(index, 1);
+      this.fill_content.splice(index-1, 0, fill_now);
+
+      var img_boolean = this.fill_show_image[index];
+      this.fill_show_image.splice(index, 1);
+      this.fill_show_image.splice(index - 1, 0, img_boolean);
+
+      var ana_img_boolean = this.fill_show_analysis_image[index];
+      this.fill_show_analysis_image.splice(index, 1);
+      this.fill_show_analysis_image.splice(index - 1, 0, ana_img_boolean);
+
+    },
+    fill_movedown(index){
+
+      var fill_now = this.fill_content[index];
+      fill_now.eno = fill_now.eno + 1;
+      this.fill_content[index+1].eno = this.fill_content[index+1].eno - 1;
+      this.fill_content.splice(index, 1);
+      this.fill_content.splice(index+1, 0, fill_now);
+
+      var img_boolean = this.fill_show_image[index];
+      this.fill_show_image.splice(index, 1);
+      this.fill_show_image.splice(index + 1, 0, img_boolean);
+
+      var ana_img_boolean = this.fill_show_analysis_image[index];
+      this.fill_show_analysis_image.splice(index, 1);
+      this.fill_show_analysis_image.splice(index + 1, 0, ana_img_boolean);
+
+    },
+    answer_moveup(index){
+
+      var answer_now = this.answer_content[index];
+      answer_now.eno = answer_now.eno - 1;
+      this.answer_content[index-1].eno = this.answer_content[index-1].eno + 1;
+      this.answer_content.splice(index, 1);
+      this.answer_content.splice(index-1, 0, answer_now);
+
+      var img_boolean = this.answer_show_option_image[index];
+      this.answer_show_option_image.splice(index, 1);
+      this.answer_show_option_image.splice(index - 1, 0, img_boolean);
+
+      var con_img_boolean = this.answer_show_image[index];
+      this.answer_show_image.splice(index, 1);
+      this.answer_show_image.splice(index - 1, 0, con_img_boolean);
+
+      var ans_img_boolean = this.answer_show_answer_image[index];
+      this.answer_show_answer_image.splice(index, 1);
+      this.answer_show_answer_image.splice(index - 1, 0, ans_img_boolean);
+
+      var ana_img_boolean = this.answer_show_analysis_image[index];
+      this.answer_show_analysis_image.splice(index, 1);
+      this.answer_show_analysis_image.splice(index - 1, 0, ana_img_boolean);
+
+    },
+    answer_movedown(index){
+
+      var answer_now = this.answer_content[index];
+      answer_now.eno = answer_now.eno + 1;
+      this.answer_content[index+1].eno = this.answer_content[index+1].eno - 1;
+      this.answer_content.splice(index, 1);
+      this.answer_content.splice(index+1, 0, answer_now);
+
+      var img_boolean = this.answer_show_option_image[index];
+      this.answer_show_option_image.splice(index, 1);
+      this.answer_show_option_image.splice(index + 1, 0, img_boolean);
+
+      var con_img_boolean = this.answer_show_image[index];
+      this.answer_show_image.splice(index, 1);
+      this.answer_show_image.splice(index + 1, 0, con_img_boolean);
+
+      var ans_img_boolean = this.answer_show_answer_image[index];
+      this.answer_show_answer_image.splice(index, 1);
+      this.answer_show_answer_image.splice(index + 1, 0, ans_img_boolean);
+
+      var ana_img_boolean = this.answer_show_analysis_image[index];
+      this.answer_show_analysis_image.splice(index, 1);
+      this.answer_show_analysis_image.splice(index + 1, 0, ana_img_boolean);
+
+    },
+    mix_moveup(index){
+
+      var mix_now = this.mix_content[index];
+      mix_now.eno = mix_now.eno - 1;
+      this.mix_content[index-1].eno = this.mix_content[index-1].eno + 1;
+      this.mix_content.splice(index, 1);
+      this.mix_content.splice(index-1, 0, mix_now);
+
+      // 题目图片
+      var con_img_boolean = this.mix_show_image[index];
+      this.mix_show_image.splice(index, 1);
+      this.mix_show_image.splice(index - 1, 0, con_img_boolean);
+
+      // 答案部分
+      var ans_img_boolean = this.mix_show_answer_image[index];
+      this.mix_show_answer_image.splice(index, 1);
+      this.mix_show_answer_image.splice(index - 1, 0, ans_img_boolean);
+
+      // 分析部分
+      var ana_img_boolean = this.mix_show_analysis_image[index];
+      this.mix_show_analysis_image.splice(index, 1);
+      this.mix_show_analysis_image.splice(index - 1, 0, ana_img_boolean);
+
+    },
+    mix_movedown(index){
+
+      var mix_now = this.mix_content[index];
+      mix_now.eno = mix_now.eno + 1;
+      this.mix_content[index+1].eno = this.mix_content[index+1].eno - 1;
+      this.mix_content.splice(index, 1);
+      this.mix_content.splice(index+1, 0, mix_now);
+
+      // 题目图片
+      var con_img_boolean = this.mix_show_image[index];
+      this.mix_show_image.splice(index, 1);
+      this.mix_show_image.splice(index + 1, 0, con_img_boolean);
+
+      // 答案部分
+      var ans_img_boolean = this.mix_show_answer_image[index];
+      this.mix_show_answer_image.splice(index, 1);
+      this.mix_show_answer_image.splice(index + 1, 0, ans_img_boolean);
+
+      // 分析部分
+      var ana_img_boolean = this.mix_show_analysis_image[index];
+      this.mix_show_analysis_image.splice(index, 1);
+      this.mix_show_analysis_image.splice(index + 1, 0, ana_img_boolean);
+
+    },
+
+    // 根据不同情况修改大题序号
+    Get_Mix_Label(){
+      if(this.option_content.length == 0){
+        return "一、非选择题"
+      }else{
+        return "二、非选择题"
+      }
+    },
+    Get_Fill_Label(){
+      if(this.option_content.length == 0){
+        return "一、填空题"
+      }else{
+        return "二、填空题"
+      }
+    },
+    Get_Answer_Label(){
+      if(this.option_content.length == 0){
+        if(this.fill_content.length == 0){
+          return "一、解答题"
+        }else{
+          return "二、解答题"
+        }
+      }else if(this.fill_content.length == 0){
+        return "二、解答题"
+      }else{
+        return "三、解答题"
+      }
+    },
+
+    // 调整选择，填空，简答题小题或选项的顺序
+    // 属于大题里面的小题的部分
+    Option_Item_Move_Up(index, indexOp){
+
+      var Option_Now = this.option_content[index].optionQuestion.option[indexOp];
+      this.option_content[index].optionQuestion.option.splice(indexOp, 1);
+      this.option_content[index].optionQuestion.option.splice(indexOp - 1, 0, Option_Now);
+
+      var Option_Image = this.option_content[index].optionQuestion.option_images[indexOp];
+
+      if(Option_Image != ""){
+
+        this.upload = true;
+
+        if(this.option_show_option_image[index][indexOp - 1]){
+          this.option_content[index].optionQuestion.option_images.splice(indexOp, 1);
+          this.option_content[index].optionQuestion.option_images.splice(indexOp - 1, 0, Option_Image); 
+        }else{
+          this.option_show_option_image[index][indexOp] = false;
+          this.option_show_option_image[index][indexOp - 1] = true;
+          this.option_content[index].optionQuestion.option_images.splice(indexOp, 1);
+          this.option_content[index].optionQuestion.option_images.splice(indexOp - 1, 0, Option_Image);  
+        }
+
+        this.resetUpload();
+
+      }else{
+
+        if(this.option_show_option_image[index][indexOp - 1]){
+
+          this.option_show_option_image[index][indexOp] = true;
+          this.option_show_option_image[index][indexOp - 1] = false;
+          this.option_content[index].optionQuestion.option_images.splice(indexOp, 1);
+          this.option_content[index].optionQuestion.option_images.splice(indexOp - 1, 0, Option_Image);
+
+        }
+
+        this.resetUpload();
+
+      }
+
+    },
+    Option_Item_Move_Down(index, indexOp){
+
+      var Option_Now = this.option_content[index].optionQuestion.option[indexOp];
+      this.option_content[index].optionQuestion.option.splice(indexOp, 1);
+      this.option_content[index].optionQuestion.option.splice(indexOp + 1, 0, Option_Now);
+
+      var Option_Image = this.option_content[index].optionQuestion.option_images[indexOp];
+      
+      if(Option_Image != ""){
+
+        this.upload = true;
+        
+        if(this.option_show_option_image[index][indexOp + 1]){
+          this.option_content[index].optionQuestion.option_images.splice(indexOp, 1);
+          this.option_content[index].optionQuestion.option_images.splice(indexOp + 1, 0, Option_Image);
+        }else{
+          this.option_show_option_image[index][indexOp] = false;
+          this.option_show_option_image[index][indexOp + 1] = true;
+          this.option_content[index].optionQuestion.option_images.splice(indexOp, 1);
+          this.option_content[index].optionQuestion.option_images.splice(indexOp + 1, 0, Option_Image);
+        }
+
+        this.resetUpload();
+
+      }else{
+
+        if(this.option_show_option_image[index][indexOp + 1]){
+
+          this.option_show_option_image[index][indexOp] = true;
+          this.option_show_option_image[index][indexOp + 1] = false;
+          this.option_content[index].optionQuestion.option_images.splice(indexOp, 1);
+          this.option_content[index].optionQuestion.option_images.splice(indexOp + 1, 0, Option_Image);
+          
+        }
+
+        this.resetUpload();
+
+      }
+
+    },
+
+    Answer_Item_Move_Up(index, indexOp){
+
+      var Answer_Sub_Ques_Now = this.answer_content[index].answerQuestion.sub_questions[indexOp];
+      this.answer_content[index].answerQuestion.sub_questions.splice(indexOp, 1);
+      this.answer_content[index].answerQuestion.sub_questions.splice(indexOp - 1, 0, Answer_Sub_Ques_Now);
+
+      var Answer_Image_Now = this.answer_content[index].answerQuestion.option_images[indexOp];
+
+      if(Answer_Image_Now != ""){
+
+        this.upload = true;
+
+        if(this.answer_show_option_image[index][indexOp - 1]){
+          this.answer_content[index].answerQuestion.option_images.splice(indexOp, 1);
+          this.answer_content[index].answerQuestion.option_images.splice(indexOp - 1, 0, Answer_Image_Now); 
+        }else{
+          this.answer_show_option_image[index][indexOp] = false;
+          this.answer_show_option_image[index][indexOp - 1] = true;
+          this.answer_content[index].answerQuestion.option_images.splice(indexOp, 1);
+          this.answer_content[index].answerQuestion.option_images.splice(indexOp - 1, 0, Answer_Image_Now);  
+        }
+
+        this.resetUpload();
+
+      }else{
+
+        if(this.answer_show_option_image[index][indexOp - 1]){
+
+          this.answer_show_option_image[index][indexOp] = true;
+          this.answer_show_option_image[index][indexOp - 1] = false;
+          this.answer_content[index].answerQuestion.option_images.splice(indexOp, 1);
+          this.answer_content[index].answerQuestion.option_images.splice(indexOp - 1, 0, Answer_Image_Now); 
+
+        }
+
+        this.resetUpload();
+
+      }
+
+    },
+    Answer_Item_Move_Down(index, indexOp){
+
+      var Answer_Sub_Ques_Now = this.answer_content[index].answerQuestion.sub_questions[indexOp];
+      this.answer_content[index].answerQuestion.sub_questions.splice(indexOp, 1);
+      this.answer_content[index].answerQuestion.sub_questions.splice(indexOp + 1, 0, Answer_Sub_Ques_Now);
+
+      var Answer_Image_Now = this.answer_content[index].answerQuestion.option_images[indexOp];
+
+      console.log(Answer_Image_Now)
+
+      if(Answer_Image_Now != ""){
+
+        this.upload = true;
+
+        if(this.answer_show_option_image[index][indexOp + 1]){
+          this.answer_content[index].answerQuestion.option_images.splice(indexOp, 1);
+          this.answer_content[index].answerQuestion.option_images.splice(indexOp + 1, 0, Answer_Image_Now); 
+        }else{
+          this.answer_show_option_image[index][indexOp] = false;
+          this.answer_show_option_image[index][indexOp + 1] = true;
+          this.answer_content[index].answerQuestion.option_images.splice(indexOp, 1);
+          this.answer_content[index].answerQuestion.option_images.splice(indexOp + 1, 0, Answer_Image_Now);  
+        }
+
+        console.log(this.answer_content[index].answerQuestion.option_images);
+        console.log(this.answer_show_option_image[index]);
+
+        this.resetUpload();
+
+      }else{
+
+        if(this.answer_show_option_image[index][indexOp + 1]){
+
+          this.answer_show_option_image[index][indexOp] = true;
+          this.answer_show_option_image[index][indexOp + 1] = false;
+          this.answer_content[index].answerQuestion.option_images.splice(indexOp, 1);
+          this.answer_content[index].answerQuestion.option_images.splice(indexOp + 1, 0, Answer_Image_Now); 
+
+        }
+
+        this.resetUpload();
+
+      }
+
+    },
+
+    // 调整混合题目小题的顺序
+    // 选择题部分
+    Mix_Option_Item_Move_Up(index, indexOp){
+
+      var Option_Now = this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_choice_questions.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_choice_questions.splice(indexOp - 1, 0, Option_Now);
+
+      if(!this.mix_content[index].mixQuestion.mix_sub_choice_view[indexOp - 1]){
+        this.mix_content[index].mixQuestion.mix_sub_choice_view[indexOp - 1] = true;
+        this.mix_content[index].mixQuestion.mix_sub_choice_view[indexOp] = false;
+      }
+
+      var Sub_Choice_Image = this.mix_content[index].mixQuestion.mix_sub_choice_image[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_choice_image.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_choice_image.splice(indexOp - 1, 0, Sub_Choice_Image);
+
+      var Sub_Choice_Option_Image = this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_choice_option_image.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_choice_option_image.splice(indexOp - 1, 0, Sub_Choice_Option_Image);
+
+
+    },
+    Mix_Option_Item_Move_Down(index, indexOp){
+
+      var Option_Now = this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_choice_questions.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_choice_questions.splice(indexOp + 1, 0, Option_Now);
+
+      if(!this.mix_content[index].mixQuestion.mix_sub_choice_view[indexOp + 1]){
+        this.mix_content[index].mixQuestion.mix_sub_choice_view[indexOp + 1] = true;
+        this.mix_content[index].mixQuestion.mix_sub_choice_view[indexOp] = false;
+      }
+
+      var Sub_Choice_Image = this.mix_content[index].mixQuestion.mix_sub_choice_image[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_choice_image.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_choice_image.splice(indexOp + 1, 0, Sub_Choice_Image);
+
+      var Sub_Choice_Option_Image = this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_choice_option_image.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_choice_option_image.splice(indexOp + 1, 0, Sub_Choice_Option_Image);
+
+    },
+
+    // 选择题的小题的选项的顺序调整
+
+    Mix_Option_Item_Opt_Move_Up(index, indexOp, indexP){
+
+      var Option_Item_Opt = this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option[indexP];
+      this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option.splice(indexP, 1);
+      this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option.splice(indexP - 1, 0, Option_Item_Opt);
+
+      var Option_Item_Img = this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images[indexP];
+
+      if(Option_Item_Img != ""){
+
+        this.upload = true;
+
+        if(this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp][indexP - 1]){
+          this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images.splice(indexP, 1);
+          this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images.splice(indexP - 1, 0, Option_Item_Img); 
+        }else{
+          this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp][indexP] = false;
+          this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp][indexP - 1] = true;
+          this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images.splice(indexP, 1);
+          this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images.splice(indexP - 1, 0, Option_Item_Img);  
+        }
+
+        this.resetUpload();
+
+      }else{
+
+        if(this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp][indexP - 1]){
+
+          this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp][indexP] = true;
+          this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp][indexP - 1] = false;
+          this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images.splice(indexP, 1);
+          this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images.splice(indexP - 1, 0, Option_Item_Img);  
+        
+        }
+
+        this.resetUpload();
+
+      }
+
+    },
+    Mix_Option_Item_Opt_Move_Down(index, indexOp, indexP){
+
+      var Option_Item_Opt = this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option[indexP];
+      this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option.splice(indexP, 1);
+      this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option.splice(indexP + 1, 0, Option_Item_Opt);
+
+      var Option_Item_Img = this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images[indexP];
+
+      if(Option_Item_Img != ""){
+
+        this.upload = true;
+
+        if(this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp][indexP + 1]){
+          this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images.splice(indexP, 1);
+          this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images.splice(indexP + 1, 0, Option_Item_Img); 
+        }else{
+          this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp][indexP] = false;
+          this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp][indexP + 1] = true;
+          this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images.splice(indexP, 1);
+          this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images.splice(indexP + 1, 0, Option_Item_Img);  
+        }
+
+        console.log(this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp]);
+        console.log(this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images);
+
+        this.resetUpload();
+
+      }else{
+
+        if(this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp][indexP + 1]){
+
+          this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp][indexP] = true;
+          this.mix_content[index].mixQuestion.mix_sub_choice_option_image[indexOp][indexP + 1] = false;
+          this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images.splice(indexP, 1);
+          this.mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option_images.splice(indexP + 1, 0, Option_Item_Img);  
+        
+        }
+
+        this.resetUpload();
+
+      }
+
+    },
+
+    // 填空题部分
+    Mix_Fill_Item_Move_Up(index, indexOp){
+
+      var Fill_Now = this.mix_content[index].mixQuestion.mix_sub_fill_questions[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_fill_questions.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_fill_questions.splice(indexOp - 1, 0, Fill_Now);
+
+      var Fill_Image = this.mix_content[index].mixQuestion.mix_sub_fill_image[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_fill_image.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_fill_image.splice(indexOp - 1, 0, Fill_Image);
+
+    },
+    Mix_Fill_Item_Move_Down(index, indexOp){
+      
+      var Fill_Now = this.mix_content[index].mixQuestion.mix_sub_fill_questions[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_fill_questions.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_fill_questions.splice(indexOp + 1, 0, Fill_Now);
+
+      var Fill_Image = this.mix_content[index].mixQuestion.mix_sub_fill_image[indexOp]
+      this.mix_content[index].mixQuestion.mix_sub_fill_image.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_fill_image.splice(indexOp + 1, 0, Fill_Image);
+
+    },
+
+    // 解答题小题
+    Mix_Answer_Item_Move_Up(index, indexOp){
+
+      var Answer_Now = this.mix_content[index].mixQuestion.mix_sub_questions[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_questions.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_questions.splice(indexOp - 1, 0, Answer_Now);
+      
+      var Answer_Img = this.mix_content[index].mixQuestion.mix_sub_image[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_image.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_image.splice(indexOp - 1, 0, Answer_Img);
+
+    },
+    Mix_Answer_Item_Move_Down(index, indexOp){
+      
+      var Answer_Now = this.mix_content[index].mixQuestion.mix_sub_questions[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_questions.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_questions.splice(indexOp + 1, 0, Answer_Now);
+      
+      var Answer_Img = this.mix_content[index].mixQuestion.mix_sub_image[indexOp];
+      this.mix_content[index].mixQuestion.mix_sub_image.splice(indexOp, 1);
+      this.mix_content[index].mixQuestion.mix_sub_image.splice(indexOp + 1, 0, Answer_Img);
+
+    },
+
+    // 展开复杂输入框的Dialog
     open_ComplexInput(){
-      console.log("Open A CI Dialog.")
+      this.CI_Visible = true;
     }
   }
 };

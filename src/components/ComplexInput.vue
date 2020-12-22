@@ -912,7 +912,7 @@ export default {
       this.temp_latex = newVal;
     },
     content(newVal){
-      this.$emit("Update_CI", newVal);
+      setTimeout(()=>{this.$emit("Update_CI", newVal)}, 10);
     },
     image_infos(newVal){
       setTimeout(()=>{this.$emit("Update_Image", newVal)}, 10);

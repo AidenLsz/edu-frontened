@@ -6,7 +6,8 @@
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-tabs type="border-card" id="tabs">
+          <ComplexInput @Update_CI="UCI_Left" @Update_Image="UCII_Left" ref="CI_Left"></ComplexInput>
+          <!-- <el-tabs type="border-card" id="tabs">
             <el-tab-pane label="试题1">
               <el-input
                 type="textarea"
@@ -30,11 +31,12 @@
                 </el-carousel-item>
               </el-carousel>
             </el-tab-pane>
-          </el-tabs>
+          </el-tabs> -->
         </el-col>
 
-        <el-col :span="11" :offset="1">
-          <el-tabs type="border-card" id="tabs">
+        <el-col :span="11" :offset="2">
+          <ComplexInput @Update_CI="UCI_Right" @Update_Image="UCII_Right" ref="CI_Right"></ComplexInput>
+          <!-- <el-tabs type="border-card" id="tabs">
             <el-tab-pane label="试题2">
               <el-input
                 type="textarea"
@@ -58,11 +60,11 @@
                 </el-carousel-item>
               </el-carousel>
             </el-tab-pane>
-          </el-tabs>
+          </el-tabs> -->
         </el-col>
       </el-row>
 
-      <el-row type="flex" justify="start">
+      <!-- <el-row type="flex" justify="start">
           <el-col :span="4" :offset="0">
           <UploadImg
             :src="src_0"
@@ -78,7 +80,7 @@
             @uploadImg="imgInfo_1"
             ></UploadImg>
           </el-col>
-      </el-row>
+      </el-row> -->
 
       <div id="result" v-if="show_result">
         <el-row type="flex" justify="start">
@@ -88,7 +90,7 @@
           <el-col :span="11">
             <el-card class="box-card">
               <div slot="header" style="text-align:left;">
-                <span>属性1</span>
+                <span>相似度</span>
               </div>
               <div style="text-align:left;">
                 <el-tag v-for="(item, index) in similarity_result" :key="index" effect="plain" id="tag">{{ item }}</el-tag>
@@ -103,10 +105,11 @@
 </template>
 
 <script>
-import Mathdown from "./Mathdown.vue";
-import UploadImg from "./UploadImg.vue";
+// import Mathdown from "./Mathdown.vue";
+// import UploadImg from "./UploadImg.vue";
+import ComplexInput from "./ComplexInput.vue"
 export default {
-  components: { Mathdown, UploadImg },
+  components: {ComplexInput},
   name: "similarity",
   data() {
     return {
@@ -115,12 +118,12 @@ export default {
       similarity_result: "", // 相似度预估返回值
       show_result: false,
       loading: false,
-      src_0: [],
-      src_1: [],
-      images_0: [],
-      images_1: [],
-      index_0: 0,
-      index_1: 0,
+      // src_0: [],
+      // src_1: [],
+      images_Left: [],
+      images_Right: [],
+      // index_0: 0,
+      // index_1: 0,
     };
   },
   methods: {
@@ -134,14 +137,19 @@ export default {
         headers: { "Content-Type": "multipart/form-data" }
       };
 
-      for (var i = 0; i < this.images_0.length; i++) {
-        param.append("file1", this.images_0[i]);
+      var temp_image_left = []
+      var temp_image_right = []
+
+      for (var i = 0; i < this.images_Left.length; i++) {
+        temp_image_left.push(this.images_Left[i]);
       }
 
-      for (var j = 0; j < this.images_1.length; j++) {
-        param.append("file2", this.images_1[j]);
+      for (var j = 0; j < this.images_Right.length; j++) {
+        temp_image_right.push(this.images_Right[j]);
       }
 
+      param.append("image_left", JSON.stringify(temp_image_left));
+      param.append("image_right",JSON.stringify(temp_image_right));
       param.append("content_1", this.content_1); // 后端接收content1字段
       param.append("content_2", this.content_2); // 后端接收content2字段
       // 请求相似度预估接口
@@ -154,27 +162,39 @@ export default {
           this.loading = false;
         });
     },
-    imgInfo_0(e) {
-      this.src_0 = e.src;
-      this.images_0 = e.filelists;
+    // imgInfo_0(e) {
+    //   this.src_0 = e.src;
+    //   this.images_0 = e.filelists;
+    // },
+    // imgInfo_1(e) {
+    //   this.src_1 = e.src;
+    //   this.images_1 = e.filelists;
+    // },
+    // del_image_0(){
+    //   this.src_0.splice(this.index_0, 1);
+    //   this.images_0.splice(this.index_0, 1);
+    // },
+    // del_image_1(){
+    //   this.src_1.splice(this.index_1, 1);
+    //   this.images_1.splice(this.index_1, 1);
+    // },
+    // change_index_0: function(key1){
+    //   this.index_0 = key1;
+    // },
+    // change_index_1: function(key1){
+    //   this.index_1 = key1;
+    // },
+    UCI_Left(val){
+      this.content_1 = val;
     },
-    imgInfo_1(e) {
-      this.src_1 = e.src;
-      this.images_1 = e.filelists;
+    UCII_Left(val){
+      this.images_Left = val;
     },
-    del_image_0(){
-      this.src_0.splice(this.index_0, 1);
-      this.images_0.splice(this.index_0, 1);
+    UCI_Right(val){
+      this.content_2 = val;
     },
-    del_image_1(){
-      this.src_1.splice(this.index_1, 1);
-      this.images_1.splice(this.index_1, 1);
-    },
-    change_index_0: function(key1){
-      this.index_0 = key1;
-    },
-    change_index_1: function(key1){
-      this.index_1 = key1;
+    UCII_Right(val){
+      this.images_Right = val;
     }
   }
 };

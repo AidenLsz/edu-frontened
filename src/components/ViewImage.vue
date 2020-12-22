@@ -158,10 +158,10 @@ export default {
       this.canvasW = this.scaledW;
       this.canvas.height = this.scaledH;
       this.canvasH = this.scaledH;
-      console.log(this.image.width);
-      console.log(this.image.height);
-      console.log(this.canvas.width);
-      console.log(this.canvas.height);
+      // console.log(this.image.width);
+      // console.log(this.image.height);
+      // console.log(this.canvas.width);
+      // console.log(this.canvas.height);
       this.ctx.drawImage(
         this.image,
         0,
