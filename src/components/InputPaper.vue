@@ -134,16 +134,24 @@
           <el-radio v-model="number_radio" label="1">不连续</el-radio>
           <el-radio v-model="number_radio" label="2">连续</el-radio>
         </el-row>
-        <br/>
+        <!-- <br/>
         <br/>
         <el-row>
           <el-button @click="open_ComplexInput()">
             组合输入助手
           </el-button>
-        </el-row>
+        </el-row> -->
       </el-col>
       <el-col :span="20">
         <el-row type="flex" justify="end">
+          <el-button 
+            type="primary"
+            round
+            icon="el-icon-edit"
+            @click="open_ComplexInput()"
+            size="small">
+            组合输入助手
+          </el-button>
           <el-button
             type="primary"
             round
@@ -251,222 +259,236 @@
               v-show="option_visible"
             >
               <div v-for="(item, index) in option_content" :key="index">
-                <el-card @mouseover.native="mouseOver($event)" shadow="hover">
+
+                <el-card @mouseover.native="mouseOver($event)" shadow="hover" >
+                             
                   <li style="margin-left:35px;">
-
-                    <el-button @click="option_moveup(index)" :disabled="index == 0">上浮</el-button>
-                    <el-button @click="option_movedown(index)" :disabled="index == option_content.length - 1">下移</el-button>
-
-                    <el-form-item label="分值" label-width="100px">
-                      <el-input
-                        class="el-short_input__inner"
-                        v-model="option_content[index].optionQuestion.score"
-                        placeholder="分值"
-                      ></el-input>
-                    </el-form-item>
-                    <el-form-item
-                      label="题目内容"
-                      label-width="100px"
-                      style="margin-bottom:5px;"
-                    >
-                      <el-input
-                        type="textarea"
-                        autosize
-                        v-model="option_content[index].optionQuestion.content"
-                      ></el-input>
-                      <el-row type="flex" justify="end">
-                        <el-button
-                          type="info"
-                          size="mini"
-                          style="float: right;margin-top:10px;"
-                          round
-                          @click="showImage('option', index, true)"
-                          >增加图片
-                        </el-button>
-                        <el-button
-                          type="info"
-                          size="mini"
-                          v-if="
-                            option_show_image[index] !== '' &&
-                              option_show_image[index].length > 0
-                          "
-                          style="float: right;margin-top:10px;"
-                          round
-                          @click="showImage('option', index, false)"
-                          >删除图片
-                        </el-button>
-                      </el-row>
-                      <div
-                        v-for="(item, indexOp) in option_show_image[index]"
-                        :key="indexOp"
+                    <div v-if="option_collapse[index]">
+                      <span style="margin-right: 20px;"></span>
+                      <el-button size="small" circle @click="option_moveup(index)" :disabled="index == 0"><i class="el-icon-arrow-up"></i></el-button>
+                      <el-button size="small" circle @click="option_movedown(index)" :disabled="index == option_content.length - 1"><i class="el-icon-arrow-down"></i></el-button>
+                      <el-button size="small" @click="Collapse(index, false, 'option')">展开</el-button>
+                      <span style="margin-left: 20px; display: inline-block" >{{Get_Collapse_Content(option_content[index].optionQuestion.score)}}</span>
+                      <span style="margin-left: 20px; display: inline-block" >{{Get_Collapse_Content(option_content[index].optionQuestion.content)}}</span>
+                    </div>
+                    <div v-if="!option_collapse[index]">
+                      <span style="margin-right: 20px;"></span>
+                      <el-button size="small" circle @click="option_moveup(index)" :disabled="index == 0"><i class="el-icon-arrow-up"></i></el-button>
+                      <el-button size="small" circle @click="option_movedown(index)" :disabled="index == option_content.length - 1"><i class="el-icon-arrow-down"></i></el-button>
+                      <el-button size="small" @click="Collapse(index, true, 'option')">折叠</el-button>
+                      <br/>
+                      <br/>
+                      <el-form-item label="分值" label-width="100px">
+                        <el-input
+                          class="el-short_input__inner"
+                          v-model="option_content[index].optionQuestion.score"
+                          placeholder="分值"
+                        ></el-input>
+                      </el-form-item>
+                      <el-form-item
+                        label="题目内容"
+                        label-width="100px"
+                        style="margin-bottom:5px;"
                       >
-                        <ImageViewer
-                          v-if="option_show_image[index][indexOp]"
-                          style="margin-top:15px;"
-                          :upload="upload"
-                          :data="
-                            option_show_image[index][indexOp]
-                              ? option_content[index].optionQuestion.image[
-                                  indexOp
-                                ]
-                              : ''
-                          "
-                          @updateUpload="resetUpload()"
-                          @ImageBase64="
-                            saveBase64('option', $event, index, indexOp)
-                          "
-                        ></ImageViewer>
-                      </div>
-                    </el-form-item>
-                    <el-form-item label="选项" label-width="100px">
-                      <ol style="list-style-type: upper-alpha">
-                        <li
-                          v-for="(option, indexOp) in item.optionQuestion
-                            .option"
-                          :key="indexOp"
-                          style="margin-bottom:0px;"
-                        >
-                        <el-button 
-                          circle 
-                          size="mini" 
-                          :disabled="indexOp == 0"
-                          @click="Option_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
-                        <el-button 
-                          circle 
-                          size="mini" 
-                          :disabled="indexOp == item.optionQuestion.option.length - 1"
-                          @click="Option_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
-                          <el-input
-                            type="textarea"
-                            autosize
-                            v-model="item.optionQuestion.option[indexOp]"
-                            :placeholder="
-                              '选项' + String.fromCharCode(65 + indexOp)
-                            "
-                          ></el-input>
-                          <i
-                            class="el-icon-circle-close"
-                            style="position: relative;left:700px;bottom:35px;"
-                            @click="deleteOption(index, indexOp)"
-                          ></i>
+                        <el-input
+                          type="textarea"
+                          autosize
+                          v-model="option_content[index].optionQuestion.content"
+                        ></el-input>
+                        <el-row type="flex" justify="end">
                           <el-button
                             type="info"
                             size="mini"
                             style="float: right;margin-top:10px;"
                             round
-                            @click="
-                              showOptionImage(
-                                'option',
-                                index,
-                                indexOp,
-                                !option_show_option_image[index][indexOp]
-                              )
+                            @click="showImage('option', index, true)"
+                            >增加图片
+                          </el-button>
+                          <el-button
+                            type="info"
+                            size="mini"
+                            v-if="
+                              option_show_image[index] !== '' &&
+                                option_show_image[index].length > 0
                             "
-                            >{{
-                              option_show_option_image[index][indexOp]
-                                ? "删除图片"
-                                : "增加图片"
-                            }}</el-button
-                          >
+                            style="float: right;margin-top:10px;"
+                            round
+                            @click="showImage('option', index, false)"
+                            >删除图片
+                          </el-button>
+                        </el-row>
+                        <div
+                          v-for="(item, indexOp) in option_show_image[index]"
+                          :key="indexOp"
+                        >
                           <ImageViewer
-                            v-if="option_show_option_image[index][indexOp]"
-                            style="margin-top:-25px"
+                            v-if="option_show_image[index][indexOp]"
+                            style="margin-top:15px;"
                             :upload="upload"
                             :data="
-                              option_show_option_image[index][indexOp]
-                                ? option_content[index].optionQuestion
-                                    .option_images[indexOp]
+                              option_show_image[index][indexOp]
+                                ? option_content[index].optionQuestion.image[
+                                    indexOp
+                                  ]
                                 : ''
                             "
                             @updateUpload="resetUpload()"
                             @ImageBase64="
-                              saveBase64Option('option', $event, index, indexOp)
+                              saveBase64('option', $event, index, indexOp)
                             "
                           ></ImageViewer>
-                        </li>
-                      </ol>
-                    </el-form-item>
-                    <el-form-item
-                      label="答案"
-                      label-width="100px"
-                      v-if="option_show_answer[index] !== false"
-                    >
-                      <div style="display:flex;">
-                        <el-input
-                          class="el-short_input__inner"
-                          v-model="option_content[index].optionQuestion.answer"
-                          placeholder="答案"
-                        >
-                        </el-input>
-                        <i
-                          class="el-icon-circle-close"
-                          style="position: absolute;right:735px;top:13px;"
-                          @click="deleteAnswer('option', index)"
-                        ></i>
-                      </div>
-                    </el-form-item>
-                    <el-form-item
-                      label="解析"
-                      label-width="100px"
-                      v-if="option_show_answer_analysis[index] !== false"
-                    >
-                      <div style="display:flex;">
-                        <el-input
-                          type="textarea"
-                          autosize
-                          v-model="
-                            option_content[index].optionQuestion.answer_analysis
-                          "
-                          placeholder="解析"
-                        ></el-input>
-                        <i
-                          class="el-icon-circle-close"
-                          style="position: absolute;right:55px;top:10px;"
-                          @click="deleteAnswerAnalysis('option', index)"
-                        ></i>
-                      </div>
-                      <el-row type="flex" justify="end">
-                        <el-button
-                          type="info"
-                          size="mini"
-                          style="float: right;margin-top:10px;"
-                          round
-                          @click="showAnalysisImage('option', index, true)"
-                          >增加图片
-                        </el-button>
-                        <el-button
-                          type="info"
-                          size="mini"
-                          v-if="option_show_analysis_image[index].length > 0"
-                          style="float: right;margin-top:10px;"
-                          round
-                          @click="showAnalysisImage('option', index, false)"
-                          >删除图片
-                        </el-button>
-                      </el-row>
-                      <div
-                        v-for="(item, indexOp) in option_show_analysis_image[
-                          index
-                        ]"
-                        :key="indexOp"
+                        </div>
+                      </el-form-item>
+                      <el-form-item label="选项" label-width="100px">
+                        <ol style="list-style-type: upper-alpha">
+                          <li
+                            v-for="(option, indexOp) in item.optionQuestion
+                              .option"
+                            :key="indexOp"
+                            style="margin-bottom:0px;"
+                          >
+                          <el-button 
+                            circle 
+                            size="mini" 
+                            :disabled="indexOp == 0"
+                            @click="Option_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
+                          <el-button 
+                            circle 
+                            size="mini" 
+                            :disabled="indexOp == item.optionQuestion.option.length - 1"
+                            @click="Option_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
+                            <el-input
+                              type="textarea"
+                              autosize
+                              v-model="item.optionQuestion.option[indexOp]"
+                              :placeholder="
+                                '选项' + String.fromCharCode(65 + indexOp)
+                              "
+                            ></el-input>
+                            <i
+                              class="el-icon-circle-close"
+                              style="position: relative;left:700px;bottom:35px;"
+                              @click="deleteOption(index, indexOp)"
+                            ></i>
+                            <el-button
+                              type="info"
+                              size="mini"
+                              style="float: right;margin-top:10px;"
+                              round
+                              @click="
+                                showOptionImage(
+                                  'option',
+                                  index,
+                                  indexOp,
+                                  !option_show_option_image[index][indexOp]
+                                )
+                              "
+                              >{{
+                                option_show_option_image[index][indexOp]
+                                  ? "删除图片"
+                                  : "增加图片"
+                              }}</el-button
+                            >
+                            <ImageViewer
+                              v-if="option_show_option_image[index][indexOp]"
+                              style="margin-top:-25px"
+                              :upload="upload"
+                              :data="
+                                option_show_option_image[index][indexOp]
+                                  ? option_content[index].optionQuestion
+                                      .option_images[indexOp]
+                                  : ''
+                              "
+                              @updateUpload="resetUpload()"
+                              @ImageBase64="
+                                saveBase64Option('option', $event, index, indexOp)
+                              "
+                            ></ImageViewer>
+                          </li>
+                        </ol>
+                      </el-form-item>
+                      <el-form-item
+                        label="答案"
+                        label-width="100px"
+                        v-if="option_show_answer[index] !== false"
                       >
-                        <ImageViewer
-                          v-if="option_show_analysis_image[index][indexOp]"
-                          style="margin-top:5px;"
-                          :upload="upload"
-                          :data="
-                            option_show_analysis_image[index][indexOp]
-                              ? option_content[index].optionQuestion
-                                  .analysis_images[indexOp]
-                              : ''
-                          "
-                          @updateUpload="resetUpload()"
-                          @ImageBase64="
-                            saveBase64Analysis('option', $event, index, indexOp)
-                          "
-                        ></ImageViewer>
-                      </div>
-                    </el-form-item>
+                        <div style="display:flex;">
+                          <el-input
+                            class="el-short_input__inner"
+                            v-model="option_content[index].optionQuestion.answer"
+                            placeholder="答案"
+                          >
+                          </el-input>
+                          <i
+                            class="el-icon-circle-close"
+                            style="position: absolute;right:735px;top:13px;"
+                            @click="deleteAnswer('option', index)"
+                          ></i>
+                        </div>
+                      </el-form-item>
+                      <el-form-item
+                        label="解析"
+                        label-width="100px"
+                        v-if="option_show_answer_analysis[index] !== false"
+                      >
+                        <div style="display:flex;">
+                          <el-input
+                            type="textarea"
+                            autosize
+                            v-model="
+                              option_content[index].optionQuestion.answer_analysis
+                            "
+                            placeholder="解析"
+                          ></el-input>
+                          <i
+                            class="el-icon-circle-close"
+                            style="position: absolute;right:55px;top:10px;"
+                            @click="deleteAnswerAnalysis('option', index)"
+                          ></i>
+                        </div>
+                        <el-row type="flex" justify="end">
+                          <el-button
+                            type="info"
+                            size="mini"
+                            style="float: right;margin-top:10px;"
+                            round
+                            @click="showAnalysisImage('option', index, true)"
+                            >增加图片
+                          </el-button>
+                          <el-button
+                            type="info"
+                            size="mini"
+                            v-if="option_show_analysis_image[index].length > 0"
+                            style="float: right;margin-top:10px;"
+                            round
+                            @click="showAnalysisImage('option', index, false)"
+                            >删除图片
+                          </el-button>
+                        </el-row>
+                        <div
+                          v-for="(item, indexOp) in option_show_analysis_image[
+                            index
+                          ]"
+                          :key="indexOp"
+                        >
+                          <ImageViewer
+                            v-if="option_show_analysis_image[index][indexOp]"
+                            style="margin-top:5px;"
+                            :upload="upload"
+                            :data="
+                              option_show_analysis_image[index][indexOp]
+                                ? option_content[index].optionQuestion
+                                    .analysis_images[indexOp]
+                                : ''
+                            "
+                            @updateUpload="resetUpload()"
+                            @ImageBase64="
+                              saveBase64Analysis('option', $event, index, indexOp)
+                            "
+                          ></ImageViewer>
+                        </div>
+                      </el-form-item>
+                    </div>
 
                     <div style="margin-top:5px;"></div>
                     <el-row type="flex" justify="end">
@@ -509,118 +531,120 @@
                       >
                     </el-row>
                     <el-dialog
-                      :title="'选择题第' + (index + 1).toString() + '题'"
-                      :visible.sync="option_view[index]"
-                      width="60%"
-                      style="text-align:left;"
-                    >
-                      <Mathdown
-                        :name="
-                          'single-option-question' + index.toString() + 'score'
-                        "
-                        :content="
-                          (index + 1).toString() +
-                            '.' +
-                            (option_content[index].optionQuestion.score === ''
-                              ? ''
-                              : '(' +
-                                option_content[index].optionQuestion.score +
-                                ')')
-                        "
-                      ></Mathdown>
-                      <Mathdown
-                        :name="'single-option-question' + index.toString()"
-                        :content="option_content[index].optionQuestion.content"
-                      ></Mathdown>
-                      <div
-                        v-for="(item, indexOp) in option_show_image[index]"
-                        :key="indexOp"
+                        :title="'选择题第' + (index + 1).toString() + '题'"
+                        :visible.sync="option_view[index]"
+                        width="60%"
+                        style="text-align:left;"
                       >
-                        <ImageViewer
-                          v-if="option_show_image[index][indexOp]"
-                          :data="
-                            option_content[index].optionQuestion.image[indexOp]
+                        <Mathdown
+                          :name="
+                            'single-option-question' + index.toString() + 'score'
                           "
-                        ></ImageViewer>
-                      </div>
-                      <ol style="list-style-type: upper-alpha">
-                        <li
-                          v-for="(option, indexOp) in option_content[index]
-                            .optionQuestion.option"
+                          :content="
+                            (index + 1).toString() +
+                              '.' +
+                              (option_content[index].optionQuestion.score === ''
+                                ? ''
+                                : '(' +
+                                  option_content[index].optionQuestion.score +
+                                  ')')
+                          "
+                        ></Mathdown>
+                        <Mathdown
+                          :name="'single-option-question' + index.toString()"
+                          :content="option_content[index].optionQuestion.content"
+                        ></Mathdown>
+                        <div
+                          v-for="(item, indexOp) in option_show_image[index]"
                           :key="indexOp"
                         >
-                          <Mathdown
-                            :name="
-                              'single-option-question' +
-                                index.toString() +
-                                '-option' +
-                                indexOp.toString()
-                            "
-                            :content="
-                              option_content[index].optionQuestion.option[
-                                indexOp
-                              ]
-                            "
-                          ></Mathdown>
                           <ImageViewer
-                            v-if="option_show_option_image[index][indexOp]"
+                            v-if="option_show_image[index][indexOp]"
                             :data="
-                              option_content[index].optionQuestion
-                                .option_images[indexOp]
+                              option_content[index].optionQuestion.image[indexOp]
                             "
                           ></ImageViewer>
-                        </li>
-                      </ol>
-                      <div style="margin-top:10px;"></div>
-                      <Mathdown
-                        :name="
-                          'single-option-question' + index.toString() + 'answer'
-                        "
-                        :content="
-                          option_content[index].optionQuestion.answer === ''
-                            ? ''
-                            : '答案：' +
-                              option_content[index].optionQuestion.answer
-                        "
-                      ></Mathdown>
-                      <Mathdown
-                        :name="
-                          'single-option-question' +
-                            index.toString() +
-                            'answer_analysis'
-                        "
-                        :content="
-                          option_content[index].optionQuestion
-                            .answer_analysis === ''
-                            ? ''
-                            : '解析：' +
-                              option_content[index].optionQuestion
-                                .answer_analysis
-                        "
-                      ></Mathdown>
-                      <div
-                        v-for="(item, indexOp) in option_show_analysis_image[
-                          index
-                        ]"
-                        :key="indexOp"
-                      >
-                        <ImageViewer
-                          v-if="option_show_analysis_image[index][indexOp]"
-                          :data="
-                            option_content[index].optionQuestion
-                              .analysis_images[indexOp]
+                        </div>
+                        <ol style="list-style-type: upper-alpha">
+                          <li
+                            v-for="(option, indexOp) in option_content[index]
+                              .optionQuestion.option"
+                            :key="indexOp"
+                          >
+                            <Mathdown
+                              :name="
+                                'single-option-question' +
+                                  index.toString() +
+                                  '-option' +
+                                  indexOp.toString()
+                              "
+                              :content="
+                                option_content[index].optionQuestion.option[
+                                  indexOp
+                                ]
+                              "
+                            ></Mathdown>
+                            <ImageViewer
+                              v-if="option_show_option_image[index][indexOp]"
+                              :data="
+                                option_content[index].optionQuestion
+                                  .option_images[indexOp]
+                              "
+                            ></ImageViewer>
+                          </li>
+                        </ol>
+                        <div style="margin-top:10px;"></div>
+                        <Mathdown
+                          :name="
+                            'single-option-question' + index.toString() + 'answer'
                           "
-                        ></ImageViewer>
-                      </div>
-                      <span slot="footer" class="dialog-footer">
-                        <el-button
-                          type="primary"
-                          @click="hideQuestionView('option', index)"
-                          >确 定</el-button
+                          :content="
+                            option_content[index].optionQuestion.answer === ''
+                              ? ''
+                              : '答案：' +
+                                option_content[index].optionQuestion.answer
+                          "
+                        ></Mathdown>
+                        <Mathdown
+                          :name="
+                            'single-option-question' +
+                              index.toString() +
+                              'answer_analysis'
+                          "
+                          :content="
+                            option_content[index].optionQuestion
+                              .answer_analysis === ''
+                              ? ''
+                              : '解析：' +
+                                option_content[index].optionQuestion
+                                  .answer_analysis
+                          "
+                        ></Mathdown>
+                        <div
+                          v-for="(item, indexOp) in option_show_analysis_image[
+                            index
+                          ]"
+                          :key="indexOp"
                         >
-                      </span>
+                          <ImageViewer
+                            v-if="option_show_analysis_image[index][indexOp]"
+                            :data="
+                              option_content[index].optionQuestion
+                                .analysis_images[indexOp]
+                            "
+                          ></ImageViewer>
+                        </div>
+                        <span slot="footer" class="dialog-footer">
+                          <el-button
+                            type="primary"
+                            @click="hideQuestionView('option', index)"
+                            >确 定</el-button
+                          >
+                        </span>
                     </el-dialog>
+                    
                   </li>
+                  
                 </el-card>
               </div>
             </ol>
@@ -674,138 +698,152 @@
                 :key="index"
               >
                 <li style="margin-left:35px;">
-                  <el-button @click="fill_moveup(index)" :disabled="index == 0">上浮</el-button>
-                  <el-button @click="fill_movedown(index)" :disabled="index == fill_content.length - 1">下移</el-button>
-                  <el-form-item label="分值" label-width="100px">
-                    <el-input
-                      class="el-short_input__inner"
-                      v-model="fill_content[index].fillQuestion.score"
-                      placeholder="分值"
-                    ></el-input>
-                  </el-form-item>
-                  <el-form-item label="题目" label-width="100px">
-                    <el-input
-                      type="textarea"
-                      autosize
-                      v-model="fill_content[index].fillQuestion.content"
-                    ></el-input>
-                    <el-row type="flex" justify="end">
-                      <el-button
-                        type="info"
-                        size="mini"
-                        style="float: right;margin-top:10px;"
-                        round
-                        @click="showImage('fill', index, true)"
-                        >增加图片
-                      </el-button>
-                      <el-button
-                        type="info"
-                        size="mini"
-                        v-if="
-                          fill_show_image[index] !== '' &&
-                            fill_show_image[index].length > 0
-                        "
-                        style="float: right;margin-top:10px;"
-                        round
-                        @click="showImage('fill', index, false)"
-                        >删除图片
-                      </el-button>
-                    </el-row>
-                    <div
-                      v-for="(item, indexOp) in fill_show_image[index]"
-                      :key="indexOp"
+                  <div v-if="fill_collapse[index]">
+                    <span style="margin-right: 20px;"></span>
+                    <el-button size="small" circle @click="fill_moveup(index)" :disabled="index == 0"><i class="el-icon-arrow-up"></i></el-button>
+                    <el-button size="small" circle @click="fill_movedown(index)" :disabled="index == fill_content.length - 1"><i class="el-icon-arrow-down"></i></el-button>
+                    <el-button size="small" @click="Collapse(index, false, 'fill')">展开</el-button>
+                    <span style="margin-left: 20px; display: inline-block" >{{Get_Collapse_Content(fill_content[index].fillQuestion.score)}}</span>
+                    <span style="margin-left: 20px; display: inline-block" >{{Get_Collapse_Content(fill_content[index].fillQuestion.content)}}</span>
+                  </div>
+                  <div v-if="!fill_collapse[index]">
+                    <span style="margin-right: 20px;"></span>
+                    <el-button circle size="small" @click="fill_moveup(index)" :disabled="index == 0"><i class="el-icon-arrow-up"></i></el-button>
+                    <el-button circle size="small" @click="fill_movedown(index)" :disabled="index == fill_content.length - 1"><i class="el-icon-arrow-down"></i></el-button>
+                    <el-button size="small" @click="Collapse(index, true, 'fill')">折叠</el-button>
+                    <br/>
+                    <br/>
+                    <el-form-item label="分值" label-width="100px">
+                      <el-input
+                        class="el-short_input__inner"
+                        v-model="fill_content[index].fillQuestion.score"
+                        placeholder="分值"
+                      ></el-input>
+                    </el-form-item>
+                    <el-form-item label="题目" label-width="100px">
+                      <el-input
+                        type="textarea"
+                        autosize
+                        v-model="fill_content[index].fillQuestion.content"
+                      ></el-input>
+                      <el-row type="flex" justify="end">
+                        <el-button
+                          type="info"
+                          size="mini"
+                          style="float: right;margin-top:10px;"
+                          round
+                          @click="showImage('fill', index, true)"
+                          >增加图片
+                        </el-button>
+                        <el-button
+                          type="info"
+                          size="mini"
+                          v-if="
+                            fill_show_image[index] !== '' &&
+                              fill_show_image[index].length > 0
+                          "
+                          style="float: right;margin-top:10px;"
+                          round
+                          @click="showImage('fill', index, false)"
+                          >删除图片
+                        </el-button>
+                      </el-row>
+                      <div
+                        v-for="(item, indexOp) in fill_show_image[index]"
+                        :key="indexOp"
+                      >
+                        <ImageViewer
+                          v-if="fill_show_image[index][indexOp]"
+                          style="margin-top:10px;margin-bottom:5px;"
+                          :upload="upload"
+                          :data="
+                            fill_show_image[index][indexOp]
+                              ? fill_content[index].fillQuestion.image[indexOp]
+                              : ''
+                          "
+                          @updateUpload="resetUpload()"
+                          @ImageBase64="
+                            saveBase64('fill', $event, index, indexOp)
+                          "
+                        ></ImageViewer>
+                      </div>
+                    </el-form-item>
+                    <el-form-item
+                      label="答案"
+                      label-width="100px"
+                      v-if="fill_show_answer[index] !== false"
                     >
-                      <ImageViewer
-                        v-if="fill_show_image[index][indexOp]"
-                        style="margin-top:10px;margin-bottom:5px;"
-                        :upload="upload"
-                        :data="
-                          fill_show_image[index][indexOp]
-                            ? fill_content[index].fillQuestion.image[indexOp]
-                            : ''
-                        "
-                        @updateUpload="resetUpload()"
-                        @ImageBase64="
-                          saveBase64('fill', $event, index, indexOp)
-                        "
-                      ></ImageViewer>
-                    </div>
-                  </el-form-item>
-                  <el-form-item
-                    label="答案"
-                    label-width="100px"
-                    v-if="fill_show_answer[index] !== false"
-                  >
-                    <el-input
-                      type="textarea"
-                      autosize
-                      v-model="fill_content[index].fillQuestion.answer"
-                      placeholder="答案"
+                      <el-input
+                        type="textarea"
+                        autosize
+                        v-model="fill_content[index].fillQuestion.answer"
+                        placeholder="答案"
+                      >
+                      </el-input>
+                      <i
+                        class="el-icon-circle-close"
+                        style="position: absolute;right:55px;top:13px;"
+                        @click="deleteAnswer('fill', index)"
+                      ></i>
+                    </el-form-item>
+                    <el-form-item
+                      label="解析"
+                      label-width="100px"
+                      v-if="fill_show_answer_analysis[index] !== false"
                     >
-                    </el-input>
-                    <i
-                      class="el-icon-circle-close"
-                      style="position: absolute;right:55px;top:13px;"
-                      @click="deleteAnswer('fill', index)"
-                    ></i>
-                  </el-form-item>
-                  <el-form-item
-                    label="解析"
-                    label-width="100px"
-                    v-if="fill_show_answer_analysis[index] !== false"
-                  >
-                    <el-input
-                      type="textarea"
-                      autosize
-                      v-model="fill_content[index].fillQuestion.answer_analysis"
-                      placeholder="解析"
-                    ></el-input>
-                    <i
-                      class="el-icon-circle-close"
-                      style="position: absolute;right:55px;top:18px;"
-                      @click="deleteAnswerAnalysis('fill', index)"
-                    ></i>
-                    <el-row type="flex" justify="end">
-                      <el-button
-                        type="info"
-                        size="mini"
-                        style="float: right;margin-top:10px;"
-                        round
-                        @click="showAnalysisImage('fill', index, true)"
-                        >增加图片
-                      </el-button>
-                      <el-button
-                        type="info"
-                        size="mini"
-                        v-if="fill_show_analysis_image[index].length > 0"
-                        style="float: right;margin-top:10px;"
-                        round
-                        @click="showAnalysisImage('fill', index, false)"
-                        >删除图片
-                      </el-button>
-                    </el-row>
-                    <div
-                      v-for="(item, indexOp) in fill_show_analysis_image[index]"
-                      :key="indexOp"
-                    >
-                      <ImageViewer
-                        v-if="fill_show_analysis_image[index][indexOp]"
-                        style="margin-top:5px"
-                        :upload="upload"
-                        :data="
-                          fill_show_analysis_image[index][indexOp]
-                            ? fill_content[index].fillQuestion.analysis_images[
-                                indexOp
-                              ]
-                            : ''
-                        "
-                        @updateUpload="resetUpload()"
-                        @ImageBase64="
-                          saveBase64Analysis('fill', $event, index, indexOp)
-                        "
-                      ></ImageViewer>
-                    </div>
-                  </el-form-item>
+                      <el-input
+                        type="textarea"
+                        autosize
+                        v-model="fill_content[index].fillQuestion.answer_analysis"
+                        placeholder="解析"
+                      ></el-input>
+                      <i
+                        class="el-icon-circle-close"
+                        style="position: absolute;right:55px;top:18px;"
+                        @click="deleteAnswerAnalysis('fill', index)"
+                      ></i>
+                      <el-row type="flex" justify="end">
+                        <el-button
+                          type="info"
+                          size="mini"
+                          style="float: right;margin-top:10px;"
+                          round
+                          @click="showAnalysisImage('fill', index, true)"
+                          >增加图片
+                        </el-button>
+                        <el-button
+                          type="info"
+                          size="mini"
+                          v-if="fill_show_analysis_image[index].length > 0"
+                          style="float: right;margin-top:10px;"
+                          round
+                          @click="showAnalysisImage('fill', index, false)"
+                          >删除图片
+                        </el-button>
+                      </el-row>
+                      <div
+                        v-for="(item, indexOp) in fill_show_analysis_image[index]"
+                        :key="indexOp"
+                      >
+                        <ImageViewer
+                          v-if="fill_show_analysis_image[index][indexOp]"
+                          style="margin-top:5px"
+                          :upload="upload"
+                          :data="
+                            fill_show_analysis_image[index][indexOp]
+                              ? fill_content[index].fillQuestion.analysis_images[
+                                  indexOp
+                                ]
+                              : ''
+                          "
+                          @updateUpload="resetUpload()"
+                          @ImageBase64="
+                            saveBase64Analysis('fill', $event, index, indexOp)
+                          "
+                        ></ImageViewer>
+                      </div>
+                    </el-form-item>
+                  </div>
                 </li>
                 <div style="margin-top:5px;"></div>
                 <el-row type="flex" justify="end">
@@ -970,358 +1008,372 @@
                 :key="index"
               >
                 <li style="margin-left:35px;">
-                  <el-button @click="answer_moveup(index)" :disabled="index==0">上浮</el-button>
-                  <el-button @click="answer_movedown(index)" :disabled="index == answer_content.length - 1">下移</el-button>
-                  <el-form-item label="分值" label-width="100px">
-                    <el-input
-                      class="el-short_input__inner"
-                      v-model="answer_content[index].answerQuestion.score"
-                      placeholder="分值"
-                    ></el-input>
-                  </el-form-item>
-                  <el-form-item label="题目" label-width="100px">
-                    <el-input
-                      type="textarea"
-                      autosize
-                      v-model="answer_content[index].answerQuestion.content"
-                    ></el-input>
-                    <el-row type="flex" justify="end">
-                      <!-- 表格 -->
-                      <el-button
-                        type="info"
-                        size="mini"
-                        round
-                        style="float: right;margin-top:10px;"
-                        v-if="
-                          answer_content[index].answerQuestion.tableConfig
-                            .length === 0
-                        "
-                        @click="
-                          answer_content[index].answerQuestion.table_view = true
-                        "
-                        >增加表格</el-button
+                  <div v-if="answer_collapse[index]">
+                    <span style="margin-right: 20px;"></span>
+                    <el-button size="small" circle @click="answer_moveup(index)" :disabled="index == 0"><i class="el-icon-arrow-up"></i></el-button>
+                    <el-button size="small" circle @click="answer_movedown(index)" :disabled="index == answer_content.length - 1"><i class="el-icon-arrow-down"></i></el-button>
+                    <el-button size="small" @click="Collapse(index, false, 'answer')">展开</el-button>
+                    <span style="margin-left: 20px; display: inline-block" >{{Get_Collapse_Content(answer_content[index].answerQuestion.score)}}</span>
+                    <span style="margin-left: 20px; display: inline-block" >{{Get_Collapse_Content(answer_content[index].answerQuestion.content)}}</span>
+                  </div>
+                  <div v-if="!answer_collapse[index]">
+                    <span style="margin-right: 20px;"></span>
+                    <el-button circle size="small" @click="answer_moveup(index)" :disabled="index==0"><i class="el-icon-arrow-up"></i></el-button>
+                    <el-button circle size="small" @click="answer_movedown(index)" :disabled="index == answer_content.length - 1"><i class="el-icon-arrow-down"></i></el-button>
+                    <el-button size="small" @click="Collapse(index, true, 'answer')">折叠</el-button>
+                    <br/>
+                    <br/>
+                    <el-form-item label="分值" label-width="100px">
+                      <el-input
+                        class="el-short_input__inner"
+                        v-model="answer_content[index].answerQuestion.score"
+                        placeholder="分值"
+                      ></el-input>
+                    </el-form-item>
+                    <el-form-item label="题目" label-width="100px">
+                      <el-input
+                        type="textarea"
+                        autosize
+                        v-model="answer_content[index].answerQuestion.content"
+                      ></el-input>
+                      <el-row type="flex" justify="end">
+                        <!-- 表格 -->
+                        <el-button
+                          type="info"
+                          size="mini"
+                          round
+                          style="float: right;margin-top:10px;"
+                          v-if="
+                            answer_content[index].answerQuestion.tableConfig
+                              .length === 0
+                          "
+                          @click="
+                            answer_content[index].answerQuestion.table_view = true
+                          "
+                          >增加表格</el-button
+                        >
+                        <el-button
+                          type="info"
+                          size="mini"
+                          round
+                          style="float: right;margin-top:10px;"
+                          v-if="
+                            answer_content[index].answerQuestion.tableConfig
+                              .length > 0
+                          "
+                          @click="showTable('answer', index, false)"
+                          >删除表格</el-button
+                        >
+                        <el-button
+                          type="info"
+                          size="mini"
+                          style="float: right;margin-top:10px;"
+                          round
+                          @click="showImage('answer', index, true)"
+                          >增加图片
+                        </el-button>
+                        <el-button
+                          type="info"
+                          size="mini"
+                          v-if="
+                            answer_show_image[index] !== '' &&
+                              answer_show_image[index].length > 0
+                          "
+                          style="float: right;margin-top:10px;"
+                          round
+                          @click="showImage('answer', index, false)"
+                          >删除图片
+                        </el-button>
+                      </el-row>
+                      <div
+                        v-for="(item, indexOp) in answer_show_image[index]"
+                        :key="indexOp"
                       >
-                      <el-button
-                        type="info"
-                        size="mini"
-                        round
-                        style="float: right;margin-top:10px;"
+                        <ImageViewer
+                          v-if="answer_show_image[index][indexOp]"
+                          style="margin-top:10px"
+                          :upload="upload"
+                          :data="
+                            answer_show_image[index][indexOp]
+                              ? answer_content[index].answerQuestion.image[
+                                  indexOp
+                                ]
+                              : ''
+                          "
+                          @updateUpload="resetUpload()"
+                          @ImageBase64="
+                            saveBase64('answer', $event, index, indexOp)
+                          "
+                        ></ImageViewer>
+                      </div>
+                      <!-- 表格 -->
+                      <div
                         v-if="
                           answer_content[index].answerQuestion.tableConfig
                             .length > 0
                         "
-                        @click="showTable('answer', index, false)"
-                        >删除表格</el-button
                       >
-                      <el-button
-                        type="info"
-                        size="mini"
-                        style="float: right;margin-top:10px;"
-                        round
-                        @click="showImage('answer', index, true)"
-                        >增加图片
-                      </el-button>
-                      <el-button
-                        type="info"
-                        size="mini"
-                        v-if="
-                          answer_show_image[index] !== '' &&
-                            answer_show_image[index].length > 0
-                        "
-                        style="float: right;margin-top:10px;"
-                        round
-                        @click="showImage('answer', index, false)"
-                        >删除图片
-                      </el-button>
-                    </el-row>
-                    <div
-                      v-for="(item, indexOp) in answer_show_image[index]"
-                      :key="indexOp"
-                    >
-                      <ImageViewer
-                        v-if="answer_show_image[index][indexOp]"
-                        style="margin-top:10px"
-                        :upload="upload"
-                        :data="
-                          answer_show_image[index][indexOp]
-                            ? answer_content[index].answerQuestion.image[
-                                indexOp
-                              ]
-                            : ''
-                        "
-                        @updateUpload="resetUpload()"
-                        @ImageBase64="
-                          saveBase64('answer', $event, index, indexOp)
-                        "
-                      ></ImageViewer>
-                    </div>
-                    <!-- 表格 -->
-                    <div
-                      v-if="
-                        answer_content[index].answerQuestion.tableConfig
-                          .length > 0
-                      "
-                    >
-                      <el-table
-                        :data="answer_content[index].answerQuestion.tableData"
-                        class="tb-edit"
-                        border
-                        style="width: 100%"
-                        highlight-current-row
-                        @row-click="handleCurrentChange"
-                        :show-header="false"
-                      >
-                        <el-table-column
-                          v-for="(item, indexT) in answer_content[index]
-                            .answerQuestion.tableConfig"
-                          :label="item.label"
-                          :key="indexT + 'answer-t'"
+                        <el-table
+                          :data="answer_content[index].answerQuestion.tableData"
+                          class="tb-edit"
+                          border
+                          style="width: 100%"
+                          highlight-current-row
+                          @row-click="handleCurrentChange"
+                          :show-header="false"
                         >
-                          <template slot-scope="scope">
-                            <el-input
-                              size="small"
-                              v-model="scope.row[item.prop]"
-                              placeholder="内容"
-                              @change="handleEdit(scope.$indexT, scope.row)"
-                            ></el-input>
-                            <span>{{ scope.row[item.prop] }}</span>
-                          </template>
-                        </el-table-column>
-                      </el-table>
-                    </div>
-                  </el-form-item>
-                  <el-dialog
-                    title="创建表格"
-                    :visible.sync="
-                      answer_content[index].answerQuestion.table_view
-                    "
-                    width="30%"
-                  >
-                    <el-form>
-                      <el-form-item label="行数：" label-width="60px">
-                        <el-input
-                          v-model="
-                            answer_content[index].answerQuestion.table_row
-                          "
-                          autocomplete="off"
-                        ></el-input>
-                      </el-form-item>
-                      <el-form-item label="列数：" label-width="60px">
-                        <el-input
-                          v-model="
-                            answer_content[index].answerQuestion.table_col
-                          "
-                          autocomplete="off"
-                        ></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <div slot="footer" class="dialog-footer">
-                      <el-button
-                        type="primary"
-                        @click="showTable('answer', index, true)"
-                        >确 定</el-button
-                      >
-                    </div>
-                  </el-dialog>
-                  <ol type="i">
-                    <el-form-item label-width="100px">
-                      <li
-                        v-for="(option, indexOp) in item.answerQuestion
-                          .sub_questions"
-                        :key="indexOp"
-                        style="margin-bottom: 10px"
-                      >
-                      <el-button 
-                          circle 
-                          size="mini" 
-                          :disabled="indexOp == 0"
-                          @click="Answer_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
-                        <el-button 
-                          circle 
-                          size="mini" 
-                          :disabled="indexOp == item.answerQuestion.sub_questions.length - 1"
-                          @click="Answer_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
-                        <el-form-item label="分值" label-width="50px">
+                          <el-table-column
+                            v-for="(item, indexT) in answer_content[index]
+                              .answerQuestion.tableConfig"
+                            :label="item.label"
+                            :key="indexT + 'answer-t'"
+                          >
+                            <template slot-scope="scope">
+                              <el-input
+                                size="small"
+                                v-model="scope.row[item.prop]"
+                                placeholder="内容"
+                                @change="handleEdit(scope.$indexT, scope.row)"
+                              ></el-input>
+                              <span>{{ scope.row[item.prop] }}</span>
+                            </template>
+                          </el-table-column>
+                        </el-table>
+                      </div>
+                    </el-form-item>
+                    <el-dialog
+                      title="创建表格"
+                      :visible.sync="
+                        answer_content[index].answerQuestion.table_view
+                      "
+                      width="30%"
+                    >
+                      <el-form>
+                        <el-form-item label="行数：" label-width="60px">
                           <el-input
-                            class="el-short_input__inner"
                             v-model="
-                              answer_content[index].answerQuestion.sub_score[
-                                indexOp
-                              ]
+                              answer_content[index].answerQuestion.table_row
                             "
-                            placeholder="分值"
+                            autocomplete="off"
                           ></el-input>
                         </el-form-item>
-                        <el-form-item label="题目" label-width="50px">
-                          <div style="display:flex;">
-                            <el-input
-                              type="textarea"
-                              autosize
-                              v-model="
-                                item.answerQuestion.sub_questions[indexOp]
-                              "
-                            ></el-input>
-                            <i
-                              class="el-icon-circle-close"
-                              style="position: absolute;right:55px;top:10px;"
-                              @click="deleteAnswerOption(index, indexOp)"
-                            ></i>
-                          </div>
-                          <el-button
-                            type="info"
-                            size="mini"
-                            style="float: right;margin-top:10px;"
-                            round
-                            @click="
-                              showOptionImage(
-                                'answer',
-                                index,
-                                indexOp,
-                                !answer_show_option_image[index][indexOp]
-                              )
+                        <el-form-item label="列数：" label-width="60px">
+                          <el-input
+                            v-model="
+                              answer_content[index].answerQuestion.table_col
                             "
-                            >{{
-                              answer_show_option_image[index][indexOp]
-                                ? "删除图片"
-                                : "增加图片"
-                            }}</el-button
-                          >
-                          <ImageViewer
-                            v-if="answer_show_option_image[index][indexOp]"
-                            style="margin-top:15px"
-                            :upload="upload"
-                            :data="
-                              answer_show_option_image[index][indexOp]
-                                ? answer_content[index].answerQuestion
-                                    .option_images[indexOp]
-                                : ''
-                            "
-                            @updateUpload="resetUpload()"
-                            @ImageBase64="
-                              saveBase64Option('answer', $event, index, indexOp)
-                            "
-                          ></ImageViewer>
+                            autocomplete="off"
+                          ></el-input>
                         </el-form-item>
-                      </li>
+                      </el-form>
+                      <div slot="footer" class="dialog-footer">
+                        <el-button
+                          type="primary"
+                          @click="showTable('answer', index, true)"
+                          >确 定</el-button
+                        >
+                      </div>
+                    </el-dialog>
+                    <ol type="i">
+                      <el-form-item label-width="100px">
+                        <li
+                          v-for="(option, indexOp) in item.answerQuestion
+                            .sub_questions"
+                          :key="indexOp"
+                          style="margin-bottom: 10px"
+                        >
+                        <el-button 
+                            circle 
+                            size="mini" 
+                            :disabled="indexOp == 0"
+                            @click="Answer_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
+                          <el-button 
+                            circle 
+                            size="mini" 
+                            :disabled="indexOp == item.answerQuestion.sub_questions.length - 1"
+                            @click="Answer_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
+                          <el-form-item label="分值" label-width="50px">
+                            <el-input
+                              class="el-short_input__inner"
+                              v-model="
+                                answer_content[index].answerQuestion.sub_score[
+                                  indexOp
+                                ]
+                              "
+                              placeholder="分值"
+                            ></el-input>
+                          </el-form-item>
+                          <el-form-item label="题目" label-width="50px">
+                            <div style="display:flex;">
+                              <el-input
+                                type="textarea"
+                                autosize
+                                v-model="
+                                  item.answerQuestion.sub_questions[indexOp]
+                                "
+                              ></el-input>
+                              <i
+                                class="el-icon-circle-close"
+                                style="position: absolute;right:55px;top:10px;"
+                                @click="deleteAnswerOption(index, indexOp)"
+                              ></i>
+                            </div>
+                            <el-button
+                              type="info"
+                              size="mini"
+                              style="float: right;margin-top:10px;"
+                              round
+                              @click="
+                                showOptionImage(
+                                  'answer',
+                                  index,
+                                  indexOp,
+                                  !answer_show_option_image[index][indexOp]
+                                )
+                              "
+                              >{{
+                                answer_show_option_image[index][indexOp]
+                                  ? "删除图片"
+                                  : "增加图片"
+                              }}</el-button
+                            >
+                            <ImageViewer
+                              v-if="answer_show_option_image[index][indexOp]"
+                              style="margin-top:15px"
+                              :upload="upload"
+                              :data="
+                                answer_show_option_image[index][indexOp]
+                                  ? answer_content[index].answerQuestion
+                                      .option_images[indexOp]
+                                  : ''
+                              "
+                              @updateUpload="resetUpload()"
+                              @ImageBase64="
+                                saveBase64Option('answer', $event, index, indexOp)
+                              "
+                            ></ImageViewer>
+                          </el-form-item>
+                        </li>
+                      </el-form-item>
+                    </ol>
+                    <el-form-item
+                      label="答案"
+                      label-width="100px"
+                      v-if="answer_show_answer[index] !== false"
+                    >
+                      <el-input
+                        type="textarea"
+                        autosize
+                        v-model="answer_content[index].answerQuestion.answer"
+                        placeholder="答案"
+                      >
+                      </el-input>
+                      <i
+                        class="el-icon-circle-close"
+                        style="position: absolute;right:55px;top:13px;"
+                        @click="deleteAnswer('answer', index)"
+                      ></i>
+                      <el-row type="flex" justify="end">
+                        <el-button
+                          type="info"
+                          size="mini"
+                          style="float: right;margin-top:10px;margin-bottom:10px;"
+                          round
+                          @click="showAnswerImage('answer', index, true)"
+                          >增加图片
+                        </el-button>
+                        <el-button
+                          type="info"
+                          size="mini"
+                          v-if="answer_show_answer_image[index].length > 0"
+                          style="float: right;margin-top:10px;margin-bottom:10px;"
+                          round
+                          @click="showAnswerImage('answer', index, false)"
+                          >删除图片
+                        </el-button>
+                      </el-row>
+                      <div
+                        v-for="(item, indexAn) in answer_show_answer_image[index]"
+                        :key="indexAn + 'answer'"
+                      >
+                        <ImageViewer
+                          v-if="answer_show_answer_image[index][indexAn]"
+                          style="margin-top:5px"
+                          :upload="upload"
+                          :data="
+                            answer_show_answer_image[index][indexAn]
+                              ? answer_content[index].answerQuestion
+                                  .answer_images[indexAn]
+                              : ''
+                          "
+                          @updateUpload="resetUpload()"
+                          @ImageBase64="
+                            saveBase64Answer('answer', $event, index, indexAn)
+                          "
+                        ></ImageViewer>
+                      </div>
                     </el-form-item>
-                  </ol>
-                  <el-form-item
-                    label="答案"
-                    label-width="100px"
-                    v-if="answer_show_answer[index] !== false"
-                  >
-                    <el-input
-                      type="textarea"
-                      autosize
-                      v-model="answer_content[index].answerQuestion.answer"
-                      placeholder="答案"
+                    <el-form-item
+                      label="解析"
+                      label-width="100px"
+                      v-if="answer_show_answer_analysis[index] !== false"
                     >
-                    </el-input>
-                    <i
-                      class="el-icon-circle-close"
-                      style="position: absolute;right:55px;top:13px;"
-                      @click="deleteAnswer('answer', index)"
-                    ></i>
-                    <el-row type="flex" justify="end">
-                      <el-button
-                        type="info"
-                        size="mini"
-                        style="float: right;margin-top:10px;margin-bottom:10px;"
-                        round
-                        @click="showAnswerImage('answer', index, true)"
-                        >增加图片
-                      </el-button>
-                      <el-button
-                        type="info"
-                        size="mini"
-                        v-if="answer_show_answer_image[index].length > 0"
-                        style="float: right;margin-top:10px;margin-bottom:10px;"
-                        round
-                        @click="showAnswerImage('answer', index, false)"
-                        >删除图片
-                      </el-button>
-                    </el-row>
-                    <div
-                      v-for="(item, indexAn) in answer_show_answer_image[index]"
-                      :key="indexAn + 'answer'"
-                    >
-                      <ImageViewer
-                        v-if="answer_show_answer_image[index][indexAn]"
-                        style="margin-top:5px"
-                        :upload="upload"
-                        :data="
-                          answer_show_answer_image[index][indexAn]
-                            ? answer_content[index].answerQuestion
-                                .answer_images[indexAn]
-                            : ''
+                      <el-input
+                        type="textarea"
+                        autosize
+                        v-model="
+                          answer_content[index].answerQuestion.answer_analysis
                         "
-                        @updateUpload="resetUpload()"
-                        @ImageBase64="
-                          saveBase64Answer('answer', $event, index, indexAn)
-                        "
-                      ></ImageViewer>
-                    </div>
-                  </el-form-item>
-                  <el-form-item
-                    label="解析"
-                    label-width="100px"
-                    v-if="answer_show_answer_analysis[index] !== false"
-                  >
-                    <el-input
-                      type="textarea"
-                      autosize
-                      v-model="
-                        answer_content[index].answerQuestion.answer_analysis
-                      "
-                      placeholder="解析"
-                    ></el-input>
-                    <i
-                      class="el-icon-circle-close"
-                      style="position: absolute;right:55px;top:18px;"
-                      @click="deleteAnswerAnalysis('answer', index)"
-                    ></i>
-                    <el-row type="flex" justify="end">
-                      <el-button
-                        type="info"
-                        size="mini"
-                        style="float: right;margin-top:10px;"
-                        round
-                        @click="showAnalysisImage('answer', index, true)"
-                        >增加图片
-                      </el-button>
-                      <el-button
-                        type="info"
-                        size="mini"
-                        v-if="answer_show_analysis_image[index].length > 0"
-                        style="float: right;margin-top:10px;"
-                        round
-                        @click="showAnalysisImage('answer', index, false)"
-                        >删除图片
-                      </el-button>
-                    </el-row>
-                    <div
-                      v-for="(item, indexOp) in answer_show_analysis_image[
-                        index
-                      ]"
-                      :key="indexOp"
-                    >
-                      <ImageViewer
-                        v-if="answer_show_analysis_image[index][indexOp]"
-                        style="margin-top:5px"
-                        :upload="upload"
-                        :data="
-                          answer_show_analysis_image[index][indexOp]
-                            ? answer_content[index].answerQuestion
-                                .analysis_images[indexOp]
-                            : ''
-                        "
-                        @updateUpload="resetUpload()"
-                        @ImageBase64="
-                          saveBase64Analysis('answer', $event, index, indexOp)
-                        "
-                      ></ImageViewer>
-                    </div>
-                  </el-form-item>
+                        placeholder="解析"
+                      ></el-input>
+                      <i
+                        class="el-icon-circle-close"
+                        style="position: absolute;right:55px;top:18px;"
+                        @click="deleteAnswerAnalysis('answer', index)"
+                      ></i>
+                      <el-row type="flex" justify="end">
+                        <el-button
+                          type="info"
+                          size="mini"
+                          style="float: right;margin-top:10px;"
+                          round
+                          @click="showAnalysisImage('answer', index, true)"
+                          >增加图片
+                        </el-button>
+                        <el-button
+                          type="info"
+                          size="mini"
+                          v-if="answer_show_analysis_image[index].length > 0"
+                          style="float: right;margin-top:10px;"
+                          round
+                          @click="showAnalysisImage('answer', index, false)"
+                          >删除图片
+                        </el-button>
+                      </el-row>
+                      <div
+                        v-for="(item, indexOp) in answer_show_analysis_image[
+                          index
+                        ]"
+                        :key="indexOp"
+                      >
+                        <ImageViewer
+                          v-if="answer_show_analysis_image[index][indexOp]"
+                          style="margin-top:5px"
+                          :upload="upload"
+                          :data="
+                            answer_show_analysis_image[index][indexOp]
+                              ? answer_content[index].answerQuestion
+                                  .analysis_images[indexOp]
+                              : ''
+                          "
+                          @updateUpload="resetUpload()"
+                          @ImageBase64="
+                            saveBase64Analysis('answer', $event, index, indexOp)
+                          "
+                        ></ImageViewer>
+                      </div>
+                    </el-form-item>
+                  </div>
                 </li>
                 <div style="margin-top:5px;"></div>
                 <el-row type="flex" justify="end">
@@ -1595,783 +1647,797 @@
                 :key="index"
               >
                 <li style="margin-left:35px;">
-                  <el-button @click="mix_moveup(index)" :disabled="index == 0">上浮</el-button>
-                  <el-button @click="mix_movedown(index)" :disabled="index == mix_content.length - 1">下移</el-button>
-                  <el-form-item label="分值" label-width="100px">
-                    <el-input
-                      class="el-short_input__inner"
-                      v-model="mix_content[index].mixQuestion.score"
-                      placeholder="分值"
-                    ></el-input>
-                  </el-form-item>
-                  <el-form-item label="题目" label-width="100px">
-                    <el-input
-                      type="textarea"
-                      autosize
-                      v-model="mix_content[index].mixQuestion.content"
-                    ></el-input>
-                    <el-row type="flex" justify="end">
-                      <el-button
-                        type="info"
-                        size="mini"
-                        style="float: right;margin-top:10px;"
-                        round
-                        @click="showImage('mix', index, true)"
-                        >增加图片
-                      </el-button>
-                      <el-button
-                        type="info"
-                        size="mini"
-                        v-if="
-                          mix_show_image[index] !== '' &&
-                            mix_show_image[index].length > 0
-                        "
-                        style="float: right;margin-top:10px;"
-                        round
-                        @click="showImage('mix', index, false)"
-                        >删除图片
-                      </el-button>
-                    </el-row>
-                    <div
-                      v-for="(item, indexOp) in mix_show_image[index]"
-                      :key="indexOp + 'img1'"
-                    >
-                      <ImageViewer
-                        v-if="mix_show_image[index][indexOp]"
-                        style="margin-top:10px"
-                        :upload="upload"
-                        :data="
-                          mix_show_image[index][indexOp]
-                            ? mix_content[index].mixQuestion.image[indexOp]
-                            : ''
-                        "
-                        @updateUpload="resetUpload()"
-                        @ImageBase64="saveBase64('mix', $event, index, indexOp)"
-                      ></ImageViewer>
-                    </div>
-                  </el-form-item>
-                  <ol type="i">
-                    <el-form-item label-width="100px">
-
-                      <!-- 优先级最低的是选择题？？？ -->
-                      <div
-                        v-for="(sub_item, indexOp) in mix_content[index]
-                          .mixQuestion.mix_sub_choice_questions"
-                        :key="indexOp + 'sub_choice'"
-                      >
-                        <li
+                  <div v-if="mix_collapse[index]">
+                    <span style="margin-right: 20px;"></span>
+                    <el-button size="small" circle @click="mix_moveup(index)" :disabled="index == 0"><i class="el-icon-arrow-up"></i></el-button>
+                    <el-button size="small" circle @click="mix_movedown(index)" :disabled="index == mix_content.length - 1"><i class="el-icon-arrow-down"></i></el-button>
+                    <el-button size="small" @click="Collapse(index, false, 'mix')">展开</el-button>
+                    <span style="margin-left: 20px; display: inline-block" >{{Get_Collapse_Content(mix_content[index].mixQuestion.score)}}</span>
+                    <span style="margin-left: 20px; display: inline-block" >{{Get_Collapse_Content(mix_content[index].mixQuestion.content)}}</span>
+                  </div>
+                  <div v-if="!mix_collapse[index]">
+                    <span style="margin-right: 20px;"></span>
+                    <el-button circle size="small" @click="mix_moveup(index)" :disabled="index == 0"><i class="el-icon-arrow-up"></i></el-button>
+                    <el-button circle size="small" @click="mix_movedown(index)" :disabled="index == mix_content.length - 1"><i class="el-icon-arrow-down"></i></el-button>
+                    <el-button size="small" @click="Collapse(index, true, 'mix')">折叠</el-button>
+                    <br/>
+                    <br/>
+                    <el-form-item label="分值" label-width="100px">
+                      <el-input
+                        class="el-short_input__inner"
+                        v-model="mix_content[index].mixQuestion.score"
+                        placeholder="分值"
+                      ></el-input>
+                    </el-form-item>
+                    <el-form-item label="题目" label-width="100px">
+                      <el-input
+                        type="textarea"
+                        autosize
+                        v-model="mix_content[index].mixQuestion.content"
+                      ></el-input>
+                      <el-row type="flex" justify="end">
+                        <el-button
+                          type="info"
+                          size="mini"
+                          style="float: right;margin-top:10px;"
+                          round
+                          @click="showImage('mix', index, true)"
+                          >增加图片
+                        </el-button>
+                        <el-button
+                          type="info"
+                          size="mini"
                           v-if="
-                            mix_content[index].mixQuestion
-                              .mix_sub_choice_questions[0]
+                            mix_show_image[index] !== '' &&
+                              mix_show_image[index].length > 0
                           "
-                        >
-                        <el-button 
-                          circle 
-                          size="mini" 
-                          :disabled="indexOp == 0"
-                          @click="Mix_Option_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
-                        <el-button 
-                          circle 
-                          size="mini" 
-                          :disabled="indexOp == mix_content[index].mixQuestion.mix_sub_choice_questions.length - 1"
-                          @click="Mix_Option_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
+                          style="float: right;margin-top:10px;"
+                          round
+                          @click="showImage('mix', index, false)"
+                          >删除图片
+                        </el-button>
+                      </el-row>
+                      <div
+                        v-for="(item, indexOp) in mix_show_image[index]"
+                        :key="indexOp + 'img1'"
+                      >
+                        <ImageViewer
+                          v-if="mix_show_image[index][indexOp]"
+                          style="margin-top:10px"
+                          :upload="upload"
+                          :data="
+                            mix_show_image[index][indexOp]
+                              ? mix_content[index].mixQuestion.image[indexOp]
+                              : ''
+                          "
+                          @updateUpload="resetUpload()"
+                          @ImageBase64="saveBase64('mix', $event, index, indexOp)"
+                        ></ImageViewer>
+                      </div>
+                    </el-form-item>
+                    <ol type="i">
+                      <el-form-item label-width="100px">
 
-                          <el-form-item label="分值" label-width="50px">
-                            <el-input
-                              class="el-short_input__inner"
-                              v-model="
-                                mix_content[index].mixQuestion
-                                  .mix_sub_choice_questions[indexOp].sub_choice
-                                  .score
-                              "
-                              placeholder="分值"
-                            ></el-input>
-                          </el-form-item>
-                          <el-form-item label="题目" label-width="50px">
-                            <div style="display:flex;">
+                        <!-- 优先级最低的是选择题？？？ -->
+                        <div
+                          v-for="(sub_item, indexOp) in mix_content[index]
+                            .mixQuestion.mix_sub_choice_questions"
+                          :key="indexOp + 'sub_choice'"
+                        >
+                          <li
+                            v-if="
+                              mix_content[index].mixQuestion
+                                .mix_sub_choice_questions[0]
+                            "
+                          >
+                          <el-button 
+                            circle 
+                            size="mini" 
+                            :disabled="indexOp == 0"
+                            @click="Mix_Option_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
+                          <el-button 
+                            circle 
+                            size="mini" 
+                            :disabled="indexOp == mix_content[index].mixQuestion.mix_sub_choice_questions.length - 1"
+                            @click="Mix_Option_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
+
+                            <el-form-item label="分值" label-width="50px">
                               <el-input
-                                type="textarea"
-                                autosize
+                                class="el-short_input__inner"
                                 v-model="
                                   mix_content[index].mixQuestion
-                                    .mix_sub_choice_questions[indexOp]
-                                    .sub_choice.content
+                                    .mix_sub_choice_questions[indexOp].sub_choice
+                                    .score
                                 "
+                                placeholder="分值"
                               ></el-input>
-                              <i
-                                class="el-icon-circle-close"
-                                style="position: absolute;right:55px;top:10px;"
-                                @click="deleteMixOption(index, indexOp)"
-                              ></i>
-                            </div>
-                            <el-row type="flex" justify="end">
-                              <el-button
-                                type="info"
-                                size="mini"
-                                style="float: right;margin-top:10px;"
-                                round
-                                @click="
-                                  showSubImage(
-                                    'sub_choice',
-                                    index,
-                                    indexOp,
-                                    true
-                                  )
-                                "
-                                >增加图片
-                              </el-button>
-                              <el-button
-                                type="info"
-                                size="mini"
-                                v-if="
-                                  mix_content[index].mixQuestion
-                                    .mix_sub_choice_image[indexOp] !== '' &&
-                                    mix_content[index].mixQuestion
-                                      .mix_sub_choice_image[indexOp].length > 0
-                                "
-                                style="float: right;margin-top:10px;"
-                                round
-                                @click="
-                                  showSubImage(
-                                    'sub_choice',
-                                    index,
-                                    indexOp,
-                                    false
-                                  )
-                                "
-                                >删除图片
-                              </el-button>
-                            </el-row>
-                            <div
-                              v-for="(item, indexImg) in mix_content[index]
-                                .mixQuestion.mix_sub_choice_image[indexOp]"
-                              :key="indexImg + 'img_choice'"
-                            >
-                              <ImageViewer
-                                v-if="
-                                  mix_content[index].mixQuestion
-                                    .mix_sub_choice_image[indexOp][indexImg]
-                                "
-                                style="margin-top:15px;"
-                                :upload="upload"
-                                :data="
-                                  mix_content[index].mixQuestion
-                                    .mix_sub_choice_image[indexOp][indexImg]
-                                    ? mix_content[index].mixQuestion
-                                        .mix_sub_choice_questions[indexOp]
-                                        .sub_choice.image[indexImg]
-                                    : ''
-                                "
-                                @updateUpload="resetUpload()"
-                                @ImageBase64="
-                                  saveBase64Sub(
-                                    'sub_choice',
-                                    $event,
-                                    index,
-                                    indexOp,
-                                    indexImg
-                                  )
-                                "
-                              ></ImageViewer>
-                            </div>
-                          </el-form-item>
-                          <el-form-item label="选项" label-width="100px">
-                            <ol style="list-style-type: upper-alpha">
-                              <li
-                                v-for="(option, indexP) in sub_item.sub_choice
-                                  .option"
-                                :key="indexP + 'sub_op'"
-                              >
-
-                              <el-button 
-                                circle 
-                                size="mini" 
-                                :disabled="indexP == 0"
-                                @click="Mix_Option_Item_Opt_Move_Up(index, indexOp, indexP)"><i class="el-icon-arrow-up"></i></el-button>
-                              <el-button 
-                                circle 
-                                size="mini" 
-                                :disabled="indexP == mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option.length - 1"
-                                @click="Mix_Option_Item_Opt_Move_Down(index, indexOp, indexP)"><i class="el-icon-arrow-down"></i></el-button>
-
+                            </el-form-item>
+                            <el-form-item label="题目" label-width="50px">
+                              <div style="display:flex;">
                                 <el-input
                                   type="textarea"
                                   autosize
-                                  v-model="sub_item.sub_choice.option[indexP]"
-                                  :placeholder="
-                                    '选项' + String.fromCharCode(65 + indexP)
+                                  v-model="
+                                    mix_content[index].mixQuestion
+                                      .mix_sub_choice_questions[indexOp]
+                                      .sub_choice.content
                                   "
                                 ></el-input>
                                 <i
                                   class="el-icon-circle-close"
-                                  style="position: relative;left:700px;bottom:35px;"
-                                  @click="
-                                    deleteSubOption(index, indexOp, indexP)
-                                  "
+                                  style="position: absolute;right:55px;top:10px;"
+                                  @click="deleteMixOption(index, indexOp)"
                                 ></i>
+                              </div>
+                              <el-row type="flex" justify="end">
                                 <el-button
                                   type="info"
                                   size="mini"
                                   style="float: right;margin-top:10px;"
                                   round
                                   @click="
-                                    showSubOptionImage(
+                                    showSubImage(
                                       'sub_choice',
                                       index,
                                       indexOp,
-                                      indexP,
-                                      !mix_content[index].mixQuestion
-                                        .mix_sub_choice_option_image[indexOp][
-                                        indexP
-                                      ]
+                                      true
                                     )
                                   "
-                                  >{{
+                                  >增加图片
+                                </el-button>
+                                <el-button
+                                  type="info"
+                                  size="mini"
+                                  v-if="
                                     mix_content[index].mixQuestion
-                                      .mix_sub_choice_option_image[indexOp][
-                                      indexP
-                                    ]
-                                      ? "删除图片"
-                                      : "增加图片"
-                                  }}</el-button
-                                >
+                                      .mix_sub_choice_image[indexOp] !== '' &&
+                                      mix_content[index].mixQuestion
+                                        .mix_sub_choice_image[indexOp].length > 0
+                                  "
+                                  style="float: right;margin-top:10px;"
+                                  round
+                                  @click="
+                                    showSubImage(
+                                      'sub_choice',
+                                      index,
+                                      indexOp,
+                                      false
+                                    )
+                                  "
+                                  >删除图片
+                                </el-button>
+                              </el-row>
+                              <div
+                                v-for="(item, indexImg) in mix_content[index]
+                                  .mixQuestion.mix_sub_choice_image[indexOp]"
+                                :key="indexImg + 'img_choice'"
+                              >
                                 <ImageViewer
                                   v-if="
                                     mix_content[index].mixQuestion
-                                      .mix_sub_choice_option_image[indexOp][
-                                      indexP
-                                    ]
+                                      .mix_sub_choice_image[indexOp][indexImg]
                                   "
-                                  style="margin-top:-25px"
+                                  style="margin-top:15px;"
                                   :upload="upload"
                                   :data="
                                     mix_content[index].mixQuestion
-                                      .mix_sub_choice_option_image[indexOp][
-                                      indexP
-                                    ]
+                                      .mix_sub_choice_image[indexOp][indexImg]
                                       ? mix_content[index].mixQuestion
                                           .mix_sub_choice_questions[indexOp]
-                                          .sub_choice.option_images[indexP]
+                                          .sub_choice.image[indexImg]
                                       : ''
                                   "
                                   @updateUpload="resetUpload()"
                                   @ImageBase64="
-                                    saveBase64SubOption(
+                                    saveBase64Sub(
                                       'sub_choice',
                                       $event,
                                       index,
                                       indexOp,
-                                      indexP
+                                      indexImg
                                     )
                                   "
                                 ></ImageViewer>
-                              </li>
-                            </ol>
-                            <el-button
-                              type="success"
-                              size="mini"
-                              round
-                              style="float: right;"
-                              @click="addSubOption(index, indexOp)"
-                              >添加选项</el-button
-                            >
-                          </el-form-item>
-                        </li>
-                      </div>                  
+                              </div>
+                            </el-form-item>
+                            <el-form-item label="选项" label-width="100px">
+                              <ol style="list-style-type: upper-alpha">
+                                <li
+                                  v-for="(option, indexP) in sub_item.sub_choice
+                                    .option"
+                                  :key="indexP + 'sub_op'"
+                                >
 
-                      <!-- 次级优先的是填空题？？？ -->
-                      <div
-                        v-for="(sub_item, indexOp) in mix_content[index]
-                          .mixQuestion.mix_sub_fill_questions"
-                        :key="indexOp + 'sub_fill'"
-                      >
-                        <li
-                          v-if="
-                            mix_content[index].mixQuestion
-                              .mix_sub_fill_questions[0]
-                          "
+                                <el-button 
+                                  circle 
+                                  size="mini" 
+                                  :disabled="indexP == 0"
+                                  @click="Mix_Option_Item_Opt_Move_Up(index, indexOp, indexP)"><i class="el-icon-arrow-up"></i></el-button>
+                                <el-button 
+                                  circle 
+                                  size="mini" 
+                                  :disabled="indexP == mix_content[index].mixQuestion.mix_sub_choice_questions[indexOp].sub_choice.option.length - 1"
+                                  @click="Mix_Option_Item_Opt_Move_Down(index, indexOp, indexP)"><i class="el-icon-arrow-down"></i></el-button>
+
+                                  <el-input
+                                    type="textarea"
+                                    autosize
+                                    v-model="sub_item.sub_choice.option[indexP]"
+                                    :placeholder="
+                                      '选项' + String.fromCharCode(65 + indexP)
+                                    "
+                                  ></el-input>
+                                  <i
+                                    class="el-icon-circle-close"
+                                    style="position: relative;left:700px;bottom:35px;"
+                                    @click="
+                                      deleteSubOption(index, indexOp, indexP)
+                                    "
+                                  ></i>
+                                  <el-button
+                                    type="info"
+                                    size="mini"
+                                    style="float: right;margin-top:10px;"
+                                    round
+                                    @click="
+                                      showSubOptionImage(
+                                        'sub_choice',
+                                        index,
+                                        indexOp,
+                                        indexP,
+                                        !mix_content[index].mixQuestion
+                                          .mix_sub_choice_option_image[indexOp][
+                                          indexP
+                                        ]
+                                      )
+                                    "
+                                    >{{
+                                      mix_content[index].mixQuestion
+                                        .mix_sub_choice_option_image[indexOp][
+                                        indexP
+                                      ]
+                                        ? "删除图片"
+                                        : "增加图片"
+                                    }}</el-button
+                                  >
+                                  <ImageViewer
+                                    v-if="
+                                      mix_content[index].mixQuestion
+                                        .mix_sub_choice_option_image[indexOp][
+                                        indexP
+                                      ]
+                                    "
+                                    style="margin-top:-25px"
+                                    :upload="upload"
+                                    :data="
+                                      mix_content[index].mixQuestion
+                                        .mix_sub_choice_option_image[indexOp][
+                                        indexP
+                                      ]
+                                        ? mix_content[index].mixQuestion
+                                            .mix_sub_choice_questions[indexOp]
+                                            .sub_choice.option_images[indexP]
+                                        : ''
+                                    "
+                                    @updateUpload="resetUpload()"
+                                    @ImageBase64="
+                                      saveBase64SubOption(
+                                        'sub_choice',
+                                        $event,
+                                        index,
+                                        indexOp,
+                                        indexP
+                                      )
+                                    "
+                                  ></ImageViewer>
+                                </li>
+                              </ol>
+                              <el-button
+                                type="success"
+                                size="mini"
+                                round
+                                style="float: right;"
+                                @click="addSubOption(index, indexOp)"
+                                >添加选项</el-button
+                              >
+                            </el-form-item>
+                          </li>
+                        </div>                  
+
+                        <!-- 次级优先的是填空题？？？ -->
+                        <div
+                          v-for="(sub_item, indexOp) in mix_content[index]
+                            .mixQuestion.mix_sub_fill_questions"
+                          :key="indexOp + 'sub_fill'"
                         >
-                        <el-button 
-                          circle 
-                          size="mini" 
-                          :disabled="indexOp == 0"
-                          @click="Mix_Fill_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
-                        <el-button 
-                          circle 
-                          size="mini" 
-                          :disabled="indexOp == mix_content[index].mixQuestion.mix_sub_fill_questions.length - 1"
-                          @click="Mix_Fill_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
-                          <el-form-item label="分值" label-width="50px">
-                            <el-input
-                              class="el-short_input__inner"
-                              v-model="
-                                mix_content[index].mixQuestion
-                                  .mix_sub_fill_questions[indexOp].sub_fill
-                                  .score
-                              "
-                              placeholder="分值"
-                            ></el-input>
-                          </el-form-item>
-                          <el-form-item label="题目" label-width="50px">
-                            <div style="display:flex;">
+                          <li
+                            v-if="
+                              mix_content[index].mixQuestion
+                                .mix_sub_fill_questions[0]
+                            "
+                          >
+                          <el-button 
+                            circle 
+                            size="mini" 
+                            :disabled="indexOp == 0"
+                            @click="Mix_Fill_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
+                          <el-button 
+                            circle 
+                            size="mini" 
+                            :disabled="indexOp == mix_content[index].mixQuestion.mix_sub_fill_questions.length - 1"
+                            @click="Mix_Fill_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
+                            <el-form-item label="分值" label-width="50px">
                               <el-input
-                                type="textarea"
-                                autosize
+                                class="el-short_input__inner"
                                 v-model="
                                   mix_content[index].mixQuestion
                                     .mix_sub_fill_questions[indexOp].sub_fill
-                                    .content
+                                    .score
                                 "
+                                placeholder="分值"
                               ></el-input>
-                              <i
-                                class="el-icon-circle-close"
-                                style="position: absolute;right:55px;top:10px;"
-                                @click="deleteMixFill(index, indexOp)"
-                              ></i>
-                            </div>
-                            <el-row type="flex" justify="end">
-                              <!-- 表格 -->
-                              <el-button
-                                type="info"
-                                size="mini"
-                                round
-                                style="float: right;margin-top:10px;"
-                                v-if="
-                                  mix_content[index].mixQuestion
-                                    .mix_sub_fill_questions[indexOp].sub_fill
-                                    .tableConfig.length === 0
-                                "
-                                @click="
-                                  mix_content[
-                                    index
-                                  ].mixQuestion.mix_sub_fill_questions[
-                                    indexOp
-                                  ].sub_fill.mix_sub_fill_table_view = true
-                                "
-                                >增加表格</el-button
+                            </el-form-item>
+                            <el-form-item label="题目" label-width="50px">
+                              <div style="display:flex;">
+                                <el-input
+                                  type="textarea"
+                                  autosize
+                                  v-model="
+                                    mix_content[index].mixQuestion
+                                      .mix_sub_fill_questions[indexOp].sub_fill
+                                      .content
+                                  "
+                                ></el-input>
+                                <i
+                                  class="el-icon-circle-close"
+                                  style="position: absolute;right:55px;top:10px;"
+                                  @click="deleteMixFill(index, indexOp)"
+                                ></i>
+                              </div>
+                              <el-row type="flex" justify="end">
+                                <!-- 表格 -->
+                                <el-button
+                                  type="info"
+                                  size="mini"
+                                  round
+                                  style="float: right;margin-top:10px;"
+                                  v-if="
+                                    mix_content[index].mixQuestion
+                                      .mix_sub_fill_questions[indexOp].sub_fill
+                                      .tableConfig.length === 0
+                                  "
+                                  @click="
+                                    mix_content[
+                                      index
+                                    ].mixQuestion.mix_sub_fill_questions[
+                                      indexOp
+                                    ].sub_fill.mix_sub_fill_table_view = true
+                                  "
+                                  >增加表格</el-button
+                                >
+                                <el-button
+                                  type="info"
+                                  size="mini"
+                                  round
+                                  style="float: right;margin-top:10px;"
+                                  v-if="
+                                    mix_content[index].mixQuestion
+                                      .mix_sub_fill_questions[indexOp].sub_fill
+                                      .tableConfig.length > 0
+                                  "
+                                  @click="
+                                    showSubTable(
+                                      'sub_fill',
+                                      index,
+                                      indexOp,
+                                      false
+                                    )
+                                  "
+                                  >删除表格</el-button
+                                >
+                                <el-button
+                                  type="info"
+                                  size="mini"
+                                  style="float: right;margin-top:10px;"
+                                  round
+                                  @click="
+                                    showSubImage('sub_fill', index, indexOp, true)
+                                  "
+                                  >增加图片
+                                </el-button>
+                                <el-button
+                                  type="info"
+                                  size="mini"
+                                  v-if="
+                                    mix_content[index].mixQuestion
+                                      .mix_sub_fill_image[indexOp] !== '' &&
+                                      mix_content[index].mixQuestion
+                                        .mix_sub_fill_image[indexOp].length > 0
+                                  "
+                                  style="float: right;margin-top:10px;"
+                                  round
+                                  @click="
+                                    showSubImage(
+                                      'sub_fill',
+                                      index,
+                                      indexOp,
+                                      false
+                                    )
+                                  "
+                                  >删除图片
+                                </el-button>
+                              </el-row>
+                              <div
+                                v-for="(item, indexImg) in mix_content[index]
+                                  .mixQuestion.mix_sub_fill_image[indexOp]"
+                                :key="indexImg + 'img3'"
                               >
-                              <el-button
-                                type="info"
-                                size="mini"
-                                round
-                                style="float: right;margin-top:10px;"
+                                <ImageViewer
+                                  v-if="
+                                    mix_content[index].mixQuestion
+                                      .mix_sub_fill_image[indexOp][indexImg]
+                                  "
+                                  style="margin-top:15px;"
+                                  :upload="upload"
+                                  :data="
+                                    mix_content[index].mixQuestion
+                                      .mix_sub_fill_image[indexOp][indexImg]
+                                      ? mix_content[index].mixQuestion
+                                          .mix_sub_fill_questions[indexOp]
+                                          .sub_fill.image[indexImg]
+                                      : ''
+                                  "
+                                  @updateUpload="resetUpload()"
+                                  @ImageBase64="
+                                    saveBase64Sub(
+                                      'sub_fill',
+                                      $event,
+                                      index,
+                                      indexOp,
+                                      indexImg
+                                    )
+                                  "
+                                ></ImageViewer>
+                              </div>
+                              <!-- 表格 -->
+                              <div
                                 v-if="
                                   mix_content[index].mixQuestion
                                     .mix_sub_fill_questions[indexOp].sub_fill
                                     .tableConfig.length > 0
                                 "
-                                @click="
-                                  showSubTable(
-                                    'sub_fill',
-                                    index,
-                                    indexOp,
-                                    false
-                                  )
-                                "
-                                >删除表格</el-button
                               >
-                              <el-button
-                                type="info"
-                                size="mini"
-                                style="float: right;margin-top:10px;"
-                                round
-                                @click="
-                                  showSubImage('sub_fill', index, indexOp, true)
-                                "
-                                >增加图片
-                              </el-button>
-                              <el-button
-                                type="info"
-                                size="mini"
-                                v-if="
-                                  mix_content[index].mixQuestion
-                                    .mix_sub_fill_image[indexOp] !== '' &&
+                                <el-table
+                                  :data="
                                     mix_content[index].mixQuestion
-                                      .mix_sub_fill_image[indexOp].length > 0
-                                "
-                                style="float: right;margin-top:10px;"
-                                round
-                                @click="
-                                  showSubImage(
-                                    'sub_fill',
-                                    index,
-                                    indexOp,
-                                    false
-                                  )
-                                "
-                                >删除图片
-                              </el-button>
-                            </el-row>
-                            <div
-                              v-for="(item, indexImg) in mix_content[index]
-                                .mixQuestion.mix_sub_fill_image[indexOp]"
-                              :key="indexImg + 'img3'"
-                            >
-                              <ImageViewer
-                                v-if="
-                                  mix_content[index].mixQuestion
-                                    .mix_sub_fill_image[indexOp][indexImg]
-                                "
-                                style="margin-top:15px;"
-                                :upload="upload"
-                                :data="
-                                  mix_content[index].mixQuestion
-                                    .mix_sub_fill_image[indexOp][indexImg]
-                                    ? mix_content[index].mixQuestion
-                                        .mix_sub_fill_questions[indexOp]
-                                        .sub_fill.image[indexImg]
-                                    : ''
-                                "
-                                @updateUpload="resetUpload()"
-                                @ImageBase64="
-                                  saveBase64Sub(
-                                    'sub_fill',
-                                    $event,
-                                    index,
-                                    indexOp,
-                                    indexImg
-                                  )
-                                "
-                              ></ImageViewer>
-                            </div>
-                            <!-- 表格 -->
-                            <div
-                              v-if="
+                                      .mix_sub_fill_questions[indexOp].sub_fill
+                                      .tableData
+                                  "
+                                  class="tb-edit"
+                                  border
+                                  style="width: 100%"
+                                  highlight-current-row
+                                  @row-click="handleCurrentChange"
+                                  :show-header="false"
+                                >
+                                  <el-table-column
+                                    v-for="(item, indexT) in mix_content[index]
+                                      .mixQuestion.mix_sub_fill_questions[indexOp]
+                                      .sub_fill.tableConfig"
+                                    :label="item.label"
+                                    :key="indexT + 'sub_t'"
+                                  >
+                                    <template slot-scope="scope">
+                                      <el-input
+                                        size="small"
+                                        v-model="scope.row[item.prop]"
+                                        placeholder="内容"
+                                        @change="
+                                          handleEdit(scope.$indexT, scope.row)
+                                        "
+                                      ></el-input>
+                                      <span>{{ scope.row[item.prop] }}</span>
+                                    </template>
+                                  </el-table-column>
+                                </el-table>
+                              </div>
+                            </el-form-item>
+
+                            <el-dialog
+                              title="创建表格"
+                              :visible.sync="
                                 mix_content[index].mixQuestion
                                   .mix_sub_fill_questions[indexOp].sub_fill
-                                  .tableConfig.length > 0
+                                  .mix_sub_fill_table_view
                               "
+                              width="30%"
                             >
-                              <el-table
-                                :data="
-                                  mix_content[index].mixQuestion
-                                    .mix_sub_fill_questions[indexOp].sub_fill
-                                    .tableData
-                                "
-                                class="tb-edit"
-                                border
-                                style="width: 100%"
-                                highlight-current-row
-                                @row-click="handleCurrentChange"
-                                :show-header="false"
-                              >
-                                <el-table-column
-                                  v-for="(item, indexT) in mix_content[index]
-                                    .mixQuestion.mix_sub_fill_questions[indexOp]
-                                    .sub_fill.tableConfig"
-                                  :label="item.label"
-                                  :key="indexT + 'sub_t'"
+                              <el-form>
+                                <el-form-item label="行数：" label-width="60px">
+                                  <el-input
+                                    v-model="
+                                      mix_content[index].mixQuestion
+                                        .mix_sub_fill_questions[indexOp].sub_fill
+                                        .table_row
+                                    "
+                                    autocomplete="off"
+                                  ></el-input>
+                                </el-form-item>
+                                <el-form-item label="列数：" label-width="60px">
+                                  <el-input
+                                    v-model="
+                                      mix_content[index].mixQuestion
+                                        .mix_sub_fill_questions[indexOp].sub_fill
+                                        .table_col
+                                    "
+                                    autocomplete="off"
+                                  ></el-input>
+                                </el-form-item>
+                              </el-form>
+                              <div slot="footer" class="dialog-footer">
+                                <el-button
+                                  type="primary"
+                                  @click="
+                                    showSubTable('sub_fill', index, indexOp, true)
+                                  "
+                                  >确 定</el-button
                                 >
-                                  <template slot-scope="scope">
-                                    <el-input
-                                      size="small"
-                                      v-model="scope.row[item.prop]"
-                                      placeholder="内容"
-                                      @change="
-                                        handleEdit(scope.$indexT, scope.row)
-                                      "
-                                    ></el-input>
-                                    <span>{{ scope.row[item.prop] }}</span>
-                                  </template>
-                                </el-table-column>
-                              </el-table>
-                            </div>
-                          </el-form-item>
+                              </div>
+                            </el-dialog>
+                            <el-button
+                              type="success"
+                              size="mini"
+                              round
+                              style="float: right;"
+                              @click="addSubFillPlaceHolder(index, indexOp)"
+                              >增加占位符</el-button
+                            >
+                          </li>
+                        </div>
 
-                          <el-dialog
-                            title="创建表格"
-                            :visible.sync="
-                              mix_content[index].mixQuestion
-                                .mix_sub_fill_questions[indexOp].sub_fill
-                                .mix_sub_fill_table_view
-                            "
-                            width="30%"
-                          >
-                            <el-form>
-                              <el-form-item label="行数：" label-width="60px">
-                                <el-input
-                                  v-model="
-                                    mix_content[index].mixQuestion
-                                      .mix_sub_fill_questions[indexOp].sub_fill
-                                      .table_row
-                                  "
-                                  autocomplete="off"
-                                ></el-input>
-                              </el-form-item>
-                              <el-form-item label="列数：" label-width="60px">
-                                <el-input
-                                  v-model="
-                                    mix_content[index].mixQuestion
-                                      .mix_sub_fill_questions[indexOp].sub_fill
-                                      .table_col
-                                  "
-                                  autocomplete="off"
-                                ></el-input>
-                              </el-form-item>
-                            </el-form>
-                            <div slot="footer" class="dialog-footer">
-                              <el-button
-                                type="primary"
-                                @click="
-                                  showSubTable('sub_fill', index, indexOp, true)
-                                "
-                                >确 定</el-button
-                              >
-                            </div>
-                          </el-dialog>
-                          <el-button
-                            type="success"
-                            size="mini"
-                            round
-                            style="float: right;"
-                            @click="addSubFillPlaceHolder(index, indexOp)"
-                            >增加占位符</el-button
-                          >
-                        </li>
-                      </div>
-
-                      <!-- 优先级最高的是小简答题？？？ -->
-                      <div
-                        v-for="(sub_item, indexOp) in mix_content[index]
-                          .mixQuestion.mix_sub_questions"
-                        :key="indexOp + 'sub_'"
-                      >
-                        <li
-                          v-if="
-                            mix_content[index].mixQuestion.mix_sub_questions[0]
-                          "
+                        <!-- 优先级最高的是小简答题？？？ -->
+                        <div
+                          v-for="(sub_item, indexOp) in mix_content[index]
+                            .mixQuestion.mix_sub_questions"
+                          :key="indexOp + 'sub_'"
                         >
-                        <el-button 
-                          circle 
-                          size="mini" 
-                          :disabled="indexOp == 0"
-                          @click="Mix_Answer_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
-                        <el-button 
-                          circle 
-                          size="mini" 
-                          :disabled="indexOp == mix_content[index].mixQuestion.mix_sub_questions.length - 1"
-                          @click="Mix_Answer_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
-                          <el-form-item label="分值" label-width="50px">
-                            <el-input
-                              class="el-short_input__inner"
-                              v-model="
-                                mix_content[index].mixQuestion
-                                  .mix_sub_questions[indexOp].sub_question.score
-                              "
-                              placeholder="分值"
-                            ></el-input>
-                          </el-form-item>
-                          <el-form-item label="题目" label-width="50px">
-                            <div style="display:flex;">
+                          <li
+                            v-if="
+                              mix_content[index].mixQuestion.mix_sub_questions[0]
+                            "
+                          >
+                          <el-button 
+                            circle 
+                            size="mini" 
+                            :disabled="indexOp == 0"
+                            @click="Mix_Answer_Item_Move_Up(index, indexOp)"><i class="el-icon-arrow-up"></i></el-button>
+                          <el-button 
+                            circle 
+                            size="mini" 
+                            :disabled="indexOp == mix_content[index].mixQuestion.mix_sub_questions.length - 1"
+                            @click="Mix_Answer_Item_Move_Down(index, indexOp)"><i class="el-icon-arrow-down"></i></el-button>
+                            <el-form-item label="分值" label-width="50px">
                               <el-input
-                                type="textarea"
-                                autosize
+                                class="el-short_input__inner"
                                 v-model="
                                   mix_content[index].mixQuestion
-                                    .mix_sub_questions[indexOp].sub_question
-                                    .content
+                                    .mix_sub_questions[indexOp].sub_question.score
                                 "
+                                placeholder="分值"
                               ></el-input>
-                              <i
-                                class="el-icon-circle-close"
-                                style="position: absolute;right:55px;top:10px;"
-                                @click="deleteMixSub(index, indexOp)"
-                              ></i>
-                            </div>
-                            <el-row type="flex" justify="end">
-                              <el-button
-                                type="info"
-                                size="mini"
-                                style="float: right;margin-top:10px;"
-                                round
-                                @click="
-                                  showSubImage(
-                                    'sub_question',
-                                    index,
-                                    indexOp,
-                                    true
-                                  )
-                                "
-                                >增加图片
-                              </el-button>
-                              <el-button
-                                type="info"
-                                size="mini"
-                                v-if="
-                                  mix_content[index].mixQuestion.mix_sub_image[
-                                    indexOp
-                                  ] !== '' &&
+                            </el-form-item>
+                            <el-form-item label="题目" label-width="50px">
+                              <div style="display:flex;">
+                                <el-input
+                                  type="textarea"
+                                  autosize
+                                  v-model="
                                     mix_content[index].mixQuestion
-                                      .mix_sub_image[indexOp].length > 0
-                                "
-                                style="float: right;margin-top:10px;"
-                                round
-                                @click="
-                                  showSubImage(
-                                    'sub_question',
-                                    index,
-                                    indexOp,
-                                    false
-                                  )
-                                "
-                                >删除图片
-                              </el-button>
-                            </el-row>
-                            <div
-                              v-for="(item, indexImg) in mix_content[index]
-                                .mixQuestion.mix_sub_image[indexOp]"
-                              :key="indexImg + 'img2'"
-                            >
-                              <ImageViewer
-                                v-if="
-                                  mix_content[index].mixQuestion.mix_sub_image[
-                                    indexOp
-                                  ][indexImg]
-                                "
-                                style="margin-top:15px;"
-                                :upload="upload"
-                                :data="
-                                  mix_content[index].mixQuestion.mix_sub_image[
-                                    indexOp
-                                  ][indexImg]
-                                    ? mix_content[index].mixQuestion
-                                        .mix_sub_questions[indexOp].sub_question
-                                        .image[indexImg]
-                                    : ''
-                                "
-                                @updateUpload="resetUpload()"
-                                @ImageBase64="
-                                  saveBase64Sub(
-                                    'sub_question',
-                                    $event,
-                                    index,
-                                    indexOp,
-                                    indexImg
-                                  )
-                                "
-                              ></ImageViewer>
-                            </div>
-                          </el-form-item>
-                        </li>
-                      </div>
+                                      .mix_sub_questions[indexOp].sub_question
+                                      .content
+                                  "
+                                ></el-input>
+                                <i
+                                  class="el-icon-circle-close"
+                                  style="position: absolute;right:55px;top:10px;"
+                                  @click="deleteMixSub(index, indexOp)"
+                                ></i>
+                              </div>
+                              <el-row type="flex" justify="end">
+                                <el-button
+                                  type="info"
+                                  size="mini"
+                                  style="float: right;margin-top:10px;"
+                                  round
+                                  @click="
+                                    showSubImage(
+                                      'sub_question',
+                                      index,
+                                      indexOp,
+                                      true
+                                    )
+                                  "
+                                  >增加图片
+                                </el-button>
+                                <el-button
+                                  type="info"
+                                  size="mini"
+                                  v-if="
+                                    mix_content[index].mixQuestion.mix_sub_image[
+                                      indexOp
+                                    ] !== '' &&
+                                      mix_content[index].mixQuestion
+                                        .mix_sub_image[indexOp].length > 0
+                                  "
+                                  style="float: right;margin-top:10px;"
+                                  round
+                                  @click="
+                                    showSubImage(
+                                      'sub_question',
+                                      index,
+                                      indexOp,
+                                      false
+                                    )
+                                  "
+                                  >删除图片
+                                </el-button>
+                              </el-row>
+                              <div
+                                v-for="(item, indexImg) in mix_content[index]
+                                  .mixQuestion.mix_sub_image[indexOp]"
+                                :key="indexImg + 'img2'"
+                              >
+                                <ImageViewer
+                                  v-if="
+                                    mix_content[index].mixQuestion.mix_sub_image[
+                                      indexOp
+                                    ][indexImg]
+                                  "
+                                  style="margin-top:15px;"
+                                  :upload="upload"
+                                  :data="
+                                    mix_content[index].mixQuestion.mix_sub_image[
+                                      indexOp
+                                    ][indexImg]
+                                      ? mix_content[index].mixQuestion
+                                          .mix_sub_questions[indexOp].sub_question
+                                          .image[indexImg]
+                                      : ''
+                                  "
+                                  @updateUpload="resetUpload()"
+                                  @ImageBase64="
+                                    saveBase64Sub(
+                                      'sub_question',
+                                      $event,
+                                      index,
+                                      indexOp,
+                                      indexImg
+                                    )
+                                  "
+                                ></ImageViewer>
+                              </div>
+                            </el-form-item>
+                          </li>
+                        </div>
 
+                      </el-form-item>
+                    </ol>
+                    <el-form-item
+                      label="答案"
+                      label-width="100px"
+                      v-if="mix_show_answer[index] !== false"
+                    >
+                      <el-input
+                        type="textarea"
+                        autosize
+                        v-model="mix_content[index].mixQuestion.answer"
+                        placeholder="答案"
+                      >
+                      </el-input>
+                      <i
+                        class="el-icon-circle-close"
+                        style="position: absolute;right:55px;top:13px;"
+                        @click="deleteAnswer('mix', index)"
+                      ></i>
+                      <el-row type="flex" justify="end">
+                        <el-button
+                          type="info"
+                          size="mini"
+                          style="float: right;margin-top:10px;margin-bottom:10px;"
+                          round
+                          @click="showAnswerImage('mix', index, true)"
+                          >增加图片
+                        </el-button>
+                        <el-button
+                          type="info"
+                          size="mini"
+                          v-if="mix_show_answer_image[index].length > 0"
+                          style="float: right;margin-top:10px;margin-bottom:10px;"
+                          round
+                          @click="showAnswerImage('mix', index, false)"
+                          >删除图片
+                        </el-button>
+                      </el-row>
+                      <div
+                        v-for="(item, indexAn) in mix_show_answer_image[index]"
+                        :key="indexAn + 'mix'"
+                      >
+                        <ImageViewer
+                          v-if="mix_show_answer_image[index][indexAn]"
+                          style="margin-top:5px"
+                          :upload="upload"
+                          :data="
+                            mix_show_answer_image[index][indexAn]
+                              ? mix_content[index].mixQuestion.answer_images[
+                                  indexAn
+                                ]
+                              : ''
+                          "
+                          @updateUpload="resetUpload()"
+                          @ImageBase64="
+                            saveBase64Answer('mix', $event, index, indexAn)
+                          "
+                        ></ImageViewer>
+                      </div>
                     </el-form-item>
-                  </ol>
-                  <el-form-item
-                    label="答案"
-                    label-width="100px"
-                    v-if="mix_show_answer[index] !== false"
-                  >
-                    <el-input
-                      type="textarea"
-                      autosize
-                      v-model="mix_content[index].mixQuestion.answer"
-                      placeholder="答案"
+                    <el-form-item
+                      label="解析"
+                      label-width="100px"
+                      v-if="mix_show_answer_analysis[index] !== false"
                     >
-                    </el-input>
-                    <i
-                      class="el-icon-circle-close"
-                      style="position: absolute;right:55px;top:13px;"
-                      @click="deleteAnswer('mix', index)"
-                    ></i>
-                    <el-row type="flex" justify="end">
-                      <el-button
-                        type="info"
-                        size="mini"
-                        style="float: right;margin-top:10px;margin-bottom:10px;"
-                        round
-                        @click="showAnswerImage('mix', index, true)"
-                        >增加图片
-                      </el-button>
-                      <el-button
-                        type="info"
-                        size="mini"
-                        v-if="mix_show_answer_image[index].length > 0"
-                        style="float: right;margin-top:10px;margin-bottom:10px;"
-                        round
-                        @click="showAnswerImage('mix', index, false)"
-                        >删除图片
-                      </el-button>
-                    </el-row>
-                    <div
-                      v-for="(item, indexAn) in mix_show_answer_image[index]"
-                      :key="indexAn + 'mix'"
-                    >
-                      <ImageViewer
-                        v-if="mix_show_answer_image[index][indexAn]"
-                        style="margin-top:5px"
-                        :upload="upload"
-                        :data="
-                          mix_show_answer_image[index][indexAn]
-                            ? mix_content[index].mixQuestion.answer_images[
-                                indexAn
-                              ]
-                            : ''
-                        "
-                        @updateUpload="resetUpload()"
-                        @ImageBase64="
-                          saveBase64Answer('mix', $event, index, indexAn)
-                        "
-                      ></ImageViewer>
-                    </div>
-                  </el-form-item>
-                  <el-form-item
-                    label="解析"
-                    label-width="100px"
-                    v-if="mix_show_answer_analysis[index] !== false"
-                  >
-                    <el-input
-                      type="textarea"
-                      autosize
-                      v-model="mix_content[index].mixQuestion.answer_analysis"
-                      placeholder="解析"
-                    ></el-input>
-                    <i
-                      class="el-icon-circle-close"
-                      style="position: absolute;right:55px;top:18px;"
-                      @click="deleteAnswerAnalysis('mix', index)"
-                    ></i>
-                    <el-row type="flex" justify="end">
-                      <el-button
-                        type="info"
-                        size="mini"
-                        style="float: right;margin-top:10px;"
-                        round
-                        @click="showAnalysisImage('mix', index, true)"
-                        >增加图片
-                      </el-button>
-                      <el-button
-                        type="info"
-                        size="mini"
-                        v-if="mix_show_analysis_image[index].length > 0"
-                        style="float: right;margin-top:10px;"
-                        round
-                        @click="showAnalysisImage('mix', index, false)"
-                        >删除图片
-                      </el-button>
-                    </el-row>
-                    <div
-                      v-for="(item, indexOp) in mix_show_analysis_image[index]"
-                      :key="indexOp"
-                    >
-                      <ImageViewer
-                        v-if="mix_show_analysis_image[index][indexOp]"
-                        style="margin-top:5px"
-                        :upload="upload"
-                        :data="
-                          mix_show_analysis_image[index][indexOp]
-                            ? mix_content[index].mixQuestion.analysis_images[
-                                indexOp
-                              ]
-                            : ''
-                        "
-                        @updateUpload="resetUpload()"
-                        @ImageBase64="
-                          saveBase64Analysis('mix', $event, index, indexOp)
-                        "
-                      ></ImageViewer>
-                    </div>
-                  </el-form-item>
+                      <el-input
+                        type="textarea"
+                        autosize
+                        v-model="mix_content[index].mixQuestion.answer_analysis"
+                        placeholder="解析"
+                      ></el-input>
+                      <i
+                        class="el-icon-circle-close"
+                        style="position: absolute;right:55px;top:18px;"
+                        @click="deleteAnswerAnalysis('mix', index)"
+                      ></i>
+                      <el-row type="flex" justify="end">
+                        <el-button
+                          type="info"
+                          size="mini"
+                          style="float: right;margin-top:10px;"
+                          round
+                          @click="showAnalysisImage('mix', index, true)"
+                          >增加图片
+                        </el-button>
+                        <el-button
+                          type="info"
+                          size="mini"
+                          v-if="mix_show_analysis_image[index].length > 0"
+                          style="float: right;margin-top:10px;"
+                          round
+                          @click="showAnalysisImage('mix', index, false)"
+                          >删除图片
+                        </el-button>
+                      </el-row>
+                      <div
+                        v-for="(item, indexOp) in mix_show_analysis_image[index]"
+                        :key="indexOp"
+                      >
+                        <ImageViewer
+                          v-if="mix_show_analysis_image[index][indexOp]"
+                          style="margin-top:5px"
+                          :upload="upload"
+                          :data="
+                            mix_show_analysis_image[index][indexOp]
+                              ? mix_content[index].mixQuestion.analysis_images[
+                                  indexOp
+                                ]
+                              : ''
+                          "
+                          @updateUpload="resetUpload()"
+                          @ImageBase64="
+                            saveBase64Analysis('mix', $event, index, indexOp)
+                          "
+                        ></ImageViewer>
+                      </div>
+                    </el-form-item>
+                  </div>
                 </li>
                 <div style="margin-top:5px;"></div>
                 <el-row type="flex" justify="end">
@@ -4167,7 +4233,11 @@ export default {
           label: "生物"
         }
       ],
-      default_subject: "math"
+      default_subject: "math",
+      option_collapse: [],
+      fill_collapse: [],
+      answer_collapse: [],
+      mix_collapse: []
     };
   },
   computed: {
@@ -4282,6 +4352,10 @@ export default {
             this.mix_show_option_image = [];
             this.option_view = [];
             this.fill_view = [];
+            this.option_collapse = [];
+            this.fill_collapse = [];
+            this.answer_collapse = [];
+            this.mix_collapse = [];
 
             const document = JSON.parse(e.target.result);
             this.paper_title = document["paper_title"];
@@ -4298,6 +4372,7 @@ export default {
                   this.option_show_option_image = [];
                   this.option_show_analysis_image = [];
                   for (let question of questions["questions"]) {
+                    this.option_collapse.push(false);
                     delete question.eno;
                     this.option_content.push({
                       optionQuestion: question
@@ -4344,6 +4419,7 @@ export default {
                   this.fill_show_image = [];
                   this.fill_show_analysis_image = [];
                   for (let question of questions["questions"]) {
+                    this.fill_collapse.push(false);
                     delete question.eno;
                     this.fill_content.push({
                       fillQuestion: question
@@ -4379,6 +4455,7 @@ export default {
                   this.answer_show_analysis_image = [];
                   this.answer_show_answer_image = [];
                   for (let question of questions["questions"]) {
+                    this.answer_collapse.push(false);
                     delete question.eno;
                     this.answer_content.push({
                       answerQuestion: question
@@ -4455,6 +4532,7 @@ export default {
                   this.mix_show_analysis_image = [];
                   this.mix_show_answer_image = [];
                   for (let question of questions["questions"]) {
+                    this.mix_collapse.push(false);
                     for (
                       var i = 0;
                       i < question.mix_sub_fill_questions.length;
@@ -4672,6 +4750,7 @@ export default {
       this.option_show_image.push([]);
       this.option_show_option_image.push([false, false, false, false]);
       this.option_show_analysis_image.push([]);
+      this.option_collapse.push(false);
     },
 
     // 添加填空题内容
@@ -4690,6 +4769,7 @@ export default {
       this.fill_show_image.push([]);
       this.fill_view.push(false);
       this.fill_show_analysis_image.push([]);
+      this.fill_collapse.push(false);
     },
 
     // 添加解答题内容
@@ -4719,6 +4799,7 @@ export default {
       this.answer_show_option_image.push([false]);
       this.answer_show_analysis_image.push([]);
       this.answer_show_answer_image.push([]);
+      this.answer_collapse.push(false);
     },
 
     // 添加非选择题内容
@@ -4756,6 +4837,7 @@ export default {
       this.mix_show_option_image.push([false]);
       this.mix_show_analysis_image.push([]);
       this.mix_show_answer_image.push([]);
+      this.mix_collapse.push(false);
     },
 
     mouseOver() {
@@ -4943,15 +5025,36 @@ export default {
     // 删除某种题型的某道小题
     deleteCard(index) {
       this.option_content.splice(index, 1);
+      this.option_collapse.splice(index, 1);
+      this.option_view.splice(index, 1);
+      this.option_show_image.splice(index, 1);
+      this.option_show_option_image.splice(index, 1);
+      this.option_show_analysis_image.splice(index, 1);
     },
     deleteFillCard(index) {
       this.fill_content.splice(index, 1);
+      this.fill_collapse.splice(index, 1);
+      this.fill_show_image.splice(index, 1);
+      this.fill_view.splice(index, 1);
+      this.fill_show_analysis_image.splice(index, 1);
     },
     deleteAnswerCard(index) {
       this.answer_content.splice(index, 1);
+      this.answer_collapse.splice(index, 1);
+      this.answer_view.splice(index, 1);
+      this.answer_show_image.splice(index, 1);
+      this.answer_show_option_image.splice(index, 1);
+      this.answer_show_analysis_image.splice(index, 1);
+      this.answer_show_answer_image.splice(index, 1);
     },
     deleteMixCard(index) {
       this.mix_content.splice(index, 1);
+      this.mix_collapse.splice(index, 1);
+      this.mix_view.splice(index, 1);
+      this.mix_show_image.splice(index, 1);
+      this.mix_show_option_image.splice(index, 1);
+      this.mix_show_analysis_image.splice(index, 1);
+      this.mix_show_answer_image.splice(index, 1);
     },
 
     // 清空所有题目内容
@@ -5686,6 +5789,10 @@ export default {
       this.option_show_analysis_image.splice(index, 1);
       this.option_show_analysis_image.splice(index - 1, 0, ana_img_boolean);
 
+      var col_boolean = this.option_collapse[index];
+      this.option_collapse.splice(index, 1);
+      this.option_collapse.splice(index - 1, 0, col_boolean);
+
     },
     option_movedown(index){
 
@@ -5707,6 +5814,10 @@ export default {
       this.option_show_analysis_image.splice(index, 1);
       this.option_show_analysis_image.splice(index + 1, 0, ana_img_boolean);
 
+      var col_boolean = this.option_collapse[index];
+      this.option_collapse.splice(index, 1);
+      this.option_collapse.splice(index + 1, 0, col_boolean);
+
     },
     fill_moveup(index){
 
@@ -5724,6 +5835,10 @@ export default {
       this.fill_show_analysis_image.splice(index, 1);
       this.fill_show_analysis_image.splice(index - 1, 0, ana_img_boolean);
 
+      var col_boolean = this.fill_collapse[index];
+      this.fill_collapse.splice(index, 1);
+      this.fill_collapse.splice(index - 1, 0, col_boolean);
+
     },
     fill_movedown(index){
 
@@ -5740,6 +5855,10 @@ export default {
       var ana_img_boolean = this.fill_show_analysis_image[index];
       this.fill_show_analysis_image.splice(index, 1);
       this.fill_show_analysis_image.splice(index + 1, 0, ana_img_boolean);
+
+      var col_boolean = this.fill_collapse[index];
+      this.fill_collapse.splice(index, 1);
+      this.fill_collapse.splice(index + 1, 0, col_boolean);
 
     },
     answer_moveup(index){
@@ -5766,6 +5885,10 @@ export default {
       this.answer_show_analysis_image.splice(index, 1);
       this.answer_show_analysis_image.splice(index - 1, 0, ana_img_boolean);
 
+      var col_boolean = this.answer_collapse[index];
+      this.answer_collapse.splice(index, 1);
+      this.answer_collapse.splice(index - 1, 0, col_boolean);
+
     },
     answer_movedown(index){
 
@@ -5791,6 +5914,10 @@ export default {
       this.answer_show_analysis_image.splice(index, 1);
       this.answer_show_analysis_image.splice(index + 1, 0, ana_img_boolean);
 
+      var col_boolean = this.answer_collapse[index];
+      this.answer_collapse.splice(index, 1);
+      this.answer_collapse.splice(index + 1, 0, col_boolean);
+
     },
     mix_moveup(index){
 
@@ -5815,6 +5942,10 @@ export default {
       this.mix_show_analysis_image.splice(index, 1);
       this.mix_show_analysis_image.splice(index - 1, 0, ana_img_boolean);
 
+      var col_boolean = this.mix_collapse[index];
+      this.mix_collapse.splice(index, 1);
+      this.mix_collapse.splice(index - 1, 0, col_boolean);
+
     },
     mix_movedown(index){
 
@@ -5838,6 +5969,10 @@ export default {
       var ana_img_boolean = this.mix_show_analysis_image[index];
       this.mix_show_analysis_image.splice(index, 1);
       this.mix_show_analysis_image.splice(index + 1, 0, ana_img_boolean);
+
+      var col_boolean = this.mix_collapse[index];
+      this.mix_collapse.splice(index, 1);
+      this.mix_collapse.splice(index + 1, 0, col_boolean);
 
     },
 
@@ -6215,6 +6350,38 @@ export default {
       this.mix_content[index].mixQuestion.mix_sub_image.splice(indexOp, 1);
       this.mix_content[index].mixQuestion.mix_sub_image.splice(indexOp + 1, 0, Answer_Img);
 
+    },
+
+    // 折叠选择小题
+
+    Collapse(index, val, type){
+      if(type == "option"){
+        this.option_collapse[index] = val;
+        this.single_choice();
+        this.deleteCard(this.option_content.length - 1);
+      }else if(type == "fill"){
+        this.fill_collapse[index] = val;
+        this.fill_in();
+        this.deleteFillCard(this.fill_content.length - 1);
+      }else if(type == "answer"){
+        this.answer_collapse[index] = val;
+        this.answer_question();
+        this.deleteAnswerCard(this.answer_content.length - 1);
+      }else if(type == "mix"){
+        this.mix_collapse[index] = val;
+        this.mix_question();
+        this.deleteMixCard(this.mix_content.length - 1);
+      }
+    },
+
+    // 更改缩写内容的显示
+    Get_Collapse_Content(str){
+      if(str.length < 20){
+        return str
+      }else{
+        var temp_str = str.substring(0, 20) + " ……";
+        return temp_str
+      }
     },
 
     // 展开复杂输入框的Dialog
