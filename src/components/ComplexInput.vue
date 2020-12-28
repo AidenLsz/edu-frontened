@@ -21,7 +21,16 @@ The line of README
 
 <template>
   <div>
-    <el-dialog width="80%" height="500px" :visible.sync="helper_dialog" title="快速公式助手" @close="Clear()" top="2vh" style="background: rgba(225,225,225,0.3); ">
+    <el-dialog 
+      width="80%" 
+      height="500px" 
+      :visible.sync="helper_dialog" 
+      title="快速公式助手" 
+      @close="Clear()" 
+      top="2vh" 
+      style="background: rgba(225,225,225,0.3); "
+      :modal-append-to-body="false"
+      :append-to-body="true">
       <el-container>
         <el-aside width="22%" height="500px" style="box-shadow: 0px 0px 2px 2px #ddd; background: rgba(196,219,183,0.4); padding-top: 10px">
           <el-row>
@@ -581,7 +590,7 @@ The line of README
                 <el-row>展示</el-row>
               </el-col>
               <el-col :span="8" v-if="temp_latex">
-                <Mathdown :content="temp_latex" :name = "show" style="border: 2px dashed black; height: 72px; margin-top: -10px"></Mathdown>
+                <Mathdown :content="temp_latex" name="show" style="border: 2px dashed black; height: 72px; margin-top: -10px"></Mathdown>
               </el-col>
               <el-col :span="8" v-else style="border: 2px dashed black; height: 72px; margin-top: -10px; padding-top: 24px">
                 <span>等待数据元素中...</span>
@@ -608,7 +617,7 @@ The line of README
                 <el-row>展示</el-row>
               </el-col>
               <el-col :span="8" v-if="temp_latex_total">
-                <Mathdown :content="temp_latex_total" :name = "total" style="border: 2px dashed red; height: 93px; margin-top: -18px"></Mathdown>
+                <Mathdown :content="temp_latex_total" name="total" style="border: 2px dashed red; height: 93px; margin-top: -18px"></Mathdown>
               </el-col>
               <el-col :span="8" v-else style="border: 2px dashed red; height: 93px; margin-top: -18px; padding-top: 33px">
                 <span>等待数据元素中...</span>
