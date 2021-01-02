@@ -1,11 +1,11 @@
 <template>
     <div>
         <!-- 题目分数及题干 -->
-        <el-row style="font-size: 18px; text-align: center; margin-bottom: 15px">
-            <el-col :span="4">
+        <el-row style="font-size: 14px; text-align: center; margin-bottom: 15px">
+            <el-col :span="2">
                 <span><label> ( {{ QI.score }}分 ) </label></span>
             </el-col>
-            <el-col :span="19" :offset="1">
+            <el-col :span="21" :offset="1">
                 <Mathdown name="OptionQuestions_Content" :content="QI.content"></Mathdown>
             </el-col>
         </el-row>

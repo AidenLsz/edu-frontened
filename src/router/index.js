@@ -11,7 +11,8 @@ import InputMarked from "@/components/InputMarked";
 import InputPaper from "@/components/InputPaper";
 import InputMarkedPreview from "@/components/InputMarkedPreview";
 import Register from "@/components/Register";
-import TestPage from "@/components/TestPage"
+import TestPage from "@/components/TestPage";
+import TestPageList from "@/components/TestPageList"
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
@@ -55,6 +56,11 @@ const router = new Router({
       path: "/TestPage",
       name: "TestPage",
       component: TestPage
+    },
+    {
+      path: "/TestPageList",
+      name: "TestPageList",
+      component: TestPageList
     },
     {
       path: "/inputPaper",

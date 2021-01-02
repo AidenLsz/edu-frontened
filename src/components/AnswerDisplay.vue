@@ -1,11 +1,11 @@
 <template>
     <div>
         <!-- 题目分数及题干 -->
-        <el-row style="font-size: 18px; text-align: center; margin-bottom: 15px">
-            <el-col :span="4">
+        <el-row style="font-size: 16px; text-align: center; margin-bottom: 6px">
+            <el-col :span="2">
                 <span><label> ( {{ QI.score }}分 ) </label></span>
             </el-col>
-            <el-col :span="19" :offset="1">
+            <el-col :span="21">
                 <Mathdown name="AnswerQuestions_Content" :content="QI.content"></Mathdown>
             </el-col>
         </el-row>
@@ -30,11 +30,11 @@
         </el-row>
         <!-- 小题内容及图片 -->
         <el-row v-for="index in QI.sub_questions.length" :key="index">
-            <el-row style="font-size: 18px; text-align: center; margin-bottom: 15px">
-                <el-col :span="4" :offset="2">
-                    <span><label> ( {{ QI.sub_questions_scores[index - 1] }}分 ) </label></span>
+            <el-row style="font-size: 14px; text-align: center; margin-bottom: 15px">
+                <el-col :span="3" :offset="1">
+                    <span><label> ( {{ QI.sub_questions_scores[index - 1] }}分 ){{index}}: </label></span>
                 </el-col>
-                <el-col :span="17" :offset="1">
+                <el-col :span="20" >
                     <Mathdown :name="'AnswerQuestions_Sub_Questions_' + index.toString()" :content="QI.sub_questions[index - 1]"></Mathdown>
                 </el-col>
             </el-row>
