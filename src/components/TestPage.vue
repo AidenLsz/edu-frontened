@@ -5,6 +5,7 @@
             :visible.sync="showDialog" 
             title="请编辑想要插入/修改的选择题内容" 
             width="65%" 
+            @close="Editor_Dialog_Close()"
             :modal-append-to-body="false"
             :close-on-click-modal="false"
         >
@@ -38,6 +39,7 @@
             :visible.sync="showDialog_Fill" 
             title="请编辑想要插入/修改的填空题内容" 
             width="65%" 
+            @close="Editor_Dialog_Close()"
             :modal-append-to-body="false"
             :close-on-click-modal="false"
         >
@@ -65,9 +67,43 @@
                 :QInfos.sync="Temp_FillQuestionInfo" 
             ></FillQuestions>
         </el-dialog>
+        <!-- 提供给解答题的编辑器 -->
+        <el-dialog 
+            :visible.sync="showDialog_Answer" 
+            title="请编辑想要插入/修改的解答题内容" 
+            width="65%" 
+            @close="Editor_Dialog_Close()"
+            :modal-append-to-body="false"
+            :close-on-click-modal="false"
+        >
+            <el-row>
+                <el-col v-if="complex_Input">
+                    <el-row>
+                        <label>复杂输入框，请在需要时自行复制至目标输入框</label>
+                    </el-row>
+                    <ComplexInput></ComplexInput>
+                    <el-row>
+                        <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
+                    </el-row>
+                </el-col>
+                <el-col v-if="!complex_Input">
+                    <el-row>
+                        <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <el-divider></el-divider>
+            <AnswerQuestions
+                @EditFinish="New_Questions" 
+                @ReEditFinish="ReEdit_Questions" 
+                :RE.sync="ReEditSwitch" 
+                :QInfos.sync="Temp_AnswerQuestionInfo" 
+            ></AnswerQuestions>
+        </el-dialog>
         <!-- 测试用按钮行 -->
         <el-button @click="showDialog = true">插入新选择题</el-button>
         <el-button @click="showDialog_Fill = true">插入新填空题</el-button>
+        <el-button @click="showDialog_Answer = true">插入新解答题</el-button>
         <el-divider></el-divider>
         <!-- 渲染区，要求所见即所得 -->
         <el-row v-for="(item, index) in Questions_List" :key="index">
@@ -112,7 +148,7 @@
                                 round 
                                 plain
                                 size="small"
-                                type="danger"
+                                type="info"
                                 @click="Change_Question_Collapse(index)"
                             >折叠</el-button>
                         </div>
@@ -121,13 +157,13 @@
                                 round 
                                 plain
                                 size="small"
-                                type="danger"
+                                type="info"
                                 @click="Change_Question_Collapse(index)"
                             >展开</el-button>
                         </div>
                     </el-col>
                 </el-row>
-                <!-- 展开模式交给Display来负责，折叠模式交给Mathdown直接全部渲染出来 -->
+                <!-- 展开模式交给Display来负责，折叠模式为了避免样式报错，直接转换成文字格式 -->
                 <div v-if="Questions_Collapse[index] == false">
                     <el-row style="text-align: left; font-size: 20px">
                         <label>第 {{index + 1}} 题</label>
@@ -136,14 +172,15 @@
                     <el-row>
                         <OptionDisplay v-if="item.type == 'option'" :QI="item"></OptionDisplay>
                         <FillDisplay v-else-if="item.type == 'fill'" :QI="item"></FillDisplay>
+                        <AnswerDisplay v-else-if="item.type == 'answer'" :QI="item"></AnswerDisplay>
                     </el-row>
                 </div>
                 <div v-if="Questions_Collapse[index]">
                     <el-row style="text-align: left; font-size: 20px">
-                        <el-col :span="4">
+                        <el-col :span="2">
                             <label>第 {{index + 1}} 题</label>
                         </el-col>
-                        <el-col :span="19" :offset="1">
+                        <el-col :span="21" :offset="1">
                             <label>{{Get_Collapse_Show(item)}}</label>
                         </el-col>
                     </el-row>
@@ -159,16 +196,22 @@ import FillQuestions from "./FillQuestions.vue"
 import ComplexInput from "./ComplexInput.vue"
 import OptionDisplay from "./OptionDisplay.vue";
 import FillDisplay from "./FillDisplay.vue";
+import AnswerQuestions from "./AnswerQuestions.vue";
+import AnswerDisplay from "./AnswerDisplay.vue";
 
 export default {
 
-    components: { OptionQuestions, ComplexInput, OptionDisplay, FillQuestions, FillDisplay},
+    components: { ComplexInput, 
+                  OptionQuestions, OptionDisplay, 
+                  FillQuestions, FillDisplay, 
+                  AnswerQuestions, AnswerDisplay},
     name: "TestPage",
     data(){
         return {
-            // 选择题编辑器和填空题编辑器的显示控制
+            // 选择题编辑器,填空题编辑器和解答题编辑器的显示控制
             showDialog: false,
             showDialog_Fill: false,
+            showDialog_Answer: false,
             // 打开复杂输入框的控制
             complex_Input: false,
             // 题目信息和折叠信息
@@ -212,6 +255,26 @@ export default {
                 analyse_images: []
 
             },
+            Temp_AnswerQuestionInfo: {
+
+                type: "answer",
+                // 分值
+                score: 1,
+                // 题目内容，题目内容图片，是否显示图片
+                content: "",
+                content_images: [],
+                // 小题的部分
+                sub_questions: [""],
+                sub_questions_images: [[]],
+                sub_questions_scores: [1],
+                // 答案的部分
+                answer: "",
+                answer_images: [],
+                // 解析的部分
+                analyse: "",
+                analyse_images: []
+
+            },
             // 临时保存重写编辑的位置用的记号
             Index_Edit_Record: -1
         }
@@ -223,6 +286,7 @@ export default {
         New_Questions(val){
 
             this.Questions_List.push(val);
+            console.log(this.Questions_List);
             this.Questions_Collapse.push(false);
             this.Close_Editor();
             this.Reset_Params();
@@ -243,15 +307,25 @@ export default {
             }else if(this.Questions_List[index].type == 'fill'){
                 this.showDialog_Fill = true;
                 this.Temp_FillQuestionInfo = this.Questions_List[index];
+            }else if(this.Questions_List[index].type == 'answer'){
+                this.showDialog_Answer = true;
+                this.Temp_AnswerQuestionInfo = this.Questions_List[index];
             }
             this.ReEditSwitch = true;
             this.Index_Edit_Record = index;
 
         },
+        Editor_Dialog_Close(){
+
+            this.Close_Editor();
+            this.Reset_Params();
+
+        },
         // 重写编辑后，把新数据直接覆盖上去
         ReEdit_Questions(val){
 
-            this.Questions_List.splice( this.Index_Edit_Record, 1, val);
+            this.Questions_List.splice(this.Index_Edit_Record, 1, val);
+
             this.Close_Editor();
             this.Reset_Params();
             
@@ -261,6 +335,7 @@ export default {
 
             this.showDialog = false;
             this.showDialog_Fill = false;
+            this.showDialog_Answer = false;
 
         },
         // 移动题目位置
@@ -321,6 +396,27 @@ export default {
                 // 题目内容，题目内容图片，是否显示图片
                 content: "",
                 content_images: [],
+                // 答案的部分
+                answer: "",
+                answer_images: [],
+                // 解析的部分
+                analyse: "",
+                analyse_images: []
+
+            }
+
+            this.Temp_AnswerQuestionInfo = {
+
+                type: "answer",
+                // 分值
+                score: 1,
+                // 题目内容，题目内容图片，是否显示图片
+                content: "",
+                content_images: [],
+                // 小题的部分
+                sub_questions: [""],
+                sub_questions_images: [[]],
+                sub_questions_scores: [1],
                 // 答案的部分
                 answer: "",
                 answer_images: [],
