@@ -23,31 +23,38 @@
                           API<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item>
-                            <router-link to="/ku" :underline="false"
-                              >知识单元检索</router-link
-                            >
-                          </el-dropdown-item>
-                          <el-dropdown-item>
-                            <router-link to="/exercise" :underline="false"
-                              >试题检索</router-link
-                            >
-                          </el-dropdown-item>
-                          <el-dropdown-item>
-                            <router-link to="/estimate" :underline="false"
-                              >试题属性预估</router-link
-                            >
-                          </el-dropdown-item>
-                          <el-dropdown-item>
-                            <router-link to="/similarity" :underline="false"
-                              >相似题预估</router-link
-                            >
-                          </el-dropdown-item>
-                          <el-dropdown-item>
-                            <router-link to="/inputMarked" :underline="false"
-                              >试题录入</router-link
-                            >
-                          </el-dropdown-item>
+                          
+                          <router-link to="/ku" :underline="false">
+                            <el-dropdown-item>
+                              知识单元检索
+                            </el-dropdown-item>
+                          </router-link>
+                          
+                          <router-link to="/exercise" :underline="false">
+                            <el-dropdown-item>
+                              试题检索
+                            </el-dropdown-item>
+                          </router-link>
+                          
+                          <router-link to="/estimate" :underline="false">
+                            <el-dropdown-item>
+                              试题属性预估
+                            </el-dropdown-item>
+                          </router-link>
+                          
+                          <router-link to="/similarity" :underline="false">
+                            <el-dropdown-item>
+                              相似题预估
+                            </el-dropdown-item>
+                          </router-link>
+                          
+                          
+                          <router-link to="/inputMarked" :underline="false">
+                            <el-dropdown-item>
+                              试题录入
+                            </el-dropdown-item>
+                          </router-link>
+                          
                         </el-dropdown-menu>
                       </el-dropdown>
                       <!--实现下拉菜单-->
@@ -89,44 +96,34 @@
     <router-view></router-view>
     <!-- footer -->
     <footer>
-      <div class="footer-wrap theme-bg">
-        <div class="container">
-          <div class="row justify-content-between">
-            <div class="col-lg-4">
-              <div class="footer-widget">
-                <div class="footer-trext">
-                  <p>Copyright © 大数据分析与应用安徽省重点实验室</p>
-                </div>
-                <div class="footer-contact">
-                  <ul>
-                    <li>
-                      <i class="el-icon-phone"></i>
-                      <span>0551-63601558</span>
-                    </li>
-                    <li>
-                      <i class="el-icon-location"></i>
-                      <span>安徽省合肥市</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="footer-widget">
-                <div class="footer-trext">
-                  <p>友情链接</p>
-                </div>
-                <div class="fw-link">
-                  <ul>
-                    <li><a href="#">中国科学技术大学</a></li>
-                    <li><a href="#">科大讯飞</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <el-row class="footer-wrap theme-bg" style="color: white; padding: 30px; font-size: 16px">
+        <el-col :span="12">
+          <el-row>
+            <span>Copyright © 大数据分析与应用安徽省重点实验室</span>
+          </el-row>
+          <br/>
+          <el-row>
+            <span><i class="el-icon-phone" style="margin-right: 15px"></i>0551-63601558</span>
+          </el-row>
+          <br/>
+          <el-row >
+            <span><i class="el-icon-location" style="margin-right: 15px"></i>安徽省合肥市</span>
+          </el-row>
+        </el-col>
+        <el-col :span="12">
+          <el-row>
+            <span>友情链接</span>
+          </el-row>
+          <br/>
+          <el-row>
+            <span><label><el-link style="color: white" :underline="false" href="https://www.ustc.edu.cn/" target="_blank">中国科学技术大学</el-link></label></span>
+          </el-row>
+          <br/>
+          <el-row>
+            <span><label><el-link style="color: white" :underline="false" href="https://www.iflytek.com/index.html" target="_blank">科大讯飞</el-link></label></span>
+          </el-row>
+        </el-col>
+      </el-row>
     </footer>
     <!-- footer-end -->
   </div>
@@ -272,7 +269,8 @@ export default {
 }
 /* footer */
 .theme-bg {
-  background: #1a2930;
+  // background: #1a2930;
+  background: black;
 }
 .footer-trext p {
   color: #fff;
