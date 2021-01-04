@@ -2,43 +2,27 @@
   <!--todo: polish the format-->
   <div class="home">
     <section class="slider-area slider-bg" >
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-10">
-            <div class="slider-content text-center">
-              <h2 class="wow fadeInUp">BASE-KG</h2>
-              <h1 style="color: #fff; margin-top:20px;">教育知识图谱</h1>
-            </div>
-            <div class="search-area">
-              <form @submit.prevent="submit" style="margin-top: 20px;">
-
-                <el-row type="flex" class="row-bg" justify="center" v-if="!complex_input_flag">
-                  <el-col :span="23">
-                    <el-input
-                      v-model="ku_name"
-                      placeholder="三角函数"
-                    ></el-input>
-                  </el-col>
-                  <el-button @click="Open_CI()">切换多格式输入</el-button>
-                  <el-button type="submit" value="提交" @click="submit"
-                    >检索</el-button
-                  >
-                </el-row>
-
-                <el-row type="flex" class="row-bg" justify="center" v-if="complex_input_flag">
-                  <el-col :span="23">
-                    <ComplexInput @Update_CI="UCI" @Update_Image="UCII" ref="CI"></ComplexInput>
-                  </el-col>
-                  <el-button @click="Close_CI()">切换简单输入</el-button>
-                  <el-button type="submit" value="提交" @click="submit"
-                    >检索</el-button
-                  >
-                </el-row>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+      <el-row  class="slider-content text-center">
+        <el-col>
+          <h2 class="wow fadeInUp">BASE-KG</h2>
+        </el-col>
+        <el-col>
+          <h1 style="color: #fff; margin-top:20px;">教育知识图谱</h1>
+        </el-col>
+      </el-row>
+      <el-row type="flex" class="row-bg" justify="center" style="margin-top: 50px">
+        <el-col :span="13">
+          <el-input
+            v-model="ku_name"
+            placeholder="三角函数"
+          ></el-input>
+        </el-col>
+        <el-col :span="1" :offset="1">
+          <el-button type="submit" value="提交" @click="submit"
+            ><i class="el-icon-search" style="margin-right: 15px"></i>检索</el-button
+          >
+        </el-col>
+      </el-row>
     </section>
     <section class="link-area">
       <!-- 试题检索卡片跳转 -->
@@ -46,10 +30,10 @@
         <h2>KNOWLEDGE GRAPHS</h2>
       </el-row>
       <el-row>
-        <el-col :span="10" :offset="1">
+        <el-col :span="6" :offset="1">
           <el-card class="link-card" shadow="hover">
-            <p>
-              <span class="card_title">BDAA知识点搜索引擎</span><br />
+            <p style="height: 100px">
+              <span class="card_title">BDAA知识点搜索引擎</span><br /><br /><br />
               BDAA知识点搜索引擎致力于让用户更便捷、全面地获取知识点信息。可以瞬间找到相关知识点的描述内容和关联信息。
             </p>
             <router-link to="/ku">
@@ -57,14 +41,61 @@
             </router-link>
           </el-card>
         </el-col>
-        <el-col :span="10" :offset="2">
+        <el-col :span="6" :offset="2">
           <el-card class="link-card" shadow="hover">
-            <p>
-              <span class="card_title">试题属性标注（如难度、考察知识点）</span
-              ><br />试题属性标注（如难度、考察知识点）是众多试题相关任务如试卷的组卷、学生答题记录的分析等的基础。一直以来是教育领域专家的关注点，也是众多教育领域人工智能技术的重要数据支撑。以往试题属性只能通过命题专家凭借积累的经验对试题的属性进行手动标注，但难以有效地对试题在语义以及更深的层面进行理解与属性判断，特别是很难应对大批量的试题标注任务。为有效解决这一问题，我们提供了一套基于人工智能技术的试题属性自动标注API，可以对试题进行自动难度预估、考察知识点识别等功能。
+            <p style="height: 220px">
+              <span class="card_title">试题检索</span><br /><br /><br />
+              试题检索功能文字说明。
             </p>
             <router-link to="/exercise">
               <el-button round style="margin-top: 30px;">立即体验</el-button>
+            </router-link>
+          </el-card>
+        </el-col>
+        <el-col :span="6" :offset="2">
+          <el-card class="link-card" shadow="hover">
+            <p style="height: 220px">
+              <span class="card_title">试题属性预估（如难度、考察知识点）</span><br /><br /><br />
+              试题属性预估（如难度、考察知识点）是众多试题相关任务如试卷的组卷、学生答题记录的分析等的基础。一直以来是教育领域专家的关注点，也是众多教育领域人工智能技术的重要数据支撑。BDAA为您提供一套基于人工智能技术的试题属性自动标注API，可以对试题进行自动难度预估、考察知识点识别等功能。
+            </p>
+            <router-link to="/estimate">
+              <el-button round style="margin-top: 30px;">立即体验</el-button>
+            </router-link>
+          </el-card>
+        </el-col>
+      </el-row>
+      <br/><br/>
+      <el-row>
+        <el-col :span="6" :offset="1">
+          <el-card class="link-card" shadow="hover">
+            <p style="height: 100px">
+              <span class="card_title">试题相似度预估</span><br /><br /><br />
+              试题相似度预估文字说明。
+            </p>
+            <router-link to="/similarity">
+              <el-button round style="margin-top: 150px;">立即体验</el-button>
+            </router-link>
+          </el-card>
+        </el-col>
+        <el-col :span="6" :offset="2">
+          <el-card class="link-card" shadow="hover">
+            <p style="height: 220px">
+              <span class="card_title">试题录入</span><br /><br /><br />
+              试题录入功能文字说明。
+            </p>
+            <router-link to="/inputMarked">
+              <el-button round style="margin-top: 30px;">立即体验</el-button>
+            </router-link>
+          </el-card>
+        </el-col>
+        <el-col :span="6" :offset="2">
+          <el-card class="link-card" shadow="hover">
+            <p style="height: 220px">
+              <span class="card_title">测试页面</span><br /><br /><br />
+              观察测试功能用页面的访问路径，正式上线会去除并将其他五个转化为五环样式的交替排列。
+            </p>
+            <router-link to="/TestPageList">
+              <el-button type="warning" round style="margin-top: 30px;">立即体验</el-button>
             </router-link>
           </el-card>
         </el-col>
@@ -98,39 +129,34 @@
     </section>
     <!-- cta-area -->
     <section class="cta-area wow fadeInUp" data-wow-delay=".4s">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-xl-9 col-lg-9">
-            <div class="section-title text-center">
-              <h2>关于我们</h2>
-            </div>
-            <div class="cta-content text-center">
-              <p>
-                大数据分析与应用安徽省重点实验室（Anhui Province Key Laboratory
-                of Big Data Analysis and
-                Application），学科领域为电子信息，由中国科学技术大学、科大讯飞股份有限公司（以下简称科
-                大讯飞公司）和安徽广电传媒产业集团有限责任公司（以下简称安徽广电集团）三方共建。
-                其中，作为依
-                托单位的中国科学技术大学，是我省乃至我国大数据分析与应用方向的优势研究单位；同时，作为共建单
-                位的科大讯飞公司和安徽广电集团，不仅拥有规模庞大的大数据云平台以及优质数据资源，而且具有丰富
-                的大数据技术产业化经验；更为重要的是，经过多年的合作，共建三方已经形成了强强联合、优势互补的
-                稳定合作局面，围绕大数据分析与应用方向，建立了大数据产学研合作平台，在科研平台、产业平台和数
-                据平台三个方面都拥有良好的科研和产业环境。
-              </p>
-              <!-- <a href="#" class="btn ">了解更多</a> -->
-            </div>
-          </div>
-        </div>
-      </div>
+      <el-row>
+        <label><h2>关于我们</h2></label>
+      </el-row>
+      <br/><br/>
+      <el-row>
+        <el-col :span="18" :offset="3">
+          <span style="font-size: 16px">
+          大数据分析与应用安徽省重点实验室（Anhui Province Key Laboratory of Big Data Analysis and
+           Application），学科领域为电子信息，由中国科学技术大学、科大讯飞股份有限公司（以下简称科大讯
+          飞公司）和安徽广电传媒产业集团有限责任公司（以下简称安徽广电集团）三方共建。其中，作为依
+          托单位的中国科学技术大学，是我省乃至我国大数据分析与应用方向的优势研究单位；同时，作为共建单
+          位的科大讯飞公司和安徽广电集团，不仅拥有规模庞大的大数据云平台以及优质数据资源，而且具有丰富
+          的大数据技术产业化经验；更为重要的是，经过多年的合作，共建三方已经形成了强强联合、优势互补的
+          稳定合作局面，围绕大数据分析与应用方向，建立了大数据产学研合作平台，在科研平台、产业平台和数
+          据平台三个方面都拥有良好的科研和产业环境。
+          </span>
+        </el-col>
+      </el-row>
     </section>
     <!-- cta-area-end -->
   </div>
 </template>
 <script>
+
 import $ from "jquery";
-import ComplexInput from "./ComplexInput.vue";
+
 export default {
-  components: {ComplexInput},
+  components: { },
   name: "Home",
   data() {
     return {
@@ -155,23 +181,6 @@ export default {
         params: { name: this.ku_name }
       });
     },
-    // Update Complex Input，将组合输入的内容复制到当前搜索框应该具有的内容里
-    UCI(val){
-      this.ku_name = val;
-    },
-    // Update Complex Input Image，将组合输入的内容的图片部分复制到当前页面的内容里，如果后续又要用到则进行调用
-    UCII(val){
-      this.image_infos = val;
-    },
-    // 打开组合输入的组件，并将当前存放的ku_name属性赋予组件，实现切换时的无缝效果，由于content发生改变时会自动
-    // 将内容返回给this.ku_name，所以关闭组合输入时无需考虑这一点
-    Open_CI(){
-      this.complex_input_flag = true;
-      setTimeout(()=>{this.$refs.CI.content = this.ku_name}, 10);
-    },
-    Close_CI(){
-      this.complex_input_flag = false;
-    }
   }
 };
 </script>

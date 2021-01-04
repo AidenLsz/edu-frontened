@@ -3,7 +3,7 @@
     <div class="panel">
       <el-row>
         <el-col :span="4">
-          <el-select v-model="subject_id" placeholder="选择学科">
+          <el-select v-model="subject_id" placeholder="请先在此选择学科">
             <el-option
               v-for="subject in options"
               :key="subject.value_id"
@@ -14,7 +14,7 @@
           </el-select>
         </el-col>
         <el-col :span="4" :offset="1">
-          <el-select v-model="type_id" placeholder="选择题型">
+          <el-select v-model="type_id" placeholder="选择学科后选择题型" :disabled="subject_id == ''">
             <el-option
               v-for="type in type_options"
               :key="type.value_id"
@@ -23,6 +23,14 @@
             >
             </el-option>
           </el-select>
+        </el-col>
+        <el-col :span="2" :offset="1">
+          <el-button type="submit" value="提交" @click="submit" :disabled="Estimate_Check()"
+              >评估
+            </el-button>
+        </el-col>
+        <el-col :span="10" style="font-size: 16px; color: grey; padding-top:6px">
+          <span>*选择学科、类别，并填写题目后方可提交*</span>
         </el-col>
       </el-row>
       <el-row type="flex" justify="start">
@@ -35,59 +43,11 @@
             <el-checkbox label="知识点"></el-checkbox>
           </el-checkbox-group>
         </el-col>
-        <el-button type="submit" value="提交" @click="submit" :disabled="Estimate_Check()"
-              >评估
-            </el-button>
+        
       </el-row>
       <el-row>
         <ComplexInput @Update_CI="UCI" @Update_Image="UCII"></ComplexInput>
       </el-row>
-      <!-- <el-row>
-        <el-col :span="11">
-          <div class="input_content">
-            <form @submit.prevent="submit" style="margin-top: 20px;">
-              <el-row type="flex" class="row-bg" justify="center">
-                <el-input
-                  type="textarea"
-                  :rows="8"
-                  v-model="content"
-                  placeholder="请输入内容"
-                >
-                </el-input>
-              </el-row>
-              <el-row>
-                <el-col :span="6">
-                  <UploadImg
-                    :src="src"
-                    :filelists="filelists"
-                    @uploadImg="imgInfo"
-                  ></UploadImg>
-                </el-col>
-              </el-row>
-            </form>
-          </div>
-        </el-col>
-        <el-col :span="11" :offset="2">
-          <el-row>
-            <div class="format_content">
-              <Mathdown :content="content"></Mathdown>
-              <div
-                class="img-list-item"
-                v-for="(item, index) in src"
-                :key="index"
-              >
-                <img :src="item" class="common" />
-                <i class="del-img" @click="forkImage(index)"></i>
-              </div>
-            </div>
-          </el-row>
-          <el-row type="flex" justify="end">
-            <el-button type="submit" value="提交" @click="submit" :disabled="Estimate_Check()"
-              >评估
-            </el-button>
-          </el-row>
-        </el-col>
-      </el-row> -->
       <el-divider></el-divider>
       <el-row v-loading="loading">
         <el-row type="flex" justify="start">
