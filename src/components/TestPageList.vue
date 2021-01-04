@@ -2,6 +2,20 @@
 
 <template>
     <div>
+        <!-- 提供给非选择题的编辑器 -->
+        <el-dialog 
+            :visible.sync="showDialog_Mix" 
+            title="请编辑想要插入/修改的非选择题内容" 
+            width="65%"
+            :modal-append-to-body="false"
+            :close-on-click-modal="false">
+            <MixQuestions
+                @EditFinish="New_Questions" 
+                @ReEditFinish="ReEdit_Questions"
+                :RE.sync="ReEditSwitch"
+                :QInfos.sync="Temp_MixQuestionInfo"
+            ></MixQuestions>
+        </el-dialog>
         <!-- 提供给选择题的编辑器 -->
         <el-dialog 
             :visible.sync="showDialog" 
@@ -114,90 +128,10 @@
                 <el-row><el-button @click="Add_Question_List('option')">添加选择题大题</el-button></el-row>
                 <el-row><el-button @click="Add_Question_List('fill')">添加填空题大题</el-button></el-row>
                 <el-row><el-button @click="Add_Question_List('answer')">添加解答题大题</el-button></el-row>
+                <el-row><el-button @click="Add_Question_List('mix')">添加非解答题大题</el-button></el-row>
             </el-col>
             
             <el-col :span="16">
-                <!-- <el-row v-for="(item, index) in Questions_List" :key="index">
-                    <el-col>
-                        编辑题目，上移，下移，删除，折叠/展开按钮
-                        <el-row style="margin-top: 5px; margin-bottom: 10px">
-                            <el-col :span="2">
-                                <el-button 
-                                    circle 
-                                    size="small"
-                                    @click="Edit_Question(index)"
-                                ><i class="el-icon-edit"></i></el-button>
-                            </el-col>
-                            <el-col :span="1">
-                                <el-button 
-                                    :disabled="index == 0" 
-                                    circle 
-                                    size="small"
-                                    @click="Question_Up(index)"
-                                ><i class="el-icon-arrow-up"></i></el-button>
-                            </el-col>
-                            <el-col :span="1">
-                                <el-button 
-                                    :disabled="index == Questions_List.length - 1" 
-                                    circle 
-                                    size="small"
-                                    @click="Question_Down(index)"
-                                ><i class="el-icon-arrow-down"></i></el-button>
-                            </el-col>
-                            <el-col :span="2">
-                                <el-button 
-                                    circle 
-                                    plain
-                                    size="small"
-                                    type="danger"
-                                    @click="Delete_Question(index)"
-                                ><i class="el-icon-delete"></i></el-button>
-                            </el-col>
-                            <el-col :span="2" >
-                                <div v-if="Questions_Collapse[index] == false">
-                                    <el-button 
-                                        round 
-                                        plain
-                                        size="small"
-                                        type="info"
-                                        @click="Change_Question_Collapse(index)"
-                                    >折叠</el-button>
-                                </div>
-                                <div v-if="Questions_Collapse[index] == true">
-                                    <el-button 
-                                        round 
-                                        plain
-                                        size="small"
-                                        type="info"
-                                        @click="Change_Question_Collapse(index)"
-                                    >展开</el-button>
-                                </div>
-                            </el-col>
-                        </el-row>
-                        展开模式交给Display来负责，折叠模式为了避免样式报错，直接转换成文字格式
-                        <div v-if="Questions_Collapse[index] == false">
-                            <el-row style="text-align: left; font-size: 20px">
-                                <label>第 {{index + 1}} 题</label>
-                            </el-row>
-                            <br/>
-                            <el-row>
-                                <OptionDisplay v-if="item.type == 'option'" :QI="item"></OptionDisplay>
-                                <FillDisplay v-else-if="item.type == 'fill'" :QI="item"></FillDisplay>
-                                <AnswerDisplay v-else-if="item.type == 'answer'" :QI="item"></AnswerDisplay>
-                            </el-row>
-                        </div>
-                        <div v-if="Questions_Collapse[index]">
-                            <el-row style="text-align: left; font-size: 20px">
-                                <el-col :span="2">
-                                    <label>第 {{index + 1}} 题</label>
-                                </el-col>
-                                <el-col :span="21" :offset="1">
-                                    <label>{{Get_Collapse_Show(item)}}</label>
-                                </el-col>
-                            </el-row>
-                        </div>
-                    </el-col>
-                </el-row> -->
                 <el-row v-for="(Question_Bundle, Bundle_Index) in Questions" :key="Bundle_Index">
                     <!-- 第一行：大题编号，添加新的小题，题目类型，上移，下移，删除，题目说明 -->
                     <el-row >
@@ -214,10 +148,10 @@
                         </el-col>
                         <el-col :span="2" style="padding-top: 5px">
                             <el-button-group>
-                                <el-button circle plain size="small" type="message" @click="Bundle_Up(Bundle_Index)">
+                                <el-button circle plain size="small" type="message" @click="Bundle_Up(Bundle_Index)" :disabled="Bundle_Index == 0">
                                     <i class="el-icon-arrow-up"></i>
                                 </el-button>
-                                <el-button circle plain size="small" type="message" @click="Bundle_Down(Bundle_Index)">
+                                <el-button circle plain size="small" type="message" @click="Bundle_Down(Bundle_Index)" :disabled="Bundle_Index == Questions.length - 1">
                                     <i class="el-icon-arrow-down"></i>
                                 </el-button>
                             </el-button-group>
@@ -298,6 +232,7 @@
                                     <OptionDisplay v-if="Question.type == 'option'" :QI="Question"></OptionDisplay>
                                     <FillDisplay v-else-if="Question.type == 'fill'" :QI="Question"></FillDisplay>
                                     <AnswerDisplay v-else-if="Question.type == 'answer'" :QI="Question"></AnswerDisplay>
+                                    <MixDisplay v-else-if="Question.type == 'mix'" :QI="Question"></MixDisplay>
                                 </el-row>
                             </div>
                             <div v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index]">
@@ -323,19 +258,22 @@ import AnswerQuestions from "./AnswerQuestions.vue";
 import OptionDisplay from "./OptionDisplay.vue";
 import FillDisplay from "./FillDisplay.vue";
 import AnswerDisplay from "./AnswerDisplay.vue";
+import MixQuestions from "./MixQuestions.vue";
+import MixDisplay from "./MixDisplay.vue";
 
 export default {
 
     components: { ComplexInput,
-                  OptionQuestions, FillQuestions, AnswerQuestions,
-                  OptionDisplay, FillDisplay, AnswerDisplay},
-    name: "TestPage",
+                  OptionQuestions, FillQuestions, AnswerQuestions, MixQuestions,
+                  OptionDisplay, FillDisplay, AnswerDisplay, MixDisplay},
+    name: "TestPageList",
     data(){
         return {
             // 选择题编辑器,填空题编辑器和解答题编辑器的显示控制
             showDialog: false,
             showDialog_Fill: false,
             showDialog_Answer: false,
+            showDialog_Mix: false,
             // 打开复杂输入框的控制
             complex_Input: false,
             // 题目信息和折叠信息
@@ -399,6 +337,18 @@ export default {
                 analyse_images: []
 
             },
+            Temp_MixQuestionInfo: {
+                type: "mix",
+                score: "None",
+                content: "",
+                content_images: [],
+                answer: "",
+                answer_images: [],
+                sub_questions: [],
+                sub_questions_collapse: [],
+                analyse: "",
+                analyse_images: [],
+            },
             // 临时保存重写编辑的位置用的记号
             Index_Edit_Record: -1,
 
@@ -416,6 +366,7 @@ export default {
         New_Questions(val){
 
             this.Questions[this.Question_Bundle_Add_Index].Bundle_Questions.push(val);
+            console.log(val);
             this.Questions[this.Question_Bundle_Add_Index].Bundle_Questions_Collapse.push(false);
 
             this.Question_Bundle_Add_Index = -1;
@@ -443,6 +394,9 @@ export default {
             }else if(this.Questions[Bundle_Index].Bundle_Questions[Question_Index].type == 'answer'){
                 this.showDialog_Answer = true;
                 this.Temp_AnswerQuestionInfo = this.Questions[Bundle_Index].Bundle_Questions[Question_Index];
+            }else if(this.Questions[Bundle_Index].Bundle_Questions[Question_Index].type == 'mix'){
+                this.showDialog_Mix = true;
+                this.Temp_MixQuestionInfo = this.Questions[Bundle_Index].Bundle_Questions[Question_Index];
             }
 
             this.ReEditSwitch = true;
@@ -471,6 +425,7 @@ export default {
             this.showDialog = false;
             this.showDialog_Fill = false;
             this.showDialog_Answer = false;
+            this.showDialog_Mix = false;
 
         },
         // 处理完题目的录入之后要重置这些临时使用的变量
@@ -536,6 +491,19 @@ export default {
                 analyse: "",
                 analyse_images: []
 
+            }
+
+            this.Temp_MixQuestionInfo = {
+                type: "mix",
+                score: "None",
+                content: "",
+                content_images: [],
+                answer: "",
+                answer_images: [],
+                sub_questions: [],
+                sub_questions_collapse: [],
+                analyse: "",
+                analyse_images: [],
             }
 
         },
@@ -652,7 +620,7 @@ export default {
             }else if(Bundle.Bundle_Type == 'answer'){
                 Result = "解答题";
             }else if(Bundle.Bundle_Type == 'mix'){
-                Result = "组合题";
+                Result = "非解答题";
             }
 
             return Result
@@ -669,6 +637,8 @@ export default {
                 this.showDialog_Fill = true;
             }else if(Question_Bundle.Bundle_Type == 'answer'){
                 this.showDialog_Answer = true;
+            }else if(Question_Bundle.Bundle_Type == 'mix'){
+                this.showDialog_Mix = true;
             }
 
         }
