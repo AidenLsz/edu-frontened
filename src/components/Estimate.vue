@@ -1,7 +1,15 @@
 <template>
   <div class="estimate">
     <div class="panel">
-      <el-row>
+      <el-row justify="start" type="flex">
+        <el-col>
+          <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>试题属性预估</el-breadcrumb-item>
+          </el-breadcrumb>
+        </el-col>
+      </el-row>
+      <el-row style="padding-top: 4vh;">
         <el-col :span="4">
           <el-select v-model="subject_id" placeholder="请先在此选择学科">
             <el-option
@@ -25,7 +33,7 @@
           </el-select>
         </el-col>
         <el-col :span="2" :offset="1">
-          <el-button type="submit" value="提交" @click="submit" :disabled="Estimate_Check()"
+          <el-button type="primary" value="提交" @click="submit" :disabled="Estimate_Check()"
               >评估
             </el-button>
         </el-col>
@@ -33,7 +41,7 @@
           <span>*选择学科、类别，并填写题目后方可提交*</span>
         </el-col>
       </el-row>
-      <el-row type="flex" justify="start">
+      <el-row type="flex" justify="start" style="padding-top: 3vh">
         <el-col :span="2.5">
           <span>预测属性勾选：</span>
         </el-col>
@@ -43,9 +51,8 @@
             <el-checkbox label="知识点"></el-checkbox>
           </el-checkbox-group>
         </el-col>
-        
       </el-row>
-      <el-row>
+      <el-row style="padding-top: 2vh" type="flex" justify="start" >
         <ComplexInput @Update_CI="UCI" @Update_Image="UCII"></ComplexInput>
       </el-row>
       <el-divider></el-divider>
@@ -62,7 +69,7 @@
                   <span>难度</span>
                 </div>
                 <div style="text-align:left;">
-                  <el-tag effect="plain" style="border: hidden">{{ difficulty_result }}</el-tag>
+                  <el-tag effect="plain" style="border: hidden; background: #F8FBFF">{{ difficulty_result }}</el-tag>
                 </div>
               </el-card>
             </el-col>
@@ -77,13 +84,13 @@
                   <span v-if="subject_id != 'math'">知识点</span>
                 </div>
                 <div style="text-align:left;" v-if="subject_id == 'math'">
-                  <el-tag v-for="(item, index) in kp_result" :key="index" effect="plain" class="kp_tag">
+                  <el-tag style="background: #F8FBFF" v-for="(item, index) in kp_result" :key="index" effect="plain" class="kp_tag">
                     <el-badge :hidden="kp_priority.indexOf(item) == -1" :value="kp_priority.indexOf(item) + 1" class="kp_badge">
                       {{ item }}
                     </el-badge>
                   </el-tag>
                 </div>
-                <div style="text-align:left;" v-if="subject_id != 'math'">
+                <div style="text-align:left; background: #F8FBFF" v-if="subject_id != 'math'">
                   <el-tag class="kp_tag" effect="plain">暂不支持数学题目以外的知识点查询</el-tag>
 
                 </div>
@@ -98,8 +105,8 @@
                 <div slot="header" style="text-align:left;">
                   <span>知识树状结构</span>
                 </div>
-                <el-tree :data="kp_layer" :props="defaultProps" v-if="subject_id == 'math'"></el-tree>
-                <el-tag class="kp_tag" effect="plain" v-if="subject_id != 'math'">暂不支持数学题目以外的知识点结构查询</el-tag>
+                <el-tree style="background: #F8FBFF" :data="kp_layer" :props="defaultProps" v-if="subject_id == 'math'"></el-tree>
+                <el-tag  style="background: #F8FBFF" class="kp_tag" effect="plain" v-if="subject_id != 'math'">暂不支持数学题目以外的知识点结构查询</el-tag>
 
               </el-card>
             </el-col>
@@ -285,15 +292,18 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.el-card{
+  background-color: #F8FBFF;
+}
 .estimate {
-  background: url("../assets/sub_bg.png");
+  // background: url("../assets/sub_bg.png");
   background-size: 100%;
-  padding: 20px 20px 0px 20px;
+  // padding: 20px 20px 0px 20px;
 }
 .panel {
   background-color: #fff;
-  border: 1px solid #fff;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
   border-radius: 4px;
   padding-left: 5%;
   padding-right: 5%;
@@ -337,7 +347,7 @@ export default {
 </style>
 
 <style scoped type="text/css">
-.el-button {
+/* .el-button {
   background-color: #1a2930;
   color: #fff;
   border-color: #1a2930;
@@ -352,6 +362,12 @@ export default {
   background-color: #008080;
   color: #fff;
   border-color: #fff;
+} */
+.el-divider--horizontal{
+  display:block;
+  height:3px;
+  width:100%;
+  margin:8vh 0
 }
 </style>
 

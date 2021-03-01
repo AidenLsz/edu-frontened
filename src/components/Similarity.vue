@@ -1,10 +1,16 @@
 <template>
   <div class="similarity">
     <div class="panel">
-      <el-row type="flex" justify="start">
-        <el-button type="submit" value="提交" @click="submit">评估</el-button>
+      <el-row justify="start" type="flex">
+        <el-col>
+          <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>相似试题评估</el-breadcrumb-item>
+          </el-breadcrumb>
+        </el-col>
       </el-row>
-      <el-row>
+
+      <el-row style="padding-top: 2vh">
         <el-col :span="11">
           <ComplexInput @Update_CI="UCI_Left" @Update_Image="UCII_Left" ref="CI_Left"></ComplexInput>
           <!-- <el-tabs type="border-card" id="tabs">
@@ -82,18 +88,23 @@
           </el-col>
       </el-row> -->
 
-      <div id="result" v-if="show_result">
+      <el-row type="flex" justify="end" style="padding-top: 5vh">
+        <el-button type="primary" value="提交" @click="submit">评估</el-button>
+      </el-row>
+
+      <div id="result" v-if="show_result" style="border-top: 3px solid #ccc; padding-top: 5vh; ">
         <el-row type="flex" justify="start">
-          <h6 style="color: #0a1612;">结果：</h6>
+          <h4 style="color: #0a1612; font-weight: bold">评估结果：</h4>
         </el-row>
         <el-row>
           <el-col :span="11">
-            <el-card class="box-card">
+            <el-card class="box-card" style="background: #F8FBFF">
               <div slot="header" style="text-align:left;">
                 <span>相似度</span>
               </div>
               <div style="text-align:left;">
-                <el-tag v-for="(item, index) in similarity_result" :key="index" effect="plain" id="tag">{{ item }}</el-tag>
+                <el-tag style="background: #F8FBFF; border: 0px; color: black; font-size: 14px" 
+                  v-for="(item, index) in similarity_result" :key="index" effect="plain" id="tag">{{ item }}</el-tag>
               </div>
             </el-card>
           </el-col>
@@ -202,9 +213,9 @@ export default {
 
 <style scoped lang="scss">
 .similarity {
-  background: url("../assets/sub_bg.png");
+  // background: url("../assets/sub_bg.png");
   background-size: 100%;
-  padding: 20px 20px 0px 20px;
+  // padding: 20px 20px 0px 20px;
 }
 .panel {
   background-color: #fff;
@@ -214,7 +225,7 @@ export default {
   padding-left: 5%;
   padding-right: 5%;
   padding-top: 3%;
-  height: 750px;
+  height: 780px;
 }
 .logo {
   margin-left: 50px;
@@ -240,22 +251,22 @@ export default {
 .el-col {
   border-radius: 4px;
 }
-.el-button {
-  background-color: #1a2930;
-  color: #fff;
-  border-color: #1a2930;
-}
-.el-button:hover {
-  background-color: #008080;
-  color: #fff;
-  border-color: #fff;
-}
-.el-button:focus {
-  outline: none;
-  background-color: #008080;
-  color: #fff;
-  border-color: #fff;
-}
+// .el-button {
+//   background-color: #1a2930;
+//   color: #fff;
+//   border-color: #1a2930;
+// }
+// .el-button:hover {
+//   background-color: #008080;
+//   color: #fff;
+//   border-color: #fff;
+// }
+// .el-button:focus {
+//   outline: none;
+//   background-color: #008080;
+//   color: #fff;
+//   border-color: #fff;
+// }
 </style>
 <style scoped>
 #tabs /deep/ .el-tabs__item {

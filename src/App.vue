@@ -18,9 +18,9 @@
                     </li>
                     <li class="drop-down">
                       <!-- <router-link to="/estimate">试题评估</router-link> -->
-                      <el-dropdown>
+                      <el-dropdown placement="bottom">
                         <span class="el-dropdown-link">
-                          API<i class="el-icon-arrow-down el-icon--right"></i>
+                          API&emsp;<i class="el-icon-arrow-down"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                           
@@ -96,34 +96,32 @@
     <router-view></router-view>
     <!-- footer -->
     <footer>
-      <el-row class="footer-wrap theme-bg" style="color: white; padding: 30px; font-size: 16px">
-        <el-col :span="12">
-          <el-row>
+      <el-col class="footer-wrap" style="color: #9B9EA4; padding: 30px; font-size: 16px; background: #E4E7ED">
+        <el-row style="text-align-last: justify">
+          <el-col :span="6" :offset="9">
             <span>Copyright © 大数据分析与应用安徽省重点实验室</span>
-          </el-row>
-          <br/>
-          <el-row>
-            <span><i class="el-icon-phone" style="margin-right: 15px"></i>0551-63601558</span>
-          </el-row>
-          <br/>
-          <el-row >
-            <span><i class="el-icon-location" style="margin-right: 15px"></i>安徽省合肥市</span>
-          </el-row>
-        </el-col>
-        <el-col :span="12">
-          <el-row>
-            <span>友情链接</span>
-          </el-row>
-          <br/>
-          <el-row>
-            <span><label><el-link style="color: white" :underline="false" href="https://www.ustc.edu.cn/" target="_blank">中国科学技术大学</el-link></label></span>
-          </el-row>
-          <br/>
-          <el-row>
-            <span><label><el-link style="color: white" :underline="false" href="https://www.iflytek.com/index.html" target="_blank">科大讯飞</el-link></label></span>
-          </el-row>
-        </el-col>
-      </el-row>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top: 15px;">
+          <el-col :span="3" :offset="9" style="text-align: left">
+            <span><i class="el-icon-phone" style="margin-right: 10px"></i>0551-63601558</span>
+          </el-col>
+          <el-col :span="3" style="text-align: right">
+            <span><i class="el-icon-location" style="margin-right: 10px"></i>安徽省合肥市</span>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top: 15px;">
+          <el-col :span="2" :offset="9" style="text-align: left;">
+            <span><i class="el-icon-link" style="margin-right: 10px;"></i>友情链接：</span>
+          </el-col>
+          <el-col :span="3">
+            <span><label><el-link style="color: #9B9EA4; font-size: 16px;" :underline="false" href="https://www.ustc.edu.cn/" target="_blank">中国科学技术大学</el-link></label></span>
+          </el-col>
+          <el-col :span="2">
+            <span><label><el-link style="color: #9B9EA4; font-size: 16px; margin-left: -60px" :underline="false" href="https://www.iflytek.com/index.html" target="_blank">科大讯飞</el-link></label></span>
+          </el-col>
+        </el-row>
+      </el-col>
     </footer>
     <!-- footer-end -->
   </div>
