@@ -8,7 +8,7 @@
         </el-col>
         <el-col :span="6"  style="text-align-last: justify; display: inline-block; text-align: justify; margin-top: 9vh">
           <el-row>
-            <el-col :span="6" style="text-align: center; color: #fff;">
+            <el-col :span="6">
               <h2>L</h2>
             </el-col>
             <el-col :span="6">

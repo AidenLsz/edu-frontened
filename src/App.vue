@@ -1,5 +1,175 @@
 <template>
   <div id="app">
+    <!-- 登录 -->
+    <el-dialog :visible.sync="login_visible" width="70%">
+      <el-row>
+        <el-col :span="10" :offset="2">
+          <el-row>
+            <span style="font-weight: bold; color: #47A2FF; font-size: 24px">
+              欢迎使用LUNA智慧教育知识图谱
+            </span>
+          </el-row>
+          <el-row style="margin: 50px 0px 30px 0px;">
+            <el-input
+              type="text"
+              v-model="account"
+              auto-complete="off"
+              placeholder="账号"
+            ></el-input>
+          </el-row>
+          <el-row style="margin: 30px 0px">
+            <el-input
+              type="password"
+              v-model="pass"
+              auto-complete="off"
+              placeholder="密码"
+            ></el-input>
+          </el-row>
+          <el-row style="margin: 30px 0px">
+            <el-col :span="15">
+              <el-input
+                type="text"
+                v-model="verifyCode"
+                auto-complete="off"
+                placeholder="请输入验证码"
+              ></el-input>     
+            </el-col>
+            <el-col :span="8" :offset="1">
+              <el-row type="flex" justify="end" >
+                <vue-img-verify @getImgCode="getImgCode" ref="vueImgVerify" />
+              </el-row>
+            </el-col>
+          </el-row>
+          <el-row style="margin: 30px 0px">
+            <el-col :span="8">
+              <el-button type="primary" style="width: 8vw" round @click="login">登录</el-button>
+            </el-col>
+            <el-col :span="6" :offset="1">
+              <el-button type="text" style="color: #aaa">忘记密码？</el-button>
+            </el-col>
+            <el-col :span="6" :offset="3">
+              <el-row type="flex" justify="end" >
+                <el-button type="text" @click="register_show">注册新用户</el-button>
+              </el-row>
+            </el-col>
+          </el-row>
+        </el-col>
+        <el-col :span="12">
+          <img src="./assets/login.png" width="350vh" height="350vh"/>
+        </el-col>
+      </el-row>
+    </el-dialog>
+    <!-- 注册 -->
+    <el-dialog :visible.sync="register_visible"  width="70%" style="margin-top: -13vh;"> 
+      <el-row>
+        <el-col :span="10" :offset="2">
+          <el-row>
+            <span style="font-weight: bold; color: #47A2FF; font-size: 24px">
+              欢迎使用LUNA智慧教育知识图谱
+            </span>
+          </el-row>
+          <el-row style="margin: 50px 0px 20px 0px;">
+            <el-col :span="5"  style="text-align-last: justify; display: inline-block; text-align: justify; padding: 1.5vh 1vw 0 0">
+              <span style="font-weight: bold">账号</span>
+            </el-col>
+            <el-col :span="18" :offset="1">
+              <el-input
+                type="text"
+                v-model="account_reg"
+                auto-complete="off"
+                placeholder="请输入账号名称"
+              ></el-input>
+            </el-col>
+          </el-row>
+          <el-row style="margin: 20px 0px">
+            <el-col :span="5"  style="text-align-last: justify; display: inline-block; text-align: justify; padding: 1.5vh 1vw 0 0">
+              <span style="font-weight: bold">密码</span>
+            </el-col>
+            <el-col :span="18" :offset="1">
+              <el-input
+                type="password"
+                v-model="pass_reg"
+                auto-complete="off"
+                placeholder="请输入初始密码"
+              ></el-input>
+            </el-col>
+          </el-row>
+          <el-row style="margin: 20px 0px">
+            <el-col :span="5"  style="text-align-last: justify; display: inline-block; text-align: justify; padding: 1.5vh 1vw 0 0">
+              <span style="font-weight: bold">验证密码</span>
+            </el-col>
+            <el-col :span="18" :offset="1">
+              <el-input
+                type="password"
+                v-model="pass_reg2"
+                auto-complete="off"
+                placeholder="请验证初始密码"
+              ></el-input>
+            </el-col>
+          </el-row>
+          <el-row style="margin: 20px 0px">
+            <el-col :span="5"  style="text-align-last: justify; display: inline-block; text-align: justify; padding: 1.5vh 1vw 0 0">
+              <span style="font-weight: bold">邮箱</span>
+            </el-col>
+            <el-col :span="18" :offset="1">
+              <el-input
+                type="text"
+                v-model="email_reg"
+                auto-complete="off"
+                placeholder="请输入您的邮箱"
+              ></el-input>
+            </el-col>
+          </el-row>
+          <el-row style="margin: 20px 0px">
+            <el-col :span="5"  style="text-align-last: justify; display: inline-block; text-align: justify; padding: 1.5vh 1vw 0 0">
+              <span style="font-weight: bold">工作单位</span>
+            </el-col>
+            <el-col :span="18" :offset="1">
+              <el-input
+                type="text"
+                v-model="school_reg"
+                auto-complete="off"
+                placeholder="请输入您的工作单位（学校）"
+              ></el-input>
+            </el-col>
+          </el-row>
+          <el-row style="margin: 20px 0px">
+            <el-col :span="5"  style="text-align-last: justify; display: inline-block; text-align: justify; padding: 1.5vh 1vw 0 0">
+              <span style="font-weight: bold">职业</span>
+            </el-col>
+            <el-col :span="18" :offset="1">
+              <el-input
+                type="text"
+                v-model="profession_reg"
+                auto-complete="off"
+                placeholder="请输入您的职业"
+              ></el-input>
+            </el-col>
+          </el-row>
+          <el-row style="margin: 20px 0px">
+            <el-col :span="15">
+              <el-input
+                type="text"
+                v-model="verifyCode_reg"
+                auto-complete="off"
+                placeholder="请输入验证码"
+              ></el-input>     
+            </el-col>
+            <el-col :span="8" :offset="1">
+              <el-row type="flex" justify="end" >
+                <vue-img-verify @getImgCode="getImgCode_reg" ref="vueImgVerify_reg" />
+              </el-row>
+            </el-col>
+          </el-row>
+          <el-row style="margin: 20px 0px">
+            <el-button type="primary" @click="register" >注册新用户</el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="12" style="padding-top: 12vh">
+          <img src="./assets/login.png" width="350vh" height="350vh"/>
+        </el-col>
+      </el-row>
+    </el-dialog>
     <header>
       <div id="header-sticky" class="menu-area">
         <div class="container">
@@ -83,8 +253,8 @@
                         >
                       </el-dropdown-menu>
                     </el-dropdown>
-                    <button v-else class="text-btn" @click="login">登录</button>
-                    <button class="text-btn" @click="register">注册</button>
+                    <button v-else class="text-btn" @click="login_show">登录</button>
+                    <button class="text-btn" @click="register_show">注册</button>
                   </ul>
                 </nav>
               </div>
@@ -129,13 +299,33 @@
 
 <script>
 import $ from "jquery";
+import vueImgVerify from "./components/vue-img-verify.vue";
 export default {
   name: "App",
+  components: { vueImgVerify },
   data() {
     return {
       root: false, // root用户
       isAdmin: false,
       username: "",
+      login_visible: false,
+      register_visible: false,
+      // 账户，密码，验证码正确值，验证码输入值
+      // 只在登录对话框使用
+      account: "",
+      pass: "",
+      imgCode: "",
+      verifyCode: "",
+      // 账号，密码，确认密码，邮箱，工作单位，职业，验证码正确值，验证法输入值
+      // 只在注册对话框使用
+      account_reg: "",
+      pass_reg: "",
+      pass_reg2: "",
+      imgCode_reg: "",
+      verifyCode_reg: "",
+      email_reg: "",
+      school_reg: "",
+      prefession_reg: ""
     };
   },
   mounted() {
@@ -158,11 +348,23 @@ export default {
     });
   },
   methods: {
-    login() {
-      this.$router.push({ path: "/login" });
+    login_show() {
+      // this.$router.push({ path: "/login" });
+      this.register_visible = false;
+      this.login_visible = true;
+    },
+    register_show(){
+      this.login_visible = false;
+      this.register_visible = true;
     },
     register() {
-      this.$router.push({ path: "/register" });
+      // this.$router.push({ path: "/register" });
+      console.log(this.account_reg);
+      console.log(this.pass_reg);
+      console.log(this.pass_reg2);
+      console.log(this.email_reg);
+      console.log(this.school_reg);
+      console.log(this.prefession_reg);
     },
     login_admin() {
       this.$router.push({ path: "/admin" });
@@ -180,6 +382,38 @@ export default {
           _this.$router.push("/");
         })
         .catch(() => {});
+    },
+    // 点击图片获取验证码
+    getImgCode(code) {
+      this.imgCode = code;
+      console.log("验证码: " + this.imgCode);
+    },
+    // 登录
+    login() {
+      if (this.verifyCode.toUpperCase() === this.imgCode.toUpperCase()) {
+        this.$http
+          .post(
+            this.backendIP + "/api/login",
+            {
+              user: this.account,
+              password: this.pass
+            },
+            { emulateJSON: true }
+          )
+          .then(function(data) {
+            console.log(data.data);
+            if (data.data == 1) { //eslint-disable-line
+              sessionStorage.user = this.account;
+              this.login_visible = false;
+              this.$router.push("/");
+              location.reload();
+            } else {
+              alert("登录失败");
+            }
+          });
+      } else {
+        alert("验证码错误");
+      }
     },
   },
 };
