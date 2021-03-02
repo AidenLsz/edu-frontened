@@ -111,7 +111,7 @@
             :modal-append-to-body="false"
             :append-to-body="true"
         >
-            <MixDisplay :QInfos.sync="questionInfos"></MixDisplay>
+            <MixDisplay :QI="questionInfos"></MixDisplay>
         </el-dialog>
         <!-- 测试用按钮行 -->
         <el-row>

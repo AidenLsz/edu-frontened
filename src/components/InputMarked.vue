@@ -1,5 +1,5 @@
 <template>
-  <div id="import_paper">
+  <!-- <div id="import_paper">
     <el-row class="panel">
       <el-col :span="4">
         <el-row type="flex" justify="start">
@@ -440,7 +440,9 @@
                 </el-card>
               </div>
             </ol>
-            <!-- 填空题 -->
+
+            填空题 
+
             <ol style="text-align:left; margin-left: -35px;">
               <el-card
                 @mouseover.native="mouseOver($event)"
@@ -693,7 +695,8 @@
                 </el-dialog>
               </el-card>
             </ol>
-            <!-- 解答题 -->
+            
+            解答题 
 
             <ol style="text-align:left; margin-left: -35px;">
               <el-card
@@ -1137,7 +1140,8 @@
                 </el-dialog>
               </el-card>
             </ol>
-            <!-- 非选择题 -->
+            
+            非选择题
 
             <ol style="text-align:left; margin-left: -35px;">
               <el-card
@@ -1353,7 +1357,9 @@
                               ></i>
                             </div>
                             <el-row type="flex" justify="end">
-                              <!-- 表格 -->
+                            
+                            表格
+
                               <el-button
                                 type="info"
                                 size="mini"
@@ -1456,7 +1462,9 @@
                                 "
                               ></ImageViewer>
                             </div>
-                            <!-- 表格 -->
+                            
+                            表格
+                            
                             <div
                               v-if="
                                 mix_content[index].mixQuestion
@@ -2078,7 +2086,8 @@
                             "
                           ></ImageViewer>
                         </div>
-                        <!-- 表格 -->
+
+                        表格 
 
                         <el-table
                           v-if="
@@ -2277,56 +2286,351 @@
         </el-row>
       </el-col>
     </el-row>
+  </div> -->
+  <div>
+    <!-- 提供给选择题的编辑器 -->
+    <el-dialog 
+        :visible.sync="showDialog" 
+        title="请编辑想要插入/修改的选择题内容" 
+        width="65%" 
+        @close="Editor_Dialog_Close()"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false"
+    >
+        <el-row>
+            <el-col v-if="complex_Input">
+                <el-row>
+                    <label>复杂输入框，请在需要时自行复制至目标输入框</label>
+                </el-row>
+                <ComplexInput></ComplexInput>
+                <el-row>
+                    <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
+                </el-row>
+            </el-col>
+            <el-col v-if="!complex_Input">
+                <el-row>
+                    <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
+                </el-row>
+            </el-col>
+        </el-row>
+        <el-divider></el-divider>
+        <OptionQuestions 
+            @EditFinish="New_Questions" 
+            @ReEditFinish="ReEdit_Questions" 
+            :RE.sync="ReEditSwitch" 
+            :QInfos.sync="Temp_OptionQuestionInfo" 
+            ref="OptionQuestionsEditor">
+        </OptionQuestions>
+    </el-dialog>
+    <!-- 提供给填空题的编辑器 -->
+    <el-dialog 
+        :visible.sync="showDialog_Fill" 
+        title="请编辑想要插入/修改的填空题内容" 
+        width="65%" 
+        @close="Editor_Dialog_Close()"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false"
+    >
+        <el-row>
+            <el-col v-if="complex_Input">
+                <el-row>
+                    <label>复杂输入框，请在需要时自行复制至目标输入框</label>
+                </el-row>
+                <ComplexInput></ComplexInput>
+                <el-row>
+                    <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
+                </el-row>
+            </el-col>
+            <el-col v-if="!complex_Input">
+                <el-row>
+                    <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
+                </el-row>
+            </el-col>
+        </el-row>
+        <el-divider></el-divider>
+        <FillQuestions
+            @EditFinish="New_Questions" 
+            @ReEditFinish="ReEdit_Questions" 
+            :RE.sync="ReEditSwitch" 
+            :QInfos.sync="Temp_FillQuestionInfo" 
+        ></FillQuestions>
+    </el-dialog>
+    <!-- 提供给解答题的编辑器 -->
+    <el-dialog 
+        :visible.sync="showDialog_Answer" 
+        title="请编辑想要插入/修改的解答题内容" 
+        width="65%" 
+        @close="Editor_Dialog_Close()"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false"
+    >
+        <el-row>
+            <el-col v-if="complex_Input">
+                <el-row>
+                    <label>复杂输入框，请在需要时自行复制至目标输入框</label>
+                </el-row>
+                <ComplexInput></ComplexInput>
+                <el-row>
+                    <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
+                </el-row>
+            </el-col>
+            <el-col v-if="!complex_Input">
+                <el-row>
+                    <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
+                </el-row>
+            </el-col>
+        </el-row>
+        <el-divider></el-divider>
+        <AnswerQuestions
+            @EditFinish="New_Questions" 
+            @ReEditFinish="ReEdit_Questions" 
+            :RE.sync="ReEditSwitch" 
+            :QInfos.sync="Temp_AnswerQuestionInfo" 
+        ></AnswerQuestions>
+    </el-dialog>
+    <!-- 提供给非选择题的编辑器 -->
+    <el-dialog 
+        :visible.sync="showDialog_Mix" 
+        title="请编辑想要插入/修改的非选择题内容" 
+        width="65%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
+        <MixQuestions
+            @EditFinish="New_Questions" 
+            @ReEditFinish="ReEdit_Questions"
+            :RE.sync="ReEditSwitch"
+            :QInfos.sync="Temp_MixQuestionInfo"
+        ></MixQuestions>
+    </el-dialog>
+    <el-row justify="start" type="flex">
+      <el-col style="padding-left: 25px">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item>试题录入</el-breadcrumb-item>
+        </el-breadcrumb>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="4" style="padding-bottom: 50px; padding-top: 30px">
+        <!-- 切换页面 -->
+        <el-row type="flex" justify="center">
+          <router-link to="/inputPaper">
+            <div style="background: #FAECD8; color: orange; font-weight: bold; border: 2px solid orange; width: 170px; height: 40px; padding-top: 10px">
+              切换至整卷录入页面
+            </div>
+          </router-link>
+        </el-row>
+        <!-- 不同题型 -->
+        <el-row style="padding-top: 30px">
+          <el-row>
+            <el-col :span="6" style="font-size: 20px">
+              <i class="el-icon-arrow-down"></i>
+            </el-col>
+            <el-col :span="18" style="text-align: left; font-size: 20px">
+              题型
+            </el-col>
+          </el-row>
+          <!-- Option -->
+          <el-row style="margin-top: 10px">
+            <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
+              <i class="el-icon-circle-check"></i>
+              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'option'; showDialog = true; ">选择题</el-button>
+            </el-col>
+          </el-row>
+          <!-- Fill -->
+          <el-row>
+            <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
+              <i class="el-icon-full-screen"></i>
+              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'fill'; showDialog_Fill = true; ">填空题</el-button>
+            </el-col>
+          </el-row>
+          <!-- Answer -->
+          <el-row>
+            <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
+              <i class="el-icon-edit-outline"></i>
+              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'answer'; showDialog_Answer = true; ">解答题</el-button>
+            </el-col>
+          </el-row>
+          <!-- Mix -->
+          <el-row>
+            <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
+              <i class="el-icon-reading"></i>
+              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'mix'; showDialog_Mix = true; ">综合题</el-button>
+            </el-col>
+          </el-row>
+        </el-row>
+        <el-row type="flex" justify="center" style="padding-top: 30px">
+          <el-button type="primary" plain style="width: 200px; font-size: 16px">
+            <label>文件导入</label>
+          </el-button>
+        </el-row>
+        <el-row type="flex" justify="center" style="padding-top: 30px">
+          <el-button type="success" plain style="width: 200px; font-size: 16px">
+            <label>导出题目</label>
+          </el-button>
+        </el-row>
+      </el-col>
+      <el-col :span="20" style="background: #F8FBFF; padding-top: 40px; min-height: 65.8vh; border-right: 30px solid white">
+        <el-row style="background: #F8FBFF; min-height: 50vh">
+          <OptionDisplay v-if="Type_Now == 'option'" :QI="Temp_OptionQuestionInfo"></OptionDisplay>
+          <FillDisplay v-else-if="Type_Now == 'fill'" :QI="Temp_FillQuestionInfo"></FillDisplay>
+          <AnswerDisplay v-else-if="Type_Now == 'answer'" :QI="Temp_AnswerQuestionInfo"></AnswerDisplay>
+          <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo"></MixDisplay>  
+        </el-row>
+        <el-row v-if="Type_Now != '-1'">
+          <el-col :span="12">
+            <el-button type="primary" plain @click="Edit_Question()">重新编辑</el-button>
+          </el-col> 
+          <el-col :span="12">
+            <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button> 
+          </el-col> 
+        </el-row>  
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
-import Mathdown from "./Mathdown.vue";
 import FileSaver from "file-saver";
-import ImageViewer from "./ViewImage.vue";
+
+import ComplexInput from './ComplexInput.vue'
+
+import OptionDisplay from './OptionDisplay.vue'
+import OptionQuestions from './OptionQuestions.vue'
+import FillQuestions from "./FillQuestions.vue"
+import FillDisplay from "./FillDisplay.vue";
+import AnswerQuestions from "./AnswerQuestions.vue";
+import AnswerDisplay from "./AnswerDisplay.vue";
+import MixQuestions from "./MixQuestions.vue";
+import MixDisplay from "./MixDisplay.vue";
+
 import Vue from "vue";
 export default {
-  components: { Mathdown, ImageViewer },
+  components: { ComplexInput, 
+                OptionDisplay, OptionQuestions, 
+                FillQuestions, FillDisplay, 
+                AnswerQuestions, AnswerDisplay,
+                MixQuestions, MixDisplay},
   data() {
     return {
-      option_content: [],
-      option_subtitle: "", // the auxiliary subtitle of Option Question
-      fill_content: [],
+      // 当前题目类型
+      Type_Now: "-1",
+      // 选择题编辑器,填空题编辑器和解答题编辑器的显示控制
+      showDialog: false,
+      showDialog_Fill: false,
+      showDialog_Answer: false,
+      showDialog_Mix: false,
+      // 打开复杂输入框的控制
+      complex_Input: false,
+      // 重写编辑标记
+      ReEditSwitch: false,
+      // 两个临时存放用的Json变量
+      Temp_OptionQuestionInfo: {
 
-      answer_content: [],
+          type: "option",
+          // 分值
+          score: 1,
+          // 题目内容，题目内容图片，是否显示图片
+          content: "",
+          content_images: [],
+          // 选项的部分
+          options: ["", "", "", ""],
+          options_images: ["", "", "", ""],
+          // 答案的部分
+          answer: "",
+          answer_images: [],
+          // 解析的部分
+          analyse: "",
+          analyse_images: []
 
-      mix_content: [],
+      },
+      Temp_MixQuestionInfo: {
+          type: "mix",
+          score: "None",
+          content: "",
+          content_images: [],
+          answer: "",
+          answer_images: [],
+          sub_questions: [],
+          sub_questions_collapse: [],
+          analyse: "",
+          analyse_images: [],
+      },
+      Temp_FillQuestionInfo: {
 
-      option_show_answer: [],
-      fill_show_answer: [],
-      answer_show_answer: [],
-      option_show_answer_analysis: [],
-      fill_show_answer_analysis: [],
-      answer_show_answer_analysis: [],
-      mix_show_answer_analysis: [],
-      option_show_image: [],
-      option_show_option_image: [],
-      fill_show_image: [],
-      answer_show_image: [],
-      answer_show_option_image: [],
-      option_show_analysis_image: [],
-      fill_show_analysis_image: [],
-      answer_show_analysis_image: [],
-      answer_show_answer_image: [],
-      mix_show_answer: [],
-      option_view: [],
-      fill_view: [],
-      answer_view: [],
-      mix_view: [],
-      mix_show_image: [],
-      mix_show_option_image: [],
-      mix_show_analysis_image: [],
-      mix_show_answer_image: [],
-      uploadFileName: "",
-      upload_files: [],
+          type: "fill",
+          // 分值
+          score: 1,
+          // 题目内容，题目内容图片，是否显示图片
+          content: "",
+          content_images: [],
+          // 答案的部分
+          answer: "",
+          answer_images: [],
+          // 解析的部分
+          analyse: "",
+          analyse_images: []
 
-      isview: false,
-      upload: false,
-      default_subject: "math"
+      },
+      Temp_AnswerQuestionInfo: {
+
+          type: "answer",
+          // 分值
+          score: 1,
+          // 题目内容，题目内容图片，是否显示图片
+          content: "",
+          content_images: [],
+          // 小题的部分
+          sub_questions: [""],
+          sub_questions_images: [[]],
+          sub_questions_scores: [1],
+          // 答案的部分
+          answer: "",
+          answer_images: [],
+          // 解析的部分
+          analyse: "",
+          analyse_images: []
+
+      }
+        
+      // option_content: [],
+      // option_subtitle: "", // the auxiliary subtitle of Option Question
+      // fill_content: [],
+
+      // answer_content: [],
+
+      // mix_content: [],
+
+      // option_show_answer: [],
+      // fill_show_answer: [],
+      // answer_show_answer: [],
+      // option_show_answer_analysis: [],
+      // fill_show_answer_analysis: [],
+      // answer_show_answer_analysis: [],
+      // mix_show_answer_analysis: [],
+      // option_show_image: [],
+      // option_show_option_image: [],
+      // fill_show_image: [],
+      // answer_show_image: [],
+      // answer_show_option_image: [],
+      // option_show_analysis_image: [],
+      // fill_show_analysis_image: [],
+      // answer_show_analysis_image: [],
+      // answer_show_answer_image: [],
+      // mix_show_answer: [],
+      // option_view: [],
+      // fill_view: [],
+      // answer_view: [],
+      // mix_view: [],
+      // mix_show_image: [],
+      // mix_show_option_image: [],
+      // mix_show_analysis_image: [],
+      // mix_show_answer_image: [],
+      // uploadFileName: "",
+      // upload_files: [],
+
+      // isview: false,
+      // upload: false,
+      // default_subject: "math"
     };
   },
 
@@ -3564,7 +3868,156 @@ export default {
     },
     handleDelete() {
       // console.log(index, row);
-    }
+    },
+    // 处理插入新题目的办法
+    // 需要管理两个条目，一个是题目内容，一个是是否折叠
+    // 由于折叠属性放在题目内会对显示造成复杂化的结果，就放在外面
+    New_Questions(val){
+
+        this.Reset_Params();
+
+        if(this.Type_Now == 'option'){
+            this.Temp_OptionQuestionInfo = val;
+        }else if(this.Type_Now == 'fill'){
+            this.Temp_FillQuestionInfo = val;
+        }else if(this.Type_Now == 'answer'){
+            this.Temp_AnswerQuestionInfo = val;
+        }
+
+        this.Close_Editor();
+
+    },
+    // 处理想要修改题目内容时的方法
+    // 核心思路是把题目内容的部分丢给编辑器，让编辑器来读取内容
+    // 然后等待编辑器内部的处理
+    // 在这里，是否发送重写信号由ReEditSwitch来决定
+    // Index_Edit_Record用于记录编辑的编号
+    // Temp名称用于临时交换让编辑器处理的数据内容
+    // showDialog代表显示的是哪个编辑器
+    Edit_Question(){
+
+        if(this.Type_Now == 'option'){
+            this.showDialog = true;
+        }else if(this.Type_Now == 'fill'){
+            this.showDialog_Fill = true;
+        }else if(this.Type_Now == 'answer'){
+            this.showDialog_Answer = true;
+        }else if(this.Type_Now == 'mix'){
+            this.showDialog_Mix = true;
+        }
+        this.ReEditSwitch = true;
+
+    },
+    // 重写编辑后，把新数据直接覆盖上去
+    ReEdit_Questions(val){
+
+        if(this.Type_Now == 'option'){
+            this.Temp_OptionQuestionInfo = val;
+        }else if(this.Type_Now == 'fill'){
+            this.Temp_FillQuestionInfo = val;
+        }else if(this.Type_Now == 'answer'){
+            this.Temp_AnswerQuestionInfo = val;
+        }else if(this.Type_Now == 'mix'){
+            this.Temp_MixQuestionInfo = val;
+        }
+
+        this.Close_Editor();
+        this.ReEditSwitch = false;
+        
+    },
+    // 一起关掉
+    Close_Editor(){
+
+        this.showDialog = false;
+        this.showDialog_Fill = false;
+        this.showDialog_Answer = false;
+        this.showDialog_Mix = false;
+
+    },  
+    Editor_Dialog_Close(){
+
+        this.Close_Editor();
+
+    },
+    // 处理完题目的录入之后要重置这些临时使用的变量
+    Reset_Params(){
+
+      this.ReEditSwitch = false;
+
+      this.Temp_OptionQuestionInfo = {
+
+          type: "option",
+          // 分值
+          score: 1,
+          // 题目内容，题目内容图片，是否显示图片
+          content: "",
+          content_images: [],
+          // 选项的部分
+          options: ["", "", "", ""],
+          options_images: ["", "", "", ""],
+          // 答案的部分
+          answer: "",
+          answer_images: [],
+          // 解析的部分
+          analyse: "",
+          analyse_images: []
+
+      }
+
+      this.Temp_FillQuestionInfo = {
+
+          type: "fill",
+          // 分值
+          score: 1,
+          // 题目内容，题目内容图片，是否显示图片
+          content: "",
+          content_images: [],
+          // 答案的部分
+          answer: "",
+          answer_images: [],
+          // 解析的部分
+          analyse: "",
+          analyse_images: []
+
+      }
+
+      this.Temp_AnswerQuestionInfo = {
+
+          type: "answer",
+          // 分值
+          score: 1,
+          // 题目内容，题目内容图片，是否显示图片
+          content: "",
+          content_images: [],
+          // 小题的部分
+          sub_questions: [""],
+          sub_questions_images: [[]],
+          sub_questions_scores: [1],
+          // 答案的部分
+          answer: "",
+          answer_images: [],
+          // 解析的部分
+          analyse: "",
+          analyse_images: []
+
+      }
+
+      this.Temp_MixQuestionInfo = {
+        // 题目类型，分值，题干内容，题干图片，答案内容，答案图片
+        // 小题内容，小题是否折叠，解析内容，解析图片
+          type: "mix",
+          score: "None",
+          content: "",
+          content_images: [],
+          answer: "",
+          answer_images: [],
+          sub_questions: [],
+          sub_questions_collapse: [],
+          analyse: "",
+          analyse_images: [],
+      }
+
+    },
   }
 };
 </script>
