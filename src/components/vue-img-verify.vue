@@ -13,7 +13,7 @@
 export default {
   data() {
     return {
-      pool: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', // 字符串
+      pool: 'ABCDEFGHJKLMNPQRSTUVWXYZ1234567890', // 字符串
       width: 120,
       height: 40,
       imgCode: ''

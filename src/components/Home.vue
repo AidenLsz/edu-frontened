@@ -2,31 +2,7 @@
   <!--todo: polish the format-->
   <div class="home">
     <section class="slider-area slider-bg" >
-      <el-row  class="slider-content text-center">
-        <el-col :span="4" :offset="6">
-          <img src="../assets/icon1.png" style="margin-top: 12vh" width="100vh" height="100vh"/>
-        </el-col>
-        <el-col :span="6"  style="text-align-last: justify; display: inline-block; text-align: justify; margin-top: 9vh">
-          <el-row>
-            <el-col :span="6">
-              <h2>L</h2>
-            </el-col>
-            <el-col :span="6">
-              <h2>U</h2>
-            </el-col>
-            <el-col :span="6">
-              <h2>N</h2>
-            </el-col>
-            <el-col :span="6">
-              <h2>A</h2>
-            </el-col>
-          </el-row>
-          <el-row>
-            <h1 style="color: #fff; margin-top: 10px;">智慧教育知识图谱</h1>
-          </el-row>
-        </el-col> 
-      </el-row>
-      <el-row type="flex" class="row-bg" justify="center" style="margin-top: 50px;">
+      <el-row type="flex" class="row-bg" justify="center" style="padding-top: 400px;">
         <el-col :span="14">
           <el-input
             v-model="ku_name"

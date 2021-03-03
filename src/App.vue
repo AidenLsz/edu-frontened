@@ -157,7 +157,7 @@
             </el-col>
             <el-col :span="8" :offset="1">
               <el-row type="flex" justify="end" >
-                <vue-img-verify @getImgCode="getImgCode_reg" ref="vueImgVerify_reg" />
+                <vue-img-verify @getImgCode="getImgCode_reg" ref="vueImgVerify_reg"/>
               </el-row>
             </el-col>
           </el-row>
@@ -173,21 +173,91 @@
     <header>
       <div id="header-sticky" class="menu-area">
         <div class="container">
-          <div class="row align-items-center">
-            <div class="col-lg-2">
-              <div class="logo">
-                <img src="./assets/kglogo.png" alt="Logo" />
-              </div>
-            </div>
-            <div class="col-lg-10">
-              <div class="main-menu text-right">
+          <el-row>
+            <el-col :span="4" style="padding-top: 5vh;">
+              <img src="./assets/luna_icon.png" alt="Logo" width="150px"/>
+            </el-col>
+            <el-col :span="12" :offset="8">
+              <el-row class="navbar" type="flex" justify="end">
+                <el-col :span="4">
+                  <router-link to="/" :underline="false" class="navbar">
+                    <span>首页</span>
+                  </router-link>
+                </el-col>
+                <el-col :span="4">
+                  <el-menu :default-active="activeIndex" mode="horizontal">
+                    <el-submenu index="0" style="padding-top: 0.5vh">
+                      <template slot="title"><span style="font-size: 18px; font-weight: bold; color: black">功能</span></template>
+                      <el-submenu index="1">
+                        <template slot="title"><span style="color: black; font-weight: bold">资源录入</span></template>
+                        <el-menu-item index="1-1"><span style="color:	Gainsboro; font-weight: bold">学习资源</span></el-menu-item>
+                        <el-menu-item index="1-2">
+                          <router-link to="/inputMarked" :underline="false">
+                            <span style="color: black; font-weight: bold">试题资源</span>
+                          </router-link>
+                        </el-menu-item>
+                        <el-menu-item index="1-3"><span style="color: Gainsboro; font-weight: bold">试卷资源</span></el-menu-item>
+                        <el-menu-item index="1-4"><span style="color:	Gainsboro; font-weight: bold">知识体系</span></el-menu-item>
+                      </el-submenu>
+                      <el-submenu index="2">
+                        <template slot="title"><span style="color: black; font-weight: bold">查询</span></template>
+                        <el-menu-item index="2-1">
+                          <router-link to="/exercise" :underline="false">
+                            <span style="color: black; font-weight: bold">试题检索</span>
+                          </router-link>
+                        </el-menu-item>
+                        <el-menu-item index="2-2">
+                          <router-link to="/ku" :underline="false">
+                            <span style="color: black; font-weight: bold">知识单元检索</span>
+                          </router-link>
+                        </el-menu-item>
+                      </el-submenu>
+                      <el-submenu index="3">
+                        <template slot="title"><span style="color: black; font-weight: bold">分析</span></template>
+                        <el-menu-item index="3-1"><span style="color: Gainsboro; font-weight: bold">学习资源</span></el-menu-item>
+                        <el-menu-item index="3-2"><span style="color: Gainsboro; font-weight: bold">试卷资源</span></el-menu-item>
+                      </el-submenu>
+                      <el-menu-item index="4">
+                        <router-link to="/estimate" :underline="false">
+                            <span style="color: black; font-weight: bold">试题属性预估</span>
+                          </router-link>
+                      </el-menu-item>
+                      <el-menu-item index="5">
+                        <router-link to="/similarity" :underline="false">
+                            <span style="color: black; font-weight: bold">相似题预估</span>
+                          </router-link>
+                      </el-menu-item>
+                    </el-submenu>
+                  </el-menu>
+                </el-col>
+                <el-col :span="5">
+                  <el-link href="http://bigdata.ustc.edu.cn/" target="_blank" class="navbar"><span style="color: black">实验室主页</span></el-link>
+                </el-col>
+                <el-col :span="4">
+                  <el-dropdown trigger="hover" v-if="username"  class="navbar">
+                    <span class="el-dropdown-link user-inner">
+                      {{ username }}
+                      <i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item @click.native="logout"
+                        >退出登录</el-dropdown-item
+                      >
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                  <el-button type="text" @click="login_show" v-else class="navbar">登录</el-button>
+                </el-col>
+                <el-col :span="2">
+                  <el-button type="text" @click="register_show" class="navbar">注册</el-button>
+                </el-col>
+              </el-row>
+              <!-- <div class="main-menu text-right">
                 <nav id="mobile-menu">
                   <ul>
                     <li>
                       <router-link to="/" :underline="false">首页</router-link>
                     </li>
                     <li class="drop-down">
-                      <!-- <router-link to="/estimate">试题评估</router-link> -->
                       <el-dropdown placement="bottom">
                         <span class="el-dropdown-link">
                           API&emsp;<i class="el-icon-arrow-down"></i>
@@ -227,7 +297,6 @@
                           
                         </el-dropdown-menu>
                       </el-dropdown>
-                      <!--实现下拉菜单-->
                     </li>
                     <li>
                       <a
@@ -257,9 +326,9 @@
                     <button class="text-btn" @click="register_show">注册</button>
                   </ul>
                 </nav>
-              </div>
-            </div>
-          </div>
+              </div> -->
+            </el-col>
+          </el-row>
         </div>
       </div>
     </header>
@@ -325,8 +394,32 @@ export default {
       verifyCode_reg: "",
       email_reg: "",
       school_reg: "",
-      prefession_reg: ""
+      profession_reg: "",
+      // activeIndex: 下拉菜单用的
+      activeIndex: ""
     };
+  },
+  watch:{
+    login_visible(newVal){
+      if(!newVal){
+        this.imgCode = "";
+        this.account = "";
+        this.pass = "";
+      }
+      this.login_visible = newVal;
+    },
+    register_visible(newVal){
+      if(!newVal){
+        this.imgCode_reg = "";
+        this.account_reg = "";
+        this.pass_reg = "";
+        this.pass_reg2 = "";
+        this.email_reg = "";
+        this.school_reg = "";
+        this.profession_reg = "";
+      }
+      this.register_visible = newVal;
+    }
   },
   mounted() {
     var user = sessionStorage.getItem("user");
@@ -352,10 +445,16 @@ export default {
       // this.$router.push({ path: "/login" });
       this.register_visible = false;
       this.login_visible = true;
+      setTimeout(()=>{
+        this.$refs.vueImgVerify.handleDraw();}, 
+      1)
     },
     register_show(){
       this.login_visible = false;
       this.register_visible = true;
+      setTimeout(()=>{
+        this.$refs.vueImgVerify_reg.handleDraw();}, 
+      1)
     },
     register() {
       // this.$router.push({ path: "/register" });
@@ -364,7 +463,7 @@ export default {
       console.log(this.pass_reg2);
       console.log(this.email_reg);
       console.log(this.school_reg);
-      console.log(this.prefession_reg);
+      console.log(this.profession_reg);
     },
     login_admin() {
       this.$router.push({ path: "/admin" });
@@ -386,7 +485,9 @@ export default {
     // 点击图片获取验证码
     getImgCode(code) {
       this.imgCode = code;
-      console.log("验证码: " + this.imgCode);
+    },
+    getImgCode_reg(code){
+      this.imgCode_reg = code;
     },
     // 登录
     login() {
@@ -595,7 +696,11 @@ export default {
 .user-inner {
   cursor: pointer;
   color: #1a2930;
-  margin-right: -23px;
-  padding-left: 45px;
+}
+.navbar {
+  padding: 20px 0px 0px 0px;
+  font-size: 18px; 
+  font-weight: bold;
+  color: black;
 }
 </style>
