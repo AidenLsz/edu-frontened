@@ -1,5 +1,34 @@
 <template>
   <div>
+    <el-dialog :visible.sync="importPaperDialog" 
+        title="试卷导入" 
+        width="65%" 
+        @close="Import_Paper_Dialog_Close()"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
+        <el-row type="flex" justify="start">
+          <el-col :span="2" :offset="1">
+            <div class="file">
+              <span>选择文件</span>
+              <input type="file" @change="uploadPaper($event)" accept=".doc, .docx, .pdf">
+            </div>
+          </el-col>
+          <el-col :span="9" :offset="1" style="text-align: left; padding-top: 4px">
+            <span>*支持doc，docx，pdf格式的文件</span>
+          </el-col>
+        </el-row>
+        <el-row style="margin: 30px 40px; background: #F8FBFF; min-height: 300px; padding-top: 20vh">
+          <span>*这部分具体内容等待题目自动分类功能完成后实现</span>
+        </el-row>
+        <el-row>
+          <el-col :span="4" :offset="8">
+            <el-button type="primary">导出txt文件</el-button>
+          </el-col>
+          <el-col :span="4">
+            <el-button type="primary">导出json文件</el-button>
+          </el-col>
+        </el-row>
+    </el-dialog>
     <!-- 提供给选择题的编辑器 -->
     <el-dialog 
         :visible.sync="showDialog" 
@@ -173,7 +202,7 @@
           </el-row>
         </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="primary" plain style="width: 200px; font-size: 16px">
+          <el-button type="primary" plain style="width: 200px; font-size: 16px" @click="importPaperDialog = true">
             <label>文件导入</label>
           </el-button>
         </el-row>
@@ -340,6 +369,8 @@ export default {
   data() {
     return {
       Sequence_Questions: "1",
+      // 是否显示导入试卷的对话框
+      importPaperDialog: false,
       // 选择题编辑器,填空题编辑器和解答题编辑器的显示控制
       showDialog: false,
       showDialog_Fill: false,
@@ -494,6 +525,14 @@ export default {
     }
   },
   methods: {
+    // 处理上传试卷时的方法
+    uploadPaper(event){
+      console.log(event.target.files)
+    },
+    // 关闭导入试卷这一栏对话框的方法
+    Import_Paper_Dialog_Close(){
+      this.importPaperDialog = false;
+    },
     // 处理插入新题目的办法
     // 需要管理两个条目，一个是题目内容，一个是是否折叠
     // 由于折叠属性放在题目内会对显示造成复杂化的结果，就放在外面
@@ -1235,5 +1274,32 @@ h6 {
 }
 .tb-edit .current-row .el-input + span {
   display: none;
+}
+// 这是单独处理上传试卷的按钮的样式
+.file {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 8px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.file:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
 }
 </style>
