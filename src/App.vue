@@ -191,42 +191,46 @@
                       <el-submenu index="1">
                         <template slot="title"><span style="color: black; font-weight: bold">资源录入</span></template>
                         <el-menu-item index="1-1"><span style="color:	Gainsboro; font-weight: bold">学习资源</span></el-menu-item>
-                        <el-menu-item index="1-2">
-                          <router-link to="/inputMarked" :underline="false">
+                        <router-link to="/inputMarked" :underline="false">
+                          <el-menu-item index="1-2">
                             <span style="color: black; font-weight: bold">试题资源</span>
-                          </router-link>
-                        </el-menu-item>
+                          </el-menu-item>
+                        </router-link>
                         <el-menu-item index="1-3"><span style="color: Gainsboro; font-weight: bold">试卷资源</span></el-menu-item>
                         <el-menu-item index="1-4"><span style="color:	Gainsboro; font-weight: bold">知识体系</span></el-menu-item>
                       </el-submenu>
                       <el-submenu index="2">
+
                         <template slot="title"><span style="color: black; font-weight: bold">查询</span></template>
-                        <el-menu-item index="2-1">
-                          <router-link to="/exercise" :underline="false">
+
+                        <router-link to="/exercise" :underline="false">
+                          <el-menu-item index="2-1">
                             <span style="color: black; font-weight: bold">试题检索</span>
-                          </router-link>
-                        </el-menu-item>
-                        <el-menu-item index="2-2">
-                          <router-link to="/ku" :underline="false">
+                          </el-menu-item>
+                        </router-link>                  
+                        
+                        <router-link to="/ku" :underline="false">
+                          <el-menu-item index="2-2">
                             <span style="color: black; font-weight: bold">知识单元检索</span>
-                          </router-link>
-                        </el-menu-item>
+                          </el-menu-item>
+                        </router-link>
+                        
                       </el-submenu>
                       <el-submenu index="3">
                         <template slot="title"><span style="color: black; font-weight: bold">分析</span></template>
                         <el-menu-item index="3-1"><span style="color: Gainsboro; font-weight: bold">学习资源</span></el-menu-item>
                         <el-menu-item index="3-2"><span style="color: Gainsboro; font-weight: bold">试卷资源</span></el-menu-item>
                       </el-submenu>
-                      <el-menu-item index="4">
-                        <router-link to="/estimate" :underline="false">
+                      <router-link to="/estimate" :underline="false">
+                        <el-menu-item index="4">
                             <span style="color: black; font-weight: bold">试题属性预估</span>
-                          </router-link>
-                      </el-menu-item>
-                      <el-menu-item index="5">
-                        <router-link to="/similarity" :underline="false">
-                            <span style="color: black; font-weight: bold">相似题预估</span>
-                          </router-link>
-                      </el-menu-item>
+                        </el-menu-item>
+                      </router-link>
+                      <router-link to="/similarity" :underline="false">
+                        <el-menu-item index="5">
+                          <span style="color: black; font-weight: bold">相似题预估</span>
+                        </el-menu-item>
+                      </router-link>
                     </el-submenu>
                   </el-menu>
                 </el-col>
