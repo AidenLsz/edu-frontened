@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <el-container id="app">
     <!-- 登录 -->
     <el-dialog :visible.sync="login_visible" width="70%">
       <el-row>
@@ -170,75 +170,157 @@
         </el-col>
       </el-row>
     </el-dialog>
-    <header>
-      <div id="header-sticky" class="menu-area">
-        <div class="container">
-          <el-row>
-            <el-col :span="4" style="padding-top: 5vh;">
-              <img src="./assets/luna_icon.png" alt="Logo" width="150px"/>
-            </el-col>
-            <el-col :span="12" :offset="8">
-              <el-row class="navbar" type="flex" justify="end">
-                <el-col :span="4">
-                  <router-link to="/" :underline="false" class="navbar">
-                    <span>首页</span>
+    <el-header>
+      <div id="header-sticky">
+        <el-row style="height: 12vh">
+          <el-col :span="4" style="padding-top: 3vh; padding-left: 30px">
+            <img src="./assets/luna_icon.png" alt="Logo" width="150px"/>
+          </el-col>
+          <el-col :span="8" :offset="11">
+            <el-row type="flex" justify="end">
+              <el-col :span="4"  style="padding-top: 4vh;">
+                <span>
+                  <router-link to="/" :underline="false" style="color: black; font-size: 18px; font-weight: bold;">
+                    首页
                   </router-link>
-                </el-col>
-                <el-col :span="4">
-                  <el-menu :default-active="activeIndex" mode="horizontal">
-                    <el-submenu index="0" style="padding-top: 0.5vh">
-                      <template slot="title"><span style="font-size: 18px; font-weight: bold; color: black">功能</span></template>
-                      <el-submenu index="1">
-                        <template slot="title"><span style="color: black; font-weight: bold">资源录入</span></template>
-                        <el-menu-item index="1-1"><span style="color:	Gainsboro; font-weight: bold">学习资源</span></el-menu-item>
-                        <router-link to="/inputMarked" :underline="false">
-                          <el-menu-item index="1-2">
-                            <span style="color: black; font-weight: bold">试题资源</span>
-                          </el-menu-item>
-                        </router-link>
-                        <el-menu-item index="1-3"><span style="color: Gainsboro; font-weight: bold">试卷资源</span></el-menu-item>
-                        <el-menu-item index="1-4"><span style="color:	Gainsboro; font-weight: bold">知识体系</span></el-menu-item>
-                      </el-submenu>
-                      <el-submenu index="2">
+                </span>
+              </el-col>
+              <el-col :span="4" style="padding-top: 2.2vh">
+                <el-menu :default-active="activeIndex" mode="horizontal">
+                  <el-submenu index="0">
+                    <template slot="title"><span style="font-size: 18px; font-weight: bold; color: black">功能</span></template>
+                    <el-submenu index="1">
+                      <template slot="title"><span style="color: black; font-weight: bold">资源录入</span></template>
+                      <el-menu-item index="1-1"><span style="color:	Gainsboro; font-weight: bold">学习资源</span></el-menu-item>
+                      <router-link to="/inputMarked" :underline="false">
+                        <el-menu-item index="1-2">
+                          <span style="color: black; font-weight: bold">试题资源</span>
+                        </el-menu-item>
+                      </router-link>
+                      <router-link to="/inputPaper" :underline="false">
+                        <el-menu-item index="1-3">
+                          <span style="color: black; font-weight: bold">试卷资源</span>
+                        </el-menu-item>
+                      </router-link>
+                      <el-menu-item index="1-4"><span style="color:	Gainsboro; font-weight: bold">知识体系</span></el-menu-item>
+                    </el-submenu>
+                    <el-submenu index="2">
 
-                        <template slot="title"><span style="color: black; font-weight: bold">查询</span></template>
+                      <template slot="title"><span style="color: black; font-weight: bold">查询</span></template>
 
-                        <router-link to="/exercise" :underline="false">
-                          <el-menu-item index="2-1">
-                            <span style="color: black; font-weight: bold">试题检索</span>
-                          </el-menu-item>
-                        </router-link>                  
+                      <router-link to="/exercise" :underline="false">
+                        <el-menu-item index="2-1">
+                          <span style="color: black; font-weight: bold">试题检索</span>
+                        </el-menu-item>
+                      </router-link>                  
+                      
+                      <router-link to="/ku" :underline="false">
+                        <el-menu-item index="2-2">
+                          <span style="color: black; font-weight: bold">知识单元检索</span>
+                        </el-menu-item>
+                      </router-link>
+                      
+                    </el-submenu>
+                    <el-submenu index="3">
+                      <template slot="title"><span style="color: black; font-weight: bold">分析</span></template>
+                      <el-menu-item index="3-1"><span style="color: Gainsboro; font-weight: bold">学习资源</span></el-menu-item>
+                      <el-menu-item index="3-2"><span style="color: Gainsboro; font-weight: bold">试卷资源</span></el-menu-item>
+                    </el-submenu>
+                    <router-link to="/estimate" :underline="false">
+                      <el-menu-item index="4">
+                          <span style="color: black; font-weight: bold">试题属性预估</span>
+                      </el-menu-item>
+                    </router-link>
+                    <router-link to="/similarity" :underline="false">
+                      <el-menu-item index="5">
+                        <span style="color: black; font-weight: bold">相似题预估</span>
+                      </el-menu-item>
+                    </router-link>
+                  </el-submenu>
+                </el-menu>
+              </el-col>
+              <el-col :span="5" style="padding-top: 3vh">
+                <el-link href="http://bigdata.ustc.edu.cn/" target="_blank" class="navbar"><span style="color: black">实验室主页</span></el-link>
+              </el-col>
+              <el-col :span="4" style="padding-top: 3vh">
+                <el-dropdown trigger="hover" v-if="username"  class="navbar">
+                  <span class="el-dropdown-link user-inner">
+                    {{ username }}
+                    <i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="logout"
+                      >退出登录</el-dropdown-item
+                    >
+                  </el-dropdown-menu>
+                </el-dropdown>
+                <el-button type="text" @click="login_show" v-else class="navbar">登录</el-button>
+              </el-col>
+              <el-col :span="2" style="padding-top: 3vh">
+                <el-button type="text" @click="register_show" class="navbar">注册</el-button>
+              </el-col>
+            </el-row>
+            <!-- <div class="main-menu text-right">
+              <nav id="mobile-menu">
+                <ul>
+                  <li>
+                    <router-link to="/" :underline="false">首页</router-link>
+                  </li>
+                  <li class="drop-down">
+                    <el-dropdown placement="bottom">
+                      <span class="el-dropdown-link">
+                        API&emsp;<i class="el-icon-arrow-down"></i>
+                      </span>
+                      <el-dropdown-menu slot="dropdown">
                         
                         <router-link to="/ku" :underline="false">
-                          <el-menu-item index="2-2">
-                            <span style="color: black; font-weight: bold">知识单元检索</span>
-                          </el-menu-item>
+                          <el-dropdown-item>
+                            知识单元检索
+                          </el-dropdown-item>
                         </router-link>
                         
-                      </el-submenu>
-                      <el-submenu index="3">
-                        <template slot="title"><span style="color: black; font-weight: bold">分析</span></template>
-                        <el-menu-item index="3-1"><span style="color: Gainsboro; font-weight: bold">学习资源</span></el-menu-item>
-                        <el-menu-item index="3-2"><span style="color: Gainsboro; font-weight: bold">试卷资源</span></el-menu-item>
-                      </el-submenu>
-                      <router-link to="/estimate" :underline="false">
-                        <el-menu-item index="4">
-                            <span style="color: black; font-weight: bold">试题属性预估</span>
-                        </el-menu-item>
-                      </router-link>
-                      <router-link to="/similarity" :underline="false">
-                        <el-menu-item index="5">
-                          <span style="color: black; font-weight: bold">相似题预估</span>
-                        </el-menu-item>
-                      </router-link>
-                    </el-submenu>
-                  </el-menu>
-                </el-col>
-                <el-col :span="5">
-                  <el-link href="http://bigdata.ustc.edu.cn/" target="_blank" class="navbar"><span style="color: black">实验室主页</span></el-link>
-                </el-col>
-                <el-col :span="4">
-                  <el-dropdown trigger="hover" v-if="username"  class="navbar">
+                        <router-link to="/exercise" :underline="false">
+                          <el-dropdown-item>
+                            试题检索
+                          </el-dropdown-item>
+                        </router-link>
+                        
+                        <router-link to="/estimate" :underline="false">
+                          <el-dropdown-item>
+                            试题属性预估
+                          </el-dropdown-item>
+                        </router-link>
+                        
+                        <router-link to="/similarity" :underline="false">
+                          <el-dropdown-item>
+                            相似题预估
+                          </el-dropdown-item>
+                        </router-link>
+                        
+                        
+                        <router-link to="/inputMarked" :underline="false">
+                          <el-dropdown-item>
+                            试题录入
+                          </el-dropdown-item>
+                        </router-link>
+                        
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                  </li>
+                  <li>
+                    <a
+                      href="http://bigdata.ustc.edu.cn/"
+                      target="_blank"
+                      :underline="false"
+                      >实验室主页</a
+                    >
+                  </li>
+                  <li>
+                    <router-link to="/admin" :underline="false" v-if="isAdmin"
+                      >数据管理</router-link
+                    >
+                  </li>
+                  <el-dropdown trigger="hover" v-if="username">
                     <span class="el-dropdown-link user-inner">
                       {{ username }}
                       <i class="el-icon-arrow-down el-icon--right"></i>
@@ -249,96 +331,20 @@
                       >
                     </el-dropdown-menu>
                   </el-dropdown>
-                  <el-button type="text" @click="login_show" v-else class="navbar">登录</el-button>
-                </el-col>
-                <el-col :span="2">
-                  <el-button type="text" @click="register_show" class="navbar">注册</el-button>
-                </el-col>
-              </el-row>
-              <!-- <div class="main-menu text-right">
-                <nav id="mobile-menu">
-                  <ul>
-                    <li>
-                      <router-link to="/" :underline="false">首页</router-link>
-                    </li>
-                    <li class="drop-down">
-                      <el-dropdown placement="bottom">
-                        <span class="el-dropdown-link">
-                          API&emsp;<i class="el-icon-arrow-down"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                          
-                          <router-link to="/ku" :underline="false">
-                            <el-dropdown-item>
-                              知识单元检索
-                            </el-dropdown-item>
-                          </router-link>
-                          
-                          <router-link to="/exercise" :underline="false">
-                            <el-dropdown-item>
-                              试题检索
-                            </el-dropdown-item>
-                          </router-link>
-                          
-                          <router-link to="/estimate" :underline="false">
-                            <el-dropdown-item>
-                              试题属性预估
-                            </el-dropdown-item>
-                          </router-link>
-                          
-                          <router-link to="/similarity" :underline="false">
-                            <el-dropdown-item>
-                              相似题预估
-                            </el-dropdown-item>
-                          </router-link>
-                          
-                          
-                          <router-link to="/inputMarked" :underline="false">
-                            <el-dropdown-item>
-                              试题录入
-                            </el-dropdown-item>
-                          </router-link>
-                          
-                        </el-dropdown-menu>
-                      </el-dropdown>
-                    </li>
-                    <li>
-                      <a
-                        href="http://bigdata.ustc.edu.cn/"
-                        target="_blank"
-                        :underline="false"
-                        >实验室主页</a
-                      >
-                    </li>
-                    <li>
-                      <router-link to="/admin" :underline="false" v-if="isAdmin"
-                        >数据管理</router-link
-                      >
-                    </li>
-                    <el-dropdown trigger="hover" v-if="username">
-                      <span class="el-dropdown-link user-inner">
-                        {{ username }}
-                        <i class="el-icon-arrow-down el-icon--right"></i>
-                      </span>
-                      <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="logout"
-                          >退出登录</el-dropdown-item
-                        >
-                      </el-dropdown-menu>
-                    </el-dropdown>
-                    <button v-else class="text-btn" @click="login_show">登录</button>
-                    <button class="text-btn" @click="register_show">注册</button>
-                  </ul>
-                </nav>
-              </div> -->
-            </el-col>
-          </el-row>
-        </div>
+                  <button v-else class="text-btn" @click="login_show">登录</button>
+                  <button class="text-btn" @click="register_show">注册</button>
+                </ul>
+              </nav>
+            </div> -->
+          </el-col>
+        </el-row>
       </div>
-    </header>
-    <router-view></router-view>
+    </el-header>
+    <el-main>
+      <router-view></router-view>
+    </el-main>
     <!-- footer -->
-    <footer>
+    <el-footer>
       <el-col class="footer-wrap" style="color: #9B9EA4; padding: 30px; font-size: 16px; background: #E4E7ED">
         <el-row style="text-align-last: justify">
           <el-col :span="6" :offset="9">
@@ -365,9 +371,9 @@
           </el-col>
         </el-row>
       </el-col>
-    </footer>
+    </el-footer>
     <!-- footer-end -->
-  </div>
+  </el-container>
 </template>
 
 <script>
@@ -537,7 +543,6 @@ export default {
 .main-menu ul li {
   display: inline-block;
   position: relative;
-  margin-left: 35px;
   margin-right: -10px;
 }
 .main-menu ul li:first-child {
@@ -547,7 +552,7 @@ export default {
   display: block;
   color: #1a2930;
   opacity: 0.8;
-  padding: 36px 0;
+  padding: 0;
   font-size: 18px;
   font-weight: 700;
   position: relative;
@@ -595,14 +600,13 @@ export default {
   position: fixed;
   top: 0;
   width: 100%;
-  box-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.07);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
   z-index: 9999;
   background: #fff;
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
   margin-top: 0px;
-  padding-left: 100px;
 }
 /* footer */
 .theme-bg {
@@ -666,7 +670,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 .el-dropdown-link {
   cursor: pointer;
@@ -702,9 +705,45 @@ export default {
   color: #1a2930;
 }
 .navbar {
-  padding: 20px 0px 0px 0px;
   font-size: 18px; 
   font-weight: bold;
   color: black;
+}
+.el-container{
+  /*设置内部填充为0，几个布局元素之间没有间距*/
+  padding: 0px;
+    /*外部间距也是如此设置*/
+  margin: 0px;
+  /*统一设置高度为100%*/
+  height: 100%;
+  width: 100%;
+}
+.el-main{
+  /*设置内部填充为0，几个布局元素之间没有间距*/
+  padding: 0px 0px 0px 0px;
+    /*外部间距也是如此设置*/
+  margin: 0px 0px 0px 0px;
+  /*统一设置高度为100%*/
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+.el-header{
+  /*设置内部填充为0，几个布局元素之间没有间距*/
+  padding: 0px 0px 0px 0px;
+    /*外部间距也是如此设置*/
+  margin: 0px 0px 30px 0px;
+  /*统一设置高度为100%*/
+  height: 100%;
+  width: 100%;
+}
+.el-footer{
+  /*设置内部填充为0，几个布局元素之间没有间距*/
+  padding: 0px;
+    /*外部间距也是如此设置*/
+  margin: 0px;
+  /*统一设置高度为100%*/
+  height: 100%;
+  width: 100%;
 }
 </style>

@@ -3,7 +3,7 @@
   <div class="ku">
     <!-- header -->
 
-    <el-row justify="start" type="flex" style="padding-left: 2vw; padding-top: 5vh; border-top: 3px solid #ccc">
+    <el-row justify="start" type="flex" style="padding-left: 2vw; padding-top: 5vh;">
       <el-col>
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -406,21 +406,27 @@ export default {
   outline: none;
 } */
 #tabs /deep/ .el-tabs__item {
-  margin-top: 2vh;
   background: #4FA5FD;;
   color: white;
   font-weight: 900;
   border-radius: 10px;
+  border: 0px;
 }
 #tabs /deep/ .el-tabs__item.is-active {
-  margin-top: 2vh;
   background: #4FA5FD;;
   color: white;
   font-weight: 900;
   border-radius: 10px;
 }
+
+#tabs /deep/ .el-tabs__nav.is-top{
+  border: none;
+}
+#tabs /deep/ .el-tabs__header.is-top{
+  border: none;
+}
+
 #checkbox /deep/ .el-checkbox__input.is-checked + .el-checkbox__label {
-  margin-top: 2vh;
   color: #1a2930;
 }
 .el-tag {

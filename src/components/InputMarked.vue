@@ -2406,7 +2406,8 @@
       <el-col style="padding-left: 25px">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>试题录入</el-breadcrumb-item>
+          <el-breadcrumb-item>资源录入</el-breadcrumb-item>
+          <el-breadcrumb-item>试题资源</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
@@ -2414,11 +2415,11 @@
       <el-col :span="4" style="padding-bottom: 50px; padding-top: 30px">
         <!-- 切换页面 -->
         <el-row type="flex" justify="center">
-          <router-link to="/inputPaper">
-            <div style="background: #FAECD8; color: orange; font-weight: bold; border: 2px solid orange; width: 170px; height: 40px; padding-top: 10px">
+          <el-button type="warning" plain @click="Router_Trans('/inputPaper')" style="width: 200px; font-size: 16px">
+            <span style="font-weight: bold">
               切换至整卷录入页面
-            </div>
-          </router-link>
+            </span>
+          </el-button>
         </el-row>
         <!-- 不同题型 -->
         <el-row style="padding-top: 30px">
@@ -2642,6 +2643,9 @@ export default {
   methods: {
     preview() {
       this.isview = true;
+    },
+    Router_Trans(route){
+      this.$router.push({ path: route });
     },
     loadJsonFromFile(file, fileList) {
       this.uploadFileName = file;

@@ -1,7 +1,7 @@
 <template>
   <div class="exercise" style="margin-bottom: 40px">
     <!-- header -->
-    <el-row style="padding-top: 6vh; border-top: 3px solid #ccc" justify="start" type="flex">
+    <el-row justify="start" type="flex">
       <el-col :offset="2">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -9,9 +9,9 @@
         </el-breadcrumb>
       </el-col>
     </el-row>
-    <el-row style="padding-left: 1.5vw; margin-top: 6vh" type="flex" v-if="simpleInput">
+    <el-row style="padding-left: 1.5vw; margin-top: 4vh" type="flex" v-if="simpleInput">
       <el-col :span="11" :offset="2">
-        <el-input v-model="exercise_text" placeholder="请输入内容" style="border: 2px solid #ccc"></el-input>
+        <el-input v-model="exercise_text" placeholder="请输入内容"></el-input>
       </el-col>
       <el-col :span="2" :offset="1">
         <el-button type="primary" plain @click="changeInput">
@@ -24,7 +24,7 @@
         </el-button>
       </el-col>
     </el-row>
-    <el-row style="margin-top: 6vh; padding-left: 1.5vw" v-if="!simpleInput" type="flex">
+    <el-row style="margin-top: 4vh; padding-left: 1.5vw" v-if="!simpleInput" type="flex">
       <el-col :span="2" :offset="2" style="padding-top: 14vh">
         <el-row>
           <el-button type="primary" plain  @click="changeInput">
@@ -44,7 +44,7 @@
       </el-col>
     </el-row>
     <!-- main -->
-    <el-row type="flex" justify="center" style="margin-top: 6vh;" >
+    <el-row type="flex" justify="center" style="margin-top: 4vh;" >
       <el-col :span="20">
         <div class="result">
           <el-row type="flex" justify="start">
@@ -71,7 +71,7 @@
                 style="height: 200px; margin-top: 5vh;"
                 id="tabs"
               >
-                <el-tab-pane label="人教版新" name="rjb_new" style="background: #ccc">
+                <el-tab-pane label="人教版新" name="rjb_new" style="border: none">
                   <el-row
                     v-for="(entities, group, group_index) in entities_groups"
                     :key="group_index"
@@ -294,16 +294,25 @@ export default {
 #tabs /deep/ .el-tabs__item {
   color: #36a9df;
   font-weight: 900;
+  border-radius: 10px;
+  border-color: #36a9df;
+}
+#tabs /deep/ .el-tabs__nav.is-top{
+  border: none;
+}
+#tabs /deep/ .el-tabs__header.is-top{
+  border: none;
 }
 #tabs /deep/ .el-tabs__item.is-active {
   background-color: #36a9df;
   color: #fff;
   font-weight: 900;
-  border-radius: 10px;
+  border-color: #36a9df;
 }
 #tag /deep/ .el-tag {
   background-color: #fff !important;
   color: #000 !important;
-  border-color: #c5c1c0 !important;
+  border-color: #36a9df !important;
 }
+
 </style>

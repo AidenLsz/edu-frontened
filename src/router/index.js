@@ -13,6 +13,7 @@ import InputMarkedPreview from "@/components/InputMarkedPreview";
 import Register from "@/components/Register";
 import TestPage from "@/components/TestPage";
 import TestPageList from "@/components/TestPageList"
+import FileUpload from "@/components/Upload"
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
@@ -81,6 +82,11 @@ const router = new Router({
       path: "/register",
       name: "Register",
       component: Register,
+    },
+    {
+      path: "/fileUpload",
+      name: "FileUpload",
+      component: FileUpload,
     },
     {
       path: "/admin",

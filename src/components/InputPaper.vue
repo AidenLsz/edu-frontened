@@ -1,6 +1,40 @@
 <template>
   <div>
-    <el-dialog :visible.sync="importPaperDialog" 
+    <el-dialog
+        :visible.sync="paperShow" 
+        title="全卷预览" 
+        width="65%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
+      <el-row v-for="(Question_Bundle, Bundle_Index) in Questions" :key="Bundle_Index">
+          <!-- 第一行：大题编号，添加新的小题，题目类型，上移，下移，删除，题目说明 -->
+          <el-row >
+            <el-col :span="2" style="font-size: 18px; padding-top: 8px">
+              <label><span>第{{Bundle_Index + 1}}大题</span></label>
+            </el-col>
+          </el-row>
+          <!-- 之后的每一行，读取这个大题中的一个题目，然后进行对应的渲染 -->
+          <el-row v-for="(Question, Question_Index) in Question_Bundle.Bundle_Questions" :key="Question_Index">
+              <el-col :offset="2">
+                  <!-- 编辑题目，上移，下移，删除，折叠/展开按钮 -->
+                  <el-row style="margin-top: 5px; margin-bottom: 10px">
+                      <el-col :span="2" style="text-align: left; font-size: 16px; padding-top: 4px">
+                          <label>第 {{Question_Index + 1}} 题</label>
+                      </el-col>
+                  </el-row>
+                  <!-- 展开模式交给Display来负责，折叠模式为了避免样式报错，直接转换成文字格式 -->
+                  <el-row>
+                      <OptionDisplay v-if="Question.type == 'option'" :QI="Question"></OptionDisplay>
+                      <FillDisplay v-else-if="Question.type == 'fill'" :QI="Question"></FillDisplay>
+                      <AnswerDisplay v-else-if="Question.type == 'answer'" :QI="Question"></AnswerDisplay>
+                      <MixDisplay v-else-if="Question.type == 'mix'" :QI="Question"></MixDisplay>
+                  </el-row>
+              </el-col>
+          </el-row>
+        </el-row>
+    </el-dialog>
+    <el-dialog 
+        :visible.sync="importPaperDialog" 
         title="试卷导入" 
         width="65%" 
         @close="Import_Paper_Dialog_Close()"
@@ -144,7 +178,7 @@
         ></MixQuestions>
     </el-dialog>
     <el-row justify="start" type="flex">
-      <el-col style="border-bottom: 3px solid #ccc; padding-bottom: 30px; margin: 0px 50px">
+      <el-col style="padding-left: 25px">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>资源录入</el-breadcrumb-item>
@@ -156,14 +190,14 @@
       <el-col :span="4" style="padding-bottom: 50px; margin-left: 20px; margin-top: 30px">
         <!-- 切换页面 -->
         <el-row type="flex" justify="center">
-          <router-link to="/inputMarked">
-            <div style="background: #FAECD8; color: orange; font-weight: bold; border: 2px solid orange; width: 170px; height: 40px; padding-top: 10px">
+          <el-button type="warning" plain @click="Router_Trans('/inputMarked')" style="width: 200px; font-size: 16px">
+            <span style="font-weight: bold">
               切换至单题录入页面
-            </div>
-          </router-link>
+            </span>
+          </el-button>
         </el-row>
         <!-- 不同题型 -->
-        <el-row style="padding-top: 30px">
+        <el-row style="padding-top: 30px;">
           <el-row>
             <el-col :span="6" style="font-size: 20px">
               <i class="el-icon-arrow-down"></i>
@@ -204,6 +238,11 @@
         <el-row type="flex" justify="center" style="padding-top: 30px">
           <el-button type="primary" plain style="width: 200px; font-size: 16px" @click="importPaperDialog = true">
             <label>文件导入</label>
+          </el-button>
+        </el-row>
+        <el-row type="flex" justify="center" style="padding-top: 30px">
+          <el-button type="primary" @click="paperShow = true" plain style="width: 200px; font-size: 16px">
+            <label>预览全卷</label>
           </el-button>
         </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px">
@@ -258,7 +297,7 @@
                 <i class="el-icon-delete"></i>
               </el-button>
             </el-col>
-            <el-col :span="13" :offset="1">
+            <el-col :span="12" :offset="1">
               <el-input v-model="Question_Bundle.Bundle_Introduce" placeholder="大题说明"></el-input>
             </el-col>
           </el-row>
@@ -324,21 +363,17 @@
                       </el-col>
                   </el-row>
                   <!-- 展开模式交给Display来负责，折叠模式为了避免样式报错，直接转换成文字格式 -->
-                  <div v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index] == false">
-                      <el-row>
-                          <OptionDisplay v-if="Question.type == 'option'" :QI="Question"></OptionDisplay>
-                          <FillDisplay v-else-if="Question.type == 'fill'" :QI="Question"></FillDisplay>
-                          <AnswerDisplay v-else-if="Question.type == 'answer'" :QI="Question"></AnswerDisplay>
-                          <MixDisplay v-else-if="Question.type == 'mix'" :QI="Question"></MixDisplay>
-                      </el-row>
-                  </div>
-                  <div v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index]">
-                      <el-row style="text-align: left; font-size: 14px">
-                          <el-col :offset="1">
-                              <label>{{Get_Collapse_Show(Question)}}</label>
-                          </el-col>
-                      </el-row>
-                  </div>
+                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index] == false">
+                      <OptionDisplay v-if="Question.type == 'option'" :QI="Question"></OptionDisplay>
+                      <FillDisplay v-else-if="Question.type == 'fill'" :QI="Question"></FillDisplay>
+                      <AnswerDisplay v-else-if="Question.type == 'answer'" :QI="Question"></AnswerDisplay>
+                      <MixDisplay v-else-if="Question.type == 'mix'" :QI="Question"></MixDisplay>
+                  </el-row>
+                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index]" style="text-align: left; font-size: 14px">
+                      <el-col :offset="1">
+                          <label>{{Get_Collapse_Show(Question)}}</label>
+                      </el-col>
+                  </el-row>
               </el-col>
           </el-row>
         </el-row>
@@ -456,7 +491,9 @@ export default {
       // 测试大题类型用的保存数组
       Questions: [],
       // 保存当前操作题包序号的标签：
-      Question_Bundle_Add_Index: -1
+      Question_Bundle_Add_Index: -1,
+      // 全卷内容预览
+      paperShow: false
     };
   },
   computed: {
@@ -818,6 +855,9 @@ export default {
             this.showDialog_Mix = true;
         }
 
+    },
+    Router_Trans(route){
+      this.$router.push({ path: route });
     },
     
     // 读取Json格式的数据
