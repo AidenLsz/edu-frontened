@@ -1,5 +1,5 @@
 <template>
-  <div class="exercise" style="margin-bottom: 40px; margin-top: 20px">
+  <div class="exercise" style="margin-bottom: 40px; margin-top: 5vh">
     <!-- header -->
     <el-row justify="start" type="flex">
       <el-col style="padding-left: 25px">

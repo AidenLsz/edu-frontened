@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 <template>
-  <div class="ku" style="margin-top: 20px">
+  <div class="ku" style="margin-top: 5vh">
     <!-- header -->
 
     <el-row justify="start" type="flex">

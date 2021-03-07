@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 20px">
+  <div style="margin-top: 5vh">
     <!-- 全卷预览 -->
     <el-dialog
         :visible.sync="paperShow" 

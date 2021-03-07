@@ -170,19 +170,19 @@
         </el-col>
       </el-row>
     </el-dialog>
-    <el-header>
+    <el-header style="height: 70px;">
       <div id="header-sticky">
-        <el-row style="height: 8vh; border-bottom: 2px solid #ccc;">
-          <el-col :span="4" style="padding-top: 1.5vh; padding-left: 30px">
+        <el-row style="border-bottom: 2px solid #ccc;">
+          <el-col :span="4" style="padding-top: 20px; padding-left: 30px">
             <img src="./assets/luna_icon.png" alt="Logo" width="150px"/>
           </el-col>
           <el-col :span="8" :offset="11">
             <el-row type="flex" justify="end">
-              <el-col :span="4"  style="padding-top: 1.2vh">
+              <el-col :span="4"  style="padding-top: 15px;">
                 <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
               </el-col>
-              <el-col :span="4" style="padding-top: 0.35vh">
-                <el-menu :default-active="activeIndex" mode="horizontal" style="height: 50px; line-height: 50px; border-bottom: none">
+              <el-col :span="4" style="padding-top: 15px;">
+                <el-menu :default-active="activeIndex" mode="horizontal">
                   <el-submenu index="0">
                     <template slot="title"><span style="font-size: 18px; color: black;">功能</span></template>
                     <el-submenu index="1">
@@ -235,10 +235,10 @@
                   </el-submenu>
                 </el-menu>
               </el-col>
-              <el-col :span="5" style="padding-top: 1.2vh">
+              <el-col :span="5" style="padding-top: 15px;">
                 <el-link href="http://bigdata.ustc.edu.cn/" target="_blank" class="navbar"><span style="color: black">实验室主页</span></el-link>
               </el-col>
-              <el-col :span="4" style="padding-top: 1.2vh">
+              <el-col :span="4" style="padding-top: 15px;">
                 <el-dropdown trigger="hover" v-if="username"  class="navbar">
                   <span class="el-dropdown-link user-inner">
                     {{ username }}
@@ -252,7 +252,7 @@
                 </el-dropdown>
                 <el-button type="text" @click="login_show" v-else class="navbar">登录</el-button>
               </el-col>
-              <el-col :span="2" style="padding-top: 1.2vh">
+              <el-col :span="2" style="padding-top: 15px;">
                 <el-button type="text" @click="register_show" class="navbar">注册</el-button>
               </el-col>
             </el-row>
@@ -460,6 +460,18 @@ export default {
   },
 };
 </script>
+<style>
+.el-menu--horizontal>.el-submenu .el-submenu__title {
+    height: 42px;
+    line-height: 18px;
+    padding-top: 15px;
+    border-bottom: 2px solid transparent;
+    width: 85%;
+}
+.el-menu.el-menu--horizontal {
+    border-bottom: none;
+}
+</style>
 
 <style scoped lang="scss">
 .menu-area {
@@ -529,9 +541,10 @@ export default {
   left: 0;
   margin: auto;
   position: fixed;
+  height: 70px;
   top: 0;
   width: 100%;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.3);
   z-index: 9999;
   background: #fff;
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
@@ -608,6 +621,7 @@ export default {
   font-size: 18px;
   font-weight: 900;
 }
+
 </style>
 <style scoped>
 .el-dropdown-menu__item:focus,
@@ -676,8 +690,5 @@ export default {
   height: 100%;
   width: 100%;
 }
-.el-menu--horizontal .el-submenu .el-submenu__title {
-    height: 50px;
-    line-height: 50px;
-}
+
 </style>

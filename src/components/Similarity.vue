@@ -1,5 +1,5 @@
 <template>
-  <div class="similarity"  style="margin-top: 20px">
+  <div class="similarity"  style="margin-top: 5vh">
     <div class="panel">
       <el-row justify="start" type="flex">
         <el-col style="padding-left: 25px">

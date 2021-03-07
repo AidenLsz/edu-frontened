@@ -2287,7 +2287,7 @@
       </el-col>
     </el-row>
   </div> -->
-  <div style="margin-top: 20px">
+  <div style="margin-top: 5vh">
     <!-- 提供给选择题的编辑器 -->
     <el-dialog 
         :visible.sync="showDialog" 
