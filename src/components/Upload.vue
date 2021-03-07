@@ -422,7 +422,7 @@ export default {
     uploadFile(formData, config, e) {
       this.loading = true;
       this.$http
-        .post(this.backendIP + "/paperProcessing/upload", formData, config)
+        .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
         .then(function(data) {
 
           this.Clear();

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 全卷预览 -->
     <el-dialog
         :visible.sync="paperShow" 
         title="全卷预览" 
@@ -33,10 +34,11 @@
           </el-row>
         </el-row>
     </el-dialog>
+    <!-- 试卷导入，中间的区域预留了位置，但是功能还得等黄杰那边实现 -->
     <el-dialog 
         :visible.sync="importPaperDialog" 
         title="试卷导入" 
-        width="65%" 
+        width="90%" 
         @close="Import_Paper_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
@@ -51,8 +53,8 @@
             <span>*支持doc，docx，pdf格式的文件</span>
           </el-col>
         </el-row>
-        <el-row style="margin: 30px 40px; background: #F8FBFF; min-height: 300px; padding-top: 20vh">
-          <span>*这部分具体内容等待题目自动分类功能完成后实现</span>
+        <el-row style="margin: 30px 40px;">
+          <FileUpload></FileUpload>
         </el-row>
         <el-row>
           <el-col :span="4" :offset="8">
@@ -395,12 +397,17 @@ import AnswerQuestions from "./AnswerQuestions.vue";
 import AnswerDisplay from "./AnswerDisplay.vue";
 import MixQuestions from "./MixQuestions.vue";
 import MixDisplay from "./MixDisplay.vue";
+
+// import Upload
+import FileUpload from "./Upload.vue";
+
 export default {
   components: { ComplexInput, 
                 OptionDisplay, OptionQuestions, 
                 FillQuestions, FillDisplay, 
                 AnswerQuestions, AnswerDisplay,
-                MixQuestions, MixDisplay},
+                MixQuestions, MixDisplay,
+                FileUpload},
   data() {
     return {
       Sequence_Questions: "1",
