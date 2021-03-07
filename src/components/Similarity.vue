@@ -1,8 +1,8 @@
 <template>
-  <div class="similarity">
+  <div class="similarity"  style="margin-top: 20px">
     <div class="panel">
       <el-row justify="start" type="flex">
-        <el-col>
+        <el-col style="padding-left: 25px">
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>相似试题评估</el-breadcrumb-item>
@@ -10,7 +10,7 @@
         </el-col>
       </el-row>
 
-      <el-row style="padding-top: 2vh">
+      <el-row style="padding: 1vh 3vw 0 3vw">
         <el-col :span="11">
           <ComplexInput @Update_CI="UCI_Left" @Update_Image="UCII_Left" ref="CI_Left"></ComplexInput>
           <!-- <el-tabs type="border-card" id="tabs">
@@ -88,11 +88,11 @@
           </el-col>
       </el-row> -->
 
-      <el-row type="flex" justify="end" style="padding-top: 5vh">
+      <el-row type="flex" justify="end" style="padding: 1vh 3vw 0 3vw">
         <el-button type="primary" value="提交" @click="submit">评估</el-button>
       </el-row>
 
-      <div id="result" v-if="show_result" style="border-top: 3px solid #ccc; padding-top: 5vh; ">
+      <div id="result" v-if="show_result" style="border-top: 3px solid #ccc; margin: 3vh 3vw 0 3vw; padding-top: 2vh">
         <el-row type="flex" justify="start">
           <h4 style="color: #0a1612; font-weight: bold">评估结果：</h4>
         </el-row>
@@ -219,13 +219,9 @@ export default {
 }
 .panel {
   background-color: #fff;
-  border: 1px solid #fff;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 4px;
-  padding-left: 5%;
-  padding-right: 5%;
-  padding-top: 3%;
-  height: 780px;
+  min-height: 700px;
+  box-shadow: none;
 }
 .logo {
   margin-left: 50px;

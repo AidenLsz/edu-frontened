@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top: 20px">
     <!-- 全卷预览 -->
     <el-dialog
         :visible.sync="paperShow" 
@@ -38,7 +38,7 @@
     <el-dialog 
         :visible.sync="importPaperDialog" 
         title="试卷导入" 
-        width="90%" 
+        width="80%" 
         @close="Import_Paper_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false">

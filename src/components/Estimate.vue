@@ -1,15 +1,15 @@
 <template>
-  <div class="estimate">
+  <div class="estimate"  style="margin-top: 20px">
     <div class="panel">
       <el-row justify="start" type="flex">
-        <el-col>
+        <el-col style="padding-left: 25px">
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>试题属性预估</el-breadcrumb-item>
           </el-breadcrumb>
         </el-col>
       </el-row>
-      <el-row style="padding-top: 4vh;">
+      <el-row style="padding-top: 4vh; padding-left: 3vw">
         <el-col :span="4">
           <el-select v-model="subject_id" placeholder="请先在此选择学科">
             <el-option
@@ -37,11 +37,11 @@
               >评估
             </el-button>
         </el-col>
-        <el-col :span="10" style="font-size: 16px; color: grey; padding-top:6px">
+        <el-col :span="10" style="font-size: 16px; color: grey; padding-top:6px; ">
           <span>*选择学科、类别，并填写题目后方可提交*</span>
         </el-col>
       </el-row>
-      <el-row type="flex" justify="start" style="padding-top: 3vh">
+      <el-row type="flex" justify="start" style="padding-top: 3vh; padding-left: 4vw">
         <el-col :span="2.5">
           <span>预测属性勾选：</span>
         </el-col>
@@ -52,17 +52,17 @@
           </el-checkbox-group>
         </el-col>
       </el-row>
-      <el-row style="padding-top: 2vh" type="flex" justify="start" >
+      <el-row style="padding-top: 2vh; padding-left: 4vw" type="flex" justify="start" >
         <ComplexInput @Update_CI="UCI" @Update_Image="UCII"></ComplexInput>
       </el-row>
       <el-divider></el-divider>
       <el-row v-loading="loading">
-        <el-row type="flex" justify="start">
-          <h6 style="color: #0a1612;">预估结果：</h6>
+        <el-row type="flex" justify="start" style="padding-top: 2vh; padding-left: 4vw">
+          <h4 style="color: #0a1612;">预估结果：</h4>
         </el-row>
 
-        <div class="result" v-if="show_result">
-          <el-row>
+        <div class="result" v-if="show_result" style="margin: 0px 4vw">
+          <el-row >
             <el-col :span="7" v-if="checkList.indexOf('难度') > -1">
               <el-card class="box-card">
                 <div slot="header" style="text-align:left;">
@@ -302,13 +302,9 @@ export default {
 }
 .panel {
   background-color: #fff;
-  border: 2px solid #fff;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
   border-radius: 4px;
-  padding-left: 5%;
-  padding-right: 5%;
-  padding-top: 3%;
-  height: 1200px;
+  min-height: 1000px;
+  box-shadow: none;
 }
 .logo {
   margin-left: 50px;

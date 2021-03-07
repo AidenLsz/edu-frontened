@@ -1,8 +1,8 @@
 <template>
-  <div class="exercise" style="margin-bottom: 40px">
+  <div class="exercise" style="margin-bottom: 40px; margin-top: 20px">
     <!-- header -->
     <el-row justify="start" type="flex">
-      <el-col :offset="2">
+      <el-col style="padding-left: 25px">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>试题检索</el-breadcrumb-item>

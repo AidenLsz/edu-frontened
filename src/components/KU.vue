@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
 <template>
-  <div class="ku">
+  <div class="ku" style="margin-top: 20px">
     <!-- header -->
 
-    <el-row justify="start" type="flex" style="padding-left: 2vw; padding-top: 5vh;">
-      <el-col>
+    <el-row justify="start" type="flex">
+      <el-col style="padding-left: 25px">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>知识单元检索</el-breadcrumb-item>

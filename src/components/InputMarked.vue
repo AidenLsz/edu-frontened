@@ -2287,7 +2287,7 @@
       </el-col>
     </el-row>
   </div> -->
-  <div>
+  <div style="margin-top: 20px">
     <!-- 提供给选择题的编辑器 -->
     <el-dialog 
         :visible.sync="showDialog" 
@@ -2326,7 +2326,7 @@
     <el-dialog 
         :visible.sync="showDialog_Fill" 
         title="请编辑想要插入/修改的填空题内容" 
-        width="65%" 
+        width="80%" 
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
@@ -2359,7 +2359,7 @@
     <el-dialog 
         :visible.sync="showDialog_Answer" 
         title="请编辑想要插入/修改的解答题内容" 
-        width="65%" 
+        width="80%" 
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
@@ -2392,7 +2392,7 @@
     <el-dialog 
         :visible.sync="showDialog_Mix" 
         title="请编辑想要插入/修改的非选择题内容" 
-        width="65%"
+        width="80%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
         <MixQuestions

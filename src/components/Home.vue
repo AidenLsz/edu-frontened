@@ -514,7 +514,7 @@
               </el-button>
             </el-button-group>
           </el-row>
-          <el-row v-if="ToolsLabelNow == '资源'" style="padding-top: 30px; background: white; padding-bottom: 30px">
+          <el-row v-if="ToolsLabelNow == '资源'" style="padding-top: 30px; padding-bottom: 30px">
             <el-col :span="6">
               <el-row>
                 <el-button @click="OpenResources(0)" circle style="height: 200px; width: 200px;"><img src="../assets/icon7.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
@@ -569,7 +569,7 @@
             </el-col>
           </el-row>
           <!-- 第二段 -->
-          <el-row v-else-if="ToolsLabelNow == '功能'"  style="padding-top: 30px; background: white; padding-bottom: 30px">
+          <el-row v-else-if="ToolsLabelNow == '功能'"  style="padding-top: 30px; padding-bottom: 30px">
             <el-col :span="6">
               <el-row>
                 <el-button @click="OpenFunctions(0)" circle style="height: 200px; width: 200px;"><img src="../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
@@ -642,7 +642,7 @@
       </el-row>
       <el-row style="margin-top: 80px; padding-bottom: 200px">
         <el-col :span="14" :offset="5">
-          <span style="font-size: 16px; line-height: 200%; text-align: left; font-weight: bold; display: inline-block">
+          <span style="font-size: 16px; line-height: 200%; text-align: left; display: inline-block">
             大数据分析与应用安徽省重点实验室（Anhui Province Key Laboratory of Big Data Analysis and Application），学科领域为电子信息，由中国科学技术大学、科大讯飞股份有限公司（以下简称科大讯飞公司）和安徽广电传媒产业集团有限责任公司（以下简称安徽广电集团）三方共建。其中，作为依托单位的中国科学技术大学，是我省乃至我国大数据分析与应用方向的优势研究单位；同时，作为共建单位的科大讯飞公司和安徽广电集团，不仅拥有规模庞大的大数据云平台以及优质数据资源，而且具有丰富的大数据技术产业化经验；更为重要的是，经过多年的合作，共建三方已经形成了强强联合、优势互补的稳定合作局面，围绕大数据分析与应用方向，建立了大数据产学研合作平台，在科研平台、产业平台和数据平台三个方面都拥有良好的科研和产业环境。
           </span>
         </el-col>
