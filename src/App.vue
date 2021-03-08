@@ -171,8 +171,8 @@
       </el-row>
     </el-dialog>
     <el-header style="height: 70px;">
-      <div id="header-sticky">
-        <el-row style="border-bottom: 2px solid #ccc;">
+      <div id="header-sticky" class="sticky-menu">
+        <el-row>
           <el-col :span="4" style="padding-top: 20px; padding-left: 30px">
             <img src="./assets/luna_icon.png" alt="Logo" width="150px"/>
           </el-col>
@@ -184,7 +184,9 @@
               <el-col :span="4" style="padding-top: 15px;">
                 <el-menu :default-active="activeIndex" mode="horizontal">
                   <el-submenu index="0">
-                    <template slot="title"><span style="font-size: 18px; color: black;">功能</span></template>
+                    <template slot="title">
+                      <span style="font-size: 18px; color: black;">功能</span>
+                    </template>
                     <el-submenu index="1">
                       <template slot="title"><span style="color: black;">资源录入</span></template>
                       <el-menu-item index="1-1"><span style="color:	Gainsboro;">学习资源</span></el-menu-item>
@@ -305,7 +307,7 @@
 </template>
 
 <script>
-import $ from "jquery";
+// import $ from "jquery";
 import vueImgVerify from "./components/vue-img-verify.vue";
 export default {
   name: "App",
@@ -369,14 +371,14 @@ export default {
     }
     // this.root = this.username === "root";
     // console.log(this.root);
-    $(window).on("scroll", function () {
-      var scroll = $(window).scrollTop();
-      if (scroll < 700) {
-        $("#header-sticky").removeClass("sticky-menu");
-      } else {
-        $("#header-sticky").addClass("sticky-menu");
-      }
-    });
+    // $(window).on("scroll", function () {
+    //   var scroll = $(window).scrollTop();
+    //   if (scroll < 700) {
+    //     $("#header-sticky").removeClass("sticky-menu");
+    //   } else {
+    //     $("#header-sticky").addClass("sticky-menu");
+    //   }
+    // });
   },
   methods: {
     goToMainPage(){
@@ -461,12 +463,13 @@ export default {
 };
 </script>
 <style>
-.el-menu--horizontal>.el-submenu .el-submenu__title {
+.el-header .el-menu--horizontal /deep/ .el-submenu .el-submenu__title {
     height: 42px;
     line-height: 18px;
     padding-top: 15px;
     border-bottom: 2px solid transparent;
     width: 85%;
+    z-index: 9999;
 }
 .el-menu.el-menu--horizontal {
     border-bottom: none;
@@ -541,15 +544,15 @@ export default {
   left: 0;
   margin: auto;
   position: fixed;
-  height: 70px;
+  max-height: 70px;
   top: 0;
   width: 100%;
-  box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.3);
-  z-index: 9999;
+  box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.5);
+  z-index: 999;
   background: #fff;
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
-  -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
+  -webkit-box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.5);
   margin-top: 0px;
 }
 /* footer */
