@@ -182,7 +182,7 @@
                 <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
               </el-col>
               <el-col :span="4" style="padding-top: 15px;">
-                <el-menu :default-active="activeIndex" mode="horizontal">
+                <el-menu :default-active="activeIndex" mode="horizontal" style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px">
                   <el-submenu index="0">
                     <template slot="title">
                       <span style="font-size: 18px; color: black;">功能</span>
@@ -463,17 +463,23 @@ export default {
 };
 </script>
 <style>
+
+.el-header .el-menu--horizontal /deep/ .el-submenu.is-active .el-submenu__title{
+  border-bottom: none;
+}
+
 .el-header .el-menu--horizontal /deep/ .el-submenu .el-submenu__title {
     height: 42px;
     line-height: 18px;
     padding-top: 15px;
     border-bottom: 2px solid transparent;
-    width: 85%;
-    z-index: 9999;
+    width: 50%;
+    z-index: 999;
 }
-.el-menu.el-menu--horizontal {
+.el-header .el-menu .el-menu--horizontal {
     border-bottom: none;
 }
+
 </style>
 
 <style scoped lang="scss">

@@ -633,7 +633,7 @@ The line of README
       <!-- Mathdown组件需要命名name属性才能区别不同的组件，而且不能是纯数字，至少第一个不能是数字 -->
     </el-dialog>
 
-    <el-row style="padding-top: 15px;" type="flex" justify="center">
+    <el-row style="padding-top: 15px; z-index: 1" type="flex" justify="center">
       <mavon-editor ref="mavoneditor" v-model="content" @imgAdd="New_Img_In" @imgDel="Del_Img">
         <el-col slot="left-toolbar-after" :span="1">
           <div>

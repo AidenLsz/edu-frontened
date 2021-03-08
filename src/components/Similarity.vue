@@ -92,11 +92,11 @@
         <el-button type="primary" value="提交" @click="submit">评估</el-button>
       </el-row>
 
-      <div id="result" v-if="show_result" style="border-top: 3px solid #ccc; margin: 3vh 3vw 0 3vw; padding-top: 2vh">
+      <div id="result" style="border-top: 3px solid #ccc; margin: 3vh 3vw 0 3vw; padding-top: 2vh">
         <el-row type="flex" justify="start">
-          <h4 style="color: #0a1612; font-weight: bold">评估结果：</h4>
+          <h4 style="color: black">评估结果：</h4>
         </el-row>
-        <el-row>
+        <el-row v-if="show_result">
           <el-col :span="11">
             <el-card class="box-card" style="background: #F8FBFF">
               <div slot="header" style="text-align:left;">
