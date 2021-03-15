@@ -356,15 +356,19 @@ export default {
       // 数学专用，答案JSON
       answer_content: "",
       txt_content: "",
+      // 文件名，试卷类型编号
       fileName: "",
       format: "3",
+      // 是否正在加载中
       loading: false,
+      // 英语用的数据
       file_data: [],
       file_item: [],
       // 题目编号
       title_index: [],
       // file_item属于的标签号
       file_item_label: [],
+      // 英语用的返回json
       json_return: {
         "paper_title": "",
         "type": "",
@@ -511,7 +515,9 @@ export default {
 
             // 最后是一个收尾用的标记标签，没有实际意义，但有功能意义
             this.file_item_label.push(-1)
-          } else if (this.paper_type == '1'){
+          } 
+          // 这里是处理数学试卷的逻辑部分
+          else if (this.paper_type == '1'){
 
             if(this.math_input == 'paper'){
               this.json_content = data.body.Paper;
@@ -533,6 +539,7 @@ export default {
       this.fileName = e.target.files[0].name;
 
     },
+    // 选择英语卷子
     selectFile(e) {
 
       if(e.target.files.length > 0){
@@ -564,6 +571,7 @@ export default {
 
       }
     },
+    // 选择数学的试卷部分的卷子
     selectPaperFile(e) {
 
       if(this.temp_File && this.math_standby == "0"){
@@ -629,6 +637,7 @@ export default {
 
       }
     },
+    // 选择数学的答案的部分的卷子
     selectAnswerFile(e) {
 
       if(this.temp_File && this.math_standby == "1"){
@@ -672,6 +681,7 @@ export default {
 
       }
     },
+    // 确认是否保存文件
     saveFile(f){
 
       this.$confirm(
@@ -693,6 +703,7 @@ export default {
         }).catch();
 
     },
+    // 英语 - 向数据库进行保存
     save_This_To_Database(){
 
       this.json_return.segment_num = this.file_item.length;

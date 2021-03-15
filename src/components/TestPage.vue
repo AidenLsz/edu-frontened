@@ -1,468 +1,113 @@
-// 这一页面的主要作用是测试不同题型的录入和显示功能是否能正常运作
+// 这一页面主要用于测试各类新功能的显示是否符合具体要求，等待完成后再放到正式页面上去
 
 <template>
     <div>
-        <!-- 提供给选择题的编辑器 -->
-        <el-dialog 
-            :visible.sync="showDialog" 
-            title="请编辑想要插入/修改的选择题内容" 
-            width="65%" 
-            @close="Editor_Dialog_Close()"
-            :modal-append-to-body="false"
-            :close-on-click-modal="false"
-        >
-            <el-row>
-                <el-col v-if="complex_Input">
-                    <el-row>
-                        <label>复杂输入框，请在需要时自行复制至目标输入框</label>
-                    </el-row>
-                    <ComplexInput></ComplexInput>
-                    <el-row>
-                        <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
-                    </el-row>
+        <el-row style="margin: 30px 50px 0px 50px">
+            {{TestData.title}}
+        </el-row>
+        <el-row v-for="(Question_Info, Question_Index) in TestData.doc" :key="Question_Index">
+            <!-- 题型，上传用户，科目部分 -->
+            <el-row type="flex" justify="start" style="margin: 30px 50px 0px 50px">
+                <el-col :span="2" style="text-align: left">
+                    {{Get_Question_Type(Question_Info.question_type)}}
                 </el-col>
-                <el-col v-if="!complex_Input">
-                    <el-row>
-                        <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
-                    </el-row>
+                <el-col :span="3" style="text-align: left">
+                    提交者：{{Question_Info.source}}
+                </el-col>
+                <el-col :span="3" style="text-align: left">
+                    科目：{{Question_Info.subject}}
                 </el-col>
             </el-row>
-            <el-divider></el-divider>
-            <OptionQuestions 
-                @EditFinish="New_Questions" 
-                @ReEditFinish="ReEdit_Questions" 
-                :RE.sync="ReEditSwitch" 
-                :QInfos.sync="Temp_OptionQuestionInfo" 
-                ref="OptionQuestionsEditor">
-            </OptionQuestions>
-        </el-dialog>
-        <!-- 提供给填空题的编辑器 -->
-        <el-dialog 
-            :visible.sync="showDialog_Fill" 
-            title="请编辑想要插入/修改的填空题内容" 
-            width="65%" 
-            @close="Editor_Dialog_Close()"
-            :modal-append-to-body="false"
-            :close-on-click-modal="false"
-        >
-            <el-row>
-                <el-col v-if="complex_Input">
-                    <el-row>
-                        <label>复杂输入框，请在需要时自行复制至目标输入框</label>
-                    </el-row>
-                    <ComplexInput></ComplexInput>
-                    <el-row>
-                        <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
-                    </el-row>
-                </el-col>
-                <el-col v-if="!complex_Input">
-                    <el-row>
-                        <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
-                    </el-row>
-                </el-col>
+            <!-- 题干部分 -->
+            <el-row type="flex" justify="start" style="margin: 30px 50px" v-html="Get_Question_Show(Question_Info.question_stem, 'stem')">
+                
             </el-row>
-            <el-divider></el-divider>
-            <FillQuestions
-                @EditFinish="New_Questions" 
-                @ReEditFinish="ReEdit_Questions" 
-                :RE.sync="ReEditSwitch" 
-                :QInfos.sync="Temp_FillQuestionInfo" 
-            ></FillQuestions>
-        </el-dialog>
-        <!-- 提供给解答题的编辑器 -->
-        <el-dialog 
-            :visible.sync="showDialog_Answer" 
-            title="请编辑想要插入/修改的解答题内容" 
-            width="65%" 
-            @close="Editor_Dialog_Close()"
-            :modal-append-to-body="false"
-            :close-on-click-modal="false"
-        >
-            <el-row>
-                <el-col v-if="complex_Input">
-                    <el-row>
-                        <label>复杂输入框，请在需要时自行复制至目标输入框</label>
-                    </el-row>
-                    <ComplexInput></ComplexInput>
-                    <el-row>
-                        <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
-                    </el-row>
-                </el-col>
-                <el-col v-if="!complex_Input">
-                    <el-row>
-                        <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
-                    </el-row>
-                </el-col>
+            <!-- 选项部分 -->
+            <el-row type="flex" justify="start" style="margin: 30px 50px" 
+                    v-for="(Question_Option, Option_Index) in Question_Info.question_options" 
+                    :key="Option_Index" 
+                    v-html="Get_Question_Options(Question_Option, Option_Index)">
+                    
             </el-row>
-            <el-divider></el-divider>
-            <AnswerQuestions
-                @EditFinish="New_Questions" 
-                @ReEditFinish="ReEdit_Questions" 
-                :RE.sync="ReEditSwitch" 
-                :QInfos.sync="Temp_AnswerQuestionInfo" 
-            ></AnswerQuestions>
-        </el-dialog>
-        <!-- 测试用按钮行 -->
-        <el-button @click="showDialog = true">插入新选择题</el-button>
-        <el-button @click="showDialog_Fill = true">插入新填空题</el-button>
-        <el-button @click="showDialog_Answer = true">插入新解答题</el-button>
-        <el-divider></el-divider>
-        <!-- 渲染区，要求所见即所得 -->
-        <el-row v-for="(item, index) in Questions_List" :key="index">
-            <el-col :span="14" :offset="8">
-                <!-- 编辑题目，上移，下移，删除，折叠/展开按钮 -->
-                <el-row style="margin-top: 5px; margin-bottom: 10px">
-                    <el-col :span="2">
-                        <el-button 
-                            circle 
-                            size="small"
-                            @click="Edit_Question(index)"
-                        ><i class="el-icon-edit"></i></el-button>
-                    </el-col>
-                    <el-col :span="1">
-                        <el-button 
-                            :disabled="index == 0" 
-                            circle 
-                            size="small"
-                            @click="Question_Up(index)"
-                        ><i class="el-icon-arrow-up"></i></el-button>
-                    </el-col>
-                    <el-col :span="1">
-                        <el-button 
-                            :disabled="index == Questions_List.length - 1" 
-                            circle 
-                            size="small"
-                            @click="Question_Down(index)"
-                        ><i class="el-icon-arrow-down"></i></el-button>
-                    </el-col>
-                    <el-col :span="2">
-                        <el-button 
-                            circle 
-                            plain
-                            size="small"
-                            type="danger"
-                            @click="Delete_Question(index)"
-                        ><i class="el-icon-delete"></i></el-button>
-                    </el-col>
-                    <el-col :span="2" >
-                        <div v-if="Questions_Collapse[index] == false">
-                            <el-button 
-                                round 
-                                plain
-                                size="small"
-                                type="info"
-                                @click="Change_Question_Collapse(index)"
-                            >折叠</el-button>
-                        </div>
-                        <div v-if="Questions_Collapse[index] == true">
-                            <el-button 
-                                round 
-                                plain
-                                size="small"
-                                type="info"
-                                @click="Change_Question_Collapse(index)"
-                            >展开</el-button>
-                        </div>
-                    </el-col>
-                </el-row>
-                <!-- 展开模式交给Display来负责，折叠模式为了避免样式报错，直接转换成文字格式 -->
-                <div v-if="Questions_Collapse[index] == false">
-                    <el-row style="text-align: left; font-size: 20px">
-                        <label>第 {{index + 1}} 题</label>
-                    </el-row>
-                    <br/>
-                    <el-row>
-                        <OptionDisplay v-if="item.type == 'option'" :QI="item"></OptionDisplay>
-                        <FillDisplay v-else-if="item.type == 'fill'" :QI="item"></FillDisplay>
-                        <AnswerDisplay v-else-if="item.type == 'answer'" :QI="item"></AnswerDisplay>
-                    </el-row>
-                </div>
-                <div v-if="Questions_Collapse[index]">
-                    <el-row style="text-align: left; font-size: 20px">
-                        <el-col :span="2">
-                            <label>第 {{index + 1}} 题</label>
-                        </el-col>
-                        <el-col :span="21" :offset="1">
-                            <label>{{Get_Collapse_Show(item)}}</label>
-                        </el-col>
-                    </el-row>
-                </div>
-            </el-col>
+            <!-- 答案部分 -->
+            <el-row type="flex" justify="start" style="margin: 30px 50px" v-html="Get_Question_Show(Question_Info.answer, 'answer')">
+               
+            </el-row>
+            <!-- 解析部分 -->
+            <el-row type="flex" justify="start" style="margin: 30px 50px" v-html="Get_Question_Show(Question_Info.analysis, 'analyse')">
+
+            </el-row>
         </el-row>
     </div>
 </template>
 <script>
 
-import OptionQuestions from "./OptionQuestions.vue"
-import FillQuestions from "./FillQuestions.vue"
-import ComplexInput from "./ComplexInput.vue"
-import OptionDisplay from "./OptionDisplay.vue";
-import FillDisplay from "./FillDisplay.vue";
-import AnswerQuestions from "./AnswerQuestions.vue";
-import AnswerDisplay from "./AnswerDisplay.vue";
-
 export default {
 
-    components: { ComplexInput, 
-                  OptionQuestions, OptionDisplay, 
-                  FillQuestions, FillDisplay, 
-                  AnswerQuestions, AnswerDisplay},
+    components: {},
     name: "TestPage",
     data(){
         return {
-            // 选择题编辑器,填空题编辑器和解答题编辑器的显示控制
-            showDialog: false,
-            showDialog_Fill: false,
-            showDialog_Answer: false,
-            // 打开复杂输入框的控制
-            complex_Input: false,
-            // 题目信息和折叠信息
-            Questions_List: [],
-            Questions_Collapse: [],
-            // 重写编辑标记
-            ReEditSwitch: false,
-            // 两个临时存放用的Json变量
-            Temp_OptionQuestionInfo: {
-
-                type: "option",
-                // 分值
-                score: 1,
-                // 题目内容，题目内容图片，是否显示图片
-                content: "",
-                content_images: [],
-                // 选项的部分
-                options: ["", "", "", ""],
-                options_images: ["", "", "", ""],
-                // 答案的部分
-                answer: "",
-                answer_images: [],
-                // 解析的部分
-                analyse: "",
-                analyse_images: []
-
-            },
-            Temp_FillQuestionInfo: {
-
-                type: "fill",
-                // 分值
-                score: 1,
-                // 题目内容，题目内容图片，是否显示图片
-                content: "",
-                content_images: [],
-                // 答案的部分
-                answer: "",
-                answer_images: [],
-                // 解析的部分
-                analyse: "",
-                analyse_images: []
-
-            },
-            Temp_AnswerQuestionInfo: {
-
-                type: "answer",
-                // 分值
-                score: 1,
-                // 题目内容，题目内容图片，是否显示图片
-                content: "",
-                content_images: [],
-                // 小题的部分
-                sub_questions: [""],
-                sub_questions_images: [[]],
-                sub_questions_scores: [1],
-                // 答案的部分
-                answer: "",
-                answer_images: [],
-                // 解析的部分
-                analyse: "",
-                analyse_images: []
-
-            },
-            // 临时保存重写编辑的位置用的记号
-            Index_Edit_Record: -1
+            TestData: {
+                "title": "2009年课标甲乙",
+                "doc": [
+                    {
+                    "question_ID": 0,
+                    "question_stem": "已知集合<IMG: 2019年高考理科数学（全国Ⅰ卷）试题-HTML.001.png>，<IMG: 2019年高考理科数学（全国Ⅰ卷）试题-HTML.002.png>，则<IMG: 2019年高考理科数学（全国Ⅰ卷）试题-HTML.003.png>",
+                    "question_options": ["<IMG: 2019年高考理科数学（全国Ⅰ卷）试题-HTML.004.png>",
+                                        "<IMG: 2019年高考理科数学（全国Ⅰ卷）试题-HTML.005.png>",
+                                        "<IMG: 2019年高考理科数学（全国Ⅰ卷）试题-HTML.006.png>",
+                                        "<IMG: 2019年高考理科数学（全国Ⅰ卷）试题-HTML.007.png>"],
+                    "answer": "A",
+                    "analysis": "",
+                    "question_type": "SingleChoice",
+                    "source": "用户6657",
+                    "subject": "数学"
+                    }
+                ],
+                "img": {
+                    "2019年高考理科数学（全国Ⅰ卷）试题-HTML.001.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHMAAAAUCAYAAAC+sgIEAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACtklEQVR4nO1YQYRWURQ+krTIMJIkiZYjiaRFkqFFkqRNkrSIMZKRRDIyi0RazCptMlqMDEmSkSFpMYu2aZG0GZlVokWSjOH1fd37dOe5971z752/v6n78fH/575z7vnPuefc836RgoKCgoI/jGtgBS6D6wLP7LPrP1Zhv0vgYoJelbHnFvBThn6vMQjOgUvgSzH+EozTWKyxK2KCtcuzNgAugE8knGwtLoKT4NYE3ZxkzmXq9xoT4B4x8b0DPrZyxukeeDnG2FPwDXjMs/YQ/AweSfXUwbcM3dRksBNcT9AfAp8n7hlr86zzmcXT7IDftRusB9+D98EzjbUL4Dj4VfKrkvAFtLLkD9og5vAsKHW7MGTtxehvBx+Ar8EDAT80/sbYbOKLZ08VToB3wVHwtiNnINhaT4MzWmMdWArIuRd/KNvJYOCZ2GQy0I/ATUp9VsQt8K2YmLRB42+szRq0N9mQLSt1f1UkN2LSpq1sI/gK3GxlzYp1UbXQBVv4ixY7PI17O/aJATvKTqU+Z4Z3YlqytgN1+ZtikzgnK/0m5kV5GDgxsdUeBWetjAk+bD/zvhyIcCaEyrHZBKvoo/jvbFffJ4ulD5zoP4ipNE3gNf7G2hT73HmP/JAoDvN++Z3AHWISxyqcsLKDYiq0DdrA8WTNB2xwuLoJ3ujYJwdd+mxvnCRZTac6ntX4G2uTGA7I+bpyvE2Rp4Bj75jznb35mfOdk9dVhRNahO5MJvqkmJE8tF+vk1mDh3pK2ocVjb+xNuvXtd1ihiUXrXcmL3C3guo7cdEaHW6s+0o/Bb6AcpLmtMdWzhM8HqGbu3cbGKNZj1zrb4zNGVkZ76nG+l/5jtyP98x/ATlx6xn4DxBb+7YE3f8xmfU/QKP9diSEEel+yfZhNf4XXmtgnEb67URBQUFBQcFax0/1H7ojtI+z7QAAAABJRU5ErkJggg==",
+                    "2019年高考理科数学（全国Ⅰ卷）试题-HTML.002.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIIAAAAXCAYAAADHqJcNAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACwklEQVR4nO2YMWhUQRCGB4tgIYKIiIjYWYiFYBFEJAgiIYiIICGkshERERHBQsRC0liIiAgWIhYSEAsLsZEQQop0IhYiNiIidlYiIsI5P/Pe3WV9s7tvd+9Oufng5969u5nZfTs7u2+JDMMwDMMwxpfTrIOjboQxWo6zjrGesg6MuC3/FV9YHdY95/5cdb/Whsw4F1ifE+w6ifFQFQ4l2g6DSdYK61emn5nKR6f6nK7u41lfbOMIA3yH9Y3+HmwM3mvWppyWMudZt1nbE2xTE+Fcot0wOMp6T5KsE5m++gd/mnqJhWd9n3WpjbNF1kfWrHP/Lutsehu7fM+wTUmEI5SfvINiK2uNta2l3V7Wy4b77vNxv/+IDYAqgGowxXrh/Ias3RzryEPTYNZLzjzJrHhCkoy5tqg+z1kPSWZcDrFtbMN11mPWV1o/mzV2sh6RJM+k0sY231VQphar6w/UK9/7SDpeAm0dRJajgyhfW5T/aB2JsS1B6ThvSCoW6C/lLpiAC6y3rBMef6GB/x3bMGwS56trZOvl6voGye5bC67JBZuZV574qEb7Pb/7MjpkW4qScdyBb+ofxuAdyR4ttEkPJcIq+ROpyyfqZfpukgwE7jKRCho2pfw2UcWfCdin2mr+YpM4Jk5bfzGl+ypJdUYVyk2Ew562dMF79opzb5mk0wuB4LGdRzauKn6wLN0kqUS+WKm2JSgdJ3YNx+S8RVIZTmX4WyI5W1FBpj0gyb5+zpBsZPb4jFuirYNIkpOsZ6wryn+0BxVjW4LScbTXPY1dJBtfbbMY8ufdI2yk9bO4fw1BKVwONK4tTYOJNxLsiLEpQtZfG4BtLoOIUw9WfQAUu7Rh09q0XIf8pZ7DDIRhnyMYPXKefXHwbo9Trh0JtpYIadQni//cCStOKFMOY36WbsiYgGdd4lTYMAzDMIwx4g85zMo5AofrygAAAABJRU5ErkJggg==",
+                    "2019年高考理科数学（全国Ⅰ卷）试题-HTML.003.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAATCAYAAADF7c7rAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAB20lEQVR4nO2WwUdEURTGj4yMJEbSIhlatEi7pFVmk6RFZpfRIokkrWYzWmS0iJZJImmVRIskSZuM0T+QWaVNkrSI1skwfcc9oze3d96b+6KU9/Ez953jnnfuveeeN0SxYtlKgBVwB97ldxW0/GZSXhVADVRJT2pI/G+WvRVcgz2QFltanssgqcR7knduW/ac2Oskml1EmPISsM/HlwIP4Ii+bsAa2FFi7oJ1xcdxNsGrT8xlUAHtoVk76BTcgEkf37EkMurj45PoUWL2gueAd/KG3YNpy74FFoKSdRWXwS2ZspqxfPOgCF6UudWQ2JqfT403LQPOLR/n0hES10lTZMpsEWx47APghMwOHyhzayGxNf8YmRNkcVPqlvEgOAyJ6Sw+uSw1LqQNXIFOSSSrzI26QG4u9WrhjpuXMVfLeEAsjUA9kinTCfosl30yd45LictT64ZRF8hNKyVj7roVGdvl+m0NgwsZc1Pge8Gtuii2jMfvpygL5E9O2bKVyDQ4revWYzmdIJ8O370lzzM3hTN55m/cJZm27bKAID+/gz8fBcs+R6bj9ofEa1oj1LgDObFz6XSRuQde/6wSx2WBSSum917zZpaaT//nFPUO/hn5/TFw8ceKFeuf6QPjVXJyDJSn4QAAAABJRU5ErkJggg==",
+                    "2019年高考理科数学（全国Ⅰ卷）试题-HTML.004.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAAAUCAYAAAAXxsqQAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAB50lEQVR4nO1XMUgDQRBcUliJYCEhiNh/ZSNWwcZCgojYim0QEREJSAhWYmNhaSdWNmIlIoJYpRBbCxEbESsbK5EQhLjL3eMR7n737glBcwMD/383u/vz9/v3ABERERFWbCDfAnSdHDnHkO859L0G1XeBbGvOg/JoUxpgHXmILAYkz2PsdU59r1FHTuhjMpXMJY+OkFuSAJ85kocaQ29IPUCfIK8Cc/rGLBjHQ8gH4/xLEth2cx3NFR30FPki1HJIdDwf/TjyBHmHnHHUIanXJ2aKaeQestSVj0XbcT3RSWnZjzrm+BpLN32GHBbqR5D7oFbLIjNXUq9vzFVd4yuybFz/ZnRQQd5kjH8gpzLGfY1tICeF+m3kI6i2UciYZ4KrNyQmgXpsyzhvAvNQ6MZmHWO0uuhJVRh997mLWeM27CCfQa1AiQmSen1jmjDrLAOzqMj1pmNsDlRv2RUmCwGnp1f6ANQqW2bmSur1jWnCrPUWucAJXD2WTF9CniNrgmQhkOpp23MM2R8aSb2+MVOk260UbI8l2G7uCdRXkxo9PdmGh9YHIdutS8t1ab0+Me/ht1WRqWaLEdXdj33sX4fIM/rzor+JEjfRgkEzNv3zWpMKqsBvqG1o8VP+Fcijar+LiIiIiBhE/ACd0YY1dOdvOAAAAABJRU5ErkJggg==",
+                    "2019年高考理科数学（全国Ⅰ卷）试题-HTML.005.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF8AAAAUCAYAAADr0+FaAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAB8klEQVR4nO2XP0hDMRDGjw5OInQQERH3IuLmJCI4iYi4irgVERERQaSIg7g4dHQrTiKIo0hBnDq4O4h0EXFycRKRItTvSCvt8+XdJU95g/nBB22Su1wuf15CFAgEApmzDj172DVT9NkPvaSwz5o8VIUa0A2Z8TCcxw2tkzWoDA14BJAm+dWU9lmzD41BOegIumiVcx6PoU2Nk7cUAfgmj3farod9Abry7PO3fS51/O6DPiL17xoncQlotsQd9ECn0KPSVqLQ8udiPwSdQLfQhCUOTbwuPl15jYlJpGEp5yRxYLx98pY2rsnnxJxDvUp7XlGH0B00L7TVxOvqUwv3V46UfUpGs9B1Qj3P5nhCvWvyS9CI0n4LuidzROWU/qV4fXxqWKbucTE1EiaXBz9lqeNV+kRmgpLso/9tSqqPYweqk1nJmkRp4tX6lMbRCftZiSmftLT/hmemZqmbgQ6gPSHINEj2vJ35JsGrdVFoq4nX1aeGaUs5Xz/nJGPbmc8Ts0DmCrVtafPXyW8zDFUo+eOoidfVp0T7ej5K5uPdiXjmM3EJeCBzG+CPE6+QkoOtCz5XzcuYcm28Lj4lzqj7OKpE6lVjy+Ke/x9Q5ZVfuPwiG/ToICT/J+0X7qrWoEjyoySO6KsuYPJYzDqIQCAQCGTPF1zIiUyolmYgAAAAAElFTkSuQmCC",
+                    "2019年高考理科数学（全国Ⅰ卷）试题-HTML.006.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFcAAAAUCAYAAAD4BKGuAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAB10lEQVR4nO1XMUgDQRBcUlgKKURExD6I2FmJCFYiIrYidkFERESwELEQG4uUdsFKbCxFBLFKYW8hYiNibyUiQYizXAIafm/37uGFeAMDyd/t/Pzc/d8dUUJCQoKKDfA1oq4VUVMGr8EmeAsORGgUAckn57RpFVkHa+BghIGYcA/AcbAEHoMXERpFQPLJOZ2AWxaR9xwGYsJd/vG7H/wMqK2AVxH3jNHUfH5YxLMCarXJN+gDz8BnY20o3gx9hsFT8A6cFHxY/IZoaj5Nz94UrlfaN+bpXxb65A2XdWuedp4xR+A9uKBoWfyGavp8fmlFc+CNp51Ha8LTnjfcFXBUaNsGH8gttiWjnuY3RpOR5bNByuBwONNCG79eL+QGwFff/V9iN/jhVj3au+ATuZloCcLiN1STSPY5Rcrk4uQbQtsseAjue+rzzNwZQx9+HXml5tm2pPS1+A3VZEg+eXs2rxVL31wOfpHcFmRH6BMbbmfbN0ZuUdEwAtbJv/hY/IZq+nyq31xGVkCP5FZT/vjzCO8F1Go4p9+fi3pALS9alxnXrX5DNDWfpmcvep/bKzDlxic0PnEMRdzgP4bbOaGtWQuqpG+6sxByuuoVcE7VvzaRkJCQkED0DaPXfUo3NuuTAAAAAElFTkSuQmCC",
+                    "2019年高考理科数学（全国Ⅰ卷）试题-HTML.007.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE8AAAAXCAYAAABK6RIcAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACCUlEQVR4nO1XMUgDQRBcUlgKKURExD6I2IhVEMFCgojYBrETERERQUTEQmwsUtoFK7GxEhFBrFKIrYWIjYi9lYgEIe549/g+f3f7B4kk3sDA8Xu3uzd/v7dPFBAQ8E/R+OsE2hlBPI0V5kvGNTbx8sxLZp15zezxzKuZQE5npHIEp/Rz6LAqdbLMrDB7Mwa3ibfLHGbmmAfM04y+W4Et5oAeQ7i6HkOHQ+aaxMmbZ3CbeOXYuJv5kcFvgXnhlVE2n7nYuIt5l7C/SxynidDQLGvHx8wnwToTXgVz+plHzBvmmEc+WX1GGGXuMftSYjpRNzwv6KA4vvkUu1Q8rK1Y7DiZ+6Te/IxlnisfH5/zpPbxzCwmbJ+OGFRiXlnsODEjBptUPCQ4aLCtM+9JXVg5wxxpPr4+AdS8ZGmpkV34bwHGDTZ8HngjJctaF5D8gsW+yXwkdZpcG3Xl4+MzjuR+iinPfgHK1gy2SVK1YEcYLA0Tgjn4BHEj47TMWea58vHxGUdyP2ixpl2LTDUPws6SajM2BMGSiFqfIVJF2wW0DVUyF3dXPj4+I8RblQjOmgekifBA6qZC4cXb2xaui3BCPzckWJUkooGL4dwjn6w+b2P5QbhkORDV9Gb0eZ0AkS74w0BHnexzXOhU8aI/jCXpgkWSNZ1xdKp40GGx2UE6VbyWIIgXEBDQDvgCo2t+Nv4wDocAAAAASUVORK5CYII="
+                }
+            }
         }
     },
     methods: {
-        // 处理插入新题目的办法
-        // 需要管理两个条目，一个是题目内容，一个是是否折叠
-        // 由于折叠属性放在题目内会对显示造成复杂化的结果，就放在外面
-        New_Questions(val){
-
-            this.Questions_List.push(val);
-            console.log(this.Questions_List);
-            this.Questions_Collapse.push(false);
-            this.Close_Editor();
-            this.Reset_Params();
-
-        },
-        // 处理想要修改题目内容时的方法
-        // 核心思路是把题目内容的部分丢给编辑器，让编辑器来读取内容
-        // 然后等待编辑器内部的处理
-        // 在这里，是否发送重写信号由ReEditSwitch来决定
-        // Index_Edit_Record用于记录编辑的编号
-        // Temp名称用于临时交换让编辑器处理的数据内容
-        // showDialog代表显示的是哪个编辑器
-        Edit_Question(index){
-
-            if(this.Questions_List[index].type == 'option'){
-                this.showDialog = true;
-                this.Temp_OptionQuestionInfo = this.Questions_List[index];
-            }else if(this.Questions_List[index].type == 'fill'){
-                this.showDialog_Fill = true;
-                this.Temp_FillQuestionInfo = this.Questions_List[index];
-            }else if(this.Questions_List[index].type == 'answer'){
-                this.showDialog_Answer = true;
-                this.Temp_AnswerQuestionInfo = this.Questions_List[index];
+        Get_Question_Type(Type){
+            if(Type == 'SingleChoice'){
+                return "选择题"
             }
-            this.ReEditSwitch = true;
-            this.Index_Edit_Record = index;
-
         },
-        Editor_Dialog_Close(){
-
-            this.Close_Editor();
-            this.Reset_Params();
-
-        },
-        // 重写编辑后，把新数据直接覆盖上去
-        ReEdit_Questions(val){
-
-            this.Questions_List.splice(this.Index_Edit_Record, 1, val);
-
-            this.Close_Editor();
-            this.Reset_Params();
-            
-        },
-        // 一起关掉
-        Close_Editor(){
-
-            this.showDialog = false;
-            this.showDialog_Fill = false;
-            this.showDialog_Answer = false;
-
-        },
-        // 移动题目位置
-        // 注意要一次移动信息和折叠属性两个，不然会有问题
-        Question_Up(index){
-
-            var temp_Save = this.Questions_List[index];
-            this.Questions_List.splice(index, 1);
-            this.Questions_List.splice(index - 1, 0, temp_Save);
-
-            var temp_coll = this.Questions_Collapse[index];
-            this.Questions_Collapse.splice(index, 1);
-            this.Questions_Collapse.splice(index - 1, 0, temp_coll);
-
-        },
-        Question_Down(index){
-
-            var temp_Save = this.Questions_List[index];
-            this.Questions_List.splice(index, 1);
-            this.Questions_List.splice(index + 1, 0, temp_Save);
-
-            var temp_coll = this.Questions_Collapse[index];
-            this.Questions_Collapse.splice(index, 1);
-            this.Questions_Collapse.splice(index + 1, 0, temp_coll);
-
-        },
-        // 处理完题目的录入之后要重置这些临时使用的变量
-        Reset_Params(){
-
-            this.Index_Edit_Record = -1;
-            this.ReEditSwitch = false;
-
-            this.Temp_OptionQuestionInfo = {
-
-                type: "option",
-                // 分值
-                score: 1,
-                // 题目内容，题目内容图片，是否显示图片
-                content: "",
-                content_images: [],
-                // 选项的部分
-                options: ["", "", "", ""],
-                options_images: ["", "", "", ""],
-                // 答案的部分
-                answer: "",
-                answer_images: [],
-                // 解析的部分
-                analyse: "",
-                analyse_images: []
-
+        Get_Question_Show(Stem, Type){
+            for(var key in this.TestData.img){
+                var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
+                if(Img_Name_Catcher.exec(Stem) != null){
+                    Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
+                }
             }
 
-            this.Temp_FillQuestionInfo = {
-
-                type: "fill",
-                // 分值
-                score: 1,
-                // 题目内容，题目内容图片，是否显示图片
-                content: "",
-                content_images: [],
-                // 答案的部分
-                answer: "",
-                answer_images: [],
-                // 解析的部分
-                analyse: "",
-                analyse_images: []
-
+            if(Type == 'stem'){
+                return "题干：" + Stem
+            }else if(Type == 'answer'){
+                return "答案：" + Stem
+            }else if(Type == 'analyse'){
+                return "解析：" + Stem
             }
-
-            this.Temp_AnswerQuestionInfo = {
-
-                type: "answer",
-                // 分值
-                score: 1,
-                // 题目内容，题目内容图片，是否显示图片
-                content: "",
-                content_images: [],
-                // 小题的部分
-                sub_questions: [""],
-                sub_questions_images: [[]],
-                sub_questions_scores: [1],
-                // 答案的部分
-                answer: "",
-                answer_images: [],
-                // 解析的部分
-                analyse: "",
-                analyse_images: []
-
-            }
-
         },
-        // 删除题目也是一样，要一起删除折叠信息
-        Delete_Question(index){
-
-            this.Questions_List.splice(index, 1);
-            this.Questions_Collapse.splice(index, 1);
-
-        },
-        // 压缩题目长度，使过长的题目能正常显示
-        Get_Collapse_Show(Ques){
-
-            var Score = Ques.score.toString();
-            var Content = Ques.content;
-
-            var Result = "（ " + Score + "分 ）   ";
-            if(Content.length > 30){
-                Content = Content.substring(0, 30) + "……";
+        Get_Question_Options(Stem, Index){
+            for(var key in this.TestData.img){
+                var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
+                if(Img_Name_Catcher.exec(Stem) != null){
+                    Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
+                }
             }
-
-            Result = Result + Content;
-            return Result
-
+            return String.fromCharCode(Index + 65) + "：" + Stem
         },
-        // 修改折叠属性，注意要用splice，否则会有bug
-        // 天知道vue这到底什么谜一样的前端内容……
-        Change_Question_Collapse(index){
-
-            if(this.Questions_Collapse[index]){
-                this.Questions_Collapse.splice(index, 1, false);
-            }else{
-                this.Questions_Collapse.splice(index, 1, true);
-            }
-
-        }
-
     }
 }
 </script>
