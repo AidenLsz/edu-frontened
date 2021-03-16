@@ -462,6 +462,25 @@ export default {
   },
 };
 </script>
+<style scoped lang="scss">
+
+.el-header .el-menu--horizontal /deep/ .el-submenu.is-active .el-submenu__title{
+  border-bottom: none;
+}
+
+.el-header .el-menu--horizontal /deep/ .el-submenu .el-submenu__title {
+    height: 42px;
+    line-height: 18px;
+    padding-top: 15px;
+    border-bottom: 2px solid transparent;
+    width: 50%;
+    z-index: 999;
+}
+.el-header .el-menu .el-menu--horizontal {
+    border-bottom: none;
+}
+
+</style>
 <style>
 
 .el-header .el-menu--horizontal /deep/ .el-submenu.is-active .el-submenu__title{
