@@ -652,10 +652,16 @@ import Mathdown from "./Mathdown.vue";
 export default {
   components: { Mathdown },
   name: "ComplexInput",
+  props: {
+    Get_Out_Content: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {
       // Latex格式的内容
-      content: "",
+      content: this.Get_Out_Content,
       // 新版本用的mavon-editor带来的自带回调函数用的json格式
       // name: 图片名
       // info: base64转换后的数据段
@@ -1115,13 +1121,13 @@ export default {
       }
       // 交并集
       else if(this.temp_param_type == 'cap'){
-        this.temp_latex = "$ 集合A \\cap 集合B \\cap 集合C $";
+        this.temp_latex = "$集合A \\cap 集合B \\cap 集合C$";
       }else if(this.temp_param_type == 'cup'){
-        this.temp_latex = "$ 集合A \\cup 集合B \\cup 集合C $";
+        this.temp_latex = "$集合A \\cup 集合B \\cup 集合C$";
       }else if(this.temp_param_type == 'bcap'){
-        this.temp_latex = "$\\bigcap_{ 开始标记 }^{ 结束标记 } {集合名称} $"
+        this.temp_latex = "$\\bigcap_{ 开始标记 }^{ 结束标记 }{ 集合名称 }$"
       }else if(this.temp_param_type == 'bcup'){
-        this.temp_latex = "$\\bigcup_{ 开始标记 }^{ 结束标记 } {集合名称} $"
+        this.temp_latex = "$\\bigcup_{ 开始标记 }^{ 结束标记 }{ 集合名称 }$"
       }
       // 闭合曲线曲面积分符号
       else if(this.temp_param_type == 'oint'){
@@ -1233,6 +1239,9 @@ export default {
     // 返回当前LaTex公式的结果
     Get_Content(){
       return this.content;
+    },
+    Get_Out(){
+      console.log(this.Get_Out_Content);
     }
   }
 };
