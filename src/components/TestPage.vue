@@ -741,6 +741,7 @@ export default {
             console.log("已提交")
             this.$message.success("已提交");
             this.Submit_Show = true;
+            this.Submit();
           }).catch(() => {
             console.log("已取消")
             this.$message.info("已取消");
@@ -869,6 +870,22 @@ export default {
           }else{
             return "Mathdown" + Question_Index.toString() + "_" + Type + "_" + Index.toString()
           }
+        },
+        Submit(){
+          let config = {
+              headers: { "Content-Type": "multipart/form-data" }
+          };
+          let param = new FormData();
+
+          param.append('result_json', JSON.stringify(this.TestData));
+          this.$http
+          .post(this.backendIP + "/api/mathUpload", param, config, {
+            emulateJSON: true
+          })
+          .then(function(data) {
+            console.log(data.data)
+          });
+
         }
     }
 }
