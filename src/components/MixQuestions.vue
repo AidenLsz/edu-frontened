@@ -174,7 +174,7 @@
                             <div 
                                 class="btn_file"
                                 :style="{ opacity: changecss }">
-                                <p><icon class="el-icon-picture"></icon></p>
+                                <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
                                     @change="uploadImg($event, 'content')"
@@ -324,7 +324,7 @@
                             <div 
                                 class="btn_file"
                                 :style="{ opacity: changecss }">
-                                <p><icon class="el-icon-picture"></icon></p>
+                                <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
                                     @change="uploadImg($event, 'answer')"
@@ -391,7 +391,7 @@
                             <div 
                                 class="btn_file"
                                 :style="{ opacity: changecss }">
-                                <p><icon class="el-icon-picture"></icon></p>
+                                <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
                                     @change="uploadImg($event, 'analyse')"
@@ -497,7 +497,7 @@ export default {
 
                 if(newVal != oldVal){
                     for(var i = 0; i < newVal.length; i++){
-                        if(parseFloat(newVal[i].score) == 1){
+                        if(parseFloat(newVal[i].score) == 1 && oldVal){
                             newVal[i].score = oldVal[i].score;
                             change_Switch = true;
                         }else if(parseFloat(newVal[i].score) <= 0){
@@ -618,6 +618,7 @@ export default {
             Index_Edit_Record: -1,
             // 是否允许预览对话框打开
             preview: false,
+            changecss: 1
         }
     },
     methods: {
@@ -626,22 +627,27 @@ export default {
         },
         Edit_Finish(){
 
+
+            if(!this.ReEdit){
+                this.ReEdit = false;
+            }
+
             if(this.Necessary_Check()){
             
                 setTimeout(()=>{
 
                     if(this.ReEdit == false){
 
-                        this.$emit("EditFinish", this.questionInfos);
+                        this.$emit("EditFinish_Mix", this.questionInfos);
 
                     }else{
 
-                        this.$emit("ReEditFinish", this.questionInfos);
+                        this.$emit("ReEditFinish_Mix", this.questionInfos);
                         this.ReEdit = false;
 
                     }
 
-                }, 10);
+                }, 1);
 
             }else{
                 this.$message.error("请先完成所有题干项的填写。");

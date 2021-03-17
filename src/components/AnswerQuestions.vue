@@ -67,7 +67,7 @@
                             <div 
                                 class="btn_file"
                                 :style="{ opacity: changecss }">
-                                <p><icon class="el-icon-picture"></icon></p>
+                                <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
                                     @change="uploadImg($event, 'content')"
@@ -153,7 +153,7 @@
                             <div 
                                 class="btn_file"
                                 style="margin-top:10px">
-                                <p><icon class="el-icon-picture"></icon></p>
+                                <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
                                     @change="uploadImg_Sub($event, index - 1)"
@@ -220,7 +220,7 @@
                             <div 
                                 class="btn_file"
                                 :style="{ opacity: changecss }">
-                                <p><icon class="el-icon-picture"></icon></p>
+                                <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
                                     @change="uploadImg($event, 'answer')"
@@ -287,7 +287,7 @@
                             <div 
                                 class="btn_file"
                                 :style="{ opacity: changecss }">
-                                <p><icon class="el-icon-picture"></icon></p>
+                                <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
                                     @change="uploadImg($event, 'analyse')"
@@ -383,7 +383,8 @@ export default {
 
             questionInfo: this.QInfos,
             preview: false,
-            ReEdit: this.RE
+            ReEdit: this.RE,
+            changecss:1
 
         }
 
@@ -398,7 +399,7 @@ export default {
 
                 if(newVal != oldVal){
                     for(var i = 0; i < newVal.length; i++){
-                        if(newVal[i] == 1){
+                        if(newVal[i] == 1 && oldVal){
                             newVal.splice(i, 1, oldVal[i]);
                             change_Switch = true;
                         }else if(newVal[i] <= 0){

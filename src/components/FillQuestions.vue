@@ -67,7 +67,7 @@
                             <div 
                                 class="btn_file"
                                 :style="{ opacity: changecss }">
-                                <p><icon class="el-icon-picture"></icon></p>
+                                <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
                                     @change="uploadImg($event, 'content')"
@@ -135,7 +135,7 @@
                             <div 
                                 class="btn_file"
                                 :style="{ opacity: changecss }">
-                                <p><icon class="el-icon-picture"></icon></p>
+                                <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
                                     @change="uploadImg($event, 'answer')"
@@ -202,7 +202,7 @@
                             <div 
                                 class="btn_file"
                                 :style="{ opacity: changecss }">
-                                <p><icon class="el-icon-picture"></icon></p>
+                                <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
                                     @change="uploadImg($event, 'analyse')"
@@ -294,7 +294,8 @@ export default {
 
             questionInfo: this.QInfos,
             ReEdit: this.RE,
-            preview: false
+            preview: false,
+            changecss: 1
 
         }
         
