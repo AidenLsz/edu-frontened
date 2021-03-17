@@ -5,30 +5,45 @@
         <el-row style="margin: 30px 50px 0px 50px">
             {{TestData.title}}
         </el-row>
+        <el-row style="margin: 30px 50px" v-if="Submit_Show">
+            <el-button @click="Ensure()" type="success">确认无误</el-button>
+        </el-row>
         <el-row v-for="(Question_Info, Question_Index) in TestData.doc" :key="Question_Index" style="border: 3px dashed black; background: #F8FBFF; margin: 30px">
             <!-- 题型，上传用户，科目部分 -->
             <el-row type="flex" justify="start" style="margin: 30px 50px 0px 50px">
-                <el-col :span="2" style="text-align: left">
+                <el-col :span="1" style="text-align: left">
+                  <el-button 
+                    v-if="Question_Check[Question_Index] == false" 
+                    circle size="medium" 
+                    @click="Question_Check.splice(Question_Index, 1, true)"
+                    type="success"><i class="el-icon-unlock"></i></el-button>
+                  <el-button 
+                    v-if="Question_Check[Question_Index] == true" 
+                    circle size="medium" 
+                    @click="Question_Check.splice(Question_Index, 1, false)"
+                    type="danger"><i class="el-icon-lock"></i></el-button>
+                </el-col>
+                <el-col :span="2" style="text-align: left; padding-top: 1.2vh">
                     {{Question_Info.question_type}}
                 </el-col>
-                <el-col :span="3" style="text-align: left">
+                <el-col :span="3" style="text-align: left; padding-top: 1.2vh">
                     提交者：{{Question_Info.source}}
                 </el-col>
-                <el-col :span="3" style="text-align: left">
+                <el-col :span="3" style="text-align: left; padding-top: 1.2vh">
                     科目：{{Question_Info.subject}}
                 </el-col>
             </el-row>
-            <!-- 题干部分 -->
+            <!-- 题干部分 - 无小题 -->
             <el-row type="flex" justify="start" style="margin: 30px 50px;">
                 <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.question_stem, 'stem')"></p> -->
-              <el-col :span="1">
+              <el-col :span="1" v-if="Question_Check[Question_Index] == false">
                 <el-row type="flex" justify="start">
                     <el-button @click="Show_Part(Question_Index, 'stem')" size="small">{{Get_Button_Label(Question_Index, 'stem')}}</el-button>
                 </el-row>
               </el-col>
               <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
                 <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Question_Show(Question_Info.question_stem, 'stem')" style="width: 84vw;"/>
+                  <Mathdown :content="Get_Question_Show(Question_Info.question_stem, 'stem')" style="width: 84vw;" :name="Get_Name(Question_Index, 'stem')"/>
                 </el-row>
                 <el-row type="flex" justify="start">
                   <ComplexInput 
@@ -38,20 +53,41 @@
                 </el-row>
               </el-col>
             </el-row>
+            <!-- 题干部分 - 有小题 -->
+            <el-row type="flex" justify="start" style="margin: 30px 50px;" 
+              v-for="(Sub_Question, Sub_Question_Index) in Question_Info.sub_questions" :key="Sub_Question_Index">
+                <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.question_stem, 'stem')"></p> -->
+              <el-col :span="1" v-if="Question_Check[Question_Index] == false">
+                <el-row type="flex" justify="start">
+                    <el-button @click="Show_Part(Question_Index, 'sub_question', Sub_Question_Index)" size="small">{{Get_Button_Label(Question_Index, 'sub_question', Sub_Question_Index)}}</el-button>
+                </el-row>
+              </el-col>
+              <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
+                <el-row type="flex" justify="start">
+                  <Mathdown :content="Get_Sub_Question(Sub_Question)" style="width: 84vw;" :name="Get_Name(Question_Index, 'sub_question', Sub_Question_Index)"/>
+                </el-row>
+                <el-row type="flex" justify="start">
+                  <ComplexInput 
+                    v-if="Show_ComplexInput(Question_Index, 'sub_question', Sub_Question_Index)"
+                    @Update_CI="Update_ComplexInput" 
+                    :Get_Out_Content="Get_Sub_Question(Sub_Question)"></ComplexInput>
+                </el-row>
+              </el-col>
+            </el-row>
             <!-- 选项部分 -->
             <el-row type="flex" justify="start" style="margin: 20px 50px" 
                     v-for="(Question_Option, Option_Index) in Question_Info.question_options" 
                     :key="Option_Index" >
               <!-- <p style="text-align: left" v-html="Get_Question_Options(Question_Option, Option_Index)"></p>
                 -->
-              <el-col :span="1">
+              <el-col :span="1" v-if="Question_Check[Question_Index] == false">
                 <el-row type="flex" justify="start">
                     <el-button @click="Show_Part(Question_Index, 'option', Option_Index)" size="small">{{Get_Button_Label(Question_Index, 'option', Option_Index)}}</el-button>
                 </el-row>
               </el-col>
               <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
                 <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Question_Options(Question_Option, Option_Index)" style="width: 80vw;"/>
+                  <Mathdown :content="Get_Question_Options(Question_Option, Option_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'option', Option_Index)"/>
                 </el-row>
                 <el-row type="flex" justify="start">
                   <ComplexInput 
@@ -69,14 +105,14 @@
             <!-- 答案部分 -->
             <el-row type="flex" justify="start" style="margin: 20px 50px">
                <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.answer, 'answer')"></p> -->
-               <el-col :span="1">
+               <el-col :span="1" v-if="Question_Check[Question_Index] == false">
                  <el-row type="flex" justify="start">
                     <el-button @click="Show_Part(Question_Index, 'answer')" size="small">{{Get_Button_Label(Question_Index, 'answer')}}</el-button>
                  </el-row>
                </el-col>
                <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
                  <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Question_Show(Question_Info.answer, 'answer')" style="width: 80vw;"/>
+                  <Mathdown :content="Get_Question_Show(Question_Info.answer, 'answer')" style="width: 80vw;"  :name="Get_Name(Question_Index, 'answer')"/>
                  </el-row>
                  <el-row type="flex" justify="start">
                   <ComplexInput 
@@ -89,14 +125,14 @@
             <!-- 解析部分 -->
             <el-row type="flex" justify="start" style="margin: 30px 50px">
                 <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.analysis, 'analyse')"></p> -->
-              <el-col :span="1">
+              <el-col :span="1" v-if="Question_Check[Question_Index] == false">
                 <el-row type="flex" justify="start">
                     <el-button @click="Show_Part(Question_Index, 'analyse')" size="small">{{Get_Button_Label(Question_Index, 'analyse')}}</el-button>
                 </el-row>
               </el-col>
               <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
                 <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Question_Show(Question_Info.analysis, 'analyse')" style="width: 80vw;"/>
+                  <Mathdown :content="Get_Question_Show(Question_Info.analysis, 'analyse')" style="width: 80vw;"  :name="Get_Name(Question_Index, 'analyse')"/>
                 </el-row>
                 <el-row type="flex" justify="start">
                   <ComplexInput 
@@ -106,6 +142,9 @@
                 </el-row>
               </el-col>
             </el-row>
+        </el-row>
+        <el-row style="margin: 30px 50px" v-if="Submit_Show">
+            <el-button @click="Ensure()" type="success">确认无误</el-button>
         </el-row>
     </div>
 </template>
@@ -125,18 +164,20 @@ export default {
               "title": "2009年课标甲乙",
               "doc": [
                 {
-                  "question_stem": "已知集合<IMG: 2018年高考文科数学试题-HTML.001.png>，<IMG: 2018年高考文科数学试题-HTML.002.png>,则<IMG: 2018年高考文科数学试题-HTML.003.png>",
-                  "question_options": [ "<IMG: 2018年高考文科数学试题-HTML.004.png>", "<IMG: 2018年高考文科数学试题-HTML.005.png>", "<IMG: 2018年高考文科数学试题-HTML.006.png>", "<IMG: 2018年高考文科数学试题-HTML.007.png>" ],
+                  "question_stem": "已知集合$A = \\{ 0,2 \\}$，$B = \\{ - 2 , - 1,0,1,2 \\}$,则$A \\cap B =$",
+                  "question_options": [ "$\\{ 0,2 \\}$", "$\\{ 1,2 \\}$", "$\\{ 0 \\}$", "$\\{ - 2 , - 1,0,1,2 \\}$" ],
                   "question_type": "选择题",
+                  "sub_questions": [],
                   "answer": "A",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
                 },
                 {
-                  "question_stem": "设<IMG: 2018年高考文科数学试题-HTML.008.png>，则<IMG: 2018年高考文科数学试题-HTML.009.png>",
-                  "question_options": [ "<IMG: 2018年高考文科数学试题-HTML.010.png>", "<IMG: 2018年高考文科数学试题-HTML.011.png>", "<IMG: 2018年高考文科数学试题-HTML.012.png>", "<IMG: 2018年高考文科数学试题-HTML.013.png>" ],
+                  "question_stem": "设$z = \\frac { 1 - i } { 1 + i } + 2 i$，则$| z | =$",
+                  "question_options": [ "$0$", "$\\frac { 1 } { 2 }$", "$1$", "$\\sqrt { 2 }$" ],
                   "question_type": "选择题",
+                  "sub_questions": [],
                   "answer": "C",
                   "analysis": "",
                   "source": "user_input",
@@ -146,24 +187,27 @@ export default {
                   "question_stem": "某地区经过一年的新农村建设，农村的经济收入增加了一倍，实现翻番. 为更好地了解该地区农村的经济收入变化情况，统计了该地区新农村建设前后农村的经济收入构成比例，得到如下饼图：则下面结论中不正确的是",
                   "question_options": [ "新农村建设后，种植收入减少", "新农村建设后，其他收入增加了一倍以上", "新农村建设后，养殖收入增加了一倍", "新农村建设后，养殖收入与第三产业收入的总和超过了经济收入的一半" ],
                   "question_type": "选择题",
+                  "sub_questions": [],
                   "answer": "A",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
                 },
                 {
-                  "question_stem": "已知椭圆<IMG: 2018年高考文科数学试题-HTML.016.png>的一个焦点为<IMG: 2018年高考文科数学试题-HTML.017.png>，则<IMG: 2018年高考文科数学试题-HTML.018.png>的离心率为",
-                  "question_options": [ "<IMG: 2018年高考文科数学试题-HTML.019.png>", "<IMG: 2018年高考文科数学试题-HTML.020.png>", "<IMG: 2018年高考文科数学试题-HTML.021.png>", "<IMG: 2018年高考文科数学试题-HTML.022.png>" ],
+                  "question_stem": "已知椭圆$C : \\frac { x ^ { 2 } } { a ^ { 2 } } + \\frac { y ^ { 2 } } { 4 } = 1$的一个焦点为$( 2,0 )$，则$C$的离心率为",
+                  "question_options": [ "$\\frac { 1 } { 3 }$", "$\\frac { 1 } { 2 }$", "$\\frac { \\sqrt { 2 } } { 2 }$", "$\\frac { 2 \\sqrt { 2 } } { 3 }$" ],
                   "question_type": "选择题",
+                  "sub_questions": [],
                   "answer": "C",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
                 },
                 {
-                  "question_stem": "已知圆柱的上、下底面的中心分别为<IMG: 2018年高考文科数学试题-HTML.023.png>，<IMG: 2018年高考文科数学试题-HTML.024.png>，过直线<IMG: 2018年高考文科数学试题-HTML.025.png>的平面截该圆柱所得的截面是面积为<IMG: 2018年高考文科数学试题-HTML.026.png>的正方形，则该圆柱的表面积为",
-                  "question_options": [ "<IMG: 2018年高考文科数学试题-HTML.027.png>", "<IMG: 2018年高考文科数学试题-HTML.028.png>", "<IMG: 2018年高考文科数学试题-HTML.029.png>", "<IMG: 2018年高考文科数学试题-HTML.030.png>" ],
+                  "question_stem": "已知圆柱的上、下底面的中心分别为$O _ { 1 }$，$O _ { 2 }$，过直线$O _ { 1 } O _ { 2 }$的平面截该圆柱所得的截面是面积为$8$的正方形，则该圆柱的表面积为",
+                  "question_options": [ "$12 \\sqrt { 2 } \\pi$", "$12 \\pi$", "$8 \\sqrt { 2 } \\pi$", "$10 \\pi$" ],
                   "question_type": "选择题",
+                  "sub_questions": [],
                   "answer": "B",
                   "analysis": "",
                   "source": "user_input",
@@ -173,6 +217,7 @@ export default {
                   "question_stem": "设函数<IMG: 2018年高考文科数学试题-HTML.031.png>. 若<IMG: 2018年高考文科数学试题-HTML.032.png>为奇函数，则曲线<IMG: 2018年高考文科数学试题-HTML.033.png>在点<IMG: 2018年高考文科数学试题-HTML.034.png>处的切线方程为",
                   "question_options": [ "<IMG: 2018年高考文科数学试题-HTML.035.png>", "<IMG: 2018年高考文科数学试题-HTML.036.png>", "<IMG: 2018年高考文科数学试题-HTML.037.png>", "<IMG: 2018年高考文科数学试题-HTML.038.png>" ],
                   "question_type": "选择题",
+                  "sub_questions": [],
                   "answer": "D",
                   "analysis": "",
                   "source": "user_input",
@@ -182,6 +227,7 @@ export default {
                   "question_stem": "在<IMG: 2018年高考文科数学试题-HTML.039.png>中，AD为BC边上的中线，E为AD的中点，则<IMG: 2018年高考文科数学试题-HTML.040.png>",
                   "question_options": [ "<IMG: 2018年高考文科数学试题-HTML.041.png>", "<IMG: 2018年高考文科数学试题-HTML.042.png>", "<IMG: 2018年高考文科数学试题-HTML.043.png>", "<IMG: 2018年高考文科数学试题-HTML.044.png>" ],
                   "question_type": "选择题",
+                  "sub_questions": [],
                   "answer": "A",
                   "analysis": "",
                   "source": "user_input",
@@ -191,6 +237,7 @@ export default {
                   "question_stem": "已知函数<IMG: 2018年高考文科数学试题-HTML.045.png>，则",
                   "question_options": [ "<IMG: 2018年高考文科数学试题-HTML.046.png>的最小正周期为<IMG: 2018年高考文科数学试题-HTML.047.png>，最大值为<IMG: 2018年高考文科数学试题-HTML.048.png>", "<IMG: 2018年高考文科数学试题-HTML.046.png>的最小正周期为<IMG: 2018年高考文科数学试题-HTML.049.png>，最大值为<IMG: 2018年高考文科数学试题-HTML.050.png>", "<IMG: 2018年高考文科数学试题-HTML.046.png>的最小正周期为<IMG: 2018年高考文科数学试题-HTML.051.png>，最大值为<IMG: 2018年高考文科数学试题-HTML.052.png>", "<IMG: 2018年高考文科数学试题-HTML.046.png>的最小正周期为<IMG: 2018年高考文科数学试题-HTML.053.png>，最大值为<IMG: 2018年高考文科数学试题-HTML.054.png>" ],
                   "question_type": "选择题",
+                  "sub_questions": [],
                   "answer": "B",
                   "analysis": "",
                   "source": "user_input",
@@ -200,6 +247,7 @@ export default {
                   "question_stem": "<IMG: 2018年高考文科数学试题-HTML.055.jpeg>某圆柱的高为2，底面周长为16，其三视图如右图.圆柱表面上的点M在正视图上的对应点为A，圆柱表面上的点N在左视图上的对应点为B，则在此圆柱侧面上，从M到N的路径中，最短路径的长度为",
                   "question_options": [ "<IMG: 2018年高考文科数学试题-HTML.056.png>", "<IMG: 2018年高考文科数学试题-HTML.057.png>", "<IMG: 2018年高考文科数学试题-HTML.058.png>", "<IMG: 2018年高考文科数学试题-HTML.059.png>" ],
                   "question_type": "选择题",
+                  "sub_questions": [],
                   "answer": "B",
                   "analysis": "",
                   "source": "user_input",
@@ -209,6 +257,7 @@ export default {
                   "question_stem": "在长方体<IMG: 2018年高考文科数学试题-HTML.060.png>中，<IMG: 2018年高考文科数学试题-HTML.061.png>，<IMG: 2018年高考文科数学试题-HTML.062.png>与平面<IMG: 2018年高考文科数学试题-HTML.063.png>所成的角为<IMG: 2018年高考文科数学试题-HTML.064.png>，则该长方体的体积为",
                   "question_options": [ "<IMG: 2018年高考文科数学试题-HTML.065.png>", "<IMG: 2018年高考文科数学试题-HTML.066.png>", "<IMG: 2018年高考文科数学试题-HTML.067.png>", "<IMG: 2018年高考文科数学试题-HTML.068.png>" ],
                   "question_type": "选择题",
+                  "sub_questions": [],
                   "answer": "C",
                   "analysis": "",
                   "source": "user_input",
@@ -218,6 +267,7 @@ export default {
                   "question_stem": "已知角<IMG: 2018年高考文科数学试题-HTML.069.png>的顶点为坐标原点，始边与x轴的非负半轴重合，终边上有两点<IMG: 2018年高考文科数学试题-HTML.070.png>，<IMG: 2018年高考文科数学试题-HTML.071.png>，且<IMG: 2018年高考文科数学试题-HTML.072.png>，则<IMG: 2018年高考文科数学试题-HTML.073.png>",
                   "question_options": [ "<IMG: 2018年高考文科数学试题-HTML.074.png>", "<IMG: 2018年高考文科数学试题-HTML.075.png>", "<IMG: 2018年高考文科数学试题-HTML.076.png>", "<IMG: 2018年高考文科数学试题-HTML.077.png>" ],
                   "question_type": "选择题",
+                  "sub_questions": [],
                   "answer": "B",
                   "analysis": "",
                   "source": "user_input",
@@ -227,6 +277,7 @@ export default {
                   "question_stem": "设函数<IMG: 2018年高考文科数学试题-HTML.078.png> 则满足<IMG: 2018年高考文科数学试题-HTML.079.png>的<IMG: 2018年高考文科数学试题-HTML.080.png>的取值范围是",
                   "question_options": [ "<IMG: 2018年高考文科数学试题-HTML.081.png>", "<IMG: 2018年高考文科数学试题-HTML.082.png>", "<IMG: 2018年高考文科数学试题-HTML.083.png>", "<IMG: 2018年高考文科数学试题-HTML.084.png>" ],
                   "question_type": "选择题",
+                  "sub_questions": [],
                   "answer": "D",
                   "analysis": "",
                   "source": "user_input",
@@ -236,7 +287,8 @@ export default {
                   "question_stem": "已知函数<IMG: 2018年高考文科数学试题-HTML.085.png>. 若<IMG: 2018年高考文科数学试题-HTML.086.png>，则<IMG: 2018年高考文科数学试题-HTML.087.png> .",
                   "question_options": [],
                   "question_type": "填空题",
-                  "answer": "<IMG: 2018年高考文科数学试题-HTML.165.png>",
+                  "sub_questions": [],
+                  "answer": "$- 7$",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
@@ -245,7 +297,8 @@ export default {
                   "question_stem": "若<IMG: 2018年高考文科数学试题-HTML.088.png>，<IMG: 2018年高考文科数学试题-HTML.089.png>满足约束条件<IMG: 2018年高考文科数学试题-HTML.090.png> 则<IMG: 2018年高考文科数学试题-HTML.091.png>的最大值为 .",
                   "question_options": [],
                   "question_type": "填空题",
-                  "answer": "<IMG: 2018年高考文科数学试题-HTML.166.png>",
+                  "sub_questions": [],
+                  "answer": "$6$",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
@@ -254,7 +307,8 @@ export default {
                   "question_stem": "直线<IMG: 2018年高考文科数学试题-HTML.092.png>与圆<IMG: 2018年高考文科数学试题-HTML.093.png>交于<IMG: 2018年高考文科数学试题-HTML.094.png>，<IMG: 2018年高考文科数学试题-HTML.095.png>两点，则<IMG: 2018年高考文科数学试题-HTML.096.png> .",
                   "question_options": [],
                   "question_type": "填空题",
-                  "answer": "<IMG: 2018年高考文科数学试题-HTML.167.png>",
+                  "sub_questions": [],
+                  "answer": "$2 \\sqrt { 2 }$",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
@@ -263,69 +317,77 @@ export default {
                   "question_stem": "<IMG: 2018年高考文科数学试题-HTML.097.png>的内角<IMG: 2018年高考文科数学试题-HTML.094.png>，<IMG: 2018年高考文科数学试题-HTML.095.png>，<IMG: 2018年高考文科数学试题-HTML.098.png>的对边分别为<IMG: 2018年高考文科数学试题-HTML.099.png>，<IMG: 2018年高考文科数学试题-HTML.100.png>，<IMG: 2018年高考文科数学试题-HTML.101.png>. 已知<IMG: 2018年高考文科数学试题-HTML.102.png>，<IMG: 2018年高考文科数学试题-HTML.103.png>，则<IMG: 2018年高考文科数学试题-HTML.104.png>的面积为 .",
                   "question_options": [],
                   "question_type": "填空题",
+                  "sub_questions": [],
                   "answer": "<IMG: 2018年高考文科数学试题-HTML.168.png>",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
                 },
                 {
-                  "question_stem": "已知数列<IMG: 2018年高考文科数学试题-HTML.105.png>满足<IMG: 2018年高考文科数学试题-HTML.106.png>，<IMG: 2018年高考文科数学试题-HTML.107.png>. 设<IMG: 2018年高考文科数学试题-HTML.108.png>.（1）求<IMG: 2018年高考文科数学试题-HTML.109.png>，<IMG: 2018年高考文科数学试题-HTML.110.png>，<IMG: 2018年高考文科数学试题-HTML.111.png>；（2）判断数列<IMG: 2018年高考文科数学试题-HTML.112.png>是否为等比数列，并说明理由；（3）求<IMG: 2018年高考文科数学试题-HTML.113.png>的通项公式.",
+                  "question_stem": "已知数列<IMG: 2018年高考文科数学试题-HTML.105.png>满足<IMG: 2018年高考文科数学试题-HTML.106.png>，<IMG: 2018年高考文科数学试题-HTML.107.png>. 设<IMG: 2018年高考文科数学试题-HTML.108.png>.",
                   "question_options": [],
                   "question_type": "解答题",
+                  "sub_questions": [ "（1）求<IMG: 2018年高考文科数学试题-HTML.109.png>，<IMG: 2018年高考文科数学试题-HTML.110.png>，<IMG: 2018年高考文科数学试题-HTML.111.png>；", "（2）判断数列<IMG: 2018年高考文科数学试题-HTML.112.png>是否为等比数列，并说明理由；", "（3）求<IMG: 2018年高考文科数学试题-HTML.113.png>的通项公式." ],
                   "answer": "（1）由条件可得<IMG: 2018年高考文科数学试题-HTML.169.png>.将<IMG: 2018年高考文科数学试题-HTML.170.png>代入得，<IMG: 2018年高考文科数学试题-HTML.171.png>，而<IMG: 2018年高考文科数学试题-HTML.106.png>，所以，<IMG: 2018年高考文科数学试题-HTML.172.png>.将<IMG: 2018年高考文科数学试题-HTML.173.png>代入得，<IMG: 2018年高考文科数学试题-HTML.174.png>，所以，<IMG: 2018年高考文科数学试题-HTML.175.png>.从而<IMG: 2018年高考文科数学试题-HTML.176.png>，<IMG: 2018年高考文科数学试题-HTML.177.png>，<IMG: 2018年高考文科数学试题-HTML.178.png>. （2）<IMG: 2018年高考文科数学试题-HTML.179.png>是首项为<IMG: 2018年高考文科数学试题-HTML.180.png>，公比为<IMG: 2018年高考文科数学试题-HTML.181.png>的等比数列.由条件可得<IMG: 2018年高考文科数学试题-HTML.182.png>，即<IMG: 2018年高考文科数学试题-HTML.183.png>，又<IMG: 2018年高考文科数学试题-HTML.184.png>，所以<IMG: 2018年高考文科数学试题-HTML.185.png>是首项为<IMG: 2018年高考文科数学试题-HTML.186.png>，公比为<IMG: 2018年高考文科数学试题-HTML.187.png>的等比数列.                                                                                                                                            （3）由（2）可得<IMG: 2018年高考文科数学试题-HTML.188.png>，所以<IMG: 2018年高考文科数学试题-HTML.189.png>.",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
                 },
                 {
-                  "question_stem": "（1）证明：平面<IMG: 2018年高考文科数学试题-HTML.122.png>平面<IMG: 2018年高考文科数学试题-HTML.123.png>；（2）<IMG: 2018年高考文科数学试题-HTML.124.png>为线段<IMG: 2018年高考文科数学试题-HTML.125.png>上一点，<IMG: 2018年高考文科数学试题-HTML.126.png>为线段<IMG: 2018年高考文科数学试题-HTML.127.png>上一点，且<IMG: 2018年高考文科数学试题-HTML.128.png>，求三棱锥<IMG: 2018年高考文科数学试题-HTML.129.png>的体积.",
+                  "question_stem": "",
                   "question_options": [],
                   "question_type": "解答题",
+                  "sub_questions": [ "（1）证明：平面<IMG: 2018年高考文科数学试题-HTML.122.png>平面<IMG: 2018年高考文科数学试题-HTML.123.png>；", "（2）<IMG: 2018年高考文科数学试题-HTML.124.png>为线段<IMG: 2018年高考文科数学试题-HTML.125.png>上一点，<IMG: 2018年高考文科数学试题-HTML.126.png>为线段<IMG: 2018年高考文科数学试题-HTML.127.png>上一点，且<IMG: 2018年高考文科数学试题-HTML.128.png>，求三棱锥<IMG: 2018年高考文科数学试题-HTML.129.png>的体积." ],
                   "answer": "（1）由已知可得，<IMG: 2018年高考文科数学试题-HTML.191.png>，<IMG: 2018年高考文科数学试题-HTML.192.png>. 又<IMG: 2018年高考文科数学试题-HTML.193.png>，所以<IMG: 2018年高考文科数学试题-HTML.194.png>平面<IMG: 2018年高考文科数学试题-HTML.195.png>.又<IMG: 2018年高考文科数学试题-HTML.196.png>平面<IMG: 2018年高考文科数学试题-HTML.123.png>，所以平面<IMG: 2018年高考文科数学试题-HTML.122.png>平面<IMG: 2018年高考文科数学试题-HTML.123.png>. （2）由已知可得，<IMG: 2018年高考文科数学试题-HTML.197.png>，<IMG: 2018年高考文科数学试题-HTML.198.png>.又<IMG: 2018年高考文科数学试题-HTML.128.png>，所以<IMG: 2018年高考文科数学试题-HTML.199.png>.作<IMG: 2018年高考文科数学试题-HTML.200.png>，垂足为<IMG: 2018年高考文科数学试题-HTML.201.png>，则<IMG: 2018年高考文科数学试题-HTML.202.png><IMG: 2018年高考文科数学试题-HTML.203.png><IMG: 2018年高考文科数学试题-HTML.204.png>. 由已知及（1）可得<IMG: 2018年高考文科数学试题-HTML.205.png>平面<IMG: 2018年高考文科数学试题-HTML.123.png>，所以<IMG: 2018年高考文科数学试题-HTML.206.png>平面<IMG: 2018年高考文科数学试题-HTML.123.png>，<IMG: 2018年高考文科数学试题-HTML.207.png>. 因此，三棱锥<IMG: 2018年高考文科数学试题-HTML.208.png>的体积为<IMG: 2018年高考文科数学试题-HTML.209.png>.",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
                 },
                 {
-                  "question_stem": "某家庭记录了未使用节水龙头50天的日用水量数据（单位：<IMG: 2018年高考文科数学试题-HTML.130.png>）和使用了节水龙头50天的日用水量数据，得到频数分布表如下：未使用节水龙头50天的日用水量频数分布表使用了节水龙头50天的日用水量频数分布表（1）在答题卡上作出使用了节水龙头50天的日用水量数据的频率分布直方图；（2）估计该家庭使用节水龙头后，日用水量小于0.35<IMG: 2018年高考文科数学试题-HTML.130.png>的概率；（3）估计该家庭使用节水龙头后，一年能节省多少水？（一年按365天计算，同一组中的数据以这组数据所在区间中点的值作代表.）",
+                  "question_stem": "某家庭记录了未使用节水龙头50天的日用水量数据（单位：<IMG: 2018年高考文科数学试题-HTML.130.png>）和使用了节水龙头50天的日用水量数据，得到频数分布表如下：未使用节水龙头50天的日用水量频数分布表使用了节水龙头50天的日用水量频数分布表",
                   "question_options": [],
                   "question_type": "解答题",
+                  "sub_questions": [ "（1）在答题卡上作出使用了节水龙头50天的日用水量数据的频率分布直方图；", "（2）估计该家庭使用节水龙头后，日用水量小于0.35<IMG: 2018年高考文科数学试题-HTML.130.png>的概率；", "（3）估计该家庭使用节水龙头后，一年能节省多少水？（一年按365天计算，同一组中的数据以这组数据所在区间中点的值作代表.）" ],
                   "answer": "（1）（2）根据以上数据，该家庭使用节水龙头后50天日用水量小于0.35<IMG: 2018年高考文科数学试题-HTML.211.png>的频率为<IMG: 2018年高考文科数学试题-HTML.212.png>，因此该家庭使用节水龙头后日用水量小于0.35<IMG: 2018年高考文科数学试题-HTML.213.png>的概率的估计值为<IMG: 2018年高考文科数学试题-HTML.214.png>. （3）该家庭未使用节水龙头50天日用水量的平均数为<IMG: 2018年高考文科数学试题-HTML.215.png> 该家庭使用了节水龙头后50天日用水量的平均数为估计使用节水龙头后，一年可节省水<IMG: 2018年高考文科数学试题-HTML.217.png>.",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
                 },
                 {
-                  "question_stem": "设抛物线<IMG: 2018年高考文科数学试题-HTML.132.png>，点<IMG: 2018年高考文科数学试题-HTML.133.png>，<IMG: 2018年高考文科数学试题-HTML.134.png>，过点<IMG: 2018年高考文科数学试题-HTML.135.png>的直线<IMG: 2018年高考文科数学试题-HTML.136.png>与<IMG: 2018年高考文科数学试题-HTML.137.png>交于<IMG: 2018年高考文科数学试题-HTML.138.png>，<IMG: 2018年高考文科数学试题-HTML.139.png>两点.（1）当<IMG: 2018年高考文科数学试题-HTML.140.png>与<IMG: 2018年高考文科数学试题-HTML.141.png>轴垂直时，求直线<IMG: 2018年高考文科数学试题-HTML.142.png>的方程；（2）证明：<IMG: 2018年高考文科数学试题-HTML.143.png>.",
+                  "question_stem": "设抛物线<IMG: 2018年高考文科数学试题-HTML.132.png>，点<IMG: 2018年高考文科数学试题-HTML.133.png>，<IMG: 2018年高考文科数学试题-HTML.134.png>，过点<IMG: 2018年高考文科数学试题-HTML.135.png>的直线<IMG: 2018年高考文科数学试题-HTML.136.png>与<IMG: 2018年高考文科数学试题-HTML.137.png>交于<IMG: 2018年高考文科数学试题-HTML.138.png>，<IMG: 2018年高考文科数学试题-HTML.139.png>两点.",
                   "question_options": [],
                   "question_type": "解答题",
+                  "sub_questions": [ "（1）当<IMG: 2018年高考文科数学试题-HTML.140.png>与<IMG: 2018年高考文科数学试题-HTML.141.png>轴垂直时，求直线<IMG: 2018年高考文科数学试题-HTML.142.png>的方程；", "（2）证明：<IMG: 2018年高考文科数学试题-HTML.143.png>." ],
                   "answer": "（1）当<IMG: 2018年高考文科数学试题-HTML.140.png>与x轴垂直时，<IMG: 2018年高考文科数学试题-HTML.140.png>的方程为<IMG: 2018年高考文科数学试题-HTML.218.png>，可得<IMG: 2018年高考文科数学试题-HTML.219.png>的坐标为<IMG: 2018年高考文科数学试题-HTML.220.png>或<IMG: 2018年高考文科数学试题-HTML.221.png>.所以直线<IMG: 2018年高考文科数学试题-HTML.222.png>的方程为<IMG: 2018年高考文科数学试题-HTML.223.png>或<IMG: 2018年高考文科数学试题-HTML.224.png>. （2）当<IMG: 2018年高考文科数学试题-HTML.140.png>与x轴垂直时，AB为MN的垂直平分线，所以<IMG: 2018年高考文科数学试题-HTML.143.png>.当<IMG: 2018年高考文科数学试题-HTML.140.png>与x轴不垂直时，设<IMG: 2018年高考文科数学试题-HTML.140.png>的方程为<IMG: 2018年高考文科数学试题-HTML.225.png>，<IMG: 2018年高考文科数学试题-HTML.226.png>，<IMG: 2018年高考文科数学试题-HTML.227.png>，则<IMG: 2018年高考文科数学试题-HTML.228.png>.由<IMG: 2018年高考文科数学试题-HTML.229.png>得<IMG: 2018年高考文科数学试题-HTML.230.png>，可知<IMG: 2018年高考文科数学试题-HTML.231.png>.直线BM，BN的斜率之和为<IMG: 2018年高考文科数学试题-HTML.232.png><IMG: 2018年高考文科数学试题-HTML.233.png>. ①将<IMG: 2018年高考文科数学试题-HTML.234.png>，<IMG: 2018年高考文科数学试题-HTML.235.png>及<IMG: 2018年高考文科数学试题-HTML.236.png>的表达式代入①式分子，可得<IMG: 2018年高考文科数学试题-HTML.237.png><IMG: 2018年高考文科数学试题-HTML.238.png>.所以<IMG: 2018年高考文科数学试题-HTML.239.png>，可知BM，BN的倾斜角互补，所以<IMG: 2018年高考文科数学试题-HTML.143.png>.综上，<IMG: 2018年高考文科数学试题-HTML.143.png>.",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
                 },
                 {
-                  "question_stem": "已知函数<IMG: 2018年高考文科数学试题-HTML.144.png>.（1）设<IMG: 2018年高考文科数学试题-HTML.145.png>是<IMG: 2018年高考文科数学试题-HTML.146.png>的极值点，求<IMG: 2018年高考文科数学试题-HTML.147.png>，并求<IMG: 2018年高考文科数学试题-HTML.146.png>的单调区间；（2）证明：当<IMG: 2018年高考文科数学试题-HTML.148.png>时，<IMG: 2018年高考文科数学试题-HTML.149.png>.",
+                  "question_stem": "已知函数$f ( x ) = a e ^ { x } - \\operatorname { ln } x - 1$.",
                   "question_options": [],
                   "question_type": "解答题",
+                  "sub_questions": [ "（1）设$x = 2$是$f ( x )$的极值点，求$C l$，并求$f ( x )$的单调区间；", "（2）证明：当$a \\geq \\frac { 1 } { e }$时，$f ( x ) \\geq 0$." ],
                   "answer": "（1）<IMG: 2018年高考文科数学试题-HTML.240.png>的定义域为<IMG: 2018年高考文科数学试题-HTML.241.png>，<IMG: 2018年高考文科数学试题-HTML.242.png>.由题设知，<IMG: 2018年高考文科数学试题-HTML.243.png>，所以<IMG: 2018年高考文科数学试题-HTML.244.png>.  从而<IMG: 2018年高考文科数学试题-HTML.245.png>，<IMG: 2018年高考文科数学试题-HTML.246.png>. 当<IMG: 2018年高考文科数学试题-HTML.247.png>时，<IMG: 2018年高考文科数学试题-HTML.248.png>；当<IMG: 2018年高考文科数学试题-HTML.249.png>时，<IMG: 2018年高考文科数学试题-HTML.250.png>. 所以<IMG: 2018年高考文科数学试题-HTML.146.png>在<IMG: 2018年高考文科数学试题-HTML.251.png>单调递减，在<IMG: 2018年高考文科数学试题-HTML.252.png>单调递增.（2）当<IMG: 2018年高考文科数学试题-HTML.253.png>时，<IMG: 2018年高考文科数学试题-HTML.254.png>. 设<IMG: 2018年高考文科数学试题-HTML.255.png>，则<IMG: 2018年高考文科数学试题-HTML.256.png>. 当<IMG: 2018年高考文科数学试题-HTML.257.png>时，<IMG: 2018年高考文科数学试题-HTML.258.png>；当<IMG: 2018年高考文科数学试题-HTML.259.png>时，<IMG: 2018年高考文科数学试题-HTML.260.png>. 所以<IMG: 2018年高考文科数学试题-HTML.261.png>是<IMG: 2018年高考文科数学试题-HTML.262.png>的最小值点.故当<IMG: 2018年高考文科数学试题-HTML.263.png>时，<IMG: 2018年高考文科数学试题-HTML.264.png>. 因此，当<IMG: 2018年高考文科数学试题-HTML.253.png>时，<IMG: 2018年高考文科数学试题-HTML.265.png>.",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
                 },
                 {
-                  "question_stem": "在直角坐标系<IMG: 2018年高考文科数学试题-HTML.150.png>中，曲线<IMG: 2018年高考文科数学试题-HTML.151.png>的方程为<IMG: 2018年高考文科数学试题-HTML.152.png>. 以坐标原点为极点，<IMG: 2018年高考文科数学试题-HTML.153.png>轴正半轴为极轴建立极坐标系，曲线<IMG: 2018年高考文科数学试题-HTML.154.png>的极坐标方程为<IMG: 2018年高考文科数学试题-HTML.155.png>.（1）求<IMG: 2018年高考文科数学试题-HTML.156.png>的直角坐标方程；（2）若<IMG: 2018年高考文科数学试题-HTML.157.png>与<IMG: 2018年高考文科数学试题-HTML.158.png>有且仅有三个公共点，求<IMG: 2018年高考文科数学试题-HTML.151.png>的方程.",
+                  "question_stem": "在直角坐标系$x O y$中，曲线$C _ { 1 }$的方程为$y = k | x | + 2$. 以坐标原点为极点，$X$轴正半轴为极轴建立极坐标系，曲线$C _ { 2 }$的极坐标方程为$\\rho ^ { 2 } + 2 \\rho \\operatorname { cos } \\theta - 3 = 0$.",
                   "question_options": [],
                   "question_type": "解答题",
+                  "sub_questions": [ "（1）求$C _ { 2 }$的直角坐标方程；", "（2）若$C _ { 1 }$与$C _ { 2 }$有且仅有三个公共点，求$C _ { 1 }$的方程." ],
                   "answer": "（1）由<IMG: 2018年高考文科数学试题-HTML.266.png>，<IMG: 2018年高考文科数学试题-HTML.267.png>得<IMG: 2018年高考文科数学试题-HTML.156.png>的直角坐标方程为 <IMG: 2018年高考文科数学试题-HTML.268.png>. （2）由（1）知<IMG: 2018年高考文科数学试题-HTML.156.png>是圆心为<IMG: 2018年高考文科数学试题-HTML.269.png>，半径为<IMG: 2018年高考文科数学试题-HTML.270.png>的圆.由题设知，<IMG: 2018年高考文科数学试题-HTML.157.png>是过点<IMG: 2018年高考文科数学试题-HTML.271.png>且关于<IMG: 2018年高考文科数学试题-HTML.272.png>轴对称的两条射线. 记<IMG: 2018年高考文科数学试题-HTML.272.png>轴右边的射线为<IMG: 2018年高考文科数学试题-HTML.273.png>，<IMG: 2018年高考文科数学试题-HTML.272.png>轴左边的射线为<IMG: 2018年高考文科数学试题-HTML.274.png>. 由于<IMG: 2018年高考文科数学试题-HTML.275.png>在圆<IMG: 2018年高考文科数学试题-HTML.156.png>的外面，故<IMG: 2018年高考文科数学试题-HTML.157.png>与<IMG: 2018年高考文科数学试题-HTML.158.png>有且仅有三个公共点等价于<IMG: 2018年高考文科数学试题-HTML.273.png>与<IMG: 2018年高考文科数学试题-HTML.156.png>只有一个公共点且<IMG: 2018年高考文科数学试题-HTML.276.png>与<IMG: 2018年高考文科数学试题-HTML.156.png>有两个公共点，或<IMG: 2018年高考文科数学试题-HTML.276.png>与<IMG: 2018年高考文科数学试题-HTML.156.png>只有一个公共点且<IMG: 2018年高考文科数学试题-HTML.273.png>与<IMG: 2018年高考文科数学试题-HTML.156.png>有两个公共点.当<IMG: 2018年高考文科数学试题-HTML.277.png>与<IMG: 2018年高考文科数学试题-HTML.278.png>只有一个公共点时，<IMG: 2018年高考文科数学试题-HTML.279.png>到<IMG: 2018年高考文科数学试题-HTML.277.png>所在直线的距离为<IMG: 2018年高考文科数学试题-HTML.280.png>，所以<IMG: 2018年高考文科数学试题-HTML.281.png>，故<IMG: 2018年高考文科数学试题-HTML.282.png>或<IMG: 2018年高考文科数学试题-HTML.283.png>. 经检验，当<IMG: 2018年高考文科数学试题-HTML.283.png>时，<IMG: 2018年高考文科数学试题-HTML.277.png>与<IMG: 2018年高考文科数学试题-HTML.284.png>没有公共点；当<IMG: 2018年高考文科数学试题-HTML.282.png>时，<IMG: 2018年高考文科数学试题-HTML.277.png>与<IMG: 2018年高考文科数学试题-HTML.278.png>只有一个公共点，<IMG: 2018年高考文科数学试题-HTML.285.png>与<IMG: 2018年高考文科数学试题-HTML.278.png>有两个公共点.当<IMG: 2018年高考文科数学试题-HTML.286.png>与<IMG: 2018年高考文科数学试题-HTML.278.png>只有一个公共点时，<IMG: 2018年高考文科数学试题-HTML.279.png>到<IMG: 2018年高考文科数学试题-HTML.287.png>所在直线的距离为<IMG: 2018年高考文科数学试题-HTML.280.png>，所以<IMG: 2018年高考文科数学试题-HTML.288.png>，故<IMG: 2018年高考文科数学试题-HTML.289.png>或<IMG: 2018年高考文科数学试题-HTML.290.png>. 经检验，当<IMG: 2018年高考文科数学试题-HTML.283.png>时，<IMG: 2018年高考文科数学试题-HTML.277.png>与<IMG: 2018年高考文科数学试题-HTML.284.png>没有公共点；当<IMG: 2018年高考文科数学试题-HTML.291.png>时，<IMG: 2018年高考文科数学试题-HTML.292.png>与<IMG: 2018年高考文科数学试题-HTML.278.png>没有公共点.综上，所求<IMG: 2018年高考文科数学试题-HTML.293.png>的方程为<IMG: 2018年高考文科数学试题-HTML.294.png>.",
                   "analysis": "",
                   "source": "user_input",
                   "subject": "user_input"
                 },
                 {
-                  "question_stem": "已知<IMG: 2018年高考文科数学试题-HTML.159.png>.（1）当<IMG: 2018年高考文科数学试题-HTML.160.png>时，求不等式<IMG: 2018年高考文科数学试题-HTML.161.png>的解集；（2）若<IMG: 2018年高考文科数学试题-HTML.162.png>时不等式<IMG: 2018年高考文科数学试题-HTML.163.png>成立，求<IMG: 2018年高考文科数学试题-HTML.164.png>的取值范围.",
+                  "question_stem": "已知$f ( x ) = | x + 1 | - | a x - 1 |$.",
                   "question_options": [],
                   "question_type": "解答题",
+                  "sub_questions": [ "（1）当$a = 1$时，求不等式$f ( x ) > 1$的解集；", "（2）若<IMG: 2018年高考文科数学试题-HTML.162.png>时不等式<IMG: 2018年高考文科数学试题-HTML.163.png>成立，求<IMG: 2018年高考文科数学试题-HTML.164.png>的取值范围." ],
                   "answer": "（1）当<IMG: 2018年高考文科数学试题-HTML.160.png>时，<IMG: 2018年高考文科数学试题-HTML.295.png>，即<IMG: 2018年高考文科数学试题-HTML.296.png>故不等式<IMG: 2018年高考文科数学试题-HTML.297.png>的解集为<IMG: 2018年高考文科数学试题-HTML.298.png>.（2）当<IMG: 2018年高考文科数学试题-HTML.299.png>时<IMG: 2018年高考文科数学试题-HTML.300.png>成立等价于当<IMG: 2018年高考文科数学试题-HTML.299.png>时<IMG: 2018年高考文科数学试题-HTML.301.png>成立.若<IMG: 2018年高考文科数学试题-HTML.302.png>，则当<IMG: 2018年高考文科数学试题-HTML.299.png>时<IMG: 2018年高考文科数学试题-HTML.303.png>；若<IMG: 2018年高考文科数学试题-HTML.304.png>，<IMG: 2018年高考文科数学试题-HTML.301.png>的解集为<IMG: 2018年高考文科数学试题-HTML.305.png>，所以<IMG: 2018年高考文科数学试题-HTML.306.png>，故<IMG: 2018年高考文科数学试题-HTML.307.png>.综上，<IMG: 2018年高考文科数学试题-HTML.164.png>的取值范围为<IMG: 2018年高考文科数学试题-HTML.308.png>.",
                   "analysis": "",
                   "source": "user_input",
@@ -645,10 +707,58 @@ export default {
             },
             Question_Edit_Now: -1,
             Question_Edit_Part: "",
-            Question_Edit_Option_Index: -1
+            Question_Edit_Option_Index: -1,
+            Question_Edit_Sub_Ques_Index: -1,
+            Question_Check: [],
+            Submit_Show: false
         }
     },
+    mounted() {
+      this.Init_Question_Check()
+    },
+    watch: {
+      Question_Check(val){
+        
+        var Flag = true
+        
+        for(var c = 0; c < val.length; c++){
+          if(!val[c]){
+            Flag = false
+            this.Submit_Show = false;
+          }
+        }
+
+        if(Flag){
+          this.Ensure();
+        }
+
+        Flag = true
+      }
+    },
     methods: {
+        Ensure(){
+          this.$confirm("您已经锁定了所有题目，确认审核完毕请点击确认提交，仍有更改请点击取消。").then( () => {
+            console.log("已提交")
+            this.$message.success("已提交");
+            this.Submit_Show = true;
+          }).catch(() => {
+            console.log("已取消")
+            this.$message.info("已取消");
+            this.Submit_Show = true;
+          })
+        },
+        Init_Question_Check(){
+
+          this.Question_Check = [];
+
+          for(var i = 0; i < this.TestData.doc.length; i++){
+            this.Question_Check.push(false);
+          }
+
+          this.$confirm("确认题目无误后请点击左上角锁定此题，所有题目锁定后可以确认审核完毕。").then( () => {
+          }).catch(() => {
+          })
+        },
         Get_Question_Show(Stem, Type){
             for(var key in this.TestData.img){
                 var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
@@ -673,15 +783,30 @@ export default {
             }
             return String.fromCharCode(Index + 65) + "：" + Stem
         },
+        Get_Sub_Question(Stem){
+            for(var key in this.TestData.img){
+                var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
+                if(Img_Name_Catcher.exec(Stem) != null){
+                    Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
+                }
+            }
+            return Stem
+        },
         Show_ComplexInput(Question_Index, Part, Index = null){
-          if(this.Question_Edit_Option_Index == -1){
+          if(this.Question_Edit_Option_Index == -1 && this.Question_Edit_Sub_Ques_Index == -1){
             if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part){
               return true
             }else{
               return false
             }
-          }else{
+          }else if(this.Question_Edit_Option_Index != -1){
             if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Option_Index){
+              return true
+            }else{
+              return false
+            }
+          }else if(this.Question_Edit_Sub_Ques_Index != -1){
+            if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Sub_Ques_Index){
               return true
             }else{
               return false
@@ -697,6 +822,8 @@ export default {
             this.TestData.doc[this.Question_Edit_Now].analysis = val;
           }else if(this.Question_Edit_Part == 'option'){
             this.TestData.doc[this.Question_Edit_Now].question_options.splice(this.Question_Edit_Option_Index, 1, val);
+          }else if(this.Question_Edit_Part == 'sub_question'){
+            this.TestData.doc[this.Question_Edit_Now].sub_questions.splice(this.Question_Edit_Sub_Ques_Index, 1, val);
           }
         },
         Show_Part(Question_Index, Part, Index = null){
@@ -708,11 +835,18 @@ export default {
             this.Question_Edit_Now = Question_Index; 
             this.Question_Edit_Part = Part;
           }
-          if(Index != null && Index != this.Question_Edit_Option_Index){
+
+          if(this.Question_Edit_Part == 'option' && Index != null && Index != this.Question_Edit_Option_Index){
             this.Question_Edit_Option_Index = Index;
           }else{
             this.Question_Edit_Option_Index = -1;
-          }      
+          }  
+          
+          if(this.Question_Edit_Part == 'sub_question' && Index != null && Index != this.Question_Edit_Sub_Ques_Index){
+            this.Question_Edit_Sub_Ques_Index = Index;
+          }else{
+            this.Question_Edit_Sub_Ques_Index = -1;
+          }
         },
         Get_Button_Label(Question_Index, Part, Index = null){
           if(Index == null){
@@ -727,6 +861,13 @@ export default {
             }else{
               return "编辑"
             }
+          }
+        },
+        Get_Name(Question_Index, Type, Index = null){
+          if(Index == null){
+            return "Mathdown" + Question_Index.toString() + "_" + Type
+          }else{
+            return "Mathdown" + Question_Index.toString() + "_" + Type + "_" + Index.toString()
           }
         }
     }
