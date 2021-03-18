@@ -2288,6 +2288,32 @@
     </el-row>
   </div> -->
   <div style="margin-top: 5vh">
+    <!-- 提供给非法输入格式的提示对话框 -->
+    <el-dialog
+        :visible.sync="showHint" 
+        title="非法输入格式提示" 
+        width="65%" 
+        @close="Editor_Dialog_Close()"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
+      <el-row style="margin: 20px 0px 0px 0px">
+        <el-col :span="4" style="text-align: left">
+          合法的英文符号有：
+        </el-col>
+        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in en_pun_list" :key="'EN' + SymIndex.toString()" v-html="Sym">
+        </el-col>
+      </el-row>
+      <el-row style="margin: 50px 0px">
+        <el-col :span="4" style="text-align: left">
+          合法的中文符号有：
+        </el-col>
+        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in ch_pun_list" :key="'CH' + SymIndex.toString()" v-html="Sym">
+        </el-col>
+      </el-row>
+      <el-row type="flex" justify="center" style="font-size: 20px; color: red; font-weight: bold">
+        请勿输入其他符号（含字母和数字），如需输入，请将字母，罗马符号及数字包裹在$$之间进行表示
+      </el-row>
+    </el-dialog>
     <!-- 提供给选择题的编辑器 -->
     <el-dialog 
         :visible.sync="showDialog" 
@@ -2396,11 +2422,178 @@
         :modal-append-to-body="false"
         :close-on-click-modal="false">
         <MixQuestions
-            @EditFinish="New_Questions" 
-            @ReEditFinish="ReEdit_Questions"
+            @EditFinish_Mix="New_Questions" 
+            @ReEditFinish_Mix="ReEdit_Questions"
             :RE.sync="ReEditSwitch"
             :QInfos.sync="Temp_MixQuestionInfo"
         ></MixQuestions>
+    </el-dialog>
+    <!-- 完成单题显示的编辑器 -->
+    <el-dialog
+        :visible.sync="showDialog_Result"
+        title="确认导入的题目内容" 
+        width="90%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
+        <el-row style="margin: 30px 50px 0px 50px">
+            {{TestData.title}}
+        </el-row>
+        <el-row style="margin: 30px 50px" v-if="Submit_Show">
+            <el-button @click="Ensure()" type="success">确认无误</el-button>
+        </el-row>
+        <el-row v-for="(Question_Info, Question_Index) in TestData.doc" :key="Question_Index" style="border: 3px dashed black; background: #F8FBFF; margin: 30px">
+            <!-- 题型，上传用户，科目部分 -->
+            <el-row type="flex" justify="start" style="margin: 30px 50px 0px 50px">
+                <el-col :span="1" style="text-align: left">
+                  <el-popover
+                    placement="top"
+                    width="170"
+                    trigger="hover"
+                    v-if="Question_Check[Question_Index] == false"
+                    content="点击完成该题目确认">
+                    <el-button 
+                      slot="reference" 
+                      circle size="medium" 
+                      @click="Question_Check.splice(Question_Index, 1, true)"
+                      type="success"
+                      ><i class="el-icon-check"></i></el-button>
+                  </el-popover>
+                  <el-popover
+                    placement="top"
+                    width="170"
+                    trigger="hover"
+                    v-if="Question_Check[Question_Index] == true"
+                    content="点击取消确认该题目">
+                    <el-button
+                      slot="reference" 
+                      circle size="medium" 
+                      @click="Question_Check.splice(Question_Index, 1, false)"
+                      type="danger"><i class="el-icon-edit"></i></el-button>
+                  </el-popover>
+                </el-col>
+                <el-col :span="2" style="text-align: left; padding-top: 1.2vh">
+                    {{Question_Info.question_type}}
+                </el-col>
+                <el-col :span="3" style="text-align: left; padding-top: 1.2vh">
+                    提交者：{{Question_Info.source}}
+                </el-col>
+                <el-col :span="3" style="text-align: left; padding-top: 1.2vh">
+                    科目：{{Question_Info.subject}}
+                </el-col>
+            </el-row>
+            <!-- 题干部分 - 无小题 -->
+            <el-row type="flex" justify="start" style="margin: 30px 50px;">
+                <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.question_stem, 'stem')"></p> -->
+              <el-col :span="1" v-if="Question_Check[Question_Index] == false">
+                <el-row type="flex" justify="start">
+                    <el-button @click="Show_Part(Question_Index, 'stem')" size="small">{{Get_Button_Label(Question_Index, 'stem')}}</el-button>
+                </el-row>
+              </el-col>
+              <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
+                <el-row type="flex" justify="start">
+                  <Mathdown :content="Get_Question_Show(Question_Info.question_stem, 'stem')" style="width: 84vw;" :name="Get_Name(Question_Index, 'stem')"/>
+                </el-row>
+                <el-row type="flex" justify="start">
+                  <ComplexInput 
+                    v-if="Show_ComplexInput(Question_Index, 'stem')"
+                    @Update_CI="Update_ComplexInput" 
+                    :Get_Out_Content="Get_Question_Show(Question_Info.question_stem, 'stem').substring(3)"></ComplexInput>
+                </el-row>
+              </el-col>
+            </el-row>
+            <!-- 题干部分 - 有小题 -->
+            <el-row type="flex" justify="start" style="margin: 30px 50px;" 
+              v-for="(Sub_Question, Sub_Question_Index) in Question_Info.sub_questions" :key="Sub_Question_Index">
+                <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.question_stem, 'stem')"></p> -->
+              <el-col :span="1" v-if="Question_Check[Question_Index] == false">
+                <el-row type="flex" justify="start">
+                    <el-button @click="Show_Part(Question_Index, 'sub_question', Sub_Question_Index)" size="small">{{Get_Button_Label(Question_Index, 'sub_question', Sub_Question_Index)}}</el-button>
+                </el-row>
+              </el-col>
+              <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
+                <el-row type="flex" justify="start">
+                  <Mathdown :content="Get_Sub_Question(Sub_Question)" style="width: 84vw;" :name="Get_Name(Question_Index, 'sub_question', Sub_Question_Index)"/>
+                </el-row>
+                <el-row type="flex" justify="start">
+                  <ComplexInput 
+                    v-if="Show_ComplexInput(Question_Index, 'sub_question', Sub_Question_Index)"
+                    @Update_CI="Update_ComplexInput" 
+                    :Get_Out_Content="Get_Sub_Question(Sub_Question)"></ComplexInput>
+                </el-row>
+              </el-col>
+            </el-row>
+            <!-- 选项部分 -->
+            <el-row type="flex" justify="start" style="margin: 20px 50px" 
+                    v-for="(Question_Option, Option_Index) in Question_Info.question_options" 
+                    :key="Option_Index" >
+              <!-- <p style="text-align: left" v-html="Get_Question_Options(Question_Option, Option_Index)"></p>
+                -->
+              <el-col :span="1" v-if="Question_Check[Question_Index] == false">
+                <el-row type="flex" justify="start">
+                    <el-button @click="Show_Part(Question_Index, 'option', Option_Index)" size="small">{{Get_Button_Label(Question_Index, 'option', Option_Index)}}</el-button>
+                </el-row>
+              </el-col>
+              <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
+                <el-row type="flex" justify="start">
+                  <Mathdown :content="Get_Question_Options(Question_Option, Option_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'option', Option_Index)"/>
+                </el-row>
+                <el-row type="flex" justify="start">
+                  <ComplexInput 
+                    v-if="Show_ComplexInput(Question_Index, 'option', Option_Index)"
+                    @Update_CI="Update_ComplexInput" 
+                    :Get_Out_Content="Get_Question_Options(Question_Option, Option_Index).substring(2)"></ComplexInput>
+                </el-row>
+              </el-col>
+              <!-- <el-row type="flex" justify="start" style="margin: 30px 50px; background: red" v-if="Show_ComplexInput(Question_Index, 'option', Option_Index)">
+                <ComplexInput 
+                    @Update_CI="Update_ComplexInput" 
+                    :Get_Out_Content="Get_Question_Options(Question_Option, Option_Index)"></ComplexInput>
+              </el-row> -->
+            </el-row>
+            <!-- 答案部分 -->
+            <el-row type="flex" justify="start" style="margin: 20px 50px">
+               <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.answer, 'answer')"></p> -->
+               <el-col :span="1" v-if="Question_Check[Question_Index] == false">
+                 <el-row type="flex" justify="start">
+                    <el-button @click="Show_Part(Question_Index, 'answer')" size="small">{{Get_Button_Label(Question_Index, 'answer')}}</el-button>
+                 </el-row>
+               </el-col>
+               <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
+                 <el-row type="flex" justify="start">
+                  <Mathdown :content="Get_Question_Show(Question_Info.answer, 'answer')" style="width: 80vw;"  :name="Get_Name(Question_Index, 'answer')"/>
+                 </el-row>
+                 <el-row type="flex" justify="start">
+                  <ComplexInput 
+                    v-if="Show_ComplexInput(Question_Index, 'answer')"
+                    @Update_CI="Update_ComplexInput" 
+                    :Get_Out_Content="Get_Question_Show(Question_Info.answer, 'answer').substring(3)"></ComplexInput>
+                 </el-row>
+               </el-col>
+            </el-row>
+            <!-- 解析部分 -->
+            <el-row type="flex" justify="start" style="margin: 30px 50px">
+                <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.analysis, 'analyse')"></p> -->
+              <el-col :span="1" v-if="Question_Check[Question_Index] == false">
+                <el-row type="flex" justify="start">
+                    <el-button @click="Show_Part(Question_Index, 'analyse')" size="small">{{Get_Button_Label(Question_Index, 'analyse')}}</el-button>
+                </el-row>
+              </el-col>
+              <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
+                <el-row type="flex" justify="start">
+                  <Mathdown :content="Get_Question_Show(Question_Info.analysis, 'analyse')" style="width: 80vw;"  :name="Get_Name(Question_Index, 'analyse')"/>
+                </el-row>
+                <el-row type="flex" justify="start">
+                  <ComplexInput 
+                    v-if="Show_ComplexInput(Question_Index, 'analyse')"
+                    @Update_CI="Update_ComplexInput" 
+                    :Get_Out_Content="Get_Question_Show(Question_Info.analysis, 'analyse').substring(3)"></ComplexInput>
+                </el-row>
+              </el-col>
+            </el-row>
+        </el-row>
+        <el-row style="margin: 30px 50px" v-if="Submit_Show">
+            <el-button @click="Ensure()" type="success">确认无误</el-button>
+        </el-row>
     </el-dialog>
     <el-row justify="start" type="flex">
       <el-col style="padding-left: 25px">
@@ -2427,8 +2620,11 @@
             <el-col :span="6" style="font-size: 20px">
               <i class="el-icon-arrow-down"></i>
             </el-col>
-            <el-col :span="18" style="text-align: left; font-size: 20px">
+            <el-col :span="6" style="text-align: left; font-size: 20px">
               题型
+            </el-col>
+            <el-col :span="12">
+              <el-button @click="showHint = true" size="small" type="danger">非法格式提示</el-button>
             </el-col>
           </el-row>
           <!-- Option -->
@@ -2461,12 +2657,12 @@
           </el-row>
         </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="primary" plain style="width: 200px; font-size: 16px">
+          <el-button type="primary" plain style="width: 200px; font-size: 16px" @click="ImportFile()">
             <label>文件导入</label>
           </el-button>
         </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="success" plain style="width: 200px; font-size: 16px">
+          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload()">
             <label>导出题目</label>
           </el-button>
         </el-row>
@@ -2504,15 +2700,46 @@ import AnswerDisplay from "./AnswerDisplay.vue";
 import MixQuestions from "./MixQuestions.vue";
 import MixDisplay from "./MixDisplay.vue";
 
+import Mathdown from "./Mathdown.vue";
+
 import Vue from "vue";
 export default {
   components: { ComplexInput, 
                 OptionDisplay, OptionQuestions, 
                 FillQuestions, FillDisplay, 
                 AnswerQuestions, AnswerDisplay,
-                MixQuestions, MixDisplay},
+                MixQuestions, MixDisplay,
+                Mathdown},
   data() {
     return {
+      // 用于标记是否有非法字符
+      Symbol_Error: false,
+      // 用于输入符号提示的部分
+      en_pun_list: [',','.','?','!',':',';','\'','"','(',')','&nbsp','_','/','|','\\','<','>'],
+      ch_pun_list: ['，','。','！','？','：','；','‘','’','“','”','（','）','&nbsp','、','《','》'],
+      // 用于给显示和展示Json格式数据的内容
+      TestData: {
+        "title": "2009年课标甲乙",
+        "doc": [
+          {
+            "question_stem": "已知集合$A = \\{ 0,2 \\}$，$B = \\{ - 2 , - 1,0,1,2 \\}$,则$A \\cap B =$",
+            "question_options": [ "$\\{ 0,2 \\}$", "$\\{ 1,2 \\}$", "$\\{ 0 \\}$", "$\\{ - 2 , - 1,0,1,2 \\}$" ],
+            "question_type": "选择题",
+            "sub_questions": [],
+            "answer": "A",
+            "analysis": "",
+            "source": "user_input",
+            "subject": "user_input"
+          }
+        ],
+        "img": {}
+      },
+      Question_Edit_Now: -1,
+      Question_Edit_Part: "",
+      Question_Edit_Option_Index: -1,
+      Question_Edit_Sub_Ques_Index: -1,
+      Question_Check: [],
+      Submit_Show: false,
       // 当前题目类型
       Type_Now: "-1",
       // 选择题编辑器,填空题编辑器和解答题编辑器的显示控制
@@ -2520,6 +2747,10 @@ export default {
       showDialog_Fill: false,
       showDialog_Answer: false,
       showDialog_Mix: false,
+      // 最终结果的显示对话框控制
+      showDialog_Result: false,
+      // 非法输入格式提示
+      showHint: false,
       // 打开复杂输入框的控制
       complex_Input: false,
       // 重写编辑标记
@@ -2636,9 +2867,73 @@ export default {
   },
 
   watch: {
+
     default_subject: function() {
       this.deleteAllCard();
+    },
+
+    Question_Check(val){
+        
+        var Flag = true
+        
+        for(var c = 0; c < val.length; c++){
+          if(!val[c]){
+            Flag = false
+            this.Submit_Show = false;
+          }
+        }
+
+        if(Flag){
+          this.Ensure();
+        }
+
+        Flag = true
+      },
+
+    TestData(val){
+      var Ques = val.doc;
+      for(var item in Ques){
+        var checkNow = item.question_stem;
+        if(!this.ChecK_Do(checkNow)){
+          return false
+        }
+
+        checkNow = item.question_options;
+        for(var i in checkNow){
+          if(!this.ChecK_Do(i)){
+            return false
+          }
+        }
+
+        checkNow = item.sub_questions;
+        for(i in checkNow){
+          if(!this.ChecK_Do(i)){
+            return false
+          }
+        }
+
+        checkNow = item.answer;
+        for(i in checkNow){
+          if(!this.ChecK_Do(i)){
+            return false
+          }
+        }
+
+        checkNow = item.analysis;
+        for(i in checkNow){
+          if(!this.ChecK_Do(i)){
+            return false
+          }
+        }
+
+      }
+
+      this.Symbol_Error = false;
     }
+
+  },
+  mounted(){
+    this.Init_Question_Check()
   },
   methods: {
     preview() {
@@ -3882,12 +4177,17 @@ export default {
 
         if(this.Type_Now == 'option'){
             this.Temp_OptionQuestionInfo = val;
+            this.Normal_Char_Check(val);
         }else if(this.Type_Now == 'fill'){
             this.Temp_FillQuestionInfo = val;
+            this.Normal_Char_Check(val);
         }else if(this.Type_Now == 'answer'){
             this.Temp_AnswerQuestionInfo = val;
+            this.Normal_Char_Check(val);
+        }else if(this.Type_Now == 'mix'){
+            this.Temp_MixQuestionInfo = val;
+            this.Mix_Char_Check(val);
         }
-
         this.Close_Editor();
 
     },
@@ -3917,17 +4217,158 @@ export default {
 
         if(this.Type_Now == 'option'){
             this.Temp_OptionQuestionInfo = val;
+            this.Normal_Char_Check(val);
         }else if(this.Type_Now == 'fill'){
             this.Temp_FillQuestionInfo = val;
+            this.Normal_Char_Check(val);
         }else if(this.Type_Now == 'answer'){
             this.Temp_AnswerQuestionInfo = val;
+            this.Normal_Char_Check(val);
         }else if(this.Type_Now == 'mix'){
             this.Temp_MixQuestionInfo = val;
+            this.Mix_Char_Check(val);
         }
 
         this.Close_Editor();
         this.ReEditSwitch = false;
         
+    },
+    // 检测是否有非法字符 - 综合
+    Mix_Char_Check(val){
+
+      var Check_Now = val.content;
+      console.log("content")
+      if(Check_Now!= "" && !this.ChecK_Do(Check_Now)){
+        return false
+      }
+
+      var Check_Now_List = val.answer;
+      console.log("answer")
+      if(Check_Now_List.indexOf("::") != -1){
+
+        Check_Now_List = Check_Now_List.split("::");
+
+        for(var j = 0; j < Check_Now_List.length; j++){
+
+          var item = Check_Now_List[j]
+          
+          if(item != "" && !this.ChecK_Do(item)){
+            return false
+          }
+
+        }
+      }else{
+        if(Check_Now_List != "" && !this.ChecK_Do(Check_Now_List)){
+          return false
+        }
+      }
+
+      Check_Now = val.analyse;
+      console.log("analyse")
+      if(Check_Now!= "" && !this.ChecK_Do(Check_Now)){
+        return false
+      }
+
+      Check_Now_List = val.sub_questions;
+      console.log("sub_Q")
+      for(var len = 0; len < Check_Now_List.length; len++){
+        item = Check_Now_List[len]
+        if(!this.Normal_Char_Check(item)){
+          return false
+        }
+      }
+
+      this.Symbol_Error = false;
+
+    },
+    // 检测是否有非法字符 - 选择-填空-解答
+    Normal_Char_Check(val){
+
+      var Check_Now = val.content;
+      if(!this.ChecK_Do(Check_Now)){
+        return false
+      }
+
+      var Check_Now_List = val.answer;
+
+      if(Check_Now_List.indexOf("::") != -1){
+
+        Check_Now_List = Check_Now_List.split("::");
+
+        for(var j = 0; j < Check_Now_List.length; j++){
+
+          var item = Check_Now_List[j]
+          
+          if(item != "" && !this.ChecK_Do(item)){
+            return false
+          }
+
+        }
+      }else{
+        if(Check_Now_List != "" && !this.ChecK_Do(Check_Now_List)){
+          return false
+        }
+      }
+
+      Check_Now = val.analyse;
+      if(Check_Now != "" && !this.ChecK_Do(Check_Now)){
+        return false
+      }
+
+      if(val.type == 'option'){
+        Check_Now_List = val.options;
+        for(var opi = 0; opi < Check_Now_List.length; opi++){
+
+          item = Check_Now_List[opi]
+          
+          if(item != "" && !this.ChecK_Do(item)){
+            return false
+          }
+        }
+      }else if(val.type == 'answer'){
+        Check_Now_List = val.sub_questions;
+        for(opi = 0; opi < Check_Now_List.length; opi++){
+          item = Check_Now_List[opi]
+          if(item != "" && !this.ChecK_Do(item)){
+            return false
+          }
+        }
+      }
+
+      this.Symbol_Error = false;
+    },
+    // 负责实际检查的部分
+    ChecK_Do(Check_Now){
+
+      var Flag = true;
+
+      for(var c = 0; c < Check_Now.length; c++){
+        
+        if(Check_Now[c] == '$'){
+          if(Flag){
+            Flag = false;
+            this.Symbol_Error = true;
+          }else{
+            Flag = true;
+            this.Symbol_Error = false;
+          }
+        }
+
+        if(!(Check_Now.charCodeAt(c) > 255 || this.ch_pun_list.indexOf(Check_Now[c]) != -1 || this.en_pun_list.indexOf(Check_Now[c]) != -1) 
+            && Flag 
+            && Check_Now[c] != '$'){
+          this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
+          this.Symbol_Error = true;
+          return false;
+        }
+      }
+      if(Flag){
+        return true;
+      }
+      else{
+        this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
+        return false
+      }
     },
     // 一起关掉
     Close_Editor(){
@@ -3936,6 +4377,8 @@ export default {
         this.showDialog_Fill = false;
         this.showDialog_Answer = false;
         this.showDialog_Mix = false;
+        this.showDialog_Result = false;
+        this.showHint = false;
 
     },  
     Editor_Dialog_Close(){
@@ -4022,6 +4465,372 @@ export default {
       }
 
     },
+    // 尝试进行导出
+    PaperUpload(){
+
+      if(this.Symbol_Error){
+        this.$message.error("仍有非法字符存在，请修改后重新尝试。")
+        return null;
+      }
+
+      var Upload_Json = {
+        "title": "Upload_Test",
+        "img": {},
+        "doc": []
+      }
+
+      var Temp_Doc = {
+        "question_stem": "",
+        "question_options": [],
+        "question_type": "",
+        "sub_questions": [],
+        "answer": "",
+        "analysis": "",
+        "source": "user_input",
+        "subject": "user_input"
+      }
+
+      var Ques = "";
+
+      if(this.Type_Now == 'option'){
+        Ques = this.Temp_OptionQuestionInfo;
+        // 题型
+        Temp_Doc.question_type = "选择题"
+        // 题干
+        Temp_Doc.question_stem = Ques.content;
+        for(var img_l = 0; img_l < Ques.content_images.length; img_l++){
+          Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
+        }
+        // 答案
+        Temp_Doc.answer = Ques.answer;
+        for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
+          Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
+        }
+        // 解析
+        Temp_Doc.analysis = Ques.analyse;
+        for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
+          Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
+        }
+        // 选项
+        for(img_l = 0; img_l < Ques.options.length; img_l++){
+          var optionInfo = Ques.options[img_l];
+          if(Ques.options_images[img_l] != ""){
+            optionInfo = optionInfo + "<img src='" + Ques.options_images[img_l] + "'>"
+          }
+          Temp_Doc.question_options.push(optionInfo)
+        }
+
+        Upload_Json.doc.push(Temp_Doc)
+      }else if(this.Type_Now == 'fill'){
+        Ques = this.Temp_FillQuestionInfo
+        // 题型
+        Temp_Doc.question_type = "填空题"
+        // 题干
+        Temp_Doc.question_stem = Ques.content;
+        for(img_l = 0; img_l < Ques.content_images.length; img_l++){
+          Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
+        }
+        // 答案
+        Temp_Doc.answer = Ques.answer;
+        for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
+          Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
+        }
+        // 解析
+        Temp_Doc.analysis = Ques.analyse;
+        for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
+          Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
+        }
+
+        Upload_Json.doc.push(Temp_Doc)
+      }else if(this.Type_Now == 'answer'){
+        Ques = this.Temp_AnswerQuestionInfo
+        // 题型
+        Temp_Doc.question_type = "解答题"
+        // 题干
+        Temp_Doc.question_stem = Ques.content;
+        for(img_l = 0; img_l < Ques.content_images.length; img_l++){
+          Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
+        }
+        // 答案
+        Temp_Doc.answer = Ques.answer;
+        for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
+          Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
+        }
+        // 解析
+        Temp_Doc.analysis = Ques.analyse;
+        for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
+          Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
+        }
+        // 小题
+        for(img_l = 0; img_l < Ques.sub_questions.length; img_l++){
+          var subTemp = Ques.sub_questions[img_l];
+          for(var inner = 0; inner < Ques.sub_questions_images[img_l].length; inner++){
+            subTemp = subTemp + "<img src='" + Ques.sub_questions_images[img_l][inner] + "'>"
+          }
+          Temp_Doc.sub_questions.push(subTemp)
+        }
+
+        Upload_Json.doc.push(Temp_Doc)
+      }else if(this.Type_Now == 'mix'){
+
+        var Ques_Out = this.Temp_MixQuestionInfo
+
+        for(var B_inner = 0; B_inner < Ques_Out.sub_questions.length; B_inner++){
+
+          Temp_Doc = {
+            "question_stem": "",
+            "question_options": [],
+            "question_type": "",
+            "sub_questions": [],
+            "answer": "",
+            "analysis": "",
+            "source": "user_input",
+            "subject": "user_input"
+          }
+
+          Ques = Ques_Out.sub_questions[B_inner]
+
+          if(Ques.type == 'option'){
+            // 题型
+            Temp_Doc.question_type = "选择题"
+            // 题干
+            Temp_Doc.question_stem = Ques_Out.content + " " + Ques.content;
+            for(img_l = 0; img_l < Ques.content_images.length; img_l++){
+              Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
+            }
+            // 答案
+            Temp_Doc.answer = Ques.answer;
+            for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
+              Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
+            }
+            // 解析
+            Temp_Doc.analysis = Ques.analyse;
+            for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
+              Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
+            }
+            // 选项
+            for(img_l = 0; img_l < Ques.options.length; img_l++){
+              optionInfo = Ques.options[img_l];
+              if(Ques.options_images[img_l] != ""){
+                optionInfo = optionInfo + "<img src='" + Ques.options_images[img_l] + "'>"
+              }
+              Temp_Doc.question_options.push(optionInfo)
+            }
+          }else if(Ques.type == 'fill'){
+            // 题型
+            Temp_Doc.question_type = "填空题"
+            // 题干
+            Temp_Doc.question_stem = Ques_Out.content + " " + Ques.content;
+            for(img_l = 0; img_l < Ques.content_images.length; img_l++){
+              Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
+            }
+            // 答案
+            Temp_Doc.answer = Ques.answer;
+            for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
+              Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
+            }
+            // 解析
+            Temp_Doc.analysis = Ques.analyse;
+            for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
+              Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
+            }
+          }else if(Ques.type == 'answer'){
+            // 题型
+            Temp_Doc.question_type = "解答题"
+            // 题干
+            Temp_Doc.question_stem = Ques_Out.content + " " + Ques.content;
+            for(img_l = 0; img_l < Ques.content_images.length; img_l++){
+              Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
+            }
+            // 答案
+            Temp_Doc.answer = Ques.answer;
+            for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
+              Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
+            }
+            // 解析
+            Temp_Doc.analysis = Ques.analyse;
+            for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
+              Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
+            }
+            // 小题
+            for(img_l = 0; img_l < Ques.sub_questions.length; img_l++){
+              subTemp = Ques.sub_questions[img_l];
+              for(inner = 0; inner < Ques.sub_questions_images[img_l].length; inner++){
+                subTemp = subTemp + "<img src='" + Ques.sub_questions_images[img_l][inner] + "'>"
+              }
+              Temp_Doc.sub_questions.push(subTemp)
+            }
+          }
+
+          Upload_Json.doc.push(Temp_Doc)
+        }
+      }
+
+      var file = new File(
+        [JSON.stringify(Upload_Json, null, 4)],
+        "Test.json",
+        { type: "text/plain;charset=utf-8" }
+      );
+      FileSaver.saveAs(file);
+
+      // let config = {
+      //     headers: { "Content-Type": "multipart/form-data" }
+      // };
+      // let param = new FormData();
+
+      // param.append('result_json', JSON.stringify(Upload_Json));
+      // this.$http
+      // .post(this.backendIP + "/api/mathUpload", param, config, {
+      //   emulateJSON: true
+      // })
+      // .then(function(data) {
+      //   console.log(data.data)
+      // });
+
+    },
+    // 以下是单题显示配套用的方法
+    Ensure(){
+      this.$confirm("您已经锁定了所有题目，确认审核完毕请点击确认提交，仍有更改请点击取消。").then( () => {
+        this.$message.success("已提交");
+        this.Submit_Show = true;
+        this.Submit();
+      }).catch(() => {
+        this.$message.info("已取消");
+        this.Submit_Show = true;
+      })
+    },
+    Submit(){
+      console.log(this.TestData);
+    },
+    Init_Question_Check(){
+
+      this.Question_Check = [];
+
+      for(var i = 0; i < this.TestData.doc.length; i++){
+        this.Question_Check.push(false);
+        var item = this.TestData.doc[i];
+        item.answer = item.answer.split("::");
+      }
+
+    },
+    Get_Question_Show(Stem, Type){
+        for(var key in this.TestData.img){
+            var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
+            if(Img_Name_Catcher.exec(Stem) != null){
+                Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
+            }
+        }
+        if(Type == 'stem'){
+            return "题干：" + Stem
+        }else if(Type == 'answer'){
+            return "答案：" + Stem
+        }else if(Type == 'analyse'){
+            return "解析：" + Stem
+        }
+    },
+    Get_Question_Options(Stem, Index){
+        for(var key in this.TestData.img){
+            var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
+            if(Img_Name_Catcher.exec(Stem) != null){
+                Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
+            }
+        }
+        return String.fromCharCode(Index + 65) + "：" + Stem
+    },
+    Get_Sub_Question(Stem){
+        for(var key in this.TestData.img){
+            var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
+            if(Img_Name_Catcher.exec(Stem) != null){
+                Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
+            }
+        }
+        return Stem
+    },
+    Show_ComplexInput(Question_Index, Part, Index = null){
+      if(this.Question_Edit_Option_Index == -1 && this.Question_Edit_Sub_Ques_Index == -1){
+        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part){
+          return true
+        }else{
+          return false
+        }
+      }else if(this.Question_Edit_Option_Index != -1){
+        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Option_Index){
+          return true
+        }else{
+          return false
+        }
+      }else if(this.Question_Edit_Sub_Ques_Index != -1){
+        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Sub_Ques_Index){
+          return true
+        }else{
+          return false
+        }
+      }
+    },
+    Update_ComplexInput(val){
+      if(this.Question_Edit_Part == 'answer'){
+        this.TestData.doc[this.Question_Edit_Now].answer = val;
+      }else if(this.Question_Edit_Part == 'stem'){
+        this.TestData.doc[this.Question_Edit_Now].question_stem = val;
+      }else if(this.Question_Edit_Part == 'analyse'){
+        this.TestData.doc[this.Question_Edit_Now].analysis = val;
+      }else if(this.Question_Edit_Part == 'option'){
+        this.TestData.doc[this.Question_Edit_Now].question_options.splice(this.Question_Edit_Option_Index, 1, val);
+      }else if(this.Question_Edit_Part == 'sub_question'){
+        this.TestData.doc[this.Question_Edit_Now].sub_questions.splice(this.Question_Edit_Sub_Ques_Index, 1, val);
+      }
+    },
+    Show_Part(Question_Index, Part, Index = null){
+
+      if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part){
+        this.Question_Edit_Now = -1;
+        this.Question_Edit_Part = "";
+      }else{
+        this.Question_Edit_Now = Question_Index; 
+        this.Question_Edit_Part = Part;
+      }
+
+      if(this.Question_Edit_Part == 'option' && Index != null && Index != this.Question_Edit_Option_Index){
+        this.Question_Edit_Option_Index = Index;
+      }else{
+        this.Question_Edit_Option_Index = -1;
+      }  
+      
+      if(this.Question_Edit_Part == 'sub_question' && Index != null && Index != this.Question_Edit_Sub_Ques_Index){
+        this.Question_Edit_Sub_Ques_Index = Index;
+      }else{
+        this.Question_Edit_Sub_Ques_Index = -1;
+      }
+    },
+    Get_Button_Label(Question_Index, Part, Index = null){
+      if(Index == null){
+        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part){
+          return "收起"
+        }else {
+          return "编辑"
+        }
+      }else{
+        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Option_Index){
+          return "收起"
+        }else{
+          return "编辑"
+        }
+      }
+    },
+    Get_Name(Question_Index, Type, Index = null){
+      if(Index == null){
+        return "Mathdown" + Question_Index.toString() + "_" + Type
+      }else{
+        return "Mathdown" + Question_Index.toString() + "_" + Type + "_" + Index.toString()
+      }
+    },
+    // 打开数据展示
+    ImportFile(){
+      this.$confirm("确认题目无误后请点击左上角锁定此题，所有题目锁定后可以确认审核完毕。").then( () => {
+      }).catch(() => {
+      })
+      this.showDialog_Result = true;
+    }
   }
 };
 </script>

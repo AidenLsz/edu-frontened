@@ -12,16 +12,31 @@
             <!-- 题型，上传用户，科目部分 -->
             <el-row type="flex" justify="start" style="margin: 30px 50px 0px 50px">
                 <el-col :span="1" style="text-align: left">
-                  <el-button 
-                    v-if="Question_Check[Question_Index] == false" 
-                    circle size="medium" 
-                    @click="Question_Check.splice(Question_Index, 1, true)"
-                    type="success"><i class="el-icon-unlock"></i></el-button>
-                  <el-button 
-                    v-if="Question_Check[Question_Index] == true" 
-                    circle size="medium" 
-                    @click="Question_Check.splice(Question_Index, 1, false)"
-                    type="danger"><i class="el-icon-lock"></i></el-button>
+                  <el-popover
+                    placement="top"
+                    width="170"
+                    trigger="hover"
+                    v-if="Question_Check[Question_Index] == false"
+                    content="点击完成该题目确认">
+                    <el-button 
+                      slot="reference" 
+                      circle size="medium" 
+                      @click="Question_Check.splice(Question_Index, 1, true)"
+                      type="success"
+                      ><i class="el-icon-check"></i></el-button>
+                  </el-popover>
+                  <el-popover
+                    placement="top"
+                    width="170"
+                    trigger="hover"
+                    v-if="Question_Check[Question_Index] == true"
+                    content="点击取消确认该题目">
+                    <el-button
+                      slot="reference" 
+                      circle size="medium" 
+                      @click="Question_Check.splice(Question_Index, 1, false)"
+                      type="danger"><i class="el-icon-edit"></i></el-button>
+                  </el-popover>
                 </el-col>
                 <el-col :span="2" style="text-align: left; padding-top: 1.2vh">
                     {{Question_Info.question_type}}
