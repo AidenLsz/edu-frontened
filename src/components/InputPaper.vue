@@ -570,8 +570,6 @@
 </template>
 <script>
 
-import FileSaver from "file-saver";
-
 import ComplexInput from './ComplexInput.vue'
 
 import OptionDisplay from './OptionDisplay.vue'
@@ -2271,26 +2269,19 @@ export default {
 
       }
 
-      var file = new File(
-        [JSON.stringify(Upload_Json, null, 4)],
-        "Test.json",
-        { type: "text/plain;charset=utf-8" }
-      );
-      FileSaver.saveAs(file);
+      let config = {
+          headers: { "Content-Type": "multipart/form-data" }
+      };
+      let param = new FormData();
 
-      // let config = {
-      //     headers: { "Content-Type": "multipart/form-data" }
-      // };
-      // let param = new FormData();
-
-      // param.append('result_json', JSON.stringify(Upload_Json));
-      // this.$http
-      // .post(this.backendIP + "/api/mathUpload", param, config, {
-      //   emulateJSON: true
-      // })
-      // .then(function(data) {
-      //   console.log(data.data)
-      // });
+      param.append('result_json', JSON.stringify(Upload_Json));
+      this.$http
+      .post(this.backendIP + "/api/mathUpload", param, config, {
+        emulateJSON: true
+      })
+      .then(function(data) {
+        console.log(data.data)
+      });
 
     },
     // 以下是单题显示配套用的方法
