@@ -18,14 +18,14 @@
           公共题库
         </div>
       </el-col>
-      <el-col :span="2">
+      <el-col :span="2" v-if="User_Check()">
         <div :class="Check_Focus_Database('neea')" @click="database_aim = 'neea'">
           NEEA
         </div>
       </el-col>
-      <el-col :span="2">
-        <div :class="Check_Focus_Database('iflynet')" @click="database_aim = 'iflynet'">
-          IFLYNET
+      <el-col :span="2" v-if="User_Check()">
+        <div :class="Check_Focus_Database('iflynet')" @click="database_aim = 'iflytec'">
+          IFLYTEC
         </div>
       </el-col>
     </el-row>
@@ -147,8 +147,8 @@
         </el-row>
       </el-col>
     </el-row>
-    <el-row v-if="question_list.length == 0" style="margin: 50px 80px; border: 3px dashed black; background: #F8FBFF; height: 44vh">
-      <p style="margin-top: 18vh; font-size: 30px; ">查询后内容在此显示</p>
+    <el-row v-if="question_list.length == 0" style="margin: 50px 80px; height: 44vh">
+      
     </el-row>
   </div>
 </template>
@@ -188,7 +188,7 @@ export default {
       // 存放题型信息
       question_type: [],
       // 存放将要查询的数据库名称
-      database_aim: ""
+      database_aim: "public"
     };
   },
   watch:{
@@ -197,6 +197,14 @@ export default {
     }
   },
   methods: {
+    // 检查用户
+    User_Check(){
+      if(sessionStorage.isAdmin){
+        return true;
+      }else{
+        return false;
+      }
+    },
     // Update_Complex_Input
     UCI(val){
       this.content = val;

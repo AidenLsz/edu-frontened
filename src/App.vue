@@ -241,7 +241,7 @@
                 <el-link href="http://bigdata.ustc.edu.cn/" target="_blank" class="navbar"><span style="color: black">实验室主页</span></el-link>
               </el-col>
               <el-col :span="4" style="padding-top: 15px;">
-                <el-dropdown trigger="hover" v-if="username"  class="navbar">
+                <el-dropdown trigger="hover" v-if="username" style="padding-top: 8px" class="navbar">
                   <span class="el-dropdown-link user-inner">
                     {{ username }}
                     <i class="el-icon-arrow-down el-icon--right"></i>
@@ -419,6 +419,7 @@ export default {
       })
         .then(() => {
           sessionStorage.removeItem("user");
+          sessionStorage.removeItem("isAdmin");
           this.username = "";
           this.isAdmin = false;
           _this.$router.push("/");
@@ -448,6 +449,7 @@ export default {
             console.log(data.data);
             if (data.data == 1) { //eslint-disable-line
               sessionStorage.user = this.account;
+              sessionStorage.isAdmin = true;
               this.login_visible = false;
               this.$router.push("/");
               location.reload();
