@@ -993,6 +993,7 @@ export default {
         "title": this.PaperTitle,
         "subject_type": this.SubjectType,
         "period_type": this.PeriodType,
+        "source": "USER_ID",
         "img": {},
         "doc": []
       }
@@ -1004,8 +1005,6 @@ export default {
         "sub_questions": [],
         "answer": "",
         "analysis": "",
-        "source": "user_input",
-        "subject": "user_input"
       }
 
       var Ques = "";
@@ -1104,8 +1103,6 @@ export default {
             "sub_questions": [],
             "answer": "",
             "analysis": "",
-            "source": "user_input",
-            "subject": "user_input"
           }
 
           Ques = Ques_Out.sub_questions[B_inner]

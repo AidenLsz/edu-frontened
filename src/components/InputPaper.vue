@@ -2009,6 +2009,7 @@ export default {
         "title": this.PaperTitle,
         "subject_type": this.SubjectType,
         "period_type": this.PeriodType,
+        "source": "USER_ID",
         "img": {},
         "doc": []
       }
@@ -2024,9 +2025,7 @@ export default {
             "question_type": "",
             "sub_questions": [],
             "answer": "",
-            "analysis": "",
-            "source": "user_input",
-            "subject": "user_input"
+            "analysis": ""
           }
 
           var Ques = this.Questions[len].Bundle_Questions[i]
@@ -2120,9 +2119,7 @@ export default {
                 "question_type": "",
                 "sub_questions": [],
                 "answer": "",
-                "analysis": "",
-                "source": "user_input",
-                "subject": "user_input"
+                "analysis": ""
               }
 
               Ques = this.Questions[len].Bundle_Questions[i].sub_questions[B_inner]
