@@ -13,19 +13,20 @@
       <el-col :span="4" :offset="1" style="text-align: left;line-height: 30px">
         请选择要查询的数据库：
       </el-col>
+      <!-- 0 - public, 1 - neea, 2 - iflytek -->
       <el-col :span="2">
-        <div :class="Check_Focus_Database('public')" @click="database_aim = 'public'">
+        <div :class="Check_Focus_Database(0)" @click="Database_Aim(0)">
           公共题库
         </div>
       </el-col>
       <el-col :span="2" v-if="User_Check()">
-        <div :class="Check_Focus_Database('neea')" @click="database_aim = 'neea'">
+        <div :class="Check_Focus_Database(1)" @click="Database_Aim(1)">
           NEEA
         </div>
       </el-col>
       <el-col :span="2" v-if="User_Check()">
-        <div :class="Check_Focus_Database('iflynet')" @click="database_aim = 'iflytec'">
-          IFLYTEC
+        <div :class="Check_Focus_Database(2)" @click="Database_Aim(2)">
+          IFLYTEK
         </div>
       </el-col>
     </el-row>
@@ -188,7 +189,8 @@ export default {
       // 存放题型信息
       question_type: [],
       // 存放将要查询的数据库名称
-      database_aim: "public"
+      // public, neea, iflytek
+      database_aim: [true, false, false]
     };
   },
   watch:{
@@ -197,6 +199,10 @@ export default {
     }
   },
   methods: {
+    // 修改目标数据库
+    Database_Aim(Index){
+      this.database_aim.splice(Index, 1, !this.database_aim[Index])
+    },
     // 检查用户
     User_Check(){
       if(sessionStorage.isAdmin){
@@ -276,8 +282,8 @@ export default {
         console.log(this.question_list);
       });    
     },
-    Check_Focus_Database(name){
-      if(name == this.database_aim){
+    Check_Focus_Database(Index){
+      if(this.database_aim[Index]){
         return "focusDatabase"
       }else{
         return "unFocusDatabase"
