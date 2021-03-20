@@ -396,8 +396,8 @@
           </el-button>
         </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload()">
-            <label>导出题目</label>
+          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')">
+            <label>题目入库</label>
           </el-button>
         </el-row>
       </el-col>
@@ -409,10 +409,13 @@
           <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo"></MixDisplay>  
         </el-row>
         <el-row v-if="Type_Now != '-1'">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-button type="primary" plain @click="Edit_Question()">重新编辑</el-button>
-          </el-col> 
-          <el-col :span="12">
+          </el-col>
+          <el-col :span="8">
+            <el-button type="warning" plain @click="PaperUpload('export')">题目导出</el-button> 
+          </el-col>  
+          <el-col :span="8">
             <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button> 
           </el-col> 
         </el-row>  
@@ -421,7 +424,8 @@
   </div>
 </template>
 <script>
-// import FileSaver from "file-saver";
+
+import FileSaver from "file-saver";
 
 import ComplexInput from './ComplexInput.vue'
 
@@ -982,7 +986,7 @@ export default {
 
     },
     // 尝试进行导出
-    PaperUpload(){
+    PaperUpload(Control){
 
       if(this.Symbol_Error){
         this.$message.error("仍有非法字符存在，请修改后重新尝试。")
@@ -1187,28 +1191,33 @@ export default {
         }
       }
 
-      // var file = new File(
-      //   [JSON.stringify(Upload_Json, null, 4)],
-      //   "Test.json",
-      //   { type: "text/plain;charset=utf-8" }
-      // );
-      // FileSaver.saveAs(file);
+      if(Control == 'upload'){
 
-      // let config = {
-      //     headers: { "Content-Type": "multipart/form-data" }
-      // };
-      // let param = new FormData();
+        let config = {
+            headers: { "Content-Type": "multipart/form-data" }
+        };
+        let param = new FormData();
 
-      // param.append('result_json', JSON.stringify(Upload_Json));
-      // this.$http
-      // .post(this.backendIP + "/api/mathUpload", param, config, {
-      //   emulateJSON: true
-      // })
-      // .then(function(data) {
-      //   console.log(data.data)
-      // });
+        param.append('result_json', JSON.stringify(Upload_Json));
+        
+        this.$http
+        .post(this.backendIP + "/api/mathUpload", param, config, {
+          emulateJSON: true
+        })
+        .then(function(data) {
+          console.log(data.data)
+        });
 
-      console.log(Upload_Json)
+      }else if(Control == 'export'){
+
+        var file = new File(
+          [JSON.stringify(Upload_Json, null, 4)],
+          "Question_" + this.SubjectType + "_" + this.PeriodType + ".json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
+
+      }
 
     },
     // 以下是单题显示配套用的方法
