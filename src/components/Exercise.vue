@@ -2,16 +2,36 @@
   <div class="exercise" style="margin-bottom: 40px; margin-top: 5vh">
     <!-- header -->
     <el-row justify="start" type="flex">
-      <el-col style="padding-left: 25px">
+      <el-col style="padding-left: 1vw">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>试题检索</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
-    <el-row style="padding-left: 1.5vw; margin-top: 4vh" type="flex" v-if="simpleInput">
-      <el-col :span="11" :offset="2">
-        <el-input v-model="exercise_text" placeholder="请输入内容"></el-input>
+    <el-row style="padding-top: 8px; height: 40px;">
+      <el-col :span="4" :offset="1" style="text-align: left;line-height: 30px">
+        请选择要查询的数据库：
+      </el-col>
+      <el-col :span="2">
+        <div :class="Check_Focus_Database('public')" @click="database_aim = 'public'">
+          公共题库
+        </div>
+      </el-col>
+      <el-col :span="2">
+        <div :class="Check_Focus_Database('neea')" @click="database_aim = 'neea'">
+          NEEA
+        </div>
+      </el-col>
+      <el-col :span="2">
+        <div :class="Check_Focus_Database('iflynet')" @click="database_aim = 'iflynet'">
+          IFLYNET
+        </div>
+      </el-col>
+    </el-row>
+    <el-row style="margin-top: 4vh; margin-bottom: 5vh" type="flex" v-if="simpleInput">
+      <el-col :span="11" :offset="1">
+        <el-input v-model="content" placeholder="请输入内容"></el-input>
       </el-col>
       <el-col :span="2" :offset="1">
         <el-button type="primary" plain @click="changeInput">
@@ -19,13 +39,13 @@
         </el-button>
       </el-col>
       <el-col :span="1" :offset="1">
-        <el-button type="primary" plain value="提交" @click="submit">
+        <el-button type="primary" plain value="提交" @click="submit()">
           <span style="font-weight: bold">检索</span>
         </el-button>
       </el-col>
     </el-row>
-    <el-row style="margin-top: 4vh; padding-left: 1.5vw" v-if="!simpleInput" type="flex">
-      <el-col :span="2" :offset="2" style="padding-top: 14vh">
+    <el-row style="margin-top: 4vh; margin-bottom: 5vh" v-if="!simpleInput" type="flex">
+      <el-col :span="2" :offset="1" style="padding-top: 14vh">
         <el-row>
           <el-button type="primary" plain  @click="changeInput">
             <span style="font-weight: bold">切换简单输入</span>
@@ -39,12 +59,12 @@
       </el-col>
       <el-col :span="18">
         <el-row>
-          <ComplexInput @Update_CI="UCI" @Update_Image="UCII"></ComplexInput>
+          <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="content"></ComplexInput>
         </el-row>
       </el-col>
     </el-row>
     <!-- main -->
-    <el-row type="flex" justify="center" style="margin-top: 4vh;" >
+    <!-- <el-row type="flex" justify="center" style="margin-top: 4vh;" >
       <el-col :span="20">
         <div class="result">
           <el-row type="flex" justify="start">
@@ -105,6 +125,30 @@
           </el-row>
         </div>
       </el-col>
+    </el-row> -->
+    <el-row v-for="(Question, Question_Index) in question_list" :key="Question_Index" style="min-height: 600px">
+      <el-col :offset="1" :span="22" class="quesCard">
+        <el-row style="text-align: left">
+            <div v-html="Question" style="font-size: 16px; min-height: 150px; margin: 10px 40px; display: block"></div>
+        </el-row>
+        <el-row style="padding-bottom: 10px">
+            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 16px">
+              所属题库：{{database_name[Question_Index]}}
+            </el-col>
+            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 16px">
+              学科：{{subject_name[Question_Index]}}
+            </el-col>
+            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 16px">
+              题型：{{question_type[Question_Index]}}
+            </el-col>
+            <el-col :span="3" :offset="13" style="line-height: 40px">
+              <el-button size="medium" plain round type="primary">详情</el-button>
+            </el-col>
+        </el-row>
+      </el-col>
+    </el-row>
+    <el-row v-if="question_list.length == 0" style="margin: 50px 80px; border: 3px dashed black; background: #F8FBFF; height: 44vh">
+      <p style="margin-top: 18vh; font-size: 30px; ">查询后内容在此显示</p>
     </el-row>
   </div>
 </template>
@@ -135,6 +179,16 @@ export default {
       // name: 图片名
       // info: base64转换后的数据段
       image_infos: [],
+      // 存放返回的题目内容
+      question_list: [],
+      // 存放数据库名信息,
+      database_name: [],
+      // 存放学科信息
+      subject_name: [],
+      // 存放题型信息
+      question_type: [],
+      // 存放将要查询的数据库名称
+      database_aim: ""
     };
   },
   watch:{
@@ -145,12 +199,10 @@ export default {
   methods: {
     // Update_Complex_Input
     UCI(val){
-      console.log(val);
       this.content = val;
     },
     // UCI_Images
     UCII(val){
-      console.log(val);
       this.image_infos = val;
     },
     dataSource(tab, event) {
@@ -186,17 +238,43 @@ export default {
       console.log(document.getElementsByTagName("input").value);
     },
     submit() {
+
+      this.question_list = [];
+
+      let config = {
+          headers: { "Content-Type": "multipart/form-data" }
+      };
+
+      let param = new FormData();
+      param.append("content", this.content);
+      param.append("size", 1);
+
       this.$http
-        .post(
-          this.backendIP + "/api/surface",
-          { exercise_text: this.exercise_text, entity_type: this.entity_type },
-          { emulateJSON: true }
-        )
-        .then(function(data) {
-          console.log(data.data);
-          this.raw_text = data.data.raw_text;
-          this.entities_groups = data.data.entities_groups;
+      .post(this.backendIP + "/api/search", param, config, {
+        emulateJSON: true
+      })
+      .then(function(data) {
+        var quess = data.data.results;
+        var dn = data.data.databaseName;
+        var sn = data.data.subjectName;
+        var qt = data.data.quesType;
+        for(var i = 0; i < quess.length; i++){
+          this.question_list.push(quess[i])
+          this.database_name.push(dn[i])
+          this.subject_name.push(sn[i])
+          this.question_type.push(qt[i])
+        }
+        
+        console.log(this.question_list);
       });    
+    },
+    Check_Focus_Database(name){
+      if(name == this.database_aim){
+        return "focusDatabase"
+      }else{
+        return "unFocusDatabase"
+      }
+
     }
   }
 };
@@ -221,6 +299,12 @@ export default {
   background-color: #F8FBFF;
   margin-left: 20px;
 }
+.quesCard{
+  // border: 3px dashed black; 
+  background: #F8FBFF; 
+  border-radius: 15px;
+  box-shadow: 3px 4px 8px 0 rgba(0, 0, 0, 0.3);
+}
 .el-row {
   margin-bottom: 20px;
   & :last-child {
@@ -238,6 +322,24 @@ export default {
 }
 .el-col {
   border-radius: 4px;
+}
+.focusDatabase{
+  background: #409EFF;
+  color: white;
+  border-radius: 15px;
+  margin: 0px 8px;
+  height: 30px;
+  line-height: 30px;
+
+}
+.unFocusDatabase{
+  background: #F8FBFF;
+  color: #409EFF;
+  border-radius: 15px;
+  border: 1px solid #409EFF;
+  margin: 0px 8px;
+  height: 30px;
+  line-height: 30px;
 }
 </style>
 

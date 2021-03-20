@@ -2491,13 +2491,13 @@
               </el-col>
               <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
                 <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Question_Show(Question_Info.question_stem, 'stem')" style="width: 84vw;" :name="Get_Name(Question_Index, 'stem')"/>
+                  <Mathdown :content="Get_Question_Show(Question_Info.question_stem, 'stem', Question_Index)" style="width: 84vw;" :name="Get_Name(Question_Index, 'stem')"/>
                 </el-row>
                 <el-row type="flex" justify="start">
                   <ComplexInput 
                     v-if="Show_ComplexInput(Question_Index, 'stem')"
                     @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Show(Question_Info.question_stem, 'stem').substring(3)"></ComplexInput>
+                    :Get_Out_Content="Get_Question_Show(Question_Info.question_stem, 'stem', Question_Index).substring(5)"></ComplexInput>
                 </el-row>
               </el-col>
             </el-row>
@@ -2512,13 +2512,13 @@
               </el-col>
               <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
                 <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Sub_Question(Sub_Question)" style="width: 84vw;" :name="Get_Name(Question_Index, 'sub_question', Sub_Question_Index)"/>
+                  <Mathdown :content="Get_Sub_Question(Sub_Question, Question_Index, Sub_Question_Index)" style="width: 84vw;" :name="Get_Name(Question_Index, 'sub_question', Sub_Question_Index)"/>
                 </el-row>
                 <el-row type="flex" justify="start">
                   <ComplexInput 
                     v-if="Show_ComplexInput(Question_Index, 'sub_question', Sub_Question_Index)"
                     @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Sub_Question(Sub_Question)"></ComplexInput>
+                    :Get_Out_Content="Get_Sub_Question(Sub_Question, Question_Index, Sub_Question_Index)"></ComplexInput>
                 </el-row>
               </el-col>
             </el-row>
@@ -2535,13 +2535,13 @@
               </el-col>
               <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
                 <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Question_Options(Question_Option, Option_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'option', Option_Index)"/>
+                  <Mathdown :content="Get_Question_Options(Question_Option, Option_Index, Question_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'option', Option_Index)"/>
                 </el-row>
                 <el-row type="flex" justify="start">
                   <ComplexInput 
                     v-if="Show_ComplexInput(Question_Index, 'option', Option_Index)"
                     @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Options(Question_Option, Option_Index).substring(2)"></ComplexInput>
+                    :Get_Out_Content="Get_Question_Options(Question_Option, Option_Index, Question_Index).substring(4)"></ComplexInput>
                 </el-row>
               </el-col>
               <!-- <el-row type="flex" justify="start" style="margin: 30px 50px; background: red" v-if="Show_ComplexInput(Question_Index, 'option', Option_Index)">
@@ -2551,22 +2551,22 @@
               </el-row> -->
             </el-row>
             <!-- 答案部分 -->
-            <el-row type="flex" justify="start" style="margin: 20px 50px">
+            <el-row type="flex" justify="start" style="margin: 20px 50px" v-for="(Answer, Answer_Index) in Question_Info.answer" :key="Question_Index + 'Answer_' + Answer_Index">
                <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.answer, 'answer')"></p> -->
                <el-col :span="1" v-if="Question_Check[Question_Index] == false">
                  <el-row type="flex" justify="start">
-                    <el-button @click="Show_Part(Question_Index, 'answer')" size="small">{{Get_Button_Label(Question_Index, 'answer')}}</el-button>
+                    <el-button @click="Show_Part(Question_Index, 'answer', Answer_Index)" size="small">{{Get_Button_Label(Question_Index, 'answer', Answer_Index)}}</el-button>
                  </el-row>
                </el-col>
                <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
                  <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Question_Show(Question_Info.answer, 'answer')" style="width: 80vw;"  :name="Get_Name(Question_Index, 'answer')"/>
+                  <Mathdown :content="Get_Question_Show(Answer, 'answer', Question_Index, Answer_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'answer', Answer_Index)"/>
                  </el-row>
                  <el-row type="flex" justify="start">
                   <ComplexInput 
-                    v-if="Show_ComplexInput(Question_Index, 'answer')"
+                    v-if="Show_ComplexInput(Question_Index, 'answer', Answer_Index)"
                     @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Show(Question_Info.answer, 'answer').substring(3)"></ComplexInput>
+                    :Get_Out_Content="Get_Question_Show(Answer, 'answer', Question_Index, Answer_Index).substring(6)"></ComplexInput>
                  </el-row>
                </el-col>
             </el-row>
@@ -2580,13 +2580,13 @@
               </el-col>
               <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
                 <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Question_Show(Question_Info.analysis, 'analyse')" style="width: 80vw;"  :name="Get_Name(Question_Index, 'analyse')"/>
+                  <Mathdown :content="Get_Question_Show(Question_Info.analysis, 'analyse', Question_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'analyse')"/>
                 </el-row>
                 <el-row type="flex" justify="start">
                   <ComplexInput 
                     v-if="Show_ComplexInput(Question_Index, 'analyse')"
                     @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Show(Question_Info.analysis, 'analyse').substring(3)"></ComplexInput>
+                    :Get_Out_Content="Get_Question_Show(Question_Info.analysis, 'analyse', Question_Index).substring(5)"></ComplexInput>
                 </el-row>
               </el-col>
             </el-row>
@@ -2687,7 +2687,7 @@
   </div>
 </template>
 <script>
-import FileSaver from "file-saver";
+// import FileSaver from "file-saver";
 
 import ComplexInput from './ComplexInput.vue'
 
@@ -2702,7 +2702,7 @@ import MixDisplay from "./MixDisplay.vue";
 
 import Mathdown from "./Mathdown.vue";
 
-import Vue from "vue";
+// import Vue from "vue";
 export default {
   components: { ComplexInput, 
                 OptionDisplay, OptionQuestions, 
@@ -2726,7 +2726,7 @@ export default {
             "question_options": [ "$\\{ 0,2 \\}$", "$\\{ 1,2 \\}$", "$\\{ 0 \\}$", "$\\{ - 2 , - 1,0,1,2 \\}$" ],
             "question_type": "选择题",
             "sub_questions": [],
-            "answer": "A",
+            "answer": "A<img src='123'>::答案2",
             "analysis": "",
             "source": "user_input",
             "subject": "user_input"
@@ -2738,6 +2738,7 @@ export default {
       Question_Edit_Part: "",
       Question_Edit_Option_Index: -1,
       Question_Edit_Sub_Ques_Index: -1,
+      Question_Edit_Answer_Index: -1,
       Question_Check: [],
       Submit_Show: false,
       // 当前题目类型
@@ -2942,1232 +2943,1232 @@ export default {
     Router_Trans(route){
       this.$router.push({ path: route });
     },
-    loadJsonFromFile(file, fileList) {
-      this.uploadFileName = file;
-      this.upload_files = fileList;
-      this.loadDataFromFile();
-    },
-    loadDataFromFile() {
-      if (this.upload_files && this.upload_files.length > 0) {
-        const file = this.upload_files[0];
-        const reader = new FileReader();
-        reader.onload = async e => {
-          try {
-            this.upload = true;
-            // reset all variables
-            this.option_content = [];
-            this.fill_content = [];
-            this.answer_content = [];
-            this.mix_content = [];
-            this.option_show_answer = [];
-            this.fill_show_answer = [];
-            this.answer_show_answer = [];
-            this.mix_show_answer = [];
-            this.option_show_answer_analysis = [];
-            this.fill_show_answer_analysis = [];
-            this.answer_show_answer_analysis = [];
-            this.mix_show_answer_analysis = [];
-            this.option_show_image = [];
-            this.option_show_option_image = [];
-            this.option_show_analysis_image = [];
-            this.fill_show_analysis_image = [];
-            this.answer_show_analysis_image = [];
-            this.mix_show_analysis_image = [];
-            this.answer_show_answer_image = [];
-            this.mix_show_answer_image = [];
-            this.fill_show_image = [];
-            this.answer_show_image = [];
-            this.mix_show_image = [];
-            this.answer_show_option_image = [];
-            this.mix_show_option_image = [];
-            this.option_view = [];
-            this.fill_view = [];
+    // loadJsonFromFile(file, fileList) {
+    //   this.uploadFileName = file;
+    //   this.upload_files = fileList;
+    //   this.loadDataFromFile();
+    // },
+    // loadDataFromFile() {
+    //   if (this.upload_files && this.upload_files.length > 0) {
+    //     const file = this.upload_files[0];
+    //     const reader = new FileReader();
+    //     reader.onload = async e => {
+    //       try {
+    //         this.upload = true;
+    //         // reset all variables
+    //         this.option_content = [];
+    //         this.fill_content = [];
+    //         this.answer_content = [];
+    //         this.mix_content = [];
+    //         this.option_show_answer = [];
+    //         this.fill_show_answer = [];
+    //         this.answer_show_answer = [];
+    //         this.mix_show_answer = [];
+    //         this.option_show_answer_analysis = [];
+    //         this.fill_show_answer_analysis = [];
+    //         this.answer_show_answer_analysis = [];
+    //         this.mix_show_answer_analysis = [];
+    //         this.option_show_image = [];
+    //         this.option_show_option_image = [];
+    //         this.option_show_analysis_image = [];
+    //         this.fill_show_analysis_image = [];
+    //         this.answer_show_analysis_image = [];
+    //         this.mix_show_analysis_image = [];
+    //         this.answer_show_answer_image = [];
+    //         this.mix_show_answer_image = [];
+    //         this.fill_show_image = [];
+    //         this.answer_show_image = [];
+    //         this.mix_show_image = [];
+    //         this.answer_show_option_image = [];
+    //         this.mix_show_option_image = [];
+    //         this.option_view = [];
+    //         this.fill_view = [];
 
-            const document = JSON.parse(e.target.result);
+    //         const document = JSON.parse(e.target.result);
 
-            for (let questions of document["questions"]) {
-              switch (questions["type"]) {
-                case "option":
-                  this.option_show_image = [];
-                  this.option_show_option_image = [];
-                  this.option_show_analysis_image = [];
-                  for (let question of questions["questions"]) {
-                    delete question.eno;
-                    this.option_content.push({
-                      optionQuestion: question
-                    });
-                    if (question.image[0] !== "") {
-                      this.option_show_image.push(
-                        question.image.map(s => {
-                          return s !== "";
-                        })
-                      );
-                    } else {
-                      this.option_show_image.push([]);
-                    }
-                    if (question.images) {
-                      question.option_images = question.images;
-                      delete question["images"];
-                    }
-                    if (question.option_images[0] !== "") {
-                      this.option_show_option_image.push(
-                        question.option_images.map(s => {
-                          return s !== "";
-                        })
-                      );
-                    } else {
-                      this.option_show_option_image.push([]);
-                    }
-                    if (typeof question.analysis_images !== "undefined") {
-                      this.option_show_analysis_image.push(
-                        question.analysis_images.map(s => {
-                          return s !== "";
-                        })
-                      );
-                    } else {
-                      question.analysis_images = [];
-                      this.option_show_analysis_image.push([]);
-                    }
-                  }
-                  this.option_subtitle = questions["subtitle"];
-                  break;
-                case "fill":
-                  this.fill_show_image = [];
-                  this.fill_show_analysis_image = [];
-                  for (let question of questions["questions"]) {
-                    delete question.eno;
-                    this.fill_content.push({
-                      fillQuestion: question
-                    });
-                    if (question.image[0] !== "") {
-                      this.fill_show_image.push(
-                        question.image.map(s => {
-                          return s !== "";
-                        })
-                      );
-                    } else {
-                      this.fill_show_image.push([]);
-                    }
-                    if (typeof question.analysis_images !== "undefined") {
-                      this.fill_show_analysis_image.push(
-                        question.analysis_images.map(s => {
-                          return s !== "";
-                        })
-                      );
-                    } else {
-                      question.analysis_images = [];
-                      this.fill_show_analysis_image.push([]);
-                    }
-                  }
+    //         for (let questions of document["questions"]) {
+    //           switch (questions["type"]) {
+    //             case "option":
+    //               this.option_show_image = [];
+    //               this.option_show_option_image = [];
+    //               this.option_show_analysis_image = [];
+    //               for (let question of questions["questions"]) {
+    //                 delete question.eno;
+    //                 this.option_content.push({
+    //                   optionQuestion: question
+    //                 });
+    //                 if (question.image[0] !== "") {
+    //                   this.option_show_image.push(
+    //                     question.image.map(s => {
+    //                       return s !== "";
+    //                     })
+    //                   );
+    //                 } else {
+    //                   this.option_show_image.push([]);
+    //                 }
+    //                 if (question.images) {
+    //                   question.option_images = question.images;
+    //                   delete question["images"];
+    //                 }
+    //                 if (question.option_images[0] !== "") {
+    //                   this.option_show_option_image.push(
+    //                     question.option_images.map(s => {
+    //                       return s !== "";
+    //                     })
+    //                   );
+    //                 } else {
+    //                   this.option_show_option_image.push([]);
+    //                 }
+    //                 if (typeof question.analysis_images !== "undefined") {
+    //                   this.option_show_analysis_image.push(
+    //                     question.analysis_images.map(s => {
+    //                       return s !== "";
+    //                     })
+    //                   );
+    //                 } else {
+    //                   question.analysis_images = [];
+    //                   this.option_show_analysis_image.push([]);
+    //                 }
+    //               }
+    //               this.option_subtitle = questions["subtitle"];
+    //               break;
+    //             case "fill":
+    //               this.fill_show_image = [];
+    //               this.fill_show_analysis_image = [];
+    //               for (let question of questions["questions"]) {
+    //                 delete question.eno;
+    //                 this.fill_content.push({
+    //                   fillQuestion: question
+    //                 });
+    //                 if (question.image[0] !== "") {
+    //                   this.fill_show_image.push(
+    //                     question.image.map(s => {
+    //                       return s !== "";
+    //                     })
+    //                   );
+    //                 } else {
+    //                   this.fill_show_image.push([]);
+    //                 }
+    //                 if (typeof question.analysis_images !== "undefined") {
+    //                   this.fill_show_analysis_image.push(
+    //                     question.analysis_images.map(s => {
+    //                       return s !== "";
+    //                     })
+    //                   );
+    //                 } else {
+    //                   question.analysis_images = [];
+    //                   this.fill_show_analysis_image.push([]);
+    //                 }
+    //               }
 
-                  break;
-                case "answer":
-                  this.answer_show_image = [];
-                  this.answer_show_option_image = [];
-                  this.answer_show_analysis_image = [];
-                  this.answer_show_answer_image = [];
-                  for (let question of questions["questions"]) {
-                    delete question.eno;
-                    this.answer_content.push({
-                      answerQuestion: question
-                    });
-                    if (question.image[0] !== "") {
-                      this.answer_show_image.push(
-                        question.image.map(s => {
-                          return s !== "";
-                        })
-                      );
-                    } else {
-                      this.answer_show_image.push([]);
-                    }
-                    if (question.images) {
-                      question.option_images = question.images;
-                      delete question["images"];
-                    }
-                    if (question.option_images[0] !== "") {
-                      this.answer_show_option_image.push(
-                        question.option_images.map(s => {
-                          return s !== "";
-                        })
-                      );
-                    } else {
-                      this.answer_show_option_image.push([]);
-                    }
-                    if (typeof question.analysis_images !== "undefined") {
-                      this.answer_show_analysis_image.push(
-                        question.analysis_images.map(s => {
-                          return s !== "";
-                        })
-                      );
-                    } else {
-                      question.analysis_images = [];
-                      this.answer_show_analysis_image.push([]);
-                    }
-                    if (typeof question.answer_images !== "undefined") {
-                      this.answer_show_answer_image.push(
-                        question.answer_images.map(s => {
-                          return s !== "";
-                        })
-                      );
-                    } else {
-                      question.answer_images = [];
-                      this.answer_show_answer_image.push([]);
-                    }
-                  }
+    //               break;
+    //             case "answer":
+    //               this.answer_show_image = [];
+    //               this.answer_show_option_image = [];
+    //               this.answer_show_analysis_image = [];
+    //               this.answer_show_answer_image = [];
+    //               for (let question of questions["questions"]) {
+    //                 delete question.eno;
+    //                 this.answer_content.push({
+    //                   answerQuestion: question
+    //                 });
+    //                 if (question.image[0] !== "") {
+    //                   this.answer_show_image.push(
+    //                     question.image.map(s => {
+    //                       return s !== "";
+    //                     })
+    //                   );
+    //                 } else {
+    //                   this.answer_show_image.push([]);
+    //                 }
+    //                 if (question.images) {
+    //                   question.option_images = question.images;
+    //                   delete question["images"];
+    //                 }
+    //                 if (question.option_images[0] !== "") {
+    //                   this.answer_show_option_image.push(
+    //                     question.option_images.map(s => {
+    //                       return s !== "";
+    //                     })
+    //                   );
+    //                 } else {
+    //                   this.answer_show_option_image.push([]);
+    //                 }
+    //                 if (typeof question.analysis_images !== "undefined") {
+    //                   this.answer_show_analysis_image.push(
+    //                     question.analysis_images.map(s => {
+    //                       return s !== "";
+    //                     })
+    //                   );
+    //                 } else {
+    //                   question.analysis_images = [];
+    //                   this.answer_show_analysis_image.push([]);
+    //                 }
+    //                 if (typeof question.answer_images !== "undefined") {
+    //                   this.answer_show_answer_image.push(
+    //                     question.answer_images.map(s => {
+    //                       return s !== "";
+    //                     })
+    //                   );
+    //                 } else {
+    //                   question.answer_images = [];
+    //                   this.answer_show_answer_image.push([]);
+    //                 }
+    //               }
 
-                  break;
-                case "mix":
-                  this.mix_show_image = [];
-                  this.mix_show_option_image = [];
-                  this.mix_show_analysis_image = [];
-                  this.mix_show_answer_image = [];
-                  for (let question of questions["questions"]) {
-                    for (
-                      var i = 0;
-                      i < question.mix_sub_fill_questions.length;
-                      i++
-                    ) {
-                      if (
-                        question.mix_sub_fill_questions[i].sub_fill
-                          .tableConfig === undefined
-                      ) {
+    //               break;
+    //             case "mix":
+    //               this.mix_show_image = [];
+    //               this.mix_show_option_image = [];
+    //               this.mix_show_analysis_image = [];
+    //               this.mix_show_answer_image = [];
+    //               for (let question of questions["questions"]) {
+    //                 for (
+    //                   var i = 0;
+    //                   i < question.mix_sub_fill_questions.length;
+    //                   i++
+    //                 ) {
+    //                   if (
+    //                     question.mix_sub_fill_questions[i].sub_fill
+    //                       .tableConfig === undefined
+    //                   ) {
                     
-                        question.mix_sub_fill_questions[
-                          i
-                        ].sub_fill.tableConfig = [];
-                      }
-                      if (
-                        question.mix_sub_fill_questions[i].sub_fill
-                          .tableData === undefined
-                      ) {
+    //                     question.mix_sub_fill_questions[
+    //                       i
+    //                     ].sub_fill.tableConfig = [];
+    //                   }
+    //                   if (
+    //                     question.mix_sub_fill_questions[i].sub_fill
+    //                       .tableData === undefined
+    //                   ) {
                      
-                        question.mix_sub_fill_questions[
-                          i
-                        ].sub_fill.tableData = [];
-                      }
-                      if (
-                        question.mix_sub_fill_questions[i].sub_fill
-                          .mix_sub_fill_table_view === undefined
-                      ) {
+    //                     question.mix_sub_fill_questions[
+    //                       i
+    //                     ].sub_fill.tableData = [];
+    //                   }
+    //                   if (
+    //                     question.mix_sub_fill_questions[i].sub_fill
+    //                       .mix_sub_fill_table_view === undefined
+    //                   ) {
                         
-                        question.mix_sub_fill_questions[
-                          i
-                        ].sub_fill.mix_sub_fill_table_view = false;
-                      }
-                      if (
-                        typeof question.mix_sub_fill_questions[i].sub_fill
-                          .table_row === "undefined"
-                      ) {
-                        question.mix_sub_fill_questions[i].sub_fill.table_row =
-                          "";
-                      }
-                      if (
-                        typeof question.mix_sub_fill_questions[i].sub_fill
-                          .table_col === "undefined"
-                      ) {
-                        question.mix_sub_fill_questions[i].sub_fill.table_col =
-                          "";
-                      }
-                    }
+    //                     question.mix_sub_fill_questions[
+    //                       i
+    //                     ].sub_fill.mix_sub_fill_table_view = false;
+    //                   }
+    //                   if (
+    //                     typeof question.mix_sub_fill_questions[i].sub_fill
+    //                       .table_row === "undefined"
+    //                   ) {
+    //                     question.mix_sub_fill_questions[i].sub_fill.table_row =
+    //                       "";
+    //                   }
+    //                   if (
+    //                     typeof question.mix_sub_fill_questions[i].sub_fill
+    //                       .table_col === "undefined"
+    //                   ) {
+    //                     question.mix_sub_fill_questions[i].sub_fill.table_col =
+    //                       "";
+    //                   }
+    //                 }
 
-                    delete question.eno;
-                    this.mix_content.push({
-                      mixQuestion: question
-                    });
-                    if (question.image[0] !== "") {
-                      this.mix_show_image.push(
-                        question.image.map(s => {
-                          return s !== "";
-                        })
-                      );
-                    } else {
-                      this.mix_show_image.push([]);
-                    }
-                    if (typeof question.analysis_images !== "undefined") {
-                      this.mix_show_analysis_image.push(
-                        question.analysis_images.map(s => {
-                          return s !== "";
-                        })
-                      );
-                    } else {
-                      question.analysis_images = [];
-                      this.mix_show_analysis_image.push([]);
-                    }
-                    if (typeof question.answer_images !== "undefined") {
-                      this.mix_show_answer_image.push(
-                        question.answer_images.map(s => {
-                          return s !== "";
-                        })
-                      );
-                    } else {
-                      question.answer_images = [];
-                      this.mix_show_answer_image.push([]);
-                    }
-                  }
+    //                 delete question.eno;
+    //                 this.mix_content.push({
+    //                   mixQuestion: question
+    //                 });
+    //                 if (question.image[0] !== "") {
+    //                   this.mix_show_image.push(
+    //                     question.image.map(s => {
+    //                       return s !== "";
+    //                     })
+    //                   );
+    //                 } else {
+    //                   this.mix_show_image.push([]);
+    //                 }
+    //                 if (typeof question.analysis_images !== "undefined") {
+    //                   this.mix_show_analysis_image.push(
+    //                     question.analysis_images.map(s => {
+    //                       return s !== "";
+    //                     })
+    //                   );
+    //                 } else {
+    //                   question.analysis_images = [];
+    //                   this.mix_show_analysis_image.push([]);
+    //                 }
+    //                 if (typeof question.answer_images !== "undefined") {
+    //                   this.mix_show_answer_image.push(
+    //                     question.answer_images.map(s => {
+    //                       return s !== "";
+    //                     })
+    //                   );
+    //                 } else {
+    //                   question.answer_images = [];
+    //                   this.mix_show_answer_image.push([]);
+    //                 }
+    //               }
 
-                  break;
-              }
-            }
-          } catch (err) {
-            this.upload = false;
-            console.log(`${err.message}`);
-          }
-        };
-        reader.readAsText(file.raw);
-      }
-    },
-    output() {
-      // save json file to local
-      const data = {};
+    //               break;
+    //           }
+    //         }
+    //       } catch (err) {
+    //         this.upload = false;
+    //         console.log(`${err.message}`);
+    //       }
+    //     };
+    //     reader.readAsText(file.raw);
+    //   }
+    // },
+    // output() {
+    //   // save json file to local
+    //   const data = {};
 
-      if (this.default_subject === "math") {
-        data["type"] = "math";
-      } else if (this.default_subject === "physics") {
-        data["type"] = "physics";
-      } else if (this.default_subject === "chemistry") {
-        data["type"] = "chemistry";
-      } else if (this.default_subject === "biology") {
-        data["type"] = "biology";
-      }
-      data["info"] = { global_eno: false };
-      data["questions"] = [];
-      let option = {};
-      option["type"] = "option";
-      option["subtitle"] = this.option_subtitle;
-      option["questions"] = [];
-      for (let i in this.option_content) {
-        let tmp = this.option_content[i].optionQuestion;
-        let eno = { eno: parseInt(i) + 1 };
-        let question = {};
-        Object.assign(question, eno, tmp);
-        option["questions"].push(question);
-      }
-      data["questions"].push(option);
+    //   if (this.default_subject === "math") {
+    //     data["type"] = "math";
+    //   } else if (this.default_subject === "physics") {
+    //     data["type"] = "physics";
+    //   } else if (this.default_subject === "chemistry") {
+    //     data["type"] = "chemistry";
+    //   } else if (this.default_subject === "biology") {
+    //     data["type"] = "biology";
+    //   }
+    //   data["info"] = { global_eno: false };
+    //   data["questions"] = [];
+    //   let option = {};
+    //   option["type"] = "option";
+    //   option["subtitle"] = this.option_subtitle;
+    //   option["questions"] = [];
+    //   for (let i in this.option_content) {
+    //     let tmp = this.option_content[i].optionQuestion;
+    //     let eno = { eno: parseInt(i) + 1 };
+    //     let question = {};
+    //     Object.assign(question, eno, tmp);
+    //     option["questions"].push(question);
+    //   }
+    //   data["questions"].push(option);
 
-      let fill = {};
-      fill["type"] = "fill";
+    //   let fill = {};
+    //   fill["type"] = "fill";
 
-      fill["questions"] = [];
-      for (let i in this.fill_content) {
-        let tmp = this.fill_content[i].fillQuestion;
-        let eno = { eno: parseInt(i) + 1 };
-        let question = {};
-        Object.assign(question, eno, tmp);
-        fill["questions"].push(question);
-      }
-      data["questions"].push(fill);
+    //   fill["questions"] = [];
+    //   for (let i in this.fill_content) {
+    //     let tmp = this.fill_content[i].fillQuestion;
+    //     let eno = { eno: parseInt(i) + 1 };
+    //     let question = {};
+    //     Object.assign(question, eno, tmp);
+    //     fill["questions"].push(question);
+    //   }
+    //   data["questions"].push(fill);
 
-      let answer = {};
-      answer["type"] = "answer";
+    //   let answer = {};
+    //   answer["type"] = "answer";
 
-      answer["questions"] = [];
-      for (let i in this.answer_content) {
-        let tmp = this.answer_content[i].answerQuestion;
-        let eno = { eno: parseInt(i) + 1 };
-        let question = {};
-        Object.assign(question, eno, tmp);
-        answer["questions"].push(question);
-      }
-      data["questions"].push(answer);
+    //   answer["questions"] = [];
+    //   for (let i in this.answer_content) {
+    //     let tmp = this.answer_content[i].answerQuestion;
+    //     let eno = { eno: parseInt(i) + 1 };
+    //     let question = {};
+    //     Object.assign(question, eno, tmp);
+    //     answer["questions"].push(question);
+    //   }
+    //   data["questions"].push(answer);
 
-      let mix = {};
-      mix["type"] = "mix";
+    //   let mix = {};
+    //   mix["type"] = "mix";
 
-      mix["questions"] = [];
-      for (let i in this.mix_content) {
-        let tmp = this.mix_content[i].mixQuestion;
-        let eno = { eno: parseInt(i) + 1 };
-        let question = {};
-        Object.assign(question, eno, tmp);
-        mix["questions"].push(question);
-      }
-      data["questions"].push(mix);
+    //   mix["questions"] = [];
+    //   for (let i in this.mix_content) {
+    //     let tmp = this.mix_content[i].mixQuestion;
+    //     let eno = { eno: parseInt(i) + 1 };
+    //     let question = {};
+    //     Object.assign(question, eno, tmp);
+    //     mix["questions"].push(question);
+    //   }
+    //   data["questions"].push(mix);
 
-      let jsonData = JSON.stringify(data);
-      const blob = new Blob([jsonData], { type: "" });
-      FileSaver.saveAs(blob, "paper" + ".json");
+    //   let jsonData = JSON.stringify(data);
+    //   const blob = new Blob([jsonData], { type: "" });
+    //   FileSaver.saveAs(blob, "paper" + ".json");
 
-      // send json file to server
+    //   // send json file to server
 
-      // let param = new FormData();
-      // param.append("option_content", JSON.stringify(this.option_content));
-      // param.append("fill_content", JSON.stringify(this.fill_content));
-      // param.append("answer_content", JSON.stringify(this.answer_content));
-      // let config = {
-      //   headers: { "Content-Type": "multipart/form-data" }
-      // };
-      // param.append("paper_title", this.paper_title);
-      // this.$http
-      //   .post(
-      //     this.backendIP + "/api/paper/" + this.paper_title + ".json",
-      //     param,
-      //     config,
-      //     {
-      //       emulateJSON: true
-      //     }
-      //   )
-      //   .then(function(data) {
-      //     let url =
-      //       this.backendIP + "/api/download/" + this.paper_title + ".json";
-      //     window.open(url);
-      //     this.$http.post(
-      //       this.backendIP + "/api/delete/" + this.paper_title + ".json"
-      //     );
-      //   });
-    },
-    single_choice() {
-      this.deleteAllCard();
-      this.option_content.splice(0, 1, {
-        optionQuestion: {
-          eid: "",
-          content: "题目内容",
-          image: [""],
-          score: "5分",
-          answer: "",
-          answer_analysis: "",
-          option: ["", "", "", ""],
-          option_images: ["", "", "", ""],
-          analysis_images: [""]
-        }
-      });
-      this.option_view.push(false);
-      this.option_show_image.push([]);
-      this.option_show_option_image.push([false, false, false, false]);
-      this.option_show_analysis_image.push([]);
-    },
-    fill_in() {
-      this.deleteAllCard();
-      this.fill_content.splice(0, 1, {
-        fillQuestion: {
-          eid: "",
-          content: "问题：_______",
-          image: [""],
-          score: "6分",
-          answer: "",
-          answer_analysis: "",
-          analysis_images: [""]
-        }
-      });
-      this.fill_show_image.push([]);
-      this.fill_view.push(false);
-      this.fill_show_analysis_image.push([]);
-    },
-    answer_question() {
-      this.deleteAllCard();
-      this.answer_content.splice(0, 1, {
-        answerQuestion: {
-          eid: "",
-          content: "解答题内容",
-          image: [""],
-          sub_questions: ["小题"],
-          sub_score: [],
-          option_images: [""],
-          score: "10分",
-          answer: "",
-          answer_analysis: "",
-          analysis_images: [""],
-          answer_images: [""]
-        }
-      });
-      this.answer_view.push(false);
-      this.answer_show_image.push([]);
-      this.answer_show_option_image.push([false]);
-      this.answer_show_analysis_image.push([]);
-      this.answer_show_answer_image.push([]);
-    },
-    mix_question() {
-      this.deleteAllCard();
-      this.mix_content.splice(0, 1, {
-        mixQuestion: {
-          eid: "",
-          content: "非选择题内容",
-          image: [""],
-          mix_sub_questions: [],
-          mix_sub_choice_questions: [],
-          mix_sub_fill_questions: [],
-          sub_score: [],
-          // option_images: [""],
-          score: "10分",
-          answer: "",
-          answer_analysis: "",
-          analysis_images: [""],
-          answer_images: [""],
-          mix_sub_choice_view: [],
-          mix_sub_choice_image: [],
-          mix_sub_choice_option_image: [],
-          mix_sub_choice_analysis_image: [],
-          mix_sub_fill_view: [],
-          // mix_sub_fill_table_view: "",
-          // table_row: "",
-          // table_col: "",
-          mix_sub_fill_image: [],
-          // mix_sub_fill_table: [],
-          mix_sub_image: []
-        }
-      });
-      this.mix_view.push(false);
-      this.mix_show_image.push([]);
-      this.mix_show_option_image.push([false]);
-      this.mix_show_analysis_image.push([]);
-      this.mix_show_answer_image.push([]);
-    },
-    mouseOver() {
-      // console.log(e.currentTarget.firstElementChild);
-    },
-    addOption(index) {
-      this.option_content[index].optionQuestion.option.push("");
-      this.option_content[index].optionQuestion.option_images.push("");
-      this.option_show_option_image[index].push(false);
-    },
-    addSubOption(index, indexOp) {
-      this.mix_content[index].mixQuestion.mix_sub_choice_questions[
-        indexOp
-      ].sub_choice.option.push("");
-      this.mix_content[index].mixQuestion.mix_sub_choice_questions[
-        indexOp
-      ].sub_choice.option_images.push("");
-      this.mix_content[index].mixQuestion.mix_sub_choice_option_image[
-        indexOp
-      ].push(false);
-    },
-    viewQuestion(type, index) {
-      switch (type) {
-        case "option":
-          Vue.set(this.option_view, index, true);
-          break;
-        case "fill":
-          Vue.set(this.fill_view, index, true);
-          break;
-        case "answer":
-          Vue.set(this.answer_view, index, true);
-          break;
-        case "mix":
-          Vue.set(this.mix_view, index, true);
-          break;
-      }
-    },
-    hideQuestionView(type, index) {
-      switch (type) {
-        case "option":
-          Vue.set(this.option_view, index, false);
-          break;
-        case "fill":
-          Vue.set(this.fill_view, index, false);
-          break;
-        case "answer":
-          Vue.set(this.answer_view, index, false);
-          break;
-        case "mix":
-          Vue.set(this.mix_view, index, false);
-          break;
-      }
-    },
-    showAnswer(type, index, data) {
-      switch (type) {
-        case "option":
-          Vue.set(this.option_show_answer, index, data);
-          if (data === false) {
-            Vue.set(this.option_show_answer_analysis, index, data);
-          }
-          break;
-        case "fill":
-          Vue.set(this.fill_show_answer, index, data);
-          if (data === false) {
-            Vue.set(this.fill_show_answer_analysis, index, data);
-          }
-          break;
-        case "answer":
-          Vue.set(this.answer_show_answer, index, data);
-          if (data === false) {
-            Vue.set(this.answer_show_answer_analysis, index, data);
-          }
-          break;
-        case "mix":
-          Vue.set(this.mix_show_answer, index, data);
-          if (data === false) {
-            Vue.set(this.mix_show_answer_analysis, index, data);
-          }
-          break;
-      }
-    },
-    showAnswerAnalysis(type, index, data) {
-      switch (type) {
-        case "option":
-          Vue.set(this.option_show_answer_analysis, index, data);
-          break;
-        case "fill":
-          Vue.set(this.fill_show_answer_analysis, index, data);
+    //   // let param = new FormData();
+    //   // param.append("option_content", JSON.stringify(this.option_content));
+    //   // param.append("fill_content", JSON.stringify(this.fill_content));
+    //   // param.append("answer_content", JSON.stringify(this.answer_content));
+    //   // let config = {
+    //   //   headers: { "Content-Type": "multipart/form-data" }
+    //   // };
+    //   // param.append("paper_title", this.paper_title);
+    //   // this.$http
+    //   //   .post(
+    //   //     this.backendIP + "/api/paper/" + this.paper_title + ".json",
+    //   //     param,
+    //   //     config,
+    //   //     {
+    //   //       emulateJSON: true
+    //   //     }
+    //   //   )
+    //   //   .then(function(data) {
+    //   //     let url =
+    //   //       this.backendIP + "/api/download/" + this.paper_title + ".json";
+    //   //     window.open(url);
+    //   //     this.$http.post(
+    //   //       this.backendIP + "/api/delete/" + this.paper_title + ".json"
+    //   //     );
+    //   //   });
+    // },
+    // single_choice() {
+    //   this.deleteAllCard();
+    //   this.option_content.splice(0, 1, {
+    //     optionQuestion: {
+    //       eid: "",
+    //       content: "题目内容",
+    //       image: [""],
+    //       score: "5分",
+    //       answer: "",
+    //       answer_analysis: "",
+    //       option: ["", "", "", ""],
+    //       option_images: ["", "", "", ""],
+    //       analysis_images: [""]
+    //     }
+    //   });
+    //   this.option_view.push(false);
+    //   this.option_show_image.push([]);
+    //   this.option_show_option_image.push([false, false, false, false]);
+    //   this.option_show_analysis_image.push([]);
+    // },
+    // fill_in() {
+    //   this.deleteAllCard();
+    //   this.fill_content.splice(0, 1, {
+    //     fillQuestion: {
+    //       eid: "",
+    //       content: "问题：_______",
+    //       image: [""],
+    //       score: "6分",
+    //       answer: "",
+    //       answer_analysis: "",
+    //       analysis_images: [""]
+    //     }
+    //   });
+    //   this.fill_show_image.push([]);
+    //   this.fill_view.push(false);
+    //   this.fill_show_analysis_image.push([]);
+    // },
+    // answer_question() {
+    //   this.deleteAllCard();
+    //   this.answer_content.splice(0, 1, {
+    //     answerQuestion: {
+    //       eid: "",
+    //       content: "解答题内容",
+    //       image: [""],
+    //       sub_questions: ["小题"],
+    //       sub_score: [],
+    //       option_images: [""],
+    //       score: "10分",
+    //       answer: "",
+    //       answer_analysis: "",
+    //       analysis_images: [""],
+    //       answer_images: [""]
+    //     }
+    //   });
+    //   this.answer_view.push(false);
+    //   this.answer_show_image.push([]);
+    //   this.answer_show_option_image.push([false]);
+    //   this.answer_show_analysis_image.push([]);
+    //   this.answer_show_answer_image.push([]);
+    // },
+    // mix_question() {
+    //   this.deleteAllCard();
+    //   this.mix_content.splice(0, 1, {
+    //     mixQuestion: {
+    //       eid: "",
+    //       content: "非选择题内容",
+    //       image: [""],
+    //       mix_sub_questions: [],
+    //       mix_sub_choice_questions: [],
+    //       mix_sub_fill_questions: [],
+    //       sub_score: [],
+    //       // option_images: [""],
+    //       score: "10分",
+    //       answer: "",
+    //       answer_analysis: "",
+    //       analysis_images: [""],
+    //       answer_images: [""],
+    //       mix_sub_choice_view: [],
+    //       mix_sub_choice_image: [],
+    //       mix_sub_choice_option_image: [],
+    //       mix_sub_choice_analysis_image: [],
+    //       mix_sub_fill_view: [],
+    //       // mix_sub_fill_table_view: "",
+    //       // table_row: "",
+    //       // table_col: "",
+    //       mix_sub_fill_image: [],
+    //       // mix_sub_fill_table: [],
+    //       mix_sub_image: []
+    //     }
+    //   });
+    //   this.mix_view.push(false);
+    //   this.mix_show_image.push([]);
+    //   this.mix_show_option_image.push([false]);
+    //   this.mix_show_analysis_image.push([]);
+    //   this.mix_show_answer_image.push([]);
+    // },
+    // mouseOver() {
+    //   // console.log(e.currentTarget.firstElementChild);
+    // },
+    // addOption(index) {
+    //   this.option_content[index].optionQuestion.option.push("");
+    //   this.option_content[index].optionQuestion.option_images.push("");
+    //   this.option_show_option_image[index].push(false);
+    // },
+    // addSubOption(index, indexOp) {
+    //   this.mix_content[index].mixQuestion.mix_sub_choice_questions[
+    //     indexOp
+    //   ].sub_choice.option.push("");
+    //   this.mix_content[index].mixQuestion.mix_sub_choice_questions[
+    //     indexOp
+    //   ].sub_choice.option_images.push("");
+    //   this.mix_content[index].mixQuestion.mix_sub_choice_option_image[
+    //     indexOp
+    //   ].push(false);
+    // },
+    // viewQuestion(type, index) {
+    //   switch (type) {
+    //     case "option":
+    //       Vue.set(this.option_view, index, true);
+    //       break;
+    //     case "fill":
+    //       Vue.set(this.fill_view, index, true);
+    //       break;
+    //     case "answer":
+    //       Vue.set(this.answer_view, index, true);
+    //       break;
+    //     case "mix":
+    //       Vue.set(this.mix_view, index, true);
+    //       break;
+    //   }
+    // },
+    // hideQuestionView(type, index) {
+    //   switch (type) {
+    //     case "option":
+    //       Vue.set(this.option_view, index, false);
+    //       break;
+    //     case "fill":
+    //       Vue.set(this.fill_view, index, false);
+    //       break;
+    //     case "answer":
+    //       Vue.set(this.answer_view, index, false);
+    //       break;
+    //     case "mix":
+    //       Vue.set(this.mix_view, index, false);
+    //       break;
+    //   }
+    // },
+    // showAnswer(type, index, data) {
+    //   switch (type) {
+    //     case "option":
+    //       Vue.set(this.option_show_answer, index, data);
+    //       if (data === false) {
+    //         Vue.set(this.option_show_answer_analysis, index, data);
+    //       }
+    //       break;
+    //     case "fill":
+    //       Vue.set(this.fill_show_answer, index, data);
+    //       if (data === false) {
+    //         Vue.set(this.fill_show_answer_analysis, index, data);
+    //       }
+    //       break;
+    //     case "answer":
+    //       Vue.set(this.answer_show_answer, index, data);
+    //       if (data === false) {
+    //         Vue.set(this.answer_show_answer_analysis, index, data);
+    //       }
+    //       break;
+    //     case "mix":
+    //       Vue.set(this.mix_show_answer, index, data);
+    //       if (data === false) {
+    //         Vue.set(this.mix_show_answer_analysis, index, data);
+    //       }
+    //       break;
+    //   }
+    // },
+    // showAnswerAnalysis(type, index, data) {
+    //   switch (type) {
+    //     case "option":
+    //       Vue.set(this.option_show_answer_analysis, index, data);
+    //       break;
+    //     case "fill":
+    //       Vue.set(this.fill_show_answer_analysis, index, data);
 
-          break;
-        case "answer":
-          Vue.set(this.answer_show_answer_analysis, index, data);
-      }
-    },
-    addAnswerOption(index) {
-      this.answer_content[index].answerQuestion.sub_questions.push("小题");
-      this.answer_content[index].answerQuestion.option_images.push("");
-      this.answer_show_option_image[index].push(false);
-    },
-    addMixSub(index) {
-      this.mix_content[index].mixQuestion.mix_sub_questions.push({
-        sub_question: {
-          content: "问题",
-          score: "",
-          image: [""]
-        }
-      });
-      this.mix_content[index].mixQuestion.mix_sub_image.push([]);
-    },
-    addMixOption(index) {
-      this.mix_content[index].mixQuestion.mix_sub_choice_questions.push({
-        sub_choice: {
-          content: "问题",
-          score: "",
-          image: [""],
-          option: ["", "", "", ""],
-          option_images: ["", "", "", ""]
-        }
-      });
-      this.mix_content[index].mixQuestion.mix_sub_choice_view.push(false);
-      this.mix_content[index].mixQuestion.mix_sub_choice_image.push([]);
-      this.mix_content[index].mixQuestion.mix_sub_choice_option_image.push([
-        false,
-        false,
-        false,
-        false
-      ]);
-    },
-    addMixFill(index) {
-      this.mix_content[index].mixQuestion.mix_sub_fill_questions.push({
-        sub_fill: {
-          content: "问题________",
-          score: "",
-          image: [""],
-          tableData: [],
-          tableConfig: [],
-          mix_sub_fill_table_view: false,
-          table_row: "",
-          table_col: ""
-        }
-      });
-      console.log(this.mix_content[index].mixQuestion.mix_sub_fill_questions);
-      this.mix_content[index].mixQuestion.mix_sub_fill_view.push(false);
-      // this.mix_content[index].mixQuestion.mix_sub_fill_table_view = false;
-      this.mix_content[index].mixQuestion.mix_sub_fill_image.push([]);
-      // this.mix_content[index].mixQuestion.mix_sub_fill_table.push([]);
-    },
-    addSubFillPlaceHolder(index, indexOp) {
-      this.mix_content[index].mixQuestion.mix_sub_fill_questions[
-        indexOp
-      ].sub_fill.content += "________";
-    },
-    addFillPlaceHolder(index) {
-      this.fill_content[index].fillQuestion.content += "________";
-    },
-    deleteCard(index) {
-      this.option_content.splice(index, 1);
-    },
-    deleteFillCard(index) {
-      this.fill_content.splice(index, 1);
-    },
-    deleteAnswerCard(index) {
-      this.answer_content.splice(index, 1);
-    },
-    deleteMixCard(index) {
-      this.mix_content.splice(index, 1);
-    },
-    deleteAllCard() {
-      this.option_content = [];
-      this.fill_content = [];
-      this.answer_content = [];
-      this.mix_content = [];
+    //       break;
+    //     case "answer":
+    //       Vue.set(this.answer_show_answer_analysis, index, data);
+    //   }
+    // },
+    // addAnswerOption(index) {
+    //   this.answer_content[index].answerQuestion.sub_questions.push("小题");
+    //   this.answer_content[index].answerQuestion.option_images.push("");
+    //   this.answer_show_option_image[index].push(false);
+    // },
+    // addMixSub(index) {
+    //   this.mix_content[index].mixQuestion.mix_sub_questions.push({
+    //     sub_question: {
+    //       content: "问题",
+    //       score: "",
+    //       image: [""]
+    //     }
+    //   });
+    //   this.mix_content[index].mixQuestion.mix_sub_image.push([]);
+    // },
+    // addMixOption(index) {
+    //   this.mix_content[index].mixQuestion.mix_sub_choice_questions.push({
+    //     sub_choice: {
+    //       content: "问题",
+    //       score: "",
+    //       image: [""],
+    //       option: ["", "", "", ""],
+    //       option_images: ["", "", "", ""]
+    //     }
+    //   });
+    //   this.mix_content[index].mixQuestion.mix_sub_choice_view.push(false);
+    //   this.mix_content[index].mixQuestion.mix_sub_choice_image.push([]);
+    //   this.mix_content[index].mixQuestion.mix_sub_choice_option_image.push([
+    //     false,
+    //     false,
+    //     false,
+    //     false
+    //   ]);
+    // },
+    // addMixFill(index) {
+    //   this.mix_content[index].mixQuestion.mix_sub_fill_questions.push({
+    //     sub_fill: {
+    //       content: "问题________",
+    //       score: "",
+    //       image: [""],
+    //       tableData: [],
+    //       tableConfig: [],
+    //       mix_sub_fill_table_view: false,
+    //       table_row: "",
+    //       table_col: ""
+    //     }
+    //   });
+    //   console.log(this.mix_content[index].mixQuestion.mix_sub_fill_questions);
+    //   this.mix_content[index].mixQuestion.mix_sub_fill_view.push(false);
+    //   // this.mix_content[index].mixQuestion.mix_sub_fill_table_view = false;
+    //   this.mix_content[index].mixQuestion.mix_sub_fill_image.push([]);
+    //   // this.mix_content[index].mixQuestion.mix_sub_fill_table.push([]);
+    // },
+    // addSubFillPlaceHolder(index, indexOp) {
+    //   this.mix_content[index].mixQuestion.mix_sub_fill_questions[
+    //     indexOp
+    //   ].sub_fill.content += "________";
+    // },
+    // addFillPlaceHolder(index) {
+    //   this.fill_content[index].fillQuestion.content += "________";
+    // },
+    // deleteCard(index) {
+    //   this.option_content.splice(index, 1);
+    // },
+    // deleteFillCard(index) {
+    //   this.fill_content.splice(index, 1);
+    // },
+    // deleteAnswerCard(index) {
+    //   this.answer_content.splice(index, 1);
+    // },
+    // deleteMixCard(index) {
+    //   this.mix_content.splice(index, 1);
+    // },
+    // deleteAllCard() {
+    //   this.option_content = [];
+    //   this.fill_content = [];
+    //   this.answer_content = [];
+    //   this.mix_content = [];
 
-      this.option_subtitle = "";
+    //   this.option_subtitle = "";
 
-      this.option_show_image = [];
-      this.option_show_option_image = [];
-      this.fill_show_image = [];
-      this.answer_show_image = [];
-      this.answer_show_option_image = [];
-      this.option_show_analysis_image = [];
-      this.fill_show_analysis_image = [];
-      this.answer_show_analysis_image = [];
-      this.answer_show_answer_image = [];
-      this.mix_show_image = [];
-      this.mix_show_option_image = [];
-      this.mix_show_analysis_image = [];
-      this.mix_show_answer_image = [];
-    },
-    deleteAnswer(type, index) {
-      switch (type) {
-        case "option":
-          Vue.set(this.option_show_answer, index, false);
-          Vue.set(this.option_content[index].optionQuestion, "answer", "");
-          break;
-        case "fill":
-          Vue.set(this.fill_show_answer, index, false);
-          Vue.set(this.fill_content[index].fillQuestion, "answer", "");
-          break;
-        case "answer":
-          Vue.set(this.answer_show_answer, index, false);
-          Vue.set(this.answer_content[index].answerQuestion, "answer", "");
-          break;
-        case "mix":
-          Vue.set(this.mix_show_answer, index, false);
-          Vue.set(this.mix_content[index].mixQuestion, "answer", "");
-          break;
-      }
-    },
-    deleteAnswerAnalysis(type, index) {
-      switch (type) {
-        case "option":
-          Vue.set(this.option_show_answer_analysis, index, false);
-          Vue.set(
-            this.option_content[index].optionQuestion,
-            "answer_analysis",
-            ""
-          );
-          break;
-        case "fill":
-          Vue.set(this.fill_show_answer_analysis, index, false);
-          Vue.set(this.fill_content[index].fillQuestion, "answer_analysis", "");
-          break;
-        case "answer":
-          Vue.set(this.answer_show_answer_analysis, index, false);
-          Vue.set(
-            this.answer_content[index].answerQuestion,
-            "answer_analysis",
-            ""
-          );
-          break;
-        case "mix":
-          Vue.set(this.mix_show_answer_analysis, index, false);
-          Vue.set(this.mix_content[index].mixQuestion, "answer_analysis", "");
-          break;
-      }
-    },
-    deleteOption(index, indexOp) {
-      this.option_content[index].optionQuestion.option.splice(indexOp, 1);
-      this.option_content[index].optionQuestion.option_images.splice(
-        indexOp,
-        1
-      );
-    },
-    deleteSubOption(index, indexOp, indexP) {
-      this.mix_content[index].mixQuestion.mix_sub_choice_questions[
-        indexOp
-      ].sub_choice.option.splice(indexP, 1);
-      this.mix_content[index].mixQuestion.mix_sub_choice_questions[
-        indexOp
-      ].sub_choice.option_images.splice(indexP, 1);
-    },
-    deleteAnswerOption(index, indexOp) {
-      this.answer_content[index].answerQuestion.sub_questions.splice(
-        indexOp,
-        1
-      );
-    },
-    deleteMixOption(index, indexOp) {
-      this.mix_content[index].mixQuestion.mix_sub_choice_questions.splice(
-        indexOp,
-        1
-      );
-    },
-    deleteMixFill(index, indexOp) {
-      this.mix_content[index].mixQuestion.mix_sub_fill_questions.splice(
-        indexOp,
-        1
-      );
-    },
-    deleteMixSub(index, indexOp) {
-      this.mix_content[index].mixQuestion.mix_sub_questions.splice(indexOp, 1);
-    },
-    saveBase64Option(type, base64, index, indexOp) {
-      switch (type) {
-        case "option":
-          Vue.set(
-            this.option_content[index].optionQuestion.option_images,
-            indexOp,
-            base64
-          );
-          break;
-        case "answer":
-          Vue.set(
-            this.answer_content[index].answerQuestion.option_images,
-            indexOp,
-            base64
-          );
-          break;
-        case "mix":
-          Vue.set(
-            this.mix_content[index].mixQuestion.option_images,
-            indexOp,
-            base64
-          );
-          break;
-      }
-    },
-    saveBase64SubOption(type, base64, index, indexOp, indexP) {
-      switch (type) {
-        case "sub_choice":
-          Vue.set(
-            this.mix_content[index].mixQuestion.mix_sub_choice_questions[
-              indexOp
-            ].sub_choice.option_images,
-            indexP,
-            base64
-          );
-          break;
-      }
-    },
-    saveBase64Analysis(type, base64, index, indexOp) {
-      switch (type) {
-        case "option":
-          Vue.set(
-            this.option_content[index].optionQuestion.analysis_images,
-            indexOp,
-            base64
-          );
-          break;
-        case "fill":
-          Vue.set(
-            this.fill_content[index].fillQuestion.analysis_images,
-            indexOp,
-            base64
-          );
-          break;
-        case "answer":
-          Vue.set(
-            this.answer_content[index].answerQuestion.analysis_images,
-            indexOp,
-            base64
-          );
-          break;
-        case "mix":
-          Vue.set(
-            this.mix_content[index].mixQuestion.analysis_images,
-            indexOp,
-            base64
-          );
-          break;
-      }
-    },
-    saveBase64Answer(type, base64, index, indexOp) {
-      switch (type) {
-        case "answer":
-          Vue.set(
-            this.answer_content[index].answerQuestion.answer_images,
-            indexOp,
-            base64
-          );
-          break;
-        case "mix":
-          Vue.set(
-            this.mix_content[index].mixQuestion.answer_images,
-            indexOp,
-            base64
-          );
-          break;
-      }
-    },
-    saveBase64(type, base64, index, indexOp) {
-      switch (type) {
-        case "option":
-          Vue.set(
-            this.option_content[index].optionQuestion.image,
-            indexOp,
-            base64
-          );
-          break;
-        case "fill":
-          Vue.set(this.fill_content[index].fillQuestion.image, indexOp, base64);
-          break;
-        case "answer":
-          Vue.set(
-            this.answer_content[index].answerQuestion.image,
-            indexOp,
-            base64
-          );
-          break;
-        case "mix":
-          Vue.set(this.mix_content[index].mixQuestion.image, indexOp, base64);
-          break;
-      }
-    },
-    saveBase64Sub(type, base64, index, indexOp, indexImg) {
-      switch (type) {
-        case "sub_choice":
-          Vue.set(
-            this.mix_content[index].mixQuestion.mix_sub_choice_questions[
-              indexOp
-            ].sub_choice.image,
-            indexImg,
-            base64
-          );
-          break;
-        case "sub_fill":
-          Vue.set(
-            this.mix_content[index].mixQuestion.mix_sub_fill_questions[indexOp]
-              .sub_fill.image,
-            indexImg,
-            base64
-          );
-          break;
-        case "sub_question":
-          Vue.set(
-            this.mix_content[index].mixQuestion.mix_sub_questions[indexOp]
-              .sub_question.image,
-            indexImg,
-            base64
-          );
-          break;
-      }
-    },
-    showOptionImage(type, index, indexOp, value) {
-      // add option_images to options of option/answer question
-      switch (type) {
-        case "option":
-          this.option_show_option_image[index].splice(indexOp, 1, value);
-          break;
-        case "answer":
-          this.answer_show_option_image[index].splice(indexOp, 1, value);
-          break;
-        case "mix":
-          this.mix_show_option_image[index].splice(indexOp, 1, value);
-          break;
-      }
-      if (value === false) {
-        switch (type) {
-          case "option":
-            this.option_content[index].optionQuestion.option_images.splice(
-              indexOp,
-              1,
-              ""
-            );
-            break;
-          case "answer":
-            this.answer_content[index].answerQuestion.option_images.splice(
-              indexOp,
-              1,
-              ""
-            );
-            break;
-          case "mix":
-            this.mix_content[index].mixQuestion.option_images.splice(
-              indexOp,
-              1,
-              ""
-            );
-            break;
-        }
-      }
-    },
-    showSubOptionImage(type, index, indexOp, indexP, value) {
-      // add option_images to options of option/answer question
-      switch (type) {
-        case "sub_choice":
-          this.mix_content[index].mixQuestion.mix_sub_choice_option_image[
-            indexOp
-          ].splice(indexP, 1, value);
-          break;
-      }
-      if (value === false) {
-        switch (type) {
-          case "sub_choice":
-            this.mix_content[index].mixQuestion.mix_sub_choice_questions[
-              indexOp
-            ].sub_choice.option_images.splice(indexP, 1, "");
-            break;
-        }
-      }
-    },
-    showAnswerImage(type, index, value) {
-      // add images to answer of answer question
-      if (value === true) {
-        switch (type) {
-          case "answer":
-            this.answer_show_answer_image[index].splice(
-              this.answer_show_answer_image[index].length,
-              0,
-              value
-            );
-            break;
-          case "mix":
-            this.mix_show_answer_image[index].splice(
-              this.mix_show_answer_image[index].length,
-              0,
-              value
-            );
-            break;
-        }
-      } else {
-        switch (type) {
-          case "answer":
-            this.answer_content[index].answerQuestion.answer_images.splice(
-              -1,
-              1
-            );
-            this.answer_show_answer_image[index].splice(-1, 1);
-            break;
-          case "mix":
-            this.mix_content[index].mixQuestion.answer_images.splice(-1, 1);
-            this.mix_show_answer_image[index].splice(-1, 1);
-            break;
-        }
-      }
-    },
-    showAnalysisImage(type, index, value) {
-      // add option_images to analysis of option/fill/answer question
-      if (value === true) {
-        switch (type) {
-          case "option":
-            this.option_show_analysis_image[index].splice(
-              this.option_show_analysis_image[index].length,
-              0,
-              value
-            );
-            break;
-          case "fill":
-            this.fill_show_analysis_image[index].splice(
-              this.fill_show_analysis_image[index].length,
-              0,
-              value
-            );
-            break;
-          case "answer":
-            this.answer_show_analysis_image[index].splice(
-              this.answer_show_analysis_image[index].length,
-              0,
-              value
-            );
-            break;
-          case "mix":
-            this.mix_show_analysis_image[index].splice(
-              this.mix_show_analysis_image[index].length,
-              0,
-              value
-            );
-            break;
-        }
-      } else {
-        switch (type) {
-          case "option":
-            this.option_content[index].optionQuestion.analysis_images.splice(
-              -1,
-              1
-            );
-            this.option_show_analysis_image[index].splice(-1, 1);
-            break;
-          case "fill":
-            this.fill_content[index].fillQuestion.analysis_images.splice(-1, 1);
-            this.fill_show_analysis_image[index].splice(-1, 1);
-            break;
-          case "answer":
-            this.answer_content[index].answerQuestion.analysis_images.splice(
-              -1,
-              1
-            );
-            this.answer_show_analysis_image[index].splice(-1, 1);
-            break;
-          case "mix":
-            this.mix_content[index].mixQuestion.analysis_images.splice(-1, 1);
-            this.mix_show_analysis_image[index].splice(-1, 1);
-            break;
-        }
-      }
-    },
-    showImage(type, index, value) {
-      // add images to option/fill/answer questions
-      if (value === true) {
-        switch (type) {
-          case "option":
-            this.option_show_image[index].splice(
-              this.option_show_image[index].length,
-              0,
-              value
-            );
-            break;
-          case "fill":
-            this.fill_show_image[index].splice(
-              this.fill_show_image[index].length,
-              0,
-              value
-            );
-            break;
-          case "answer":
-            this.answer_show_image[index].splice(
-              this.answer_show_image[index].length,
-              0,
-              value
-            );
-            break;
-          case "mix":
-            this.mix_show_image[index].splice(
-              this.mix_show_image[index].length,
-              0,
-              value
-            );
-            break;
-        }
-      } else {
-        switch (type) {
-          case "option":
-            this.option_content[index].optionQuestion.image.splice(-1, 1);
-            this.option_show_image[index].splice(-1, 1);
-            break;
-          case "fill":
-            this.fill_content[index].fillQuestion.image.splice(-1, 1);
-            this.fill_show_image[index].splice(-1, 1);
-            break;
-          case "answer":
-            this.answer_content[index].answerQuestion.image.splice(-1, 1);
-            this.answer_show_image[index].splice(-1, 1);
-            break;
-          case "mix":
-            this.mix_content[index].mixQuestion.image.splice(-1, 1);
-            this.mix_show_image[index].splice(-1, 1);
-            break;
-        }
-      }
-    },
-    showSubImage(type, index, indexOp, value) {
-      // add sub_images to mix questions
-      if (value === true) {
-        switch (type) {
-          case "sub_choice":
-            this.mix_content[index].mixQuestion.mix_sub_choice_image[
-              indexOp
-            ].splice(
-              this.mix_content[index].mixQuestion.mix_sub_choice_image[indexOp]
-                .length,
-              0,
-              value
-            );
-            break;
-          case "sub_fill":
-            this.mix_content[index].mixQuestion.mix_sub_fill_image[
-              indexOp
-            ].splice(
-              this.mix_content[index].mixQuestion.mix_sub_fill_image[indexOp]
-                .length,
-              0,
-              value
-            );
-            break;
-          case "sub_question":
-            this.mix_content[index].mixQuestion.mix_sub_image[indexOp].splice(
-              this.mix_content[index].mixQuestion.mix_sub_image[indexOp].length,
-              0,
-              value
-            );
-            break;
-        }
-      } else {
-        switch (type) {
-          case "sub_choice":
-            this.mix_content[index].mixQuestion.mix_sub_choice_questions[
-              indexOp
-            ].sub_choice.image.splice(-1, 1);
-            this.mix_content[index].mixQuestion.mix_sub_choice_image[
-              indexOp
-            ].splice(-1, 1);
-            break;
-          case "sub_fill":
-            this.mix_content[index].mixQuestion.mix_sub_fill_questions[
-              indexOp
-            ].sub_fill.image.splice(-1, 1);
-            this.mix_content[index].mixQuestion.mix_sub_fill_image[
-              indexOp
-            ].splice(-1, 1);
-            break;
-          case "sub_question":
-            this.mix_content[index].mixQuestion.mix_sub_questions[
-              indexOp
-            ].sub_question.image.splice(-1, 1);
-            this.mix_content[index].mixQuestion.mix_sub_image[indexOp].splice(
-              -1,
-              1
-            );
-            break;
-        }
-      }
-    },
-    resetUpload() {
-      this.upload = false;
-    },
-    // 表格
-    showSubTable(type, index, indexOp, value) {
-      // add option_images to options of option/answer question
-      switch (type) {
-        case "sub_fill":
-          for (
-            var i = 1;
-            i <=
-            this.mix_content[index].mixQuestion.mix_sub_fill_questions[indexOp]
-              .sub_fill.table_col;
-            i++
-          ) {
-            this.mix_content[index].mixQuestion.mix_sub_fill_questions[
-              indexOp
-            ].sub_fill.tableConfig.push({
-              label: "第" + i + "列",
-              prop: "col" + i
-            });
-          }
-          for (
-            var j = 0;
-            j <
-            this.mix_content[index].mixQuestion.mix_sub_fill_questions[indexOp]
-              .sub_fill.table_row;
-            j++
-          ) {
-            this.mix_content[index].mixQuestion.mix_sub_fill_questions[
-              indexOp
-            ].sub_fill.tableData.push({
-              col1: "",
-              col2: "",
-              col3: "",
-              col4: "",
-              col5: "",
-              col6: "",
-              col7: "",
-              col8: "",
-              col9: ""
-            });
-          }
-          this.mix_content[index].mixQuestion.mix_sub_fill_questions[
-            indexOp
-          ].sub_fill.mix_sub_fill_table_view = false;
-          break;
-      }
-      if (value === false) {
-        switch (type) {
-          case "sub_fill":
-            this.mix_content[index].mixQuestion.mix_sub_fill_questions[
-              indexOp
-            ].sub_fill.table_row = "";
-            this.mix_content[index].mixQuestion.mix_sub_fill_questions[
-              indexOp
-            ].sub_fill.table_col = "";
-            this.mix_content[index].mixQuestion.mix_sub_fill_questions[
-              indexOp
-            ].sub_fill.tableData = [];
-            this.mix_content[index].mixQuestion.mix_sub_fill_questions[
-              indexOp
-            ].sub_fill.tableConfig = [];
-            break;
-        }
-      }
-    },
-    handleCurrentChange() {
-      // console.log(row, event, column, event.currentTarget)
-    },
-    handleEdit() {
-      // console.log(row);
-    },
-    handleDelete() {
-      // console.log(index, row);
-    },
+    //   this.option_show_image = [];
+    //   this.option_show_option_image = [];
+    //   this.fill_show_image = [];
+    //   this.answer_show_image = [];
+    //   this.answer_show_option_image = [];
+    //   this.option_show_analysis_image = [];
+    //   this.fill_show_analysis_image = [];
+    //   this.answer_show_analysis_image = [];
+    //   this.answer_show_answer_image = [];
+    //   this.mix_show_image = [];
+    //   this.mix_show_option_image = [];
+    //   this.mix_show_analysis_image = [];
+    //   this.mix_show_answer_image = [];
+    // },
+    // deleteAnswer(type, index) {
+    //   switch (type) {
+    //     case "option":
+    //       Vue.set(this.option_show_answer, index, false);
+    //       Vue.set(this.option_content[index].optionQuestion, "answer", "");
+    //       break;
+    //     case "fill":
+    //       Vue.set(this.fill_show_answer, index, false);
+    //       Vue.set(this.fill_content[index].fillQuestion, "answer", "");
+    //       break;
+    //     case "answer":
+    //       Vue.set(this.answer_show_answer, index, false);
+    //       Vue.set(this.answer_content[index].answerQuestion, "answer", "");
+    //       break;
+    //     case "mix":
+    //       Vue.set(this.mix_show_answer, index, false);
+    //       Vue.set(this.mix_content[index].mixQuestion, "answer", "");
+    //       break;
+    //   }
+    // },
+    // deleteAnswerAnalysis(type, index) {
+    //   switch (type) {
+    //     case "option":
+    //       Vue.set(this.option_show_answer_analysis, index, false);
+    //       Vue.set(
+    //         this.option_content[index].optionQuestion,
+    //         "answer_analysis",
+    //         ""
+    //       );
+    //       break;
+    //     case "fill":
+    //       Vue.set(this.fill_show_answer_analysis, index, false);
+    //       Vue.set(this.fill_content[index].fillQuestion, "answer_analysis", "");
+    //       break;
+    //     case "answer":
+    //       Vue.set(this.answer_show_answer_analysis, index, false);
+    //       Vue.set(
+    //         this.answer_content[index].answerQuestion,
+    //         "answer_analysis",
+    //         ""
+    //       );
+    //       break;
+    //     case "mix":
+    //       Vue.set(this.mix_show_answer_analysis, index, false);
+    //       Vue.set(this.mix_content[index].mixQuestion, "answer_analysis", "");
+    //       break;
+    //   }
+    // },
+    // deleteOption(index, indexOp) {
+    //   this.option_content[index].optionQuestion.option.splice(indexOp, 1);
+    //   this.option_content[index].optionQuestion.option_images.splice(
+    //     indexOp,
+    //     1
+    //   );
+    // },
+    // deleteSubOption(index, indexOp, indexP) {
+    //   this.mix_content[index].mixQuestion.mix_sub_choice_questions[
+    //     indexOp
+    //   ].sub_choice.option.splice(indexP, 1);
+    //   this.mix_content[index].mixQuestion.mix_sub_choice_questions[
+    //     indexOp
+    //   ].sub_choice.option_images.splice(indexP, 1);
+    // },
+    // deleteAnswerOption(index, indexOp) {
+    //   this.answer_content[index].answerQuestion.sub_questions.splice(
+    //     indexOp,
+    //     1
+    //   );
+    // },
+    // deleteMixOption(index, indexOp) {
+    //   this.mix_content[index].mixQuestion.mix_sub_choice_questions.splice(
+    //     indexOp,
+    //     1
+    //   );
+    // },
+    // deleteMixFill(index, indexOp) {
+    //   this.mix_content[index].mixQuestion.mix_sub_fill_questions.splice(
+    //     indexOp,
+    //     1
+    //   );
+    // },
+    // deleteMixSub(index, indexOp) {
+    //   this.mix_content[index].mixQuestion.mix_sub_questions.splice(indexOp, 1);
+    // },
+    // saveBase64Option(type, base64, index, indexOp) {
+    //   switch (type) {
+    //     case "option":
+    //       Vue.set(
+    //         this.option_content[index].optionQuestion.option_images,
+    //         indexOp,
+    //         base64
+    //       );
+    //       break;
+    //     case "answer":
+    //       Vue.set(
+    //         this.answer_content[index].answerQuestion.option_images,
+    //         indexOp,
+    //         base64
+    //       );
+    //       break;
+    //     case "mix":
+    //       Vue.set(
+    //         this.mix_content[index].mixQuestion.option_images,
+    //         indexOp,
+    //         base64
+    //       );
+    //       break;
+    //   }
+    // },
+    // saveBase64SubOption(type, base64, index, indexOp, indexP) {
+    //   switch (type) {
+    //     case "sub_choice":
+    //       Vue.set(
+    //         this.mix_content[index].mixQuestion.mix_sub_choice_questions[
+    //           indexOp
+    //         ].sub_choice.option_images,
+    //         indexP,
+    //         base64
+    //       );
+    //       break;
+    //   }
+    // },
+    // saveBase64Analysis(type, base64, index, indexOp) {
+    //   switch (type) {
+    //     case "option":
+    //       Vue.set(
+    //         this.option_content[index].optionQuestion.analysis_images,
+    //         indexOp,
+    //         base64
+    //       );
+    //       break;
+    //     case "fill":
+    //       Vue.set(
+    //         this.fill_content[index].fillQuestion.analysis_images,
+    //         indexOp,
+    //         base64
+    //       );
+    //       break;
+    //     case "answer":
+    //       Vue.set(
+    //         this.answer_content[index].answerQuestion.analysis_images,
+    //         indexOp,
+    //         base64
+    //       );
+    //       break;
+    //     case "mix":
+    //       Vue.set(
+    //         this.mix_content[index].mixQuestion.analysis_images,
+    //         indexOp,
+    //         base64
+    //       );
+    //       break;
+    //   }
+    // },
+    // saveBase64Answer(type, base64, index, indexOp) {
+    //   switch (type) {
+    //     case "answer":
+    //       Vue.set(
+    //         this.answer_content[index].answerQuestion.answer_images,
+    //         indexOp,
+    //         base64
+    //       );
+    //       break;
+    //     case "mix":
+    //       Vue.set(
+    //         this.mix_content[index].mixQuestion.answer_images,
+    //         indexOp,
+    //         base64
+    //       );
+    //       break;
+    //   }
+    // },
+    // saveBase64(type, base64, index, indexOp) {
+    //   switch (type) {
+    //     case "option":
+    //       Vue.set(
+    //         this.option_content[index].optionQuestion.image,
+    //         indexOp,
+    //         base64
+    //       );
+    //       break;
+    //     case "fill":
+    //       Vue.set(this.fill_content[index].fillQuestion.image, indexOp, base64);
+    //       break;
+    //     case "answer":
+    //       Vue.set(
+    //         this.answer_content[index].answerQuestion.image,
+    //         indexOp,
+    //         base64
+    //       );
+    //       break;
+    //     case "mix":
+    //       Vue.set(this.mix_content[index].mixQuestion.image, indexOp, base64);
+    //       break;
+    //   }
+    // },
+    // saveBase64Sub(type, base64, index, indexOp, indexImg) {
+    //   switch (type) {
+    //     case "sub_choice":
+    //       Vue.set(
+    //         this.mix_content[index].mixQuestion.mix_sub_choice_questions[
+    //           indexOp
+    //         ].sub_choice.image,
+    //         indexImg,
+    //         base64
+    //       );
+    //       break;
+    //     case "sub_fill":
+    //       Vue.set(
+    //         this.mix_content[index].mixQuestion.mix_sub_fill_questions[indexOp]
+    //           .sub_fill.image,
+    //         indexImg,
+    //         base64
+    //       );
+    //       break;
+    //     case "sub_question":
+    //       Vue.set(
+    //         this.mix_content[index].mixQuestion.mix_sub_questions[indexOp]
+    //           .sub_question.image,
+    //         indexImg,
+    //         base64
+    //       );
+    //       break;
+    //   }
+    // },
+    // showOptionImage(type, index, indexOp, value) {
+    //   // add option_images to options of option/answer question
+    //   switch (type) {
+    //     case "option":
+    //       this.option_show_option_image[index].splice(indexOp, 1, value);
+    //       break;
+    //     case "answer":
+    //       this.answer_show_option_image[index].splice(indexOp, 1, value);
+    //       break;
+    //     case "mix":
+    //       this.mix_show_option_image[index].splice(indexOp, 1, value);
+    //       break;
+    //   }
+    //   if (value === false) {
+    //     switch (type) {
+    //       case "option":
+    //         this.option_content[index].optionQuestion.option_images.splice(
+    //           indexOp,
+    //           1,
+    //           ""
+    //         );
+    //         break;
+    //       case "answer":
+    //         this.answer_content[index].answerQuestion.option_images.splice(
+    //           indexOp,
+    //           1,
+    //           ""
+    //         );
+    //         break;
+    //       case "mix":
+    //         this.mix_content[index].mixQuestion.option_images.splice(
+    //           indexOp,
+    //           1,
+    //           ""
+    //         );
+    //         break;
+    //     }
+    //   }
+    // },
+    // showSubOptionImage(type, index, indexOp, indexP, value) {
+    //   // add option_images to options of option/answer question
+    //   switch (type) {
+    //     case "sub_choice":
+    //       this.mix_content[index].mixQuestion.mix_sub_choice_option_image[
+    //         indexOp
+    //       ].splice(indexP, 1, value);
+    //       break;
+    //   }
+    //   if (value === false) {
+    //     switch (type) {
+    //       case "sub_choice":
+    //         this.mix_content[index].mixQuestion.mix_sub_choice_questions[
+    //           indexOp
+    //         ].sub_choice.option_images.splice(indexP, 1, "");
+    //         break;
+    //     }
+    //   }
+    // },
+    // showAnswerImage(type, index, value) {
+    //   // add images to answer of answer question
+    //   if (value === true) {
+    //     switch (type) {
+    //       case "answer":
+    //         this.answer_show_answer_image[index].splice(
+    //           this.answer_show_answer_image[index].length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //       case "mix":
+    //         this.mix_show_answer_image[index].splice(
+    //           this.mix_show_answer_image[index].length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //     }
+    //   } else {
+    //     switch (type) {
+    //       case "answer":
+    //         this.answer_content[index].answerQuestion.answer_images.splice(
+    //           -1,
+    //           1
+    //         );
+    //         this.answer_show_answer_image[index].splice(-1, 1);
+    //         break;
+    //       case "mix":
+    //         this.mix_content[index].mixQuestion.answer_images.splice(-1, 1);
+    //         this.mix_show_answer_image[index].splice(-1, 1);
+    //         break;
+    //     }
+    //   }
+    // },
+    // showAnalysisImage(type, index, value) {
+    //   // add option_images to analysis of option/fill/answer question
+    //   if (value === true) {
+    //     switch (type) {
+    //       case "option":
+    //         this.option_show_analysis_image[index].splice(
+    //           this.option_show_analysis_image[index].length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //       case "fill":
+    //         this.fill_show_analysis_image[index].splice(
+    //           this.fill_show_analysis_image[index].length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //       case "answer":
+    //         this.answer_show_analysis_image[index].splice(
+    //           this.answer_show_analysis_image[index].length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //       case "mix":
+    //         this.mix_show_analysis_image[index].splice(
+    //           this.mix_show_analysis_image[index].length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //     }
+    //   } else {
+    //     switch (type) {
+    //       case "option":
+    //         this.option_content[index].optionQuestion.analysis_images.splice(
+    //           -1,
+    //           1
+    //         );
+    //         this.option_show_analysis_image[index].splice(-1, 1);
+    //         break;
+    //       case "fill":
+    //         this.fill_content[index].fillQuestion.analysis_images.splice(-1, 1);
+    //         this.fill_show_analysis_image[index].splice(-1, 1);
+    //         break;
+    //       case "answer":
+    //         this.answer_content[index].answerQuestion.analysis_images.splice(
+    //           -1,
+    //           1
+    //         );
+    //         this.answer_show_analysis_image[index].splice(-1, 1);
+    //         break;
+    //       case "mix":
+    //         this.mix_content[index].mixQuestion.analysis_images.splice(-1, 1);
+    //         this.mix_show_analysis_image[index].splice(-1, 1);
+    //         break;
+    //     }
+    //   }
+    // },
+    // showImage(type, index, value) {
+    //   // add images to option/fill/answer questions
+    //   if (value === true) {
+    //     switch (type) {
+    //       case "option":
+    //         this.option_show_image[index].splice(
+    //           this.option_show_image[index].length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //       case "fill":
+    //         this.fill_show_image[index].splice(
+    //           this.fill_show_image[index].length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //       case "answer":
+    //         this.answer_show_image[index].splice(
+    //           this.answer_show_image[index].length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //       case "mix":
+    //         this.mix_show_image[index].splice(
+    //           this.mix_show_image[index].length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //     }
+    //   } else {
+    //     switch (type) {
+    //       case "option":
+    //         this.option_content[index].optionQuestion.image.splice(-1, 1);
+    //         this.option_show_image[index].splice(-1, 1);
+    //         break;
+    //       case "fill":
+    //         this.fill_content[index].fillQuestion.image.splice(-1, 1);
+    //         this.fill_show_image[index].splice(-1, 1);
+    //         break;
+    //       case "answer":
+    //         this.answer_content[index].answerQuestion.image.splice(-1, 1);
+    //         this.answer_show_image[index].splice(-1, 1);
+    //         break;
+    //       case "mix":
+    //         this.mix_content[index].mixQuestion.image.splice(-1, 1);
+    //         this.mix_show_image[index].splice(-1, 1);
+    //         break;
+    //     }
+    //   }
+    // },
+    // showSubImage(type, index, indexOp, value) {
+    //   // add sub_images to mix questions
+    //   if (value === true) {
+    //     switch (type) {
+    //       case "sub_choice":
+    //         this.mix_content[index].mixQuestion.mix_sub_choice_image[
+    //           indexOp
+    //         ].splice(
+    //           this.mix_content[index].mixQuestion.mix_sub_choice_image[indexOp]
+    //             .length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //       case "sub_fill":
+    //         this.mix_content[index].mixQuestion.mix_sub_fill_image[
+    //           indexOp
+    //         ].splice(
+    //           this.mix_content[index].mixQuestion.mix_sub_fill_image[indexOp]
+    //             .length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //       case "sub_question":
+    //         this.mix_content[index].mixQuestion.mix_sub_image[indexOp].splice(
+    //           this.mix_content[index].mixQuestion.mix_sub_image[indexOp].length,
+    //           0,
+    //           value
+    //         );
+    //         break;
+    //     }
+    //   } else {
+    //     switch (type) {
+    //       case "sub_choice":
+    //         this.mix_content[index].mixQuestion.mix_sub_choice_questions[
+    //           indexOp
+    //         ].sub_choice.image.splice(-1, 1);
+    //         this.mix_content[index].mixQuestion.mix_sub_choice_image[
+    //           indexOp
+    //         ].splice(-1, 1);
+    //         break;
+    //       case "sub_fill":
+    //         this.mix_content[index].mixQuestion.mix_sub_fill_questions[
+    //           indexOp
+    //         ].sub_fill.image.splice(-1, 1);
+    //         this.mix_content[index].mixQuestion.mix_sub_fill_image[
+    //           indexOp
+    //         ].splice(-1, 1);
+    //         break;
+    //       case "sub_question":
+    //         this.mix_content[index].mixQuestion.mix_sub_questions[
+    //           indexOp
+    //         ].sub_question.image.splice(-1, 1);
+    //         this.mix_content[index].mixQuestion.mix_sub_image[indexOp].splice(
+    //           -1,
+    //           1
+    //         );
+    //         break;
+    //     }
+    //   }
+    // },
+    // resetUpload() {
+    //   this.upload = false;
+    // },
+    // // 表格
+    // showSubTable(type, index, indexOp, value) {
+    //   // add option_images to options of option/answer question
+    //   switch (type) {
+    //     case "sub_fill":
+    //       for (
+    //         var i = 1;
+    //         i <=
+    //         this.mix_content[index].mixQuestion.mix_sub_fill_questions[indexOp]
+    //           .sub_fill.table_col;
+    //         i++
+    //       ) {
+    //         this.mix_content[index].mixQuestion.mix_sub_fill_questions[
+    //           indexOp
+    //         ].sub_fill.tableConfig.push({
+    //           label: "第" + i + "列",
+    //           prop: "col" + i
+    //         });
+    //       }
+    //       for (
+    //         var j = 0;
+    //         j <
+    //         this.mix_content[index].mixQuestion.mix_sub_fill_questions[indexOp]
+    //           .sub_fill.table_row;
+    //         j++
+    //       ) {
+    //         this.mix_content[index].mixQuestion.mix_sub_fill_questions[
+    //           indexOp
+    //         ].sub_fill.tableData.push({
+    //           col1: "",
+    //           col2: "",
+    //           col3: "",
+    //           col4: "",
+    //           col5: "",
+    //           col6: "",
+    //           col7: "",
+    //           col8: "",
+    //           col9: ""
+    //         });
+    //       }
+    //       this.mix_content[index].mixQuestion.mix_sub_fill_questions[
+    //         indexOp
+    //       ].sub_fill.mix_sub_fill_table_view = false;
+    //       break;
+    //   }
+    //   if (value === false) {
+    //     switch (type) {
+    //       case "sub_fill":
+    //         this.mix_content[index].mixQuestion.mix_sub_fill_questions[
+    //           indexOp
+    //         ].sub_fill.table_row = "";
+    //         this.mix_content[index].mixQuestion.mix_sub_fill_questions[
+    //           indexOp
+    //         ].sub_fill.table_col = "";
+    //         this.mix_content[index].mixQuestion.mix_sub_fill_questions[
+    //           indexOp
+    //         ].sub_fill.tableData = [];
+    //         this.mix_content[index].mixQuestion.mix_sub_fill_questions[
+    //           indexOp
+    //         ].sub_fill.tableConfig = [];
+    //         break;
+    //     }
+    //   }
+    // },
+    // handleCurrentChange() {
+    //   // console.log(row, event, column, event.currentTarget)
+    // },
+    // handleEdit() {
+    //   // console.log(row);
+    // },
+    // handleDelete() {
+    //   // console.log(index, row);
+    // },
     // 处理插入新题目的办法
     // 需要管理两个条目，一个是题目内容，一个是是否折叠
     // 由于折叠属性放在题目内会对显示造成复杂化的结果，就放在外面
@@ -4342,6 +4343,16 @@ export default {
 
       var Flag = true;
 
+      var Img_Catcher = new RegExp("<img src='(.*?)'>")
+      var Result_List = Img_Catcher.exec(Check_Now);
+
+      if(Result_List != null){
+        for(var rl = 0; rl < Result_List.length; rl++){
+          var Temp_Catcher = new RegExp(Result_List[rl])
+          Check_Now = Check_Now.replace(Temp_Catcher, "");
+        }
+      }
+
       for(var c = 0; c < Check_Now.length; c++){
         
         if(Check_Now[c] == '$'){
@@ -4354,7 +4365,7 @@ export default {
           }
         }
 
-        if(!(Check_Now.charCodeAt(c) > 255 || this.ch_pun_list.indexOf(Check_Now[c]) != -1 || this.en_pun_list.indexOf(Check_Now[c]) != -1) 
+        if(!(Check_Now.charCodeAt(c) > 255 || this.ch_pun_list.indexOf(Check_Now[c]) != -1 || this.en_pun_list.indexOf(Check_Now[c]) != -1 || Check_Now[c] == ' ') 
             && Flag 
             && Check_Now[c] != '$'){
           this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
@@ -4700,7 +4711,57 @@ export default {
       })
     },
     Submit(){
+
+      var Docs = this.TestData.doc;
+
+      for(var i = 0; i < Docs.length; i++){
+
+        var Ques = Docs[i]
+
+        var stem = Ques.question_stem;
+        if(!this.ChecK_Do(stem)){
+          this.$message.error("第"+ (i+1).toString() + "题题干内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+          return false;
+        }
+
+        var answer = Ques.answer;
+        for(var j = 0; j < answer.length; j++){
+
+          var item = answer[j]
+            
+          if(item != "" && !this.ChecK_Do(item)){
+            this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+            return false
+          }
+
+        }
+
+        var analyse = Ques.analysis;
+        if(!this.ChecK_Do(analyse)){
+          this.$message.error("第"+ (i+1).toString() + "题解析内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+          return false;
+        }
+      
+        var options = Ques.question_options;
+        for(j = 0; j < options.length; j++){
+          if(!this.ChecK_Do(options[j])){
+            this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+            return false;
+          }
+        }
+
+        var sub_Ques = Ques.sub_questions;
+        for(j = 0; j < sub_Ques.length; j++){
+          if(!this.ChecK_Do(sub_Ques[j])){
+            this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+            return false;
+          }
+        }
+
+      }
+
       console.log(this.TestData);
+      console.log("Ready To Upload.")
     },
     Init_Question_Check(){
 
@@ -4708,12 +4769,13 @@ export default {
 
       for(var i = 0; i < this.TestData.doc.length; i++){
         this.Question_Check.push(false);
-        var item = this.TestData.doc[i];
-        item.answer = item.answer.split("::");
+        this.TestData.doc[i].answer = this.TestData.doc[i].answer.split("::");
+        console.log(this.TestData.doc[i].answer)
       }
 
     },
-    Get_Question_Show(Stem, Type){
+    Get_Question_Show(Stem, Type, Question_Index, Answer_Index = null){
+
         for(var key in this.TestData.img){
             var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
             if(Img_Name_Catcher.exec(Stem) != null){
@@ -4721,33 +4783,44 @@ export default {
             }
         }
         if(Type == 'stem'){
-            return "题干：" + Stem
+            if(this.TestData.doc[Question_Index].question_stem != Stem)
+              this.TestData.doc[Question_Index].question_stem = Stem;
+            return "题干$：$" + Stem
         }else if(Type == 'answer'){
-            return "答案：" + Stem
+            
+            if(this.TestData.doc[Question_Index].answer[Answer_Index] != Stem)
+              this.TestData.doc[Question_Index].answer.splice(Answer_Index, 1, Stem)
+            return "答案$" + (Answer_Index + 1).toString() + "$：" + Stem
         }else if(Type == 'analyse'){
-            return "解析：" + Stem
+            if(this.TestData.doc[Question_Index].analysis != Stem)
+              this.TestData.doc[Question_Index].analysis = Stem;
+            return "解析$：$" + Stem
         }
     },
-    Get_Question_Options(Stem, Index){
+    Get_Question_Options(Stem, Index, Question_Index){
         for(var key in this.TestData.img){
             var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
             if(Img_Name_Catcher.exec(Stem) != null){
                 Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
             }
         }
-        return String.fromCharCode(Index + 65) + "：" + Stem
+        if(this.TestData.doc[Question_Index].question_options[Index] != Stem)
+          this.TestData.doc[Question_Index].question_options.splice(Index, 1, Stem)
+        return String.fromCharCode(Index + 65) + "$：$" + Stem
     },
-    Get_Sub_Question(Stem){
+    Get_Sub_Question(Stem, Question_Index, Sub_Question_Index){
         for(var key in this.TestData.img){
             var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
             if(Img_Name_Catcher.exec(Stem) != null){
                 Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
             }
         }
+        if(this.TestData.doc[Question_Index].sub_questions[Sub_Question_Index] != Stem)
+          this.TestData.doc[Question_Index].sub_questions.splice(Sub_Question_Index, 1, Stem);
         return Stem
     },
     Show_ComplexInput(Question_Index, Part, Index = null){
-      if(this.Question_Edit_Option_Index == -1 && this.Question_Edit_Sub_Ques_Index == -1){
+      if(this.Question_Edit_Option_Index == -1 && this.Question_Edit_Sub_Ques_Index == -1 && this.Question_Edit_Answer_Index == -1){
         if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part){
           return true
         }else{
@@ -4765,11 +4838,18 @@ export default {
         }else{
           return false
         }
+      }else if(this.Question_Edit_Answer_Index != -1){
+        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Answer_Index){
+          return true
+        }else{
+          return false
+        }
+
       }
     },
     Update_ComplexInput(val){
       if(this.Question_Edit_Part == 'answer'){
-        this.TestData.doc[this.Question_Edit_Now].answer = val;
+        this.TestData.doc[this.Question_Edit_Now].answer.splice(this.Question_Edit_Answer_Index, 1, val);
       }else if(this.Question_Edit_Part == 'stem'){
         this.TestData.doc[this.Question_Edit_Now].question_stem = val;
       }else if(this.Question_Edit_Part == 'analyse'){
@@ -4801,6 +4881,12 @@ export default {
       }else{
         this.Question_Edit_Sub_Ques_Index = -1;
       }
+
+      if(this.Question_Edit_Part == 'answer' && Index != null && Index != this.Question_Edit_Answer_Index){
+        this.Question_Edit_Answer_Index = Index;
+      }else{
+        this.Question_Edit_Answer_Index = -1;
+      }
     },
     Get_Button_Label(Question_Index, Part, Index = null){
       if(Index == null){
@@ -4809,8 +4895,15 @@ export default {
         }else {
           return "编辑"
         }
-      }else{
+      }else if(Part == 'option'){
         if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Option_Index){
+          return "收起"
+        }else{
+          return "编辑"
+        }
+      }
+      else if(Part == 'answer'){
+        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Answer_Index){
           return "收起"
         }else{
           return "编辑"
