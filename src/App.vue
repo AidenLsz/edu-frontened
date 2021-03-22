@@ -178,7 +178,7 @@
           </el-col>
           <el-col :span="8" :offset="11">
             <el-row type="flex" justify="end">
-              <el-col :span="4"  style="padding-top: 15px;">
+              <el-col :span="4" :offset="5"  style="padding-top: 15px;">
                 <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
               </el-col>
               <el-col :span="4" style="padding-top: 15px;">
@@ -237,9 +237,6 @@
                   </el-submenu>
                 </el-menu>
               </el-col>
-              <el-col :span="5" style="padding-top: 15px;">
-                <el-link href="http://bigdata.ustc.edu.cn/" target="_blank" class="navbar"><span style="color: black">实验室主页</span></el-link>
-              </el-col>
               <el-col :span="4" style="padding-top: 15px;">
                 <el-dropdown trigger="hover" v-if="username" style="padding-top: 8px" class="navbar">
                   <span class="el-dropdown-link user-inner">
@@ -269,36 +266,16 @@
     <el-footer>
       <el-col class="footer-wrap" style="color: #9B9EA4; padding: 30px; font-size: 16px; background: #E4E7ED">
         <el-row type="flex" justify="center">
-            <span>Copyright © 大数据分析与应用安徽省重点实验室</span>
+            <el-link :underline="false" style="color: #9B9EA4; font-size: 16px">服务条款</el-link>
+            <el-divider direction="vertical"></el-divider>
+            <el-link :underline="false" style="color: #9B9EA4; font-size: 16px">隐私政策</el-link>
+            <el-divider direction="vertical"></el-divider>
+            <el-link :underline="false" style="color: #9B9EA4; font-size: 16px">联系我们</el-link>
         </el-row>
         <el-row  type="flex" justify="center" style="margin-top: 15px">
-          <el-col :span="4">
-            <el-row type="flex" justify="start">
-              <span><i class="el-icon-phone" style="margin-right: 10px"></i>0551-63601558</span>
-            </el-row>
-          </el-col>
-          <el-col :span="4" :offset="1">
-            <el-row type="flex" justify="end">
-              <span><i class="el-icon-location" style="margin-right: 10px"></i>安徽省合肥市</span>
-            </el-row>
-          </el-col>
-        </el-row>
-        <el-row  type="flex" justify="center" style="margin-top: 15px">
-          <el-col :span="3">
-            <el-row type="flex" justify="start">
-              <span><i class="el-icon-link" style="margin-right: 10px;"></i>友情链接：</span>
-            </el-row>
-          </el-col>
-          <el-col :span="3">
-            <el-row type="flex" justify="center">
-              <span><label><el-link style="color: #9B9EA4; font-size: 16px;" :underline="false" href="https://www.ustc.edu.cn/" target="_blank">中国科学技术大学</el-link></label></span>
-            </el-row>
-          </el-col>
-          <el-col :span="3">
-            <el-row type="flex" justify="end">
-              <span><label><el-link style="color: #9B9EA4; font-size: 16px; margin-left: -60px" :underline="false" href="https://www.iflytek.com/index.html" target="_blank">科大讯飞</el-link></label></span>
-            </el-row>
-          </el-col>
+          <el-link @click="TeMethod()" :underline="false" style="padding-right: 10px; color: #9B9EA4; font-size: 16px">LUNA水镜智能</el-link> 
+          © 
+          <el-link href="http://bigdata.ustc.edu.cn/" target="_blank" :underline="false" style="padding-left: 10px; color: #9B9EA4; font-size: 16px">大数据分析与应用安徽省重点实验室</el-link>
         </el-row>
       </el-col>
     </el-footer>
@@ -381,6 +358,11 @@ export default {
     // });
   },
   methods: {
+    TeMethod(){
+      this.$router.push({ path: "/" });
+      location.reload();
+      window.scrollTo(0,0);
+    },
     goToMainPage(){
       this.$router.push({ path: "/" });
     },
@@ -721,4 +703,10 @@ export default {
   width: 100%;
 }
 
+.el-divider--vertical{
+  display:block;
+  width:2px;
+  margin:3px 49px;
+  background-color: #9B9EA4;
+}
 </style>

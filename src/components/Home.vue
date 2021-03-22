@@ -628,7 +628,7 @@
     </section>
     
     <!-- cta-area -->
-    <section>
+    <!-- <section>
       <el-row style="margin-top: 50px;">
         <el-col :span="4" :offset="5">
           <el-divider></el-divider>
@@ -647,7 +647,7 @@
           </span>
         </el-col>
       </el-row>
-    </section>
+    </section> -->
     <!-- cta-area-end -->
   </div>
 </template>

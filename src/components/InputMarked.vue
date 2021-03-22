@@ -1199,7 +1199,7 @@ export default {
         let param = new FormData();
 
         param.append('result_json', JSON.stringify(Upload_Json));
-        
+
         this.$http
         .post(this.backendIP + "/api/mathUpload", param, config, {
           emulateJSON: true
