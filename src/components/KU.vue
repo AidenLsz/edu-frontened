@@ -28,7 +28,7 @@
 
         <el-row type="flex" class="row-bg" justify="start" v-if="complex_input_flag">
           <el-col :span="18" :offset="1">
-            <ComplexInput @Update_CI="UCI" @Update_Image="UCII" ref="CI"></ComplexInput>
+            <ComplexInput @Update_CI="UCI" @Update_Image="UCII" ref="CI" @Full_Change="ComplexInputFullChange"></ComplexInput>
           </el-col>
           <el-col :span="3" type="flex" justify="center">
             <el-button type="primary"  @click="Close_CI()" style="margin-top: 14vh">切换简单输入</el-button>
@@ -46,7 +46,7 @@
       </form>
     </el-row>
     <!-- main -->
-    <el-row v-loading="loading" style="padding-top: 5vh">
+    <el-row v-loading="loading" style="padding-top: 5vh" v-if="FullChange">
       <el-col :span="9">
         <div class="result" style="background: #F8FBFF">
           <el-row type="flex" justify="start">
@@ -194,6 +194,7 @@
             :neighbors_groups="neighbors_groups"
             :inward_arrow="inward_arrow"
             :outward_arrow="outward_arrow"
+            :selected_type="checkList"
           ></Graph>
         </div>
       </el-col>
@@ -224,7 +225,8 @@ export default {
       loading: false,
       url: "",
       image_infos: [],
-      complex_input_flag: false
+      complex_input_flag: false,
+      FullChange: true
     };
   },
   mounted() {
@@ -244,6 +246,14 @@ export default {
     }
   },
   methods: {
+    ComplexInputFullChange(val){
+      if(val){
+        this.FullChange = false;
+      }
+      else{
+        this.FullChange = true;
+      }
+    },
     dataSource(tab) {
       this.sour = "rjb_new";
       return tab.name;
@@ -280,7 +290,6 @@ export default {
             alert("输入知识点不存在！");
           } else {
             this.node = data.data.node;
-            console.log(data.data.node);
             this.neighbors_groups = data.data.neighbors_groups;
             this.inward_arrow = data.data.pre_len;
             this.outward_arrow = data.data.suc_len;
@@ -298,7 +307,7 @@ export default {
           { emulateJSON: true }
         )
         .then(function(data) {
-          this.directed_len = "(" + data.data.pre_len + data.data.suc_len + ")";
+          this.directed_len = "(" + (data.data.pre_len + data.data.suc_len) + ")";
           this.undirected_len = "(" + data.data.undirected_len + ")";
         });
     },

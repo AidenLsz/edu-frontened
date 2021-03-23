@@ -129,22 +129,36 @@
     </el-row> -->
     <el-row v-for="(Question, Question_Index) in question_list" :key="Question_Index" style="min-height: 600px">
       <el-col :offset="1" :span="22" class="quesCard">
-        <el-row style="text-align: left">
-            <div v-html="Question" style="font-size: 16px; min-height: 150px; margin: 10px 40px; display: block"></div>
+        <el-row style="text-align: left; padding-left: 40px; padding-top: 10px">
+          <el-col>
+            <span>题干：</span><div v-html="Question.stem" style="display: inline-block"></div>
+          </el-col>
+          <el-col style="line-height: 40px" v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
+            <span>选项{{Get_Option_Label(Option_Index)}}：</span><div v-html="Option" style="display: inline-block"></div>
+          </el-col>
         </el-row>
         <el-row style="padding-bottom: 10px">
             <el-col :span="4" style="line-height: 40px; color: #888; font-size: 16px">
               所属题库：{{database_name[Question_Index]}}
             </el-col>
             <el-col :span="2" style="line-height: 40px; color: #888; font-size: 16px">
-              学科：{{subject_name[Question_Index]}}
+              学科：{{Question.subject}}
             </el-col>
             <el-col :span="2" style="line-height: 40px; color: #888; font-size: 16px">
-              题型：{{question_type[Question_Index]}}
+              题型：{{Question.type}}
             </el-col>
-            <el-col :span="3" :offset="13" style="line-height: 40px">
-              <el-button size="medium" plain round type="primary">详情</el-button>
+            <el-col :span="2" :offset="11" style="line-height: 40px">
+              <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">详情</el-button>
             </el-col>
+            <el-col :span="3" style="line-height: 40px">
+              <el-button size="medium" plain round type="primary">查看分析报告</el-button>
+            </el-col>
+        </el-row>
+        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: -10px">
+          <span>答案：</span><div v-html="Question.answer" style="display: inline-block"></div>
+        </el-row>
+        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px;">
+          <span>解析：</span><div v-html="Question.analysis" style="display: inline-block"></div>
         </el-row>
       </el-col>
     </el-row>
@@ -190,7 +204,9 @@ export default {
       question_type: [],
       // 存放将要查询的数据库名称
       // public, neea, iflytek
-      database_aim: [true, false, false]
+      database_aim: [true, false, false],
+      // 检测是否要展开答案和解析内容
+      Expand_List: []
     };
   },
   watch:{
@@ -199,6 +215,14 @@ export default {
     }
   },
   methods: {
+    // 修改是否展开
+    Expand(Index){
+      this.Expand_List.splice(Index, 1, !this.Expand_List[Index]);
+    },
+    // 返回选项标签
+    Get_Option_Label(Index){
+      return String.fromCharCode(Index + 65)
+    },
     // 修改目标数据库
     Database_Aim(Index){
       this.database_aim.splice(Index, 1, !this.database_aim[Index])
@@ -270,13 +294,10 @@ export default {
       .then(function(data) {
         var quess = data.data.results;
         var dn = data.data.databaseName;
-        var sn = data.data.subjectName;
-        var qt = data.data.quesType;
         for(var i = 0; i < quess.length; i++){
           this.question_list.push(quess[i])
           this.database_name.push(dn[i])
-          this.subject_name.push(sn[i])
-          this.question_type.push(qt[i])
+          this.Expand_List.push(false);
         }
         
         console.log(this.question_list);

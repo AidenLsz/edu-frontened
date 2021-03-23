@@ -12,81 +12,13 @@
 
       <el-row style="padding: 1vh 3vw 0 3vw">
         <el-col :span="11">
-          <ComplexInput @Update_CI="UCI_Left" @Update_Image="UCII_Left" ref="CI_Left"></ComplexInput>
-          <!-- <el-tabs type="border-card" id="tabs">
-            <el-tab-pane label="试题1">
-              <el-input
-                type="textarea"
-                :rows="14"
-                v-model="content_1"
-                placeholder="请输入内容"
-              >
-              </el-input>
-            </el-tab-pane>
-            <el-tab-pane label="LaTex预览">
-              <div style="height:305px; overflow-y:scroll;">
-                <Mathdown :content="content_1"></Mathdown>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="图片预览">
-              <el-carousel indicator-position="none" @change="change_index_0">
-                <el-carousel-item v-for="item in src_0" :key="item">
-                  <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="del_image_0"></el-button>
-                  <el-image v-bind:src = item :preview-src-list = src_0>
-                  </el-image>
-                </el-carousel-item>
-              </el-carousel>
-            </el-tab-pane>
-          </el-tabs> -->
+          <ComplexInput @Update_CI="UCI_Left" @Update_Image="UCII_Left" @Full_Change="FullChange_L" ref="CI_Left" :class="OpacityCheck(0)"></ComplexInput>
         </el-col>
 
         <el-col :span="11" :offset="2">
-          <ComplexInput @Update_CI="UCI_Right" @Update_Image="UCII_Right" ref="CI_Right"></ComplexInput>
-          <!-- <el-tabs type="border-card" id="tabs">
-            <el-tab-pane label="试题2">
-              <el-input
-                type="textarea"
-                :rows="14"
-                v-model="content_2"
-                placeholder="请输入内容"
-              >
-              </el-input>
-            </el-tab-pane>
-            <el-tab-pane label="LaTex预览">
-              <div style="height:305px; overflow-y:scroll;">
-                <Mathdown :content="content_2"></Mathdown>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="图片预览">
-              <el-carousel indicator-position="none" @change="change_index_1">
-                <el-carousel-item v-for="item in src_1" :key="item" >
-                  <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="del_image_1"></el-button>
-                  <el-image v-bind:src = item :preview-src-list = src_1>
-                  </el-image>
-                </el-carousel-item>
-              </el-carousel>
-            </el-tab-pane>
-          </el-tabs> -->
+          <ComplexInput @Update_CI="UCI_Right" @Update_Image="UCII_Right" @Full_Change="FullChange_R" ref="CI_Right" :class="OpacityCheck(1)"></ComplexInput>
         </el-col>
       </el-row>
-
-      <!-- <el-row type="flex" justify="start">
-          <el-col :span="4" :offset="0">
-          <UploadImg
-            :src="src_0"
-            :filelists="images_0"
-            @uploadImg="imgInfo_0"
-            ></UploadImg>
-          </el-col>
-
-          <el-col :span="4" :offset="8">
-          <UploadImg
-            :src="src_1"
-            :filelists="images_1"
-            @uploadImg="imgInfo_1"
-            ></UploadImg>
-          </el-col>
-      </el-row> -->
 
       <el-row type="flex" justify="end" style="padding: 1vh 3vw 0 3vw">
         <el-button type="primary" value="提交" @click="submit">评估</el-button>
@@ -135,9 +67,21 @@ export default {
       images_Right: [],
       // index_0: 0,
       // index_1: 0,
+      visibleList: [false, false]
     };
   },
   methods: {
+    OpacityCheck(Index){
+      if(this.visibleList[Index]){
+        return "unvisible"
+      }
+    },
+    FullChange_L(val){
+      this.visibleList.splice(1, 1, val); 
+    },
+    FullChange_R(val){
+      this.visibleList.splice(0, 1, val); 
+    },
     // 提交评估按钮，向后端发送请求
     submit() {
       document.documentElement.scrollTop = 200;
@@ -246,6 +190,9 @@ export default {
 }
 .el-col {
   border-radius: 4px;
+}
+.unvisible{
+  opacity: 0;
 }
 // .el-button {
 //   background-color: #1a2930;

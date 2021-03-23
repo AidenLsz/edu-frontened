@@ -2248,6 +2248,13 @@ export default {
         );
         FileSaver.saveAs(file);
 
+        var file_2 = new File(
+          [JSON.stringify(this.Questions, null, 4) + "'学科':" + this.SubjectType + "\n'学段':" + this.PeriodType + "\n'试卷名称':" + this.PaperTitle],
+          this.PaperTitle + "_Full_List.json",
+          { type: "text/plain;charset=utf-8" }
+        )
+        FileSaver.saveAs(file_2);
+
       }
 
     },
