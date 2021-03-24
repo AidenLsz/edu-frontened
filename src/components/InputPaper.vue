@@ -2250,9 +2250,16 @@ export default {
         );
         FileSaver.saveAs(file);
 
+        var Upload_Json_2 = {
+        "title": this.PaperTitle,
+        "subject_type": this.SubjectType,
+        "period_type": this.PeriodType,
+        "questions": this.Questions,
+      }
+
         var file_2 = new File(
-          [JSON.stringify(this.Questions, null, 4) + "'学科':" + this.SubjectType + "\n'学段':" + this.PeriodType + "\n'试卷名称':" + this.PaperTitle],
-          this.PaperTitle + "_Full_List.json",
+          [JSON.stringify(this.Upload_Json_2, null, 4)],
+          this.PaperTitle + "_Full.json",
           { type: "text/plain;charset=utf-8" }
         )
         FileSaver.saveAs(file_2);
