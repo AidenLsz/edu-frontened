@@ -127,7 +127,7 @@
         </div>
       </el-col>
     </el-row> -->
-    <el-row v-for="(Question, Question_Index) in question_list" :key="Question_Index" style="min-height: 600px">
+    <el-row v-for="(Question, Question_Index) in Get_Question_Bundle(Page_Index)" :key="Question_Index" style="margin-bottom: 50px">
       <el-col :offset="1" :span="22" class="quesCard">
         <el-row style="text-align: left; padding-left: 40px; padding-top: 10px; background: white; padding-bottom: 15px">
           <el-col style="padding-bottom: 15px">
@@ -168,6 +168,15 @@
     </el-row>
     <el-row v-if="question_list.length == 0" style="margin: 50px 80px; height: 44vh">
       
+    </el-row>
+    <el-row>
+      <el-pagination
+        @current-change="BackToTop"
+        :current-page.sync="Page_Index"
+        :page-size="Page_Length"
+        layout="total, prev, pager, next"
+        :total="question_list.length">
+      </el-pagination>
     </el-row>
   </div>
 </template>
@@ -210,7 +219,12 @@ export default {
       // public, neea, iflytek
       database_aim: [true, false, false],
       // 检测是否要展开答案和解析内容
-      Expand_List: []
+      Expand_List: [],
+      // 页码
+      Page_Index: 1,
+      // 单页长度，总页数
+      Page_Length: 5,
+      Total_Page: -1
     };
   },
   watch:{
@@ -219,6 +233,17 @@ export default {
     }
   },
   methods: {
+    BackToTop(){
+      window.scrollTo(0,0);
+    },
+    // 修改翻页内容
+    Get_Question_Bundle(Page_Index){
+      if(Page_Index * 5 > this.question_list.length){
+        return this.question_list.slice((Page_Index - 1)*5)
+      }else {
+        return this.question_list.slice((Page_Index - 1)*5, Page_Index * 5)
+      }
+    },
     // 修改是否展开
     Expand(Index){
       this.Expand_List.splice(Index, 1, !this.Expand_List[Index]);
@@ -289,7 +314,7 @@ export default {
 
       let param = new FormData();
       param.append("content", this.content);
-      param.append("size", 1);
+      param.append("size", 100);
 
       this.$http
       .post(this.backendIP + "/api/search", param, config, {
@@ -303,8 +328,6 @@ export default {
           this.database_name.push(dn[i])
           this.Expand_List.push(false);
         }
-        
-        console.log(this.question_list[0].stem);
       });    
     },
     Check_Focus_Database(Index){

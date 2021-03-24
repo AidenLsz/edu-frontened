@@ -42,7 +42,7 @@ export default {
   watch: {
     node: {
       handler() {
-        this.draw_graph();
+        this.draw_graph_Single();
       },
       deep: true
     },
@@ -797,16 +797,16 @@ export default {
           if(i > 390 && i < 510 && j > 330 && j < 450){
             continue
           } else {
-            if(i <= 450 && j <= 450 && i + j <= 540){
+            if(i <= 330 && j <= 570 && j >= 210){
               Front_Axis.push([i,j])
               Front_chosen_list.push(false)
-            }else if( i + j >= 1140 && i >= 450 && j >= 330 ){
+            }else if( j <= 570 && i >= 570 && j >= 210 ){
               After_Axis.push([i,j])
               After_chosen_list.push(false)
-            }else if(i <= 420 && j > 480 && j - i <= 360){
+            }else if(i <= 510 && i >= 390 && j < 390){
               Combo_Axis.push([i,j])
               Combo_chosen_list.push(false)
-            }else if(i > 480 && j < 420 && i - j <= 360){
+            }else if(i <= 510 && i >= 390 && j > 390){
               Layer_Axis.push([i,j])
               Layer_chosen_list.push(false)
             }
@@ -832,15 +832,6 @@ export default {
         Front_Axis = []
         Front_chosen_list = Front_chosen_list.concat(After_chosen_list).concat(Combo_chosen_list).concat(Layer_chosen_list)
         Front_chosen_list = []
-        Layer_chosen_list = []
-        Combo_chosen_list = []
-      }else if(L.length == directedLen && OA != 0 && IA != 0){
-        After_Axis = After_Axis.concat(Combo_Axis)
-        After_chosen_list = After_chosen_list.concat(Combo_chosen_list)  
-        Front_Axis = Front_Axis.concat(Layer_Axis)
-        Front_chosen_list = Front_chosen_list.concat(Layer_chosen_list)
-        Combo_Axis = []
-        Layer_Axis = []
         Layer_chosen_list = []
         Combo_chosen_list = []
       }else if(L.length > directedLen && IA == 0){
