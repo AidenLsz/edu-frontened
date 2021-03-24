@@ -42,7 +42,7 @@ export default {
   watch: {
     node: {
       handler() {
-        this.draw_graph_Single();
+        this.draw_graph();
       },
       deep: true
     },
@@ -63,6 +63,11 @@ export default {
       // console.log(this.inward_arrow , this.outward_arrow)
       // 改线条颜色
       var directedLen = this.inward_arrow + this.outward_arrow;
+      let _this = this;
+      var KnowledgePoint = "";
+
+      let Node_Color_List = ["#EDB664","#9ECCAB"]
+      let Ray_Color_List = ["#EDB664", "#409EFD", "#9ECCAB"]
 
       // 生成图
       // 先清空画布
@@ -77,7 +82,8 @@ export default {
             hidden: false,
             lock: false,
             hideSymbol: null,
-            lockSymbol: null
+            lockSymbol: null,
+            searchSymbol: null
           }
         ],
         links: []
@@ -93,7 +99,8 @@ export default {
           hidden: false,
           lock: false,
           hideSymbol: null,
-          lockSymbol: null
+          lockSymbol: null,
+          searchSymbol: null
         };
         if (i < this.inward_arrow) {
           state.links[i] = {
@@ -112,8 +119,6 @@ export default {
         }   
       }
 
-      console.log(state.nodes, this.inward_arrow, this.outward_arrow, directedLen);
-
       // console.log(state.links);
 
       let selectedNode;
@@ -123,7 +128,7 @@ export default {
 
       // 经典调色盘
       // 获取画布(SVG)对象，并添加宽度和高度属性
-      let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+      // let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
       let svg = d3.select("svg");
       let width = +svg.attr("width");
       let height = +svg.attr("height");
@@ -169,7 +174,7 @@ export default {
         .attr("orient", "auto")
         .append("path")
         .attr("d", "M0,-4L8,0L0,4")
-        .style("fill", "#66b3ff");
+        .style("fill", "#EDB664");
 
       svg
         .append("defs")
@@ -197,7 +202,7 @@ export default {
 
       // 这里设置了每个圆环的弧度大小比例即可，不是非要写角度大小
       // 它的实际意义是总和的分子而不是实际值
-      let pieData = d3.pie()([3, 3, 1, 1, 1]);
+      let pieData = d3.pie()([1, 1, 2]);
       let pies = g
         .append("g")
         .attr("class", "pie button")
@@ -217,7 +222,7 @@ export default {
         })
         // 调整知识点点击出来的环的颜色
         .attr("fill", function(d, i) {
-          return colorScale(i);
+          return Ray_Color_List[i];
         })
         // 添加透明度
         .attr("opacity", 0.8)
@@ -266,6 +271,12 @@ export default {
               return null;
             })
             .interrupt();
+          searchSymbol
+            .attr("xlink:href", function(d){
+              d.searchSymbol = null;
+              return null;
+          })
+          .interrupt();
           // 0 - 4 : 隐藏，锁定，绿，红，紫
           // selectedNode指的是当前被点击到的那个知识点圆
           if (index === 0) {
@@ -277,18 +288,14 @@ export default {
               d.hidden = true;
             });
             hideFlag = 0;
-            console.log("hide");
           } else if (index === 1) {
             // unlock the node; default to lock
             selectedNode.each(function(d) {
               d.fx = null;
               d.fy = null;
             });
-            console.log("unlock");
-          } else {
-            // Change the color of the node
-            selectedNode.style("fill", colorScale(index));
-            console.log("change the color");
+          } else if (index === 2) {
+            _this.$emit("Research", KnowledgePoint) 
           }
         });
       // 找到所有的被锁定或被隐藏的点
@@ -300,6 +307,10 @@ export default {
         .append("g")
         .attr("class", "hideSymbol")
         .selectAll("hideSymbol");
+      let searchSymbol = g
+        .append("g")
+        .attr("class", "searchSymbol")
+        .selectAll("searchSymbol");
       // add the symbol of each button
       // 给hideSymbol添加节点的ID值，并舍弃多余的部分
       // xlink:href是一个老的属性，指链接地址，现在新版本已经替换成用href了
@@ -326,6 +337,20 @@ export default {
         .append("image")
         .attr("xlink:href", function(d) {
           d.lockSymbol = null;
+          return null;
+        })
+        .attr("width", 20)
+        .attr("height", 20);
+
+      searchSymbol = searchSymbol.data(state.nodes, function(d) {
+        return d.id;
+      });
+      searchSymbol.exit().remove();
+      searchSymbol = searchSymbol
+        .enter()
+        .append("image")
+        .attr("xlink:href", function(d) {
+          d.searchSymbol = null;
           return null;
         })
         .attr("width", 20)
@@ -381,19 +406,26 @@ export default {
             });
           // add the symbol
           // 按照知识点中心位置进行偏移
-          hideSymbol
-            .attr("x", function(d) {
-              return d.x + 26;
-            })
-            .attr("y", function(d) {
-              return d.y - 20;
-            });
           lockSymbol
             .attr("x", function(d) {
-              return d.x - 9.5;
+              return d.x - 40;
             })
             .attr("y", function(d) {
-              return d.y + 29;
+              return d.y - 32;
+            });
+          hideSymbol
+            .attr("x", function(d) {
+              return d.x - 40;
+            })
+            .attr("y", function(d) {
+              return d.y + 15;
+            });
+          searchSymbol
+            .attr("x", function(d) {
+              return d.x + 25;
+            })
+            .attr("y", function(d) {
+              return d.y - 12;
             });
           // 若当前这个点被点击了，则调整它周围的环进行显示
           if (buttonFlag) {
@@ -605,8 +637,15 @@ export default {
           .attr("class", function(d) {
             return d.selected ? "selected" : "";
           })
-          .attr("fill", function(d) {
-            return colorScale(d.type);
+          .attr("fill", function(d, i) {
+            if(i === 0){
+              return "#409EFD"
+            }
+            else if(i - 1 < directedLen){
+              return Node_Color_List[0];
+            }else{
+              return Node_Color_List[1]
+            }
           })
           // 对应拖拽事件绑定对应的处理方法
           .call(
@@ -617,10 +656,12 @@ export default {
               .on("end", dragEnded)
           )
           // 只有当非隐藏状态时，点击事件才会生效
-          .on("click", function() {
+          .on("click", function(d) {
+            KnowledgePoint = d.id
             if (hideFlag === 0) {
               // 非隐藏状态，且点击的是当前按钮时，会触发对应按钮的点击事件
               if (buttonFlag) {
+                
                 buttonFlag = 0;
                 // 把这个按钮对应的锁定和隐藏按钮都设置为null
                 // 然后将它们原本用来设置配套图片的链接地址也设为null
@@ -633,6 +674,12 @@ export default {
                 lockSymbol
                   .attr("xlink:href", function(d) {
                     d.lockSymbol = null;
+                    return null;
+                  })
+                  .interrupt();
+                searchSymbol
+                  .attr("xlink:href", function(d) {
+                    d.searchSymbol = null;
                     return null;
                   })
                   .interrupt();
@@ -649,12 +696,16 @@ export default {
                   // 设置配套的图片
                   d.hideSymbol = require("../assets/hide.png");
                   d.lockSymbol = require("../assets/unlock.png");
+                  d.searchSymbol = require("../assets/search.png")
                 });
                 hideSymbol.attr("xlink:href", function(d) {
                   return d.hideSymbol;
                 });
                 lockSymbol.attr("xlink:href", function(d) {
                   return d.lockSymbol;
+                });
+                searchSymbol.attr("xlink:href", function(d) {
+                  return d.searchSymbol;
                 });
                 // 生成环绕弧
                 // 并调整弧的中心位置与知识点按钮的中心点一致
@@ -697,7 +748,7 @@ export default {
           // 设定线的颜色
           .style("stroke", function(d) {
             if (d.index < directedLen) {
-              return "#66b3ff";
+              return "#EDB664";
             } else {
               return "#000000";
             }
@@ -711,6 +762,9 @@ export default {
     },
     draw_graph_Single() {
 
+      let _this = this;
+      var KnowledgePoint = "";
+
       // 生成图
       // 先清空画布
       d3.selectAll("svg > *").remove();
@@ -722,6 +776,9 @@ export default {
       // 动态添加边属性
       let IA = this.inward_arrow;
       let OA = this.outward_arrow;
+
+      let Node_Color_List = ["#EDB664","#9ECCAB"]
+      let Ray_Color_List = ["#EDB664", "#409EFD", "#9ECCAB"]
 
       var Lock_Switch = true;
 
@@ -740,16 +797,16 @@ export default {
           if(i > 390 && i < 510 && j > 330 && j < 450){
             continue
           } else {
-            if(i <= 450 && j <= 450 && i + j <= 600){
+            if(i <= 450 && j <= 450 && i + j <= 540){
               Front_Axis.push([i,j])
               Front_chosen_list.push(false)
-            }else if( i + j >= 1080 && i >= 450 && j >= 330 ){
+            }else if( i + j >= 1140 && i >= 450 && j >= 330 ){
               After_Axis.push([i,j])
               After_chosen_list.push(false)
-            }else if(i <= 450 && j > 450 && j - i <= 300){
+            }else if(i <= 420 && j > 480 && j - i <= 360){
               Combo_Axis.push([i,j])
               Combo_chosen_list.push(false)
-            }else if(i > 450 && j < 450 && i - j <= 300){
+            }else if(i > 480 && j < 420 && i - j <= 360){
               Layer_Axis.push([i,j])
               Layer_chosen_list.push(false)
             }
@@ -758,8 +815,6 @@ export default {
       }
 
       let L = this.neighbors_groups["kp2.0"]
-
-      console.log(IA, OA, directedLen, L.length)
 
       if(IA == 0 && L.length == OA){
         After_Axis = After_Axis.concat(Front_Axis).concat(Combo_Axis).concat(Layer_Axis)
@@ -813,10 +868,6 @@ export default {
         Layer_chosen_list = []
       }
 
-      console.log("FA", Front_Axis)
-      console.log("AA", After_Axis)
-      console.log("CA", Combo_Axis)
-      console.log("LA", Layer_Axis)
 
       var Row_Axis = []
       var Col_Axis = []
@@ -825,22 +876,18 @@ export default {
       for(var Front = 0; Front < IA; Front++){
         Index = Math.floor(Math.random()*Front_Axis.length);
         while(Front_chosen_list[Index] == true){
-          console.log("Crash Front.")
           Index = Math.floor(Math.random()*Front_Axis.length); 
         }
         Front_chosen_list.splice(Index, 1, true);
         Row_Axis.push(Front_Axis[Index][0])
         Col_Axis.push(Front_Axis[Index][1])
-        console.log("A F P", Front)
       }
 
       for(var After = IA; After < directedLen; After++){
         Index = Math.floor(Math.random()*After_Axis.length);
         while(After_chosen_list[Index] == true){
-          console.log("Crash After.")
           Index = Math.floor(Math.random()*After_Axis.length);
         }
-        console.log("A A P", After)
         After_chosen_list.splice(Index, 1, true);
         Row_Axis.push(After_Axis[Index][0])
         Col_Axis.push(After_Axis[Index][1])  
@@ -849,18 +896,12 @@ export default {
       for(var Combo = directedLen; Combo < L.length; Combo++){
         Index = Math.floor(Math.random()*Combo_Axis.length);
         while(Combo_chosen_list[Index] == true){
-          console.log("Crash Combo.")
           Index = Math.floor(Math.random()*Combo_Axis.length);
         }
-        console.log("A C P", Combo)
         Combo_chosen_list.splice(Index, 1, true);
         Row_Axis.push(Combo_Axis[Index][0])
         Col_Axis.push(Combo_Axis[Index][1])
       }
-
-      console.log(Row_Axis, Col_Axis)
-
-      
 
       let state = {
         nodes: [
@@ -871,7 +912,8 @@ export default {
             hidden: false,
             lock: false,
             hideSymbol: null,
-            lockSymbol: null
+            lockSymbol: null,
+            searchSymbol: null
           }
         ],
         links: []
@@ -887,7 +929,8 @@ export default {
           hidden: false,
           lock: false,
           hideSymbol: null,
-          lockSymbol: null
+          lockSymbol: null,
+          searchSymbol: null
         };
         if (i < this.inward_arrow) {
           state.links[i] = {
@@ -906,8 +949,6 @@ export default {
         }   
       }
 
-      // console.log(state.links);
-
       let selectedNode;
       let nodeSize = 25;
       let buttonFlag = 0;
@@ -915,7 +956,7 @@ export default {
 
       // 经典调色盘
       // 获取画布(SVG)对象，并添加宽度和高度属性
-      let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+      // let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
       let svg = d3.select("svg");
       let width = +svg.attr("width");
       let height = +svg.attr("height");
@@ -961,7 +1002,7 @@ export default {
         .attr("orient", "auto")
         .append("path")
         .attr("d", "M0,-4L8,0L0,4")
-        .style("fill", "#66b3ff");
+        .style("fill", "#EDB664");
 
       svg
         .append("defs")
@@ -989,7 +1030,7 @@ export default {
 
       // 这里设置了每个圆环的弧度大小比例即可，不是非要写角度大小
       // 它的实际意义是总和的分子而不是实际值
-      let pieData = d3.pie()([3, 3, 1, 1, 1]);
+      let pieData = d3.pie()([1, 1, 2]);
       let pies = g
         .append("g")
         .attr("class", "pie button")
@@ -1009,10 +1050,10 @@ export default {
         })
         // 调整知识点点击出来的环的颜色
         .attr("fill", function(d, i) {
-          return colorScale(i);
+          return Ray_Color_List[i];
         })
         // 添加透明度
-        .attr("opacity", 0.8)
+        .attr("opacity", 1)
         // 添加鼠标悬在上面的事件
         // 这两个画弧都是通过调用生成器后，把D传进去完成的
         // 同时添加了透明度属性
@@ -1023,7 +1064,7 @@ export default {
               .transition()
               .duration(200)
               .attr("d", arcBigger(d))
-              .attr("opacity", 0.6);
+              .attr("opacity", 1);
           }
         })
         // 添加鼠标移出上面的事件
@@ -1034,7 +1075,7 @@ export default {
               .transition()
               .duration(200)
               .attr("d", arcGenerator(d))
-              .attr("opacity", 0.8);
+              .attr("opacity", 1);
           }
         })
         // 给知识点圆添加点击事件
@@ -1058,6 +1099,12 @@ export default {
               return null;
             })
             .interrupt();
+          searchSymbol
+            .attr("xlink:href", function(d) {
+              d.searchSymbol = null;
+              return null;
+            })
+            .interrupt();
           // 0 - 4 : 隐藏，锁定，绿，红，紫
           // selectedNode指的是当前被点击到的那个知识点圆
           if (index === 0) {
@@ -1069,18 +1116,14 @@ export default {
               d.hidden = true;
             });
             hideFlag = 0;
-            console.log("hide");
           } else if (index === 1) {
             // unlock the node; default to lock
             selectedNode.each(function(d) {
               d.fx = null;
               d.fy = null;
             });
-            console.log("unlock");
-          } else {
-            // Change the color of the node
-            selectedNode.style("fill", colorScale(index));
-            console.log("change the color");
+          } else if (index === 2) {
+            _this.$emit("Research", KnowledgePoint) 
           }
         });
       // 找到所有的被锁定或被隐藏的点
@@ -1092,6 +1135,10 @@ export default {
         .append("g")
         .attr("class", "hideSymbol")
         .selectAll("hideSymbol");
+      let searchSymbol = g
+        .append("g")
+        .attr("class", "searchSymbol")
+        .selectAll("searchSymbol");
       // add the symbol of each button
       // 给hideSymbol添加节点的ID值，并舍弃多余的部分
       // xlink:href是一个老的属性，指链接地址，现在新版本已经替换成用href了
@@ -1118,6 +1165,20 @@ export default {
         .append("image")
         .attr("xlink:href", function(d) {
           d.lockSymbol = null;
+          return null;
+        })
+        .attr("width", 20)
+        .attr("height", 20);
+
+      searchSymbol = searchSymbol.data(state.nodes, function(d) {
+        return d.id;
+      });
+      searchSymbol.exit().remove();
+      searchSymbol = searchSymbol
+        .enter()
+        .append("image")
+        .attr("xlink:href", function(d) {
+          d.searchSymbol = null;
           return null;
         })
         .attr("width", 20)
@@ -1196,19 +1257,26 @@ export default {
             });
           // add the symbol
           // 按照知识点中心位置进行偏移
-          hideSymbol
-            .attr("x", function(d) {
-              return d.x + 26;
-            })
-            .attr("y", function(d) {
-              return d.y - 20;
-            });
           lockSymbol
             .attr("x", function(d) {
-              return d.x - 9.5;
+              return d.x - 40;
             })
             .attr("y", function(d) {
-              return d.y + 29;
+              return d.y - 32;
+            });
+          hideSymbol
+            .attr("x", function(d) {
+              return d.x - 40;
+            })
+            .attr("y", function(d) {
+              return d.y + 15;
+            });
+          searchSymbol
+            .attr("x", function(d) {
+              return d.x + 25;
+            })
+            .attr("y", function(d) {
+              return d.y - 12;
             });
           // 若当前这个点被点击了，则调整它周围的环进行显示
           if (buttonFlag) {
@@ -1246,11 +1314,11 @@ export default {
             .forceLink()
             .strength(function(d) {
               if (d.source.hidden || d.target.hidden) return 0;
-              else return 0.8;
+              else return 0.05;
             })
             .distance(function(d) {
               // 控制节点间距离
-              return ((d.target.id.length % 6) + 2) * 40;
+              return (d.target.id.length % 6);
             })
             // 返回知识点ID
             .id(function(d) {
@@ -1420,8 +1488,15 @@ export default {
           .attr("class", function(d) {
             return d.selected ? "selected" : "";
           })
-          .attr("fill", function(d) {
-            return colorScale(d.type);
+          .attr("fill", function(d, i) {
+            if(i === 0){
+              return "#409EFD"
+            }
+            else if(i - 1 < directedLen){
+              return Node_Color_List[0];
+            }else{
+              return Node_Color_List[1]
+            }
           })
           // 对应拖拽事件绑定对应的处理方法
           .call(
@@ -1432,7 +1507,8 @@ export default {
               .on("end", dragEnded)
           )
           // 只有当非隐藏状态时，点击事件才会生效
-          .on("click", function() {
+          .on("click", function(d) {
+            KnowledgePoint = d.id
             if (hideFlag === 0) {
               // 非隐藏状态，且点击的是当前按钮时，会触发对应按钮的点击事件
               if (buttonFlag) {
@@ -1451,6 +1527,12 @@ export default {
                     return null;
                   })
                   .interrupt();
+                searchSymbol
+                  .attr("xlink:href", function(d) {
+                    d.searchSymbol = null;
+                    return null;
+                  })
+                  .interrupt();
                 pieGs
                   // 将这个点对应的路径也都设为Null
                   .attr("d", function() {
@@ -1464,12 +1546,16 @@ export default {
                   // 设置配套的图片
                   d.hideSymbol = require("../assets/hide.png");
                   d.lockSymbol = require("../assets/unlock.png");
+                  d.searchSymbol = require("../assets/search.png");
                 });
                 hideSymbol.attr("xlink:href", function(d) {
                   return d.hideSymbol;
                 });
                 lockSymbol.attr("xlink:href", function(d) {
                   return d.lockSymbol;
+                });
+                searchSymbol.attr("xlink:href", function(d) {
+                  return d.searchSymbol;
                 });
                 // 生成环绕弧
                 // 并调整弧的中心位置与知识点按钮的中心点一致
@@ -1512,9 +1598,9 @@ export default {
           // 设定线的颜色
           .style("stroke", function(d) {
             if (d.index < directedLen) {
-              return "#66b3ff";
+              return "#EDB664";
             } else {
-              return "#000000";
+              return "#9ECCAB";
             }
           });
         // 这里在绑定节点和链接关系，然后开始模拟这个力矩图
@@ -1531,7 +1617,7 @@ export default {
 .links path {
   fill: none;
   stroke: #999;
-  stroke-opacity: 0.6;
+  stroke-opacity: 1;
 }
 marker {
   fill: #999;

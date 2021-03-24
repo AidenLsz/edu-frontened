@@ -1287,6 +1287,8 @@ export default {
     // 查找次序依次为题目包，点击添加按钮的包序号，然后访问这个包下保存题目和题目折叠信息的条目
     New_Questions(val){
 
+      console.log(val)
+
         if(val.type != 'mix'){
           this.Normal_Char_Check(val);
         }else{

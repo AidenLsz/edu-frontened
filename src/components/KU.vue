@@ -195,6 +195,7 @@
             :inward_arrow="inward_arrow"
             :outward_arrow="outward_arrow"
             :selected_type="checkList"
+            @Research="Research"
           ></Graph>
         </div>
       </el-col>
@@ -246,6 +247,10 @@ export default {
     }
   },
   methods: {
+    Research(val){
+      console.log(val);
+      this.submit(val);
+    },
     ComplexInputFullChange(val){
       if(val){
         this.FullChange = false;

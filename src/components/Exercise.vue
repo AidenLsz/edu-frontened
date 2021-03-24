@@ -129,15 +129,15 @@
     </el-row> -->
     <el-row v-for="(Question, Question_Index) in question_list" :key="Question_Index" style="min-height: 600px">
       <el-col :offset="1" :span="22" class="quesCard">
-        <el-row style="text-align: left; padding-left: 40px; padding-top: 10px">
-          <el-col>
-            <span>题干：</span><div v-html="Question.stem" style="display: inline-block"></div>
+        <el-row style="text-align: left; padding-left: 40px; padding-top: 10px; background: white; padding-bottom: 15px">
+          <el-col style="padding-bottom: 15px">
+            <span style="margin-bottom: 20px; display: block">题干：</span><Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
           </el-col>
-          <el-col style="line-height: 40px" v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
-            <span>选项{{Get_Option_Label(Option_Index)}}：</span><div v-html="Option" style="display: inline-block"></div>
+          <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
+            <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">选项{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown></el-row>
           </el-col>
         </el-row>
-        <el-row style="padding-bottom: 10px">
+        <el-row style="padding-bottom: 10px; border-bottom: 1px dashed black">
             <el-col :span="4" style="line-height: 40px; color: #888; font-size: 16px">
               所属题库：{{database_name[Question_Index]}}
             </el-col>
@@ -154,11 +154,15 @@
               <el-button size="medium" plain round type="primary">查看分析报告</el-button>
             </el-col>
         </el-row>
-        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: -10px">
-          <span>答案：</span><div v-html="Question.answer" style="display: inline-block"></div>
+        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: -10px; padding-bottom: 20px">
+          <el-col>
+            <span style="margin-bottom: 10px; display: block">答案：</span><Mathdown :content="Question.answer" :name="'Q_' + Question_Index + '_Answer'"></Mathdown>
+          </el-col>
         </el-row>
-        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px;">
-          <span>解析：</span><div v-html="Question.analysis" style="display: inline-block"></div>
+        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; padding-bottom: 20px">
+          <el-col>
+            <span style="margin-bottom: 20px; display: block">解析：</span><Mathdown :content="Question.analysis" :name="'Q_' + Question_Index + '_Analysis'"></Mathdown>
+          </el-col>
         </el-row>
       </el-col>
     </el-row>
@@ -300,7 +304,7 @@ export default {
           this.Expand_List.push(false);
         }
         
-        console.log(this.question_list);
+        console.log(this.question_list[0].stem);
       });    
     },
     Check_Focus_Database(Index){
@@ -336,9 +340,8 @@ export default {
 }
 .quesCard{
   // border: 3px dashed black; 
-  background: #F8FBFF; 
-  border-radius: 15px;
-  box-shadow: 3px 4px 8px 0 rgba(0, 0, 0, 0.3);
+  background: #EBEEF5; 
+  border: 1px dashed black
 }
 .el-row {
   margin-bottom: 20px;
