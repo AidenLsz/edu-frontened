@@ -95,7 +95,7 @@
                     <span><label>解析：</label></span>
                 </el-col>
                 <el-col :span="22" v-if="QI.analyse != ''">
-                    <Mathdown name="OptionQuestions_Content" :content="QI.analyse"></Mathdown>
+                    <Mathdown name="OptionQuestions_Analyse" :content="QI.analyse"></Mathdown>
                 </el-col>
                 <el-col :span="22" v-if="QI.analyse == ''" style="text-align: left">
                     <label>暂无文字解析，请参考附图</label>

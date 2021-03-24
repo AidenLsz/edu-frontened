@@ -1,47 +1,56 @@
 /* eslint-disable camelcase */
 <template>
-  <div class="ku">
+  <div class="ku" style="margin-top: 5vh">
     <!-- header -->
-    <el-row>
-      <el-col :span="6">
-        <div class="logo">
-          <img src="../assets/title_ku.png" alt="logo" />
-        </div>
-      </el-col>
-      <el-col :span="14">
-        <form @submit.prevent="submit(ku_name)" style="margin-top: 20px;">
-          <el-row type="flex" class="row-bg" justify="center" v-if="!complex_input_flag">
-            <el-col :span="23">
-              <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
-            </el-col>
-            <el-button @click="Open_CI()">切换多格式输入</el-button>
-            <el-button type="submit" value="提交" @click="submit(ku_name)">检索</el-button>
-          </el-row>
 
-          <el-row type="flex" class="row-bg" justify="center" v-if="complex_input_flag">
-            <el-col :span="23">
-              <ComplexInput @Update_CI="UCI" @Update_Image="UCII" ref="CI"></ComplexInput>
-            </el-col>
-            <el-button @click="Close_CI()">切换简单输入</el-button>
-            <el-button type="submit" value="提交" @click="submit(ku_name)">检索</el-button>
-          </el-row>
-          <!-- <el-row type="flex" class="row-bg" justify="center">
-            <el-col :span="22">
-              <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
-            </el-col>
-            <el-button type="submit" value="提交" @click="submit(ku_name)"
-              >检索</el-button
-            >
-          </el-row> -->
-        </form>
+    <el-row justify="start" type="flex">
+      <el-col style="padding-left: 25px">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item>知识单元检索</el-breadcrumb-item>
+        </el-breadcrumb>
       </el-col>
     </el-row>
+
+    <el-row>
+      <form @submit.prevent="submit(ku_name)" style="margin-top: 20px;">
+        <el-row type="flex" class="row-bg" justify="start" v-if="!complex_input_flag">
+          <el-col :span="10" style="padding-left: 2vw">
+            <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
+          </el-col>
+          <el-col :span="3" :offset="1">
+            <el-button type="primary"  @click="Open_CI()">切换多格式输入</el-button>
+          </el-col>
+          <el-col :span="2">
+            <el-button type="primary"  value="提交" @click="submit(ku_name)">检索</el-button>
+          </el-col>
+        </el-row>
+
+        <el-row type="flex" class="row-bg" justify="start" v-if="complex_input_flag">
+          <el-col :span="18" :offset="1">
+            <ComplexInput @Update_CI="UCI" @Update_Image="UCII" ref="CI" @Full_Change="ComplexInputFullChange"></ComplexInput>
+          </el-col>
+          <el-col :span="3" type="flex" justify="center">
+            <el-button type="primary"  @click="Close_CI()" style="margin-top: 14vh">切换简单输入</el-button>
+            <el-button type="primary" value="提交" @click="submit(ku_name)"  style="margin-top: 3vh">检索</el-button>
+          </el-col>
+        </el-row>
+        <!-- <el-row type="flex" class="row-bg" justify="center">
+          <el-col :span="22">
+            <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
+          </el-col>
+          <el-button type="submit" value="提交" @click="submit(ku_name)"
+            >检索</el-button
+          >
+        </el-row> -->
+      </form>
+    </el-row>
     <!-- main -->
-    <el-row v-loading="loading">
+    <el-row v-loading="loading" style="padding-top: 5vh" v-if="FullChange">
       <el-col :span="9">
-        <div class="result">
+        <div class="result" style="background: #F8FBFF">
           <el-row type="flex" justify="start">
-            <h5 style="color: #0a1612;">知识单元简介</h5>
+            <h4 style="color: #0a1612; font-weight: bold">知识单元简介</h4>
           </el-row>
           <el-row type="flex" justify="start" class="title">
             {{ node.name }}
@@ -63,7 +72,7 @@
           <el-row type="flex" justify="start">
             <el-col :span="24">
               <el-row>
-                <h5 style="color: #0a1612; float: left;">知识关系</h5>
+                <h4 style="color: #0a1612; float: left; font-weight: bold">知识关系</h4>
               </el-row>
               <el-tabs
                 value="rjb_new"
@@ -98,6 +107,7 @@
                   <el-row
                     v-for="(entities, group, group_index) in neighbors_groups"
                     :key="group_index"
+                    style="background: #F8FBFF"
                   >
                     <el-row
                       v-if="group == 'kp2.0'"
@@ -112,6 +122,7 @@
                         :title="entity.name"
                         width="300"
                         trigger="hover"
+                        style="background: #F8FBFF"
                       >
                         <el-tag size="mini">{{
                           (entity.annotation || "").split(";")[0].split("-")[1]
@@ -132,7 +143,7 @@
                               .split("...")[0]
                           }}
                         </h6>
-                        <el-tag slot="reference" @click="submit(entity.name)">{{
+                        <el-tag style="background: #F8FBFF; color: #4FA5FD; border: 1px solid #4FA5FD; margin: 0.35vw 0.5vw" slot="reference" @click="submit(entity.name)">{{
                           entity.name
                         }}</el-tag>
                       </el-popover>
@@ -183,6 +194,8 @@
             :neighbors_groups="neighbors_groups"
             :inward_arrow="inward_arrow"
             :outward_arrow="outward_arrow"
+            :selected_type="checkList"
+            @Research="Research"
           ></Graph>
         </div>
       </el-col>
@@ -213,7 +226,8 @@ export default {
       loading: false,
       url: "",
       image_infos: [],
-      complex_input_flag: false
+      complex_input_flag: false,
+      FullChange: true
     };
   },
   mounted() {
@@ -233,6 +247,18 @@ export default {
     }
   },
   methods: {
+    Research(val){
+      console.log(val);
+      this.submit(val);
+    },
+    ComplexInputFullChange(val){
+      if(val){
+        this.FullChange = false;
+      }
+      else{
+        this.FullChange = true;
+      }
+    },
     dataSource(tab) {
       this.sour = "rjb_new";
       return tab.name;
@@ -269,7 +295,6 @@ export default {
             alert("输入知识点不存在！");
           } else {
             this.node = data.data.node;
-            console.log(data.data.node);
             this.neighbors_groups = data.data.neighbors_groups;
             this.inward_arrow = data.data.pre_len;
             this.outward_arrow = data.data.suc_len;
@@ -287,7 +312,7 @@ export default {
           { emulateJSON: true }
         )
         .then(function(data) {
-          this.directed_len = "(" + data.data.pre_len + data.data.suc_len + ")";
+          this.directed_len = "(" + (data.data.pre_len + data.data.suc_len) + ")";
           this.undirected_len = "(" + data.data.undirected_len + ")";
         });
     },
@@ -314,7 +339,7 @@ export default {
 
 <style scoped lang="scss">
 .ku {
-  background: url("../assets/sub_bg.png") repeat;
+  // background: url("../assets/sub_bg.png") repeat;
   background-size: 100%;
 }
 .ku h6 {
@@ -337,7 +362,7 @@ export default {
   height: 850px;
   background-color: #fff;
   margin-left: 20px;
-  border-right: 14px solid #fff;
+  // border-right: 14px solid #fff;
 }
 .graph {
   border: 1px solid #fff;
@@ -378,7 +403,7 @@ export default {
 </style>
 
 <style scoped type="text/css">
-.el-button {
+/* .el-button {
   background-color: #1a2930;
   color: #fff;
   border-color: #1a2930;
@@ -393,16 +418,28 @@ export default {
   color: #fff;
   border-color: #fff;
   outline: none;
-}
+} */
 #tabs /deep/ .el-tabs__item {
-  color: #0a1612;
+  background: #4FA5FD;;
+  color: white;
   font-weight: 900;
+  border-radius: 10px;
+  border: 0px;
 }
 #tabs /deep/ .el-tabs__item.is-active {
-  background-color: #0a1612;
-  color: #fff;
+  background: #4FA5FD;;
+  color: white;
   font-weight: 900;
+  border-radius: 10px;
 }
+
+#tabs /deep/ .el-tabs__nav.is-top{
+  border: none;
+}
+#tabs /deep/ .el-tabs__header.is-top{
+  border: none;
+}
+
 #checkbox /deep/ .el-checkbox__input.is-checked + .el-checkbox__label {
   color: #1a2930;
 }

@@ -277,7 +277,6 @@ export default {
             // 打开复杂输入框的控制
             complex_Input: false,
             // 题目信息和折叠信息
-            Questions_List: [],
             Questions_Collapse: [],
             // 重写编辑标记
             ReEditSwitch: false,

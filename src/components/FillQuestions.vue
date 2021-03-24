@@ -58,18 +58,22 @@
                         </el-input>
                     </el-col>
                     <el-col :span="5" :offset="1">
-                        <el-row>
+                        <el-row type="flex" justify="center">
                             <label>
                                 添加图片
                             </label>
                         </el-row>
-                        <el-row style="padding-left: 24px">
-                            <input
-                                type="file"
-                                @change="uploadImg($event, 'content')"
-                                accept="image/png, image/jpeg"
-                                style="width: 72px; background: #eee"
-                            />
+                        <el-row type="flex" justify="center">
+                            <div 
+                                class="btn_file"
+                                :style="{ opacity: changecss }">
+                                <p><i class="el-icon-picture"></i></p>
+                                <input
+                                    type="file"
+                                    @change="uploadImg($event, 'content')"
+                                    accept="image/png, image/jpeg"
+                                />
+                            </div>
                         </el-row>
                     </el-col>
                 </el-row>     
@@ -121,19 +125,23 @@
                             placeholder="请输入答案内容（可选）">
                         </el-input>
                     </el-col>
-                    <el-col :span="4" :offset="1">
-                        <el-row>
+                    <el-col :span="5">
+                        <el-row type="flex" justify="center">
                             <label>
                                 添加图片
                             </label>
                         </el-row>
-                        <el-row style="padding-left: 24px">
-                            <input
-                                type="file"
-                                @change="uploadImg($event, 'answer')"
-                                accept="image/png, image/jpeg"
-                                style="width: 72px; background: #eee"
-                            />
+                        <el-row type="flex" justify="center">
+                            <div 
+                                class="btn_file"
+                                :style="{ opacity: changecss }">
+                                <p><i class="el-icon-picture"></i></p>
+                                <input
+                                    type="file"
+                                    @change="uploadImg($event, 'answer')"
+                                    accept="image/png, image/jpeg"
+                                />
+                            </div>
                         </el-row>
                     </el-col>
                 </el-row>     
@@ -184,19 +192,23 @@
                             placeholder="请输入解析内容（可选）">
                         </el-input>
                     </el-col>
-                    <el-col :span="4" :offset="1">
-                        <el-row>
+                    <el-col :span="5">
+                        <el-row type="flex" justify="center">
                             <label>
                                 添加图片
                             </label>
                         </el-row>
-                        <el-row style="padding-left: 24px">
-                            <input
-                                type="file"
-                                @change="uploadImg($event, 'analyse')"
-                                accept="image/png, image/jpeg"
-                                style="width: 72px; background: #eee"
-                            />
+                        <el-row type="flex" justify="center">
+                            <div 
+                                class="btn_file"
+                                :style="{ opacity: changecss }">
+                                <p><i class="el-icon-picture"></i></p>
+                                <input
+                                    type="file"
+                                    @change="uploadImg($event, 'analyse')"
+                                    accept="image/png, image/jpeg"
+                                />
+                            </div>
                         </el-row>
                     </el-col>
                 </el-row>     
@@ -282,7 +294,8 @@ export default {
 
             questionInfo: this.QInfos,
             ReEdit: this.RE,
-            preview: false
+            preview: false,
+            changecss: 1
 
         }
         
@@ -424,3 +437,26 @@ export default {
     }
 }
 </script>
+<style scoped>
+.btn_file {
+  position: relative;
+  background-color: #fff;
+  padding-top: 2px;
+  height: 30px;
+  width: 4vw;
+  font-size: 20px;
+  border-radius: 2px;
+  border: 1px dashed black;
+  cursor: pointer;
+}
+input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 30px;
+  width: 4vw;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
+}
+</style>

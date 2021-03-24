@@ -1,99 +1,42 @@
 <template>
-  <div class="similarity">
+  <div class="similarity"  style="margin-top: 5vh">
     <div class="panel">
-      <el-row type="flex" justify="start">
-        <el-button type="submit" value="提交" @click="submit">评估</el-button>
+      <el-row justify="start" type="flex">
+        <el-col style="padding-left: 25px">
+          <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>相似试题评估</el-breadcrumb-item>
+          </el-breadcrumb>
+        </el-col>
       </el-row>
-      <el-row>
+
+      <el-row style="padding: 1vh 3vw 0 3vw">
         <el-col :span="11">
-          <ComplexInput @Update_CI="UCI_Left" @Update_Image="UCII_Left" ref="CI_Left"></ComplexInput>
-          <!-- <el-tabs type="border-card" id="tabs">
-            <el-tab-pane label="试题1">
-              <el-input
-                type="textarea"
-                :rows="14"
-                v-model="content_1"
-                placeholder="请输入内容"
-              >
-              </el-input>
-            </el-tab-pane>
-            <el-tab-pane label="LaTex预览">
-              <div style="height:305px; overflow-y:scroll;">
-                <Mathdown :content="content_1"></Mathdown>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="图片预览">
-              <el-carousel indicator-position="none" @change="change_index_0">
-                <el-carousel-item v-for="item in src_0" :key="item">
-                  <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="del_image_0"></el-button>
-                  <el-image v-bind:src = item :preview-src-list = src_0>
-                  </el-image>
-                </el-carousel-item>
-              </el-carousel>
-            </el-tab-pane>
-          </el-tabs> -->
+          <ComplexInput @Update_CI="UCI_Left" @Update_Image="UCII_Left" @Full_Change="FullChange_L" ref="CI_Left" :class="OpacityCheck(0)"></ComplexInput>
         </el-col>
 
         <el-col :span="11" :offset="2">
-          <ComplexInput @Update_CI="UCI_Right" @Update_Image="UCII_Right" ref="CI_Right"></ComplexInput>
-          <!-- <el-tabs type="border-card" id="tabs">
-            <el-tab-pane label="试题2">
-              <el-input
-                type="textarea"
-                :rows="14"
-                v-model="content_2"
-                placeholder="请输入内容"
-              >
-              </el-input>
-            </el-tab-pane>
-            <el-tab-pane label="LaTex预览">
-              <div style="height:305px; overflow-y:scroll;">
-                <Mathdown :content="content_2"></Mathdown>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="图片预览">
-              <el-carousel indicator-position="none" @change="change_index_1">
-                <el-carousel-item v-for="item in src_1" :key="item" >
-                  <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="del_image_1"></el-button>
-                  <el-image v-bind:src = item :preview-src-list = src_1>
-                  </el-image>
-                </el-carousel-item>
-              </el-carousel>
-            </el-tab-pane>
-          </el-tabs> -->
+          <ComplexInput @Update_CI="UCI_Right" @Update_Image="UCII_Right" @Full_Change="FullChange_R" ref="CI_Right" :class="OpacityCheck(1)"></ComplexInput>
         </el-col>
       </el-row>
 
-      <!-- <el-row type="flex" justify="start">
-          <el-col :span="4" :offset="0">
-          <UploadImg
-            :src="src_0"
-            :filelists="images_0"
-            @uploadImg="imgInfo_0"
-            ></UploadImg>
-          </el-col>
+      <el-row type="flex" justify="end" style="padding: 1vh 3vw 0 3vw">
+        <el-button type="primary" value="提交" @click="submit">评估</el-button>
+      </el-row>
 
-          <el-col :span="4" :offset="8">
-          <UploadImg
-            :src="src_1"
-            :filelists="images_1"
-            @uploadImg="imgInfo_1"
-            ></UploadImg>
-          </el-col>
-      </el-row> -->
-
-      <div id="result" v-if="show_result">
+      <div id="result" style="border-top: 3px solid #ccc; margin: 3vh 3vw 0 3vw; padding-top: 2vh">
         <el-row type="flex" justify="start">
-          <h6 style="color: #0a1612;">结果：</h6>
+          <h4 style="color: black">评估结果：</h4>
         </el-row>
-        <el-row>
+        <el-row v-if="show_result">
           <el-col :span="11">
-            <el-card class="box-card">
+            <el-card class="box-card" style="background: #F8FBFF">
               <div slot="header" style="text-align:left;">
                 <span>相似度</span>
               </div>
               <div style="text-align:left;">
-                <el-tag v-for="(item, index) in similarity_result" :key="index" effect="plain" id="tag">{{ item }}</el-tag>
+                <el-tag style="background: #F8FBFF; border: 0px; color: black; font-size: 14px" 
+                  v-for="(item, index) in similarity_result" :key="index" effect="plain" id="tag">{{ item }}</el-tag>
               </div>
             </el-card>
           </el-col>
@@ -124,9 +67,21 @@ export default {
       images_Right: [],
       // index_0: 0,
       // index_1: 0,
+      visibleList: [false, false]
     };
   },
   methods: {
+    OpacityCheck(Index){
+      if(this.visibleList[Index]){
+        return "unvisible"
+      }
+    },
+    FullChange_L(val){
+      this.visibleList.splice(1, 1, val); 
+    },
+    FullChange_R(val){
+      this.visibleList.splice(0, 1, val); 
+    },
     // 提交评估按钮，向后端发送请求
     submit() {
       document.documentElement.scrollTop = 200;
@@ -202,19 +157,15 @@ export default {
 
 <style scoped lang="scss">
 .similarity {
-  background: url("../assets/sub_bg.png");
+  // background: url("../assets/sub_bg.png");
   background-size: 100%;
-  padding: 20px 20px 0px 20px;
+  // padding: 20px 20px 0px 20px;
 }
 .panel {
   background-color: #fff;
-  border: 1px solid #fff;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 4px;
-  padding-left: 5%;
-  padding-right: 5%;
-  padding-top: 3%;
-  height: 750px;
+  min-height: 700px;
+  box-shadow: none;
 }
 .logo {
   margin-left: 50px;
@@ -240,22 +191,25 @@ export default {
 .el-col {
   border-radius: 4px;
 }
-.el-button {
-  background-color: #1a2930;
-  color: #fff;
-  border-color: #1a2930;
+.unvisible{
+  opacity: 0;
 }
-.el-button:hover {
-  background-color: #008080;
-  color: #fff;
-  border-color: #fff;
-}
-.el-button:focus {
-  outline: none;
-  background-color: #008080;
-  color: #fff;
-  border-color: #fff;
-}
+// .el-button {
+//   background-color: #1a2930;
+//   color: #fff;
+//   border-color: #1a2930;
+// }
+// .el-button:hover {
+//   background-color: #008080;
+//   color: #fff;
+//   border-color: #fff;
+// }
+// .el-button:focus {
+//   outline: none;
+//   background-color: #008080;
+//   color: #fff;
+//   border-color: #fff;
+// }
 </style>
 <style scoped>
 #tabs /deep/ .el-tabs__item {

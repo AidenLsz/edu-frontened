@@ -51,7 +51,7 @@
                     :key="index_subImg"
                     >
                     <el-image 
-                        v-if="index < QI.sub_questions_images[index - 1].length"
+                        v-if="index_subImg < QI.sub_questions_images[index - 1].length"
                         :src="QI.sub_questions_images[index - 1][index_subImg]" 
                         style="height: 100px; width: 100px;" 
                         fit="contain"
