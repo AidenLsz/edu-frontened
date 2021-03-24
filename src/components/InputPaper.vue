@@ -2250,15 +2250,13 @@ export default {
         );
         FileSaver.saveAs(file);
 
-        var Upload_Json_2 = {
-        "title": this.PaperTitle,
-        "subject_type": this.SubjectType,
-        "period_type": this.PeriodType,
-        "questions": this.Questions,
-      }
-
         var file_2 = new File(
-          [JSON.stringify(this.Upload_Json_2, null, 4)],
+          [JSON.stringify({
+                          "title": this.PaperTitle,
+                          "subject_type": this.SubjectType,
+                          "period_type": this.PeriodType,
+                          "questions": this.Questions,
+                          }, null, 4)],
           this.PaperTitle + "_Full.json",
           { type: "text/plain;charset=utf-8" }
         )
