@@ -352,14 +352,14 @@ export default {
                 return {
                     type: "answer",
                     // 分值
-                    score: "1",
+                    score: 1,
                     // 题目内容，题目内容图片，是否显示图片
                     content: "",
                     content_images: [],
                     // 小题的部分
                     sub_questions: [""],
                     sub_questions_images: [[]],
-                    sub_questions_scores: ["1"],
+                    sub_questions_scores: [1],
                     // 答案的部分
                     answer: "",
                     answer_images: [],
@@ -562,7 +562,7 @@ export default {
             if(this.questionInfo.sub_questions.length < 26){
                 this.questionInfo.sub_questions.push("");
                 this.questionInfo.sub_questions_images.push([]);
-                this.questionInfo.sub_questions_scores.push("1");
+                this.questionInfo.sub_questions_scores.push(1);
             }else{
                 this.$message("小题过多！");
             }
