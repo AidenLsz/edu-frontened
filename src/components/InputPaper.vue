@@ -1130,7 +1130,7 @@ export default {
       },
       Temp_MixQuestionInfo: {
           type: "mix",
-          score: "None",
+          score: 0,
           content: "",
           content_images: [],
           answer: "",
@@ -1430,7 +1430,7 @@ export default {
 
         this.Temp_MixQuestionInfo = {
             type: "mix",
-            score: "None",
+            score: 0,
             content: "",
             content_images: [],
             answer: "",

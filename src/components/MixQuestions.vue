@@ -467,7 +467,7 @@ export default {
             default: function(){
                 return {
                     type: "mix",
-                    score: "None",
+                    score: 0,
                     content: "",
                     content_images: [],
                     answer: "",
@@ -501,11 +501,11 @@ export default {
                             newVal[i].score = oldVal[i].score;
                             change_Switch = true;
                         }else if(parseFloat(newVal[i].score) <= 0){
-                            newVal[i].score = "0.1";
+                            newVal[i].score = 0.1;
                             this.$message.error("一道题目应当至少有0.1分");
                             change_Switch = true;
                         }else if(parseFloat(newVal[i].score) > 100){
-                            newVal[i].score = "100";
+                            newVal[i].score = 100;
                             this.$message.error("一道题目应当至多有100分");
                             change_Switch = true;
                         }
@@ -523,7 +523,7 @@ export default {
                 }
 
                 if(newVal.length == 0){
-                    this.questionInfos.score = "None";
+                    this.questionInfos.score = 0;
                 }
 
             },
@@ -605,7 +605,7 @@ export default {
                 // 小题的部分
                 sub_questions: [""],
                 sub_questions_images: [[]],
-                sub_questions_scores: ["1"],
+                sub_questions_scores: [1],
                 // 答案的部分
                 answer: "",
                 answer_images: [],
@@ -669,6 +669,7 @@ export default {
         New_Questions(val){
 
             this.questionInfos.sub_questions.push(val);
+            console.log(val)
             this.questionInfos.sub_questions_collapse.push(false);
             this.Close_Editor();
             this.Reset_Params();
@@ -803,7 +804,7 @@ export default {
                 // 小题的部分
                 sub_questions: [""],
                 sub_questions_images: [[]],
-                sub_questions_scores: ["1"],
+                sub_questions_scores: [1],
                 // 答案的部分
                 answer: "",
                 answer_images: [],
