@@ -2014,216 +2014,216 @@ export default {
         return null;
       }
 
-      var Upload_Json = {
-        "title": this.PaperTitle,
-        "subject_type": this.SubjectType,
-        "period_type": this.PeriodType,
-        "source": "USER_ID",
-        "img": {},
-        "doc": []
-      }
+      // var Upload_Json = {
+      //   "title": this.PaperTitle,
+      //   "subject_type": this.SubjectType,
+      //   "period_type": this.PeriodType,
+      //   "source": "USER_ID",
+      //   "img": {},
+      //   "doc": []
+      // }
 
-      for(var len = 0; len < this.Questions.length; len++){
+      // for(var len = 0; len < this.Questions.length; len++){
 
-        for(var i = 0; i < this.Questions[len].Bundle_Questions.length; i++){
+      //   for(var i = 0; i < this.Questions[len].Bundle_Questions.length; i++){
 
 
-          var Temp_Doc = {
-            "question_stem": "",
-            "question_options": [],
-            "question_type": "",
-            "sub_questions": [],
-            "answer": "",
-            "analysis": ""
-          }
+      //     var Temp_Doc = {
+      //       "question_stem": "",
+      //       "question_options": [],
+      //       "question_type": "",
+      //       "sub_questions": [],
+      //       "answer": "",
+      //       "analysis": ""
+      //     }
 
-          var Ques = this.Questions[len].Bundle_Questions[i]
+      //     var Ques = this.Questions[len].Bundle_Questions[i]
 
-          if(Ques.type == 'option'){
-            // 题型
-            Temp_Doc.question_type = "选择题"
-            // 题干
-            Temp_Doc.question_stem = Ques.content;
-            for(var img_l = 0; img_l < Ques.content_images.length; img_l++){
-              Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-            }
-            // 答案
-            Temp_Doc.answer = Ques.answer;
-            for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-              Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-            }
-            // 解析
-            Temp_Doc.analysis = Ques.analyse;
-            for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-              Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-            }
-            // 选项
-            for(img_l = 0; img_l < Ques.options.length; img_l++){
-              var optionInfo = Ques.options[img_l];
-              if(Ques.options_images[img_l] != ""){
-                optionInfo = optionInfo + "<img src='" + Ques.options_images[img_l] + "'>"
-              }
-              Temp_Doc.question_options.push(optionInfo)
-            }
+      //     if(Ques.type == 'option'){
+      //       // 题型
+      //       Temp_Doc.question_type = "选择题"
+      //       // 题干
+      //       Temp_Doc.question_stem = Ques.content;
+      //       for(var img_l = 0; img_l < Ques.content_images.length; img_l++){
+      //         Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
+      //       }
+      //       // 答案
+      //       Temp_Doc.answer = Ques.answer;
+      //       for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
+      //         Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
+      //       }
+      //       // 解析
+      //       Temp_Doc.analysis = Ques.analyse;
+      //       for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
+      //         Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
+      //       }
+      //       // 选项
+      //       for(img_l = 0; img_l < Ques.options.length; img_l++){
+      //         var optionInfo = Ques.options[img_l];
+      //         if(Ques.options_images[img_l] != ""){
+      //           optionInfo = optionInfo + "<img src='" + Ques.options_images[img_l] + "'>"
+      //         }
+      //         Temp_Doc.question_options.push(optionInfo)
+      //       }
 
-            Upload_Json.doc.push(Temp_Doc)
-          }else if(Ques.type == 'fill'){
-            // 题型
-            Temp_Doc.question_type = "填空题"
-            // 题干
-            Temp_Doc.question_stem = Ques.content;
-            for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-              Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-            }
-            // 答案
-            Temp_Doc.answer = Ques.answer;
-            for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-              Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-            }
-            // 解析
-            Temp_Doc.analysis = Ques.analyse;
-            for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-              Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-            }
+      //       Upload_Json.doc.push(Temp_Doc)
+      //     }else if(Ques.type == 'fill'){
+      //       // 题型
+      //       Temp_Doc.question_type = "填空题"
+      //       // 题干
+      //       Temp_Doc.question_stem = Ques.content;
+      //       for(img_l = 0; img_l < Ques.content_images.length; img_l++){
+      //         Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
+      //       }
+      //       // 答案
+      //       Temp_Doc.answer = Ques.answer;
+      //       for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
+      //         Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
+      //       }
+      //       // 解析
+      //       Temp_Doc.analysis = Ques.analyse;
+      //       for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
+      //         Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
+      //       }
 
-            Upload_Json.doc.push(Temp_Doc)
-          }else if(Ques.type == 'answer'){
-            // 题型
-            Temp_Doc.question_type = "解答题"
-            // 题干
-            Temp_Doc.question_stem = Ques.content;
-            for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-              Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-            }
-            // 答案
-            Temp_Doc.answer = Ques.answer;
-            for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-              Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-            }
-            // 解析
-            Temp_Doc.analysis = Ques.analyse;
-            for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-              Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-            }
-            // 小题
-            for(img_l = 0; img_l < Ques.sub_questions.length; img_l++){
-              var subTemp = Ques.sub_questions[img_l];
-              for(var inner = 0; inner < Ques.sub_questions_images[img_l].length; inner++){
-                subTemp = subTemp + "<img src='" + Ques.sub_questions_images[img_l][inner] + "'>"
-              }
-              Temp_Doc.sub_questions.push(subTemp)
-            }
+      //       Upload_Json.doc.push(Temp_Doc)
+      //     }else if(Ques.type == 'answer'){
+      //       // 题型
+      //       Temp_Doc.question_type = "解答题"
+      //       // 题干
+      //       Temp_Doc.question_stem = Ques.content;
+      //       for(img_l = 0; img_l < Ques.content_images.length; img_l++){
+      //         Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
+      //       }
+      //       // 答案
+      //       Temp_Doc.answer = Ques.answer;
+      //       for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
+      //         Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
+      //       }
+      //       // 解析
+      //       Temp_Doc.analysis = Ques.analyse;
+      //       for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
+      //         Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
+      //       }
+      //       // 小题
+      //       for(img_l = 0; img_l < Ques.sub_questions.length; img_l++){
+      //         var subTemp = Ques.sub_questions[img_l];
+      //         for(var inner = 0; inner < Ques.sub_questions_images[img_l].length; inner++){
+      //           subTemp = subTemp + "<img src='" + Ques.sub_questions_images[img_l][inner] + "'>"
+      //         }
+      //         Temp_Doc.sub_questions.push(subTemp)
+      //       }
 
-            Upload_Json.doc.push(Temp_Doc)
-          }else if(Ques.type == 'mix'){
+      //       Upload_Json.doc.push(Temp_Doc)
+      //     }else if(Ques.type == 'mix'){
 
-            var O_Ques = this.Questions[len].Bundle_Questions[i];
-            var O_Answer = O_Ques.answer.split("::");
+      //       var O_Ques = this.Questions[len].Bundle_Questions[i];
+      //       var O_Answer = O_Ques.answer.split("::");
 
-            for(var B_inner = 0; B_inner < this.Questions[len].Bundle_Questions[i].sub_questions.length; B_inner++){
+      //       for(var B_inner = 0; B_inner < this.Questions[len].Bundle_Questions[i].sub_questions.length; B_inner++){
 
-              Temp_Doc = {
-                "question_stem": "",
-                "question_options": [],
-                "question_type": "",
-                "sub_questions": [],
-                "answer": "",
-                "analysis": ""
-              }
+      //         Temp_Doc = {
+      //           "question_stem": "",
+      //           "question_options": [],
+      //           "question_type": "",
+      //           "sub_questions": [],
+      //           "answer": "",
+      //           "analysis": ""
+      //         }
 
-              Ques = this.Questions[len].Bundle_Questions[i].sub_questions[B_inner]
+      //         Ques = this.Questions[len].Bundle_Questions[i].sub_questions[B_inner]
 
-              if(Ques.type == 'option'){
-                // 题型
-                Temp_Doc.question_type = "选择题"
-                // 题干
-                Temp_Doc.question_stem = this.Questions[len].Bundle_Questions[i].content + " " + Ques.content;
-                for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-                  Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-                }
-                // 答案
-                if(O_Answer[B_inner]){
-                  Temp_Doc.answer = O_Answer[B_inner] + " " + Ques.answer;
-                }else{
-                  Temp_Doc.answer = Ques.answer;
-                }
-                for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-                  Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-                }
-                // 解析
-                Temp_Doc.analysis = Ques.analyse;
-                for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-                  Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-                }
-                // 选项
-                for(img_l = 0; img_l < Ques.options.length; img_l++){
-                  optionInfo = Ques.options[img_l];
-                  if(Ques.options_images[img_l] != ""){
-                    optionInfo = optionInfo + "<img src='" + Ques.options_images[img_l] + "'>"
-                  }
-                  Temp_Doc.question_options.push(optionInfo)
-                }
-              }else if(Ques.type == 'fill'){
-                // 题型
-                Temp_Doc.question_type = "填空题"
-                // 题干
-                Temp_Doc.question_stem = this.Questions[len].Bundle_Questions[i].content + " " + Ques.content;
-                for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-                  Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-                }
-                // 答案
-                if(O_Answer[B_inner]){
-                  Temp_Doc.answer = O_Answer[B_inner] + " " + Ques.answer;
-                }else{
-                  Temp_Doc.answer = Ques.answer;
-                }
-                for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-                  Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-                }
-                // 解析
-                Temp_Doc.analysis = Ques.analyse;
-                for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-                  Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-                }
-              }else if(Ques.type == 'answer'){
-                // 题型
-                Temp_Doc.question_type = "解答题"
-                // 题干
-                Temp_Doc.question_stem = this.Questions[len].Bundle_Questions[i].content + " " + Ques.content;
-                for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-                  Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-                }
-                // 答案
-                if(O_Answer[B_inner]){
-                  Temp_Doc.answer = O_Answer[B_inner] + " " + Ques.answer;
-                }else{
-                  Temp_Doc.answer = Ques.answer;
-                }
-                for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-                  Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-                }
-                // 解析
-                Temp_Doc.analysis = Ques.analyse;
-                for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-                  Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-                }
-                // 小题
-                for(img_l = 0; img_l < Ques.sub_questions.length; img_l++){
-                  subTemp = Ques.sub_questions[img_l];
-                  for(inner = 0; inner < Ques.sub_questions_images[img_l].length; inner++){
-                    subTemp = subTemp + "<img src='" + Ques.sub_questions_images[img_l][inner] + "'>"
-                  }
-                  Temp_Doc.sub_questions.push(subTemp)
-                }
-              }
+      //         if(Ques.type == 'option'){
+      //           // 题型
+      //           Temp_Doc.question_type = "选择题"
+      //           // 题干
+      //           Temp_Doc.question_stem = this.Questions[len].Bundle_Questions[i].content + " " + Ques.content;
+      //           for(img_l = 0; img_l < Ques.content_images.length; img_l++){
+      //             Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
+      //           }
+      //           // 答案
+      //           if(O_Answer[B_inner]){
+      //             Temp_Doc.answer = O_Answer[B_inner] + " " + Ques.answer;
+      //           }else{
+      //             Temp_Doc.answer = Ques.answer;
+      //           }
+      //           for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
+      //             Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
+      //           }
+      //           // 解析
+      //           Temp_Doc.analysis = Ques.analyse;
+      //           for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
+      //             Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
+      //           }
+      //           // 选项
+      //           for(img_l = 0; img_l < Ques.options.length; img_l++){
+      //             optionInfo = Ques.options[img_l];
+      //             if(Ques.options_images[img_l] != ""){
+      //               optionInfo = optionInfo + "<img src='" + Ques.options_images[img_l] + "'>"
+      //             }
+      //             Temp_Doc.question_options.push(optionInfo)
+      //           }
+      //         }else if(Ques.type == 'fill'){
+      //           // 题型
+      //           Temp_Doc.question_type = "填空题"
+      //           // 题干
+      //           Temp_Doc.question_stem = this.Questions[len].Bundle_Questions[i].content + " " + Ques.content;
+      //           for(img_l = 0; img_l < Ques.content_images.length; img_l++){
+      //             Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
+      //           }
+      //           // 答案
+      //           if(O_Answer[B_inner]){
+      //             Temp_Doc.answer = O_Answer[B_inner] + " " + Ques.answer;
+      //           }else{
+      //             Temp_Doc.answer = Ques.answer;
+      //           }
+      //           for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
+      //             Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
+      //           }
+      //           // 解析
+      //           Temp_Doc.analysis = Ques.analyse;
+      //           for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
+      //             Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
+      //           }
+      //         }else if(Ques.type == 'answer'){
+      //           // 题型
+      //           Temp_Doc.question_type = "解答题"
+      //           // 题干
+      //           Temp_Doc.question_stem = this.Questions[len].Bundle_Questions[i].content + " " + Ques.content;
+      //           for(img_l = 0; img_l < Ques.content_images.length; img_l++){
+      //             Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
+      //           }
+      //           // 答案
+      //           if(O_Answer[B_inner]){
+      //             Temp_Doc.answer = O_Answer[B_inner] + " " + Ques.answer;
+      //           }else{
+      //             Temp_Doc.answer = Ques.answer;
+      //           }
+      //           for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
+      //             Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
+      //           }
+      //           // 解析
+      //           Temp_Doc.analysis = Ques.analyse;
+      //           for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
+      //             Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
+      //           }
+      //           // 小题
+      //           for(img_l = 0; img_l < Ques.sub_questions.length; img_l++){
+      //             subTemp = Ques.sub_questions[img_l];
+      //             for(inner = 0; inner < Ques.sub_questions_images[img_l].length; inner++){
+      //               subTemp = subTemp + "<img src='" + Ques.sub_questions_images[img_l][inner] + "'>"
+      //             }
+      //             Temp_Doc.sub_questions.push(subTemp)
+      //           }
+      //         }
 
-              Upload_Json.doc.push(Temp_Doc)
-            }
-          }
+      //         Upload_Json.doc.push(Temp_Doc)
+      //       }
+      //     }
 
-        }
+      //   }
 
-      }
+      // }
 
       if(Control == 'upload'){
 
@@ -2232,26 +2232,30 @@ export default {
         };
         let param = new FormData();
 
-        param.append('result_json', JSON.stringify(Upload_Json));
+        param.append('result_json', 
+                        JSON.stringify({
+                          "post_type": 1,
+                          "title": this.PaperTitle,
+                          "subject_type": this.SubjectType,
+                          "period_type": this.PeriodType,
+                          "questions": this.Questions,
+                        }, null, 4));
+
         this.$http
         .post(this.backendIP + "/api/mathUpload", param, config, {
           emulateJSON: true
         })
         .then(function(data) {
-          console.log(data.data)
+          if(data.data){
+            this.$message.success("整卷上传已完成。");
+          }
         });
 
       }else if(Control == 'export'){
 
-        var file = new File(
-          [JSON.stringify(Upload_Json, null, 4)],
-          this.PaperTitle + ".json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
-
         var file_2 = new File(
           [JSON.stringify({
+                          "post_type": 1,
                           "title": this.PaperTitle,
                           "subject_type": this.SubjectType,
                           "period_type": this.PeriodType,
