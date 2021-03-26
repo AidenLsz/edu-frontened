@@ -46,7 +46,12 @@
       </el-col>
     </el-row>
     <el-row style="margin-top: 4vh; margin-bottom: 5vh" v-if="!simpleInput" type="flex">
-      <el-col :span="2" :offset="1" style="padding-top: 14vh">
+      <el-col :span="18" :offset="1">
+        <el-row>
+          <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="content"></ComplexInput>
+        </el-row>
+      </el-col>
+      <el-col :span="3" style="padding-top: 14vh">
         <el-row>
           <el-button type="primary" plain  @click="changeInput">
             <span style="font-weight: bold">切换简单输入</span>
@@ -56,11 +61,6 @@
           <el-button type="primary" plain  value="提交" @click="submit">
             <span style="font-weight: bold">检索</span>
           </el-button>
-        </el-row>
-      </el-col>
-      <el-col :span="18">
-        <el-row>
-          <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="content"></ComplexInput>
         </el-row>
       </el-col>
     </el-row>
@@ -127,7 +127,7 @@
         </div>
       </el-col>
     </el-row> -->
-    <el-row v-for="(Question, Question_Index) in Get_Question_Bundle(Page_Index)" :key="Question_Index" style="margin-bottom: 50px">
+    <el-row v-for="(Question, Question_Index) in question_list" :key="Question_Index" style="margin-bottom: 50px">
       <el-col :offset="1" :span="22" class="quesCard">
         <el-row style="text-align: left; padding-left: 40px; padding-top: 10px; background: white; padding-bottom: 15px">
           <el-col style="padding-bottom: 15px">
@@ -139,7 +139,7 @@
         </el-row>
         <el-row style="padding-bottom: 10px; border-bottom: 1px dashed black">
             <el-col :span="4" style="line-height: 40px; color: #888; font-size: 16px">
-              所属题库：{{database_name[Question_Index]}}
+              所属题库：{{database_from[Question_Index]}}
             </el-col>
             <el-col :span="2" style="line-height: 40px; color: #888; font-size: 16px">
               学科：{{Question.subject}}
@@ -166,16 +166,22 @@
         </el-row>
       </el-col>
     </el-row>
-    <el-row v-if="question_list.length == 0" style="margin: 50px 80px; height: 44vh">
+    <el-row 
+      v-if="question_list.length == 0" 
+      style="margin: 50px 60px; height: 44vh"
+      v-loading="loading"
+      element-loading-text="加载中，请等待"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.6)">
       
     </el-row>
-    <el-row>
+    <el-row v-if="question_list.length != 0">
       <el-pagination
         @current-change="BackToTop"
         :current-page.sync="Page_Index"
         :page-size="Page_Length"
         layout="total, prev, pager, next"
-        :total="question_list.length">
+        :total="Total_Count">
       </el-pagination>
     </el-row>
   </div>
@@ -209,8 +215,6 @@ export default {
       image_infos: [],
       // 存放返回的题目内容
       question_list: [],
-      // 存放数据库名信息,
-      database_name: [],
       // 存放学科信息
       subject_name: [],
       // 存放题型信息
@@ -218,13 +222,20 @@ export default {
       // 存放将要查询的数据库名称
       // public, neea, iflytek
       database_aim: [true, false, false],
+      database_name: ['public', 'neea', 'iflytek'],
+      // 这些数据依次来源于哪里
+      database_from: [],
       // 检测是否要展开答案和解析内容
       Expand_List: [],
       // 页码
       Page_Index: 1,
       // 单页长度，总页数
       Page_Length: 5,
-      Total_Page: -1
+      Total_Page: -1,
+      // 能搜索到的题目数量
+      Total_Count: -1,
+      // loading
+      loading: false
     };
   },
   watch:{
@@ -234,6 +245,7 @@ export default {
   },
   methods: {
     BackToTop(){
+      this.submit();
       window.scrollTo(0,0);
     },
     // 修改翻页内容
@@ -283,12 +295,6 @@ export default {
     changeInput() {
       this.simpleInput = !this.simpleInput;
     },
-    imgInfo(e) {
-      this.src = e.src;
-      this.filelists = e.filelists;
-      console.log(e.src);
-      console.log(e.filelists);
-    },
    // 删除图片并保持图片数组顺序
     forkImage(index) {
       this.src.splice(index, 1);
@@ -306,6 +312,8 @@ export default {
     },
     submit() {
 
+      this.loading = true;
+
       this.question_list = [];
 
       let config = {
@@ -313,21 +321,44 @@ export default {
       };
 
       let param = new FormData();
-      param.append("content", this.content);
-      param.append("size", 100);
+
+      var database_list = [];
+      for(var i = 0; i < this.database_aim.length; i++){
+        if(this.database_aim[i]){
+          database_list.push(this.database_name[i])
+        }
+      }
+      // console.log(this.content, 5, database_list, this.Page_Index);
+      // param.append("content", this.content);
+      // param.append("size", 5);
+      // param.append("database", database_list);
+      // param.append("page_count", this.Page_Index)
+
+      var data = JSON.stringify({
+        "content": this.content,
+        "size": 5,
+        "database": database_list,
+        "page_count": this.Page_Index
+      })
+
+      param.append("data", data);
 
       this.$http
       .post(this.backendIP + "/api/search", param, config, {
         emulateJSON: true
       })
       .then(function(data) {
+        this.loading = false;
+        this.Expand_List = [];
+        this.question_list = [];
         var quess = data.data.results;
-        var dn = data.data.databaseName;
+        var databaseName = data.data.databaseName;
         for(var i = 0; i < quess.length; i++){
           this.question_list.push(quess[i])
-          this.database_name.push(dn[i])
+          this.database_from.push(databaseName[i])
           this.Expand_List.push(false);
         }
+        this.Total_Count = data.data.totalLength
       });    
     },
     Check_Focus_Database(Index){
