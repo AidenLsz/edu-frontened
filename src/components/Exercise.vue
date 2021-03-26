@@ -144,7 +144,7 @@
             <el-col :span="2" style="line-height: 40px; color: #888; font-size: 16px">
               学科：{{Question.subject}}
             </el-col>
-            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 16px">
+            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 16px; display: none">
               题型：{{Question.type}}
             </el-col>
             <el-col :span="2" :offset="11" style="line-height: 40px">
@@ -168,11 +168,10 @@
     </el-row>
     <el-row 
       v-if="question_list.length == 0" 
-      style="margin: 50px 60px; height: 44vh"
+      style="margin: 50px 60px; height: 44vh; font-size: 30px"
       v-loading="loading"
       element-loading-text="加载中，请等待"
-      element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.6)">
+      element-loading-spinner="el-icon-loading">
       
     </el-row>
     <el-row v-if="question_list.length != 0">
@@ -207,6 +206,8 @@ export default {
       sour: "",
       // Latex格式的内容
       content: "",
+      // 老内容
+      old_content: "",
       // 当前是否为简单输入格式
       simpleInput: true,
       // 新版本用的mavon-editor带来的自带回调函数用的json格式
@@ -314,6 +315,13 @@ export default {
 
       this.loading = true;
 
+      if(this.old_content == ""){
+        this.old_content = this.content;
+      }else if(this.content != this.old_content){
+        this.Page_Index = 1;
+        this.old_content = this.content
+      }
+
       this.question_list = [];
 
       let config = {
@@ -359,6 +367,7 @@ export default {
           this.Expand_List.push(false);
         }
         this.Total_Count = data.data.totalLength
+        
       });    
     },
     Check_Focus_Database(Index){
