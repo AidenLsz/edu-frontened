@@ -2563,7 +2563,7 @@ export default {
           }
         }
 
-        if(!(Check_Now.charCodeAt(c) > 255 || this.ch_pun_list.indexOf(Check_Now[c]) != -1 || this.en_pun_list.indexOf(Check_Now[c]) != -1 || Check_Now[c] == ' ') 
+        if(!(Check_Now.charCodeAt(c) > 255 || this.ch_pun_list.indexOf(Check_Now[c]) != -1 || this.en_pun_list.indexOf(Check_Now[c]) != -1 || Check_Now[c] == ' ' || Check_Now.charCodeAt(c) == 10) 
             && Flag 
             && Check_Now[c] != '$'){
           this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
