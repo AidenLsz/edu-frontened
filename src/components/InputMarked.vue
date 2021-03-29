@@ -352,49 +352,50 @@
           </el-row>
           <el-row>
             <el-col :span="6" style="font-size: 20px">
-              <i class="el-icon-arrow-down"></i>
+              <i v-if="Expand" @click="Expand_Type_Change()" class="el-icon-arrow-down"></i>
+              <i v-if="!Expand" @click="Expand_Type_Change()" class="el-icon-arrow-right"></i>
             </el-col>
             <el-col :span="6" style="text-align: left; font-size: 20px">
               题型
             </el-col>
             <el-col :span="12">
-              <el-button @click="showHint = true" size="small" type="danger">非法格式提示</el-button>
+              <el-button @click="showHint = true" size="small" type="danger" plain>非法格式提示</el-button>
             </el-col>
           </el-row>
           <!-- Option -->
-          <el-row style="margin-top: 10px">
+          <el-row style="margin-top: 10px" v-if="Expand">
             <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
               <i class="el-icon-circle-check"></i>
               <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'option'; showDialog = true; ">选择题</el-button>
             </el-col>
           </el-row>
           <!-- Fill -->
-          <el-row>
+          <el-row v-if="Expand">
             <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
               <i class="el-icon-full-screen"></i>
               <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'fill'; showDialog_Fill = true; ">填空题</el-button>
             </el-col>
           </el-row>
           <!-- Answer -->
-          <el-row>
+          <el-row v-if="Expand">
             <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
               <i class="el-icon-edit-outline"></i>
               <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'answer'; showDialog_Answer = true; ">解答题</el-button>
             </el-col>
           </el-row>
           <!-- Mix -->
-          <el-row>
+          <el-row v-if="Expand">
             <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
               <i class="el-icon-reading"></i>
               <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'mix'; showDialog_Mix = true; ">综合题</el-button>
             </el-col>
           </el-row>
         </el-row>
-        <el-row type="flex" justify="center" style="padding-top: 30px">
+        <!-- <el-row type="flex" justify="center" style="padding-top: 30px">
           <el-button type="primary" plain style="width: 200px; font-size: 16px" @click="ImportFile()">
             <label>文件导入</label>
           </el-button>
-        </el-row>
+        </el-row> -->
         <el-row type="flex" justify="center" style="padding-top: 30px">
           <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')">
             <label>题目入库</label>
@@ -450,6 +451,8 @@ export default {
                 Mathdown},
   data() {
     return {
+      // 是否展开题型
+      Expand: true,
       // 待选科目
       Subject_List: [{
         value: "语文",
@@ -690,6 +693,10 @@ export default {
     this.Init_Question_Check()
   },
   methods: {
+    // 展开题型
+    Expand_Type_Change(){
+      this.Expand = !this.Expand;
+    },
     preview() {
       this.isview = true;
     },
