@@ -6,7 +6,7 @@
                 <span><label> ( {{ QI.score }}分 ) </label></span>
             </el-col>
             <el-col :span="21" :offset="1">
-                <Mathdown name="OptionQuestions_Content" :content="QI.content"></Mathdown>
+                <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'OptionQuestions_Content'" :content="QI.content"></Mathdown>
             </el-col>
         </el-row>
         <!-- 题干图片 -->
@@ -36,7 +36,7 @@
                 </el-col>
                 <el-col :span="20">
                     <Mathdown 
-                        :name="'OptionQuestions_Option_' + index.toString()" 
+                        :name="Bundle_Index + '_' + Sub_Index + 'OptionQuestions_Option_' + index.toString()" 
                         :content="QI.options[index - 1]">
                     </Mathdown>
                 </el-col>
@@ -62,7 +62,7 @@
                     <span><label>答案：</label></span>
                 </el-col>
                 <el-col :span="22" v-if="QI.answer != ''">
-                    <Mathdown name="OptionQuestions_Answer" :content="QI.answer"></Mathdown>
+                    <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'OptionQuestions_Answer'" :content="QI.answer"></Mathdown>
                 </el-col>
                 <el-col :span="22" v-if="QI.answer == ''"  style="text-align: left">
                     <label>暂无文字答案，请参考附图</label>
@@ -95,7 +95,7 @@
                     <span><label>解析：</label></span>
                 </el-col>
                 <el-col :span="22" v-if="QI.analyse != ''">
-                    <Mathdown name="OptionQuestions_Analyse" :content="QI.analyse"></Mathdown>
+                    <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'OptionQuestions_Analyse'" :content="QI.analyse"></Mathdown>
                 </el-col>
                 <el-col :span="22" v-if="QI.analyse == ''" style="text-align: left">
                     <label>暂无文字解析，请参考附图</label>
@@ -151,6 +151,14 @@ export default {
                     analyse_images: []
                 }
             }
+        },
+        Bundle_Index: {
+            type: String,
+            default: "Bundle_0"
+        },
+        Sub_Index:{
+            type: String,
+            default: "Sub_1"
         }
     }
 }

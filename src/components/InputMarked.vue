@@ -366,28 +366,28 @@
           <el-row style="margin-top: 10px" v-if="Expand">
             <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
               <i class="el-icon-circle-check"></i>
-              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'option'; showDialog = true; ">选择题</el-button>
+              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Change_Type('option')">选择题</el-button>
             </el-col>
           </el-row>
           <!-- Fill -->
           <el-row v-if="Expand">
             <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
               <i class="el-icon-full-screen"></i>
-              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'fill'; showDialog_Fill = true; ">填空题</el-button>
+              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Change_Type('fill')">填空题</el-button>
             </el-col>
           </el-row>
           <!-- Answer -->
           <el-row v-if="Expand">
             <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
               <i class="el-icon-edit-outline"></i>
-              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'answer'; showDialog_Answer = true; ">解答题</el-button>
+              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Change_Type('answer')">解答题</el-button>
             </el-col>
           </el-row>
           <!-- Mix -->
           <el-row v-if="Expand">
             <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
               <i class="el-icon-reading"></i>
-              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'mix'; showDialog_Mix = true; ">综合题</el-button>
+              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Change_Type('mix')">综合题</el-button>
             </el-col>
           </el-row>
         </el-row>
@@ -397,19 +397,19 @@
           </el-button>
         </el-row> -->
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')" :disabled="Type_Now == ''">
+          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')" :disabled="Type_Now == '-1'">
             <label>题目入库</label>
           </el-button>
         </el-row>
       </el-col>
       <el-col :span="20" style="background: #F8FBFF; margin-top: 30px; min-height: 65vh; padding-top: 40px; border-right: 30px solid white">
         <el-row style="background: #F8FBFF; min-height: 50vh">
-          <OptionDisplay v-if="Type_Now == 'option'" :QI="Temp_OptionQuestionInfo"></OptionDisplay>
-          <FillDisplay v-else-if="Type_Now == 'fill'" :QI="Temp_FillQuestionInfo"></FillDisplay>
-          <AnswerDisplay v-else-if="Type_Now == 'answer'" :QI="Temp_AnswerQuestionInfo"></AnswerDisplay>
-          <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo"></MixDisplay>  
+          <OptionDisplay v-if="Type_Now == 'option'" :QI="Temp_OptionQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></OptionDisplay>
+          <FillDisplay v-else-if="Type_Now == 'fill'" :QI="Temp_FillQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></FillDisplay>
+          <AnswerDisplay v-else-if="Type_Now == 'answer'" :QI="Temp_AnswerQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></AnswerDisplay>
+          <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo" :BI="'Bundle_0'"></MixDisplay>  
         </el-row>
-        <el-row v-if="Type_Now != ''">
+        <el-row v-if="Type_Now != '-1'">
           <el-col :span="8">
             <el-button type="primary" plain @click="Edit_Question()">重新编辑</el-button>
           </el-col>
@@ -417,7 +417,7 @@
             <el-button type="warning" plain @click="PaperUpload('export')">题目导出</el-button> 
           </el-col>  
           <el-col :span="8">
-            <el-button type="danger" plain @click="Type_Now = ''; Reset_Params()">清空数据</el-button> 
+            <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button> 
           </el-col> 
         </el-row>  
       </el-col>
@@ -538,7 +538,7 @@ export default {
       Submit_Show: false,
       // ------------------- 以下是原来的单题内容，以上是新加的编辑 -------------------
       // 当前题目类型
-      Type_Now: "",
+      Type_Now: "-1",
       // 选择题编辑器,填空题编辑器和解答题编辑器的显示控制
       showDialog: false,
       showDialog_Fill: false,
@@ -695,6 +695,24 @@ export default {
     this.ToTop();
   },
   methods: {
+
+    Change_Type(Type){
+      
+      this.Type_Now = Type;
+
+      console.log("TYPE", Type, "TN", this.Type_Now)
+
+      if(Type == 'option'){
+          this.showDialog = true;
+      }else if(Type == 'fill'){
+          this.showDialog_Fill = true;
+      }else if(Type == 'answer'){
+          this.showDialog_Answer = true;
+      }else if(Type == 'mix'){
+          this.showDialog_Mix = true;
+      }
+
+    },
     ToTop(){
       window.scrollTo(0,0);
     },
@@ -710,7 +728,78 @@ export default {
     },
     New_Questions(val){
 
-        this.Reset_Params();
+        this.Temp_OptionQuestionInfo = {
+
+            type: "option",
+            // 分值
+            score: 1,
+            // 题目内容，题目内容图片，是否显示图片
+            content: "",
+            content_images: [],
+            // 选项的部分
+            options: ["", "", "", ""],
+            options_images: ["", "", "", ""],
+            // 答案的部分
+            answer: "",
+            answer_images: [],
+            // 解析的部分
+            analyse: "",
+            analyse_images: []
+
+        }
+
+        this.Temp_FillQuestionInfo = {
+
+            type: "fill",
+            // 分值
+            score: 1,
+            // 题目内容，题目内容图片，是否显示图片
+            content: "",
+            content_images: [],
+            // 答案的部分
+            answer: "",
+            answer_images: [],
+            // 解析的部分
+            analyse: "",
+            analyse_images: []
+
+        }
+
+        this.Temp_AnswerQuestionInfo = {
+
+            type: "answer",
+            // 分值
+            score: 1,
+            // 题目内容，题目内容图片，是否显示图片
+            content: "",
+            content_images: [],
+            // 小题的部分
+            sub_questions: [""],
+            sub_questions_images: [[]],
+            sub_questions_scores: [1],
+            // 答案的部分
+            answer: "",
+            answer_images: [],
+            // 解析的部分
+            analyse: "",
+            analyse_images: []
+
+        }
+
+        this.Temp_MixQuestionInfo = {
+          // 题目类型，分值，题干内容，题干图片，答案内容，答案图片
+          // 小题内容，小题是否折叠，解析内容，解析图片
+            type: "mix",
+            score: "None",
+            content: "",
+            content_images: [],
+            answer: "",
+            answer_images: [],
+            sub_questions: [],
+            sub_questions_collapse: [],
+            analyse: "",
+            analyse_images: [],
+        }
 
         if(this.Type_Now == 'option'){
             this.Temp_OptionQuestionInfo = val;
@@ -725,6 +814,7 @@ export default {
             this.Temp_MixQuestionInfo = val;
             this.Mix_Char_Check(val);
         }
+
         this.Close_Editor();
 
     },
@@ -922,7 +1012,7 @@ export default {
     Reset_Params(){
 
       this.ReEditSwitch = false;
-      this.Type_Now = "";
+      this.Type_Now = "-1";
 
       this.Temp_OptionQuestionInfo = {
 

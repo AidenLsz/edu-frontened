@@ -6,7 +6,7 @@
                 <span><label> ( {{ QI.score }}分 ) </label></span>
             </el-col>
             <el-col :span="21">
-                <Mathdown name="AnswerQuestions_Content" :content="QI.content"></Mathdown>
+                <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'AnswerQuestions_Content'" :content="QI.content"></Mathdown>
             </el-col>
         </el-row>
         <!-- 题干图片 -->
@@ -35,7 +35,7 @@
                     <span><label> ( {{ QI.sub_questions_scores[index - 1] }}分 ){{index}}: </label></span>
                 </el-col>
                 <el-col :span="20" >
-                    <Mathdown :name="'AnswerQuestions_Sub_Questions_' + index.toString()" :content="QI.sub_questions[index - 1]"></Mathdown>
+                    <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'AnswerQuestions_Sub_Questions_' + index.toString()" :content="QI.sub_questions[index - 1]"></Mathdown>
                 </el-col>
             </el-row>
             <el-row 
@@ -67,7 +67,7 @@
                     <span><label>答案：</label></span>
                 </el-col>
                 <el-col :span="22" v-if="QI.answer != ''">
-                    <Mathdown name="AnswerQuestions_Answer" :content="QI.answer"></Mathdown>
+                    <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'AnswerQuestions_Answer'" :content="QI.answer"></Mathdown>
                 </el-col>
                 <el-col :span="22" v-if="QI.answer == ''"  style="text-align: left">
                     <label>暂无文字答案，请参考附图</label>
@@ -100,7 +100,7 @@
                     <span><label>解析：</label></span>
                 </el-col>
                 <el-col :span="22" v-if="QI.analyse != ''">
-                    <Mathdown name="AnswerQuestions_Analyse" :content="QI.analyse"></Mathdown>
+                    <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'AnswerQuestions_Analyse'" :content="QI.analyse"></Mathdown>
                 </el-col>
                 <el-col :span="22" v-if="QI.analyse == ''" style="text-align: left">
                     <label>暂无文字解析，请参考附图</label>
@@ -157,6 +157,14 @@ export default {
                     analyse_images: []
                 }
             }
+        },
+        Bundle_Index: {
+            type: String,
+            default: "Bundle_0"
+        },
+        Sub_Index:{
+            type: String,
+            default: "Sub_1"
         }
     }
 }
