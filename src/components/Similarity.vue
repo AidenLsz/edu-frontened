@@ -70,7 +70,13 @@ export default {
       visibleList: [false, false]
     };
   },
+  mounted(){
+    this.ToTop();
+  },
   methods: {
+    ToTop(){
+      window.scrollTo(0,0);
+    },
     OpacityCheck(Index){
       if(this.visibleList[Index]){
         return "unvisible"

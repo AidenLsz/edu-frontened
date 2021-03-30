@@ -352,51 +352,52 @@
           </el-row>
           <el-row>
             <el-col :span="6" style="font-size: 20px">
-              <i class="el-icon-arrow-down"></i>
+              <i v-if="Expand" @click="Expand_Type_Change()" class="el-icon-arrow-down"></i>
+              <i v-if="!Expand" @click="Expand_Type_Change()" class="el-icon-arrow-right"></i>
             </el-col>
             <el-col :span="6" style="text-align: left; font-size: 20px">
               题型
             </el-col>
             <el-col :span="12">
-              <el-button @click="showHint = true" size="small" type="danger">非法格式提示</el-button>
+              <el-button @click="showHint = true" size="small" type="danger" plain>非法格式提示</el-button>
             </el-col>
           </el-row>
           <!-- Option -->
-          <el-row style="margin-top: 10px">
+          <el-row style="margin-top: 10px" v-if="Expand">
             <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
               <i class="el-icon-circle-check"></i>
               <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'option'; showDialog = true; ">选择题</el-button>
             </el-col>
           </el-row>
           <!-- Fill -->
-          <el-row>
+          <el-row v-if="Expand">
             <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
               <i class="el-icon-full-screen"></i>
               <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'fill'; showDialog_Fill = true; ">填空题</el-button>
             </el-col>
           </el-row>
           <!-- Answer -->
-          <el-row>
+          <el-row v-if="Expand">
             <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
               <i class="el-icon-edit-outline"></i>
               <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'answer'; showDialog_Answer = true; ">解答题</el-button>
             </el-col>
           </el-row>
           <!-- Mix -->
-          <el-row>
+          <el-row v-if="Expand">
             <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
               <i class="el-icon-reading"></i>
               <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Type_Now = 'mix'; showDialog_Mix = true; ">综合题</el-button>
             </el-col>
           </el-row>
         </el-row>
-        <el-row type="flex" justify="center" style="padding-top: 30px">
+        <!-- <el-row type="flex" justify="center" style="padding-top: 30px">
           <el-button type="primary" plain style="width: 200px; font-size: 16px" @click="ImportFile()">
             <label>文件导入</label>
           </el-button>
-        </el-row>
+        </el-row> -->
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')">
+          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')" :disabled="Type_Now == ''">
             <label>题目入库</label>
           </el-button>
         </el-row>
@@ -408,7 +409,7 @@
           <AnswerDisplay v-else-if="Type_Now == 'answer'" :QI="Temp_AnswerQuestionInfo"></AnswerDisplay>
           <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo"></MixDisplay>  
         </el-row>
-        <el-row v-if="Type_Now != '-1'">
+        <el-row v-if="Type_Now != ''">
           <el-col :span="8">
             <el-button type="primary" plain @click="Edit_Question()">重新编辑</el-button>
           </el-col>
@@ -416,7 +417,7 @@
             <el-button type="warning" plain @click="PaperUpload('export')">题目导出</el-button> 
           </el-col>  
           <el-col :span="8">
-            <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button> 
+            <el-button type="danger" plain @click="Type_Now = ''; Reset_Params()">清空数据</el-button> 
           </el-col> 
         </el-row>  
       </el-col>
@@ -450,6 +451,8 @@ export default {
                 Mathdown},
   data() {
     return {
+      // 是否展开题型
+      Expand: true,
       // 待选科目
       Subject_List: [{
         value: "语文",
@@ -533,8 +536,9 @@ export default {
       Question_Edit_Answer_Index: -1,
       Question_Check: [],
       Submit_Show: false,
+      // ------------------- 以下是原来的单题内容，以上是新加的编辑 -------------------
       // 当前题目类型
-      Type_Now: "-1",
+      Type_Now: "",
       // 选择题编辑器,填空题编辑器和解答题编辑器的显示控制
       showDialog: false,
       showDialog_Fill: false,
@@ -688,8 +692,16 @@ export default {
   },
   mounted(){
     this.Init_Question_Check()
+    this.ToTop();
   },
   methods: {
+    ToTop(){
+      window.scrollTo(0,0);
+    },
+    // 展开题型
+    Expand_Type_Change(){
+      this.Expand = !this.Expand;
+    },
     preview() {
       this.isview = true;
     },
@@ -874,7 +886,7 @@ export default {
           }
         }
 
-        if(!(Check_Now.charCodeAt(c) > 255 || this.ch_pun_list.indexOf(Check_Now[c]) != -1 || this.en_pun_list.indexOf(Check_Now[c]) != -1 || Check_Now[c] == ' ') 
+        if(!(Check_Now.charCodeAt(c) > 255 || this.ch_pun_list.indexOf(Check_Now[c]) != -1 || this.en_pun_list.indexOf(Check_Now[c]) != -1 || Check_Now[c] == ' ' || Check_Now.charCodeAt(c) == 10) 
             && Flag 
             && Check_Now[c] != '$'){
           this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
@@ -910,6 +922,7 @@ export default {
     Reset_Params(){
 
       this.ReEditSwitch = false;
+      this.Type_Now = "";
 
       this.Temp_OptionQuestionInfo = {
 

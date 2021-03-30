@@ -28,7 +28,7 @@
             <el-button @click="Router_Trans('/inputMarked')"  circle style="height: 200px; width: 200px;"><img src="../assets/icon6.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
-            <router-link to="/inputMarked" :underline="false">
+            <router-link to="/inputMarked" :underline="false" @click.native="ToTop">
               <label style="margin-top: 30px; font-size: 20px; color: black">
                 试题资源
               </label>
@@ -43,7 +43,7 @@
             <el-button @click="Router_Trans('/inputPaper')" circle style="height: 200px; width: 200px"><img src="../assets/icon8.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
-            <router-link to="/inputPaper" :underline="false">
+            <router-link to="/inputPaper" :underline="false" @click.native="ToTop">
               <label style="margin-top: 30px; font-size: 20px; color: black">
                 试卷资源
               </label>
@@ -95,7 +95,7 @@
             <el-button @click="Router_Trans('/exercise')"  circle style="height: 200px; width: 200px"><img src="../assets/icon6.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
-            <router-link to="/exercise" :underline="false">
+            <router-link to="/exercise" :underline="false" @click.native="ToTop">
               <label style="margin-top: 30px; font-size: 20px; color: black">
                 试题资源
               </label>
@@ -110,7 +110,7 @@
             <el-button @click="Router_Trans('/ku')" circle style="height: 200px; width: 200px"><img src="../assets/icon5.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
-            <router-link to="/ku" :underline="false">
+            <router-link to="/ku" :underline="false" @click.native="ToTop">
               <label style="margin-top: 30px; font-size: 20px; color: black">
                 知识体系
               </label>
@@ -287,7 +287,7 @@
             <el-button @click="Router_Trans('/inputMarked')" circle style="height: 200px; width: 200px;"><img src="../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
-            <router-link to="/inputMarked" :underline="false">
+            <router-link to="/inputMarked" :underline="false" @click.native="ToTop">
               <label style="margin-top: 30px; font-size: 20px; color: black">
                 资源录入
               </label>
@@ -302,7 +302,7 @@
             <el-button @click="Router_Trans('/exercise')" circle style="height: 200px; width: 200px"><img src="../assets/icon3.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
-            <router-link to="/exercise" :underline="false">
+            <router-link to="/exercise" :underline="false" @click.native="ToTop">
               <label style="margin-top: 30px; font-size: 20px; color: black">
                 查询
               </label>
@@ -354,7 +354,7 @@
             <el-button @click="Router_Trans('/inputPaper')" circle style="height: 200px; width: 200px;"><img src="../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
-            <router-link to="/inputPaper" :underline="false">
+            <router-link to="/inputPaper" :underline="false" @click.native="ToTop">
               <label style="margin-top: 30px; font-size: 20px; color: black">
                 试卷录入
               </label>
@@ -419,7 +419,7 @@
             <el-button @click="Router_Trans('/ku')" circle style="height: 200px; width: 200px"><img src="../assets/icon3.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
-            <router-link to="/ku" :underline="false">
+            <router-link to="/ku" :underline="false" @click.native="ToTop">
               <label style="margin-top: 30px; font-size: 20px; color: black">
                 查询
               </label>
@@ -677,10 +677,13 @@ export default {
     });
   },
   methods: {
+    ToTop(){
+      window.scrollTo(0,0);
+    },
     submit() {
       this.$router.push({
         name: "Knowledge Unit",
-        params: { name: this.ku_name }
+        params: { name: this.ku_name, knowledgeSystem: "neea" }
       });
     },
     CloseFunctions(){

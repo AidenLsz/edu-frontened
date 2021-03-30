@@ -244,7 +244,13 @@ export default {
       this.submit();
     }
   },
+  mounted(){
+    this.ToTop()
+  },
   methods: {
+    ToTop(){
+      window.scrollTo(0,0);
+    },
     BackToTop(){
       this.submit();
       window.scrollTo(0,0);

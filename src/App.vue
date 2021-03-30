@@ -190,12 +190,12 @@
                     <el-submenu index="1">
                       <template slot="title"><span style="color: black;">资源录入</span></template>
                       <el-menu-item index="1-1"><span style="color:	Gainsboro;">学习资源</span></el-menu-item>
-                      <router-link to="/inputMarked" :underline="false">
+                      <router-link to="/inputMarked" :underline="false" @click.native="ToTop">
                         <el-menu-item index="1-2">
                           <span style="color: black;">试题资源</span>
                         </el-menu-item>
                       </router-link>
-                      <router-link to="/inputPaper" :underline="false">
+                      <router-link to="/inputPaper" :underline="false" @click.native="ToTop">
                         <el-menu-item index="1-3">
                           <span style="color: black;">试卷资源</span>
                         </el-menu-item>
@@ -206,13 +206,13 @@
 
                       <template slot="title"><span style="color: black;">查询</span></template>
 
-                      <router-link to="/exercise" :underline="false">
+                      <router-link to="/exercise" :underline="false" @click.native="ToTop">
                         <el-menu-item index="2-1">
                           <span style="color: black;">试题检索</span>
                         </el-menu-item>
                       </router-link>                  
                       
-                      <router-link to="/ku" :underline="false">
+                      <router-link to="/ku" :underline="false" @click.native="ToTop">
                         <el-menu-item index="2-2">
                           <span style="color: black;">知识单元检索</span>
                         </el-menu-item>
@@ -224,12 +224,12 @@
                       <el-menu-item index="3-1"><span style="color: Gainsboro;">学习资源</span></el-menu-item>
                       <el-menu-item index="3-2"><span style="color: Gainsboro;">试卷资源</span></el-menu-item>
                     </el-submenu>
-                    <router-link to="/estimate" :underline="false">
+                    <router-link to="/estimate" :underline="false" @click.native="ToTop">
                       <el-menu-item index="4">
                           <span style="color: black;">试题属性预估</span>
                       </el-menu-item>
                     </router-link>
-                    <router-link to="/similarity" :underline="false">
+                    <router-link to="/similarity" :underline="false" @click.native="ToTop">
                       <el-menu-item index="5">
                         <span style="color: black;">相似题预估</span>
                       </el-menu-item>
@@ -358,6 +358,9 @@ export default {
     // });
   },
   methods: {
+    ToTop(){
+      window.scrollTo(0,0);
+    },
     TeMethod(){
       this.$router.push({ path: "/" });
       location.reload();
