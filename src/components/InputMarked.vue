@@ -700,8 +700,6 @@ export default {
       
       this.Type_Now = Type;
 
-      console.log("TYPE", Type, "TN", this.Type_Now)
-
       if(Type == 'option'){
           this.showDialog = true;
       }else if(Type == 'fill'){
@@ -1408,7 +1406,6 @@ export default {
       for(var i = 0; i < this.TestData.doc.length; i++){
         this.Question_Check.push(false);
         this.TestData.doc[i].answer = this.TestData.doc[i].answer.split("::");
-        console.log(this.TestData.doc[i].answer)
       }
 
     },

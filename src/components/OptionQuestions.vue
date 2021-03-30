@@ -372,17 +372,17 @@ export default {
         'questionInfo.score': {
 
             handler(newVal, oldVal) {
-                if(newVal == ""){
+                if(!parseFloat(newVal)){
                     newVal = oldVal;
                     this.$message.error("请勿直接删除分数值");
-                }else if(newVal <= 0){
+                }else if(parseFloat(newVal) < 0){
                     newVal = 0.1;
                     this.$message.error("一道题目应当至少有0.1分");
-                }else if(newVal > 100){
+                }else if(parseFloat(newVal) > 100){
                     newVal = 100;
                     this.$message.error("一道题目应当至多有100分");
                 }
-                this.questionInfo.score = newVal;
+                this.questionInfo.score = parseFloat(newVal);
             },
 
             deep: true,
@@ -431,7 +431,6 @@ export default {
 
             let _this = this;
             let length = e.target.files.length;
-            console.log(e.target.files);
 
             for (var i = 0; i < length; i++) {
                 let reader = new FileReader();

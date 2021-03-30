@@ -1781,8 +1781,6 @@ export default {
 
       }
 
-      this.Show_TITLE();
-
     },
 
     // 切分位置在这一点的后面
@@ -1873,8 +1871,6 @@ export default {
         }
       
       }
-
-      this.Show_TITLE();
     
     },
     
@@ -2111,8 +2107,6 @@ export default {
         }
       }
 
-      this.Show_TITLE();
-
     },
 
     // 获取题干或其他内容应当显示的分界线内容
@@ -2229,7 +2223,6 @@ export default {
 
       }
 
-      this.Show_TITLE();
 
     },
     Show_CANT(){
@@ -2281,12 +2274,7 @@ export default {
       this.TestData = {}
 
     },
-    Show_TITLE(){
-      console.log("-----------------");
-      console.log(this.title_index);
-      console.log(this.file_item_label);
-    },
-    // ---------------------------这下面是本体的方法，上面是导入试卷的方法-------------------------------
+    // ------------------------这下面是本体的方法，上面是导入试卷的方法-------------------------------
     // 处理上传试卷时的方法
     uploadPaper(event){
       console.log(event.target.files)
@@ -2300,8 +2288,6 @@ export default {
     // 由于折叠属性放在题目内会对显示造成复杂化的结果，就放在外面
     // 查找次序依次为题目包，点击添加按钮的包序号，然后访问这个包下保存题目和题目折叠信息的条目
     New_Questions(val){
-
-      console.log(val)
 
         if(val.type != 'mix'){
           this.Normal_Char_Check(val);
@@ -3497,13 +3483,11 @@ export default {
     Normal_Char_Check(val){
 
       var Check_Now = val.content;
-      console.log("con")
       if(!this.ChecK_Do(Check_Now)){
         return false
       }
 
       var Check_Now_List = val.answer;
-      console.log("ans")
       if(Check_Now_List.indexOf("::") != -1){
 
         Check_Now_List = Check_Now_List.split("::");
@@ -3524,13 +3508,11 @@ export default {
       }
 
       Check_Now = val.analyse;
-      console.log("ana")
       if(Check_Now != "" && !this.ChecK_Do(Check_Now)){
         return false
       }
 
       if(val.type == 'option'){
-        console.log("opt")
         Check_Now_List = val.options;
         for(var opi = 0; opi < Check_Now_List.length; opi++){
 
@@ -3756,7 +3738,6 @@ export default {
           Ans.answer_images = []
           Ans.analyse = Ques.analysis;
           Ans.analyse_images = [];
-          console.log(Ques.sub_questions);
           for(j = 0; j < Ques.sub_questions.length; j++){
             Ans.sub_questions.push(Ques.sub_questions[j]);
             Ans.sub_questions_images.push([]);
