@@ -1,5 +1,3 @@
-// 这一页面的主要作用是测试不同题型的录入和显示功能是否能正常运作
-
 <template>
     <div>
         <!-- 题目分数及题干 -->
@@ -8,7 +6,7 @@
                 <span><label> ( {{ QI.score }}分 ) </label></span>
             </el-col>
             <el-col :span="21">
-                <Mathdown name="MixQuestions_Content" :content="QI.content"></Mathdown>
+                <Mathdown :name="BI + '_' + 'MixQuestions_Content'" :content="QI.content"></Mathdown>
             </el-col>
         </el-row>
         <!-- 题干图片的部分 -->
@@ -48,9 +46,9 @@
                     <label>第 {{index + 1}} 小题：</label>
                 </el-row>
                 <el-row>
-                    <OptionDisplay v-if="item.type == 'option'" :QI="item"></OptionDisplay>
-                    <FillDisplay v-else-if="item.type == 'fill'" :QI="item"></FillDisplay>
-                    <AnswerDisplay v-else-if="item.type == 'answer'" :QI="item"></AnswerDisplay>
+                    <OptionDisplay v-if="item.type == 'option'" :QI="item" :Bundle_Index="BI" :Sub_Index="index.toString()"></OptionDisplay>
+                    <FillDisplay v-else-if="item.type == 'fill'" :QI="item" :Bundle_Index="BI" :Sub_Index="index.toString()"></FillDisplay>
+                    <AnswerDisplay v-else-if="item.type == 'answer'" :QI="item" :Bundle_Index="BI" :Sub_Index="index.toString()"></AnswerDisplay>
                 </el-row>
             </el-col>
         </el-row>
@@ -61,7 +59,7 @@
                     <span><label>答案：</label></span>
                 </el-col>
                 <el-col :span="22" v-if="QI.answer != ''">
-                    <Mathdown name="MixQuestions_Answer" :content="QI.answer"></Mathdown>
+                    <Mathdown :name="BI + '_' + 'MixQuestions_Answer'" :content="QI.answer"></Mathdown>
                 </el-col>
                 <el-col :span="22" v-if="QI.answer == ''"  style="text-align: left">
                     <label>暂无文字答案，请参考附图</label>
@@ -94,7 +92,7 @@
                     <span><label>解析：</label></span>
                 </el-col>
                 <el-col :span="22" v-if="QI.analyse != ''">
-                    <Mathdown name="MixQuestions_Analyse" :content="QI.analyse"></Mathdown>
+                    <Mathdown :name="BI + '_' + 'MixQuestions_Analyse'" :content="QI.analyse"></Mathdown>
                 </el-col>
                 <el-col :span="22" v-if="QI.analyse == ''" style="text-align: left">
                     <label>暂无文字解析，请参考附图</label>
@@ -153,6 +151,10 @@ export default {
                 }
             }
 
+        },
+        BI: {
+            type: String,
+            default: "Bundle_0"
         }
     },
 }

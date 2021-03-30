@@ -51,10 +51,10 @@
                   </el-row>
                   <!-- 展开模式交给Display来负责，折叠模式为了避免样式报错，直接转换成文字格式 -->
                   <el-row>
-                      <OptionDisplay v-if="Question.type == 'option'" :QI="Question"></OptionDisplay>
-                      <FillDisplay v-else-if="Question.type == 'fill'" :QI="Question"></FillDisplay>
-                      <AnswerDisplay v-else-if="Question.type == 'answer'" :QI="Question"></AnswerDisplay>
-                      <MixDisplay v-else-if="Question.type == 'mix'" :QI="Question"></MixDisplay>
+                      <OptionDisplay v-if="Question.type == 'option'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></OptionDisplay>
+                      <FillDisplay v-else-if="Question.type == 'fill'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></FillDisplay>
+                      <AnswerDisplay v-else-if="Question.type == 'answer'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></AnswerDisplay>
+                      <MixDisplay v-else-if="Question.type == 'mix'" :QI="Question" :BI="'Bundle_' + Bundle_Index"></MixDisplay>
                   </el-row>
               </el-col>
           </el-row>
@@ -879,10 +879,10 @@
                   </el-row>
                   <!-- 展开模式交给Display来负责，折叠模式为了避免样式报错，直接转换成文字格式 -->
                   <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index] == false">
-                      <OptionDisplay v-if="Question.type == 'option'" :QI="Question"></OptionDisplay>
-                      <FillDisplay v-else-if="Question.type == 'fill'" :QI="Question"></FillDisplay>
-                      <AnswerDisplay v-else-if="Question.type == 'answer'" :QI="Question"></AnswerDisplay>
-                      <MixDisplay v-else-if="Question.type == 'mix'" :QI="Question"></MixDisplay>
+                      <OptionDisplay v-if="Question.type == 'option'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></OptionDisplay>
+                      <FillDisplay v-else-if="Question.type == 'fill'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></FillDisplay>
+                      <AnswerDisplay v-else-if="Question.type == 'answer'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></AnswerDisplay>
+                      <MixDisplay v-else-if="Question.type == 'mix'" :QI="Question" :BI="'Bundle_' + Bundle_Index"></MixDisplay>
                   </el-row>
                   <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index]" style="text-align: left; font-size: 14px">
                       <el-col :offset="1">
