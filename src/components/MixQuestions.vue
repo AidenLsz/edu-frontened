@@ -493,21 +493,32 @@ export default {
 
             handler: function(newVal, oldVal) {
 
+                
+
                 var change_Switch = false;
 
                 if(newVal != oldVal){
                     for(var i = 0; i < newVal.length; i++){
-                        if(parseFloat(newVal[i].score) == 1 && oldVal){
-                            newVal[i].score = oldVal[i].score;
+                        if(parseFloat(newVal[i])){
+                            newVal[i] = parseFloat(newVal[i]);
+                        }
+                        if(parseFloat(oldVal[i])){
+                            oldVal[i] = parseFloat(oldVal[i]);
+                        }
+                        if(newVal[i] == 1 && oldVal){
+                            newVal.splice(i, 1, oldVal[i]);
                             change_Switch = true;
-                        }else if(parseFloat(newVal[i].score) <= 0){
-                            newVal[i].score = 0.1;
+                        }else if(newVal[i] <= 0){
+                            newVal.splice(i, 1, 0.1);
                             this.$message.error("一道题目应当至少有0.1分");
                             change_Switch = true;
-                        }else if(parseFloat(newVal[i].score) > 100){
-                            newVal[i].score = 100;
+                        }else if(newVal[i] > 100){
+                            newVal.splice(i, 1, 100);
                             this.$message.error("一道题目应当至多有100分");
                             change_Switch = true;
+                        }else if(!parseFloat(newVal[i])){
+                            newVal[i] = oldVal[i]
+                            this.$message.error("请勿直接删除分数值");
                         }
                     }
                 }
@@ -669,7 +680,6 @@ export default {
         New_Questions(val){
 
             this.questionInfos.sub_questions.push(val);
-            console.log(val)
             this.questionInfos.sub_questions_collapse.push(false);
             this.Close_Editor();
             this.Reset_Params();
@@ -687,15 +697,12 @@ export default {
             if(this.questionInfos.sub_questions[index].type == 'option'){
                 this.showDialog = true;
                 this.Temp_OptionQuestionInfos = this.questionInfos.sub_questions[index];
-                console.log(this.Temp_OptionQuestionInfos)
             }else if(this.questionInfos.sub_questions[index].type == 'fill'){
                 this.showDialog_Fill = true;
                 this.Temp_FillQuestionInfos = this.questionInfos.sub_questions[index];
-                console.log(this.Temp_FillQuestionInfos)
             }else if(this.questionInfos.sub_questions[index].type == 'answer'){
                 this.showDialog_Answer = true;
                 this.Temp_AnswerQuestionInfos = this.questionInfos.sub_questions[index];
-                console.log(this.Temp_AnswerQuestionInfos)
             }
             this.ReEditSwitch = true;
             this.Index_Edit_Record = index;

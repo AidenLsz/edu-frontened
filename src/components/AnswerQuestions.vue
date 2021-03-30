@@ -395,34 +395,32 @@ export default {
 
             handler: function(newVal, oldVal) {
 
-                var change_Switch = false;
-
-                if(newVal != oldVal){
-                    for(var i = 0; i < newVal.length; i++){
-                        if(newVal[i] == 1 && oldVal){
-                            newVal.splice(i, 1, oldVal[i]);
-                            change_Switch = true;
-                        }else if(newVal[i] <= 0){
-                            newVal.splice(i, 1, 0.1);
-                            this.$message.error("一道题目应当至少有0.1分");
-                            change_Switch = true;
-                        }else if(newVal[i] > 100){
-                            newVal.splice(i, 1, 100);
-                            this.$message.error("一道题目应当至多有100分");
-                            change_Switch = true;
-                        }
+                for(var i = 0; i < newVal.length; i++){
+                    if(parseFloat(newVal[i]) == 1 && oldVal){
+                        newVal[i] = parseFloat(oldVal[i]);
+                    }else if(parseFloat(newVal[i]) <= 0){
+                        newVal.splice(i, 1, 0.1);
+                        this.$message.error("一道题目应当至少有0.1分");
+                        return 
+                    }else if(parseFloat(newVal[i]) > 100){
+                        newVal.splice(i, 1, 100);
+                        this.$message.error("一道题目应当至多有100分");
+                        return 
+                    }else if(!parseFloat(newVal[i])){
+                        newVal[i] = parseFloat(oldVal[i])
+                        this.$message.error("请勿直接删除分数值");
+                        return 
+                    }else if(parseFloat(newVal[i])){
+                        newVal[i] = parseFloat(newVal[i])
                     }
                 }
 
-                if(!change_Switch){
 
-                    this.questionInfo.sub_questions_scores = newVal;
-                    this.questionInfo.score = parseFloat(this.questionInfo.sub_questions_scores[0]);
+                this.questionInfo.sub_questions_scores = newVal;
+                this.questionInfo.score = parseFloat(this.questionInfo.sub_questions_scores[0]);
 
-                    for(var j = 1; j < this.questionInfo.sub_questions_scores.length; j++){
-                        this.questionInfo.score = this.questionInfo.score + parseFloat(this.questionInfo.sub_questions_scores[j]);
-                    }
-
+                for(var j = 1; j < this.questionInfo.sub_questions_scores.length; j++){
+                    this.questionInfo.score = this.questionInfo.score + parseFloat(this.questionInfo.sub_questions_scores[j]);
                 }
 
             },
@@ -473,7 +471,6 @@ export default {
 
             let _this = this;
             let length = e.target.files.length;
-            console.log(e.target.files);
 
             for (var i = 0; i < length; i++) {
                 let reader = new FileReader();
