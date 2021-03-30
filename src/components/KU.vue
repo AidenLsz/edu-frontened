@@ -22,7 +22,17 @@
             <el-button type="primary"  @click="Open_CI()">切换多格式输入</el-button>
           </el-col>
           <el-col :span="2">
-            <el-button type="primary"  value="提交" @click="submit(ku_name)">检索</el-button>
+            <el-button type="primary"  value="提交" @click="submit(ku_name)" :disabled="knowledgeSystem == ''">检索</el-button>
+          </el-col>
+          <el-col :span="4" :offset="3">
+            <el-select v-model="knowledgeSystem" placeholder="请选择知识体系">
+              <el-option
+                v-for="item in KS_List"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-col>
         </el-row>
 
@@ -31,8 +41,16 @@
             <ComplexInput @Update_CI="UCI" @Update_Image="UCII" ref="CI" @Full_Change="ComplexInputFullChange"></ComplexInput>
           </el-col>
           <el-col :span="3" type="flex" justify="center">
-            <el-button type="primary"  @click="Close_CI()" style="margin-top: 14vh">切换简单输入</el-button>
-            <el-button type="primary" value="提交" @click="submit(ku_name)"  style="margin-top: 3vh">检索</el-button>
+            <el-select v-model="knowledgeSystem" placeholder="请选择知识体系" style="margin-top: 6vh">
+              <el-option
+                v-for="item in KS_List"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <el-button type="primary"  @click="Close_CI()" style="margin-top: 7vh">切换简单输入</el-button>
+            <el-button type="primary" value="提交" @click="submit(ku_name)"  style="margin-top: 3vh" :disabled="knowledgeSystem == ''">检索</el-button>        
           </el-col>
         </el-row>
         <!-- <el-row type="flex" class="row-bg" justify="center">
@@ -90,17 +108,23 @@
                 >
                   <el-row type="flex" justufy="start" :gutter="40">
                     <el-checkbox-group v-model="checkList" id="checkbox">
-                      <el-col :span="6">
+                      <el-col :span="4">
                         <el-checkbox label="前驱后继">前驱后继</el-checkbox>
                       </el-col>
                       <el-col :span="1">
                         <h6>{{ directed_len }}</h6>
                       </el-col>
-                      <el-col :span="6">
+                      <el-col :span="4">
                         <el-checkbox label="共同学习">共同学习</el-checkbox>
                       </el-col>
                       <el-col :span="1">
                         <h6>{{ undirected_len }}</h6>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-checkbox label="层级关系">层级关系</el-checkbox>
+                      </el-col>
+                      <el-col :span="1">
+                        <h6>{{ '(' + 0 + ')' }}</h6>
                       </el-col>
                     </el-checkbox-group>
                   </el-row>
@@ -189,6 +213,12 @@
       </el-col>
       <el-col :span="15">
         <div class="graph">
+          <el-row>
+            <el-col :span="6"><p style="color: #409EFD; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>知识点</p></el-col>
+            <el-col :span="6"><p style="color: #EDB664; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>前驱后继</p></el-col>
+            <el-col :span="6"><p style="color: #9ECCAB; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>共同学习</p></el-col>
+            <el-col :span="6"><p style="color: #F1939C; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>层级关系</p></el-col>
+          </el-row>
           <Graph
             :node="node"
             :neighbors_groups="neighbors_groups"
@@ -217,7 +247,7 @@ export default {
       neighbors_groups: {},
       sour: "rjb_new",
       sourceLabel: ["百科", "人教版"],
-      checkList: ["前驱后继", "共同学习"],
+      checkList: ["前驱后继", "共同学习", "层级关系"],
       directed_len: "",
       undirected_len: "",
       inward_arrow: 0,
@@ -227,7 +257,32 @@ export default {
       url: "",
       image_infos: [],
       complex_input_flag: false,
-      FullChange: true
+      FullChange: true,
+      // 知识体系名称
+      KS_List: [
+        {
+          value: 'NUEAGUC',
+          label: '高考数据'
+        },
+        {
+          value: 'iflytek',
+          label: '讯飞'
+        },
+        {
+          value: 'neea',
+          label: '考试中心'
+        },
+        {
+          value: 'tiku',
+          label: '题库中国'
+        },
+        {
+          value: 'Other',
+          label: '其他'
+        },
+      ],
+      // 知识体系
+      knowledgeSystem: ""
     };
   },
   mounted() {
@@ -237,6 +292,7 @@ export default {
       this.ku_name = this.$route.params.name;
       this.submit(this.ku_name);
     }
+    this.ToTop();
   },
   watch: {
     sour() {
@@ -247,6 +303,9 @@ export default {
     }
   },
   methods: {
+    ToTop(){
+      window.scrollTo(0,0);
+    },
     Research(val){
       console.log(val);
       this.submit(val);
@@ -271,11 +330,12 @@ export default {
     /**
      * 提交
      */
-    submit(name) {
+    submit(name, ks) {
       if (this.ku_name.length === 0) {
         return;
       }
       if (name !== undefined) this.ku_name = name;
+      if (ks !== undefined) this.knowledgeSystem = ks;
       this.url =
         "https://baike.baidu.com/search/word?word=" + encodeURI(this.ku_name);
       this.loading = true;
@@ -285,7 +345,8 @@ export default {
           {
             ku_name: this.ku_name,
             ku_type: this.ku_type,
-            ku_edge_type: this.checkList
+            ku_edge_type: this.checkList,
+            system: this.knowledgeSystem
           },
           { emulateJSON: true }
         )
@@ -307,7 +368,8 @@ export default {
           {
             ku_name: this.ku_name,
             ku_type: this.ku_type,
-            ku_edge_type: ["前驱后继", "共同学习"]
+            ku_edge_type: ["前驱后继", "共同学习", "层级关系"],
+            system: this.knowledgeSystem
           },
           { emulateJSON: true }
         )

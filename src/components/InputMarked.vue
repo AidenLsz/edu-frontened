@@ -397,7 +397,7 @@
           </el-button>
         </el-row> -->
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')">
+          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')" :disabled="Type_Now == ''">
             <label>题目入库</label>
           </el-button>
         </el-row>
@@ -409,7 +409,7 @@
           <AnswerDisplay v-else-if="Type_Now == 'answer'" :QI="Temp_AnswerQuestionInfo"></AnswerDisplay>
           <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo"></MixDisplay>  
         </el-row>
-        <el-row v-if="Type_Now != '-1'">
+        <el-row v-if="Type_Now != ''">
           <el-col :span="8">
             <el-button type="primary" plain @click="Edit_Question()">重新编辑</el-button>
           </el-col>
@@ -417,7 +417,7 @@
             <el-button type="warning" plain @click="PaperUpload('export')">题目导出</el-button> 
           </el-col>  
           <el-col :span="8">
-            <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button> 
+            <el-button type="danger" plain @click="Type_Now = ''; Reset_Params()">清空数据</el-button> 
           </el-col> 
         </el-row>  
       </el-col>
@@ -536,8 +536,9 @@ export default {
       Question_Edit_Answer_Index: -1,
       Question_Check: [],
       Submit_Show: false,
+      // ------------------- 以下是原来的单题内容，以上是新加的编辑 -------------------
       // 当前题目类型
-      Type_Now: "-1",
+      Type_Now: "",
       // 选择题编辑器,填空题编辑器和解答题编辑器的显示控制
       showDialog: false,
       showDialog_Fill: false,
@@ -691,8 +692,12 @@ export default {
   },
   mounted(){
     this.Init_Question_Check()
+    this.ToTop();
   },
   methods: {
+    ToTop(){
+      window.scrollTo(0,0);
+    },
     // 展开题型
     Expand_Type_Change(){
       this.Expand = !this.Expand;
@@ -917,6 +922,7 @@ export default {
     Reset_Params(){
 
       this.ReEditSwitch = false;
+      this.Type_Now = "";
 
       this.Temp_OptionQuestionInfo = {
 

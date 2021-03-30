@@ -58,9 +58,7 @@ export default {
       console.log(this.selected_type);
     },
     draw_graph() {
-      // console.log(this.node)
-      // console.log(this.neighbors_groups)
-      // console.log(this.inward_arrow , this.outward_arrow)
+      
       // 改线条颜色
       var directedLen = this.inward_arrow + this.outward_arrow;
       let _this = this;
@@ -77,7 +75,7 @@ export default {
         nodes: [
           {
             id: this.node.name,
-            desc: "this is " + this.node.name,
+            desc: "this is " + this.node.description,
             type: 0,
             hidden: false,
             lock: false,
@@ -768,9 +766,9 @@ export default {
       // 生成图
       // 先清空画布
       d3.selectAll("svg > *").remove();
-      // console.log(this.node)
-      // console.log(this.neighbors_groups)
-      // console.log(this.inward_arrow , this.outward_arrow)
+      console.log(this.node)
+      console.log(this.neighbors_groups)
+      console.log(this.inward_arrow , this.outward_arrow)
       // 改线条颜色
       var directedLen = this.inward_arrow + this.outward_arrow;
       // 动态添加边属性
@@ -898,7 +896,7 @@ export default {
         nodes: [
           {
             id: this.node.name,
-            desc: "this is " + this.node.name,
+            desc: this.node.description,
             type: 0,
             hidden: false,
             lock: false,
@@ -915,7 +913,7 @@ export default {
       for (i = 0; i < this.neighbors_groups["kp2.0"].length; i++) {
         state.nodes[i + 1] = {
           id: this.neighbors_groups["kp2.0"][i].name,
-          desc: "this is " + this.neighbors_groups["kp2.0"][i].name,
+          desc: this.neighbors_groups["kp2.0"][i].annotation.split("description-")[1],
           type: 1,
           hidden: false,
           lock: false,

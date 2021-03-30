@@ -202,7 +202,13 @@ export default {
       }
     }
   },
+  mounted(){
+    this.ToTop();
+  },
   methods: {
+    ToTop(){
+      window.scrollTo(0,0);
+    },
     // 提交评估按钮，向后端发送请求
     submit() {
       if (this.checkList.length === 0) {

@@ -64,7 +64,7 @@
     <!-- 暂时是个展示功能，之后有需求的时候往进接一下那个算法就行了 -->
     <el-dialog 
         :visible.sync="importPaperDialog" 
-        title="试卷文件导入" 
+        title="试卷文件导入（尚未开发完成，数学部分仍在测试过程当中）" 
         width="90%" 
         @close="Import_Paper_Dialog_Close()"
         :modal-append-to-body="false"
@@ -79,6 +79,15 @@
             <el-option value="0" label="英语"></el-option>
             <el-option value="1" label="数学"></el-option>
           </el-select>
+          <label style="font-weight: bold; line-height: 40px; padding-left: 30px" v-if="paper_type == '1'">请选择学段信息：</label>
+          <el-select v-model="PeriodType" placeholder="请选择学段" v-if="paper_type == '1'">
+                <el-option
+                  v-for="item in Period_List"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
           <label style="font-weight: bold; line-height: 40px; padding-left: 30px">*支持doc，docx格式的文件</label>
         </el-row>
         
@@ -506,7 +515,7 @@
           <el-button type="primary" @click="saveFile(format)" :disabled="Download_Show(format)">导出文件</el-button>
         </el-row>
         <el-row v-if="paper_type == '1'">
-          <el-col :span="4" :offset="6">
+          <el-col :span="4" :offset="4">
             <el-button :disabled="!(Submit_Show)" @click="Ensure()" type="success" plain>
               确认入库
             </el-button>
@@ -521,6 +530,13 @@
               @click="saveMathFile(1)"  
               type="primary" plain>
               下载答案原Json文件
+            </el-button>
+          </el-col>
+          <el-col :span="4">
+            <el-button :disabled="downloadAnswer == ''" 
+              @click="saveMathFile(2)"  
+              type="primary" plain>
+              下载合并Json文件
             </el-button>
           </el-col>
         </el-row>
@@ -707,17 +723,17 @@
           </el-button>
         </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="primary" @click="paperShow = true" plain style="width: 200px; font-size: 16px">
+          <el-button type="primary" @click="paperShow = true" plain style="width: 200px; font-size: 16px" :disabled="Questions.length == 0">
             <label>预览全卷</label>
           </el-button>
         </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')">
+          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')" :disabled="Questions.length == 0">
             <label>题目入库</label>
           </el-button>
         </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('export')">
+          <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('export')" :disabled="Questions.length == 0">
             <label>导出题目</label>
           </el-button>
         </el-row>
@@ -1132,9 +1148,6 @@ export default {
       downloadAnswerName: ""
     };
   },
-  mounted(){
-
-  },
   computed: {
     total_score: {
       get: function() {
@@ -1239,7 +1252,13 @@ export default {
       }
     },
   },
+  mounted(){
+    this.ToTop();
+  },
   methods: {
+    ToTop(){
+      window.scrollTo(0,0);
+    },
     // 切换题包是否展开
     Expand_Type_Change(){
       this.Expand = !this.Expand;
@@ -1345,44 +1364,7 @@ export default {
             if(this.math_input == 'paper'){
               this.json_content = data.body.Paper;
               this.downloadPaper = data.body.Download_Paper;
-              this.TestData = {
-                "title": "2009年课标甲乙",
-                "subject_type": "数学",
-                "period_type": "高中",
-                "doc": [
-                  // {
-                  //   "question_stem": "已知集合$A = \\{ 0,2 \\}$，$B = \\{ - 2 , - 1,0,1,2 \\}$,则$A \\cap B =$",
-                  //   "question_options": [ "$\\{ 0,2 \\}$", "$\\{ 1,2 \\}$", "$\\{ 0 \\}$", "$\\{ - 2 , - 1,0,1,2 \\}$" ],
-                  //   "question_type": "选择题",
-                  //   "sub_questions": [],
-                  //   "answer": "A",
-                  //   "analysis": "",
-                  //   "source": "user_input",
-                  //   "subject": "user_input"
-                  // },
-                  // {
-                  //   "question_stem": "已知函数<IMG: 2018年高考文科数学试题-HTML.085.png>. 若<IMG: 2018年高考文科数学试题-HTML.086.png>，则<IMG: 2018年高考文科数学试题-HTML.087.png> .",
-                  //   "question_options": [],
-                  //   "question_type": "填空题",
-                  //   "sub_questions": [],
-                  //   "answer": "$- 7$",
-                  //   "analysis": "",
-                  //   "source": "user_input",
-                  //   "subject": "user_input"
-                  // },
-                  {
-                    "question_stem": "设抛物线$<IMG: 2018年高考文科数学试题-HTML.132.png>$",
-                    "question_options": [],
-                    "question_type": "解答题",
-                    "sub_questions": [ "$（1）$当$<IMG: 2018年高考文科数学试题-HTML.140.png>$",
-                                       "$（2）$证明：$<IMG: 2018年高考文科数学试题-HTML.143.png>$." ],
-                    "answer": "$（1）$当$<IMG: 2018年高考文科数学试题-HTML.140.png>$与x轴垂直时", 
-                    "analysis": "",
-                    "source": "user_input",
-                    "subject": "user_input"
-                  }
-                ]
-              }
+              this.TestData = data.body.TestData;
               this.Init_Question_Check();
               this.loading = false;
             }else{
@@ -1390,46 +1372,7 @@ export default {
               this.downloadPaper = data.body.Download_Paper;
               this.answer_content = data.body.Answer;
               this.downloadAnswer = data.body.Download_Answer;
-              this.TestData = {
-                "title": "2009年课标甲乙",
-                "subject_type": "数学",
-                "period_type": "高中",
-                "doc": [
-                  {
-                    "question_stem": "已知集合$A = \\{ 0,2 \\}$，$B = \\{ - 2 , - 1,0,1,2 \\}$,则$A \\cap B =$",
-                    "question_options": [ "$\\{ 0,2 \\}$", "$\\{ 1,2 \\}$", "$\\{ 0 \\}$", "$\\{ - 2 , - 1,0,1,2 \\}$" ],
-                    "question_type": "选择题",
-                    "sub_questions": [],
-                    "answer": "A",
-                    "analysis": "",
-                    "source": "user_input",
-                    "subject": "user_input"
-                  },
-                  {
-                    "question_stem": "已知函数<IMG: 2018年高考文科数学试题-HTML.085.png>. 若<IMG: 2018年高考文科数学试题-HTML.086.png>，则<IMG: 2018年高考文科数学试题-HTML.087.png> .",
-                    "question_options": [],
-                    "question_type": "填空题",
-                    "sub_questions": [],
-                    "answer": "$- 7$",
-                    "analysis": "",
-                    "source": "user_input",
-                    "subject": "user_input"
-                  },
-                  {
-                    "question_stem": "设抛物线<IMG: 2018年高考文科数学试题-HTML.132.png>，点<IMG: 2018年高考文科数学试题-HTML.133.png>，<IMG: 2018年高考文科数学试题-HTML.134.png>，过点<IMG: 2018年高考文科数学试题-HTML.135.png>的直线<IMG: 2018年高考文科数学试题-HTML.136.png>与<IMG: 2018年高考文科数学试题-HTML.137.png>交于<IMG: 2018年高考文科数学试题-HTML.138.png>，<IMG: 2018年高考文科数学试题-HTML.139.png>两点.",
-                    "question_options": [],
-                    "question_type": "解答题",
-                    "sub_questions": [ "（1）当<IMG: 2018年高考文科数学试题-HTML.140.png>与<IMG: 2018年高考文科数学试题-HTML.141.png>轴垂直时，求直线<IMG: 2018年高考文科数学试题-HTML.142.png>的方程；", "（2）证明：<IMG: 2018年高考文科数学试题-HTML.143.png>." ],
-                    "answer": "（1）当<IMG: 2018年高考文科数学试题-HTML.140.png>与x轴垂直时，<IMG: 2018年高考文科数学试题-HTML.140.png>的方程为<IMG: 2018年高考文科数学试题-HTML.218.png>，可得<IMG: 2018年高考文科数学试题-HTML.219.png>的坐标为<IMG: 2018年高考文科数学试题-HTML.220.png>或<IMG: 2018年高考文科数学试题-HTML.221.png>.所以直线<IMG: 2018年高考文科数学试题-HTML.222.png>的方程为<IMG: 2018年高考文科数学试题-HTML.223.png>或<IMG: 2018年高考文科数学试题-HTML.224.png>. （2）当<IMG: 2018年高考文科数学试题-HTML.140.png>与x轴垂直时，AB为MN的垂直平分线，所以<IMG: 2018年高考文科数学试题-HTML.143.png>.当<IMG: 2018年高考文科数学试题-HTML.140.png>与x轴不垂直时，设<IMG: 2018年高考文科数学试题-HTML.140.png>的方程为<IMG: 2018年高考文科数学试题-HTML.225.png>，<IMG: 2018年高考文科数学试题-HTML.226.png>，<IMG: 2018年高考文科数学试题-HTML.227.png>，则<IMG: 2018年高考文科数学试题-HTML.228.png>.由<IMG: 2018年高考文科数学试题-HTML.229.png>得<IMG: 2018年高考文科数学试题-HTML.230.png>，可知<IMG: 2018年高考文科数学试题-HTML.231.png>.直线BM，BN的斜率之和为<IMG: 2018年高考文科数学试题-HTML.232.png><IMG: 2018年高考文科数学试题-HTML.233.png>. ①将<IMG: 2018年高考文科数学试题-HTML.234.png>，<IMG: 2018年高考文科数学试题-HTML.235.png>及<IMG: 2018年高考文科数学试题-HTML.236.png>的表达式代入①式分子，可得<IMG: 2018年高考文科数学试题-HTML.237.png><IMG: 2018年高考文科数学试题-HTML.238.png>.所以<IMG: 2018年高考文科数学试题-HTML.239.png>，可知BM，BN的倾斜角互补，所以<IMG: 2018年高考文科数学试题-HTML.143.png>.综上，<IMG: 2018年高考文科数学试题-HTML.143.png>.",
-                    "analysis": "",
-                    "source": "user_input",
-                    "subject": "user_input"
-                  }
-                ],
-                "img": {
-
-                }
-              }
+              this.TestData = data.body.TestData;
               this.Init_Question_Check();
               this.loading = false;
             }
@@ -1453,9 +1396,6 @@ export default {
 
         formData.append("files", e.target.files[0]);
         formData.append("paper_type", this.paper_type);
-        if(this.paper_type == '1'){
-          formData.append("math_input", this.math_input)
-        }
 
         let config = {
           headers: {
@@ -1699,11 +1639,19 @@ export default {
           { type: "text/plain;charset=utf-8" }
         );
         FileSaver.saveAs(file);
-      }else{
+      }else if(part == 1){
         json = this.downloadAnswer
         file = new File(
           [JSON.stringify(json, null, 4)],
           this.downloadAnswerName + ".json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
+      }else if(part == 2){
+        json = this.TestData
+        file = new File(
+          [JSON.stringify(json, null, 4)],
+          this.downloadPaperName + "_" + this.downloadAnswerName + "_Merge" + ".json",
           { type: "text/plain;charset=utf-8" }
         );
         FileSaver.saveAs(file);
@@ -3321,7 +3269,6 @@ export default {
 
         var file_2 = new File(
           [JSON.stringify({
-                          "post_type": 1,
                           "title": this.PaperTitle,
                           "subject_type": this.SubjectType,
                           "period_type": this.PeriodType,
@@ -3372,7 +3319,11 @@ export default {
             
             if(this.TestData.doc[Question_Index].answer[Answer_Index] != Stem)
               this.TestData.doc[Question_Index].answer.splice(Answer_Index, 1, Stem)
-            return "答案$" + (Answer_Index + 1).toString() + "$：" + Stem
+            if(this.TestData.doc[Question_Index].answer.length == 1){
+              "答案   ：" + Stem
+            }else{
+              return "答案$" + (Answer_Index + 1).toString() + "$：" + Stem
+            }
         }else if(Type == 'analyse'){
             if(this.TestData.doc[Question_Index].analysis != Stem)
               this.TestData.doc[Question_Index].analysis = Stem;
@@ -3825,7 +3776,7 @@ export default {
 
       // param.append('result_json', 
       //               JSON.stringify({
-      //                 "post_type": 2,
+      //                 "post_type": 3,
       //                 "title": this.PaperTitle,
       //                 "subject_type": this.SubjectType,
       //                 "period_type": this.PeriodType,

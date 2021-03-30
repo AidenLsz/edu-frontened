@@ -2,7 +2,7 @@
 
 <template>
     <div>
-      <svg width="930" height="760" style="background: #ccc"></svg>
+      <svg width="960" height="600"></svg>
     </div>
 </template>
 <script>
