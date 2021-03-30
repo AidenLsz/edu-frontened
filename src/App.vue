@@ -185,7 +185,7 @@
                 <el-menu :default-active="activeIndex" mode="horizontal" style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px">
                   <el-submenu index="0">
                     <template slot="title">
-                      <span style="font-size: 18px; color: black;">功能</span>
+                      <span :style="Title_Pos()">功能</span>
                     </template>
                     <el-submenu index="1">
                       <template slot="title"><span style="color: black;">资源录入</span></template>
@@ -358,6 +358,22 @@ export default {
     // });
   },
   methods: {
+    Title_Pos(){
+      return {
+        "font-size": "18px",
+        "color": "black",
+        "margin-left": this.Calculate_Title_Margin()
+      }
+    },
+    Calculate_Title_Margin(){
+      var Width = window.screen.width;
+      var CWidth = document.body.clientWidth;
+      console.log(Width, CWidth)
+      if(Width - CWidth < 100){
+        return "0px"
+      }
+      return (0 - (CWidth/Width)*25) + "px";
+    },
     ToTop(){
       window.scrollTo(0,0);
     },
