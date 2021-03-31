@@ -35,10 +35,10 @@ export default {
             let option = {
                 title: {
                     text: "各学科数据统计",
-                    x: "left",
+                    x: "center",
                     y: "top",
                     textStyle: { 
-                        fontSize: 14,
+                        fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
                     },
@@ -46,15 +46,15 @@ export default {
                 },
                 color: ['#636B92','#6BE7C2','#3DB3E1'],
                 tooltip : {
-                    trigger: 'axis',
-                    axisPointer : {
-                        type : 'shadow',
-                        label : {
-                            show: true
-                        }
-                }
+                    // trigger: 'axis',
+                    // axisPointer : {
+                    //     type : 'shadow',
+                    //     label : {
+                    //         show: true
+                    //     }
+                    // }
                 },
-                calculable: true,
+                // calculable: true,
                 legend: {
                     data: ['试卷', '试题', '知识单元'],
                     itemGap: 20,
@@ -62,10 +62,8 @@ export default {
                     y: "top",
                     padding: [5,105,40,5]
                 },
-                xAxis : [
-                {
+                xAxis : {
                     type : 'category',
-                    data : ['语文','数学','英语','政治','历史','地理','物理','化学','生物'],
                     axisTick: {
                         alignWithLabel: true
                     },
@@ -74,75 +72,57 @@ export default {
                         interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
                         textStyle:{   //textStyle里面写x轴下的字体的样式
                             color:'black',
-                            fontSize:12
+                            fontSize:14
                         }
-                    },
-                }
-                ],
-                yAxis : [
-                {
+                    }
+                },
+                yAxis : {
                     type : 'value',
                     name : '数量',
                     axisLabel:{
                         show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
                         textStyle:{   //textStyle里面写y轴下的字体的样式
                             color:'black',
-                            fontSize:12
+                            fontSize:14
                         }
                     },
                     nameTextStyle:{
                         color:"black", 
-                        fontSize:12,  
-                        padding:[30, 35, 5, 10]
+                        fontSize:14,  
+                        padding:[30, 35, 15, 10]
                     }
-                }
-                ],
+                },
+                dataset :{
+                    dimensions: ['product', "试卷", "试题", "知识单元"],
+                    source: [{
+                        product: "语文", "试卷": 5, "试题": 1, "知识单元": 5
+                    },{
+                        product: "数学", "试卷": 6, "试题": 2, "知识单元": 5
+                    },{
+                        product: "英语", "试卷": 4, "试题": 3, "知识单元": 5
+                    },{
+                        product: "政治", "试卷": 8, "试题": 4, "知识单元": 5
+                    },{
+                        product: "历史", "试卷": 6, "试题": 5, "知识单元": 5
+                    },{
+                        product: "地理", "试卷": 2, "试题": 6, "知识单元": 5
+                    },{
+                        product: "物理", "试卷": 6, "试题": 7, "知识单元": 5
+                    },{
+                        product: "化学", "试卷": 5, "试题": 8, "知识单元": 5
+                    },{
+                        product: "生物", "试卷": 8, "试题": 9, "知识单元": 5
+                    },]
+                },
                 series : [
                 {
-                    name:'试卷',
-                    type:'bar',
-                    barWidth: '20%',
-                    data:[5,6,4,8,6,2,6,5,8],
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'top',
-                            textStyle: {
-                                color: '#636B92'
-                            }
-                        }
-                    },
+                    type:'bar'
                 },
                 {
-                    name:'试题',
-                    type:'bar',
-                    barWidth: '20%',
-                    data:[1,2,3,4,5,6,7,8,9],
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'top',
-                            textStyle: {
-                                color: '#6BE7C2'
-                            }
-                        }
-                    },
-                },
-                {
-                    name:'知识单元',
-                    type:'bar',
-                    barWidth: '20%',
-                    data:[5,5,5,5,5,5,5,5,5],
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'top',
-                            textStyle: {
-                                color: '#3DB3E1'
-                            }
-                        }
-                    },
-                },
+                    type:'bar'
+                },{
+                    type:'bar'
+                }
                 ]
             };
             myChart.setOption(option);

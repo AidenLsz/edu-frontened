@@ -644,7 +644,7 @@
         <el-col :span="4" :offset="4" class="partData">
           <el-row>
             <el-col :span="12">
-              <img src="../assets/dataIcon1.png" width="70%" style="padding-top: 15%"/>
+              <img src="../assets/dataIcon1.png" width="50%" style="padding-top: 25%"/>
             </el-col>
             <el-col :span="12" style="padding-top: 30px">
               <p style="font-weight:bold; font-size: 18px; color: black">试题</p>
@@ -655,7 +655,7 @@
         <el-col :span="4" :offset="2" class="partData">
           <el-row>
             <el-col :span="12">
-              <img src="../assets/dataIcon2.png" width="70%" style="padding-top: 15%"/>
+              <img src="../assets/dataIcon2.png" width="50%" style="padding-top: 25%"/>
             </el-col>
             <el-col :span="12" style="padding-top: 30px">
               <p style="font-weight:bold; font-size: 18px; color: black">试卷</p>
@@ -666,7 +666,7 @@
         <el-col :span="4" :offset="2" class="partData">
           <el-row>
             <el-col :span="12">
-              <img src="../assets/dataIcon3.png" width="70%" style="padding-top: 15%"/>
+              <img src="../assets/dataIcon3.png" width="50%" style="padding-top: 25%"/>
             </el-col>
             <el-col :span="12" style="padding-top: 30px">
               <p style="font-weight:bold; font-size: 18px; color: black">知识单元</p>
@@ -768,16 +768,16 @@ export default {
           },
           title: {
               text: "各学科数据统计",
-              x: "left",
+              x: "center",
               y: "top",
               textStyle: { 
-                  fontSize: 14,
+                  fontSize: 16,
                   fontStyle: 'normal',
                   fontWeight: 'bold',
               },
               padding: [5,5,40,25]
           },
-          color: ['#636B92','#6BE7C2','#3DB3E1'],
+          color: ['#626C91','#6BE6C1','#3FB1E3'],
           tooltip : {
               trigger: 'axis',
               axisPointer : {
@@ -793,7 +793,11 @@ export default {
               itemGap: 20,
               x: "right",
               y: "top",
-              padding: [5,30,40,5]
+              padding: [5,30,40,5],
+              textStyle: { 
+                  fontSize: 14,
+                  fontStyle: 'normal',
+              },
           },
           xAxis : [
           {
@@ -807,7 +811,7 @@ export default {
                   interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
                   textStyle:{   //textStyle里面写x轴下的字体的样式
                       color:'black',
-                      fontSize:12
+                      fontSize:14
                   }
               },
           }
@@ -820,12 +824,12 @@ export default {
                   show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
                   textStyle:{   //textStyle里面写y轴下的字体的样式
                       color:'black',
-                      fontSize:12
+                      fontSize:14
                   }
               },
               nameTextStyle:{
                   color:"black", 
-                  fontSize:12,  
+                  fontSize:14,  
                   padding:[30, 35, 15, 10]
               }
           }
@@ -835,46 +839,19 @@ export default {
               name:'试卷',
               type:'bar',
               barWidth: '20%',
-              data:[5,6,4,8,6,2,6,5,8],
-              label: {
-                  normal: {
-                      show: true,
-                      position: 'top',
-                      textStyle: {
-                          color: '#636B92'
-                      }
-                  }
-              },
+              data:[5,6,4,8,6,2,6,5,8]
           },
           {
               name:'试题',
               type:'bar',
               barWidth: '20%',
-              data:[1,2,3,4,5,6,7,8,9],
-              label: {
-                  normal: {
-                      show: true,
-                      position: 'top',
-                      textStyle: {
-                          color: '#6BE7C2'
-                      }
-                  }
-              },
+              data:[1,2,3,4,5,6,7,8,9]
           },
           {
               name:'知识单元',
               type:'bar',
               barWidth: '20%',
-              data:[5,5,5,5,5,5,5,5,5],
-              label: {
-                  normal: {
-                      show: true,
-                      position: 'top',
-                      textStyle: {
-                          color: '#3DB3E1'
-                      }
-                  }
-              },
+              data:[5,5,5,5,5,5,5,5,5]
           },
           ]
       };
@@ -1030,9 +1007,10 @@ a {
 }
 .partData{
   height: 120px;
-  background: #F8FBFF;
+  background: #EEF5FE;
   box-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.07);
   -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
+  border-radius: 10px;
 }
 .data_chart{
    border-radius: 10px; 
