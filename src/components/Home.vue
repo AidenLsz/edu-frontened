@@ -644,7 +644,7 @@
         <el-col :span="4" :offset="4" class="partData">
           <el-row>
             <el-col :span="12">
-              <img src="../assets/icon1.png" width="100%"/>
+              <img src="../assets/dataIcon1.png" width="70%" style="padding-top: 15%"/>
             </el-col>
             <el-col :span="12" style="padding-top: 30px">
               <p style="font-weight:bold; font-size: 18px; color: black">试题</p>
@@ -655,7 +655,7 @@
         <el-col :span="4" :offset="2" class="partData">
           <el-row>
             <el-col :span="12">
-              <img src="../assets/icon2.png" width="100%"/>
+              <img src="../assets/dataIcon2.png" width="70%" style="padding-top: 15%"/>
             </el-col>
             <el-col :span="12" style="padding-top: 30px">
               <p style="font-weight:bold; font-size: 18px; color: black">试卷</p>
@@ -666,7 +666,7 @@
         <el-col :span="4" :offset="2" class="partData">
           <el-row>
             <el-col :span="12">
-              <img src="../assets/icon3.png" width="100%"/>
+              <img src="../assets/dataIcon3.png" width="70%" style="padding-top: 15%"/>
             </el-col>
             <el-col :span="12" style="padding-top: 30px">
               <p style="font-weight:bold; font-size: 18px; color: black">知识单元</p>

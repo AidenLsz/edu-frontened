@@ -146,6 +146,9 @@ export default {
                 ]
             };
             myChart.setOption(option);
+            myChart.on('click', function (param) { 
+                alert(param.name + "_" + param.seriesName)//获取自定义变量barIds的值,barIds要和option的series里自定义的一样
+            })
         
             //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
             window.addEventListener('resize',function() {myChart.resize()});
