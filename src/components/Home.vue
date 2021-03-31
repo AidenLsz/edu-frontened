@@ -785,7 +785,12 @@ export default {
                   label : {
                       show: true
                   }
-          }
+              },
+              textStyle: { 
+                  fontSize: 14,
+                  fontStyle: 'normal',
+                  align: 'left'
+              },
           },
           calculable: true,
           legend: {

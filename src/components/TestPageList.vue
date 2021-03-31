@@ -44,7 +44,7 @@ export default {
                     },
                     padding: [5,5,40,85]
                 },
-                color: ['#636B92','#6BE7C2','#3DB3E1'],
+                color: ['#626C91','#6BE6C1','#3FB1E3'],
                 tooltip : {
                     // trigger: 'axis',
                     // axisPointer : {
