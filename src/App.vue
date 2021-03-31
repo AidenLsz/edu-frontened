@@ -369,10 +369,11 @@ export default {
       var Width = window.screen.width;
       var CWidth = document.body.clientWidth;
       console.log(Width, CWidth)
-      if(Width - CWidth < 100){
+      if(Width - CWidth < 300){
         return "0px"
+      }else{
+        return (0 - (CWidth/Width)*(CWidth/Width)*40) + "px";
       }
-      return (0 - (CWidth/Width)*25) + "px";
     },
     ToTop(){
       window.scrollTo(0,0);
