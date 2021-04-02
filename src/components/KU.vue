@@ -121,10 +121,10 @@
                         <h6>{{ undirected_len }}</h6>
                       </el-col>
                       <el-col :span="4">
-                        <el-checkbox label="层级关系">层级关系</el-checkbox>
+                        <el-checkbox label="层级结构">层级结构</el-checkbox>
                       </el-col>
                       <el-col :span="1">
-                        <h6>{{ '(' + 0 + ')' }}</h6>
+                        <h6>{{ layerLength }}</h6>
                       </el-col>
                     </el-checkbox-group>
                   </el-row>
@@ -222,8 +222,11 @@
           <Graph
             :node="node"
             :neighbors_groups="neighbors_groups"
+            :neighbors_hierarchy="neighbors_hierarchy"
             :inward_arrow="inward_arrow"
             :outward_arrow="outward_arrow"
+            :superior_layer="superior_layer"
+            :inferior_layer="inferior_layer"
             :selected_type="checkList"
             @Research="Research"
           ></Graph>
@@ -243,15 +246,22 @@ export default {
     return {
       ku_name: "",
       ku_type: "kp2.0",
+      // 节点。邻居节点，层级结构
       node: {},
       neighbors_groups: {},
+      neighbors_hierarchy : [],
       sour: "rjb_new",
       sourceLabel: ["百科", "人教版"],
-      checkList: ["前驱后继", "共同学习", "层级关系"],
+      checkList: ["前驱后继", "共同学习", "层级结构"],
+      // 前驱后继，共同学习，向内箭头，向外箭头
       directed_len: "",
       undirected_len: "",
       inward_arrow: 0,
       outward_arrow: 0,
+      // 上级层，下级层
+      superior_layer: 0,
+      inferior_layer: 0,
+      layerLength: "",
       root_view: false,
       loading: false,
       url: "",
@@ -282,7 +292,7 @@ export default {
         },
       ],
       // 知识体系
-      knowledgeSystem: ""
+      knowledgeSystem: "neea"
     };
   },
   mounted() {
@@ -296,10 +306,10 @@ export default {
   },
   watch: {
     sour() {
-      this.submit(this.ku_name);
+      this.submit(this.ku_name, this.knowledgeSystem);
     },
     checkList() {
-      this.submit(this.ku_name);
+      this.submit(this.ku_name, this.knowledgeSystem);
     }
   },
   methods: {
@@ -355,10 +365,14 @@ export default {
             this.loading = false;
             alert("输入知识点不存在！");
           } else {
+            console.log("Data: ", data.data);
             this.node = data.data.node;
             this.neighbors_groups = data.data.neighbors_groups;
+            this.neighbors_hierarchy = data.data.neighbors_hierarchy;
             this.inward_arrow = data.data.pre_len;
             this.outward_arrow = data.data.suc_len;
+            this.superior_layer = data.data.sup_len;
+            this.inferior_layer = data.data.inf_len;
             this.loading = false;
           }
         });
@@ -368,7 +382,7 @@ export default {
           {
             ku_name: this.ku_name,
             ku_type: this.ku_type,
-            ku_edge_type: ["前驱后继", "共同学习", "层级关系"],
+            ku_edge_type: ["前驱后继", "共同学习", "层级结构"],
             system: this.knowledgeSystem
           },
           { emulateJSON: true }
@@ -376,6 +390,7 @@ export default {
         .then(function(data) {
           this.directed_len = "(" + (data.data.pre_len + data.data.suc_len) + ")";
           this.undirected_len = "(" + data.data.undirected_len + ")";
+          this.layerLength = "(" + (data.data.sup_len + data.data.inf_len) + ")";
         });
     },
     // Update Complex Input，将组合输入的内容复制到当前搜索框应该具有的内容里

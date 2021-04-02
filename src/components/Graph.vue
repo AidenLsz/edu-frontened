@@ -21,11 +21,23 @@ export default {
         return { message: "hello" };
       }
     },
+    neighbors_hierarchy: {
+      type: Array,
+      default: () => []
+    },
     inward_arrow: {
       type: Number,
       default: 0
     },
     outward_arrow: {
+      type: Number,
+      default: 0
+    },
+    superior_layer: {
+      type: Number,
+      default: 0
+    },
+    inferior_layer: {
       type: Number,
       default: 0
     },
@@ -766,17 +778,17 @@ export default {
       // 生成图
       // 先清空画布
       d3.selectAll("svg > *").remove();
-      console.log(this.node)
-      console.log(this.neighbors_groups)
-      console.log(this.inward_arrow , this.outward_arrow)
       // 改线条颜色
       var directedLen = this.inward_arrow + this.outward_arrow;
       // 动态添加边属性
       let IA = this.inward_arrow;
       let OA = this.outward_arrow;
 
-      let Node_Color_List = ["#EDB664","#9ECCAB"]
-      let Ray_Color_List = ["#EDB664", "#409EFD", "#9ECCAB"]
+      var LayerLen = this.superior_layer + this.inferior_layer;
+      let SL = this.superior_layer;
+
+      let Node_Color_List = ["#EDB664","#9ECCAB", "#F1939C"]
+      let Ray_Color_List = ["#EDB664", "#409EFD", "#9ECCAB", "#F1939C"]
 
       var Lock_Switch = true;
 
@@ -895,7 +907,7 @@ export default {
       let state = {
         nodes: [
           {
-            id: this.node.name,
+            id: " " + this.node.name + " ",
             desc: this.node.description,
             type: 0,
             hidden: false,
@@ -908,34 +920,71 @@ export default {
         links: []
       };
 
+      let NH = this.neighbors_hierarchy;
+      console.log(NH)
+
       // 显示最新人教版
       // 将所有的邻居节点塞进去，并给所有导入至node的节点的方向设为从自己到node，将node引出的节点或平行节点方向设为node到节点
-      for (i = 0; i < this.neighbors_groups["kp2.0"].length; i++) {
-        state.nodes[i + 1] = {
-          id: this.neighbors_groups["kp2.0"][i].name,
-          desc: this.neighbors_groups["kp2.0"][i].annotation.split("description-")[1],
-          type: 1,
-          hidden: false,
-          lock: false,
-          hideSymbol: null,
-          lockSymbol: null,
-          searchSymbol: null
-        };
+      for (i = 0; i < this.neighbors_groups["kp2.0"].length + LayerLen; i++) {
+        if(i < this.neighbors_groups["kp2.0"].length){
+          state.nodes[i + 1] = {
+            id: this.neighbors_groups["kp2.0"][i].name,
+            desc: this.neighbors_groups["kp2.0"][i].annotation.split("description-")[1],
+            type: 1,
+            hidden: false,
+            lock: false,
+            hideSymbol: null,
+            lockSymbol: null,
+            searchSymbol: null
+          };
+        } else {
+          state.nodes[i + 1] = {
+            id: NH[i - directedLen],
+            desc: "暂无描述",
+            type: 1,
+            hidden: false,
+            lock: false,
+            hideSymbol: null,
+            lockSymbol: null,
+            searchSymbol: null
+          };
+        }
         if (i < this.inward_arrow) {
           state.links[i] = {
             source: this.neighbors_groups["kp2.0"][i].name,
-            target: this.node.name,
+            target:  " " + this.node.name + " ",
+            width: 3,
+            curved: false
+          };
+        } else if(i < directedLen) {
+          state.links[i] = {
+            source:  " " + this.node.name + " ",
+            target: this.neighbors_groups["kp2.0"][i].name,
+            width: 3,
+            curved: false
+          };
+        } else if(i < L.length){
+          state.links[i] = {
+            source: this.neighbors_groups["kp2.0"][i].name,
+            target:  " " + this.node.name + " ",
+            width: 3,
+            curved: false
+          };
+        } else if(i < L.length + SL) {
+          state.links[i] = {
+            source: NH[i - directedLen],
+            target:  " " + this.node.name + " ",
             width: 3,
             curved: false
           };
         } else {
           state.links[i] = {
-            source: this.node.name,
-            target: this.neighbors_groups["kp2.0"][i].name,
+            source:  " " + this.node.name + " ",
+            target: NH[i - directedLen],
             width: 3,
             curved: false
           };
-        }   
+        }
       }
 
       let selectedNode;
@@ -992,6 +1041,20 @@ export default {
         .append("path")
         .attr("d", "M0,-4L8,0L0,4")
         .style("fill", "#EDB664");
+
+      svg
+        .append("defs")
+        .append("marker")
+        .attr("id", "straightLayer")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 4)
+        .attr("refY", 0)
+        .attr("markerWidth", 5)
+        .attr("markerHeight", 5)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M0,-4L8,0L0,4")
+        .style("fill", "#F1939C");
 
       svg
         .append("defs")
@@ -1200,14 +1263,14 @@ export default {
                 d.fx = 450
                 return 450
               }
-              else if(Lock_Switch){
+              else if(Lock_Switch && i < L.length + 1){
                 d.x = Row_Axis[i-1]
                 d.fx = Row_Axis[i-1]
                 return Row_Axis[i-1]
               }else{
                 if (d.lock) {
                   d.fx = d.x;
-                }
+                } 
                 return d.x;
               }
             })
@@ -1217,7 +1280,7 @@ export default {
                 d.fy = 390
                 return 390
               }
-              else if(Lock_Switch){
+              else if(Lock_Switch && i < L.length + 1){
                 d.y = Col_Axis[i-1]
                 d.fy = Col_Axis[i-1]
                 return Col_Axis[i-1]
@@ -1292,7 +1355,7 @@ export default {
           "charge",
           d3.forceManyBody().strength(function(d) {
             if (d.hidden) return 0;
-            else return -25;
+            else return -10 * d.id.length;
           })
         )
         // Change the strength of link force for hidden nodes.
@@ -1303,11 +1366,11 @@ export default {
             .forceLink()
             .strength(function(d) {
               if (d.source.hidden || d.target.hidden) return 0;
-              else return 0.05;
+              else return 0.1;
             })
             .distance(function(d) {
               // 控制节点间距离
-              return (d.target.id.length % 6);
+              return (d.target.id.length * 10);
             })
             // 返回知识点ID
             .id(function(d) {
@@ -1483,8 +1546,10 @@ export default {
             }
             else if(i - 1 < directedLen){
               return Node_Color_List[0];
-            }else{
+            }else if (i - 1 < L.length){
               return Node_Color_List[1]
+            }else {
+              return Node_Color_List[2]
             }
           })
           // 对应拖拽事件绑定对应的处理方法
@@ -1576,8 +1641,10 @@ export default {
           .attr("marker-end", function(d) {
             if (d.index < directedLen) {
               return "url(#straight)";
+            } else if(d.index > L.length - 1 && d.index < L.length + LayerLen){
+              return "url(#straightLayer)";
             } else {
-              return "";
+              return ""
             }
           })
           // 设定线长度
@@ -1588,8 +1655,10 @@ export default {
           .style("stroke", function(d) {
             if (d.index < directedLen) {
               return "#EDB664";
-            } else {
+            } else if(d.index < L.length){
               return "#9ECCAB";
+            } else {
+              return "#F1939C";
             }
           });
         // 这里在绑定节点和链接关系，然后开始模拟这个力矩图

@@ -977,7 +977,7 @@ export default {
       SubjectType: "数学",
       PeriodType: "高中",
       // 试卷标题
-      PaperTitle: "未知试卷名称",
+      PaperTitle: "",
       // 用于标记是否有非法字符
       Symbol_Error: false,
       // 用于输入符号提示的部分
@@ -1362,15 +1362,12 @@ export default {
             this.TestData = {};
 
             if(this.math_input == 'paper'){
-              this.json_content = data.body.Paper;
               this.downloadPaper = data.body.Download_Paper;
               this.TestData = data.body.TestData;
               this.Init_Question_Check();
               this.loading = false;
             }else{
-              this.json_content = data.body.Paper;
               this.downloadPaper = data.body.Download_Paper;
-              this.answer_content = data.body.Answer;
               this.downloadAnswer = data.body.Download_Answer;
               this.TestData = data.body.TestData;
               this.Init_Question_Check();
@@ -1439,6 +1436,8 @@ export default {
             this.downloadAnswerName = this.downloadAnswerName + "_Answer";
             formData.append("math_input", "2");
           }
+          
+          formData.append("From", "File_Import");
 
           let config = {
             headers: {
@@ -1456,6 +1455,7 @@ export default {
             formData.append("answer", this.temp_File);
             formData.append("paper_type", this.paper_type);
             formData.append("math_input", "1");
+            formData.append("From", "File_Import");
 
             let config = {
               headers: {
@@ -1502,6 +1502,7 @@ export default {
           formData.append("paper", this.temp_File);
           formData.append("paper_type", this.paper_type);
           formData.append("math_input", "1");
+          formData.append("From", "File_Import");
 
           let config = {
             headers: {
@@ -3226,6 +3227,11 @@ export default {
       // }
 
       if(Control == 'upload'){
+
+        if(this.PaperTitle == ""){
+          this.$message.error("试卷标题不能为空！")
+          return
+        }
 
         let config = {
             headers: { "Content-Type": "multipart/form-data" }

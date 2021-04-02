@@ -648,7 +648,7 @@
             </el-col>
             <el-col :span="12" style="padding-top: 30px">
               <p style="font-weight:bold; font-size: 18px; color: black">试题</p>
-              <p style="font-weight:bold; font-size: 18px; color: black">{{1}}</p>
+              <p style="font-weight:bold; font-size: 18px; color: black">{{Num_Question}}</p>
             </el-col>
           </el-row>
         </el-col>
@@ -659,7 +659,7 @@
             </el-col>
             <el-col :span="12" style="padding-top: 30px">
               <p style="font-weight:bold; font-size: 18px; color: black">试卷</p>
-              <p style="font-weight:bold; font-size: 18px; color: black">{{1}}</p>
+              <p style="font-weight:bold; font-size: 18px; color: black">{{Num_Paper}}</p>
             </el-col>
           </el-row>
         </el-col>
@@ -670,7 +670,7 @@
             </el-col>
             <el-col :span="12" style="padding-top: 30px">
               <p style="font-weight:bold; font-size: 18px; color: black">知识单元</p>
-              <p style="font-weight:bold; font-size: 18px; color: black">{{1}}</p>
+              <p style="font-weight:bold; font-size: 18px; color: black">{{Num_KU}}</p>
             </el-col>
           </el-row>
         </el-col>
@@ -703,7 +703,10 @@ export default {
       image_infos: [],
       ToolsLabelNow: "资源",
       functionStatus: [false, false, false, false],
-      resourceStatus: [false, false, false, false]
+      resourceStatus: [false, false, false, false],
+      Num_Paper: 0,
+      Num_Question: 0,
+      Num_KU: 0
     };
   },
   mounted() {
@@ -758,10 +761,41 @@ export default {
       this.resourceStatus.splice(index, 1, true);
     },
     Init_Bar(){
-      let myChart = echarts.init(document.getElementById('data_chart'));
-      let option = {
+
+      
+
+      let config = {
+          headers: { "Content-Type": "multipart/form-data" }
+      };
+      let param = new FormData();
+
+      this.$http
+      .post(this.backendIP + "/api/count", param, config, {
+        emulateJSON: true
+      })
+      .then(function(data) {
+
+        var Chart_Data = {};
+
+        var Paper_Data = [];
+        var Question_Data = [];
+        var KU_Data = [];
+
+        Chart_Data = data.data;
+
+        this.Num_Paper = Chart_Data.num_paper;
+        this.Num_Question = Chart_Data.num_question;
+        this.Num_KU = Chart_Data.num_knowledge;
+        for(var index = 0; index < Chart_Data.num_sub.length; index ++){
+          Paper_Data.push(Chart_Data.num_sub[index].paper);
+          Question_Data.push(Chart_Data.num_sub[index].question);
+          KU_Data.push(Chart_Data.num_sub[index].knowledge);
+        }
+
+        let myChart = echarts.init(document.getElementById('data_chart'));
+        let option = {
           grid: {
-            x: 50,
+            x: 70,
             y: 90,
             x2: 30,
             y2: 35
@@ -807,7 +841,7 @@ export default {
           xAxis : [
           {
               type : 'category',
-              data : ['语文','数学','英语','政治','历史','地理','物理','化学','生物'],
+              data : Chart_Data.list_sub,
               axisTick: {
                   alignWithLabel: true
               },
@@ -844,19 +878,19 @@ export default {
               name:'试卷',
               type:'bar',
               barWidth: '20%',
-              data:[5,6,4,8,6,2,6,5,8]
+              data: Paper_Data
           },
           {
               name:'试题',
               type:'bar',
               barWidth: '20%',
-              data:[1,2,3,4,5,6,7,8,9]
+              data: Question_Data
           },
           {
               name:'知识单元',
               type:'bar',
               barWidth: '20%',
-              data:[5,5,5,5,5,5,5,5,5]
+              data: KU_Data
           },
           ]
       };
@@ -864,7 +898,8 @@ export default {
   
       //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
       window.addEventListener('resize',function() {myChart.resize()});
-  }
+      });
+    }
   }
 };
 </script>
