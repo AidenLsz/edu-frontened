@@ -907,7 +907,7 @@ export default {
       let state = {
         nodes: [
           {
-            id: " " + this.node.name + " ",
+            id: this.node.name,
             desc: this.node.description,
             type: 0,
             hidden: false,
@@ -921,7 +921,6 @@ export default {
       };
 
       let NH = this.neighbors_hierarchy;
-      console.log(NH)
 
       // 显示最新人教版
       // 将所有的邻居节点塞进去，并给所有导入至node的节点的方向设为从自己到node，将node引出的节点或平行节点方向设为node到节点
@@ -939,7 +938,7 @@ export default {
           };
         } else {
           state.nodes[i + 1] = {
-            id: NH[i - directedLen],
+            id: NH[i - L.length],
             desc: "暂无描述",
             type: 1,
             hidden: false,
@@ -952,13 +951,13 @@ export default {
         if (i < this.inward_arrow) {
           state.links[i] = {
             source: this.neighbors_groups["kp2.0"][i].name,
-            target:  " " + this.node.name + " ",
+            target: this.node.name,
             width: 3,
             curved: false
           };
         } else if(i < directedLen) {
           state.links[i] = {
-            source:  " " + this.node.name + " ",
+            source: this.node.name,
             target: this.neighbors_groups["kp2.0"][i].name,
             width: 3,
             curved: false
@@ -966,26 +965,32 @@ export default {
         } else if(i < L.length){
           state.links[i] = {
             source: this.neighbors_groups["kp2.0"][i].name,
-            target:  " " + this.node.name + " ",
+            target: this.node.name,
             width: 3,
             curved: false
           };
         } else if(i < L.length + SL) {
           state.links[i] = {
-            source: NH[i - directedLen],
-            target:  " " + this.node.name + " ",
+            source: NH[i - L.length],
+            target: this.node.name,
             width: 3,
             curved: false
           };
         } else {
           state.links[i] = {
-            source:  " " + this.node.name + " ",
-            target: NH[i - directedLen],
+            source: this.node.name,
+            target: NH[i - L.length - SL],
             width: 3,
             curved: false
           };
         }
       }
+
+      // var Flag = true;
+
+      // if(Flag){
+      //   return 
+      // }
 
       let selectedNode;
       let nodeSize = 25;
@@ -1259,15 +1264,20 @@ export default {
           node
             .attr("cx", function(d,i) {
               if(i == 0 && Lock_Switch){
+                d.lock = true
                 d.x = 450
                 d.fx = 450
                 return 450
               }
               else if(Lock_Switch && i < L.length + 1){
+                d.lock = true
                 d.x = Row_Axis[i-1]
                 d.fx = Row_Axis[i-1]
                 return Row_Axis[i-1]
               }else{
+                // d.x = 0
+                // d.fx = 0
+                // return 0
                 if (d.lock) {
                   d.fx = d.x;
                 } 
@@ -1276,15 +1286,20 @@ export default {
             })
             .attr("cy", function(d,i) { 
               if(i == 0 && Lock_Switch){
+                d.lock = true
                 d.x = 390
                 d.fy = 390
                 return 390
               }
               else if(Lock_Switch && i < L.length + 1){
+                d.lock = true
                 d.y = Col_Axis[i-1]
                 d.fy = Col_Axis[i-1]
                 return Col_Axis[i-1]
               }else{
+                // d.y = 0
+                // d.fy = 0
+                // return 0
                 if (d.lock) {
                   d.fy = d.y;
                 }
@@ -1355,7 +1370,7 @@ export default {
           "charge",
           d3.forceManyBody().strength(function(d) {
             if (d.hidden) return 0;
-            else return -10 * d.id.length;
+            else return -5;
           })
         )
         // Change the strength of link force for hidden nodes.
@@ -1365,12 +1380,12 @@ export default {
           d3
             .forceLink()
             .strength(function(d) {
-              if (d.source.hidden || d.target.hidden) return 0;
+              if (d.source.hidden || d.target.hidden || d.source.lock || d.target.lock) return 0;
               else return 0.1;
             })
             .distance(function(d) {
               // 控制节点间距离
-              return (d.target.id.length * 10);
+              return (d.target.id.length / 2);
             })
             // 返回知识点ID
             .id(function(d) {

@@ -365,10 +365,14 @@ export default {
             this.loading = false;
             alert("输入知识点不存在！");
           } else {
-            console.log("Data: ", data.data);
             this.node = data.data.node;
             this.neighbors_groups = data.data.neighbors_groups;
             this.neighbors_hierarchy = data.data.neighbors_hierarchy;
+            for(var ind = 0; ind < this.neighbors_hierarchy.length; ind++){
+              if(this.neighbors_hierarchy[ind] == this.node.name){
+                this.neighbors_hierarchy[ind] = this.neighbors_hierarchy[ind] + " "
+              }
+            }
             this.inward_arrow = data.data.pre_len;
             this.outward_arrow = data.data.suc_len;
             this.superior_layer = data.data.sup_len;
