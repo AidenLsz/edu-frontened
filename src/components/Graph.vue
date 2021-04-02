@@ -824,7 +824,9 @@ export default {
         }
       }
 
-      let L = this.neighbors_groups["kp2.0"]
+      let L = this.neighbors_groups["kp2.0"]?this.neighbors_groups["kp2.0"]:[]
+      
+
 
       if(IA == 0 && L.length == OA){
         After_Axis = After_Axis.concat(Front_Axis).concat(Combo_Axis).concat(Layer_Axis)
@@ -924,11 +926,11 @@ export default {
 
       // 显示最新人教版
       // 将所有的邻居节点塞进去，并给所有导入至node的节点的方向设为从自己到node，将node引出的节点或平行节点方向设为node到节点
-      for (i = 0; i < this.neighbors_groups["kp2.0"].length + LayerLen; i++) {
-        if(i < this.neighbors_groups["kp2.0"].length){
+      for (i = 0; i < L.length + LayerLen; i++) {
+        if(i < L.length){
           state.nodes[i + 1] = {
-            id: this.neighbors_groups["kp2.0"][i].name,
-            desc: this.neighbors_groups["kp2.0"][i].annotation.split("description-")[1],
+            id: L[i].name,
+            desc: L[i].annotation.split("description-")[1],
             type: 1,
             hidden: false,
             lock: false,
@@ -950,7 +952,7 @@ export default {
         }
         if (i < this.inward_arrow) {
           state.links[i] = {
-            source: this.neighbors_groups["kp2.0"][i].name,
+            source: L[i].name,
             target: this.node.name,
             width: 3,
             curved: false
@@ -958,13 +960,13 @@ export default {
         } else if(i < directedLen) {
           state.links[i] = {
             source: this.node.name,
-            target: this.neighbors_groups["kp2.0"][i].name,
+            target: L[i].name,
             width: 3,
             curved: false
           };
         } else if(i < L.length){
           state.links[i] = {
-            source: this.neighbors_groups["kp2.0"][i].name,
+            source: L[i].name,
             target: this.node.name,
             width: 3,
             curved: false
