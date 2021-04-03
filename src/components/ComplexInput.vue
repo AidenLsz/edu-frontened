@@ -964,6 +964,9 @@ export default {
     temp_latex(newVal){
       this.temp_latex = newVal;
     },
+    Get_Out_Content(val){
+      this.content = val;
+    },
     content(newVal){
       setTimeout(()=>{this.$emit("Update_CI", newVal)}, 10);
     },
