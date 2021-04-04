@@ -25,7 +25,7 @@
             <el-button type="primary"  value="提交" @click="submit(ku_name)" :disabled="knowledgeSystem == ''">检索</el-button>
           </el-col>
           <el-col :span="4" :offset="3">
-            <el-select v-model="knowledgeSystem" placeholder="请选择知识体系">
+            <el-select v-model="knowledgeSystem" placeholder="请选择知识体系" v-if="false">
               <el-option
                 v-for="item in KS_List"
                 :key="item.value"
@@ -41,7 +41,7 @@
             <ComplexInput @Update_CI="UCI" @Update_Image="UCII" ref="CI" @Full_Change="ComplexInputFullChange"></ComplexInput>
           </el-col>
           <el-col :span="3" type="flex" justify="center">
-            <el-select v-model="knowledgeSystem" placeholder="请选择知识体系" style="margin-top: 6vh">
+            <el-select v-model="knowledgeSystem" placeholder="请选择知识体系" style="margin-top: 6vh" v-if="false">
               <el-option
                 v-for="item in KS_List"
                 :key="item.value"
