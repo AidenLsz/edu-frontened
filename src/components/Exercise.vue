@@ -1,16 +1,26 @@
 <template>
   <div class="exercise" style="margin-bottom: 40px; margin-top: 5vh">
-    <!-- header -->
+    <el-dialog
+        :visible.sync="simpleInput" 
+        title="LUNA输入助手" 
+        width="65%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
+      <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="content"></ComplexInput>
+      <el-button type="success" plain @click="simpleInput = false">完成输入</el-button>
+    </el-dialog>
+    <!-- 地址框 -->
     <el-row justify="start" type="flex">
-      <el-col style="padding-left: 1vw">
+      <el-col :span="7" style="margin-left: 5vw;">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>试题检索</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
+    <!-- 题库选择 -->
     <el-row style="padding-top: 8px; height: 40px;">
-      <el-col :span="4" :offset="1" style="text-align: left;line-height: 30px">
+      <el-col :span="4" style="text-align: left; line-height: 30px; margin-left: 5vw;">
         请选择要查询的数据库：
       </el-col>
       <!-- 0 - public, 1 - neea, 2 - iflytek -->
@@ -30,108 +40,78 @@
         </div>
       </el-col>
     </el-row>
-    <el-row style="margin-top: 4vh; margin-bottom: 5vh" type="flex" v-if="simpleInput">
-      <el-col :span="11" :offset="1">
-        <el-input v-model="content" placeholder="请输入内容"></el-input>
+    <!-- 搜索框行 -->
+    <el-row type="flex" justify="start" class="SearchArea">
+        <el-col :span="20">
+          <el-input class="SearchInput" v-model="content" type="text">
+            
+          </el-input>
+        </el-col>
+        <el-col :span="1">
+          <el-button type="text" style="font-size: 20px; color: black;" size="small" v-if="content != ''" @click="content = ''">
+            <i class="el-icon-close"></i>
+          </el-button>
+        </el-col>
+        <el-col :span="1">
+          <el-divider direction="vertical"></el-divider>
+        </el-col>
+        <el-col :span="1">
+          <el-button type="text" style="font-size: 18px; color: black; display: block; margin-left: -5px"  size="small" @click="simpleInput = true">
+            ∑
+          </el-button>
+        </el-col>
+        <el-col :span="1">
+          <el-button type="text" style="font-size: 20px; display: block; margin-left: -8px;" size="small" @click="submit()">
+            <i class="el-icon-search"></i>
+          </el-button>
+        </el-col>
+    </el-row>
+    <!-- 筛选条件行 -->
+    <el-row type="flex" justify="start" style="margin-left: 5vw; margin-right: 5vw; border-top: 1px solid Silver; border-bottom: 1px solid Silver;">
+      <el-col :span="2">
+        <span style="line-height: 40px; font-weight: bold">筛选条件：</span>
       </el-col>
-      <el-col :span="2" :offset="1">
-        <el-button type="primary" plain @click="changeInput">
-          <span style="font-weight: bold">切换多格式输入</span>
-        </el-button>
+      <el-col :span="2">
+        <el-popover
+          placement="bottom-start"
+          width="765"
+          trigger="hover">
+          <el-checkbox-group v-model="Subject_Type">     
+            <el-checkbox label="语文">语文</el-checkbox>
+            <el-checkbox label="数学">数学</el-checkbox>
+            <el-checkbox label="英语">英语</el-checkbox>
+            <el-checkbox label="政治">政治</el-checkbox>
+            <el-checkbox label="历史">历史</el-checkbox>
+            <el-checkbox label="地理">地理</el-checkbox>
+            <el-checkbox label="物理">物理</el-checkbox>
+            <el-checkbox label="化学">化学</el-checkbox>
+            <el-checkbox label="生物">生物</el-checkbox>
+          </el-checkbox-group>
+          <el-button slot="reference" class="FilterButton" type="text">{{Get_Subject()}}</el-button>
+          <el-button slot="reference" type="text" v-if="Subject_Type.length > 0" @click="Subject_Type = []" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+        </el-popover>
       </el-col>
-      <el-col :span="1" :offset="1">
-        <el-button type="primary" plain value="提交" @click="submit()">
-          <span style="font-weight: bold">检索</span>
-        </el-button>
+      <el-col :span="3">
+        <el-popover
+          placement="bottom-start"
+          width="340"
+          trigger="hover">
+          <el-checkbox-group v-model="Period_Type">     
+            <el-checkbox label="小学">小学</el-checkbox>
+            <el-checkbox label="初中">初中</el-checkbox>
+            <el-checkbox label="高中">高中</el-checkbox>
+            <el-checkbox label="大学">大学</el-checkbox>
+          </el-checkbox-group>
+          <el-button slot="reference" class="FilterButton" type="text">{{Get_Period()}}</el-button>
+          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+        </el-popover>
       </el-col>
     </el-row>
-    <el-row style="margin-top: 4vh; margin-bottom: 5vh" v-if="!simpleInput" type="flex">
-      <el-col :span="18" :offset="1">
-        <el-row>
-          <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="content"></ComplexInput>
-        </el-row>
-      </el-col>
-      <el-col :span="3" style="padding-top: 14vh">
-        <el-row>
-          <el-button type="primary" plain  @click="changeInput">
-            <span style="font-weight: bold">切换简单输入</span>
-          </el-button>
-        </el-row>
-        <el-row>
-          <el-button type="primary" plain  value="提交" @click="submit">
-            <span style="font-weight: bold">检索</span>
-          </el-button>
-        </el-row>
-      </el-col>
-    </el-row>
-    <!-- main -->
-    <!-- <el-row type="flex" justify="center" style="margin-top: 4vh;" >
-      <el-col :span="20">
-        <div class="result">
-          <el-row type="flex" justify="start">
-            <h4 style="color: #0a1612; font-weight: bold">试题检索</h4>
-          </el-row>
-          <el-row type="flex" justify="start">
-            <h3 style="color: #0a1612;">试题文本</h3>
-          </el-row>
-          <el-row type="flex" justify="start">
-            <el-col style="text-align: left">
-              <p>{{ raw_text }}</p>
-            </el-col>
-          </el-row>
-          <el-divider></el-divider>
-          <el-row type="flex" justify="start" style="margin-top: 3vh">
-            <el-col :span="24">
-              <el-row type="flex" justify="start">
-                <h4 style="color: #0a1612; font-weight: bold">知识点</h4>
-              </el-row>
-              <el-tabs
-                value="rjb_new"
-                @tab-click="dataSource"
-                type="card"
-                style="height: 200px; margin-top: 5vh;"
-                id="tabs"
-              >
-                <el-tab-pane label="人教版新" name="rjb_new" style="border: none">
-                  <el-row
-                    v-for="(entities, group, group_index) in entities_groups"
-                    :key="group_index"
-                  >
-                    <el-row v-if="group_index == 0" type="flex" justify="start">
-                    </el-row>
-                    <el-row
-                      v-if="group_index == 0"
-                      class="label"
-                      type="flex"
-                      justify="start"
-                    >
-                      <el-popover
-                        placement="top-start"
-                        v-for="(entity, index) in entities"
-                        :key="index"
-                        :title="entity.name"
-                        width="200"
-                        trigger="hover"
-                        :content="entity.annotation"
-                      >
-                        <el-tag slot="reference" id="tag">{{
-                          entity.name
-                        }}</el-tag>
-                      </el-popover>
-                    </el-row>
-                  </el-row>
-                </el-tab-pane>
-              </el-tabs>
-            </el-col>
-          </el-row>
-        </div>
-      </el-col>
-    </el-row> -->
     <el-row v-for="(Question, Question_Index) in question_list" :key="Question_Index" style="margin-bottom: 50px">
-      <el-col :offset="1" :span="22" class="quesCard">
+      <el-col :span="17" class="quesCard">
         <el-row style="text-align: left; padding-left: 40px; padding-top: 10px; background: white; padding-bottom: 15px">
           <el-col style="padding-bottom: 15px">
-            <span style="margin-bottom: 20px; display: block">题干：</span><Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
+            <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
           </el-col>
           <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
             <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">选项{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown></el-row>
@@ -209,7 +189,7 @@ export default {
       // 老内容
       old_content: "",
       // 当前是否为简单输入格式
-      simpleInput: true,
+      simpleInput: false,
       // 新版本用的mavon-editor带来的自带回调函数用的json格式
       // name: 图片名
       // info: base64转换后的数据段
@@ -236,7 +216,10 @@ export default {
       // 能搜索到的题目数量
       Total_Count: -1,
       // loading
-      loading: false
+      loading: false,
+      // 学科和学段
+      Subject_Type: [],
+      Period_Type: [],
     };
   },
   watch:{
@@ -383,6 +366,25 @@ export default {
         return "unFocusDatabase"
       }
 
+    },
+    // 修改学科，学段时的配套显示
+    Get_Subject(){
+      if(this.Subject_Type.length == 0){
+        return "选择学科"
+      }else if(this.Subject_Type.length == 1){
+        return this.Subject_Type[0]
+      }else{
+        return this.Subject_Type[0] + "（等" + this.Subject_Type.length + "项）"
+      }
+    },
+    Get_Period(){
+      if(this.Period_Type.length == 0){
+        return "选择学段"
+      }else if(this.Period_Type.length == 1){
+        return this.Period_Type[0]
+      }else{
+        return this.Period_Type[0] + "（等" + this.Period_Type.length + "项）"
+      }
     }
   }
 };
@@ -410,7 +412,8 @@ export default {
 .quesCard{
   // border: 3px dashed black; 
   background: #EBEEF5; 
-  border: 1px dashed black
+  border: 1px dashed black;
+  margin-left: 5vw;
 }
 .el-row {
   margin-bottom: 20px;
@@ -524,4 +527,34 @@ export default {
   border-color: #36a9df !important;
 }
 
+</style>
+<style lang="scss" scoped>
+.SearchInput{
+  font-size: 16px;
+  line-height: 28px;
+  height: 28px
+}
+.SearchInput /deep/ .el-input__inner {
+  border: 0;
+  border-radius: 0px;
+  background: transparent;
+}
+
+.el-divider--vertical{
+  display: block;
+  width: 2px;
+  background-color: #9B9EA4;
+  height: 32px;
+  margin-top: 4px;
+}
+.FilterButton{
+  padding-top: 12px;
+}
+.SearchArea{
+  margin-left: 5vw; 
+  border: 1px solid Silver;
+  width: 60%; 
+  border-radius: 18px;
+  -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
+}
 </style>

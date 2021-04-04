@@ -13,6 +13,7 @@ build:
   stage: build
   before_script:
   - if [ $CI_COMMIT_BRANCH="master" ]; then sed -i "s%DEFAULT_BACKEND_URL%$BACKEND_URL%g" .env.production;fi
+  - cat .env.production
   script:
   - npm config set unsafe-perm true
   - npm install -g cnpm --registry=https://registry.npm.taobao.org

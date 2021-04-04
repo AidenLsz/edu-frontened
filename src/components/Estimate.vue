@@ -2,14 +2,14 @@
   <div class="estimate"  style="margin-top: 5vh">
     <div class="panel">
       <el-row justify="start" type="flex">
-        <el-col style="padding-left: 25px">
+        <el-col style="padding-left: 5vw">
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>试题属性预估</el-breadcrumb-item>
           </el-breadcrumb>
         </el-col>
       </el-row>
-      <el-row style="padding-top: 4vh; padding-left: 3vw">
+      <el-row style="padding-top: 4vh; padding-left: 5vw">
         <el-col :span="4">
           <el-select v-model="subject_id" placeholder="请先在此选择学科">
             <el-option
@@ -41,7 +41,7 @@
           <span>*选择学科、类别，并填写题目后方可提交*</span>
         </el-col>
       </el-row>
-      <el-row type="flex" justify="start" style="padding-top: 3vh; padding-left: 4vw">
+      <el-row type="flex" justify="start" style="padding-top: 3vh; padding-left: 5vw">
         <el-col :span="2.5">
           <span>预测属性勾选：</span>
         </el-col>
@@ -52,10 +52,10 @@
           </el-checkbox-group>
         </el-col>
       </el-row>
-      <el-row style="padding-top: 2vh; padding-left: 4vw; z-index: 1" type="flex" justify="start" >
+      <el-row style="padding-top: 2vh; padding-left: 5vw; z-index: 1" type="flex" justify="start" >
         <ComplexInput @Update_CI="UCI" @Update_Image="UCII"></ComplexInput>
       </el-row>
-      <div style="border-top: 3px solid #ccc; margin: 5vh 3vw 0 3vw; padding-top: 2vh">
+      <div style="border-top: 3px solid #ccc; margin: 5vh 5vw 0 5vw; padding-top: 2vh">
         <el-row v-loading="loading">
           <el-row type="flex" justify="start">
             <h4 style="color: #0a1612;">预估结果：</h4>
