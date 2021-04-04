@@ -2,7 +2,7 @@
   <div class="similarity"  style="margin-top: 5vh">
     <div class="panel">
       <el-row justify="start" type="flex">
-        <el-col style="padding-left: 25px">
+        <el-col style="padding-left: 5vw">
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>相似试题评估</el-breadcrumb-item>
@@ -10,7 +10,7 @@
         </el-col>
       </el-row>
 
-      <el-row style="padding: 1vh 3vw 0 3vw">
+      <el-row style="padding: 1vh 5vw 0 5vw">
         <el-col :span="11">
           <ComplexInput @Update_CI="UCI_Left" @Update_Image="UCII_Left" @Full_Change="FullChange_L" ref="CI_Left" :class="OpacityCheck(0)"></ComplexInput>
         </el-col>
@@ -20,11 +20,11 @@
         </el-col>
       </el-row>
 
-      <el-row type="flex" justify="end" style="padding: 1vh 3vw 0 3vw">
+      <el-row type="flex" justify="end" style="padding: 1vh 5vw 0 5vw">
         <el-button type="primary" value="提交" @click="submit">评估</el-button>
       </el-row>
 
-      <div id="result" style="border-top: 3px solid #ccc; margin: 3vh 3vw 0 3vw; padding-top: 2vh">
+      <div id="result" style="border-top: 3px solid #ccc; margin: 3vh 5vw 0 5vw; padding-top: 2vh">
         <el-row type="flex" justify="start">
           <h4 style="color: black">评估结果：</h4>
         </el-row>
