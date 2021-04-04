@@ -282,7 +282,7 @@ export default {
         },
       ],
       // 知识体系
-      knowledgeSystem: ""
+      knowledgeSystem: "neea"
     };
   },
   mounted() {
