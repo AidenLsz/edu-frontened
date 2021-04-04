@@ -4,30 +4,56 @@
             <el-row style="margin: 30px 0px 10px 0px">
                 <label style="font-size: 20px">指导老师</label>
             </el-row>
-            <el-row class="Teacher_Card" v-for="(teacher, teacher_index) in member_data.teachers" :key="'T_' + teacher_index" style="">
-                <el-col :span="6">
-                    <img class="img_background_teacher" :src="member_data.img_path[teacher.name]" style="border-radius: 50%">
+            <el-row v-for="Row_Index in Math.ceil(member_data.teachers.length/3)" :key="'T_R_' + Row_Index" style="margin-left: 10vw; margin-right: 10vw; padding-left: 3vw">
+                <el-col :span="7" v-if="(Row_Index - 1) * 3 + 0 < member_data.teachers.length" class="Teacher_Card">
+                    <el-row>
+                        <img class="img_background_teacher" :src="Get_Teacher_Img(Row_Index, 0)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.teachers[(Row_Index - 1) * 3 + 0].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.teachers[(Row_Index - 1) * 3 + 0].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-s-home" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i><el-link :href="member_data.teachers[(Row_Index - 1) * 3 + 0].page" :underline="false" target="_blank">{{member_data.teachers[(Row_Index - 1) * 3 + 0].name}}的个人主页</el-link></span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <p style="white-space: pre-line; line-height: 30px; text-align: left;">{{member_data.teachers[(Row_Index - 1) * 3 + 0].intro}}</p>
+                    </el-row>
                 </el-col>
-                <el-col :span="18">
-                    <el-row style="margin-top: 42px" type="flex" justify="start">
-                        <label style="font-size: 18px">{{teacher.name}}</label>
+                <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 1 < member_data.teachers.length" class="Teacher_Card">
+                    <el-row>
+                        <img class="img_background_teacher" :src="Get_Teacher_Img(Row_Index, 1)" style="border-radius: 50%" alt="暂无图片">
                     </el-row>
-                    <el-row style="margin-top: 20px">
-                        <el-col :span="8">
-                            <el-row type="flex" justify="start">
-                                <span style="margin-right: 120px"><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{teacher.mail}}</span>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="8">
-                            <el-row type="flex" justify="start">
-                                <span><i class="el-icon-s-home" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i><el-link :href="teacher.page" :underline="false" target="_blank">{{teacher.name}}的个人主页</el-link></span>
-                            </el-row>
-                        </el-col>            
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.teachers[(Row_Index - 1) * 3 + 1].name}}</label>
                     </el-row>
-                    <el-row style="margin-top: 20px; padding-right: 30px" type="flex" justify="start">
-                        <span style="text-align: left">
-                            {{teacher.intro}}
-                        </span>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.teachers[(Row_Index - 1) * 3 + 1].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-s-home" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i><el-link :href="member_data.teachers[(Row_Index - 1) * 3 + 1].page" :underline="false" target="_blank">{{member_data.teachers[(Row_Index - 1) * 3 + 1].name}}的个人主页</el-link></span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <p style="white-space: pre-line; line-height: 30px; text-align: left;">{{member_data.teachers[(Row_Index - 1) * 3 + 1].intro}}</p>
+                    </el-row>
+                </el-col>
+                <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 2 < member_data.teachers.length" class="Teacher_Card">
+                    <el-row>
+                        <img class="img_background_teacher" :src="Get_Teacher_Img(Row_Index, 2)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.teachers[(Row_Index - 1) * 3 + 2].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.teachers[(Row_Index - 1) * 3 + 2].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-s-home" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i><el-link :href="member_data.teachers[(Row_Index - 1) * 3 + 2].page" :underline="false" target="_blank">{{member_data.teachers[(Row_Index - 1) * 3 + 2].name}}的个人主页</el-link></span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <p style="white-space: pre-line; line-height: 30px; text-align: left;">{{member_data.teachers[(Row_Index - 1) * 3 + 2].intro}}</p>
                     </el-row>
                 </el-col>
             </el-row>
@@ -47,7 +73,7 @@
                         <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.students[(Row_Index - 1) * 3 + 0].mail}}</span>
                     </el-row>
                     <el-row style="padding-top: 10px">
-                        <span style="white-space: pre-line; line-height: 30px">{{member_data.students[(Row_Index - 1) * 3 + 0].intro}}</span>
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.students[(Row_Index - 1) * 3 + 0].intro}}</span>
                     </el-row>
                 </el-col>
                 <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 1 < member_data.students.length" class="Student_Card">
@@ -61,7 +87,7 @@
                         <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.students[(Row_Index - 1) * 3 + 1].mail}}</span>
                     </el-row>
                     <el-row style="padding-top: 10px">
-                        <span style="white-space: pre-line; line-height: 30px">{{member_data.students[(Row_Index - 1) * 3 + 1].intro}}</span>
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.students[(Row_Index - 1) * 3 + 1].intro}}</span>
                     </el-row>
                 </el-col>
                 <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 2 < member_data.students.length" class="Student_Card">
@@ -74,12 +100,10 @@
                     <el-row style="padding-top: 10px">
                         <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.students[(Row_Index - 1) * 3 + 2].mail}}</span>
                     </el-row>
-                    <el-row style="padding-top: 10px">
-                        <span style="white-space: pre-line; line-height: 30px">{{member_data.students[(Row_Index - 1) * 3 + 2].intro}}</span>
+                    <el-row style="padding-top: 10px" >
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.students[(Row_Index - 1) * 3 + 2].intro}}</span>
                     </el-row>
                 </el-col>
-                <!-- 
-                {{student}} -->
             </el-row>
         </el-row>
     </div>
@@ -95,19 +119,19 @@ export default {
             member_data: {
                 "teachers": [
                     {
-                    "intro": "陈恩红，博士，教授，博导，国家杰出青年基金获得者，科技部重点领域创新团队负责人，CCF会士。1996年获中国科学技术大学计算机软件专业博士学位。主要研究方向：机器学习、数据挖掘、社会网络、个性化推荐系统。",
+                    "intro": "陈恩红，博士，教授，博导，国家杰出青年基金获得者，科技部重点领域创新团队负责人，CCF会士。中国科学技术大学计算机科学与技术学院副院长，语音及语言信息处理国家工程实验室副主任，大数据分析及应用安徽省重点实验室主任。",
                     "mail": "cheneh@ustc.edu.cn",
                     "name": "陈恩红",
                     "page": "http://staff.ustc.edu.cn/~cheneh"
                     },
                     {
-                    "intro": "刘淇，男，特任教授，博士生导师，中国计算机学会(CCF)大数据专家委员会委员、中国人工智能学会(CAAI)机器学习专委会委员、中科院青年创新促进会优秀会员、IEEE/ACM会员。2013年获得中国科学技术大学计算机应用技术专业博士学位。主要研究方向：数据挖掘与知识发现、机器学习方法及其应用。",
+                    "intro": "刘淇，特任教授，博导，中国计算机学会(CCF)大数据专家委员会委员、中国人工智能学会(CAAI)机器学习专委会委员、中科院青年创新促进会优秀会员、IEEE/ACM会员。",
                     "mail": "qiliuql@ustc.edu.cn",
                     "name": "刘淇",
                     "page": "http://staff.ustc.edu.cn/~qiliuql"
                     },
                     {
-                    "intro": "黄振亚，1992年生，博士，特任副研究员，硕士生导师。2014年于山东大学软件学院获工学学士学位，2020年于中国科学技术大学计算机学院获工学博士学位。主要研究方向：数据挖掘，文本挖掘，推荐系统等。",
+                    "intro": "黄振亚，博士，特任副研究员，硕导。担任IEEE TKDE、ACM TIST等学术期刊审稿人，以及NeurIPS、AAAI、SDM等多个国际会议的程序委员会委员。",
                     "mail": "huangzhy@ustc.edu.cn",
                     "name": "黄振亚",
                     "page": "http://staff.ustc.edu.cn/~huangzhy"
@@ -272,7 +296,16 @@ export default {
             }else{
                 return "/members/unknown.png"
             }
-        }
+        },
+        Get_Teacher_Img(row, index){
+            var i = (row-1)*3 + index
+            var teacher = this.member_data.teachers[i];
+            if(this.member_data.img_path[teacher.name]){
+                return this.member_data.img_path[teacher.name];
+            }else{
+                return "/members/unknown.png"
+            }
+        },
     }
 }
 </script>
@@ -282,8 +315,8 @@ export default {
     background-repeat: no-repeat;
 	background-position:center center;
 	background-size: cover;
-	width: 180px;
-	height: 180px;
+	width: 240px;
+	height: 240px;
     object-fit: cover;
 }
 .img_background_student{
@@ -295,11 +328,12 @@ export default {
     object-fit: cover;
 }
 .Teacher_Card{
-    margin: 2vh 10vw 5vh 10vw; 
-    height: 240px;
+    padding: 2vh 2vw 5vh 2vw;
+    height: 650px;
+    margin-bottom: 50px;
     -webkit-box-shadow: 8px 10px 12px rgba(25, 25, 25, 0.1);
     box-shadow: 8px 10px 12px rgba(25, 25, 25, 0.1);
-    border-radius: 15px;
+    border-radius: 40px;
     background: #F8FBFF;
 }
 .Student_Card{

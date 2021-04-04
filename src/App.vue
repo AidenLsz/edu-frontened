@@ -178,7 +178,7 @@
           </el-col>
           <el-col :span="8" :offset="11">
             <el-row type="flex" justify="end">
-              <el-col :span="4" :offset="5"  style="padding-top: 15px;">
+              <el-col :span="4" :offset="1"  style="padding-top: 15px;">
                 <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
               </el-col>
               <el-col :span="4" style="padding-top: 15px;">
@@ -217,12 +217,14 @@
                           <span style="color: black;">知识单元检索</span>
                         </el-menu-item>
                       </router-link>
+                      <el-menu-item index="2-3"><span style="color: Gainsboro;">学习资源</span></el-menu-item>
                       
                     </el-submenu>
                     <el-submenu index="3">
                       <template slot="title"><span style="color: black;">分析</span></template>
                       <el-menu-item index="3-1"><span style="color: Gainsboro;">学习资源</span></el-menu-item>
-                      <el-menu-item index="3-2"><span style="color: Gainsboro;">试卷资源</span></el-menu-item>
+                      <el-menu-item index="3-2"><span style="color: Gainsboro;">试题资源</span></el-menu-item>
+                      <el-menu-item index="3-3"><span style="color: Gainsboro;">试卷资源</span></el-menu-item>
                     </el-submenu>
                     <router-link to="/estimate" :underline="false" @click.native="ToTop">
                       <el-menu-item index="4">
@@ -236,6 +238,9 @@
                     </router-link>
                   </el-submenu>
                 </el-menu>
+              </el-col>
+              <el-col :span="4" style="padding-top: 15px;">
+                <el-button type="text" @click="show_members" class="navbar">成员</el-button>
               </el-col>
               <el-col :span="4" style="padding-top: 15px;">
                 <el-dropdown trigger="hover" v-if="username" style="padding-top: 8px" class="navbar">
@@ -369,10 +374,11 @@ export default {
       var Width = window.screen.width;
       var CWidth = document.body.clientWidth;
       console.log(Width, CWidth)
-      if(Width - CWidth < 100){
+      if(Width - CWidth < 300){
         return "0px"
+      }else{
+        return (0 - (CWidth/Width)*(CWidth/Width)*40) + "px";
       }
-      return (0 - (CWidth/Width)*25) + "px";
     },
     ToTop(){
       window.scrollTo(0,0);
@@ -384,6 +390,11 @@ export default {
     },
     goToMainPage(){
       this.$router.push({ path: "/" });
+      this.ToTop();
+    },
+    show_members(){
+      this.$router.push({ path: "/Members" });
+      this.ToTop();
     },
     login_show() {
       // this.$router.push({ path: "/login" });
@@ -411,6 +422,7 @@ export default {
     },
     login_admin() {
       this.$router.push({ path: "/admin" });
+      this.ToTop();
     },
     // 测试退出函数
     logout() {
