@@ -8,6 +8,9 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 import VueResource from "vue-resource";
 Vue.use(VueResource);
 
+import echarts from "echarts";
+Vue.prototype.$echarts = echarts;
+
 Vue.config.productionTip = false
 
 if (process.env.NODE_ENV === "production") {

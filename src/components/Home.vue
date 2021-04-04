@@ -627,33 +627,72 @@
       </el-row>
     </section>
     
-    <!-- cta-area -->
-    <!-- <section>
+    <!-- 图标区域-area -->
+    <section>
       <el-row style="margin-top: 50px;">
         <el-col :span="4" :offset="5">
           <el-divider></el-divider>
         </el-col>
         <el-col :span="6">
-          <span style="padding-left: 5vw; padding-right: 4vw; letter-spacing: 1vw; font-size: 36px;">关于我们</span>
+          <span style="padding-left: 5vw; padding-right: 4vw; letter-spacing: 1vw; font-size: 36px;">智能分析</span>
         </el-col>
         <el-col :span="4">
           <el-divider></el-divider>
         </el-col>
       </el-row>
-      <el-row style="margin-top: 80px; padding-bottom: 200px">
-        <el-col :span="14" :offset="5">
-          <span style="font-size: 16px; line-height: 200%; text-align: left; display: inline-block">
-            大数据分析与应用安徽省重点实验室（Anhui Province Key Laboratory of Big Data Analysis and Application），学科领域为电子信息，由中国科学技术大学、科大讯飞股份有限公司（以下简称科大讯飞公司）和安徽广电传媒产业集团有限责任公司（以下简称安徽广电集团）三方共建。其中，作为依托单位的中国科学技术大学，是我省乃至我国大数据分析与应用方向的优势研究单位；同时，作为共建单位的科大讯飞公司和安徽广电集团，不仅拥有规模庞大的大数据云平台以及优质数据资源，而且具有丰富的大数据技术产业化经验；更为重要的是，经过多年的合作，共建三方已经形成了强强联合、优势互补的稳定合作局面，围绕大数据分析与应用方向，建立了大数据产学研合作平台，在科研平台、产业平台和数据平台三个方面都拥有良好的科研和产业环境。
-          </span>
+      <el-row style="margin-top: 40px; padding-bottom: 40px">
+        <el-col :span="4" :offset="4" class="partData">
+          <el-row>
+            <el-col :span="12">
+              <img src="../assets/dataIcon1.png" width="50%" style="padding-top: 25%"/>
+            </el-col>
+            <el-col :span="12" style="padding-top: 30px">
+              <p style="font-weight:bold; font-size: 18px; color: black">试题</p>
+              <p style="font-weight:bold; font-size: 18px; color: black">{{Num_Question}}</p>
+            </el-col>
+          </el-row>
+        </el-col>
+        <el-col :span="4" :offset="2" class="partData">
+          <el-row>
+            <el-col :span="12">
+              <img src="../assets/dataIcon2.png" width="50%" style="padding-top: 25%"/>
+            </el-col>
+            <el-col :span="12" style="padding-top: 30px">
+              <p style="font-weight:bold; font-size: 18px; color: black">试卷</p>
+              <p style="font-weight:bold; font-size: 18px; color: black">{{Num_Paper}}</p>
+            </el-col>
+          </el-row>
+        </el-col>
+        <el-col :span="4" :offset="2" class="partData">
+          <el-row>
+            <el-col :span="12">
+              <img src="../assets/dataIcon3.png" width="50%" style="padding-top: 25%"/>
+            </el-col>
+            <el-col :span="12" style="padding-top: 30px">
+              <p style="font-weight:bold; font-size: 18px; color: black">知识单元</p>
+              <p style="font-weight:bold; font-size: 18px; color: black">{{Num_KU}}</p>
+            </el-col>
+          </el-row>
         </el-col>
       </el-row>
-    </section> -->
+      <el-row>
+        <div id="data_chart" class="data_chart"></div>
+      </el-row>
+    </section>
     <!-- cta-area-end -->
   </div>
 </template>
 <script>
 
 import $ from "jquery";
+
+// 引入基本模板
+let echarts = require('echarts/lib/echarts')
+// 引入柱状图组件
+require('echarts/lib/chart/bar')
+// 引入提示框和title组件
+require('echarts/lib/component/tooltip')
+require('echarts/lib/component/title')
 
 export default {
   components: { },
@@ -664,10 +703,14 @@ export default {
       image_infos: [],
       ToolsLabelNow: "资源",
       functionStatus: [false, false, false, false],
-      resourceStatus: [false, false, false, false]
+      resourceStatus: [false, false, false, false],
+      Num_Paper: 0,
+      Num_Question: 0,
+      Num_KU: 0
     };
   },
   mounted() {
+    this.Init_Bar();
     // data - background
     $("[data-background]").each(function() {
       $(this).css(
@@ -716,6 +759,146 @@ export default {
     },
     OpenResources(index){
       this.resourceStatus.splice(index, 1, true);
+    },
+    Init_Bar(){
+
+      
+
+      let config = {
+          headers: { "Content-Type": "multipart/form-data" }
+      };
+      let param = new FormData();
+
+      this.$http
+      .post(this.backendIP + "/api/count", param, config, {
+        emulateJSON: true
+      })
+      .then(function(data) {
+
+        var Chart_Data = {};
+
+        var Paper_Data = [];
+        var Question_Data = [];
+        var KU_Data = [];
+
+        Chart_Data = data.data;
+
+        this.Num_Paper = Chart_Data.num_paper;
+        this.Num_Question = Chart_Data.num_question;
+        this.Num_KU = Chart_Data.num_knowledge;
+        for(var index = 0; index < Chart_Data.num_sub.length; index ++){
+          Paper_Data.push(Chart_Data.num_sub[index].paper);
+          Question_Data.push(Chart_Data.num_sub[index].question);
+          KU_Data.push(Chart_Data.num_sub[index].knowledge);
+        }
+
+        let myChart = echarts.init(document.getElementById('data_chart'));
+        let option = {
+          grid: {
+            x: 70,
+            y: 90,
+            x2: 30,
+            y2: 35
+          },
+          title: {
+              text: "各学科数据统计",
+              x: "center",
+              y: "top",
+              textStyle: { 
+                  fontSize: 16,
+                  fontStyle: 'normal',
+                  fontWeight: 'bold',
+              },
+              padding: [5,5,40,25]
+          },
+          color: ['#626C91','#6BE6C1','#3FB1E3'],
+          tooltip : {
+              trigger: 'axis',
+              axisPointer : {
+                  type : 'shadow',
+                  label : {
+                      show: true
+                  }
+              },
+              textStyle: { 
+                  fontSize: 14,
+                  fontStyle: 'normal',
+                  align: 'left'
+              },
+          },
+          calculable: true,
+          legend: {
+              data: ['试卷', '试题', '知识单元'],
+              itemGap: 20,
+              x: "right",
+              y: "top",
+              padding: [5,30,40,5],
+              textStyle: { 
+                  fontSize: 14,
+                  fontStyle: 'normal',
+              },
+          },
+          xAxis : [
+          {
+              type : 'category',
+              data : Chart_Data.list_sub,
+              axisTick: {
+                  alignWithLabel: true
+              },
+              axisLabel:{
+                  show:true,  //这里的show用于设置是否显示x轴下的字体 默认为true
+                  interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
+                  textStyle:{   //textStyle里面写x轴下的字体的样式
+                      color:'black',
+                      fontSize:14
+                  }
+              },
+          }
+          ],
+          yAxis : [
+          {
+              type : 'value',
+              name : '数量',
+              axisLabel:{
+                  show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
+                  textStyle:{   //textStyle里面写y轴下的字体的样式
+                      color:'black',
+                      fontSize:14
+                  }
+              },
+              nameTextStyle:{
+                  color:"black", 
+                  fontSize:14,  
+                  padding:[30, 35, 15, 10]
+              }
+          }
+          ],
+          series : [
+          {
+              name:'试卷',
+              type:'bar',
+              barWidth: '20%',
+              data: Paper_Data
+          },
+          {
+              name:'试题',
+              type:'bar',
+              barWidth: '20%',
+              data: Question_Data
+          },
+          {
+              name:'知识单元',
+              type:'bar',
+              barWidth: '20%',
+              data: KU_Data
+          },
+          ]
+      };
+      myChart.setOption(option);
+  
+      //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+      window.addEventListener('resize',function() {myChart.resize()});
+      });
     }
   }
 };
@@ -861,5 +1044,21 @@ a {
 .sleepingButton{
   background: #F8FBFF;
   color: rgb(122, 122, 122);
+}
+.partData{
+  height: 120px;
+  background: #EEF5FE;
+  box-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.07);
+  -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
+  border-radius: 10px;
+}
+.data_chart{
+   border-radius: 10px; 
+   width: 67%; 
+   height:300px; 
+   padding-top: 20px; 
+   margin-left: 16.5%; 
+   border: 3px solid #EEF5FE; 
+   margin-bottom: 40px;
 }
 </style>
