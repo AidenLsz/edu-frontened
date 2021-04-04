@@ -841,9 +841,9 @@ export default {
         Front_Axis = Front_Axis.concat(After_Axis).concat(Combo_Axis).concat(Layer_Axis)
         Combo_Axis = []
         Layer_Axis = []
-        Front_Axis = []
+        After_Axis = []
         Front_chosen_list = Front_chosen_list.concat(After_chosen_list).concat(Combo_chosen_list).concat(Layer_chosen_list)
-        Front_chosen_list = []
+        After_chosen_list = []
         Layer_chosen_list = []
         Combo_chosen_list = []
       }else if(L.length > directedLen && IA == 0){
@@ -870,7 +870,6 @@ export default {
         Layer_Axis = []
         Layer_chosen_list = []
       }
-
 
       var Row_Axis = []
       var Col_Axis = []
