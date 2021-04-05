@@ -4,7 +4,7 @@
     <!-- header -->
 
     <el-row justify="start" type="flex">
-      <el-col style="padding-left: 25px">
+      <el-col style="padding-left: 5vw;">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>知识单元检索</el-breadcrumb-item>
@@ -13,9 +13,9 @@
     </el-row>
 
     <el-row>
-      <form @submit.prevent="submit(ku_name)" style="margin-top: 20px;">
+      <form @submit.prevent="submit(ku_name)" style="margin-top: 20px; margin-left: 5vw;">
         <el-row type="flex" class="row-bg" justify="start" v-if="!complex_input_flag">
-          <el-col :span="10" style="padding-left: 2vw">
+          <el-col :span="10">
             <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
           </el-col>
           <el-col :span="3" :offset="1">
@@ -64,7 +64,7 @@
       </form>
     </el-row>
     <!-- main -->
-    <el-row v-loading="loading" style="padding-top: 5vh" v-if="FullChange">
+    <el-row v-loading="loading" style="padding-top: 5vh; margin-left: 5vw; margin-right: 5vw" v-if="FullChange">
       <el-col :span="9">
         <div class="result" style="background: #F8FBFF">
           <el-row type="flex" justify="start">
@@ -442,7 +442,6 @@ export default {
   padding-top: 5%;
   height: 850px;
   background-color: #fff;
-  margin-left: 20px;
   // border-right: 14px solid #fff;
 }
 .graph {
