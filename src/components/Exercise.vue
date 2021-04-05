@@ -2,7 +2,7 @@
   <div class="exercise" style="margin-bottom: 40px; margin-top: 5vh">
     <el-dialog
         :visible.sync="simpleInput" 
-        title="复杂输入助手" 
+        title="LUNA输入助手" 
         width="65%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
@@ -11,7 +11,7 @@
     </el-dialog>
     <!-- 地址框 -->
     <el-row justify="start" type="flex">
-      <el-col style="padding-left: 1vw">
+      <el-col :span="7" style="margin-left: 5vw;">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>试题检索</el-breadcrumb-item>
@@ -20,7 +20,7 @@
     </el-row>
     <!-- 题库选择 -->
     <el-row style="padding-top: 8px; height: 40px;">
-      <el-col :span="4" :offset="1" style="text-align: left;line-height: 30px">
+      <el-col :span="4" style="text-align: left; line-height: 30px; margin-left: 5vw;">
         请选择要查询的数据库：
       </el-col>
       <!-- 0 - public, 1 - neea, 2 - iflytek -->
@@ -67,7 +67,7 @@
         </el-col>
     </el-row>
     <!-- 筛选条件行 -->
-    <el-row type="flex" justify="start" style="margin-left: 40px; margin-right: 40px; border-top: 1px solid Silver; border-bottom: 1px solid Silver;">
+    <el-row type="flex" justify="start" style="margin-left: 5vw; margin-right: 5vw; border-top: 1px solid Silver; border-bottom: 1px solid Silver;">
       <el-col :span="2">
         <span style="line-height: 40px; font-weight: bold">筛选条件：</span>
       </el-col>
@@ -108,7 +108,7 @@
       </el-col>
     </el-row>
     <el-row v-for="(Question, Question_Index) in question_list" :key="Question_Index" style="margin-bottom: 50px">
-      <el-col :offset="1" :span="22" class="quesCard">
+      <el-col :span="17" class="quesCard">
         <el-row style="text-align: left; padding-left: 40px; padding-top: 10px; background: white; padding-bottom: 15px">
           <el-col style="padding-bottom: 15px">
             <span style="margin-bottom: 20px; display: block">题干：</span><Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
@@ -412,7 +412,8 @@ export default {
 .quesCard{
   // border: 3px dashed black; 
   background: #EBEEF5; 
-  border: 1px dashed black
+  border: 1px dashed black;
+  margin-left: 5vw;
 }
 .el-row {
   margin-bottom: 20px;
@@ -550,9 +551,9 @@ export default {
   padding-top: 12px;
 }
 .SearchArea{
-  margin-left: 40px; 
+  margin-left: 5vw; 
   border: 1px solid Silver;
-  width: 50%; 
+  width: 60%; 
   border-radius: 18px;
   -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
 }

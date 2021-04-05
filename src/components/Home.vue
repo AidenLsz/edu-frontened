@@ -634,7 +634,7 @@
           <el-divider></el-divider>
         </el-col>
         <el-col :span="6">
-          <span style="padding-left: 5vw; padding-right: 4vw; letter-spacing: 1vw; font-size: 36px;">智能分析</span>
+          <span style="padding-left: 5vw; padding-right: 4vw; letter-spacing: 1vw; font-size: 36px;">数据统计</span>
         </el-col>
         <el-col :span="4">
           <el-divider></el-divider>
@@ -761,9 +761,7 @@ export default {
       this.resourceStatus.splice(index, 1, true);
     },
     Init_Bar(){
-
       
-
       let config = {
           headers: { "Content-Type": "multipart/form-data" }
       };
