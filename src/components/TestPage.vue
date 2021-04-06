@@ -85,11 +85,11 @@
         <el-row :class="Paper_Total_Analyse_Hidden(true)">
             <!-- 知识点难度分析部分 -->
             <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 18px; margin-top: 30px">
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px; margin-top: 30px">
                 <label>本卷共包含了&nbsp;&nbsp;{{Get_Paper_Knowledge_Length()}}&nbsp;&nbsp;个知识点，难度最大的知识点为&nbsp;&nbsp;{{Get_Paper_Knowledge_Difficult(true)}}&nbsp;&nbsp;，难度最小的知识点为&nbsp;&nbsp;{{Get_Paper_Knowledge_Difficult(false)}}&nbsp;&nbsp;。</label>
             </el-row>
             <!-- 提示行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 18px">
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px">
                 <label>各知识点平均难度为：</label>
             </el-row>
             <!-- 知识点难度分布柱状图 -->
@@ -97,7 +97,55 @@
                 <div id="Paper_Knowledge_Difficult_Analyse" class="Paper_Knowledge_Difficult_Analyse"></div>
             </el-row>
             <!-- 知识点分值分布部分 -->
+            <!-- 总分析行 -->
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px; margin-top: 30px; margin-right: 16.5vw;">
+                <label>本卷总分为&nbsp;&nbsp;{{Paper_Json.score}}&nbsp;&nbsp;分。
+                    其中，分值最大的知识点为&nbsp;&nbsp;{{KnowledgeScore_Name_List[0]}}&nbsp;&nbsp;
+                    {{Paper_Total_Get_Second_Score()}}
+                    ，分值最小的知识点为&nbsp;&nbsp;{{KnowledgeScore_Name_List[KnowledgeScore_List.length - 1]}}&nbsp;&nbsp;
+                    ，仅占&nbsp;&nbsp;{{KnowledgeScore_List[KnowledgeScore_List.length - 1]}}&nbsp;&nbsp;分。</label>
+            </el-row>
+            <!-- 提示行 -->
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px">
+                <label>各知识点所占分值为：</label>
+            </el-row>
+            <!-- 知识点难度分布柱状图 -->
+            <el-row>
+                <div id="Paper_Knowledge_Score_Analyse" class="Paper_Knowledge_Score_Analyse"></div>
+            </el-row>
             <!-- 知识点点对分布部分 -->
+            <!-- 总分析行 -->
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px; margin-top: 30px; margin-right: 16.5vw;">
+                <label v-if="KnowledgePair_Name_List.length > 0">
+                    共同出现次数最多的知识点为&nbsp;&nbsp;{{Paper_Total_Get_First_Pair()}}&nbsp;&nbsp;，
+                    共同出现了&nbsp;&nbsp;{{KnowledgePair_List[0]}}&nbsp;&nbsp;次
+                    {{Paper_Total_Get_Second_Pair()}}
+                </label>
+                <label v-if="KnowledgePair_Name_List.length == 0">
+                    本卷中没有共同出现的知识点对。
+                </label>
+            </el-row>
+            <!-- 提示行 -->
+            <el-row v-if="KnowledgePair_Name_List.length > 0" type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px">
+                <label>知识点共现关系如下：</label>
+            </el-row>
+            <!-- 知识点点对分布表格展示部分 -->
+            <el-row v-if="KnowledgePair_Name_List.length > 0"  style="font-size: 16px; margin-top: 30px; ">
+                <el-row style="background: #409EFD; color: white; margin: 0px 16.5vw;">
+                    <el-col :offset="2" :span="7"><label>知识点1</label></el-col>
+                    <el-col :span="7"><label>知识点2</label></el-col>
+                    <el-col :span="7"><label>出现次数</label></el-col>
+                </el-row>
+                <el-row v-for="(Knowledge_Pair, Pair_Index) in KnowledgePair_Name_List" :key="'T_P_Ku_Pair_' + Pair_Index" :class="Total_Table_Style(Pair_Index)">
+                    <el-col :offset="2" :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, 0)}}</label></el-col>
+                    <el-col :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, 1)}}</label></el-col>
+                    <el-col :span="7"><label>{{KnowledgePair_List[Pair_Index]}}</label></el-col>
+                </el-row>
+            </el-row>
+            <!-- 共现关系的图的部分 -->
+            <el-row v-if="KnowledgePair_Name_List.length > 0">
+                
+            </el-row>
             <!-- 知识点覆盖程度部分 -->
         </el-row>
         <!-- 难度分析 -->
@@ -161,6 +209,7 @@ export default {
             "id": "",
             "type": "",
             "status": "",
+            "score": 0,
             "difficulty_area_score": [],
             "difficulty_statistics": {},
             "knowledge_knowledge2num": {},
@@ -170,7 +219,15 @@ export default {
           },
           Part_Expand: [false, false, false, false],
           Paper_Total_Analyse_Focus: true,
-          Max_Gap: ""
+          Max_Gap: "",
+          // 以下属性只用于全卷分析这一节的内容，之后的大题分析环节我们交给函数去算
+          // 知识点分值和知识点分值对应的名称
+          KnowledgeScore_List: [],
+          KnowledgeScore_Name_List: [],
+          // 知识点对的次数和知识点对对应的名称
+          KnowledgePair_List: [],
+          KnowledgePair_Name_List: [],
+
         }
     },
     mounted() {
@@ -185,6 +242,36 @@ export default {
         // 返回全卷知识点的长度
         Get_Paper_Knowledge_Length(){
             return Object.keys(this.Paper_Json.knowledge2score).length;
+        },
+        // 切分知识点对并返回对应部分
+        Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, index){
+            var Pair = Knowledge_Pair.split("::")
+            return Pair[index]
+        },
+        // 返回全卷知识点分值排序的次选点信息
+        Paper_Total_Get_Second_Score(){
+            if(this.KnowledgeScore_Name_List.length < 3){
+                return ""
+            }else if(this.KnowledgeScore_Name_List.length == 3){
+                return "，其次是 " + this.KnowledgeScore_Name_List[1]
+            }else if(this.KnowledgeScore_Name_List.length > 3){
+                return "，其次是 " + this.KnowledgeScore_Name_List[1] + " 和 " + this.KnowledgeScore_Name_List[2]
+            }
+        },
+        // 返回全卷知识点对排序的首选点信息
+        Paper_Total_Get_First_Pair(){
+            return this.KnowledgePair_Name_List[0].replace(/::/, " 和 ")
+        },
+        // 返回全卷知识点对排序的次选点信息
+        Paper_Total_Get_Second_Pair(){
+            if(this.KnowledgePair_Name_List.length == 1){
+                return "。"
+            }else if(this.KnowledgePair_Name_List.length == 2){
+                return "，其次为 " + this.KnowledgePair_Name_List[1].replace(/::/, " 和 ") + "。"
+            }else if(this.KnowledgePair_Name_List.length > 2){
+                return "，其次为 " + this.KnowledgePair_Name_List[1].replace(/::/, " 和 ") 
+                    + " 与 " + this.KnowledgePair_Name_List[2].replace(/::/, " 和 ") + "。"
+            }
         },
         // 返回全卷知识点最难和最简单
         Get_Paper_Knowledge_Difficult(Part){
@@ -209,6 +296,14 @@ export default {
                     }
                 }
                 return E_Ku
+            }
+        },
+        // 返回首页分析的表格样式
+        Total_Table_Style(index){
+            if(index%2 == 1){
+                return "Total_Table_Single"
+            }else{
+                return "Total_Table_Double"
             }
         },
         // 返回全卷分析选项的样式
@@ -564,6 +659,81 @@ export default {
             //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
             window.addEventListener('resize',function() {myChart.resize()});
         },
+        // 初始化总体的知识点分数分布的那张饼图的方法
+        Init_Paper_Knowledge_Score_Analyse(){
+
+            var chartDom = document.getElementById('Paper_Knowledge_Score_Analyse');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}：{c} 分<br/>占比：({d}%)'
+                },
+                // roseType: 'radius',
+                legend: {
+                    top: '18%',
+                    right: '15%',
+                    orient: 'vertical'
+                },
+                title: {
+                    text: "各知识点平均分值图",
+                    x: "center",
+                    y: "top",
+                    textStyle: { 
+                        fontSize: 16,
+                        fontStyle: 'normal',
+                        fontWeight: 'bold',
+                    },
+                    padding: [15, 5, 5, 5]
+                },
+                series: [
+                    {
+                        name: '分值与比例',
+                        type: 'pie',
+                        radius: ['30%', '65%'],
+                        center: ["50%", "55%"], 
+                        avoidLabelOverlap: false,
+                        label: {
+                            show: true,
+                            // position: 'center',
+                            color: 'black',
+                            fontSize: '14',
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '18',
+                                fontWeight: 'bold',
+                            }
+                        },
+                        labelLine: {
+                            show: true,
+                            lineStyle: {
+                                color: 'red'
+                            },
+                            length: 20,
+                            length2: 0
+                        },
+                        data: [],
+                    }
+                ]
+            };
+
+            for(var i = 0; i < this.KnowledgeScore_Name_List.length; i++){
+                option.series[0].data.push(
+                    {
+                        value: this.KnowledgeScore_List[i], 
+                        name: this.KnowledgeScore_Name_List[i]
+                    }
+                )
+            }
+
+            myChart.setOption(option);
+            window.addEventListener('resize',function() {myChart.resize()});
+
+        },
         // 初始化数据的方法，不要动，放到最下面就得了
         // 千把来行着实太长了，展开了翻起来都费劲
         Init(){
@@ -571,6 +741,7 @@ export default {
             "id": "af6a45a3-46fa-41d6-ac7e-ae3842ce40fb",
             "type": "paper",
             "status": "OK",
+            "score": 31,
             "difficulty_area_score": [
                 0,
                 0,
@@ -1544,11 +1715,41 @@ export default {
             // for(var i in this.Paper_Json){
             //   console.log(i);
             // }
+
+            var Temp_Score_Dict = this.Paper_Json.knowledge2score;
+            while(Object.keys(Temp_Score_Dict).length > this.KnowledgeScore_List.length){
+                var Temp_Ku_Max_Score = -1;
+                var Temp_Ku_Max_Name = "";
+                for(var Ku in Temp_Score_Dict){
+                    if(this.KnowledgeScore_Name_List.indexOf(Ku) == -1 && Temp_Score_Dict[Ku] > Temp_Ku_Max_Score){
+                        Temp_Ku_Max_Score = Temp_Score_Dict[Ku]
+                        Temp_Ku_Max_Name = Ku
+                    }
+                }
+                this.KnowledgeScore_Name_List.push(Temp_Ku_Max_Name)
+                this.KnowledgeScore_List.push(Temp_Ku_Max_Score)
+            }
+
+            var Temp_Pair_Dict = this.Paper_Json.knowledge_knowledge2num;
+            while(Object.keys(Temp_Pair_Dict).length > this.KnowledgePair_List.length){
+                var Temp_Pair_Max_Count = -1;
+                var Temp_Pair_Max_Name = "";
+                for(var Pair in Temp_Pair_Dict){
+                    if(this.KnowledgePair_Name_List.indexOf(Pair) == -1 && Temp_Pair_Dict[Pair] > Temp_Pair_Max_Count){
+                        Temp_Pair_Max_Count = Temp_Pair_Dict[Pair]
+                        Temp_Pair_Max_Name = Pair
+                    }
+                }
+                this.KnowledgePair_Name_List.push(Temp_Pair_Max_Name)
+                this.KnowledgePair_List.push(Temp_Pair_Max_Count)
+            }
+
             setTimeout(()=>{
                 this.Init_Paper_Total_Bar();
                 this.Init_Paper_Total_Difficult_Analyse();
                 this.Get_Max_Difficult_Gap();
                 this.Init_Paper_Knowledge_Difficult_Analyse();
+                this.Init_Paper_Knowledge_Score_Analyse();
             }, 100)
         }
     }
@@ -1596,6 +1797,7 @@ export default {
     border: 3px solid #EEF5FE; 
     margin-bottom: 40px;
 }
+// 整体难度分析
 .Paper_Total_Difficult_Analyse{
     margin-top: 30px;
     border-radius: 10px; 
@@ -1607,11 +1809,24 @@ export default {
     background: #EEF5FE;
     margin-bottom: 40px;
 }
+// 知识点难度分析
 .Paper_Knowledge_Difficult_Analyse{
     margin-top: 30px;
     border-radius: 10px; 
     width: 67vw; 
     height:350px; 
+    padding-top: 10px; 
+    margin-left: 16.5%; 
+    border: 3px solid #EEF5FE; 
+    background: #EEF5FE;
+    margin-bottom: 40px;
+}
+// 知识点分数分析
+.Paper_Knowledge_Score_Analyse{
+    margin-top: 30px;
+    border-radius: 10px; 
+    width: 67vw; 
+    height:400px; 
     padding-top: 10px; 
     margin-left: 16.5%; 
     border: 3px solid #EEF5FE; 
@@ -1634,5 +1849,14 @@ export default {
     margin-top: -1px;
     height: 30px;
     padding-top: 5px;
+}
+// 表格单行，双行
+.Total_Table_Single{
+    background: transparent;
+    margin: 0 16.5vw;
+}
+.Total_Table_Double{
+    background: #F8FBFF;
+    margin: 0 16.5vw;
 }
 </style>

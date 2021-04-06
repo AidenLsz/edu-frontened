@@ -19,7 +19,7 @@
                         <span><i class="el-icon-s-home" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i><el-link :href="member_data.teachers[(Row_Index - 1) * 3 + 0].page" :underline="false" target="_blank">{{member_data.teachers[(Row_Index - 1) * 3 + 0].name}}的个人主页</el-link></span>
                     </el-row>
                     <el-row style="padding-top: 10px">
-                        <span style="white-space: pre-line; line-height: 30px; float: left;">{{member_data.teachers[(Row_Index - 1) * 3 + 0].intro}}</span>
+                        <p style="white-space: pre-line; line-height: 30px; text-align: left;">{{member_data.teachers[(Row_Index - 1) * 3 + 0].intro}}</p>
                     </el-row>
                 </el-col>
                 <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 1 < member_data.teachers.length" class="Teacher_Card">
@@ -36,7 +36,7 @@
                         <span><i class="el-icon-s-home" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i><el-link :href="member_data.teachers[(Row_Index - 1) * 3 + 1].page" :underline="false" target="_blank">{{member_data.teachers[(Row_Index - 1) * 3 + 1].name}}的个人主页</el-link></span>
                     </el-row>
                     <el-row style="padding-top: 10px">
-                        <span style="white-space: pre-line; line-height: 30px; float: left;">{{member_data.teachers[(Row_Index - 1) * 3 + 1].intro}}</span>
+                        <p style="white-space: pre-line; line-height: 30px; text-align: left;">{{member_data.teachers[(Row_Index - 1) * 3 + 1].intro}}</p>
                     </el-row>
                 </el-col>
                 <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 2 < member_data.teachers.length" class="Teacher_Card">
@@ -53,7 +53,7 @@
                         <span><i class="el-icon-s-home" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i><el-link :href="member_data.teachers[(Row_Index - 1) * 3 + 2].page" :underline="false" target="_blank">{{member_data.teachers[(Row_Index - 1) * 3 + 2].name}}的个人主页</el-link></span>
                     </el-row>
                     <el-row style="padding-top: 10px">
-                        <span style="white-space: pre-line; line-height: 30px; float: left;">{{member_data.teachers[(Row_Index - 1) * 3 + 2].intro}}</span>
+                        <p style="white-space: pre-line; line-height: 30px; text-align: left;">{{member_data.teachers[(Row_Index - 1) * 3 + 2].intro}}</p>
                     </el-row>
                 </el-col>
             </el-row>
@@ -119,19 +119,19 @@ export default {
             member_data: {
                 "teachers": [
                     {
-                    "intro": "陈恩红，博士，教授，博导，国家杰出青年基金获得者，科技部重点领域创新团队负责人，CCF会士。1996年获中国科学技术大学计算机软件专业博士学位。主要研究方向：机器学习、数据挖掘、社会网络、个性化推荐系统。",
+                    "intro": "陈恩红，博士，教授，博导，国家杰出青年基金获得者，科技部重点领域创新团队负责人，CCF会士。中国科学技术大学计算机科学与技术学院副院长，语音及语言信息处理国家工程实验室副主任，大数据分析及应用安徽省重点实验室主任。",
                     "mail": "cheneh@ustc.edu.cn",
                     "name": "陈恩红",
                     "page": "http://staff.ustc.edu.cn/~cheneh"
                     },
                     {
-                    "intro": "刘淇，男，特任教授，博士生导师，中国计算机学会(CCF)大数据专家委员会委员、中国人工智能学会(CAAI)机器学习专委会委员、中科院青年创新促进会优秀会员、IEEE/ACM会员。2013年获得中国科学技术大学计算机应用技术专业博士学位。主要研究方向：数据挖掘与知识发现、机器学习方法及其应用。",
+                    "intro": "刘淇，特任教授，博导，中国计算机学会(CCF)大数据专家委员会委员、中国人工智能学会(CAAI)机器学习专委会委员、中科院青年创新促进会优秀会员、IEEE/ACM会员。",
                     "mail": "qiliuql@ustc.edu.cn",
                     "name": "刘淇",
                     "page": "http://staff.ustc.edu.cn/~qiliuql"
                     },
                     {
-                    "intro": "黄振亚，1992年生，博士，特任副研究员，硕士生导师。2014年于山东大学软件学院获工学学士学位，2020年于中国科学技术大学计算机学院获工学博士学位。主要研究方向：数据挖掘，文本挖掘，推荐系统等。",
+                    "intro": "黄振亚，博士，特任副研究员，硕导。担任IEEE TKDE、ACM TIST等学术期刊审稿人，以及NeurIPS、AAAI、SDM等多个国际会议的程序委员会委员。",
                     "mail": "huangzhy@ustc.edu.cn",
                     "name": "黄振亚",
                     "page": "http://staff.ustc.edu.cn/~huangzhy"
