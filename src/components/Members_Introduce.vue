@@ -270,8 +270,7 @@ export default {
             if(this.member_data.img_path[student.name]){
                 return this.member_data.img_path[student.name];
             }else{
-                console.log(student.name);
-                return ""
+                return "/members/unknown.png"
             }
         }
     }
