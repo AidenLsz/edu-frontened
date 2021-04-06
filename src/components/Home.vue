@@ -718,6 +718,7 @@ export default {
         "url(" + $(this).attr("data-background") + ")"
       );
     });
+    this.ToTop();
   },
   methods: {
     ToTop(){

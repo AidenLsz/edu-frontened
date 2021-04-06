@@ -111,7 +111,7 @@
       <el-col :span="17" class="quesCard">
         <el-row style="text-align: left; padding-left: 40px; padding-top: 10px; background: white; padding-bottom: 15px">
           <el-col style="padding-bottom: 15px">
-            <span style="margin-bottom: 20px; display: block">题干：</span><Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
+            <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
           </el-col>
           <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
             <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">选项{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown></el-row>

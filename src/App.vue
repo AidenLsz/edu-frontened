@@ -178,7 +178,7 @@
           </el-col>
           <el-col :span="8" :offset="11">
             <el-row type="flex" justify="end">
-              <el-col :span="4" :offset="5"  style="padding-top: 15px;">
+              <el-col :span="4" :offset="1"  style="padding-top: 15px;">
                 <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
               </el-col>
               <el-col :span="4" style="padding-top: 15px;">
@@ -238,6 +238,9 @@
                     </router-link>
                   </el-submenu>
                 </el-menu>
+              </el-col>
+              <el-col :span="4" style="padding-top: 15px;">
+                <el-button type="text" @click="show_members" class="navbar">成员</el-button>
               </el-col>
               <el-col :span="4" style="padding-top: 15px;">
                 <el-dropdown trigger="hover" v-if="username" style="padding-top: 8px" class="navbar">
@@ -387,6 +390,11 @@ export default {
     },
     goToMainPage(){
       this.$router.push({ path: "/" });
+      this.ToTop();
+    },
+    show_members(){
+      this.$router.push({ path: "/Members" });
+      this.ToTop();
     },
     login_show() {
       // this.$router.push({ path: "/login" });
@@ -414,6 +422,7 @@ export default {
     },
     login_admin() {
       this.$router.push({ path: "/admin" });
+      this.ToTop();
     },
     // 测试退出函数
     logout() {
