@@ -1,138 +1,320 @@
 <template>
     <div>
-        <div id="chart_example" style="width: 70%; height:300px; margin-top: 60px"></div>
+        <el-row>
+            <el-row style="margin: 30px 0px 10px 0px">
+                <label style="font-size: 20px">指导老师</label>
+            </el-row>
+            <el-row class="Teacher_Card" v-for="(teacher, teacher_index) in member_data.teachers" :key="'T_' + teacher_index" style="">
+                <el-col :span="6">
+                    <img class="img_background_teacher" :src="member_data.img_path[teacher.name]" style="border-radius: 50%">
+                </el-col>
+                <el-col :span="18">
+                    <el-row style="margin-top: 42px" type="flex" justify="start">
+                        <label style="font-size: 18px">{{teacher.name}}</label>
+                    </el-row>
+                    <el-row style="margin-top: 20px">
+                        <el-col :span="8">
+                            <el-row type="flex" justify="start">
+                                <span style="margin-right: 120px"><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{teacher.mail}}</span>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-row type="flex" justify="start">
+                                <span><i class="el-icon-s-home" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i><el-link :href="teacher.page" :underline="false" target="_blank">{{teacher.name}}的个人主页</el-link></span>
+                            </el-row>
+                        </el-col>            
+                    </el-row>
+                    <el-row style="margin-top: 20px; padding-right: 30px" type="flex" justify="start">
+                        <span style="text-align: left">
+                            {{teacher.intro}}
+                        </span>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <el-divider></el-divider>
+            <el-row style="margin: 30px 0px 30px 0px">
+                <label style="font-size: 20px">团队成员</label>
+            </el-row>
+            <el-row v-for="Row_Index in Math.ceil(member_data.students.length/3)" :key="'S_R_' + Row_Index" style="margin-left: 10vw; margin-right: 10vw; padding-left: 3vw">
+                <el-col :span="7" v-if="(Row_Index - 1) * 3 + 0 < member_data.students.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_Student_Img(Row_Index, 0)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.students[(Row_Index - 1) * 3 + 0].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.students[(Row_Index - 1) * 3 + 0].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span style="white-space: pre-line; line-height: 30px">{{member_data.students[(Row_Index - 1) * 3 + 0].intro}}</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 1 < member_data.students.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_Student_Img(Row_Index, 1)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.students[(Row_Index - 1) * 3 + 1].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.students[(Row_Index - 1) * 3 + 1].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span style="white-space: pre-line; line-height: 30px">{{member_data.students[(Row_Index - 1) * 3 + 1].intro}}</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 2 < member_data.students.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_Student_Img(Row_Index, 2)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.students[(Row_Index - 1) * 3 + 2].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.students[(Row_Index - 1) * 3 + 2].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span style="white-space: pre-line; line-height: 30px">{{member_data.students[(Row_Index - 1) * 3 + 2].intro}}</span>
+                    </el-row>
+                </el-col>
+                <!-- 
+                {{student}} -->
+            </el-row>
+        </el-row>
     </div>
 </template>
-<script src="echarts.min.js">
-
-</script>
 <script>
-
-// 引入基本模板
-let echarts = require('echarts/lib/echarts')
-// 引入柱状图组件
-require('echarts/lib/chart/bar')
-// 引入提示框和title组件
-require('echarts/lib/component/tooltip')
-require('echarts/lib/component/title')
-
 export default {
-
-    components: {},
-    name: "TestPageList",
+    name: "Members",
+    mounted(){
+        this.ToTop();
+    },
     data(){
         return {
-
+            member_data: {
+                "teachers": [
+                    {
+                    "intro": "陈恩红，博士，教授，博导，国家杰出青年基金获得者，科技部重点领域创新团队负责人，CCF会士。1996年获中国科学技术大学计算机软件专业博士学位。主要研究方向：机器学习、数据挖掘、社会网络、个性化推荐系统。",
+                    "mail": "cheneh@ustc.edu.cn",
+                    "name": "陈恩红",
+                    "page": "http://staff.ustc.edu.cn/~cheneh"
+                    },
+                    {
+                    "intro": "刘淇，男，特任教授，博士生导师，中国计算机学会(CCF)大数据专家委员会委员、中国人工智能学会(CAAI)机器学习专委会委员、中科院青年创新促进会优秀会员、IEEE/ACM会员。2013年获得中国科学技术大学计算机应用技术专业博士学位。主要研究方向：数据挖掘与知识发现、机器学习方法及其应用。",
+                    "mail": "qiliuql@ustc.edu.cn",
+                    "name": "刘淇",
+                    "page": "http://staff.ustc.edu.cn/~qiliuql"
+                    },
+                    {
+                    "intro": "黄振亚，1992年生，博士，特任副研究员，硕士生导师。2014年于山东大学软件学院获工学学士学位，2020年于中国科学技术大学计算机学院获工学博士学位。主要研究方向：数据挖掘，文本挖掘，推荐系统等。",
+                    "mail": "huangzhy@ustc.edu.cn",
+                    "name": "黄振亚",
+                    "page": "http://staff.ustc.edu.cn/~huangzhy"
+                    }
+                ],
+                "students": [
+                    {
+                    "name": "童世炜",
+                    "mail": "tongsw@mail.ustc.edu.cn",
+                    "intro": "不爱打球的摄影师不是好的零号员工 (-.-)"
+                    },
+                    {
+                    "name": "黄威",
+                    "mail": "chinawolfman@hotmail.com",
+                    "intro": "208 腐烂开心果\n糊弄学大师"
+                    },
+                    {
+                    "name": "黄小青",
+                    "mail": "暂无数据",
+                    "intro": "暂无数据"
+                    },
+                    {
+                    "name": "雷思琦",
+                    "mail": "leisiqi@mail.ustc.edu.cn",
+                    "intro": "海纳百川，有啥说啥"
+                    },
+                    {
+                    "name": "黄野",
+                    "mail": "huangyehy@mail.ustc.edu.cn",
+                    "intro": "铁血平台跳跃游戏爱好者"
+                    },
+                    {
+                    "name": "韩子勤",
+                    "mail": "hanziqin@mail.ustc.edu.cn",
+                    "intro": "前端开发新人。\n减肥与反弹的波动过程中。"
+                    },
+                    {
+                    "name": "马一潇",
+                    "mail": "iiishawn@yahoo.com",
+                    "intro": "211唯一指定废物\n专业浪费纳税人的钱\ngood luck and fair sea"
+                    },
+                    {
+                    "name": "龚政",
+                    "mail": "gz70229@mail.ustc.edu.cn",
+                    "intro": "208三亚渔民"
+                    },
+                    {
+                    "name": "何理扬",
+                    "mail": "heliyang@mail.ustc.edu.cn",
+                    "intro": "中国科学技术大学研究生一年级\n感兴趣的方向是信息检索"
+                    },
+                    {
+                    "name": "房松涛",
+                    "mail": "songtao@mail.ustc.edu.cn",
+                    "intro": "不怕山高路远，只怕中途偷懒"
+                    },
+                    {
+                    "name": "黄杰",
+                    "mail": "jiehuang@mail.ustc.edu.cn",
+                    "intro": "Work hard.\nBe strong.\nDon't complain."
+                    },
+                    {
+                    "name": "吕瑞",
+                    "mail": "lvrui2018@mail.ustc.edu.cn",
+                    "intro": "中国科学技术大学 2018级本科\n计算机科学与技术专业"
+                    },
+                    {
+                    "name": "杨哲",
+                    "mail": "yz01@mail.ustc.edu.cn",
+                    "intro": "我爱CV"
+                    },
+                    {
+                    "name": "宁雨亭",
+                    "mail": "ningyt@mail.ustc.edu.cn",
+                    "intro": "睡觉大王\n拥有一只同样爱睡觉的小猫"
+                    },
+                    {
+                    "name": "翟佳伦",
+                    "mail": "jlzhai@ustc.edu",
+                    "intro": "头铁"
+                    },
+                    {
+                    "name": "张鑫",
+                    "mail": "438518244@qq.com",
+                    "intro": "略懂音乐，审美过关，经常面向ddl编程"
+                    },
+                    {
+                    "name": "项子扬",
+                    "mail": "xiangzy@mail.ustc.edu.cn",
+                    "intro": "纯音乐爱好者\n愿世人都能睡到自然醒"
+                    },
+                    {
+                    "name": "金鑫",
+                    "mail": "kingx8128@gmail.com",
+                    "intro": "游戏天赋点满型选手"
+                    },
+                    {
+                    "name": "毛清扬",
+                    "mail": "maoqy0503@mail.ustc.edu.cn",
+                    "intro": "一个安静的冷面大副。"
+                    },
+                    {
+                    "name": "洪玉婷",
+                    "mail": "1044653353@qq.com",
+                    "intro": "大闸蟹爱好者"
+                    },
+                    {
+                    "name": "覃龙虎",
+                    "mail": "longhuseven@163.com",
+                    "intro": "弗兰小伙一名\n爱运动，爱美食，爱代码。"
+                    },
+                    {
+                    "name": "曹智",
+                    "mail": "2667505886@qq.com",
+                    "intro": "exile in the coney island"
+                    },
+                    {
+                    "name": "包美凯",
+                    "mail": "baomeikai@163.com",
+                    "intro": "^V^"
+                    }
+                ],
+                "img_path": {
+                    "何理扬": "/members/何理扬.jpg",
+                    "刘淇": "/members/刘淇.jpg",
+                    "包美凯": "/members/包美凯.jpg",
+                    "吕瑞": "/members/吕瑞.jpg",
+                    "宁雨亭": "/members/宁雨亭.jpg",
+                    "张鑫": "/members/张鑫.jpg",
+                    "房松涛": "/members/房松涛.jpg",
+                    "曹智": "/members/曹智.png",
+                    "杨哲": "/members/杨哲.jpg",
+                    "毛清扬": "/members/毛清扬.jpg",
+                    "洪玉婷": "/members/洪玉婷.jpg",
+                    "童世炜": "/members/童世炜.jpg",
+                    "翟佳伦": "/members/翟佳伦.jpg",
+                    "覃龙虎": "/members/覃龙虎.jpg",
+                    "金鑫": "/members/金鑫.jpg",
+                    "陈恩红": "/members/陈恩红.jpg",
+                    "雷思琦": "/members/雷思琦.jpg",
+                    "韩子勤": "/members/韩子勤.jpg",
+                    "项子扬": "/members/项子扬.jpg",
+                    "马一潇": "/members/马一潇.jpg",
+                    "黄威": "/members/黄威.jpg",
+                    "黄振亚": "/members/黄振亚.jpeg",
+                    "黄杰": "/members/黄杰.jpg",
+                    "黄野": "/members/黄野.jpg",
+                    "龚政": "/members/龚政.jpg"
+                }
+            }
         }
     },
-    mounted(){
-        this.Init_Bar()
-    },
     methods: {
-        Init_Bar(){
-            let this_ = this;
-            let myChart = echarts.init(document.getElementById('chart_example'));
-            let option = {
-                title: {
-                    text: "各学科数据统计",
-                    x: "center",
-                    y: "top",
-                    textStyle: { 
-                        fontSize: 16,
-                        fontStyle: 'normal',
-                        fontWeight: 'bold',
-                    },
-                    padding: [5,5,40,85]
-                },
-                color: ['#626C91','#6BE6C1','#3FB1E3'],
-                tooltip : {
-                    // trigger: 'axis',
-                    // axisPointer : {
-                    //     type : 'shadow',
-                    //     label : {
-                    //         show: true
-                    //     }
-                    // }
-                },
-                // calculable: true,
-                legend: {
-                    data: ['试卷', '试题', '知识单元'],
-                    itemGap: 20,
-                    x: "right",
-                    y: "top",
-                    padding: [5,105,40,5]
-                },
-                xAxis : {
-                    type : 'category',
-                    axisTick: {
-                        alignWithLabel: true
-                    },
-                    axisLabel:{
-                        show:true,  //这里的show用于设置是否显示x轴下的字体 默认为true
-                        interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
-                        textStyle:{   //textStyle里面写x轴下的字体的样式
-                            color:'black',
-                            fontSize:14
-                        }
-                    }
-                },
-                yAxis : {
-                    type : 'value',
-                    name : '数量',
-                    axisLabel:{
-                        show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
-                        textStyle:{   //textStyle里面写y轴下的字体的样式
-                            color:'black',
-                            fontSize:14
-                        }
-                    },
-                    nameTextStyle:{
-                        color:"black", 
-                        fontSize:14,  
-                        padding:[30, 35, 15, 10]
-                    }
-                },
-                dataset :{
-                    dimensions: ['product', "试卷", "试题", "知识单元"],
-                    source: [{
-                        product: "语文", "试卷": 5, "试题": 1, "知识单元": 5
-                    },{
-                        product: "数学", "试卷": 6, "试题": 2, "知识单元": 5
-                    },{
-                        product: "英语", "试卷": 4, "试题": 3, "知识单元": 5
-                    },{
-                        product: "政治", "试卷": 8, "试题": 4, "知识单元": 5
-                    },{
-                        product: "历史", "试卷": 6, "试题": 5, "知识单元": 5
-                    },{
-                        product: "地理", "试卷": 2, "试题": 6, "知识单元": 5
-                    },{
-                        product: "物理", "试卷": 6, "试题": 7, "知识单元": 5
-                    },{
-                        product: "化学", "试卷": 5, "试题": 8, "知识单元": 5
-                    },{
-                        product: "生物", "试卷": 8, "试题": 9, "知识单元": 5
-                    },]
-                },
-                series : [
-                {
-                    type:'bar'
-                },
-                {
-                    type:'bar'
-                },{
-                    type:'bar'
-                }
-                ]
-            };
-            myChart.setOption(option);
-            myChart.on('click', function (param) { 
-                alert(param.name + "_" + param.seriesName)//获取自定义变量barIds的值,barIds要和option的series里自定义的一样
-            })
-        
-            //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-            window.addEventListener('resize',function() {myChart.resize()});
+        ToTop(){
+            window.scrollTo(0,0);
+        },
+        Get_Student_Img(row, index){
+            var i = (row-1)*3 + index
+            var student = this.member_data.students[i];
+            if(this.member_data.img_path[student.name]){
+                return this.member_data.img_path[student.name];
+            }else{
+                return "/members/unknown.png"
+            }
         }
     }
 }
 </script>
+<style lang="scss" scoped>
+.img_background_teacher{
+    margin-top: 30px;
+    background-repeat: no-repeat;
+	background-position:center center;
+	background-size: cover;
+	width: 180px;
+	height: 180px;
+    object-fit: cover;
+}
+.img_background_student{
+    background-repeat: no-repeat;
+	background-position:center center;
+	background-size: cover;
+	width: 120px;
+	height: 120px;
+    object-fit: cover;
+}
+.Teacher_Card{
+    margin: 2vh 10vw 5vh 10vw; 
+    height: 240px;
+    -webkit-box-shadow: 8px 10px 12px rgba(25, 25, 25, 0.1);
+    box-shadow: 8px 10px 12px rgba(25, 25, 25, 0.1);
+    border-radius: 15px;
+    background: #F8FBFF;
+}
+.Student_Card{
+    padding: 2vh 2vw 5vh 2vw;
+    height: 360px;
+    margin-bottom: 50px;
+    -webkit-box-shadow: 8px 10px 12px rgba(25, 25, 25, 0.1);
+    box-shadow: 8px 10px 12px rgba(25, 25, 25, 0.1);
+    border-radius: 40px;
+    background: #F8FBFF;
+}
+.el-divider--horizontal{
+  display:block;
+  height:2px;
+  width:90vw;
+  margin:10px 5vw;
+}
+</style>

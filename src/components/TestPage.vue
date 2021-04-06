@@ -83,7 +83,22 @@
         </el-row>
         <!-- 知识点分析 -->
         <el-row :class="Paper_Total_Analyse_Hidden(true)">
-            2-1
+            <!-- 知识点难度分析部分 -->
+            <!-- 总分析行 -->
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 18px; margin-top: 30px">
+                <label>本卷共包含了&nbsp;&nbsp;{{Get_Paper_Knowledge_Length()}}&nbsp;&nbsp;个知识点，难度最大的知识点为&nbsp;&nbsp;{{Get_Paper_Knowledge_Difficult(true)}}&nbsp;&nbsp;，难度最小的知识点为&nbsp;&nbsp;{{Get_Paper_Knowledge_Difficult(false)}}&nbsp;&nbsp;。</label>
+            </el-row>
+            <!-- 提示行 -->
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 18px">
+                <label>各知识点平均难度为：</label>
+            </el-row>
+            <!-- 知识点难度分布柱状图 -->
+            <el-row>
+                <div id="Paper_Knowledge_Difficult_Analyse" class="Paper_Knowledge_Difficult_Analyse"></div>
+            </el-row>
+            <!-- 知识点分值分布部分 -->
+            <!-- 知识点点对分布部分 -->
+            <!-- 知识点覆盖程度部分 -->
         </el-row>
         <!-- 难度分析 -->
         <el-row :class="Paper_Total_Analyse_Hidden(false)">
@@ -127,37 +142,6 @@
       <el-row :class="Get_Expand_Or_Collapse(3)">
         4
       </el-row>
-      <!-- <el-row>
-        {{Paper_Json.id}}
-        {{Paper_Json.type}}
-        {{Paper_Json.difficulty_area_score}}
-        {{Paper_Json.difficulty_statistics}}
-        {{Paper_Json.knowledge_knowledge2num}}
-        {{Paper_Json.knowledge2difficulty}}
-      </el-row>
-      <el-row v-for="(Item, Index) in Paper_Json.sub_question" :key="Index" style="border: 1px solid black">
-        <el-row>
-          {{Item.id}}
-        </el-row>
-        <el-row>
-          {{Item.type}}
-        </el-row>
-        <el-row>
-          {{Item.difficulty_area_score}}
-        </el-row>
-        <el-row>
-          {{Item.difficulty_statistics}}
-        </el-row>
-        <el-row>
-          {{Item.knowledge_knowledge2num}}
-        </el-row>
-        <el-row>
-          {{Item.knowledge2difficulty}}
-        </el-row>
-        <el-row>
-          {{Item.sub_question}}
-        </el-row>
-      </el-row> -->
     </div>
 </template>
 <script>
@@ -180,6 +164,7 @@ export default {
             "difficulty_area_score": [],
             "difficulty_statistics": {},
             "knowledge_knowledge2num": {},
+            "knowledge2score": {},
             "knowledge2difficulty": {},
             "sub_question": []
           },
@@ -196,6 +181,35 @@ export default {
         Reduce_Length(Data){
             Data = Data + "";
             return Data.substring(0, 4);
+        },
+        // 返回全卷知识点的长度
+        Get_Paper_Knowledge_Length(){
+            return Object.keys(this.Paper_Json.knowledge2score).length;
+        },
+        // 返回全卷知识点最难和最简单
+        Get_Paper_Knowledge_Difficult(Part){
+            var D = 0;
+            if(Part){
+                D = -1;
+                var D_Ku = ""
+                for(var i in this.Paper_Json.knowledge2difficulty){
+                    if(this.Paper_Json.knowledge2difficulty[i] > D){
+                        D = this.Paper_Json.knowledge2difficulty[i]
+                        D_Ku = i
+                    }
+                }
+                return D_Ku
+            }else{
+                D = 1;
+                var E_Ku = ""
+                for(var j in this.Paper_Json.knowledge2difficulty){
+                    if(this.Paper_Json.knowledge2difficulty[j] < D){
+                        D = this.Paper_Json.knowledge2difficulty[j]
+                        E_Ku = j
+                    }
+                }
+                return E_Ku
+            }
         },
         // 返回全卷分析选项的样式
         Check_Total_Switch(Part){
@@ -234,7 +248,6 @@ export default {
             var Max_Gap = Math.max.apply(Math, this.Paper_Json.difficulty_area_score);
             var Result = "";
             for(var i = 0; i < 10; i++){
-                console.log(this.Paper_Json.difficulty_area_score[i] == Max_Gap, Max_Gap, Result)
                 if(this.Paper_Json.difficulty_area_score[i] == Max_Gap){
                     if(Result == ""){
                         if(i != 9){
@@ -444,7 +457,115 @@ export default {
             window.addEventListener('resize',function() {myChart.resize()});
 
         },
+        // 初始化总体的知识点难度分布的那张柱状图的方法
+        Init_Paper_Knowledge_Difficult_Analyse(){
+
+            let myChart = echarts.init(document.getElementById('Paper_Knowledge_Difficult_Analyse'));
+
+            let option = {
+                grid: {
+                x: 70,
+                y: 90,
+                x2: 30,
+                y2: 35
+                },
+                title: {
+                    text: "知识点平均难度",
+                    x: "center",
+                    y: "top",
+                    textStyle: { 
+                        fontSize: 16,
+                        fontStyle: 'normal',
+                        fontWeight: 'bold',
+                    },
+                    padding: [5,5,40,25]
+                },
+                color: ["#409EFD"],
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {
+                        type : 'shadow',
+                        label : {
+                            show: true
+                        }
+                    },
+                    textStyle: { 
+                        fontSize: 14,
+                        fontStyle: 'normal',
+                        align: 'left'
+                    },
+                },
+                calculable: true,
+                legend: {
+                    data: ['平均难度'],
+                    itemGap: 20,
+                    x: "right",
+                    y: "top",
+                    padding: [5,30,40,5],
+                    textStyle: { 
+                        fontSize: 14,
+                        fontStyle: 'normal',
+                    },
+                },
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : [],
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        axisLabel:{
+                            show:true,  //这里的show用于设置是否显示x轴下的字体 默认为true
+                            interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
+                            textStyle:{   //textStyle里面写x轴下的字体的样式
+                                color:'black',
+                                fontSize:14
+                            }
+                        },
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value',
+                        name : '平均难度',
+                        min: 0.0,
+                        max: 0.7,
+                        axisLabel:{
+                            show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
+                            textStyle:{   //textStyle里面写y轴下的字体的样式
+                                color:'black',
+                                fontSize:14
+                            }
+                        },
+                        nameTextStyle:{
+                            color:"black", 
+                            fontSize:14,  
+                            padding:[30, 35, 15, 10]
+                        }
+                    }
+                ],
+                series : [
+                    {
+                        name:'平均难度',
+                        type:'bar',
+                        barWidth: '20%',
+                        data: []
+                    }
+                ]
+            };
+
+            for(var knowledgePoint in this.Paper_Json.knowledge2difficulty){
+                option.xAxis[0].data.push(knowledgePoint);
+                option.series[0].data.push(this.Paper_Json.knowledge2difficulty[knowledgePoint])
+            }
+
+            myChart.setOption(option);
+
+            //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+            window.addEventListener('resize',function() {myChart.resize()});
+        },
         // 初始化数据的方法，不要动，放到最下面就得了
+        // 千把来行着实太长了，展开了翻起来都费劲
         Init(){
             this.Paper_Json = {
             "id": "af6a45a3-46fa-41d6-ac7e-ae3842ce40fb",
@@ -1427,6 +1548,7 @@ export default {
                 this.Init_Paper_Total_Bar();
                 this.Init_Paper_Total_Difficult_Analyse();
                 this.Get_Max_Difficult_Gap();
+                this.Init_Paper_Knowledge_Difficult_Analyse();
             }, 100)
         }
     }
@@ -1475,6 +1597,17 @@ export default {
     margin-bottom: 40px;
 }
 .Paper_Total_Difficult_Analyse{
+    margin-top: 30px;
+    border-radius: 10px; 
+    width: 67vw; 
+    height:350px; 
+    padding-top: 10px; 
+    margin-left: 16.5%; 
+    border: 3px solid #EEF5FE; 
+    background: #EEF5FE;
+    margin-bottom: 40px;
+}
+.Paper_Knowledge_Difficult_Analyse{
     margin-top: 30px;
     border-radius: 10px; 
     width: 67vw; 
