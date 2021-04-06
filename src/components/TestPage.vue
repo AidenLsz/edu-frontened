@@ -2,77 +2,77 @@
 
 <template>
     <div style="min-height: 600px">
-      <el-row style="padding-top: 15px">
+    <el-row style="padding-top: 15px">
         <label style="font-size: 22px">xxx试卷分析报告</label>
-      </el-row>
-      <el-row>
+    </el-row>
+    <el-row>
         <el-col :span="18" :offset="3">
-          <el-divider style="width: 3px"></el-divider>
+            <el-divider style="width: 3px"></el-divider>
         </el-col>
-      </el-row>
-      <!-- 综合分析 -->
-      <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(0)" :class="Get_Part_Row_Style(0)">
+    </el-row>
+    <!-- 综合分析 -->
+    <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(0)" :class="Get_Part_Row_Style(0)">
         <el-col :span="2">
-          综合分析
+            综合分析
         </el-col>
         <el-col :span="2" :offset="20">
-          <i class="el-icon-arrow-down" v-if="!Part_Expand[0]"></i>
-          <i class="el-icon-arrow-up" v-if="Part_Expand[0]"></i>
+            <i class="el-icon-arrow-down" v-if="!Part_Expand[0]"></i>
+            <i class="el-icon-arrow-up" v-if="Part_Expand[0]"></i>
         </el-col>
-      </el-row>
-      <el-row :class="Get_Expand_Or_Collapse(0)">
+    </el-row>
+    <el-row :class="Get_Expand_Or_Collapse(0)">
         <!-- 本卷大题数量 -->
         <el-row style="width: 67vw; margin-left: 16.5vw; font-size: 16px" type="flex" justify="start">
-          <label>本卷共{{Paper_Json.sub_question.length}}道大题，各项指标如下：</label>
+            <label>本卷共{{Paper_Json.sub_question.length}}道大题，各项指标如下：</label>
         </el-row>
         <!-- 三项指标的假表格 -->
         <!-- 表头项 -->
         <el-row style="width: 67vw; background: WhiteSmoke; font-weight: bold; font-size: 16px; margin-left: 16.5vw; margin-top: 30px; padding-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
-          <el-col :span="5" :offset="4">均值</el-col>
-          <el-col :span="5">方差</el-col>
-          <el-col :span="5">最大值</el-col>
-          <el-col :span="5">最小值</el-col>
+            <el-col :span="5" :offset="4">均值</el-col>
+            <el-col :span="5">方差</el-col>
+            <el-col :span="5">最大值</el-col>
+            <el-col :span="5">最小值</el-col>
         </el-row>
         <!-- 第一项 -->
         <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
-          <el-col :span="4">难度</el-col>
-          <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}</el-col>
-          <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.min)}}</el-col>
-          <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.max)}}</el-col>
-          <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.std)}}</el-col>
+            <el-col :span="4">难度</el-col>
+            <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}</el-col>
+            <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.min)}}</el-col>
+            <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.max)}}</el-col>
+            <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.std)}}</el-col>
         </el-row>
         <!-- 第二项 -->
         <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
-          <el-col :span="4">指标2</el-col>
-          <el-col :span="5">0</el-col>
-          <el-col :span="5">0</el-col>
-          <el-col :span="5">0</el-col>
-          <el-col :span="5">0</el-col>
+            <el-col :span="4">指标2</el-col>
+            <el-col :span="5">0</el-col>
+            <el-col :span="5">0</el-col>
+            <el-col :span="5">0</el-col>
+            <el-col :span="5">0</el-col>
         </el-row>
         <!-- 第三项 -->
         <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver">
-          <el-col :span="4">指标3</el-col>
-          <el-col :span="5">0</el-col>
-          <el-col :span="5">0</el-col>
-          <el-col :span="5">0</el-col>
-          <el-col :span="5">0</el-col>
+            <el-col :span="4">指标3</el-col>
+            <el-col :span="5">0</el-col>
+            <el-col :span="5">0</el-col>
+            <el-col :span="5">0</el-col>
+            <el-col :span="5">0</el-col>
         </el-row>
         <!-- 随意添加的一个假柱状图 -->
         <el-row>
-          <div id="Paper_Total_Bar" class="Paper_Total_Bar"></div>
+            <div id="Paper_Total_Bar" class="Paper_Total_Bar"></div>
         </el-row>
-      </el-row>
-      <!-- 分析详情 -->
-      <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(1)" :class="Get_Part_Row_Style(1)">
+    </el-row>
+    <!-- 分析详情 -->
+    <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(1)" :class="Get_Part_Row_Style(1)">
         <el-col :span="2">
-          分析详情
+            分析详情
         </el-col>
         <el-col :span="2" :offset="20">
-          <i class="el-icon-arrow-down" v-if="!Part_Expand[1]"></i>
-          <i class="el-icon-arrow-up" v-if="Part_Expand[1]"></i>
+            <i class="el-icon-arrow-down" v-if="!Part_Expand[1]"></i>
+            <i class="el-icon-arrow-up" v-if="Part_Expand[1]"></i>
         </el-col>
-      </el-row>
-      <el-row :class="Get_Expand_Or_Collapse(1)">
+    </el-row>
+    <el-row :class="Get_Expand_Or_Collapse(1)">
         <el-row style="width: 18vw; margin-left: 41vw; margin-top: 10px; border: 1px solid #409EFD; border-radius: 10px; height: 30px">
             <el-col :span="12" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;" :class="Check_Total_Switch(true)" v-on:click.native="Paper_Total_Analyse_Focus = true">
                 知识点分析
@@ -132,8 +132,8 @@
             <!-- 知识点点对分布表格展示部分 -->
             <el-row v-if="KnowledgePair_Name_List.length > 0"  style="font-size: 16px; margin-top: 30px; ">
                 <el-row style="background: #409EFD; color: white; margin: 0px 16.5vw;">
-                    <el-col :offset="2" :span="7"><label>知识点1</label></el-col>
-                    <el-col :span="7"><label>知识点2</label></el-col>
+                    <el-col :offset="2" :span="7"><label>知识点Ⅰ</label></el-col>
+                    <el-col :span="7"><label>知识点Ⅱ</label></el-col>
                     <el-col :span="7"><label>出现次数</label></el-col>
                 </el-row>
                 <el-row v-for="(Knowledge_Pair, Pair_Index) in KnowledgePair_Name_List" :key="'T_P_Ku_Pair_' + Pair_Index" :class="Total_Table_Style(Pair_Index)">
@@ -142,11 +142,17 @@
                     <el-col :span="7"><label>{{KnowledgePair_List[Pair_Index]}}</label></el-col>
                 </el-row>
             </el-row>
-            <!-- 共现关系的图的部分 -->
+            <!-- 知识点点对分布共现关系的图的部分 -->
             <el-row v-if="KnowledgePair_Name_List.length > 0">
-                
+                <div id="Paper_Knowledge_Pair" class="Paper_Knowledge_Pair"></div>
             </el-row>
             <!-- 知识点覆盖程度部分 -->
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px; margin-top: 30px; margin-right: 16.5vw;">
+                <label>本卷覆盖的知识点比例尚待进一步分析。（下方区域是圆环图今后大致的占位区域）</label>
+            </el-row>
+            <el-row>
+                <div id="Paper_Knowledge_Cover" class="Paper_Knowledge_Cover"></div>
+            </el-row>
         </el-row>
         <!-- 难度分析 -->
         <el-row :class="Paper_Total_Analyse_Hidden(false)">
@@ -163,38 +169,36 @@
                 <div id="Paper_Total_Difficult_Analyse" class="Paper_Total_Difficult_Analyse"></div>
             </el-row>
         </el-row>
-      </el-row>
-      <!-- 相似试卷 -->
-      <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(2)" :class="Get_Part_Row_Style(2)">
+    </el-row>
+    <!-- 相似试卷 -->
+    <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(2)" :class="Get_Part_Row_Style(2)">
         <el-col :span="2">
-          相似试卷
+            相似试卷
         </el-col>
         <el-col :span="2" :offset="20">
-          <i class="el-icon-arrow-down" v-if="!Part_Expand[2]"></i>
-          <i class="el-icon-arrow-up" v-if="Part_Expand[2]"></i>
+            <i class="el-icon-arrow-down" v-if="!Part_Expand[2]"></i>
+            <i class="el-icon-arrow-up" v-if="Part_Expand[2]"></i>
         </el-col>
-      </el-row>
-      <el-row :class="Get_Expand_Or_Collapse(2)">
-        3
-      </el-row>
-      <!-- 试卷详情 -->
-      <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(3)" :class="Get_Part_Row_Style(3)">
+    </el-row>
+    <el-row :class="Get_Expand_Or_Collapse(2)" type="flex" justify="start" style="margin: 0px 16.5vw 30px 16.5vw">
+        <label>与此试卷相似的试卷是xxxxxxx</label>
+    </el-row>
+    <!-- 试卷详情 -->
+    <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(3)" :class="Get_Part_Row_Style(3)">
         <el-col :span="2">
-          试卷详情
+            试卷详情
         </el-col>
         <el-col :span="2" :offset="20">
-          <i class="el-icon-arrow-down" v-if="!Part_Expand[3]"></i>
-          <i class="el-icon-arrow-up" v-if="Part_Expand[3]"></i>
+            <i class="el-icon-arrow-down" v-if="!Part_Expand[3]"></i>
+            <i class="el-icon-arrow-up" v-if="Part_Expand[3]"></i>
         </el-col>
-      </el-row>
-      <el-row :class="Get_Expand_Or_Collapse(3)">
+    </el-row>
+    <el-row :class="Get_Expand_Or_Collapse(3)">
         4
-      </el-row>
+    </el-row>
     </div>
 </template>
 <script>
-
-// import $ from "jquery";
 
 // 引入基本模板
 import * as echarts from 'echarts';
@@ -733,6 +737,122 @@ export default {
             myChart.setOption(option);
             window.addEventListener('resize',function() {myChart.resize()});
 
+        },
+        // 初始化总体的知识点点对分布的那张关系图的办法
+        Init_Paper_Knowledge_Pair(){
+
+            let myChart = echarts.init(document.getElementById('Paper_Knowledge_Pair'));
+
+            let option = {
+                grid: {
+                    x: 600,
+                    y: 600,
+                    x2: 600,
+                    y2: 400
+                },
+                title: {
+                    text: "知识点对共现关系图",
+                    x: "center",
+                    y: "top",
+                    textStyle: { 
+                        fontSize: 16,
+                        fontStyle: 'normal',
+                        fontWeight: 'bold',
+                    },
+                    padding: [5,5,40,25]
+                },
+                tooltip : {},
+                label: {
+                    normal: {
+                        show: true
+                    }
+                },
+                legend: {
+                    data: ['知识点'],
+                    itemGap: 20,
+                    x: "right",
+                    y: "top",
+                    padding: [5,30,70,5],
+                    textStyle: { 
+                        fontSize: 14,
+                        fontStyle: 'normal',
+                    },
+                },
+                series : [
+                {
+                    name:'知识点对共现关系图',
+                    type: 'graph',
+                    layout: 'circular',
+                    symbolSize: 20,
+                    focusNodeAdjacency: true,
+                    categories: [
+                        {
+                            name: "知识点",
+                            itemStyle: {
+                                color: "#409EFD"
+                            }
+                        }
+                    ],
+                    zoom: 0.8,
+                    circular: {
+                        rotateLabel: true
+                    },
+                    label: {
+                        show: true,
+                            textStyle: {
+                                fontSize: 14
+                            },
+                            position: 'right',
+                            formatter: '{b}'
+                    },
+                    data: [],
+                    links: [],
+                    lineStyle: {
+                        opacity: 0.7,
+                        width: 2,
+                        curveness: 0.7
+                    }
+                }
+            ]
+            };
+
+            var Temp_Ku_Name_List = []
+
+            for(var j in this.Paper_Json.knowledge2difficulty){
+                option.series[0].data.push({
+                    name: j,
+                    category: 0
+                })
+                Temp_Ku_Name_List.push(j)
+            }
+
+            for(var i = 0; i < this.KnowledgePair_Name_List.length; i++){
+                var Pair = this.KnowledgePair_Name_List[i]
+                var From = Pair.split("::")[0]
+                var To = Pair.split("::")[1]
+                option.series[0].links.push({
+                    source: Temp_Ku_Name_List.indexOf(From),
+                    target: Temp_Ku_Name_List.indexOf(To),
+                    value: this.KnowledgePair_List[i],
+                    lineStyle: {
+                        color: this.Paper_Total_Ku_Pair_LineStyle(i)
+                    }
+                })
+            }
+
+            myChart.setOption(option);
+
+            //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+            window.addEventListener('resize',function() {myChart.resize()});
+
+        },
+        // 返回不同颜色
+        Paper_Total_Ku_Pair_LineStyle(index){
+            if(index < 3){
+                return 'red'
+            }else{
+                return '#CCC'
+            }
         },
         // 初始化数据的方法，不要动，放到最下面就得了
         // 千把来行着实太长了，展开了翻起来都费劲
@@ -1750,6 +1870,7 @@ export default {
                 this.Get_Max_Difficult_Gap();
                 this.Init_Paper_Knowledge_Difficult_Analyse();
                 this.Init_Paper_Knowledge_Score_Analyse();
+                this.Init_Paper_Knowledge_Pair();
             }, 100)
         }
     }
@@ -1815,6 +1936,30 @@ export default {
     border-radius: 10px; 
     width: 67vw; 
     height:350px; 
+    padding-top: 10px; 
+    margin-left: 16.5%; 
+    border: 3px solid #EEF5FE; 
+    background: #EEF5FE;
+    margin-bottom: 40px;
+}
+// 知识点覆盖率，暂时是个占位符
+.Paper_Knowledge_Cover{
+    margin-top: 30px;
+    border-radius: 10px; 
+    width: 67vw; 
+    height:350px; 
+    padding-top: 10px; 
+    margin-left: 16.5%; 
+    border: 3px solid #EEF5FE; 
+    background: #EEF5FE;
+    margin-bottom: 40px;
+}
+// 知识点对的出现情况
+.Paper_Knowledge_Pair{
+    margin-top: 30px;
+    border-radius: 10px; 
+    width: 67vw; 
+    height:550px; 
     padding-top: 10px; 
     margin-left: 16.5%; 
     border: 3px solid #EEF5FE; 
