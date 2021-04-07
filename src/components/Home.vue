@@ -146,7 +146,7 @@
         </el-col>
         <el-col :span="6">
           <el-row>
-            <el-button circle style="height: 200px; width: 200px"><img src="../assets/icon8.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+            <el-button @click="Router_Trans('/PaperAnalyse')" circle style="height: 200px; width: 200px"><img src="../assets/icon8.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
             <label style="margin-top: 30px; font-size: 20px; color: black">
@@ -379,7 +379,7 @@
         </el-col>
         <el-col :span="6">
           <el-row>
-            <el-button circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+            <el-button @click="Router_Trans('/PaperAnalyse')" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
             <label style="margin-top: 30px; font-size: 20px; color: black">
