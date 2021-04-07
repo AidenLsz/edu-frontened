@@ -1367,6 +1367,7 @@ export default {
               this.Init_Question_Check();
               this.loading = false;
             }else{
+              console.log(data.body);
               this.downloadPaper = data.body.Download_Paper;
               this.downloadAnswer = data.body.Download_Answer;
               this.TestData = data.body.TestData;
@@ -3308,11 +3309,10 @@ export default {
               this.TestData.doc[Question_Index].question_stem = Stem;
             return "题干$：$" + Stem
         }else if(Type == 'answer'){
-            
             if(this.TestData.doc[Question_Index].answer[Answer_Index] != Stem)
               this.TestData.doc[Question_Index].answer.splice(Answer_Index, 1, Stem)
             if(this.TestData.doc[Question_Index].answer.length == 1){
-              "答案   ：" + Stem
+              return "答案   ：" + Stem
             }else{
               return "答案$" + (Answer_Index + 1).toString() + "$：" + Stem
             }
