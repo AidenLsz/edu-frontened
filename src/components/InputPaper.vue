@@ -1266,6 +1266,32 @@ export default {
     // 处理导入试卷功能时所使用的提交方法
     // 选择上传
     uploadFile(formData, config, e) {
+      this.TestData = {
+                "doc": [
+                    {
+                        "question_stem": "已知集合<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD0AAAAVCAYAAAD1neayAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACUklEQVR4nO2WQUhVQRSGj5WlhSktLDQMxYVhiJhIVAjRok1lIJgktNRN5MJF1CbSlRv3iUK72rQRISgsCBJCrEWLVALNEoNM0iQKivx/zlwcr3Pfvfe9KwTeHz54d97MmTMz55wZkVSpdryqQdk22O0C8+BzgjZPgD/gA7iYrZHDYBUMJ+SUpzzwHTSAXabtMngPfoEJcCrD+LPgMVgGP8Bb0Gn+ywftYDJb54bAp1wMBKhI1GFPjWABnAfFok5/EXeE7QH/wDNwHBSIbt4bcNP0OWTGx1Y9eAj6RXc/PxsjASoBS9Y35+nw9ekFfY6x3qKP+tp5+q8D7EfWE3BMdNc5SZ1j4kxMZbDNtFmwvpnXpb4+Z8CLGP7WgnHz+4BoWsZSq2zsco3oIq7HNRIghmMPGLHafjv6VYLpGHZvgxvWN4tki0SM0H3gpehuUSw0a2AghgNBYnHyosDO16BFZ4oWWyfBK9m8wAvGLucrCDNwC8yCUQtWyOdWn1zCez+4K5rHnnIJbxa/GVDla+f8rBN7wwyUmokKRXfHg1fWtwgORBVPed76fgSu+frcE3ch87Tb9HkqW6s8ff4Z1ZlB0Oxo7xY9vYqohkLkr65Noqd9DhwEbaJXTrnoQXz0jWflHgN3ZOOeZ9tcgH2nOJBhzNy97/vvqujlz0XzSqgMXVK4ih1OXRENSeYh3wWnTfsl0feC7euSuFNqzvThor8m4Gei4otsRTQP80L6PgBHYthm2DPP32Xl2TaL19aibL6vcxXf3n9F60VbgnZTpUqV6v/ROnFRg4bmlEXFAAAAAElFTkSuQmCC\">，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHEAAAAVCAYAAABxGwGcAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAC40lEQVR4nO2Y3YtPQRjHn127+kWsKO8XKBfiQkvavFyIKHm72oRrbuRGLuyF1xt/ggsXm/KSUkgSyRUloVBeUta2IuS1RBHfr+esPab5nTMzZw61zbc+tTt75nueZ87MMzMrkpSUlJRUk8aChQadYGoN79oO+sFADd7DRfPAd/AUrHXtNB8cBT9BLzgMjoDX4BoYGSm4FvBBdIK0evRbCs6Ad+AzuAu2RYqJ2imaa5nWg4fgK7gFuip6FuXVDjaB2w5x/dEG0Y84Lte2MWtb5WNUoDGiAfuoLYvhCpgDGqKT4I7oQFXVXvAMvC15jtXpBVgBOkQH+JXYq5WLp0te47N3OGu/6PLNa2v2ok4fowJxgpQNlqnBZKcb7ZzFNyvGw4HjTJ/tENdJsMVoOwgOBXq65OU9XufA6dzvM8ADcMry4iIeFbxjkuhsjqG54EZFD5Z0ngdcBot7+ESjbYnodhPqaVM+r9Hgk09nHjYeg0vgumiN5j7ZFhCITZyhu8D5SH57wI5IXi4D/s3SNlN0zEI9bTLz4nfhVtde1nGC6CpaY7Q9AccCAjHVJUOrNMaJd4HoRCtNzFFVPmKzyhPyEW15rc7ezfFrFHVemT00xWg/Ln9fBaqU01Fgn+jeYvr4JMuDBSfXLMvfQn1jllMfz7ya5cXx5F5cekPYDV5a2u+BCx6BlImrsD+w7whwAFyW+PdXlwHn2WCz0cZ4zIONjydVlBdX3hcHj986AS4abbyv8D60zNXEQaH7BE9wV0GPDN0v2dYnujqeR47L5rlIdDUuFz24dIse/6c1ed7Fsygvm4dVDIAHmfeiK4Q/82OyRJwFi8sMPNXhEpSh1qyPrXT3gXWiB7AQNSyeAwWevDezvHGP4jVicHzyz7t6luVF8SO+CcytNvE/Nh9F635LJM9eMDmSV6iny/O+niyz3Cfve/T5Z+I1g/tvrPvicBT/d/pDtDp2/+dYkpKSkpKSkpLq1S9O4dRshV/wngAAAABJRU5ErkJggg==\">,则<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAATCAYAAADSz14iAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABeUlEQVR4nO2VzSsFURiHj48F8pG4K0U+NreUhbsVEgvFxs5C/gPK2kI27JGdbJSSDW5IipCsJQtZSCwUWdgoH8/pvGqcO3duXndza3711MzvzHk/zpwzY0yswlQTNOcpVhWkPDqhEYrzlCNr4kc4Chn7UsRrh0WZuw5zsAC3cAUNujJzax7u4BWKvDFNI1a9Mrc14CXFm1LGjFQb7MGkJGnxxrWN2GJfzO+FSUm8MWXMSG1CB3RLkhFvXNvIGhwG7hOwD+dQHpIjF5EagCW5roZPmA1JotG1cWdi17izZ7ftFtQq42VVKZxAXcC7gW3vOU0jlfABowHPvgX7hi4U8SI1AffGFf7Dk3hBaRrpknlJz58WvyYkh2pr1cMxVEBZgBmZlPhnI3aR3kzmP2PDuO3mfxnVWoa+EH/YuML7A56mkVU487xBeIdxRbwMlcCOcau14o3Zxk6NK/wSesT/SyP2R2cP9zM8yHUaDoz7Yg0p644VK1asAtQ34vhfnssZIN4AAAAASUVORK5CYII=\">",
+                        "question_options": [
+                            "<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAUCAYAAADoZO9yAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABnklEQVR4nO2VTSuEURTHz4xhSFhYKcVkZOGl2Qk7JUOsbUUKxUIWPoB8AWsWVrK2mSU7GwvshAmFvJSivIyX/+keuR3Py6XJ6vnXr+ac55xzz3Pvfc4QRXLTODgHb0WsmQYFcAJGXJMuQC8oEbsf7IMnsAf6AnK7wQa4AY+SNwcSwjA4cmkiTmYnYmJ3gEswAGrAkNitPvkfYAu0g3KJY3tZnpfJC4WKuy5Y9hqYUDHTYCWgkbTyNYM7n/q+qiSzpV/KgwYV0wQOXYqJasGp/I5JI4mghCSYBNuW7wWUqrgK1WyY+PIvWfYBGCVzTD+UIbOtxyDl0MiDYxMtYBdUWb4eMi/C6zV6JfEC82DT8uXp70fTJXEZ5d8BM2Qus6+qwb1le13WKbAaUIO/vAUyR5zyeM67nAxqgqVvNb8Nz5WsNDlI5vNtE/tW5deBHFik7wtp13T+aniIvSofL84X7JnMgMqKnwfbuoq9JnP2GrsRXd9XPBV5kMVD4vh46l2LSr1OcOaaMAuuwPsvFgkTDzme2PwfNlbEupEi/a8+AZZfVlV6+BJ3AAAAAElFTkSuQmCC\">",
+                            "<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAUCAYAAADskT9PAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABTElEQVR4nO3VPS8EQRzH8b/zTEKUREOuUoiHRERP4i1oiBCFRoF3oPEGdGrxCqgkhFIUKgUR8RQ0QkI8rO+YudgbM27sbrm/5JPc7N785z+7e3siedyZwgU+UJOyVhHvOMNE6CS1+BiqzXjaFPkrI9jEPZ5xjEXUit7EOM5DG1A7L5jPSzhFVGGOOr+LXjSgBztYM+cLAZsoK1aK2klHYANF61gXHj11vanHa2zc9p/JVlpxFRu/oa7S4nM4cJxL0sAkVmPjI8yYdX6lzyyintbuDBpQt+NQ9FUoZRhP4r5d32kU/eRupWxgCCcYsI7vY0H0Q+pNs+ifUZIGqrCMPXFfxRc0BdRxLhY/1oIH63w7trEi5S+vyPM5uIHIYRQb1pw7z3cTNXCLfvl5GdlZR2doMVNnENehE+Zxg0/J5r9AvVkvMZuyVp482ecLjVhPCo8W8x8AAAAASUVORK5CYII=\">",
+                            "<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAUCAYAAACJfM0wAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABGUlEQVR4nO2UO27CQBCGRwkQIBIcAQlR8xANJ4CEI1BR8ChoKLgQnIILQI0gvY0QCukTiTf5RzsWK+PF2xLllz6tZ3b878tror+iJliBE4gYanLgCBzQsDVm0yp4lrgG5mALFuBN8jzoO1jaGvNMn+Q5DzagDtLSbiRPUne0Nb5ozyPQ9vV3wNBQb9QL2GmxCzK+Go4dLT6AWJhpF0y13B5EfXVR3+Az0JL3b1QktSSeSdbCeKvFFfAt7+eCzBNgAMZazqXwrZiAPogHmXp6BT9aHHR4bcl74tkn75l60k+Zt+iT1LebkpbjgqHe2pjFl+CD1IFxWw+pN+oLlOh6SUzi/jKpFVipR+p2nen+v4Jv6Jpuz+Bfj6xff6I7U6CJWpgAAAAASUVORK5CYII=\">",
+                            "<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFIAAAAUCAYAAAAeLWrqAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACF0lEQVR4nO2Xy0ocQRSGT2JMTATFZYIghlll4RVE3CfqPIIbRTK6yMaF+gZufAF3gq7EJ0hWAUWXIsaVCy9I4oQkG0lgJl7if6wa6amprkuXQYX64aPpovo/dU5XV1UTRUU9BI2BY3ABntztUO6NcuAcHIAR14e4iO9AnUPfAbAKfoI/YBdMg3rfkSoaJzFwkwbBDiiBL2Ao0NOWC0+qYXBkiXMjnomPHfv+A2ugAzSAN+AzWHANptEM2JfeaeJ4RZAHzfJalO1ZPV1y4brYXnCVoU/fnNLWDk49PFTxTHhlGccyKChtE2ApwNM1F6f6PANll44G8Qz5FvB8i7yaBnwI2pQ2vj8I8NRJl8sZeGp6iIs4CTY9g6kaBfOBHixT0n+pdh3me9sk8C2kLpdt8J5EvWrUJYPwG33tGSwp/jS2SLzJUGUpZCnAU1VaLv3gN+mXgms9J7FLfVQCJzGpD+yBHkMfH7/b/LRdPJMy5bIBpkhsSKlqJLH1++gRmAXrFDabVfluNgXZntWT5ZILz/oXFh+nYEm9BJ/AHFUf3tmjCfzy8Eobh86Hl6ITEmfHJnnl+05LXJOnKRedh1U+hfxBtZ9rhbdgxcMrGV9F58OHYz7WlOU1L9t1cV08TbmoXk76DrrJ/VCepkXQGuiRxcelf5axcT16Scx8J30g8ZdwSfFfuyLenfmP7yvVrs1RUVFRUVH/X1ctY5+FqmqArAAAAABJRU5ErkJggg==\">"
+                        ],
+                        "question_type": "选择题",
+                        "sub_questions": [],
+                        "answer": [
+                            "$A$"
+                        ],
+                        "analysis": "",
+                        "source": "user_input",
+                        "subject": "user_input"
+                    }
+                ]
+              }
+              this.Init_Question_Check();
+      var Flag = true;
+      if(Flag){
+        return 
+      }
       this.loading = true;
       this.$http
         .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
@@ -3278,12 +3304,12 @@ export default {
     // 以下是单题显示配套用的方法
     Ensure(){
       this.$confirm("您已经锁定了所有题目，确认审核完毕请点击确认提交，仍有更改请点击取消。").then( () => {
-        this.$message.success("已提交");
         this.Submit_Show = true;
         this.Submit();
+        this.$message.success("已提交");
       }).catch(() => {
-        this.$message.info("已取消");
         this.Submit_Show = true;
+        this.$message.info("已取消");
       })
     },
     Init_Question_Check(){
@@ -3292,7 +3318,7 @@ export default {
 
       for(var i = 0; i < this.TestData.doc.length; i++){
         this.Question_Check.push(false);
-        this.TestData.doc[i].answer = this.TestData.doc[i].answer.split("::");
+        // this.TestData.doc[i].answer = this.TestData.doc[i].answer.split("::");
       }
 
     },
@@ -3545,15 +3571,19 @@ export default {
 
       var Flag = true;
 
-      var Img_Catcher = new RegExp("<img src='(.*?)'>")
+      var Img_Catcher = new RegExp('<img src="(.*?)">', 'g')
       var Result_List = Img_Catcher.exec(Check_Now);
 
-      if(Result_List != null){
-        for(var rl = 0; rl < Result_List.length; rl++){
-          var Temp_Catcher = new RegExp(Result_List[rl])
-          Check_Now = Check_Now.replace(Temp_Catcher, "");
-        }
+      var Img_SE = [];
+
+      while(Result_List != null){
+        var Temp_Catcher = '<img src="' + Result_List[1] + '">';
+        var Start = Check_Now.indexOf(Temp_Catcher);
+        Img_SE.push([Start, Start + Temp_Catcher.length])
+        Result_List = Img_Catcher.exec(Check_Now);
       }
+      
+      var Img_Index = 0;
 
       for(var c = 0; c < Check_Now.length; c++){
         
@@ -3567,10 +3597,17 @@ export default {
           }
         }
 
+        if( c >= Img_SE[Img_Index][0] && c <= Img_SE[Img_Index][1]){
+          continue;
+        }else if(c > Img_SE[Img_Index][1]){
+          Img_Index = Img_Index + 1
+        }
+
         if(!(Check_Now.charCodeAt(c) > 255 || this.ch_pun_list.indexOf(Check_Now[c]) != -1 || this.en_pun_list.indexOf(Check_Now[c]) != -1 || Check_Now[c] == ' ' || Check_Now.charCodeAt(c) == 10) 
             && Flag 
             && Check_Now[c] != '$'){
-          this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
+          this.$message.error({message: "请修正非法字符 " + Check_Now[c] + " ，或将字母，罗马符号及数字包裹在$$之间进行输入",
+                            offset: 40});
           this.Symbol_Error = true;
           return false;
         }
@@ -3579,8 +3616,8 @@ export default {
         return true;
       }
       else{
-        this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
-        return false
+        this.$message.error("请修正非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
+        return false;
       }
     },
     Submit(){
@@ -3593,7 +3630,8 @@ export default {
 
         var stem = Ques.question_stem;
         if(!this.ChecK_Do(stem)){
-          this.$message.error("第"+ (i+1).toString() + "题题干内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+          this.$message.error({message: "第 "+ (i+1).toString() + " 题题干内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
+                              , offset: 80});
           return false;
         }
 
@@ -3603,7 +3641,8 @@ export default {
           var item = answer[j]
             
           if(item != "" && !this.ChecK_Do(item)){
-            this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+            this.$message.error({message: "第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
+                              , offset: 80});
             return false
           }
 
@@ -3611,14 +3650,16 @@ export default {
 
         var analyse = Ques.analysis;
         if(!this.ChecK_Do(analyse)){
-          this.$message.error("第"+ (i+1).toString() + "题解析内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+          this.$message.error({message: "第"+ (i+1).toString() + "题解析内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
+                              , offset: 80});
           return false;
         }
       
         var options = Ques.question_options;
         for(j = 0; j < options.length; j++){
           if(!this.ChecK_Do(options[j])){
-            this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+            this.$message.error({message: "第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
+                              , offset: 80});
             return false;
           }
         }
@@ -3626,7 +3667,8 @@ export default {
         var sub_Ques = Ques.sub_questions;
         for(j = 0; j < sub_Ques.length; j++){
           if(!this.ChecK_Do(sub_Ques[j])){
-            this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+            this.$message.error({message: "第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
+                              , offset: 80});
             return false;
           }
         }
@@ -3754,31 +3796,31 @@ export default {
         
       }
 
-      console.log(Ques_List);
+      // console.log(Ques_List);
 
-      // let config = {
-      //       headers: { "Content-Type": "multipart/form-data" }
-      //   };
-      // let param = new FormData();
+      let config = {
+            headers: { "Content-Type": "multipart/form-data" }
+        };
+      let param = new FormData();
 
-      // param.append('result_json', 
-      //               JSON.stringify({
-      //                 "post_type": 3,
-      //                 "title": this.PaperTitle,
-      //                 "subject_type": this.SubjectType,
-      //                 "period_type": this.PeriodType,
-      //                 "questions": Ques_List,
-      //               }, null, 4));
+      param.append('result_json', 
+                    JSON.stringify({
+                      "post_type": 3,
+                      "title": this.PaperTitle,
+                      "subject_type": this.SubjectType,
+                      "period_type": this.PeriodType,
+                      "questions": this.TestData,
+                    }, null, 4));
 
-      // this.$http
-      //   .post(this.backendIP + "/api/mathUpload", param, config, {
-      //     emulateJSON: true
-      //   })
-      //   .then(function(data) {
-      //     if(data.data){
-      //       this.$message.success("试卷内容上传已完成。");
-      //     }
-      //   });
+      this.$http
+        .post(this.backendIP + "/api/mathUpload", param, config, {
+          emulateJSON: true
+        })
+        .then(function(data) {
+          if(data.data){
+            this.$message.success("试卷内容上传已完成。");
+          }
+        });
 
     },
   }

@@ -150,8 +150,8 @@ export default {
                     },
                     {
                     "name": "黄小青",
-                    "mail": "暂无数据",
-                    "intro": "暂无数据"
+                    "mail": "xqhuang@mail.ustc.edu.cn",
+                    "intro": "中国科学技术大学博士生一年级"
                     },
                     {
                     "name": "雷思琦",
@@ -279,7 +279,8 @@ export default {
                     "黄振亚": "/members/黄振亚.jpeg",
                     "黄杰": "/members/黄杰.jpg",
                     "黄野": "/members/黄野.jpg",
-                    "龚政": "/members/龚政.jpg"
+                    "龚政": "/members/龚政.jpg",
+                    "黄小青": "/members/黄小青.jpg"
                 }
             }
         }
