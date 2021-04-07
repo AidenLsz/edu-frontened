@@ -224,7 +224,11 @@
                       <template slot="title"><span style="color: black;">分析</span></template>
                       <el-menu-item index="3-1"><span style="color: Gainsboro;">学习资源</span></el-menu-item>
                       <el-menu-item index="3-2"><span style="color: Gainsboro;">试题资源</span></el-menu-item>
-                      <el-menu-item index="3-3"><span style="color: Gainsboro;">试卷资源</span></el-menu-item>
+                      <router-link to="/PaperAnalyse" :underline="false" @click.native="ToTop">
+                        <el-menu-item index="3-3">
+                          <span style="color: black;">试卷资源</span>
+                        </el-menu-item>
+                      </router-link>
                     </el-submenu>
                     <router-link to="/estimate" :underline="false" @click.native="ToTop">
                       <el-menu-item index="4">
