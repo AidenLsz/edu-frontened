@@ -439,7 +439,8 @@ export default {
         }
     },
     mounted() {
-      this.Init()
+      this.Init();
+      window.scrollTo(0, 0);
     },
     methods: {
         // 处理对话框内应当显示的内容

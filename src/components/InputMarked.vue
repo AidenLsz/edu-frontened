@@ -307,8 +307,8 @@
             <el-button @click="Ensure()" type="success">确认无误</el-button>
         </el-row>
     </el-dialog>
-    <el-row justify="start" type="flex">
-      <el-col style="padding-left: 25px">
+    <el-row justify="start" type="flex" style="margin-left: 5vw">
+      <el-col>
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>资源录入</el-breadcrumb-item>
@@ -316,11 +316,11 @@
         </el-breadcrumb>
       </el-col>
     </el-row>
-    <el-row>
+    <el-row style="margin-left: 5vw; margin-right: 5vw">
       <el-col :span="4" style="padding-bottom: 50px; padding-top: 30px">
         <!-- 切换页面 -->
-        <el-row type="flex" justify="center">
-          <el-button type="warning" plain @click="Router_Trans('/inputPaper')" style="width: 200px; font-size: 16px">
+        <el-row type="flex" justify="start">
+          <el-button type="warning" plain @click="Router_Trans('/inputPaper')" style="width: 12.5vw; font-size: 16px">
             <span style="font-weight: bold">
               切换至整卷录入页面
             </span>
@@ -328,9 +328,11 @@
         </el-row>
         <!-- 不同题型 -->
         <el-row>
-          <el-row style="margin: 20px 10px">
-            <p style="text-align: left; padding-left: 10px">确认科目：</p>
-            <el-select v-model="SubjectType" placeholder="请选择科目">
+          <el-row style="margin: 20px 0px 0px 0px" type="flex" justify="start">
+            <p style="text-align: left;">确认科目：</p>
+          </el-row>
+          <el-row type="flex" justify="start">
+            <el-select v-model="SubjectType" placeholder="请选择科目" style="width: 12.5vw">
               <el-option
                 v-for="item in Subject_List"
                 :key="item.value"
@@ -339,9 +341,11 @@
               </el-option>
             </el-select>
           </el-row>
-          <el-row style="margin: 20px 10px">
-            <p style="text-align: left; padding-left: 10px">确认学段：</p>
-            <el-select v-model="PeriodType" placeholder="请选择学段">
+          <el-row style="margin: 20px 0px 0px 0px" type="flex" justify="start">
+            <p style="text-align: left;">确认学段：</p>
+          </el-row>
+          <el-row type="flex" justify="start">
+            <el-select v-model="PeriodType" placeholder="请选择学段" style="width: 12.5vw">
               <el-option
                 v-for="item in Period_List"
                 :key="item.value"
@@ -350,12 +354,12 @@
               </el-option>
             </el-select>
           </el-row>
-          <el-row>
-            <el-col :span="6" style="font-size: 20px">
+          <el-row style="margin-top: 2vh">
+            <el-col :span="4" style="font-size: 20px; text-align: left">
               <i v-if="Expand" @click="Expand_Type_Change()" class="el-icon-arrow-down"></i>
               <i v-if="!Expand" @click="Expand_Type_Change()" class="el-icon-arrow-right"></i>
             </el-col>
-            <el-col :span="6" style="text-align: left; font-size: 20px">
+            <el-col :span="5" style="text-align: left; font-size: 20px">
               题型
             </el-col>
             <el-col :span="12">
@@ -364,28 +368,28 @@
           </el-row>
           <!-- Option -->
           <el-row style="margin-top: 10px" v-if="Expand">
-            <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
+            <el-col :span="18" :offset="4" style="text-align: left; font-size: 20px">
               <i class="el-icon-circle-check"></i>
               <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Change_Type('option')">选择题</el-button>
             </el-col>
           </el-row>
           <!-- Fill -->
           <el-row v-if="Expand">
-            <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
+            <el-col :span="18" :offset="4" style="text-align: left; font-size: 20px">
               <i class="el-icon-full-screen"></i>
               <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Change_Type('fill')">填空题</el-button>
             </el-col>
           </el-row>
           <!-- Answer -->
           <el-row v-if="Expand">
-            <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
+            <el-col :span="18" :offset="4" style="text-align: left; font-size: 20px">
               <i class="el-icon-edit-outline"></i>
               <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Change_Type('answer')">解答题</el-button>
             </el-col>
           </el-row>
           <!-- Mix -->
           <el-row v-if="Expand">
-            <el-col :span="18" :offset="6" style="text-align: left; font-size: 20px">
+            <el-col :span="18" :offset="4" style="text-align: left; font-size: 20px">
               <i class="el-icon-reading"></i>
               <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Change_Type('mix')">综合题</el-button>
             </el-col>
@@ -396,7 +400,7 @@
             <label>文件导入</label>
           </el-button>
         </el-row> -->
-        <el-row type="flex" justify="center" style="padding-top: 30px">
+        <el-row type="flex" justify="start" style="padding-top: 30px">
           <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')" :disabled="Type_Now == '-1'">
             <label>题目入库</label>
           </el-button>

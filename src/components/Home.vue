@@ -146,7 +146,7 @@
         </el-col>
         <el-col :span="6">
           <el-row>
-            <el-button circle style="height: 200px; width: 200px"><img src="../assets/icon8.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+            <el-button @click="Router_Trans('/PaperAnalyse')" circle style="height: 200px; width: 200px"><img src="../assets/icon8.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
             <label style="margin-top: 30px; font-size: 20px; color: black">
@@ -379,7 +379,7 @@
         </el-col>
         <el-col :span="6">
           <el-row>
-            <el-button circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+            <el-button @click="Router_Trans('/PaperAnalyse')" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
             <label style="margin-top: 30px; font-size: 20px; color: black">
@@ -634,7 +634,7 @@
           <el-divider></el-divider>
         </el-col>
         <el-col :span="6">
-          <span style="padding-left: 5vw; padding-right: 4vw; letter-spacing: 1vw; font-size: 36px;">智能分析</span>
+          <span style="padding-left: 5vw; padding-right: 4vw; letter-spacing: 1vw; font-size: 36px;">数据统计</span>
         </el-col>
         <el-col :span="4">
           <el-divider></el-divider>
@@ -644,7 +644,7 @@
         <el-col :span="4" :offset="4" class="partData">
           <el-row>
             <el-col :span="12">
-              <img src="../assets/dataIcon1.png" width="50%" style="padding-top: 25%"/>
+              <img src="../assets/dataIcon1.png" width="60px" style="padding-top: 30px"/>
             </el-col>
             <el-col :span="12" style="padding-top: 30px">
               <p style="font-weight:bold; font-size: 18px; color: black">试题</p>
@@ -655,7 +655,7 @@
         <el-col :span="4" :offset="2" class="partData">
           <el-row>
             <el-col :span="12">
-              <img src="../assets/dataIcon2.png" width="50%" style="padding-top: 25%"/>
+              <img src="../assets/dataIcon2.png" width="60px" style="padding-top: 30px"/>
             </el-col>
             <el-col :span="12" style="padding-top: 30px">
               <p style="font-weight:bold; font-size: 18px; color: black">试卷</p>
@@ -666,7 +666,7 @@
         <el-col :span="4" :offset="2" class="partData">
           <el-row>
             <el-col :span="12">
-              <img src="../assets/dataIcon3.png" width="50%" style="padding-top: 25%"/>
+              <img src="../assets/dataIcon3.png" width="60px" style="padding-top: 30px"/>
             </el-col>
             <el-col :span="12" style="padding-top: 30px">
               <p style="font-weight:bold; font-size: 18px; color: black">知识单元</p>
@@ -718,6 +718,7 @@ export default {
         "url(" + $(this).attr("data-background") + ")"
       );
     });
+    this.ToTop();
   },
   methods: {
     ToTop(){
@@ -761,9 +762,7 @@ export default {
       this.resourceStatus.splice(index, 1, true);
     },
     Init_Bar(){
-
       
-
       let config = {
           headers: { "Content-Type": "multipart/form-data" }
       };
