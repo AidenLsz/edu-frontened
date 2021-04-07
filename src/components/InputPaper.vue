@@ -1370,6 +1370,7 @@ export default {
               console.log(data.body);
               this.downloadPaper = data.body.Download_Paper;
               this.downloadAnswer = data.body.Download_Answer;
+              FileSaver.saveFile
               this.TestData = data.body.TestData;
               this.Init_Question_Check();
               this.loading = false;
@@ -3542,45 +3543,45 @@ export default {
     },
     // 负责实际检查的部分
     ChecK_Do(Check_Now){
-
+      Check_Now
       var Flag = true;
 
-      var Img_Catcher = new RegExp("<img src='(.*?)'>")
-      var Result_List = Img_Catcher.exec(Check_Now);
+      // var Img_Catcher = new RegExp("<img src='(.*?)'>")
+      // var Result_List = Img_Catcher.exec(Check_Now);
 
-      if(Result_List != null){
-        for(var rl = 0; rl < Result_List.length; rl++){
-          var Temp_Catcher = new RegExp(Result_List[rl])
-          Check_Now = Check_Now.replace(Temp_Catcher, "");
-        }
-      }
+      // if(Result_List != null){
+      //   for(var rl = 0; rl < Result_List.length; rl++){
+      //     var Temp_Catcher = new RegExp(Result_List[rl])
+      //     Check_Now = Check_Now.replace(Temp_Catcher, "");
+      //   }
+      // }
 
-      for(var c = 0; c < Check_Now.length; c++){
+      // for(var c = 0; c < Check_Now.length; c++){
         
-        if(Check_Now[c] == '$'){
-          if(Flag){
-            Flag = false;
-            this.Symbol_Error = true;
-          }else{
-            Flag = true;
-            this.Symbol_Error = false;
-          }
-        }
+      //   if(Check_Now[c] == '$'){
+      //     if(Flag){
+      //       Flag = false;
+      //       this.Symbol_Error = true;
+      //     }else{
+      //       Flag = true;
+      //       this.Symbol_Error = false;
+      //     }
+      //   }
 
-        if(!(Check_Now.charCodeAt(c) > 255 || this.ch_pun_list.indexOf(Check_Now[c]) != -1 || this.en_pun_list.indexOf(Check_Now[c]) != -1 || Check_Now[c] == ' ' || Check_Now.charCodeAt(c) == 10) 
-            && Flag 
-            && Check_Now[c] != '$'){
-          this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
-          this.Symbol_Error = true;
-          return false;
-        }
-      }
+      //   if(!(Check_Now.charCodeAt(c) > 255 || this.ch_pun_list.indexOf(Check_Now[c]) != -1 || this.en_pun_list.indexOf(Check_Now[c]) != -1 || Check_Now[c] == ' ' || Check_Now.charCodeAt(c) == 10) 
+      //       && Flag 
+      //       && Check_Now[c] != '$'){
+      //     this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
+      //     this.Symbol_Error = true;
+      //     return false;
+      //   }
+      // }
       if(Flag){
         return true;
       }
       else{
-        this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
-        return false
+        // this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
+        return true
       }
     },
     Submit(){
@@ -3754,31 +3755,31 @@ export default {
         
       }
 
-      console.log(Ques_List);
+      // console.log(Ques_List);
 
-      // let config = {
-      //       headers: { "Content-Type": "multipart/form-data" }
-      //   };
-      // let param = new FormData();
+      let config = {
+            headers: { "Content-Type": "multipart/form-data" }
+        };
+      let param = new FormData();
 
-      // param.append('result_json', 
-      //               JSON.stringify({
-      //                 "post_type": 3,
-      //                 "title": this.PaperTitle,
-      //                 "subject_type": this.SubjectType,
-      //                 "period_type": this.PeriodType,
-      //                 "questions": Ques_List,
-      //               }, null, 4));
+      param.append('result_json', 
+                    JSON.stringify({
+                      "post_type": 3,
+                      "title": this.PaperTitle,
+                      "subject_type": this.SubjectType,
+                      "period_type": this.PeriodType,
+                      "questions": this.TestData,
+                    }, null, 4));
 
-      // this.$http
-      //   .post(this.backendIP + "/api/mathUpload", param, config, {
-      //     emulateJSON: true
-      //   })
-      //   .then(function(data) {
-      //     if(data.data){
-      //       this.$message.success("试卷内容上传已完成。");
-      //     }
-      //   });
+      this.$http
+        .post(this.backendIP + "/api/mathUpload", param, config, {
+          emulateJSON: true
+        })
+        .then(function(data) {
+          if(data.data){
+            this.$message.success("试卷内容上传已完成。");
+          }
+        });
 
     },
   }
