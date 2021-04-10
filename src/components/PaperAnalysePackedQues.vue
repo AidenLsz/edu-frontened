@@ -296,7 +296,6 @@ export default {
   },
   methods: {
     Init(){
-      console.log(this.Name_Packed_Next)
       this.Expand_Ana = [];
       for(var i = 0; i < this.PackedQuestion.length; i++){
         this.Expand_Ana.push(false);

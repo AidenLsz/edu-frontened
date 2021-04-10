@@ -1,8 +1,8 @@
 <!-- 作为递归自身的节点 -->
 <template>
-  <div style="margin: 30px 16.5vw 10px 16.5vw">
-      <el-row>
-          <label>xxx试题分析报告</label>
+  <div style="margin: 0px 16.5vw 10px 16.5vw">
+      <el-row style="padding-top: 15px">
+          <label style="font-size: 2rem">xxx试题分析报告</label>
       </el-row>
       <el-row>
           <el-divider></el-divider>
@@ -19,13 +19,22 @@
             <el-row>
                 <PaperAnalysePackedQuestion :PackedQuestion="Question.sub_question" :Sub_Index="Index" :Name_P="'P_' + Index"  :Analyse="false" style="width: 100%"></PaperAnalysePackedQuestion>
             </el-row>
-            <el-row v-if="Analyse" type="flex" justify="start" style="margin-bottom: 10px">
-                <el-button type="primary" size="small" plain @click="Change_Expand()">题目分析详情&nbsp;&nbsp;
-                    <i class="el-icon-caret-right" v-if="!Expand_Ana[Index]"></i>
-                    <i class="el-icon-caret-bottom" v-if="Expand_Ana[Index]"></i>
-                </el-button>
-            </el-row>
             <el-row v-if="Expand_Ana">
+                <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+                    <el-col :span="12" style="text-align: left">
+                        综合分析
+                    </el-col>
+                </el-row>
+                <el-row type="flex" justify="start">
+                    <p style="text-align: left; padding-left: 45px">
+                        <span>综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字</span>
+                    </p>
+                </el-row>
             <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
                 <el-col :span="12" style="text-align: left">
                     分析详情
@@ -63,11 +72,11 @@
                             </el-col>
                             <!-- 右列 -->
                             <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
-                                <el-row v-for="(item, index) in Test_Layer_Data.kp" :key="index" type="flex" justify="start">
+                                <el-row v-for="(item, index) in Question.knowledge_points_frontend.kp" :key="index" type="flex" justify="start">
                                     <el-tag style="background: transparent; color: black" effect="plain" class="kp_tag">
                                         <el-badge 
-                                        :hidden="Test_Layer_Data.kp_priority.indexOf(item) == -1" 
-                                        :value="Test_Layer_Data.kp_priority.indexOf(item) + 1" 
+                                        :hidden="Question.knowledge_points_frontend.kp_priority.indexOf(item) == -1" 
+                                        :value="Question.knowledge_points_frontend.kp_priority.indexOf(item) + 1" 
                                         class="kp_badge"
                                         type="primary">
                                         {{ item }}
@@ -97,7 +106,11 @@
                         <label>此题包含的知识树状结构为：</label>
                     </el-row>
                     <el-row type="flex" justify="start" class="Table_Unit" style="padding-top: 8px;">
-                        <el-tree style="background: transparent" :data="Test_Layer_Data.kp_layer" :props="defaultProps"></el-tree>
+                        <el-tree 
+                            :default-expand-all="true"
+                            style="background: transparent" 
+                            :data="Question.knowledge_points_frontend.kp_layer" 
+                            :props="defaultProps"></el-tree>
                     </el-row>
                 </el-col>
             </el-row>
@@ -118,118 +131,113 @@
             <el-row type="flex" justify="start" style="margin-bottom: 10px;">
                 <PaperAnalyseQuestion :Question="Question" style="width: 100%"></PaperAnalyseQuestion>
             </el-row>
-            <el-row v-if="Analyse" type="flex" justify="start" style="margin-bottom: 10px">
-                <el-button type="primary" size="small" plain @click="Change_Expand()">题目分析详情&nbsp;&nbsp;
-                    <i class="el-icon-caret-right" v-if="!Expand_Ana[Index]"></i>
-                    <i class="el-icon-caret-bottom" v-if="Expand_Ana[Index]"></i>
-                </el-button>
-            </el-row>
             <el-row v-if="Expand_Ana">
-            <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
-                <el-col :span="12" style="text-align: left">
-                    综合分析
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="start">
-                <p style="text-align: left">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>综合分析的文字综合分析的文字综合分析的文字
-                        综合分析的文字综合分析的文字综合分析的文字
-                        综合分析的文字综合分析的文字综合分析的文字
-                        综合分析的文字综合分析的文字综合分析的文字
-                        综合分析的文字综合分析的文字综合分析的文字
-                        综合分析的文字综合分析的文字综合分析的文字
-                        综合分析的文字综合分析的文字综合分析的文字综合分析的文字
-                        综合分析的文字综合分析的文字综合分析的文字综合分析的文字
-                        综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字
-                        综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字</span>
-                </p>
-            </el-row>
-            <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
-                <el-col :span="12" style="text-align: left">
-                    分析详情
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="start" style="padding-left: 45px">
-                <el-col>
-                <!-- 属性分析表格 -->
-                <el-row type="flex" justify="start" style="margin: 10px 0px 10px 0px">
-                    <label>此题难度等属性分析如下：</label>
+                <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+                    <el-col :span="12" style="text-align: left">
+                        综合分析
+                    </el-col>
                 </el-row>
-                <el-row style="width: 100%">
-                    <!-- 第一行 -->
-                    <el-row style="width: 66.7%" class="Table_Unit">
-                    <!-- 左列 -->
-                    <el-col :span="6" style="padding-top: 8px;">
-                        <el-row type="flex" justify="start">
-                        <label>此题难度</label>
-                        </el-row>
-                    </el-col>
-                    <!-- 右列 -->
-                    <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
-                        <el-row type="flex" justify="start">
-                        <span>{{Question.difficulty}}</span>
-                        </el-row>
-                    </el-col>
-                    </el-row>
-                    <!-- 第二行 -->
-                    <el-row style="width: 66.7%" class="Table_Unit">
-                    <!-- 左列 -->
-                    <el-col :span="6" style="padding-top: 8px;">
-                        <el-row type="flex" justify="start">
-                        <label style="text-align: left">考察知识点</label>
-                        </el-row>
-                    </el-col>
-                    <!-- 右列 -->
-                    <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
-                        <el-row v-for="(item, index) in Question.knowledge_points_frontend.kp" :key="index" type="flex" justify="start">
-                        <el-tag style="background: transparent; color: black" effect="plain" class="kp_tag">
-                            <el-badge 
-                            :hidden="Question.knowledge_points_frontend.kp_priority.indexOf(item) == -1" 
-                            :value="Question.knowledge_points_frontend.kp_priority.indexOf(item) + 1" 
-                            class="kp_badge"
-                            type="primary">
-                            {{ item }}
-                            </el-badge>
-                        </el-tag>
-                        </el-row>
-                    </el-col>
-                    </el-row>
-                    <!-- 第三行 -->
-                    <el-row style="width: 66.7%" class="Table_Unit">
-                    <!-- 左列 -->
-                    <el-col :span="6" style="padding-top: 8px;">
-                        <el-row type="flex" justify="start">
-                        <label style="text-align: left">考察能力</label>
-                        </el-row>
-                    </el-col>
-                    <!-- 右列 -->
-                    <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
-                        <el-row type="flex" justify="start">
-                        <span style="text-align: left">能力一、能力二、能力三</span>
-                        </el-row>
-                    </el-col>
-                    </el-row>
+                <el-row type="flex" justify="start">
+                    <p style="text-align: left">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字
+                            综合分析的文字综合分析的文字综合分析的文字综合分析的文字综合分析的文字</span>
+                    </p>
                 </el-row>
-                <!-- 树状结构 -->
-                <el-row type="flex" justify="start" style="margin: 25px 0px 10px 0px">
-                    <label>此题包含的知识树状结构为：</label>
+                <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+                    <el-col :span="12" style="text-align: left">
+                        分析详情
+                    </el-col>
                 </el-row>
-                <el-row type="flex" justify="start" class="Table_Unit" style="padding-top: 8px; padding-bottom: 8px">
-                    <el-tree 
-                        style="background: transparent" 
-                        :data="Question.knowledge_points_frontend.kp_layer" 
-                        :props="defaultProps"></el-tree>
+                <el-row type="flex" justify="start" style="padding-left: 45px">
+                    <el-col>
+                        <!-- 属性分析表格 -->
+                        <el-row type="flex" justify="start" style="margin: 10px 0px 10px 0px">
+                            <label>此题难度等属性分析如下：</label>
+                        </el-row>
+                        <el-row style="width: 100%">
+                            <!-- 第一行 -->
+                            <el-row style="width: 66.7%" class="Table_Unit">
+                            <!-- 左列 -->
+                            <el-col :span="6" style="padding-top: 8px;">
+                                <el-row type="flex" justify="start">
+                                <label>此题难度</label>
+                                </el-row>
+                            </el-col>
+                            <!-- 右列 -->
+                            <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                <el-row type="flex" justify="start">
+                                <span>{{Question.difficulty}}</span>
+                                </el-row>
+                            </el-col>
+                            </el-row>
+                            <!-- 第二行 -->
+                            <el-row style="width: 66.7%" class="Table_Unit">
+                            <!-- 左列 -->
+                            <el-col :span="6" style="padding-top: 8px;">
+                                <el-row type="flex" justify="start">
+                                <label style="text-align: left">考察知识点</label>
+                                </el-row>
+                            </el-col>
+                            <!-- 右列 -->
+                            <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                <el-row v-for="(item, index) in Question.knowledge_points_frontend.kp" :key="index" type="flex" justify="start">
+                                <el-tag style="background: transparent; color: black" effect="plain" class="kp_tag">
+                                    <el-badge 
+                                    :hidden="Question.knowledge_points_frontend.kp_priority.indexOf(item) == -1" 
+                                    :value="Question.knowledge_points_frontend.kp_priority.indexOf(item) + 1" 
+                                    class="kp_badge"
+                                    type="primary">
+                                    {{ item }}
+                                    </el-badge>
+                                </el-tag>
+                                </el-row>
+                            </el-col>
+                            </el-row>
+                            <!-- 第三行 -->
+                            <el-row style="width: 66.7%" class="Table_Unit">
+                            <!-- 左列 -->
+                            <el-col :span="6" style="padding-top: 8px;">
+                                <el-row type="flex" justify="start">
+                                <label style="text-align: left">考察能力</label>
+                                </el-row>
+                            </el-col>
+                            <!-- 右列 -->
+                            <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                <el-row type="flex" justify="start">
+                                <span style="text-align: left">能力一、能力二、能力三</span>
+                                </el-row>
+                            </el-col>
+                            </el-row>
+                        </el-row>
+                        <!-- 树状结构 -->
+                        <el-row type="flex" justify="start" style="margin: 25px 0px 10px 0px">
+                            <label>此题包含的知识树状结构为：</label>
+                        </el-row>
+                        <el-row type="flex" justify="start" class="Table_Unit" style="padding-top: 8px; padding-bottom: 8px">
+                            <el-tree 
+                                :default-expand-all="true"
+                                style="background: transparent" 
+                                :data="Question.knowledge_points_frontend.kp_layer" 
+                                :props="defaultProps"></el-tree>
+                        </el-row>
+                    </el-col>
                 </el-row>
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
-                <el-col :span="12" style="text-align: left">
-                    相似试卷
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="start" style="padding-left: 45px">
-                <label>与此试卷相似的试卷是xxxxxxx</label>
-            </el-row>
+                <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+                    <el-col :span="12" style="text-align: left">
+                        相似试卷
+                    </el-col>
+                </el-row>
+                <el-row type="flex" justify="start" style="padding-left: 45px">
+                    <label>与此试卷相似的试卷是xxxxxxx</label>
+                </el-row>
             </el-row>
         </el-col>
       </el-row>
@@ -401,80 +409,20 @@ export default {
       Mathdown
   },
   created(){
-    this.Name_Packed_Next = [];
-    for(var i = 0; i < this.Question.sub_question.length; i++){
-      this.Name_Packed_Next.push(this.Name_P + "_" + i)
-    }
-    setTimeout(()=>{this.Init();}, 100)
+    this.Init()
   },
   data(){
     return {
       Expand_Ana: true,
-      Name_Packed_Next: [],
       defaultProps: {
         label: "label",
         children: "children"
       },
-      Test_Layer_Data: {
-        kp: [
-            "圆内接四边形的性质定理与判定定理",
-            "直线与圆的位置关系（选）",
-            "立体几何与平面几何",
-            "几何证明选讲（选考内容）"
-        ],
-        kp_layer: [
-            {
-                "label": "立体几何与平面几何",
-                "children": [
-                    {
-                        "label": "几何证明选讲（选考内容）",
-                        "children": [
-                            {
-                                "label": "直线与圆的位置关系（选）",
-                                "children": [
-                                    {
-                                        "label": "圆内接四边形的性质定理与判定定理",
-                                        "children": []
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "label": "立体几何初步",
-                        "children": [
-                            {
-                                "label": "空间几何体",
-                                "children": []
-                            }
-                        ]
-                    }
-                ]
-            }
-        ],
-        kp_priority: [
-          "立体几何与平面几何",
-          "几何证明选讲（选考内容）",
-          "空间几何体",
-          "直线与圆的位置关系（选）",
-          "圆内接四边形的性质定理与判定定理"
-        ]
-      }
     }                        
   },
   methods: {
     Init(){
-      this.Expand_Ana = true;
-    },
-    Show_Expand_Analyse(index){
-      if(this.Expand_Ana[index]){
-        return true
-      }else{
-        return false
-      }
-    },
-    Change_Expand(){
-      this.Expand_Ana = !this.Expand_Ana;
+      window.scrollTo(0,0);
     },
     Get_Class(Analyse){
       if(Analyse){
@@ -483,9 +431,6 @@ export default {
         return ""
       }
     },
-    Get_Name(Index){
-      return this.Name_Packed_Next[Index]
-    }
   }
 };
 </script>
@@ -523,7 +468,7 @@ export default {
 .Table_Unit{
    border: 1px solid #ECECEC; 
    padding-left: 10px; 
-   background: white;
+   background: #F8FBFF;
    box-sizing:border-box;
 }
 .el-divider--horizontal{
