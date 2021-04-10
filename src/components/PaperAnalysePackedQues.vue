@@ -21,7 +21,89 @@
             </el-button>
           </el-row>
           <el-row v-if="Expand_Ana[Index]">
-            这里是分析详情区域{{Index}}
+            <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+              <el-col :span="12" style="text-align: left">
+                  分析详情
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="start" style="padding-left: 45px">
+              <el-col>
+                <!-- 属性分析表格 -->
+                <el-row type="flex" justify="start" style="margin: 10px 0px 10px 0px">
+                  <label>此题难度等属性分析如下：</label>
+                </el-row>
+                <el-row style="width: 100%">
+                  <!-- 第一行 -->
+                  <el-row style="width: 66.7%" class="Table_Unit">
+                    <!-- 左列 -->
+                    <el-col :span="6" style="padding-top: 8px;">
+                      <el-row type="flex" justify="start">
+                        <label>平均难度</label>
+                      </el-row>
+                    </el-col>
+                    <!-- 右列 -->
+                    <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                      <el-row type="flex" justify="start">
+                        <span>{{Question.difficulty_statistics.mean}}</span>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                  <!-- 第二行 -->
+                  <el-row style="width: 66.7%" class="Table_Unit">
+                    <!-- 左列 -->
+                    <el-col :span="6" style="padding-top: 8px;">
+                      <el-row type="flex" justify="start">
+                        <label style="text-align: left">考察知识点</label>
+                      </el-row>
+                    </el-col>
+                    <!-- 右列 -->
+                    <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                      <el-row v-for="(item, index) in Question.knowledge_points_frontend.kp" :key="index" type="flex" justify="start">
+                        <el-tag style="background: transparent; color: black" effect="plain" class="kp_tag">
+                          <el-badge 
+                            :hidden="Question.knowledge_points_frontend.kp_priority.indexOf(item) == -1" 
+                            :value="Question.knowledge_points_frontend.kp_priority.indexOf(item) + 1" 
+                            class="kp_badge"
+                            type="primary">
+                            {{ item }}
+                          </el-badge>
+                        </el-tag>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                  <!-- 第三行 -->
+                  <el-row style="width: 66.7%" class="Table_Unit">
+                    <!-- 左列 -->
+                    <el-col :span="6" style="padding-top: 8px;">
+                      <el-row type="flex" justify="start">
+                        <label style="text-align: left">考察能力</label>
+                      </el-row>
+                    </el-col>
+                    <!-- 右列 -->
+                    <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                      <el-row type="flex" justify="start">
+                        <span style="text-align: left">能力一、能力二、能力三</span>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                </el-row>
+                <!-- 树状结构 -->
+                <el-row type="flex" justify="start" style="margin: 25px 0px 10px 0px">
+                  <label>此题包含的知识树状结构为：</label>
+                </el-row>
+                <el-row type="flex" justify="start" class="Table_Unit" style="padding-top: 8px;">
+                  <el-tree style="background: transparent" :data="Question.knowledge_points_frontend.kp_layer" :props="defaultProps"></el-tree>
+                </el-row>
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+              <el-col :span="12" style="text-align: left">
+                  相似试题
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="start" style="padding-left: 45px">
+                <label>与此试题相似的试题是xxxxxxx</label>
+            </el-row>
           </el-row>
         </el-col>
         <el-col :span="24" v-else>
@@ -38,7 +120,89 @@
             </el-button>
           </el-row>
           <el-row v-if="Expand_Ana[Index]">
-            这里是分析详情区域{{Index}}
+            <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+              <el-col :span="12" style="text-align: left">
+                  分析详情
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="start" style="padding-left: 45px">
+              <el-col>
+              <!-- 属性分析表格 -->
+                <el-row type="flex" justify="start" style="margin: 10px 0px 10px 0px">
+                  <label>此题难度等属性分析如下：</label>
+                </el-row>
+                <el-row style="width: 100%">
+                  <!-- 第一行 -->
+                  <el-row style="width: 66.7%" class="Table_Unit">
+                    <!-- 左列 -->
+                    <el-col :span="6" style="padding-top: 8px;">
+                      <el-row type="flex" justify="start">
+                        <label>此题难度</label>
+                      </el-row>
+                    </el-col>
+                    <!-- 右列 -->
+                    <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                      <el-row type="flex" justify="start">
+                        <span>{{Question.difficulty}}</span>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                  <!-- 第二行 -->
+                  <el-row style="width: 66.7%" class="Table_Unit">
+                    <!-- 左列 -->
+                    <el-col :span="6" style="padding-top: 8px;">
+                      <el-row type="flex" justify="start">
+                        <label style="text-align: left">考察知识点</label>
+                      </el-row>
+                    </el-col>
+                    <!-- 右列 -->
+                    <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                      <el-row v-for="(item, index) in Question.knowledge_points_frontend.kp" :key="index" type="flex" justify="start">
+                        <el-tag style="background: transparent; color: black" effect="plain" class="kp_tag">
+                          <el-badge 
+                            :hidden="Question.knowledge_points_frontend.kp_priority.indexOf(item) == -1" 
+                            :value="Question.knowledge_points_frontend.kp_priority.indexOf(item) + 1" 
+                            class="kp_badge"
+                            type="primary">
+                            {{ item }}
+                          </el-badge>
+                        </el-tag>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                  <!-- 第三行 -->
+                  <el-row style="width: 66.7%" class="Table_Unit">
+                    <!-- 左列 -->
+                    <el-col :span="6" style="padding-top: 8px;">
+                      <el-row type="flex" justify="start">
+                        <label style="text-align: left">考察能力</label>
+                      </el-row>
+                    </el-col>
+                    <!-- 右列 -->
+                    <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                      <el-row type="flex" justify="start">
+                        <span style="text-align: left">能力一、能力二、能力三</span>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                </el-row>
+                <!-- 树状结构 -->
+                <el-row type="flex" justify="start" style="margin: 25px 0px 10px 0px">
+                  <label>此题包含的知识树状结构为：</label>
+                </el-row>
+                <el-row type="flex" justify="start" class="Table_Unit" style="padding-top: 8px; padding-bottom: 8px">
+                  <el-tree style="background: transparent" :data="Question.knowledge_points_frontend.kp_layer" :props="defaultProps"></el-tree>
+                </el-row>
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+              <el-col :span="12" style="text-align: left">
+                  相似试题
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="start" style="padding-left: 45px">
+                <label>与此试题相似的试题是xxxxxxx</label>
+            </el-row>
           </el-row>
         </el-col>
       </el-row>
@@ -78,8 +242,57 @@ export default {
   data(){
     return {
       Expand_Ana: [],
-      Name_Packed_Next: []
-    }
+      Name_Packed_Next: [],
+      defaultProps: {
+        label: "label",
+        children: "children"
+      },
+      // Test_Layer_Data: {
+      //   kp: [
+      //       "圆内接四边形的性质定理与判定定理",
+      //       "直线与圆的位置关系（选）",
+      //       "立体几何与平面几何",
+      //       "几何证明选讲（选考内容）"
+      //   ],
+      //   kp_layer: [
+      //       {
+      //           "label": "立体几何与平面几何",
+      //           "children": [
+      //               {
+      //                   "label": "几何证明选讲（选考内容）",
+      //                   "children": [
+      //                       {
+      //                           "label": "直线与圆的位置关系（选）",
+      //                           "children": [
+      //                               {
+      //                                   "label": "圆内接四边形的性质定理与判定定理",
+      //                                   "children": []
+      //                               }
+      //                           ]
+      //                       }
+      //                   ]
+      //               },
+      //               {
+      //                   "label": "立体几何初步",
+      //                   "children": [
+      //                       {
+      //                           "label": "空间几何体",
+      //                           "children": []
+      //                       }
+      //                   ]
+      //               }
+      //           ]
+      //       }
+      //   ],
+      //   kp_priority: [
+      //     "立体几何与平面几何",
+      //     "几何证明选讲（选考内容）",
+      //     "空间几何体",
+      //     "直线与圆的位置关系（选）",
+      //     "圆内接四边形的性质定理与判定定理"
+      //   ]
+      // }
+    }                        
   },
   methods: {
     Init(){
@@ -120,5 +333,33 @@ export default {
   box-shadow: 8px 10px 12px rgba(25, 25, 25, 0.1);
   margin-bottom: 30px;
   padding: 10px 20px
+}
+.Part_Row_Style_Expand{
+    border-left: 15px solid #409EFD; 
+    background: 	transparent; 
+    width: 100%; 
+    padding-left: 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 20px 0px 10px 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.kp_badge {
+  padding-right: 8px;
+  background: transparent;
+}
+.kp_tag {
+  margin-top: 8px;
+  border: hidden;
+  background: transparent;
+  color: white;
+  font-size: 13px
+}
+.Table_Unit{
+   border: 1px solid #ECECEC; 
+   padding-left: 10px; 
+   background: white;
+   box-sizing:border-box;
 }
 </style>

@@ -16,6 +16,7 @@ import TestPageList from "@/components/TestPageList";
 import FileUpload from "@/components/Upload";
 import Members from "@/components/Members_Introduce";
 import PaperAnalyse from "@/components/PaperAnalyse";
+import QuestionAnalyse from "@/components/QuestionAnalyse";
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
@@ -74,6 +75,11 @@ const router = new Router({
       path: "/PaperAnalyse",
       name: "PaperAnalyse",
       component: PaperAnalyse
+    },
+    {
+      path: "/QuestionAnalyse",
+      name: "QuestionAnalyse",
+      component: QuestionAnalyse
     },
     {
       path: "/inputPaper",
