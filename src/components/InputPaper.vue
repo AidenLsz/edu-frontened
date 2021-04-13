@@ -3319,6 +3319,22 @@ export default {
           { type: "text/plain;charset=utf-8" }
         )
         FileSaver.saveAs(file_2);
+      }else if(Control == 'download') {
+        let config = {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          },
+          responseType: 'arraybuffer',
+          emulateJSON: true
+        }
+        let param = new FormData();
+        param.append('result_json',
+            JSON.stringify({
+              "title": this.PaperTitle,
+              "subject_type": this.SubjectType,
+              "period_type": this.PeriodType,
+              "questions": this.Questions,
+            }, null, 4));
 
       }else if(Control == 'download') {
 
