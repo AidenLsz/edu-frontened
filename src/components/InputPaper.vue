@@ -732,15 +732,21 @@
             <label>题目入库</label>
           </el-button>
         </el-row>
-        <el-row type="flex" justify="center" style="padding-top: 30px">
+        <el-row type="flex" justify="center" style="padding-top: 30px" v-if="Authority_Check()" >
           <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('export')" :disabled="Questions.length == 0">
             <label>导出题目</label>
           </el-button>
         </el-row>
-        <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('download')" :disabled="Questions.length == 0">
-            <label>下载试卷</label>
-          </el-button>
+        <el-row 
+          v-loading="downloading"
+          element-loading-text="加载中，请等待"
+          element-loading-spinner="el-icon-loading"
+          type="flex" 
+          justify="center" 
+          style="margin-top: 30px">
+            <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('download')" :disabled="Questions.length == 0">
+              <label>下载试卷</label>
+            </el-button>
         </el-row>
         <!-- <el-row type="flex" justify="center" style="padding-top: 30px; font-size: 18px">
           <el-col :span="14">
@@ -1150,7 +1156,9 @@ export default {
       downloadAnswer: "",
       // 下载用的json名称
       downloadPaperName: "",
-      downloadAnswerName: ""
+      downloadAnswerName: "",
+      // 下载doc/docx格式时用的等待变量
+      downloading: false
     };
   },
   computed: {
@@ -1261,6 +1269,14 @@ export default {
     this.ToTop();
   },
   methods: {
+    Authority_Check(){
+      var username = sessionStorage.getItem("user");
+      if(username === "advanced" || username === "admin"){
+        return true
+      }else{
+        return false
+      }
+    },
     ToTop(){
       window.scrollTo(0,0);
     },
@@ -3303,7 +3319,11 @@ export default {
           { type: "text/plain;charset=utf-8" }
         )
         FileSaver.saveAs(file_2);
+
       }else if(Control == 'download') {
+
+        this.downloading = true;
+
         let config = {
           headers: {
             "Content-Type": "multipart/form-data"
@@ -3324,6 +3344,9 @@ export default {
             .post(this.backendIP + "/api/paperDownload", param, config)
             .then(function(data) {
               if(data.data){
+
+                this.downloading = false;
+
                 const link = document.createElement('a')
                 let blob = new Blob([data.data],
                     {type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"})
