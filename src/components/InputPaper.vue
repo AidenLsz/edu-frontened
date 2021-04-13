@@ -737,6 +737,11 @@
             <label>导出题目</label>
           </el-button>
         </el-row>
+        <el-row type="flex" justify="center" style="padding-top: 30px">
+          <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('download')" :disabled="Questions.length == 0">
+            <label>下载试卷</label>
+          </el-button>
+        </el-row>
         <!-- <el-row type="flex" justify="center" style="padding-top: 30px; font-size: 18px">
           <el-col :span="14">
           <label>导出序号：</label>
@@ -3236,7 +3241,9 @@ export default {
         }
 
         let config = {
-            headers: { "Content-Type": "multipart/form-data" }
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
         };
         let param = new FormData();
 
@@ -3260,7 +3267,6 @@ export default {
         });
 
       }else if(Control == 'export'){
-
         var file_2 = new File(
           [JSON.stringify({
                           "title": this.PaperTitle,
@@ -3272,7 +3278,37 @@ export default {
           { type: "text/plain;charset=utf-8" }
         )
         FileSaver.saveAs(file_2);
+      }else if(Control == 'download') {
+        let config = {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          },
+          responseType: 'arraybuffer',
+          emulateJSON: true
+        }
+        let param = new FormData();
+        param.append('result_json',
+            JSON.stringify({
+              "title": this.PaperTitle,
+              "subject_type": this.SubjectType,
+              "period_type": this.PeriodType,
+              "questions": this.Questions,
+            }, null, 4));
 
+        this.$http
+            .post(this.backendIP + "/api/paperDownload", param, config)
+            .then(function(data) {
+              if(data.data){
+                const link = document.createElement('a')
+                let blob = new Blob([data.data],
+                    {type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"})
+                let objectUrl = URL.createObjectURL(blob)
+                link.href = objectUrl
+                link.download = this.PaperTitle + '.docx'
+                link.click()
+                URL.revokeObjectURL(objectUrl);
+              }
+            });
       }
 
     },
