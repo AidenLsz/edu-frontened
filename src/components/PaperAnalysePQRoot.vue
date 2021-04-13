@@ -1,19 +1,21 @@
 <template>
     <div>
-        题包：{{PackedQues.id}}
-        <packed-question :PackedQuestion="PackedQues.sub_question"></packed-question>
+        <el-row type="flex" justify="start">
+            <PaperAnalysePackedQuestion :PackedQuestion="PackedQues.sub_question" :Sub_Index="Index" :Name_P="'P_' + Index" style="width: 100%"></PaperAnalysePackedQuestion>
+        </el-row>
     </div>
 </template>
  
 <script>
-import PackedQuestion from './PaperAnalysePackedQues.vue'
+import PaperAnalysePackedQuestion from './PaperAnalysePackedQues.vue'
 export default {
     name: 'PQRoot',
     props: {
-        PackedQues: Object
+        PackedQues: Object,
+        Index: Number
     },
     components: {
-        PackedQuestion
+        PaperAnalysePackedQuestion
     }
 }
 </script>

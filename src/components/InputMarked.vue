@@ -418,7 +418,7 @@
             <el-button type="primary" plain @click="Edit_Question()">重新编辑</el-button>
           </el-col>
           <el-col :span="8">
-            <el-button type="warning" plain @click="PaperUpload('export')">题目导出</el-button> 
+            <el-button type="warning" v-if="Authority_Check()" plain @click="PaperUpload('export')">题目导出</el-button> 
           </el-col>  
           <el-col :span="8">
             <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button> 
@@ -699,6 +699,15 @@ export default {
     this.ToTop();
   },
   methods: {
+    
+    Authority_Check(){
+      var username = sessionStorage.getItem("user");
+      if(username === "advanced" || username === "admin"){
+        return true
+      }else{
+        return false
+      }
+    },
 
     Change_Type(Type){
       
