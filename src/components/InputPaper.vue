@@ -3308,6 +3308,7 @@ export default {
         });
 
       }else if(Control == 'export'){
+
         var file_2 = new File(
           [JSON.stringify({
                           "title": this.PaperTitle,
@@ -3318,6 +3319,7 @@ export default {
           this.PaperTitle + "_Full.json",
           { type: "text/plain;charset=utf-8" }
         )
+
         FileSaver.saveAs(file_2);
       }else if(Control == 'download') {
         let config = {
@@ -3347,14 +3349,16 @@ export default {
           responseType: 'arraybuffer',
           emulateJSON: true
         }
+
         let param = new FormData();
+
         param.append('result_json',
-            JSON.stringify({
-              "title": this.PaperTitle,
-              "subject_type": this.SubjectType,
-              "period_type": this.PeriodType,
-              "questions": this.Questions,
-            }, null, 4));
+          JSON.stringify({
+            "title": this.PaperTitle,
+            "subject_type": this.SubjectType,
+            "period_type": this.PeriodType,
+            "questions": this.Questions,
+          }, null, 4));
 
         this.$http
             .post(this.backendIP + "/api/paperDownload", param, config)
