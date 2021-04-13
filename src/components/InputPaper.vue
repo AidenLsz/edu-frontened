@@ -3633,9 +3633,9 @@ export default {
           }
         }
 
-        if( c >= Img_SE[Img_Index][0] && c <= Img_SE[Img_Index][1]){
+        if(Img_SE.length > 0 && c >= Img_SE[Img_Index][0] && c <= Img_SE[Img_Index][1]){
           continue;
-        }else if(c > Img_SE[Img_Index][1]){
+        }else if(Img_SE.length > 0 && c > Img_SE[Img_Index][1]){
           Img_Index = Img_Index + 1
         }
 
