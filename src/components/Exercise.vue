@@ -411,7 +411,7 @@ export default {
 }
 .quesCard{
   // border: 3px dashed black; 
-  background: #EBEEF5; 
+  background: #F8FBFF; 
   border: 1px dashed black;
   margin-left: 5vw;
 }

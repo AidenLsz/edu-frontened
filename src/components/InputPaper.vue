@@ -3321,6 +3321,7 @@ export default {
         )
 
         FileSaver.saveAs(file_2);
+        
       }else if(Control == 'download') {
 
         this.downloading = true;
