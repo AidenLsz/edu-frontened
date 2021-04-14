@@ -2318,7 +2318,7 @@ export default {
 // 调整区块显示条
 .Part_Row_Style_Collapse{
     border-left: 15px solid #409EFD; 
-    background: 	Gainsboro; 
+    background: 	#F8FBFF; 
     width: 70%; 
     margin: 5px 15% 20px 15%;
     padding-left: 30px;
@@ -2330,7 +2330,7 @@ export default {
 }
 .Part_Row_Style_Expand{
     border-left: 15px solid #409EFD; 
-    background: 	whitesmoke; 
+    background: 	white; 
     width: 70%; 
     margin: 5px 15% 20px 15%;
     padding-left: 30px;
