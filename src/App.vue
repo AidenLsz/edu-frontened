@@ -174,7 +174,7 @@
       <div id="header-sticky" class="sticky-menu">
         <el-row>
           <el-col :span="4" style="padding-top: 20px; padding-left: 30px">
-            <img src="./assets/luna_icon.png" alt="Logo" width="150px"/>
+            <img src="./assets/luna_icon.png" alt="Logo" width="150px" style="cursor: pointer" @click="goToMainPage"/>
           </el-col>
           <el-col :span="8" :offset="11">
             <el-row type="flex" justify="end">
