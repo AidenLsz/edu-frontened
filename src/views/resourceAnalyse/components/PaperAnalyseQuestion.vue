@@ -37,7 +37,7 @@
  
 <script>
 
-import Mathdown from "./Mathdown.vue"
+import Mathdown from "../../../common/components/Mathdown.vue"
 
 export default {
   name: "PaperAnalyseQuestion",

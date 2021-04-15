@@ -212,7 +212,7 @@
 <script>
 
 import PaperAnalyseQuestion from "./PaperAnalyseQuestion.vue";
-import Mathdown from "./Mathdown.vue"
+import Mathdown from "../../../common/components/Mathdown.vue"
 
 export default {
   name: "PaperAnalysePackedQuestion",

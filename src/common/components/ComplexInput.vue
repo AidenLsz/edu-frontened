@@ -1407,7 +1407,7 @@ export default {
   height: 20px;
   display: inline-block;
   background: rgba(0, 0, 0, 0.1);
-  background-image: url(../assets/delete.jpeg);
+  background-image: url(./../../assets/delete.jpeg);
   background-size: 10px;
   background-repeat: no-repeat;
   background-position: 50%;

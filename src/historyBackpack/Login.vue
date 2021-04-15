@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import vueImgVerify from "./vue-img-verify.vue";
+import vueImgVerify from "../common/components/vue-img-verify.vue";
 export default {
   components: { vueImgVerify },
   data() {

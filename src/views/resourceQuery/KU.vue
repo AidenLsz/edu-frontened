@@ -1,6 +1,17 @@
 /* eslint-disable camelcase */
 <template>
   <div class="ku" style="margin-top: 5vh">
+
+    <el-dialog
+        :visible.sync="simpleInput" 
+        title="LUNA输入助手" 
+        width="65%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
+      <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="content"></ComplexInput>
+      <el-button type="success" plain @click="simpleInput = false">完成输入</el-button>
+    </el-dialog>
+
     <!-- header -->
 
     <el-row justify="start" type="flex">
@@ -12,7 +23,34 @@
       </el-col>
     </el-row>
 
-    <el-row>
+    <!-- 搜索框行 -->
+    <el-row type="flex" justify="start" class="SearchArea">
+        <el-col :span="20">
+          <el-input class="SearchInput" v-model="ku_name" type="text">
+            
+          </el-input>
+        </el-col>
+        <el-col :span="1">
+          <el-button type="text" style="font-size: 20px; color: black;" size="small" v-if="content != ''" @click="content = ''">
+            <i class="el-icon-close"></i>
+          </el-button>
+        </el-col>
+        <el-col :span="1">
+          <el-divider direction="vertical"></el-divider>
+        </el-col>
+        <el-col :span="1">
+          <el-button type="text" style="font-size: 18px; color: black; display: block; margin-left: -5px"  size="small" @click="simpleInput = true">
+            ∑
+          </el-button>
+        </el-col>
+        <el-col :span="1">
+          <el-button type="text" style="font-size: 20px; display: block; margin-left: -8px;" size="small" @click="submit(ku_name)">
+            <i class="el-icon-search"></i>
+          </el-button>
+        </el-col>
+    </el-row>
+
+    <!-- <el-row>
       <form @submit.prevent="submit(ku_name)" style="margin-top: 20px; margin-left: 5vw;">
         <el-row type="flex" class="row-bg" justify="start" v-if="!complex_input_flag">
           <el-col :span="10">
@@ -52,7 +90,7 @@
             <el-button type="primary"  @click="Close_CI()" style="margin-top: 7vh">切换简单输入</el-button>
             <el-button type="primary" value="提交" @click="submit(ku_name)"  style="margin-top: 3vh" :disabled="knowledgeSystem == ''">检索</el-button>        
           </el-col>
-        </el-row>
+        </el-row> -->
         <!-- <el-row type="flex" class="row-bg" justify="center">
           <el-col :span="22">
             <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
@@ -60,9 +98,9 @@
           <el-button type="submit" value="提交" @click="submit(ku_name)"
             >检索</el-button
           >
-        </el-row> -->
+        </el-row> 
       </form>
-    </el-row>
+    </el-row> -->
     <!-- main -->
     <el-row v-loading="loading" style="padding-top: 5vh; margin-left: 5vw; margin-right: 5vw" v-if="FullChange">
       <el-col :span="9">
@@ -237,8 +275,8 @@
 </template>
 
 <script>
-import Graph from "./Graph.vue";
-import ComplexInput from "./ComplexInput.vue";
+import Graph from "./components/Graph.vue";
+import ComplexInput from "../../common/components/ComplexInput.vue";
 export default {
   components: { Graph, ComplexInput },
   name: "KU",
@@ -292,7 +330,9 @@ export default {
         },
       ],
       // 知识体系
-      knowledgeSystem: "neea"
+      knowledgeSystem: "neea",
+      // 当前是否为简单输入格式
+      simpleInput: false,
     };
   },
   mounted() {
@@ -313,6 +353,9 @@ export default {
     }
   },
   methods: {
+    changeInput() {
+      this.simpleInput = !this.simpleInput;
+    },
     ToTop(){
       window.scrollTo(0,0);
     },
@@ -528,5 +571,35 @@ export default {
   background-color: #fff;
   color: #000;
   border-color: #c5c1c0;
+}
+</style>
+<style lang="scss" scoped>
+.SearchInput{
+  font-size: 16px;
+  line-height: 28px;
+  height: 28px
+}
+.SearchInput /deep/ .el-input__inner {
+  border: 0;
+  border-radius: 0px;
+  background: transparent;
+}
+
+.el-divider--vertical{
+  display: block;
+  width: 2px;
+  background-color: #9B9EA4;
+  height: 32px;
+  margin-top: 4px;
+}
+.FilterButton{
+  padding-top: 12px;
+}
+.SearchArea{
+  margin-left: 5vw; 
+  border: 1px solid Silver;
+  width: 60%; 
+  border-radius: 18px;
+  -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
 }
 </style>

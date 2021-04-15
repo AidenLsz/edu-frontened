@@ -50,7 +50,7 @@
 <script>
 // import Mathdown from "./Mathdown.vue";
 // import UploadImg from "./UploadImg.vue";
-import ComplexInput from "./ComplexInput.vue"
+import ComplexInput from "../common/components/ComplexInput.vue"
 export default {
   components: {ComplexInput},
   name: "similarity",

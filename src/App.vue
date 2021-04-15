@@ -178,7 +178,10 @@
           </el-col>
           <el-col :span="8" :offset="11">
             <el-row type="flex" justify="end">
-              <el-col :span="4" :offset="1"  style="padding-top: 15px;">
+              <el-col :span="4" v-if="username" style="padding-top: 15px;">
+                <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
+              </el-col>
+              <el-col :span="4" :offset="1" v-else style="padding-top: 15px;">
                 <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
               </el-col>
               <el-col :span="4" style="padding-top: 15px;">
@@ -244,25 +247,33 @@
                         <span style="color: black;">相似题预估</span>
                       </el-menu-item>
                     </router-link>
+                    <router-link to="/admin" v-if="Get_Priority()" :underline="false" @click.native="ToTop">
+                      <el-menu-item index="5">
+                        <span style="color: red;">管理员页面</span>
+                      </el-menu-item>
+                    </router-link>                  
                   </el-submenu>
                 </el-menu>
               </el-col>
               <el-col :span="4" style="padding-top: 15px;">
                 <el-button type="text" @click="show_members" class="navbar">成员</el-button>
               </el-col>
-              <el-col :span="4" style="padding-top: 15px;">
-                <el-dropdown trigger="hover" v-if="username" style="padding-top: 8px" class="navbar">
-                  <span class="el-dropdown-link user-inner">
-                    {{ username }}
-                    <i class="el-icon-arrow-down el-icon--right"></i>
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="logout"
-                      >退出登录</el-dropdown-item
-                    >
-                  </el-dropdown-menu>
-                </el-dropdown>
-                <el-button type="text" @click="login_show" v-else class="navbar">登录</el-button>
+              <el-col :span="5" style="padding-top: 15px;" v-if="username">
+                <el-row>
+                  <el-dropdown trigger="hover"  style="padding-top: 8px" class="navbar">
+                    <span class="el-dropdown-link user-inner">
+                      {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item @click.native="logout"
+                        >退出登录</el-dropdown-item
+                      >
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </el-row>
+              </el-col>
+              <el-col :span="4" style="padding-top: 15px;" v-else>
+                  <el-button type="text" @click="login_show" class="navbar">登录</el-button>
               </el-col>
               <el-col :span="2" style="padding-top: 15px;">
                 <el-button type="text" @click="register_show" class="navbar">注册</el-button>
@@ -298,7 +309,7 @@
 
 <script>
 // import $ from "jquery";
-import vueImgVerify from "./components/vue-img-verify.vue";
+import vueImgVerify from "./common/components/vue-img-verify.vue";
 export default {
   name: "App",
   components: { vueImgVerify },
@@ -371,11 +382,18 @@ export default {
     // });
   },
   methods: {
+    Get_Priority(){
+      if(sessionStorage.isAdmin){
+        return true
+      }else{
+        return false
+      }
+    },
     Title_Pos(){
       return {
         "font-size": "18px",
         "color": "black",
-        "margin-left": this.Calculate_Title_Margin()
+        "margin-left": "0px"
       }
     },
     Calculate_Title_Margin(){

@@ -131,7 +131,7 @@
               <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">详情</el-button>
             </el-col>
             <el-col :span="3" style="line-height: 40px">
-              <el-button size="medium" plain round type="primary">查看分析报告</el-button>
+              <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id)">查看分析报告</el-button>
             </el-col>
         </el-row>
         <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: -10px; padding-bottom: 20px">
@@ -168,11 +168,10 @@
 
 <script>
 /* eslint-disable */
-import Mathdown from "./Mathdown.vue";
-import UploadImg from "./UploadImg.vue";
-import ComplexInput from "./ComplexInput.vue";
+import Mathdown from "../../common/components/Mathdown.vue";
+import ComplexInput from "../../common/components/ComplexInput.vue";
 export default {
-  components: { Mathdown, UploadImg, ComplexInput },
+  components: { Mathdown, ComplexInput },
   name: "exercise",
   data() {
     return {
@@ -231,6 +230,10 @@ export default {
     this.ToTop()
   },
   methods: {
+    // 查看单题分析报告
+    Check_Analyse(ID){
+      console.log(ID)
+    },
     ToTop(){
       window.scrollTo(0,0);
     },
@@ -345,6 +348,7 @@ export default {
         emulateJSON: true
       })
       .then(function(data) {
+        console.log(data.data);
         this.loading = false;
         this.Expand_List = [];
         this.question_list = [];
@@ -487,7 +491,7 @@ export default {
   height: 20px;
   display: inline-block;
   background: rgba(0, 0, 0, 0.1);
-  background-image: url(../assets/delete.jpeg);
+  background-image: url(./../../assets/delete.jpeg);
   background-size: 10px;
   background-repeat: no-repeat;
   background-position: 50%;

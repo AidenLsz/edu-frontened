@@ -442,9 +442,10 @@
 </template>
 <script>
 
+import ComplexInput from "../../../common/components/ComplexInput.vue"
+
 import OptionQuestions from "./OptionQuestions.vue"
 import FillQuestions from "./FillQuestions.vue"
-import ComplexInput from "./ComplexInput.vue"
 import OptionDisplay from "./OptionDisplay.vue";
 import FillDisplay from "./FillDisplay.vue";
 import AnswerQuestions from "./AnswerQuestions.vue";

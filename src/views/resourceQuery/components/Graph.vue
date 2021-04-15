@@ -704,9 +704,9 @@ export default {
                 buttonFlag = 1;
                 selectedNode.each(function(d) {
                   // 设置配套的图片
-                  d.hideSymbol = require("../assets/hide.png");
-                  d.lockSymbol = require("../assets/unlock.png");
-                  d.searchSymbol = require("../assets/search.png")
+                  d.hideSymbol = require("./../../../assets/hide.png");
+                  d.lockSymbol = require("./../../../assets/unlock.png");
+                  d.searchSymbol = require("./../../../assets/search.png")
                 });
                 hideSymbol.attr("xlink:href", function(d) {
                   return d.hideSymbol;
@@ -1614,9 +1614,9 @@ export default {
                 buttonFlag = 1;
                 selectedNode.each(function(d) {
                   // 设置配套的图片
-                  d.hideSymbol = require("../assets/hide.png");
-                  d.lockSymbol = require("../assets/unlock.png");
-                  d.searchSymbol = require("../assets/search.png");
+                  d.hideSymbol = require("./../../../assets/hide.png");
+                  d.lockSymbol = require("./../../../assets/unlock.png");
+                  d.searchSymbol = require("./../../../assets/search.png");
                 });
                 hideSymbol.attr("xlink:href", function(d) {
                   return d.hideSymbol;
