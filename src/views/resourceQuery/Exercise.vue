@@ -75,7 +75,7 @@
       <el-col :span="2">
         <el-popover
           placement="bottom-start"
-          width="765"
+          width="850"
           trigger="hover">
           <el-checkbox-group v-model="Subject_Type">     
             <el-checkbox label="语文">语文</el-checkbox>
@@ -87,15 +87,16 @@
             <el-checkbox label="物理">物理</el-checkbox>
             <el-checkbox label="化学">化学</el-checkbox>
             <el-checkbox label="生物">生物</el-checkbox>
+            <el-button size="small" plain type="primary" @click="submit()" style="margin-left: 40px; font-size: 14px">确认</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Subject()}}</el-button>
-          <el-button slot="reference" type="text" v-if="Subject_Type.length > 0" @click="Subject_Type = []" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+          <el-button slot="reference" type="text" v-if="Subject_Type.length > 0" @click="Subject_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
       <el-col :span="3">
         <el-popover
           placement="bottom-start"
-          width="425"
+          width="510"
           trigger="hover">
           <el-checkbox-group v-model="Period_Type">     
             <el-checkbox label="小学">小学</el-checkbox>
@@ -103,9 +104,10 @@
             <el-checkbox label="高中">高中</el-checkbox>
             <el-checkbox label="大学">大学</el-checkbox>
             <el-checkbox label="成人">成人</el-checkbox>
+            <el-button size="small" plain type="primary" @click="submit()" style="margin-left: 40px; font-size: 14px">确认</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Period()}}</el-button>
-          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
     </el-row>
@@ -119,27 +121,27 @@
             <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">选项{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown></el-row>
           </el-col>
         </el-row>
-        <el-row style="padding-bottom: 10px; border-bottom: 1px dashed black">
+        <el-row style="margin-bottom: 15px">
             <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem">
               所属题库：{{Question.database}}
             </el-col>
             <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学科：{{Question.subject}}
             </el-col>
-            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
+            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
               题型：{{Question.type}}
             </el-col>
             <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学段：{{Question.period}}
             </el-col>
-            <el-col :span="2" :offset="8" style="line-height: 40px">
+            <el-col :span="2" :offset="6" style="line-height: 40px">
               <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">详情</el-button>
             </el-col>
             <el-col :span="3" style="line-height: 40px">
               <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id)">查看分析报告</el-button>
             </el-col>
         </el-row>
-        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: -10px; padding-bottom: 20px">
+        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: 20px; border-top: 1px dashed black">
           <el-col>
             <span style="margin-bottom: 10px; display: block">答案：</span><Mathdown :content="Question.answer" :name="'Q_' + Question_Index + '_Answer'"></Mathdown>
           </el-col>
@@ -222,6 +224,9 @@ export default {
       // 学科和学段
       Subject_Type: [],
       Period_Type: [],
+      // 上次选择的学科和学段
+      history_Subject_Type: [],
+      history_Period_Type: []
     };
   },
   watch:{
@@ -311,16 +316,38 @@ export default {
       console.log(this.filelists);
       console.log(document.getElementsByTagName("input").value);
     },
+    Same_Check(Arr1, Arr2){
+      if(Arr1.length != Arr2.length){
+        return false
+      }
+      for(let i = 0; i < Arr1.length; i++){
+        if(Arr2.indexOf(Arr1[i]) == -1){
+          return false
+        }
+      }
+      return true
+    },
     submit() {
 
       this.loading = true;
 
-      if(this.old_content == ""){
-        this.old_content = this.content;
-      }else if(this.content != this.old_content){
+      if(this.content != this.old_content){
         this.Page_Index = 1;
-        this.old_content = this.content
       }
+
+      this.old_content = this.content
+
+      if(!this.Same_Check(this.history_Subject_Type, this.Subject_Type)){
+        this.Page_Index = 1;
+      }
+
+      this.history_Subject_Type = this.Subject_Type;
+
+      if(!this.Same_Check(this.history_Period_Type, this.Period_Type)){
+        this.Page_Index = 1;
+      }
+
+      this.history_Period_Type = this.Period_Type;
 
       this.question_list = [];
 
@@ -336,13 +363,6 @@ export default {
           database_list.push(this.database_name[i])
         }
       }
-
-      console.log(database_list)
-      // console.log(this.content, 5, database_list, this.Page_Index);
-      // param.append("content", this.content);
-      // param.append("size", 5);
-      // param.append("database", database_list);
-      // param.append("page_count", this.Page_Index)
 
       var data = JSON.stringify({
         "content": this.content,
