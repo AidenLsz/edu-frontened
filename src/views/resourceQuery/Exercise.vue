@@ -72,7 +72,7 @@
       <el-col :span="2">
         <span style="line-height: 40px; font-weight: bold">筛选条件：</span>
       </el-col>
-      <el-col :span="2">
+      <el-col :span="3">
         <el-popover
           placement="bottom-start"
           width="850"
