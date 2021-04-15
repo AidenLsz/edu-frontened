@@ -42,8 +42,9 @@
     </el-row>
     <!-- 搜索框行 -->
     <el-row type="flex" justify="start" class="SearchArea">
+      <!-- enter.native才能监听到组件化的事件，要注意一下 -->
         <el-col :span="20">
-          <el-input class="SearchInput" v-model="content" type="text">
+          <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit">
             
           </el-input>
         </el-col>
@@ -119,16 +120,16 @@
           </el-col>
         </el-row>
         <el-row style="padding-bottom: 10px; border-bottom: 1px dashed black">
-            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 14px">
+            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem">
               所属题库：{{database_from[Question_Index]}}
             </el-col>
-            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 14px">
+            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学科：{{Question.subject}}
             </el-col>
-            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 14px">
+            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
               题型：{{Question.type}}
             </el-col>
-            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 14px">
+            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学段：{{Question.period}}
             </el-col>
             <el-col :span="2" :offset="8" style="line-height: 40px">
@@ -234,6 +235,11 @@ export default {
     this.ToTop()
   },
   methods: {
+    // 添加监听器
+    addEnterListener(){
+      var Input = document.getElementById("ExerciseInput");
+      Input.addEventListener()
+    },
     // 查看单题分析报告
     Check_Analyse(ID){
       console.log(ID)
@@ -360,6 +366,7 @@ export default {
         this.loading = false;
         this.Expand_List = [];
         this.question_list = [];
+        this.database_from = [];
         var quess = data.data.results;
         var databaseName = data.data.databaseName;
         for(var i = 0; i < quess.length; i++){

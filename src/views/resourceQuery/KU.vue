@@ -26,7 +26,7 @@
     <!-- 搜索框行 -->
     <el-row type="flex" justify="start" class="SearchArea">
         <el-col :span="20">
-          <el-input class="SearchInput" v-model="ku_name" type="text">
+          <el-input class="SearchInput" v-model="ku_name" type="text" @keyup.enter.native="submit(ku_name)">
             
           </el-input>
         </el-col>
