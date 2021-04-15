@@ -94,13 +94,14 @@
       <el-col :span="3">
         <el-popover
           placement="bottom-start"
-          width="340"
+          width="425"
           trigger="hover">
           <el-checkbox-group v-model="Period_Type">     
             <el-checkbox label="小学">小学</el-checkbox>
             <el-checkbox label="初中">初中</el-checkbox>
             <el-checkbox label="高中">高中</el-checkbox>
             <el-checkbox label="大学">大学</el-checkbox>
+            <el-checkbox label="成人">成人</el-checkbox>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Period()}}</el-button>
           <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
@@ -118,16 +119,19 @@
           </el-col>
         </el-row>
         <el-row style="padding-bottom: 10px; border-bottom: 1px dashed black">
-            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 16px">
+            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 14px">
               所属题库：{{database_from[Question_Index]}}
             </el-col>
-            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 16px">
+            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 14px">
               学科：{{Question.subject}}
             </el-col>
-            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 16px; display: none">
+            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 14px">
               题型：{{Question.type}}
             </el-col>
-            <el-col :span="2" :offset="11" style="line-height: 40px">
+            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 14px">
+              学段：{{Question.period}}
+            </el-col>
+            <el-col :span="2" :offset="8" style="line-height: 40px">
               <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">详情</el-button>
             </el-col>
             <el-col :span="3" style="line-height: 40px">
@@ -328,6 +332,8 @@ export default {
           database_list.push(this.database_name[i])
         }
       }
+
+      console.log(database_list)
       // console.log(this.content, 5, database_list, this.Page_Index);
       // param.append("content", this.content);
       // param.append("size", 5);
@@ -338,7 +344,9 @@ export default {
         "content": this.content,
         "size": 5,
         "database": database_list,
-        "page_count": this.Page_Index
+        "page_count": this.Page_Index,
+        "subject": this.Subject_Type,
+        "period": this.Period_Type
       })
 
       param.append("data", data);
