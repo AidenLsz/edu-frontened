@@ -121,7 +121,7 @@
         </el-row>
         <el-row style="padding-bottom: 10px; border-bottom: 1px dashed black">
             <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem">
-              所属题库：{{database_from[Question_Index]}}
+              所属题库：{{Question.database}}
             </el-col>
             <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学科：{{Question.subject}}
@@ -208,8 +208,6 @@ export default {
       // public, neea, iflytek
       database_aim: [true, false, false],
       database_name: ['public', 'neea', 'iflytek'],
-      // 这些数据依次来源于哪里
-      database_from: [],
       // 检测是否要展开答案和解析内容
       Expand_List: [],
       // 页码
@@ -366,12 +364,9 @@ export default {
         this.loading = false;
         this.Expand_List = [];
         this.question_list = [];
-        this.database_from = [];
         var quess = data.data.results;
-        var databaseName = data.data.databaseName;
         for(var i = 0; i < quess.length; i++){
           this.question_list.push(quess[i])
-          this.database_from.push(databaseName[i])
           this.Expand_List.push(false);
         }
         this.Total_Count = data.data.totalLength
