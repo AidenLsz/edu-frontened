@@ -113,7 +113,7 @@
     </el-row>
     <el-row v-for="(Question, Question_Index) in question_list" :key="Question_Index" style="margin-bottom: 50px">
       <el-col :span="17" class="quesCard">
-        <el-row style="text-align: left; padding-left: 40px; padding-top: 10px; background: white; padding-bottom: 15px">
+        <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
           <el-col style="padding-bottom: 15px">
             <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
           </el-col>
@@ -122,7 +122,7 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 15px">
-            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem">
+            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
               所属题库：{{Question.database}}
             </el-col>
             <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
@@ -134,7 +134,7 @@
             <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学段：{{Question.period}}
             </el-col>
-            <el-col :span="2" :offset="6" style="line-height: 40px">
+            <el-col :span="2" :offset="9" style="line-height: 40px">
               <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">详情</el-button>
             </el-col>
             <el-col :span="3" style="line-height: 40px">
