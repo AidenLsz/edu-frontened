@@ -1,22 +1,35 @@
 import Vue from "vue";
 import Router from "vue-router";
-import KU from "@/components/KU";
-import Exercise from "@/components/Exercise";
-import Home from "@/components/Home";
-import Login from "@/components/Login";
-import Admin from "@/components/Admin";
-import Estimate from "@/components/Estimate";
-import Similarity from "@/components/Similarity";
-import InputMarked from "@/components/InputMarked";
-import InputPaper from "@/components/InputPaper";
-import InputMarkedPreview from "@/components/InputMarkedPreview";
-import Register from "@/components/Register";
-import TestPage from "@/components/TestPage";
-import TestPageList from "@/components/TestPageList";
-import FileUpload from "@/components/Upload";
-import Members from "@/components/Members_Introduce";
-import PaperAnalyse from "@/components/PaperAnalyse";
-import QuestionAnalyse from "@/components/QuestionAnalyse";
+
+// Views主目录
+import Admin from "@/views/Admin";
+import Estimate from "@/views/Estimate";
+import Home from "@/views/Home";
+import Members from "@/views/Members_Introduce";
+import Similarity from "@/views/Similarity";
+
+// 资源查询类页面
+import KU from "@/views/resourceQuery/KU.vue";
+import Exercise from "@/views/resourceQuery/Exercise";
+
+// 资源录入类页面
+import InputMarked from "@/views/resourceInput/InputMarked";
+import InputPaper from "@/views/resourceInput/InputPaper";
+
+// 测试类页面，用于测试新功能的导入
+import TestPage from "@/views/testPage/TestPage";
+import TestPageList from "@/views/testPage/TestPageList";
+
+// 资源分析类页面
+import PaperAnalyse from "@/views/resourceAnalyse/PaperAnalyse";
+import QuestionAnalyse from "@/views/resourceAnalyse/QuestionAnalyse";
+
+// 历史遗留问题类页面，留着防止报错无法回滚
+// import Login from "@/components/Login";
+// import InputMarkedPreview from "@/components/InputMarkedPreview";
+// import Register from "@/components/Register";
+// import FileUpload from "@/components/Upload";
+
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
@@ -57,27 +70,27 @@ const router = new Router({
       component: InputMarked,
     },
     {
-      path: "/TestPage",
+      path: "/testPage",
       name: "TestPage",
       component: TestPage
     },
     {
-      path: "/TestPageList",
+      path: "/testPageList",
       name: "TestPageList",
       component: TestPageList
     },
     {
-      path: "/Members",
+      path: "/members",
       name: "Members",
       component: Members
     },
     {
-      path: "/PaperAnalyse",
+      path: "/paperAnalyse",
       name: "PaperAnalyse",
       component: PaperAnalyse
     },
     {
-      path: "/QuestionAnalyse",
+      path: "/questionAnalyse",
       name: "QuestionAnalyse",
       component: QuestionAnalyse
     },
@@ -86,26 +99,26 @@ const router = new Router({
       name: "inputPaper",
       component: InputPaper,
     },
-    {
-      path: "/inputMarkedPreview",
-      name: "inputMarkedPreview",
-      component: InputMarkedPreview,
-    },
-    {
-      path: "/login",
-      name: "Login",
-      component: Login,
-    },
-    {
-      path: "/register",
-      name: "Register",
-      component: Register,
-    },
-    {
-      path: "/fileUpload",
-      name: "FileUpload",
-      component: FileUpload,
-    },
+    // {
+    //   path: "/inputMarkedPreview",
+    //   name: "inputMarkedPreview",
+    //   component: InputMarkedPreview,
+    // },
+    // {
+    //   path: "/login",
+    //   name: "Login",
+    //   component: Login,
+    // },
+    // {
+    //   path: "/register",
+    //   name: "Register",
+    //   component: Register,
+    // },
+    // {
+    //   path: "/fileUpload",
+    //   name: "FileUpload",
+    //   component: FileUpload,
+    // },
     {
       path: "/admin",
       name: "Admin",
@@ -114,59 +127,59 @@ const router = new Router({
         {
           path: "/eduData",
           name: "eduData",
-          component: () => import("@/components/admin/EduData.vue"),
+          component: () => import("@/views/admin/EduData.vue"),
         },
         {
           path: "/concept",
           name: "concept",
-          component: () => import("@/components/admin/concept.vue"),
+          component: () => import("@/views/admin/concept.vue"),
         },
         {
           path: "/knowledgePoint",
           name: "knowledgePoint",
-          component: () => import("@/components/admin/knowledgePoint.vue"),
+          component: () => import("@/views/admin/knowledgePoint.vue"),
         },
         {
           path: "/KPNew",
           name: "KPNew",
-          component: () => import("@/components/admin/KPNew.vue"),
+          component: () => import("@/views/admin/KPNew.vue"),
         },
         {
           path: "/relation",
           name: "relation",
-          component: () => import("@/components/admin/relation.vue"),
+          component: () => import("@/views/admin/relation.vue"),
         },
         {
           path: "/neeaNode",
           name: "neeaNode",
-          component: () => import("@/components/admin/neeaNode.vue"),
+          component: () => import("@/views/admin/neeaNode.vue"),
         },
         {
           path: "/importNode",
           name: "importNode",
-          component: () => import("@/components/admin/importNode.vue"),
+          component: () => import("@/views/admin/importNode.vue"),
         },
         {
           path: "/importEdge",
           name: "importEdge",
-          component: () => import("@/components/admin/importEdge.vue"),
+          component: () => import("@/views/admin/importEdge.vue"),
         },
         {
           path: "/bulkImport",
           name: "bulkImport",
-          component: () => import("@/components/admin/bulkImport.vue"),
+          component: () => import("@/views/admin/bulkImport.vue"),
         },
         {
           path: "/checkExercise",
           name: "checkExercise",
-          component: () => import("@/components/admin/checkExercise.vue"),
+          component: () => import("@/views/admin/checkExercise.vue"),
         },
       ],
     },
     {
       name: "404",
       path: "/404",
-      component: () => import("@/components/404.vue"),
+      component: () => import("@/views/404.vue"),
     },
     {
       path: "*",

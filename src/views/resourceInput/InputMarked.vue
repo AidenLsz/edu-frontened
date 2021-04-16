@@ -432,18 +432,18 @@
 
 import FileSaver from "file-saver";
 
-import ComplexInput from './ComplexInput.vue'
+import ComplexInput from '../../common/components/ComplexInput.vue'
 
-import OptionDisplay from './OptionDisplay.vue'
-import OptionQuestions from './OptionQuestions.vue'
-import FillQuestions from "./FillQuestions.vue"
-import FillDisplay from "./FillDisplay.vue";
-import AnswerQuestions from "./AnswerQuestions.vue";
-import AnswerDisplay from "./AnswerDisplay.vue";
-import MixQuestions from "./MixQuestions.vue";
-import MixDisplay from "./MixDisplay.vue";
+import OptionDisplay from './components/OptionDisplay.vue'
+import OptionQuestions from './components/OptionQuestions.vue'
+import FillQuestions from "./components/FillQuestions.vue"
+import FillDisplay from "./components/FillDisplay.vue";
+import AnswerQuestions from "./components/AnswerQuestions.vue";
+import AnswerDisplay from "./components/AnswerDisplay.vue";
+import MixQuestions from "./components/MixQuestions.vue";
+import MixDisplay from "./components/MixDisplay.vue";
 
-import Mathdown from "./Mathdown.vue";
+import Mathdown from "../../common/components/Mathdown.vue";
 
 // import Vue from "vue";
 export default {
@@ -1583,7 +1583,7 @@ export default {
 </script>
 <style lang="less" scoped>
 #import_paper {
-  background: url("../assets/sub_bg.png");
+  background: url("./../../assets/sub_bg.png");
   background-size: 100%;
   padding: 20px 20px 0px 20px;
 }

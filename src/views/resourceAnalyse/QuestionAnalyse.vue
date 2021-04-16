@@ -246,9 +246,9 @@
  
 <script>
 
-import PaperAnalyseQuestion from "./PaperAnalyseQuestion.vue";
-import PaperAnalysePackedQuestion from './PaperAnalysePackedQues.vue'
-import Mathdown from "./Mathdown.vue"
+import PaperAnalyseQuestion from "./components/PaperAnalyseQuestion.vue";
+import PaperAnalysePackedQuestion from './components/PaperAnalysePackedQues.vue'
+import Mathdown from "../../common/components/Mathdown.vue"
 
 export default {
   name: "QuestionAnalyse",

@@ -125,7 +125,7 @@
 </template>
 <script>
 
-import Mathdown from "./Mathdown.vue";
+import Mathdown from "./../../../common/components/Mathdown.vue";
 export default {
     components: { Mathdown },
     name: "OptionDisplay",

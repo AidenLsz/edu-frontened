@@ -41,7 +41,7 @@
   </div>
 </template>
 <script>
-import Mathdown from "./Mathdown.vue";
+import Mathdown from "../components/Mathdown.vue";
 export default {
   components: { Mathdown },
   data() {
