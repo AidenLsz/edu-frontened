@@ -32,7 +32,7 @@
                 v-model="verifyCode"
                 auto-complete="off"
                 placeholder="请输入验证码"
-              ></el-input>     
+              ></el-input>
             </el-col>
             <el-col :span="8" :offset="1">
               <el-row type="flex" justify="end" >
@@ -60,7 +60,7 @@
       </el-row>
     </el-dialog>
     <!-- 注册 -->
-    <el-dialog :visible.sync="register_visible"  width="70%" style="margin-top: -13vh;"> 
+    <el-dialog :visible.sync="register_visible"  width="70%" style="margin-top: -13vh;">
       <el-row>
         <el-col :span="10" :offset="2">
           <el-row>
@@ -153,7 +153,7 @@
                 v-model="verifyCode_reg"
                 auto-complete="off"
                 placeholder="请输入验证码"
-              ></el-input>     
+              ></el-input>
             </el-col>
             <el-col :span="8" :offset="1">
               <el-row type="flex" justify="end" >
@@ -213,15 +213,15 @@
                         <el-menu-item index="2-1">
                           <span style="color: black;">试题检索</span>
                         </el-menu-item>
-                      </router-link>                  
-                      
+                      </router-link>
+
                       <router-link to="/ku" :underline="false" @click.native="ToTop">
                         <el-menu-item index="2-2">
                           <span style="color: black;">知识单元检索</span>
                         </el-menu-item>
                       </router-link>
                       <el-menu-item index="2-3"><span style="color: Gainsboro;">学习资源</span></el-menu-item>
-                      
+
                     </el-submenu>
                     <el-submenu index="3">
                       <template slot="title"><span style="color: black;">分析</span></template>
@@ -297,8 +297,8 @@
             <el-link :underline="false" style="color: #9B9EA4; font-size: 16px">联系我们</el-link>
         </el-row>
         <el-row  type="flex" justify="center" style="margin-top: 15px">
-          <el-link @click="TeMethod()" :underline="false" style="padding-right: 10px; color: #9B9EA4; font-size: 16px">LUNA水镜智能</el-link> 
-          © 
+          <el-link @click="TeMethod()" :underline="false" style="padding-right: 10px; color: #9B9EA4; font-size: 16px">LUNA水镜智能</el-link>
+          ©
           <el-link href="http://bigdata.ustc.edu.cn/" target="_blank" :underline="false" style="padding-left: 10px; color: #9B9EA4; font-size: 16px">大数据分析与应用安徽省重点实验室</el-link>
         </el-row>
       </el-col>
@@ -427,14 +427,14 @@ export default {
       this.register_visible = false;
       this.login_visible = true;
       setTimeout(()=>{
-        this.$refs.vueImgVerify.handleDraw();}, 
+        this.$refs.vueImgVerify.handleDraw();},
       1)
     },
     register_show(){
       this.login_visible = false;
       this.register_visible = true;
       setTimeout(()=>{
-        this.$refs.vueImgVerify_reg.handleDraw();}, 
+        this.$refs.vueImgVerify_reg.handleDraw();},
       1)
     },
     register() {
