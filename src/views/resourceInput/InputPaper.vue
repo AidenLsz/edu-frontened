@@ -1388,11 +1388,9 @@ export default {
               this.Init_Question_Check();
               this.loading = false;
             }else{
-              console.log("Data Get");
               this.downloadPaper = data.body.Download_Paper;
               this.downloadAnswer = data.body.Download_Answer;
               this.TestData = data.body.TestData;
-              console.log(this.TestData);
               this.Init_Question_Check();
               this.loading = false;
             }
@@ -3403,12 +3401,15 @@ export default {
           this.TestData.doc[Question_Index].question_options.splice(Index, 1, Stem)
         return String.fromCharCode(Index + 65) + "$：$" + Stem
     },
-    Get_Sub_Question(Stem){
+    Get_Sub_Question(Stem, Question_Index, Sub_Question_Index){
         for(var key in this.TestData.img){
             var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
             if(Img_Name_Catcher.exec(Stem) != null){
-                Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
+                Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">') 
             }
+        }
+        if(this.TestData.doc[Question_Index].sub_questions[Sub_Question_Index] != Stem){
+          this.TestData.doc[Question_Index].sub_questions.splice(Sub_Question_Index, 1, Stem);
         }
         return Stem
     },
