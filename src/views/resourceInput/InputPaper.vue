@@ -352,7 +352,7 @@
         <el-row 
           v-if="file_item.length == 0 && !(TestData.doc)"
           v-loading="loading"
-          element-loading-text="加载中，请等待"
+          :element-loading-text="Waiting_Text"
           element-loading-spinner="el-icon-loading"
           style="height: 300px"
           >
@@ -1157,7 +1157,9 @@ export default {
       downloadPaperName: "",
       downloadAnswerName: "",
       // 下载doc/docx格式时用的等待变量
-      downloading: false
+      downloading: false,
+      // 等待信息
+      Waiting_Text: "切分试卷中，请等待......"
     };
   },
   computed: {
@@ -1288,11 +1290,20 @@ export default {
     uploadFile(formData, config, e) {
 
       this.loading = true;
+
+      setTimeout(()=>{
+        if(this.loading){
+          this.Waiting_Text = "切分已超过预期时间，您可以选择继续等待，刷新页面或更换试卷重试。"
+        }
+      }, 30000);
+
       this.$http
         .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
         .then(function(data) {
 
           this.Clear();
+
+          console.log(new Date().getTime())
 
           // 这里是处理英语试卷的逻辑部分，数学试卷的逻辑部分另写
           if(this.paper_type == '0'){
@@ -1377,6 +1388,8 @@ export default {
             // 最后是一个收尾用的标记标签，没有实际意义，但有功能意义
             this.file_item_label.push(-1)
           } else if (this.paper_type == '1'){
+
+            this.Waiting_Text = "已获取切分结果，正在排版显示内容......"
 
             this.ImportFile();
 
@@ -2277,6 +2290,8 @@ export default {
 
       this.downloadPaper = ""
       this.downloadAnswer = ""
+
+      this.Waiting_Text = "切分试卷中，请等待......"
 
       this.format = "3"
       this.loading = false
