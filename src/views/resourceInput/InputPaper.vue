@@ -1303,8 +1303,6 @@ export default {
 
           this.Clear();
 
-          console.log(new Date().getTime())
-
           // 这里是处理英语试卷的逻辑部分，数学试卷的逻辑部分另写
           if(this.paper_type == '0'){
 

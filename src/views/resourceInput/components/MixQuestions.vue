@@ -855,7 +855,36 @@ export default {
                 this.questionInfos.sub_questions_collapse.splice(index, 1, true);
             }
 
-        }
+        },
+        uploadImg(e, type) {
+
+            let _this = this;
+            let length = e.target.files.length;
+
+            for (var i = 0; i < length; i++) {
+                let reader = new FileReader();
+                reader.readAsDataURL(e.target.files[i]);
+                reader.onloadend = function() {
+                    if(type == 'content'){
+                        _this.questionInfos.content_images.push(this.result);
+                    }else if(type == 'answer'){
+                        _this.questionInfos.answer_images.push(this.result);
+                    }else if(type == 'analyse'){
+                        _this.questionInfos.analyse_images.push(this.result);
+                    }
+                };
+            }
+
+            this.clearImgSelector(e);
+
+        },
+        clearImgSelector(e){
+
+            e.target.type = "text";
+            e.target.value = "";
+            e.target.type = "file";
+
+        },
 
     }
 }
