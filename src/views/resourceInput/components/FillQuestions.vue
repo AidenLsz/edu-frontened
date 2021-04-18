@@ -17,33 +17,28 @@
             <!-- 左边组，第一行是分值和显示分值的地方 -->
             <!-- 第二行是添加选项，预览题目效果 -->
             <el-col :span="6">
-                <el-row>
-                    <el-col :span="6" style="padding-top: 4px">
-                        <span style="font-size: 15px; font-weight: bold">分值</span>
-                    </el-col>
-                    <el-col :span="18">
-                        <el-input type="number" min="1" max="100" step="0.1" v-model="questionInfo.score" size="mini" style="font-size: 15px"></el-input>
-                    </el-col>
+                <el-row type="flex" justify="start">
+                    <label style="padding-left: 5px; font-size: 15px; display: inline-block; width: 60px; padding-top:4px">分值：</label>
+                    <el-input type="number" min="1" max="100" step="0.1" v-model="questionInfo.score" size="mini" style="font-size: 15px; width: 100px; margin-left: 20px"></el-input>
+                    <label style="font-size: 15px; display: inline-block; width: 20px; padding-top:4px; margin-left: 20px">分</label>
                 </el-row>
                 <br/>
-                <el-row style="padding-left: 20px">
-                    <el-col :span="12">
-                        <el-button size="mini" style="font-size: 12px" @click="Fill_Add()">
-                            <i class="el-icon-edit"></i>
-                            添加占位符
-                        </el-button>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-button size="mini" style="font-size: 12px" @click="Open_Preview()">
-                            <i class="el-icon-search"></i>
-                            预览本题
-                        </el-button>
-                    </el-col>
+                <el-row type="flex" justify="center">
+                    <el-button size="mini" style="font-size: 12px; margin-left: 5px" @click="Fill_Add()">
+                        <i class="el-icon-edit"></i>
+                        添加占位
+                    </el-button>
+                    <el-button size="mini" style="font-size: 12px; margin-left: 20px" @click="Open_Preview()">
+                        <i class="el-icon-search"></i>
+                        预览本题
+                    </el-button>
                 </el-row>
             </el-col>
             
             <el-col :span="2" style="padding-top: 4px">
-                <span style="font-size: 15px; font-weight: bold">题目</span>
+                <el-row type="flex" justify="center">
+                    <span style="font-size: 15px; font-weight: bold">题目</span>
+                </el-row>
             </el-col>
             <el-col :span="16">
                 <el-row>
@@ -53,11 +48,11 @@
                             v-model="questionInfo.content" 
                             :autosize="{minRows: 2, maxRows: 4}" 
                             resize="none" 
-                            style="font-size: 15px"
+                            style="font-size: 15px; padding-right: 15px"
                             placeholder="请输入题目内容（必填）">
                         </el-input>
                     </el-col>
-                    <el-col :span="5" :offset="1">
+                    <el-col :span="6" style="margin-left: -5px">
                         <el-row type="flex" justify="center">
                             <label>
                                 添加图片
@@ -244,7 +239,7 @@
         </el-row>
         <!-- 确认完成的按钮 -->
         <br/>
-        <el-row>
+        <el-row type="flex" justify="center">
             <el-button type="success" @click="Edit_Finish()">
                 <i class="el-icon-check"></i>
                 编辑完成
@@ -412,7 +407,7 @@ export default {
 
             var Result = true;
             
-            if(this.questionInfo.content == ""){
+            if(this.questionInfo.content == "" && this.questionInfo.content_images.length == 0){
                 Result = false
             }
 
@@ -446,6 +441,7 @@ export default {
   font-size: 20px;
   border-radius: 2px;
   border: 1px dashed black;
+  text-align: center;
   cursor: pointer;
 }
 input {

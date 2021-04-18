@@ -352,7 +352,7 @@
         <el-row 
           v-if="file_item.length == 0 && !(TestData.doc)"
           v-loading="loading"
-          element-loading-text="加载中，请等待"
+          :element-loading-text="Waiting_Text"
           element-loading-spinner="el-icon-loading"
           style="height: 300px"
           >
@@ -737,6 +737,11 @@
             <label>导出题目</label>
           </el-button>
         </el-row>
+        <el-row type="flex" justify="center" style="padding-top: 30px">
+          <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('analyse')">
+            <label>试卷分析</label>
+          </el-button>
+        </el-row>
         <el-row 
           v-loading="downloading"
           element-loading-text="加载中，请等待"
@@ -798,10 +803,10 @@
           <!-- 第一行：大题编号，添加新的小题，题目类型，上移，下移，删除，题目说明 -->
           <el-row style="margin-top: 20px">
             <el-col :span="2" style="font-size: 18px; padding-top: 8px">
-              <label><span>第{{Bundle_Index + 1}}大题</span></label>
+              <label>第{{Bundle_Index + 1}}大题</label>
             </el-col>
             <el-col :span="2" style="font-size: 18px; padding-top: 8px">
-              <label><span>{{Get_Bundle_Type_Label(Question_Bundle)}}</span></label>
+              <label>{{Get_Bundle_Type_Label(Question_Bundle)}}</label>
             </el-col>
             <el-col :span="1" style="padding-top: 5px">
               <el-button circle plain size="small" type="message" @click="New_Question(Bundle_Index, Question_Bundle)">
@@ -829,7 +834,7 @@
           </el-row>
           <!-- 之后的每一行，读取这个大题中的一个题目，然后进行对应的渲染 -->
           <el-row v-for="(Question, Question_Index) in Question_Bundle.Bundle_Questions" :key="Question_Index">
-              <el-col :offset="2">
+              <el-col style="margin-left: 50px; margin-top: 5px">
                   <!-- 编辑题目，上移，下移，删除，折叠/展开按钮 -->
                   <el-row style="margin-top: 5px; margin-bottom: 10px">
                       <el-col :span="2" style="text-align: left; font-size: 16px; padding-top: 4px">
@@ -889,16 +894,14 @@
                       </el-col>
                   </el-row>
                   <!-- 展开模式交给Display来负责，折叠模式为了避免样式报错，直接转换成文字格式 -->
-                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index] == false">
+                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index] == false"  style="text-align: left">
                       <OptionDisplay v-if="Question.type == 'option'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></OptionDisplay>
                       <FillDisplay v-else-if="Question.type == 'fill'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></FillDisplay>
                       <AnswerDisplay v-else-if="Question.type == 'answer'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></AnswerDisplay>
                       <MixDisplay v-else-if="Question.type == 'mix'" :QI="Question" :BI="'Bundle_' + Bundle_Index"></MixDisplay>
                   </el-row>
-                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index]" style="text-align: left; font-size: 14px">
-                      <el-col :offset="1">
-                          <label>{{Get_Collapse_Show(Question)}}</label>
-                      </el-col>
+                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index]" style="text-align: left; font-size: 14px; padding-left: 22px">
+                      <label>{{Get_Collapse_Show(Question)}}</label>
                   </el-row>
               </el-col>
           </el-row>
@@ -1157,7 +1160,9 @@ export default {
       downloadPaperName: "",
       downloadAnswerName: "",
       // 下载doc/docx格式时用的等待变量
-      downloading: false
+      downloading: false,
+      // 等待信息
+      Waiting_Text: "切分试卷中，请等待......"
     };
   },
   computed: {
@@ -1206,7 +1211,6 @@ export default {
         return totalScore;
       },
       set: function(value) {
-        console.log(value);
         this.total_score = value;
       }
     },
@@ -1286,33 +1290,15 @@ export default {
     // 处理导入试卷功能时所使用的提交方法
     // 选择上传
     uploadFile(formData, config, e) {
-      this.TestData = {
-                "doc": [
-                    {
-                        "question_stem": "已知集合<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD0AAAAVCAYAAAD1neayAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACUklEQVR4nO2WQUhVQRSGj5WlhSktLDQMxYVhiJhIVAjRok1lIJgktNRN5MJF1CbSlRv3iUK72rQRISgsCBJCrEWLVALNEoNM0iQKivx/zlwcr3Pfvfe9KwTeHz54d97MmTMz55wZkVSpdryqQdk22O0C8+BzgjZPgD/gA7iYrZHDYBUMJ+SUpzzwHTSAXabtMngPfoEJcCrD+LPgMVgGP8Bb0Gn+ywftYDJb54bAp1wMBKhI1GFPjWABnAfFok5/EXeE7QH/wDNwHBSIbt4bcNP0OWTGx1Y9eAj6RXc/PxsjASoBS9Y35+nw9ekFfY6x3qKP+tp5+q8D7EfWE3BMdNc5SZ1j4kxMZbDNtFmwvpnXpb4+Z8CLGP7WgnHz+4BoWsZSq2zsco3oIq7HNRIghmMPGLHafjv6VYLpGHZvgxvWN4tki0SM0H3gpehuUSw0a2AghgNBYnHyosDO16BFZ4oWWyfBK9m8wAvGLucrCDNwC8yCUQtWyOdWn1zCez+4K5rHnnIJbxa/GVDla+f8rBN7wwyUmokKRXfHg1fWtwgORBVPed76fgSu+frcE3ch87Tb9HkqW6s8ff4Z1ZlB0Oxo7xY9vYqohkLkr65Noqd9DhwEbaJXTrnoQXz0jWflHgN3ZOOeZ9tcgH2nOJBhzNy97/vvqujlz0XzSqgMXVK4ih1OXRENSeYh3wWnTfsl0feC7euSuFNqzvThor8m4Gei4otsRTQP80L6PgBHYthm2DPP32Xl2TaL19aibL6vcxXf3n9F60VbgnZTpUqV6v/ROnFRg4bmlEXFAAAAAElFTkSuQmCC\">，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHEAAAAVCAYAAABxGwGcAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAC40lEQVR4nO2Y3YtPQRjHn127+kWsKO8XKBfiQkvavFyIKHm72oRrbuRGLuyF1xt/ggsXm/KSUkgSyRUloVBeUta2IuS1RBHfr+esPab5nTMzZw61zbc+tTt75nueZ87MMzMrkpSUlJRUk8aChQadYGoN79oO+sFADd7DRfPAd/AUrHXtNB8cBT9BLzgMjoDX4BoYGSm4FvBBdIK0evRbCs6Ad+AzuAu2RYqJ2imaa5nWg4fgK7gFuip6FuXVDjaB2w5x/dEG0Y84Lte2MWtb5WNUoDGiAfuoLYvhCpgDGqKT4I7oQFXVXvAMvC15jtXpBVgBOkQH+JXYq5WLp0te47N3OGu/6PLNa2v2ok4fowJxgpQNlqnBZKcb7ZzFNyvGw4HjTJ/tENdJsMVoOwgOBXq65OU9XufA6dzvM8ADcMry4iIeFbxjkuhsjqG54EZFD5Z0ngdcBot7+ESjbYnodhPqaVM+r9Hgk09nHjYeg0vgumiN5j7ZFhCITZyhu8D5SH57wI5IXi4D/s3SNlN0zEI9bTLz4nfhVtde1nGC6CpaY7Q9AccCAjHVJUOrNMaJd4HoRCtNzFFVPmKzyhPyEW15rc7ezfFrFHVemT00xWg/Ln9fBaqU01Fgn+jeYvr4JMuDBSfXLMvfQn1jllMfz7ya5cXx5F5cekPYDV5a2u+BCx6BlImrsD+w7whwAFyW+PdXlwHn2WCz0cZ4zIONjydVlBdX3hcHj986AS4abbyv8D60zNXEQaH7BE9wV0GPDN0v2dYnujqeR47L5rlIdDUuFz24dIse/6c1ed7Fsygvm4dVDIAHmfeiK4Q/82OyRJwFi8sMPNXhEpSh1qyPrXT3gXWiB7AQNSyeAwWevDezvHGP4jVicHzyz7t6luVF8SO+CcytNvE/Nh9F635LJM9eMDmSV6iny/O+niyz3Cfve/T5Z+I1g/tvrPvicBT/d/pDtDp2/+dYkpKSkpKSkpLq1S9O4dRshV/wngAAAABJRU5ErkJggg==\">,则<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAATCAYAAADSz14iAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABeUlEQVR4nO2VzSsFURiHj48F8pG4K0U+NreUhbsVEgvFxs5C/gPK2kI27JGdbJSSDW5IipCsJQtZSCwUWdgoH8/pvGqcO3duXndza3711MzvzHk/zpwzY0yswlQTNOcpVhWkPDqhEYrzlCNr4kc4Chn7UsRrh0WZuw5zsAC3cAUNujJzax7u4BWKvDFNI1a9Mrc14CXFm1LGjFQb7MGkJGnxxrWN2GJfzO+FSUm8MWXMSG1CB3RLkhFvXNvIGhwG7hOwD+dQHpIjF5EagCW5roZPmA1JotG1cWdi17izZ7ftFtQq42VVKZxAXcC7gW3vOU0jlfABowHPvgX7hi4U8SI1AffGFf7Dk3hBaRrpknlJz58WvyYkh2pr1cMxVEBZgBmZlPhnI3aR3kzmP2PDuO3mfxnVWoa+EH/YuML7A56mkVU487xBeIdxRbwMlcCOcau14o3Zxk6NK/wSesT/SyP2R2cP9zM8yHUaDoz7Yg0p644VK1asAtQ34vhfnssZIN4AAAAASUVORK5CYII=\">",
-                        "question_options": [
-                            "<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAUCAYAAADoZO9yAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABnklEQVR4nO2VTSuEURTHz4xhSFhYKcVkZOGl2Qk7JUOsbUUKxUIWPoB8AWsWVrK2mSU7GwvshAmFvJSivIyX/+keuR3Py6XJ6vnXr+ac55xzz3Pvfc4QRXLTODgHb0WsmQYFcAJGXJMuQC8oEbsf7IMnsAf6AnK7wQa4AY+SNwcSwjA4cmkiTmYnYmJ3gEswAGrAkNitPvkfYAu0g3KJY3tZnpfJC4WKuy5Y9hqYUDHTYCWgkbTyNYM7n/q+qiSzpV/KgwYV0wQOXYqJasGp/I5JI4mghCSYBNuW7wWUqrgK1WyY+PIvWfYBGCVzTD+UIbOtxyDl0MiDYxMtYBdUWb4eMi/C6zV6JfEC82DT8uXp70fTJXEZ5d8BM2Qus6+qwb1le13WKbAaUIO/vAUyR5zyeM67nAxqgqVvNb8Nz5WsNDlI5vNtE/tW5deBHFik7wtp13T+aniIvSofL84X7JnMgMqKnwfbuoq9JnP2GrsRXd9XPBV5kMVD4vh46l2LSr1OcOaaMAuuwPsvFgkTDzme2PwfNlbEupEi/a8+AZZfVlV6+BJ3AAAAAElFTkSuQmCC\">",
-                            "<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAUCAYAAADskT9PAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABTElEQVR4nO3VPS8EQRzH8b/zTEKUREOuUoiHRERP4i1oiBCFRoF3oPEGdGrxCqgkhFIUKgUR8RQ0QkI8rO+YudgbM27sbrm/5JPc7N785z+7e3siedyZwgU+UJOyVhHvOMNE6CS1+BiqzXjaFPkrI9jEPZ5xjEXUit7EOM5DG1A7L5jPSzhFVGGOOr+LXjSgBztYM+cLAZsoK1aK2klHYANF61gXHj11vanHa2zc9p/JVlpxFRu/oa7S4nM4cJxL0sAkVmPjI8yYdX6lzyyintbuDBpQt+NQ9FUoZRhP4r5d32kU/eRupWxgCCcYsI7vY0H0Q+pNs+ifUZIGqrCMPXFfxRc0BdRxLhY/1oIH63w7trEi5S+vyPM5uIHIYRQb1pw7z3cTNXCLfvl5GdlZR2doMVNnENehE+Zxg0/J5r9AvVkvMZuyVp482ecLjVhPCo8W8x8AAAAASUVORK5CYII=\">",
-                            "<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAUCAYAAACJfM0wAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABGUlEQVR4nO2UO27CQBCGRwkQIBIcAQlR8xANJ4CEI1BR8ChoKLgQnIILQI0gvY0QCukTiTf5RzsWK+PF2xLllz6tZ3b878tror+iJliBE4gYanLgCBzQsDVm0yp4lrgG5mALFuBN8jzoO1jaGvNMn+Q5DzagDtLSbiRPUne0Nb5ozyPQ9vV3wNBQb9QL2GmxCzK+Go4dLT6AWJhpF0y13B5EfXVR3+Az0JL3b1QktSSeSdbCeKvFFfAt7+eCzBNgAMZazqXwrZiAPogHmXp6BT9aHHR4bcl74tkn75l60k+Zt+iT1LebkpbjgqHe2pjFl+CD1IFxWw+pN+oLlOh6SUzi/jKpFVipR+p2nen+v4Jv6Jpuz+Bfj6xff6I7U6CJWpgAAAAASUVORK5CYII=\">",
-                            "<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFIAAAAUCAYAAAAeLWrqAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACF0lEQVR4nO2Xy0ocQRSGT2JMTATFZYIghlll4RVE3CfqPIIbRTK6yMaF+gZufAF3gq7EJ0hWAUWXIsaVCy9I4oQkG0lgJl7if6wa6amprkuXQYX64aPpovo/dU5XV1UTRUU9BI2BY3ABntztUO6NcuAcHIAR14e4iO9AnUPfAbAKfoI/YBdMg3rfkSoaJzFwkwbBDiiBL2Ao0NOWC0+qYXBkiXMjnomPHfv+A2ugAzSAN+AzWHANptEM2JfeaeJ4RZAHzfJalO1ZPV1y4brYXnCVoU/fnNLWDk49PFTxTHhlGccyKChtE2ApwNM1F6f6PANll44G8Qz5FvB8i7yaBnwI2pQ2vj8I8NRJl8sZeGp6iIs4CTY9g6kaBfOBHixT0n+pdh3me9sk8C2kLpdt8J5EvWrUJYPwG33tGSwp/jS2SLzJUGUpZCnAU1VaLv3gN+mXgms9J7FLfVQCJzGpD+yBHkMfH7/b/LRdPJMy5bIBpkhsSKlqJLH1++gRmAXrFDabVfluNgXZntWT5ZILz/oXFh+nYEm9BJ/AHFUf3tmjCfzy8Eobh86Hl6ITEmfHJnnl+05LXJOnKRedh1U+hfxBtZ9rhbdgxcMrGV9F58OHYz7WlOU1L9t1cV08TbmoXk76DrrJ/VCepkXQGuiRxcelf5axcT16Scx8J30g8ZdwSfFfuyLenfmP7yvVrs1RUVFRUVH/X1ctY5+FqmqArAAAAABJRU5ErkJggg==\">"
-                        ],
-                        "question_type": "选择题",
-                        "sub_questions": [],
-                        "answer": [
-                            "$A$"
-                        ],
-                        "analysis": "",
-                        "source": "user_input",
-                        "subject": "user_input"
-                    }
-                ]
-              }
-              this.Init_Question_Check();
-      var Flag = true;
-      if(Flag){
-        return 
-      }
+
       this.loading = true;
+
+      setTimeout(()=>{
+        if(this.loading){
+          this.Waiting_Text = "切分已超过预期时间，您可以选择继续等待，刷新页面或更换试卷重试。"
+        }
+      }, 30000);
+
       this.$http
         .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
         .then(function(data) {
@@ -1403,6 +1389,8 @@ export default {
             this.file_item_label.push(-1)
           } else if (this.paper_type == '1'){
 
+            this.Waiting_Text = "已获取切分结果，正在排版显示内容......"
+
             this.ImportFile();
 
             this.TestData = {};
@@ -1413,7 +1401,6 @@ export default {
               this.Init_Question_Check();
               this.loading = false;
             }else{
-              console.log(data.body);
               this.downloadPaper = data.body.Download_Paper;
               this.downloadAnswer = data.body.Download_Answer;
               this.TestData = data.body.TestData;
@@ -1435,8 +1422,6 @@ export default {
       if(e.target.files.length > 0){
 
         let formData = new FormData();
-
-        console.log(e.target.files);
 
         formData.append("files", e.target.files[0]);
         formData.append("paper_type", this.paper_type);
@@ -1632,7 +1617,7 @@ export default {
           emulateJSON: true
         }).then(
         function(data){
-          console.log(data);
+          data
         }
       );
 
@@ -1926,7 +1911,7 @@ export default {
     Del(index_out, index_in) {
 
       if (this.file_item[index_out][index_in].length != 0) {
-        console.log("It's not a divider.");
+        alert("这里不是分界线！");
       } 
 
       else {
@@ -2303,6 +2288,8 @@ export default {
 
       this.downloadPaper = ""
       this.downloadAnswer = ""
+
+      this.Waiting_Text = "切分试卷中，请等待......"
 
       this.format = "3"
       this.loading = false
@@ -3360,7 +3347,663 @@ export default {
                 URL.revokeObjectURL(objectUrl);
               }
             });
-      }
+      }else if(Control == 'analyse'){
+              let Test_Json = {
+                    "id": "af6a45a3-46fa-41d6-ac7e-ae3842ce40fb",
+                    "type": "Paper",
+                    "status": "OK",
+                    "score": 31,
+                    "difficulty_area_score": [
+                        0,
+                        0,
+                        2,
+                        12,
+                        3,
+                        2,
+                        12,
+                        0,
+                        0,
+                        0
+                    ],
+                    "difficulty_statistics": {
+                        "mean": 0.47843202083341535,
+                        "min": 0.29554620385169983,
+                        "max": 0.6161502003669739,
+                        "std": 0.11606908316104704
+                    },
+                    "knowledge_knowledge2num": {
+                        "代数::解析几何": 1,
+                        "三角函数::代数": 2,
+                        "统计与概率::三角函数": 1,
+                        "统计与概率::代数": 1
+                    },
+                    "knowledge2score": {
+                        "解析几何": 4,
+                        "代数": 20,
+                        "立体几何与平面几何": 1,
+                        "三角函数": 20,
+                        "统计与概率": 8
+                    },
+                    "knowledge2difficulty": {
+                        "解析几何": 0.4028695672750473,
+                        "代数": 0.5347670212388038,
+                        "立体几何与平面几何": 0.4640635550022125,
+                        "三角函数": 0.5146675765514374,
+                        "统计与概率": 0.3793210983276367
+                    },
+                    "sub_question": [
+                        {
+                            "id": "43482c08-8c71-4166-8490-2d991ba5be0a",
+                            "type": "PackedQues",
+                            "desc": "填空题",
+                            "level": 1,
+                            "score": 4,
+                            "difficulty_statistics": {
+                                "mean": 0.4028695672750473,
+                                "min": 0.29554620385169983,
+                                "max": 0.5101929306983948,
+                                "std": 0.10732336342334747
+                            },
+                            "knowledge_knowledge2num": {
+                                "解析几何::代数": 1
+                            },
+                            "knowledge2difficulty": {
+                                "解析几何": 0.4028695672750473,
+                                "代数": 0.5101929306983948
+                            },
+                            "knowledge2score": {
+                                "解析几何": 4,
+                                "代数": 2
+                            },
+                            "sub_question": [
+                                {
+                                    "id": "812f1b6f-cd74-41a0-9504-dc4fb9d3871b",
+                                    "type": "Question",
+                                    "level": 2,
+                                    "stem": "在平面直角坐标系$\\LUNALaTexPictureID{57511d56-9861-4de6-a896-e2d3e5ffcf0c}$中，椭圆$C$的中心为原点，焦点$F_{1}$、$F_{2}$在$x$轴上，离心率为$\\frac{\\sqrt{2}}{2}$.过点$F_{1}$的直线$l$交椭圆$C$于$A$、$B$两点，且$\\Delta A B F_{2}$的周长为$16$，那么椭圆$C$的方程为________.",
+                                    "options": "",
+                                    "answer": "$\\frac{x^{2}}{16}+\\frac{y^{2}}{8}=1$",
+                                    "analysis": "",
+                                    "difficulty": 0.29554620385169983,
+                                    "score": 2,
+                                    "knowledge_points_frontend": {
+                                        "kp": [
+                                            "圆锥曲线与方程",
+                                            "解析几何",
+                                            "椭圆的定义、标准方程及简单几何性质",
+                                            "直线与圆锥曲线的关系",
+                                            "直线与椭圆的位置关系及其简单应用",
+                                            "圆锥曲线"
+                                        ],
+                                        "kp_layer": [
+                                            {
+                                                "label": "解析几何",
+                                                "children": [
+                                                    {
+                                                        "label": "圆锥曲线与方程",
+                                                        "children": [
+                                                            {
+                                                                "label": "圆锥曲线",
+                                                                "children": []
+                                                            },
+                                                            {
+                                                                "label": "直线与圆锥曲线的关系",
+                                                                "children": [
+                                                                    {
+                                                                        "label": "直线与椭圆的位置关系及其简单应用",
+                                                                        "children": []
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "kp_priority": [
+                                            "解析几何",
+                                            "圆锥曲线与方程",
+                                            "圆锥曲线",
+                                            "直线与圆锥曲线的关系",
+                                            "直线与椭圆的位置关系及其简单应用"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "id": "3bd039b1-f8e1-425d-aea9-9b33990fe172",
+                                    "type": "Question",
+                                    "level": 2,
+                                    "stem": "过点$\\LUNALaTexPictureID{3907684b-1bfa-4189-bd04-fa59578c7239}$与曲线$f(x)=x^{3}-x^{2}-2 x+1$相切的直线有___________条（以数字作答）.",
+                                    "options": "",
+                                    "answer": "$2$",
+                                    "analysis": "",
+                                    "difficulty": 0.5101929306983948,
+                                    "score": 2,
+                                    "knowledge_points_frontend": {
+                                        "kp": [
+                                            "函数概念与基本初等函数I",
+                                            "代数",
+                                            "函数及其基本性质",
+                                            "解析几何"
+                                        ],
+                                        "kp_layer": [
+                                            {
+                                                "label": "代数",
+                                                "children": [
+                                                    {
+                                                        "label": "函数概念与基本初等函数I",
+                                                        "children": [
+                                                            {
+                                                                "label": "函数及其基本性质",
+                                                                "children": [
+                                                                    {
+                                                                        "label": "函数的概念",
+                                                                        "children": []
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "label": "解析几何",
+                                                "children": []
+                                            }
+                                        ],
+                                        "kp_priority": [
+                                            "代数",
+                                            "解析几何",
+                                            "函数概念与基本初等函数I",
+                                            "函数及其基本性质",
+                                            "函数的概念"
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "9d7f1411-677a-4e69-b34e-e87f28e95a78",
+                            "type": "PackedQues",
+                            "desc": "综合题",
+                            "level": 1,
+                            "score": 13,
+                            "difficulty_statistics": {
+                                "mean": 0.6014587627007411,
+                                "min": 0.4640635550022125,
+                                "max": 0.6161502003669739,
+                                "std": 0.03978468727873507
+                            },
+                            "knowledge_knowledge2num": {
+                                "代数::三角函数": 1
+                            },
+                            "knowledge2difficulty": {
+                                "立体几何与平面几何": 0.4640635550022125,
+                                "三角函数": 0.6129083633422852,
+                                "代数": 0.6129083633422852
+                            },
+                            "knowledge2score": {
+                                "立体几何与平面几何": 1,
+                                "三角函数": 12,
+                                "代数": 12
+                            },
+                            "sub_question": [
+                                {
+                                    "id": "67856dca-708c-4aa2-9fd7-8850e3edafaf",
+                                    "type": "PackedQues",
+                                    "desc": "请解答以下问题。",
+                                    "level": 2,
+                                    "score": 13,
+                                    "difficulty_statistics": {
+                                        "mean": 0.6014587627007411,
+                                        "min": 0.4640635550022125,
+                                        "max": 0.6161502003669739,
+                                        "std": 0.03978468727873507
+                                    },
+                                    "knowledge_knowledge2num": {
+                                        "三角函数::代数": 1
+                                    },
+                                    "knowledge2difficulty": {
+                                        "立体几何与平面几何": 0.4640635550022125,
+                                        "三角函数": 0.6129083633422852,
+                                        "代数": 0.6129083633422852
+                                    },
+                                    "knowledge2score": {
+                                        "立体几何与平面几何": 1,
+                                        "三角函数": 12,
+                                        "代数": 12
+                                    },
+                                    "sub_question": [
+                                        {
+                                            "id": "7c2bcff3-0f75-4062-ab0d-8a9441a74d03",
+                                            "type": "Question",
+                                            "level": 3,
+                                            "stem": "要在边长为$\\LUNALaTexPictureID{8b8cc022-63ff-4645-b27f-628f97765f77}$米的正方形草坪上安装喷水龙头，使整个草坪都能喷洒到水．假设每个喷水龙头的喷洒范围都是关径为$6$米的圆面，则需安装这种喷水龙头的个数最少是（　　）",
+                                            "options": "['$3$', '$4$', '$5$', '$6$']",
+                                            "answer": "$B$",
+                                            "analysis": "",
+                                            "difficulty": 0.4640635550022125,
+                                            "score": 1
+                                        },
+                                        {
+                                            "id": "ef94592e-3828-430c-a629-e23b68f392f3",
+                                            "type": "PackedQues",
+                                            "desc": "设$\\LUNALaTexPictureID{099cfbf5-d63a-4aa7-94d7-49c24cbc7a53}$，曲线$x^{2} \\sin \\theta+y^{2} \\cos \\theta=1$和$x^{2} \\cos \\theta-y^{2} \\sin \\theta=1$有$4$个不同的交点。",
+                                            "level": 3,
+                                            "score": 12,
+                                            "difficulty_statistics": {
+                                                "mean": 0.6129083633422852,
+                                                "min": 0.6096665263175964,
+                                                "max": 0.6161502003669739,
+                                                "std": 0.0032418370246887207
+                                            },
+                                            "knowledge_knowledge2num": {
+                                                "代数::三角函数": 2
+                                            },
+                                            "knowledge2difficulty": {
+                                                "三角函数": 0.6129083633422852,
+                                                "代数": 0.6129083633422852
+                                            },
+                                            "knowledge2score": {
+                                                "三角函数": 12,
+                                                "代数": 12
+                                            },
+                                            "sub_question": [
+                                                {
+                                                    "id": "86ed5c6a-53b0-4dd5-8a70-9860b90897bc",
+                                                    "type": "Question",
+                                                    "level": 4,
+                                                    "stem": "求$\\LUNALaTexPictureID{a9fc567d-485a-4ced-aac9-5bbb70ad7b57}$的取值范围；",
+                                                    "options": "",
+                                                    "answer": "",
+                                                    "analysis": "",
+                                                    "difficulty": 0.6096665263175964,
+                                                    "score": 6
+                                                },
+                                                {
+                                                    "id": "bf446a82-96d6-45fc-ad44-2733d1db8128",
+                                                    "type": "Question",
+                                                    "level": 4,
+                                                    "stem": "证明这$\\LUNALaTexPictureID{79c8ee0e-c76c-4aaa-aa47-2cf575b770e8}$个交点共圆，并求圆半径的取值范围。",
+                                                    "options": "",
+                                                    "answer": "",
+                                                    "analysis": "",
+                                                    "difficulty": 0.6161502003669739,
+                                                    "score": 6
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "knowledge_points_frontend": {
+                                        "kp": [
+                                            "圆内接四边形的性质定理与判定定理",
+                                            "立体几何与平面几何",
+                                            "直线与圆的位置关系（选）",
+                                            "几何证明选讲（选考内容）"
+                                        ],
+                                        "kp_layer": [
+                                            {
+                                                "label": "立体几何与平面几何",
+                                                "children": [
+                                                    {
+                                                        "label": "几何证明选讲（选考内容）",
+                                                        "children": [
+                                                            {
+                                                                "label": "直线与圆的位置关系（选）",
+                                                                "children": [
+                                                                    {
+                                                                        "label": "圆内接四边形的性质定理与判定定理",
+                                                                        "children": []
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "label": "立体几何初步",
+                                                        "children": [
+                                                            {
+                                                                "label": "空间几何体",
+                                                                "children": []
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "kp_priority": [
+                                            "立体几何与平面几何",
+                                            "几何证明选讲（选考内容）",
+                                            "空间几何体",
+                                            "直线与圆的位置关系（选）",
+                                            "圆内接四边形的性质定理与判定定理"
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "ac789714-5394-45f8-9641-966a74a31c67",
+                            "type": "PackedQues",
+                            "desc": "解答题",
+                            "level": 1,
+                            "score": 12,
+                            "difficulty_statistics": {
+                                "mean": 0.37724650899569195,
+                                "min": 0.36151546239852905,
+                                "max": 0.3971267342567444,
+                                "std": 0.014831327958718265
+                            },
+                            "knowledge_knowledge2num": {
+                                "三角函数::代数": 1,
+                                "三角函数::统计与概率": 1,
+                                "代数::统计与概率": 1
+                            },
+                            "knowledge2difficulty": {
+                                "三角函数": 0.3673063963651657,
+                                "代数": 0.36151546239852905,
+                                "统计与概率": 0.3793210983276367
+                            },
+                            "knowledge2score": {
+                                "三角函数": 8,
+                                "代数": 4,
+                                "统计与概率": 8
+                            },
+                            "sub_question": [
+                                {
+                                    "id": "e45b0d29-1444-445f-b71f-f733100f7e91",
+                                    "type": "PackedQues",
+                                    "desc": "某陶瓷厂准备烧制甲、乙、丙三件不同的工艺品，制作过程必须先后经过两次烧制，当第一次烧制合格后方可进入第二次烧制，两次烧制过程相互独立．根据该厂现有的技术水平，经过第一次烧制后，甲、乙、丙三件产品合格的概率依次为$\\LUNALaTexPictureID{a2f1b992-f1f6-4302-be31-1b3ce261c724}$、$0.6$、$0.4$，第二次烧制后，甲、乙、丙三件产品合格的概率依次为$0.6$、$\\LUNALaTexPictureID{a2f1b992-f1f6-4302-be31-1b3ce261c724}$、$0.75$。",
+                                    "level": 2,
+                                    "score": 8,
+                                    "difficulty_statistics": {
+                                        "mean": 0.3793210983276367,
+                                        "min": 0.36151546239852905,
+                                        "max": 0.3971267342567444,
+                                        "std": 0.017805635929107666
+                                    },
+                                    "knowledge_knowledge2num": {
+                                        "代数::三角函数": 1,
+                                        "统计与概率::三角函数": 1,
+                                        "统计与概率::代数": 1
+                                    },
+                                    "knowledge2difficulty": {
+                                        "三角函数": 0.36151546239852905,
+                                        "代数": 0.36151546239852905,
+                                        "统计与概率": 0.3793210983276367
+                                    },
+                                    "knowledge2score": {
+                                        "三角函数": 4,
+                                        "代数": 4,
+                                        "统计与概率": 8
+                                    },
+                                    "sub_question": [
+                                        {
+                                            "id": "ded078a1-20bd-4354-b847-e7b71a02dd40",
+                                            "type": "Question",
+                                            "level": 3,
+                                            "stem": "求第一次烧制后恰有一件产品合格的概率；",
+                                            "options": "",
+                                            "answer": "分别记甲、乙、丙经第一次烧制后合格为事件$\\LUNALaTexPictureID{189b6d98-384d-46b1-9385-7aa84cc67e16}$， $A_{2}$，$A_{3}$设$E$表示第一次烧制后恰好有一件合格，则$P=0.38$::因为每件工艺品经过两次烧制后合格的概率均为$p=0.3$，所以$\\xi \\sim B(30, 0.3)$，故$E \\xi=x p=3 \\times 0.3=0.9$．",
+                                            "analysis": "",
+                                            "difficulty": 0.36151546239852905,
+                                            "score": 4
+                                        },
+                                        {
+                                            "id": "f5c073b3-e0c7-45e4-b8b4-53c97792a3fa",
+                                            "type": "Question",
+                                            "level": 3,
+                                            "stem": "经过前后两次烧制后，合格工艺品的个数为$\\LUNALaTexPictureID{8701cc30-2975-4215-aac0-7418edc597c9}$，求随机变量$\\LUNALaTexPictureID{8701cc30-2975-4215-aac0-7418edc597c9}$的期望．",
+                                            "options": "",
+                                            "answer": "分别记甲、乙、丙经第一次烧制后合格为事件$A_{1}$， $A_{2}$，$A_{3}$设$E$表示第一次烧制后恰好有一件合格，则$P=0.38$::因为每件工艺品经过两次烧制后合格的概率均为$p=0.3$，所以$\\xi \\sim B(30, 0.3)$，故$E \\xi=x p=3 \\times 0.3=0.9$．",
+                                            "analysis": "",
+                                            "difficulty": 0.3971267342567444,
+                                            "score": 4
+                                        }
+                                    ],
+                                    "knowledge_points_frontend": {
+                                        "kp": [
+                                            "随机变量及其分布",
+                                            "统计与概率",
+                                            "概率",
+                                            "离散型随机变量及其分布列",
+                                            "离散型随机变量的均值、方差"
+                                        ],
+                                        "kp_layer": [
+                                            {
+                                                "label": "代数",
+                                                "children": []
+                                            },
+                                            {
+                                                "label": "三角函数",
+                                                "children": []
+                                            },
+                                            {
+                                                "label": "统计与概率",
+                                                "children": [
+                                                    {
+                                                        "label": "概率",
+                                                        "children": [
+                                                            {
+                                                                "label": "概率初步",
+                                                                "children": []
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "kp_priority": [
+                                            "代数",
+                                            "三角函数",
+                                            "统计与概率",
+                                            "概率",
+                                            "概率初步"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "id": "b51bc253-90eb-4968-ba5f-79be3cc808b8",
+                                    "type": "PackedQues",
+                                    "desc": "请计算以下问题。",
+                                    "level": 2,
+                                    "score": 4,
+                                    "difficulty_statistics": {
+                                        "mean": 0.37309733033180237,
+                                        "min": 0.37309733033180237,
+                                        "max": 0.37309733033180237,
+                                        "std": 0.0
+                                    },
+                                    "knowledge_knowledge2num": {},
+                                    "knowledge2difficulty": {
+                                        "三角函数": 0.37309733033180237
+                                    },
+                                    "knowledge2score": {
+                                        "三角函数": 4
+                                    },
+                                    "sub_question": [
+                                        {
+                                            "id": "7db9674f-17be-4b48-bff8-0989d31cb93c",
+                                            "type": "Question",
+                                            "level": 3,
+                                            "stem": "方程$\\LUNALaTexPictureID{828f4cea-bda1-4f8a-8b6c-0f1b85980750}$在区间$(0,2\\pi)$内的解的个数。",
+                                            "options": "",
+                                            "answer": "本小题考查三角方程的解。原方程等价于$\\sin x=0$或$\\cos x=\\frac{1}{2}$，又$x \\in(0,2\\pi)$，∴$x=\\frac{\\pi}{3}$或$x=\\pi$或$x=\\frac{5 \\pi}{3}$。本题难度：中等",
+                                            "analysis": "",
+                                            "difficulty": 0.37309733033180237,
+                                            "score": 4
+                                        }
+                                    ],
+                                    "knowledge_points_frontend": {
+                                        "kp": [
+                                            "三角函数",
+                                            "三角函数的图象与性质",
+                                            "基本初等函数II"
+                                        ],
+                                        "kp_layer": [
+                                            {
+                                                "label": "三角函数",
+                                                "children": [
+                                                    {
+                                                        "label": "基本初等函数II",
+                                                        "children": [
+                                                            {
+                                                                "label": "任意角的三角函数",
+                                                                "children": [
+                                                                    {
+                                                                        "label": "任意角的三角函数（正弦、余弦、正切）的定义",
+                                                                        "children": []
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "label": "三角函数的图象与性质",
+                                                                "children": []
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "kp_priority": [
+                                            "三角函数",
+                                            "基本初等函数II",
+                                            "任意角的三角函数",
+                                            "三角函数的图象与性质",
+                                            "任意角的三角函数（正弦、余弦、正切）的定义"
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "da5146bf-6f05-47d5-bd2b-d77b77a6e576",
+                            "type": "PackedQues",
+                            "desc": "选择题: 请从以下四个选项中，选出一个正确的答案。",
+                            "level": 1,
+                            "score": 2,
+                            "difficulty_statistics": {
+                                "mean": 0.4369961768388748,
+                                "min": 0.4020228981971741,
+                                "max": 0.47196945548057556,
+                                "std": 0.034973278641700745
+                            },
+                            "knowledge_knowledge2num": {},
+                            "knowledge2difficulty": {
+                                "代数": 0.4369961768388748
+                            },
+                            "knowledge2score": {
+                                "代数": 2
+                            },
+                            "sub_question": [
+                                {
+                                    "id": "0b1b75ac-3053-45b5-9244-65b0dbb9d9f1",
+                                    "type": "Question",
+                                    "level": 2,
+                                    "stem": "从$\\LUNALaTexPictureID{59dae23f-c8cd-4771-8711-d6a20d1c0118}$名男生和$3$名女生中选出$3$人，分别从事三项不同的工作，若这$3$人中至少有$1$名女生，则选派方案共有(  )种",
+                                    "options": "['$108$种', '$186$种', '$216$种', '$270$种']",
+                                    "answer": "$B$",
+                                    "analysis": "",
+                                    "difficulty": 0.4020228981971741,
+                                    "score": 1,
+                                    "knowledge_points_frontend": {
+                                        "kp": [
+                                            "排列、组合与二项式定理",
+                                            "代数",
+                                            "计数原理"
+                                        ],
+                                        "kp_layer": [
+                                            {
+                                                "label": "代数",
+                                                "children": [
+                                                    {
+                                                        "label": "不等式",
+                                                        "children": []
+                                                    },
+                                                    {
+                                                        "label": "计数原理",
+                                                        "children": [
+                                                            {
+                                                                "label": "排列、组合与二项式定理",
+                                                                "children": [
+                                                                    {
+                                                                        "label": "排列与组合的简单应用",
+                                                                        "children": []
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "kp_priority": [
+                                            "代数",
+                                            "不等式",
+                                            "计数原理",
+                                            "排列、组合与二项式定理",
+                                            "排列与组合的简单应用"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "id": "4bc1ada9-0364-45be-8f80-4960c9327c20",
+                                    "type": "Question",
+                                    "level": 2,
+                                    "stem": "设函数$\\LUNALaTexPictureID{d6f31644-c14a-4097-9048-9ba0b0f01d01}$,集合$M=\\{x | f(x)<0\\}$,$P=\\left\\{x | f^{\\prime}(x)>0\\right\\}$,若$M\\subset P$,则实数$a$的取值范围是 (     )",
+                                    "options": "['$(-\\infty,1)$', '$(0,1)$', '$(1,+\\infty)$', '$[1,+\\infty)$']",
+                                    "answer": "",
+                                    "analysis": "",
+                                    "difficulty": 0.47196945548057556,
+                                    "score": 1,
+                                    "knowledge_points_frontend": {
+                                        "kp": [
+                                            "代数",
+                                            "集合间的关系与运算",
+                                            "集合"
+                                        ],
+                                        "kp_layer": [
+                                            {
+                                                "label": "代数",
+                                                "children": [
+                                                    {
+                                                        "label": "集合",
+                                                        "children": [
+                                                            {
+                                                                "label": "集合间的关系与运算",
+                                                                "children": [
+                                                                    {
+                                                                        "label": "集合之间的基本关系",
+                                                                        "children": []
+                                                                    },
+                                                                    {
+                                                                        "label": "集合的基本运算",
+                                                                        "children": []
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "kp_priority": [
+                                            "代数",
+                                            "集合",
+                                            "集合间的关系与运算",
+                                            "集合之间的基本关系",
+                                            "集合的基本运算"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+              }
+              sessionStorage.PaperJson = JSON.stringify(Test_Json);
+              let routeData = this.$router.resolve({ path: '/paperAnalyse' });
+              window.open(routeData.href, '_blank');
+            }
 
     },
     // 以下是单题显示配套用的方法
@@ -3369,9 +4012,11 @@ export default {
         this.Submit_Show = true;
         this.Submit();
         this.$message.success("已提交");
+        return
       }).catch(() => {
         this.Submit_Show = true;
         this.$message.info("已取消");
+        return
       })
     },
     Init_Question_Check(){
@@ -3380,7 +4025,7 @@ export default {
 
       for(var i = 0; i < this.TestData.doc.length; i++){
         this.Question_Check.push(false);
-        // this.TestData.doc[i].answer = this.TestData.doc[i].answer.split("::");
+        this.TestData.doc[i].answer = this.TestData.doc[i].answer.split("::");
       }
 
     },
@@ -3421,12 +4066,15 @@ export default {
           this.TestData.doc[Question_Index].question_options.splice(Index, 1, Stem)
         return String.fromCharCode(Index + 65) + "$：$" + Stem
     },
-    Get_Sub_Question(Stem){
+    Get_Sub_Question(Stem, Question_Index, Sub_Question_Index){
         for(var key in this.TestData.img){
             var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
             if(Img_Name_Catcher.exec(Stem) != null){
-                Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
+                Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">') 
             }
+        }
+        if(this.TestData.doc[Question_Index].sub_questions[Sub_Question_Index] != Stem){
+          this.TestData.doc[Question_Index].sub_questions.splice(Sub_Question_Index, 1, Stem);
         }
         return Stem
     },
@@ -3684,58 +4332,62 @@ export default {
     },
     Submit(){
 
-      var Docs = this.TestData.doc;
+      // var Docs = this.TestData.doc;
 
-      for(var i = 0; i < Docs.length; i++){
+      // console.log("Start_Check.")
 
-        var Ques = Docs[i]
+      // for(var i = 0; i < Docs.length; i++){
 
-        var stem = Ques.question_stem;
-        if(!this.ChecK_Do(stem)){
-          this.$message.error({message: "第 "+ (i+1).toString() + " 题题干内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
-                              , offset: 80});
-          return false;
-        }
+      //   var Ques = Docs[i]
 
-        var answer = Ques.answer;
-        for(var j = 0; j < answer.length; j++){
+      //   var stem = Ques.question_stem;
+      //   if(!this.ChecK_Do(stem)){
+      //     this.$message.error({message: "第 "+ (i+1).toString() + " 题题干内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
+      //                         , offset: 80});
+      //     return false;
+      //   }
 
-          var item = answer[j]
+      //   var answer = Ques.answer;
+      //   for(var j = 0; j < answer.length; j++){
+
+      //     var item = answer[j]
             
-          if(item != "" && !this.ChecK_Do(item)){
-            this.$message.error({message: "第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
-                              , offset: 80});
-            return false
-          }
+      //     if(item != "" && !this.ChecK_Do(item)){
+      //       this.$message.error({message: "第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
+      //                         , offset: 80});
+      //       return false
+      //     }
 
-        }
+      //   }
 
-        var analyse = Ques.analysis;
-        if(!this.ChecK_Do(analyse)){
-          this.$message.error({message: "第"+ (i+1).toString() + "题解析内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
-                              , offset: 80});
-          return false;
-        }
+      //   var analyse = Ques.analysis;
+      //   if(!this.ChecK_Do(analyse)){
+      //     this.$message.error({message: "第"+ (i+1).toString() + "题解析内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
+      //                         , offset: 80});
+      //     return false;
+      //   }
       
-        var options = Ques.question_options;
-        for(j = 0; j < options.length; j++){
-          if(!this.ChecK_Do(options[j])){
-            this.$message.error({message: "第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
-                              , offset: 80});
-            return false;
-          }
-        }
+      //   var options = Ques.question_options;
+      //   for(j = 0; j < options.length; j++){
+      //     if(!this.ChecK_Do(options[j])){
+      //       this.$message.error({message: "第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
+      //                         , offset: 80});
+      //       return false;
+      //     }
+      //   }
 
-        var sub_Ques = Ques.sub_questions;
-        for(j = 0; j < sub_Ques.length; j++){
-          if(!this.ChecK_Do(sub_Ques[j])){
-            this.$message.error({message: "第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
-                              , offset: 80});
-            return false;
-          }
-        }
+      //   var sub_Ques = Ques.sub_questions;
+      //   for(j = 0; j < sub_Ques.length; j++){
+      //     if(!this.ChecK_Do(sub_Ques[j])){
+      //       this.$message.error({message: "第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
+      //                         , offset: 80});
+      //       return false;
+      //     }
+      //   }
 
-      }
+      // }
+
+      // console.log("Check_Pass.")
 
       // let config = {
       //     headers: { "Content-Type": "multipart/form-data" }
@@ -3751,112 +4403,112 @@ export default {
       //   console.log(data.data)
       // });
 
-      var Ques_List = [];
+      // var Ques_List = [];
 
-      var Option_Ques = {
-          type: "option",
-          // 分值
-          score: 1,
-          // 题目内容，题目内容图片，是否显示图片
-          content: "",
-          content_images: [],
-          // 选项的部分
-          options: ["", "", "", ""],
-          options_images: ["", "", "", ""],
-          // 答案的部分
-          answer: "",
-          answer_images: [],
-          // 解析的部分
-          analyse: "",
-          analyse_images: []
-      }
+      // var Option_Ques = {
+      //     type: "option",
+      //     // 分值
+      //     score: 1,
+      //     // 题目内容，题目内容图片，是否显示图片
+      //     content: "",
+      //     content_images: [],
+      //     // 选项的部分
+      //     options: ["", "", "", ""],
+      //     options_images: ["", "", "", ""],
+      //     // 答案的部分
+      //     answer: "",
+      //     answer_images: [],
+      //     // 解析的部分
+      //     analyse: "",
+      //     analyse_images: []
+      // }
 
-      var Fill_Ques = {
+      // var Fill_Ques = {
 
-          type: "fill",
-          // 分值
-          score: 1,
-          // 题目内容，题目内容图片，是否显示图片
-          content: "",
-          content_images: [],
-          // 答案的部分
-          answer: "",
-          answer_images: [],
-          // 解析的部分
-          analyse: "",
-          analyse_images: []
+      //     type: "fill",
+      //     // 分值
+      //     score: 1,
+      //     // 题目内容，题目内容图片，是否显示图片
+      //     content: "",
+      //     content_images: [],
+      //     // 答案的部分
+      //     answer: "",
+      //     answer_images: [],
+      //     // 解析的部分
+      //     analyse: "",
+      //     analyse_images: []
 
-      }
+      // }
 
-      var Answer_Ques = {
+      // var Answer_Ques = {
 
-          type: "answer",
-          // 分值
-          score: 1,
-          // 题目内容，题目内容图片，是否显示图片
-          content: "",
-          content_images: [],
-          // 小题的部分
-          sub_questions: [],
-          sub_questions_images: [],
-          sub_questions_scores: [],
-          // 答案的部分
-          answer: "",
-          answer_images: [],
-          // 解析的部分
-          analyse: "",
-          analyse_images: []
+      //     type: "answer",
+      //     // 分值
+      //     score: 1,
+      //     // 题目内容，题目内容图片，是否显示图片
+      //     content: "",
+      //     content_images: [],
+      //     // 小题的部分
+      //     sub_questions: [],
+      //     sub_questions_images: [],
+      //     sub_questions_scores: [],
+      //     // 答案的部分
+      //     answer: "",
+      //     answer_images: [],
+      //     // 解析的部分
+      //     analyse: "",
+      //     analyse_images: []
 
-      }
+      // }
 
-      for(i = 0; i < Docs.length; i++){
-        Ques = Docs[i]
-        if(Ques.question_type == "选择题"){
-          var Opt = Option_Ques;
-          Opt.type = "option"
-          Opt.score = "UNKNOWN";
-          Opt.content = Ques.question_stem;
-          Opt.content_images = [];
-          Opt.options = Ques.question_options;
-          Opt.options_images = [];
-          for(j = 0; j < Ques.question_options.length; j++){
-            Opt.options_images.push("")
-          }
-          Opt.answer = Ques.answer;
-          Opt.answer_images = [];
-          Opt.analyse = Ques.analysis;
-          Opt.analyse_images = [];
-          Ques_List.push(Opt);
-        }else if(Ques.question_type == "填空题"){
-          var Fill = Fill_Ques;
-          Fill.type = "fill"
-          Fill.score = "UNKNOWN";
-          Fill.content = Ques.question_stem;
-          Fill.content_images = [];
-          Fill.answer = Ques.answer;
-          Fill.answer_images = [];
-          Fill.analyse = Ques.analysis;
-          Fill.analyse_images = [];
-          Ques_List.push(Fill);
-        }else if(Ques.question_type == "解答题"){
-          var Ans = Answer_Ques;
-          Ans.type = "answer";
-          Ans.score = "UNKNOWN";
-          Ans.content = Ques.question_stem;
-          Ans.content_images = []
-          Ans.answer = Ques.answer;
-          Ans.answer_images = []
-          Ans.analyse = Ques.analysis;
-          Ans.analyse_images = [];
-          for(j = 0; j < Ques.sub_questions.length; j++){
-            Ans.sub_questions.push(Ques.sub_questions[j]);
-            Ans.sub_questions_images.push([]);
-            Ans.sub_questions_scores.push("UNKNOWN");
-          }
-          Ques_List.push(Ans);
-        }
+      // for(i = 0; i < Docs.length; i++){
+      //   Ques = Docs[i]
+      //   if(Ques.question_type == "选择题"){
+      //     var Opt = Option_Ques;
+      //     Opt.type = "option"
+      //     Opt.score = "UNKNOWN";
+      //     Opt.content = Ques.question_stem;
+      //     Opt.content_images = [];
+      //     Opt.options = Ques.question_options;
+      //     Opt.options_images = [];
+      //     for(j = 0; j < Ques.question_options.length; j++){
+      //       Opt.options_images.push("")
+      //     }
+      //     Opt.answer = Ques.answer;
+      //     Opt.answer_images = [];
+      //     Opt.analyse = Ques.analysis;
+      //     Opt.analyse_images = [];
+      //     Ques_List.push(Opt);
+      //   }else if(Ques.question_type == "填空题"){
+      //     var Fill = Fill_Ques;
+      //     Fill.type = "fill"
+      //     Fill.score = "UNKNOWN";
+      //     Fill.content = Ques.question_stem;
+      //     Fill.content_images = [];
+      //     Fill.answer = Ques.answer;
+      //     Fill.answer_images = [];
+      //     Fill.analyse = Ques.analysis;
+      //     Fill.analyse_images = [];
+      //     Ques_List.push(Fill);
+      //   }else if(Ques.question_type == "解答题"){
+      //     var Ans = Answer_Ques;
+      //     Ans.type = "answer";
+      //     Ans.score = "UNKNOWN";
+      //     Ans.content = Ques.question_stem;
+      //     Ans.content_images = []
+      //     Ans.answer = Ques.answer;
+      //     Ans.answer_images = []
+      //     Ans.analyse = Ques.analysis;
+      //     Ans.analyse_images = [];
+      //     for(j = 0; j < Ques.sub_questions.length; j++){
+      //       Ans.sub_questions.push(Ques.sub_questions[j]);
+      //       Ans.sub_questions_images.push([]);
+      //       Ans.sub_questions_scores.push("UNKNOWN");
+      //     }
+      //     Ques_List.push(Ans);
+      //   }
         
-      }
+      // }
 
       // console.log(Ques_List);
 

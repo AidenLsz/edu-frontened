@@ -9,6 +9,15 @@
       <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="content"></ComplexInput>
       <el-button type="success" plain @click="simpleInput = false">完成输入</el-button>
     </el-dialog>
+    <!-- 查看分析报告 -->
+    <el-dialog
+        :visible.sync="analyseReport"
+        width="90%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="true">
+        <template slot="title"></template>
+        <QuestionAnalyse :Question="analyseData"></QuestionAnalyse>
+    </el-dialog>
     <!-- 地址框 -->
     <el-row justify="start" type="flex">
       <el-col :span="7" style="margin-left: 5vw;">
@@ -138,7 +147,7 @@
               <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">详情</el-button>
             </el-col>
             <el-col :span="3" style="line-height: 40px">
-              <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id)">查看分析报告</el-button>
+              <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id, Question.database)">查看分析报告</el-button>
             </el-col>
         </el-row>
         <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: 20px; border-top: 1px dashed black">
@@ -177,8 +186,9 @@
 /* eslint-disable */
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
+import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
 export default {
-  components: { Mathdown, ComplexInput },
+  components: { Mathdown, ComplexInput, QuestionAnalyse },
   name: "exercise",
   data() {
     return {
@@ -226,7 +236,60 @@ export default {
       Period_Type: [],
       // 上次选择的学科和学段
       history_Subject_Type: [],
-      history_Period_Type: []
+      history_Period_Type: [],
+      // 分析报告页是否显示
+      analyseReport: false,
+      // 用于分析显示的题目数据
+      analyseData: {
+        "id": "0b1b75ac-3053-45b5-9244-65b0dbb9d9f1",
+        "type": "Question",
+        "level": 2,
+        "stem": "从$\\LUNALaTexPictureID{59dae23f-c8cd-4771-8711-d6a20d1c0118}$名男生和$3$名女生中选出$3$人，分别从事三项不同的工作，若这$3$人中至少有$1$名女生，则选派方案共有(  )种",
+        "options": "['$108$种', '$186$种', '$216$种', '$270$种']",
+        "answer": "$B$",
+        "analysis": "",
+        "difficulty": 0.4020228981971741,
+        "score": 1,
+        "knowledge_points_frontend": {
+          "kp": [
+              "排列、组合与二项式定理",
+              "代数",
+              "计数原理"
+          ],
+          "kp_layer": [
+              {
+                  "label": "代数",
+                  "children": [
+                      {
+                          "label": "不等式",
+                          "children": []
+                      },
+                      {
+                          "label": "计数原理",
+                          "children": [
+                              {
+                                  "label": "排列、组合与二项式定理",
+                                  "children": [
+                                      {
+                                          "label": "排列与组合的简单应用",
+                                          "children": []
+                                      }
+                                  ]
+                              }
+                          ]
+                      }
+                  ]
+              }
+          ],
+          "kp_priority": [
+              "代数",
+              "不等式",
+              "计数原理",
+              "排列、组合与二项式定理",
+              "排列与组合的简单应用"
+          ]
+        }
+      }
     };
   },
   watch:{
@@ -244,8 +307,9 @@ export default {
       Input.addEventListener()
     },
     // 查看单题分析报告
-    Check_Analyse(ID){
-      console.log(ID)
+    Check_Analyse(ID, DatabaseName){
+      console.log(ID, DatabaseName)
+      this.analyseReport = true;
     },
     ToTop(){
       window.scrollTo(0,0);
@@ -312,9 +376,9 @@ export default {
       }
       this.filelists.splice(index, 1);
       document.getElementsByTagName("input").value = "";
-      console.log(this.src);
-      console.log(this.filelists);
-      console.log(document.getElementsByTagName("input").value);
+      // console.log(this.src);
+      // console.log(this.filelists);
+      // console.log(document.getElementsByTagName("input").value);
     },
     Same_Check(Arr1, Arr2){
       if(Arr1.length != Arr2.length){
@@ -380,7 +444,6 @@ export default {
         emulateJSON: true
       })
       .then(function(data) {
-        console.log(data.data);
         this.loading = false;
         this.Expand_List = [];
         this.question_list = [];
@@ -589,6 +652,7 @@ export default {
   border: 1px solid Silver;
   width: 60%; 
   border-radius: 18px;
+  box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
   -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
 }
 </style>
