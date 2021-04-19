@@ -485,8 +485,6 @@ export default {
                 this.QB_KnowledgePair_Name_List.push(Temp_Pair_Max_Name_2)
                 this.QB_KnowledgePair_List.push(Temp_Pair_Max_Count_2)
             }
-
-            console.log(this.QB_KnowledgePair_Name_List)
             
             this.Question_Bundle_Analyse = true;
 

@@ -1206,7 +1206,6 @@ export default {
         return totalScore;
       },
       set: function(value) {
-        console.log(value);
         this.total_score = value;
       }
     },
@@ -1419,8 +1418,6 @@ export default {
 
         let formData = new FormData();
 
-        console.log(e.target.files);
-
         formData.append("files", e.target.files[0]);
         formData.append("paper_type", this.paper_type);
 
@@ -1615,7 +1612,7 @@ export default {
           emulateJSON: true
         }).then(
         function(data){
-          console.log(data);
+          data
         }
       );
 
@@ -1909,7 +1906,7 @@ export default {
     Del(index_out, index_in) {
 
       if (this.file_item[index_out][index_in].length != 0) {
-        console.log("It's not a divider.");
+        alert("这里不是分界线！");
       } 
 
       else {
@@ -3352,13 +3349,11 @@ export default {
     Ensure(){
       this.$confirm("您已经锁定了所有题目，确认审核完毕请点击确认提交，仍有更改请点击取消。").then( () => {
         this.Submit_Show = true;
-        console.log("Check");
         this.Submit();
         this.$message.success("已提交");
         return
       }).catch(() => {
         this.Submit_Show = true;
-        console.log("Cancel.");
         this.$message.info("已取消");
         return
       })
@@ -3371,8 +3366,6 @@ export default {
         this.Question_Check.push(false);
         this.TestData.doc[i].answer = this.TestData.doc[i].answer.split("::");
       }
-
-      console.log(this.TestData.doc.length);
 
     },
     Get_Question_Show(Stem, Type, Question_Index, Answer_Index = null){

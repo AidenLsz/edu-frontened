@@ -64,7 +64,6 @@ export default {
         for(var i = 0 ; i < tempList.length; i++){
           Result.push(tempList[i].substring(1, tempList[i].length-1))
         }
-        console.log(Result)
         return Result
       }else{
         return []
