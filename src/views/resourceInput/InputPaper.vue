@@ -798,10 +798,10 @@
           <!-- 第一行：大题编号，添加新的小题，题目类型，上移，下移，删除，题目说明 -->
           <el-row style="margin-top: 20px">
             <el-col :span="2" style="font-size: 18px; padding-top: 8px">
-              <label><span>第{{Bundle_Index + 1}}大题</span></label>
+              <label>第{{Bundle_Index + 1}}大题</label>
             </el-col>
             <el-col :span="2" style="font-size: 18px; padding-top: 8px">
-              <label><span>{{Get_Bundle_Type_Label(Question_Bundle)}}</span></label>
+              <label>{{Get_Bundle_Type_Label(Question_Bundle)}}</label>
             </el-col>
             <el-col :span="1" style="padding-top: 5px">
               <el-button circle plain size="small" type="message" @click="New_Question(Bundle_Index, Question_Bundle)">
@@ -829,7 +829,7 @@
           </el-row>
           <!-- 之后的每一行，读取这个大题中的一个题目，然后进行对应的渲染 -->
           <el-row v-for="(Question, Question_Index) in Question_Bundle.Bundle_Questions" :key="Question_Index">
-              <el-col :offset="2">
+              <el-col style="margin-left: 50px; margin-top: 5px">
                   <!-- 编辑题目，上移，下移，删除，折叠/展开按钮 -->
                   <el-row style="margin-top: 5px; margin-bottom: 10px">
                       <el-col :span="2" style="text-align: left; font-size: 16px; padding-top: 4px">
@@ -889,16 +889,14 @@
                       </el-col>
                   </el-row>
                   <!-- 展开模式交给Display来负责，折叠模式为了避免样式报错，直接转换成文字格式 -->
-                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index] == false">
+                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index] == false"  style="text-align: left">
                       <OptionDisplay v-if="Question.type == 'option'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></OptionDisplay>
                       <FillDisplay v-else-if="Question.type == 'fill'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></FillDisplay>
                       <AnswerDisplay v-else-if="Question.type == 'answer'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></AnswerDisplay>
                       <MixDisplay v-else-if="Question.type == 'mix'" :QI="Question" :BI="'Bundle_' + Bundle_Index"></MixDisplay>
                   </el-row>
-                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index]" style="text-align: left; font-size: 14px">
-                      <el-col :offset="1">
-                          <label>{{Get_Collapse_Show(Question)}}</label>
-                      </el-col>
+                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index]" style="text-align: left; font-size: 14px; padding-left: 22px">
+                      <label>{{Get_Collapse_Show(Question)}}</label>
                   </el-row>
               </el-col>
           </el-row>
