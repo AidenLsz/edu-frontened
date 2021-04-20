@@ -1,8 +1,8 @@
 <!-- 作为递归自身的节点 -->
 <template>
-  <div style="margin: 0px 16.5vw 10px 16.5vw">
+  <div style="margin: 0px 11.5vw 10px 11.5vw">
       <el-row style="padding-top: 15px">
-          <label style="font-size: 2rem">xxx试题分析报告</label>
+          <label style="font-size: 2rem">试题分析报告</label>
       </el-row>
       <el-row>
           <el-divider></el-divider>

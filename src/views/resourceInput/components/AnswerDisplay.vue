@@ -1,11 +1,11 @@
 <template>
     <div>
         <!-- 题目分数及题干 -->
-        <el-row style="font-size: 16px; text-align: center; margin-bottom: 6px">
+        <el-row style="font-size: 14px; text-align: center; margin-bottom: 6px">
             <el-col :span="2">
                 <span><label> ( {{ QI.score }}分 ) </label></span>
             </el-col>
-            <el-col :span="21">
+            <el-col :span="20">
                 <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'AnswerQuestions_Content'" :content="QI.content"></Mathdown>
             </el-col>
         </el-row>
@@ -30,12 +30,16 @@
         </el-row>
         <!-- 小题内容及图片 -->
         <el-row v-for="index in QI.sub_questions.length" :key="index">
-            <el-row style="font-size: 14px; text-align: center; margin-bottom: 15px">
-                <el-col :span="3" :offset="1">
-                    <span><label> ( {{ QI.sub_questions_scores[index - 1] }}分 ){{index}}: </label></span>
+            <el-row style="font-size: 14px; text-align: center; margin-bottom: 10px">
+                <el-col :span="3">
+                    <el-row type="flex" justify="start" style="padding-left: 4vw">
+                        <label> ( {{ QI.sub_questions_scores[index - 1] }}分 )</label>
+                    </el-row>
                 </el-col>
-                <el-col :span="20" >
-                    <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'AnswerQuestions_Sub_Questions_' + index.toString()" :content="QI.sub_questions[index - 1]"></Mathdown>
+                <el-col :span="19" >
+                    <el-row type="flex" justify="start">
+                        <label style="margin-right: 15px"> {{index}}:</label> <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'AnswerQuestions_Sub_Questions_' + index.toString()" :content="QI.sub_questions[index - 1]"></Mathdown>
+                    </el-row>
                 </el-col>
             </el-row>
             <el-row 
@@ -66,10 +70,10 @@
                 <el-col :span="2">                        
                     <span><label>答案：</label></span>
                 </el-col>
-                <el-col :span="22" v-if="QI.answer != ''">
+                <el-col :span="20" v-if="QI.answer != ''">
                     <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'AnswerQuestions_Answer'" :content="QI.answer"></Mathdown>
                 </el-col>
-                <el-col :span="22" v-if="QI.answer == ''"  style="text-align: left">
+                <el-col :span="20" v-if="QI.answer == ''"  style="text-align: left">
                     <label>暂无文字答案，请参考附图</label>
                 </el-col>
             </el-row>
@@ -99,10 +103,10 @@
                 <el-col :span="2">                        
                     <span><label>解析：</label></span>
                 </el-col>
-                <el-col :span="22" v-if="QI.analyse != ''">
+                <el-col :span="20" v-if="QI.analyse != ''">
                     <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'AnswerQuestions_Analyse'" :content="QI.analyse"></Mathdown>
                 </el-col>
-                <el-col :span="22" v-if="QI.analyse == ''" style="text-align: left">
+                <el-col :span="20" v-if="QI.analyse == ''" style="text-align: left">
                     <label>暂无文字解析，请参考附图</label>
                 </el-col>
             </el-row>

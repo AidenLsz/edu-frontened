@@ -17,28 +17,21 @@
             <!-- 左边组，第一行是分值和显示分值的地方 -->
             <!-- 第二行是添加选项，预览题目效果 -->
             <el-col :span="6">
-                <el-row>
-                    <el-col :span="6" style="padding-top: 4px">
-                        <span style="font-size: 15px; font-weight: bold">分值</span>
-                    </el-col>
-                    <el-col :span="18">
-                        <el-input type="number" min="1" max="100" step="0.1" v-model="questionInfo.score" size="mini" style="font-size: 15px"></el-input>
-                    </el-col>
+                <el-row type="flex" justify="start">
+                    <label style="padding-left: 5px; font-size: 15px; display: inline-block; width: 60px; padding-top:4px">分值：</label>
+                    <el-input type="number" min="1" max="100" step="0.1" v-model="questionInfo.score" size="mini" style="font-size: 15px; width: 100px; margin-left: 20px"></el-input>
+                    <label style="font-size: 15px; display: inline-block; width: 20px; padding-top:4px; margin-left: 20px">分</label>
                 </el-row>
                 <br/>
-                <el-row style="padding-left: 10px">
-                    <el-col :span="12">
-                        <el-button size="mini" style="font-size: 12px" @click="Option_Add()">
-                            <i class="el-icon-edit"></i>
-                            添加选项
-                        </el-button>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-button size="mini" style="font-size: 12px" @click="Open_Preview()">
-                            <i class="el-icon-search"></i>
-                            预览本题
-                        </el-button>
-                    </el-col>
+                <el-row type="flex" justify="start">
+                    <el-button size="mini" style="font-size: 12px; margin-left: 5px" @click="Option_Add()">
+                        <i class="el-icon-edit"></i>
+                        添加选项
+                    </el-button>
+                    <el-button size="mini" style="font-size: 12px; margin-left: 20px" @click="Open_Preview()">
+                        <i class="el-icon-search"></i>
+                        预览本题
+                    </el-button>
                 </el-row>
             </el-col>
             
@@ -57,7 +50,7 @@
                             placeholder="请输入题目内容（必填）">
                         </el-input>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="6" style="margin-left: -5px">
                         <el-row type="flex" justify="center">
                             <label>
                                 添加图片
@@ -128,19 +121,24 @@
                                 <i class="el-icon-delete"></i>
                             </el-button>
                         </el-col>
-                        <el-col :span="2" style="padding-top: 10px; font-size: 15px; font-weight: bold">
-                            选项 {{String.fromCharCode(64 + index)}}
+                        <el-col :span="2" style="padding-top: 10px; font-size: 15px; font-weight: bold;">
+                            <el-row type="flex" justify="start" style="padding-left: 20px">
+                                    选项 {{String.fromCharCode(64 + index)}}
+                            </el-row>
                         </el-col>
                         <el-col :span="12" style="margin-left: 10px">
                             <el-input v-model="questionInfo.options[index - 1]" :placeholder="'选项' + String.fromCharCode(64 + index) + '（必填）'"></el-input>
                         </el-col>
-                        <el-col :span="4" style="padding-top: 10px">
-                            <label>添加或更改图片 ></label>
+                        <el-col :span="4" style="padding-top: 10px; margin-left: -3px">
+                            <el-row type="flex" justify="center">
+                                <label>添加或更改图片 ></label>
+                            </el-row>
                         </el-col>
                         <el-col :span="2" style="padding-top: 6px">
                             <div 
                                 class="btn_file"
-                                :style="{ opacity: changecss }">
+                                style="margin-left: -5px;"
+                                >
                                 <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
@@ -173,8 +171,10 @@
         </el-row>
         <!-- 答案与答案图片 -->
         <el-row style="margin-top: 15px">
-            <el-col :span="2" :offset="1"  style="padding-top: 4px">
-                <span style="font-size: 15px; font-weight: bold">答案</span>
+            <el-col :span="3"  style="padding-top: 4px">
+                <el-row type="flex" justify="center">
+                    <span style="font-size: 15px; font-weight: bold">答案</span>
+                </el-row>
             </el-col>
             <el-col :span="21">
                 <el-row>
@@ -240,8 +240,10 @@
         </el-row>
         <!-- 解析与解析图片 -->
         <el-row style="margin-top: 15px">
-            <el-col :span="2" :offset="1"  style="padding-top: 4px">
-                <span style="font-size: 15px; font-weight: bold">解析</span>
+            <el-col :span="3" style="padding-top: 4px">
+                <el-row type="flex" justify="center">
+                    <span style="font-size: 15px; font-weight: bold">解析</span>
+                </el-row>
             </el-col>
             <el-col :span="21">
                 <el-row>
@@ -307,7 +309,7 @@
         </el-row>
         <!-- 确认完成的按钮 -->
         <br/>
-        <el-row>
+        <el-row type="flex" justify="center">
             <el-button type="success" @click="Edit_Finish()">
                 <i class="el-icon-check"></i>
                 编辑完成
@@ -541,12 +543,12 @@ export default {
 
             var Result = true;
             
-            if(this.questionInfo.content == ""){
+            if(this.questionInfo.content == "" && this.questionInfo.content_images.length == 0){
                 Result = false
             }
 
             for(var i = 0; i < this.questionInfo.options.length; i++){
-                if(this.questionInfo.options[i] == ""){
+                if(this.questionInfo.options[i] == "" && this.questionInfo.options_images[i] == ""){
                     Result = false
                 }
             }
@@ -576,6 +578,7 @@ export default {
   font-size: 20px;
   border-radius: 2px;
   border: 1px dashed black;
+  text-align: center;
   cursor: pointer;
 }
 input {

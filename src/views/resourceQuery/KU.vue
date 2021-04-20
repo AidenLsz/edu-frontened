@@ -337,7 +337,6 @@ export default {
   },
   mounted() {
     this.root_view = sessionStorage.user === "root";
-    console.log(this.root_view);
     if (this.$route.params.name) {
       this.ku_name = this.$route.params.name;
       this.submit(this.ku_name);
@@ -360,7 +359,6 @@ export default {
       window.scrollTo(0,0);
     },
     Research(val){
-      console.log(val);
       this.submit(val);
     },
     ComplexInputFullChange(val){
@@ -600,6 +598,7 @@ export default {
   border: 1px solid Silver;
   width: 60%; 
   border-radius: 18px;
+  box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
   -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
 }
 </style>

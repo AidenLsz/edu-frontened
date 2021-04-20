@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     Type_Change(){
-      console.log(this.selected_type);
+      return
     },
     draw_graph() {
       
@@ -128,8 +128,6 @@ export default {
           };
         }   
       }
-
-      // console.log(state.links);
 
       let selectedNode;
       let nodeSize = 25;

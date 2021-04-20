@@ -5,24 +5,26 @@
         <!-- 提供给选择题的编辑器 -->
         <el-dialog 
             :visible.sync="showDialog" 
-            title="请编辑想要插入/修改的选择题内容" 
             width="65%" 
             @close="Editor_Dialog_Close()"
             :modal-append-to-body="false"
             :append-to-body="true"
         >
+            <template slot="title">
+                <el-row type="flex" justify="center" style="font-size: 18px;">请编辑想要插入/修改的选择题内容</el-row>  
+            </template>
             <el-row>
                 <el-col v-if="complex_Input">
-                    <el-row>
+                    <el-row type="flex" justify="center">
                         <label>复杂输入框，请在需要时自行复制至目标输入框</label>
                     </el-row>
                     <ComplexInput></ComplexInput>
-                    <el-row>
+                    <el-row type="flex" justify="center">
                         <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
                     </el-row>
                 </el-col>
                 <el-col v-if="!complex_Input">
-                    <el-row>
+                    <el-row type="flex" justify="center">
                         <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
                     </el-row>
                 </el-col>
@@ -39,24 +41,26 @@
         <!-- 提供给填空题的编辑器 -->
         <el-dialog 
             :visible.sync="showDialog_Fill" 
-            title="请编辑想要插入/修改的填空题内容" 
             width="65%" 
             @close="Editor_Dialog_Close()"
             :modal-append-to-body="false"
             :append-to-body="true"
         >
+            <template slot="title">
+                <el-row type="flex" justify="center" style="font-size: 18px;">请编辑想要插入/修改的填空题内容</el-row>  
+            </template>
             <el-row>
                 <el-col v-if="complex_Input">
-                    <el-row>
+                    <el-row type="flex" justify="center">
                         <label>复杂输入框，请在需要时自行复制至目标输入框</label>
                     </el-row>
                     <ComplexInput></ComplexInput>
-                    <el-row>
+                    <el-row type="flex" justify="center">
                         <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
                     </el-row>
                 </el-col>
                 <el-col v-if="!complex_Input">
-                    <el-row>
+                    <el-row type="flex" justify="center">
                         <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
                     </el-row>
                 </el-col>
@@ -72,24 +76,26 @@
         <!-- 提供给解答题的编辑器 -->
         <el-dialog 
             :visible.sync="showDialog_Answer" 
-            title="请编辑想要插入/修改的解答题内容" 
             width="65%" 
             @close="Editor_Dialog_Close()"
             :modal-append-to-body="false"
             :append-to-body="true"
         >
+            <template slot="title">
+                <el-row type="flex" justify="center" style="font-size: 18px;">请编辑想要插入/修改的解答题内容</el-row>  
+            </template>
             <el-row>
                 <el-col v-if="complex_Input">
-                    <el-row>
+                    <el-row type="flex" justify="center">
                         <label>复杂输入框，请在需要时自行复制至目标输入框</label>
                     </el-row>
                     <ComplexInput></ComplexInput>
-                    <el-row>
+                    <el-row type="flex" justify="center">
                         <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
                     </el-row>
                 </el-col>
                 <el-col v-if="!complex_Input">
-                    <el-row>
+                    <el-row type="flex" justify="center">
                         <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
                     </el-row>
                 </el-col>
@@ -114,7 +120,7 @@
             <MixDisplay :QI="questionInfos"></MixDisplay>
         </el-dialog>
         <!-- 测试用按钮行 -->
-        <el-row>
+        <!-- <el-row>
             <el-col :span="3">
                 <el-button size="small" @click="showDialog = true">插入新选择题</el-button>
             </el-col>
@@ -124,33 +130,41 @@
             <el-col :span="3">
                 <el-button size="small" @click="showDialog_Answer = true">插入新解答题</el-button>
             </el-col>
-        </el-row>
+        </el-row> -->
         <!-- 分值，题干 -->
         <el-row style="margin-top: 15px">
             <!-- 左边组，第一行是分值和显示分值的地方 -->
             <!-- 第二行是添加选项，预览题目效果 -->
             <el-col :span="6">
-                <el-row>
-                    <el-col :span="6" style="padding-top: 4px">
-                        <span style="font-size: 15px; font-weight: bold">分值</span>
-                    </el-col>
-                    <el-col :span="18">
-                        <el-input readonly v-model="questionInfos.score" size="mini" style="font-size: 15px"></el-input>
-                    </el-col>
+                <el-row type="flex" justify="start">
+                    <label style="padding-left: 5px; font-size: 15px; display: inline-block; width: 60px; padding-top:4px">分值：</label>
+                    <el-input type="number" min="1" max="100" step="0.1" v-model="questionInfos.score" size="mini" style="font-size: 15px; width: 100px; margin-left: 20px"></el-input>
+                    <label style="font-size: 15px; display: inline-block; width: 20px; padding-top:4px; margin-left: 20px">分</label>
                 </el-row>
-                <br/>
-                <el-row style="padding-left: 10px">
-                    <el-col :span="12">
-                        <el-button size="mini" style="font-size: 12px" @click="Open_Preview()">
-                            <i class="el-icon-search"></i>
-                            预览本题
-                        </el-button>
-                    </el-col>
+                <el-row type="flex" justify="start" style="margin-top: 10px">
+                    <el-button size="mini" style="font-size: 12px; margin-left: 5px" @click="Open_Preview()">
+                        <i class="el-icon-search"></i>
+                        预览本题
+                    </el-button>
+                    <el-button size="small" @click="showDialog = true" style="font-size: 12px; margin-left: 20px">
+                        <i class="el-icon-edit"></i>
+                        新选择题
+                    </el-button>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-top: 10px">
+                    <el-button size="small" @click="showDialog_Fill = true" style="font-size: 12px; margin-left: 5px">
+                        <i class="el-icon-edit"></i>
+                        新填空题
+                    </el-button>
+                    <el-button size="small" @click="showDialog_Answer = true" style="font-size: 12px; margin-left: 20px">
+                        <i class="el-icon-edit"></i>
+                        新解答题
+                    </el-button>
                 </el-row>
             </el-col>
             
             <el-col :span="2" style="padding-top: 4px">
-                <span style="font-size: 15px; font-weight: bold">题目</span>
+                <span style="font-size: 15px; font-weight: bold">题干</span>
             </el-col>
             <el-col :span="16">
                 <el-row>
@@ -158,13 +172,13 @@
                         <el-input 
                             type="textarea" 
                             v-model="questionInfos.content" 
-                            :autosize="{minRows: 3, maxRows: 5}" 
+                            :autosize="{minRows: 4, maxRows: 6}" 
                             resize="none" 
                             style="font-size: 15px"
-                            placeholder="请输入题目内容（必填）">
+                            placeholder="请输入题干内容（必填）">
                         </el-input>
                     </el-col>
-                    <el-col :span="5" :offset="1">
+                    <el-col :span="6">
                         <el-row type="flex" justify="center">
                             <label>
                                 添加图片
@@ -274,33 +288,30 @@
                     </el-col>
                 </el-row>
                 <!-- 展开模式交给Display来负责，折叠模式为了避免样式报错，直接转换成文字格式 -->
-                <div v-if="questionInfos.sub_questions_collapse[index] == false">
-                    <el-row style="text-align: left; font-size: 20px">
+                <div v-if="questionInfos.sub_questions_collapse[index] == false" style="margin-top: 20px">
+                    <el-row style="text-align: left; font-size: 15px; padding-left: 20px; margin-bottom: 10px">
                         <label>第 {{index + 1}} 题</label>
                     </el-row>
-                    <br/>
                     <el-row>
                         <OptionDisplay v-if="item.type == 'option'" :QI="item"></OptionDisplay>
                         <FillDisplay v-else-if="item.type == 'fill'" :QI="item"></FillDisplay>
                         <AnswerDisplay v-else-if="item.type == 'answer'" :QI="item"></AnswerDisplay>
                     </el-row>
                 </div>
-                <div v-if="questionInfos.sub_questions_collapse[index]">
-                    <el-row style="text-align: left; font-size: 20px">
-                        <el-col :span="2">
-                            <label>第 {{index + 1}} 题</label>
-                        </el-col>
-                        <el-col :span="21" :offset="1">
-                            <label>{{Get_collapse_Show(item)}}</label>
-                        </el-col>
+                <div v-if="questionInfos.sub_questions_collapse[index]" style="margin-top: 20px">
+                    <el-row style="text-align: left; font-size: 15px; padding-left: 20px; margin-bottom: 10px">
+                        <label>第 {{index + 1}} 题</label>
+                        <span style="margin-left: 20px">{{Get_collapse_Show(item)}}</span>
                     </el-row>
                 </div>
             </el-col>
         </el-row>
         <!-- 答案与答案图片 -->
         <el-row style="margin-top: 15px">
-            <el-col :span="2" :offset="1"  style="padding-top: 4px">
-                <span style="font-size: 15px; font-weight: bold">答案</span>
+            <el-col :span="3" style="padding-top: 4px">
+                <el-row type="flex" justify="center">
+                    <span style="font-size: 15px; font-weight: bold">答案</span>
+                </el-row>
             </el-col>
             <el-col :span="21">
                 <el-row>
@@ -366,8 +377,10 @@
         </el-row>
         <!-- 解析与解析图片 -->
         <el-row style="margin-top: 15px">
-            <el-col :span="2" :offset="1"  style="padding-top: 4px">
-                <span style="font-size: 15px; font-weight: bold">解析</span>
+            <el-col :span="3" style="padding-top: 4px">
+                <el-row type="flex" justify="center">
+                    <span style="font-size: 15px; font-weight: bold">解析</span>
+                </el-row>
             </el-col>
             <el-col :span="21">
                 <el-row>
@@ -899,6 +912,7 @@ export default {
   font-size: 20px;
   border-radius: 2px;
   border: 1px dashed black;
+  text-align: center;
   cursor: pointer;
 }
 input {
