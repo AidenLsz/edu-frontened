@@ -5,7 +5,7 @@
             <el-col :span="2">
                 <span><label> ( {{ QI.score }}分 ) </label></span>
             </el-col>
-            <el-col :span="21" :offset="1">
+            <el-col :span="20">
                 <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'FillQuestions_Content'" :content="QI.content"></Mathdown>
             </el-col>
         </el-row>
@@ -34,10 +34,10 @@
                 <el-col :span="2">                        
                     <span><label>答案：</label></span>
                 </el-col>
-                <el-col :span="22" v-if="QI.answer != ''">
+                <el-col :span="20" v-if="QI.answer != ''">
                     <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'FillQuestions_Answer'" :content="QI.answer"></Mathdown>
                 </el-col>
-                <el-col :span="22" v-if="QI.answer == ''"  style="text-align: left">
+                <el-col :span="20" v-if="QI.answer == ''"  style="text-align: left">
                     <label>暂无文字答案，请参考附图</label>
                 </el-col>
             </el-row>
@@ -67,10 +67,10 @@
                 <el-col :span="2">                        
                     <span><label>解析：</label></span>
                 </el-col>
-                <el-col :span="22" v-if="QI.analyse != ''">
+                <el-col :span="20" v-if="QI.analyse != ''">
                     <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'FillQuestions_Analyse'" :content="QI.analyse"></Mathdown>
                 </el-col>
-                <el-col :span="22" v-if="QI.analyse == ''" style="text-align: left">
+                <el-col :span="20" v-if="QI.analyse == ''" style="text-align: left">
                     <label>暂无文字解析，请参考附图</label>
                 </el-col>
             </el-row>

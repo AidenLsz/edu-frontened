@@ -737,6 +737,17 @@
             <label>导出题目</label>
           </el-button>
         </el-row>
+        <el-row
+          v-loading="analysing"
+          element-loading-text="加载中，请等待"
+          element-loading-spinner="el-icon-loading"
+          type="flex" 
+          justify="center" 
+          style="margin-top: 30px">
+          <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('analyse')">
+            <label>试卷分析</label>
+          </el-button>
+        </el-row>
         <el-row 
           v-loading="downloading"
           element-loading-text="加载中，请等待"
@@ -798,10 +809,10 @@
           <!-- 第一行：大题编号，添加新的小题，题目类型，上移，下移，删除，题目说明 -->
           <el-row style="margin-top: 20px">
             <el-col :span="2" style="font-size: 18px; padding-top: 8px">
-              <label><span>第{{Bundle_Index + 1}}大题</span></label>
+              <label>第{{Bundle_Index + 1}}大题</label>
             </el-col>
             <el-col :span="2" style="font-size: 18px; padding-top: 8px">
-              <label><span>{{Get_Bundle_Type_Label(Question_Bundle)}}</span></label>
+              <label>{{Get_Bundle_Type_Label(Question_Bundle)}}</label>
             </el-col>
             <el-col :span="1" style="padding-top: 5px">
               <el-button circle plain size="small" type="message" @click="New_Question(Bundle_Index, Question_Bundle)">
@@ -829,7 +840,7 @@
           </el-row>
           <!-- 之后的每一行，读取这个大题中的一个题目，然后进行对应的渲染 -->
           <el-row v-for="(Question, Question_Index) in Question_Bundle.Bundle_Questions" :key="Question_Index">
-              <el-col :offset="2">
+              <el-col style="margin-left: 50px; margin-top: 5px">
                   <!-- 编辑题目，上移，下移，删除，折叠/展开按钮 -->
                   <el-row style="margin-top: 5px; margin-bottom: 10px">
                       <el-col :span="2" style="text-align: left; font-size: 16px; padding-top: 4px">
@@ -889,16 +900,14 @@
                       </el-col>
                   </el-row>
                   <!-- 展开模式交给Display来负责，折叠模式为了避免样式报错，直接转换成文字格式 -->
-                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index] == false">
+                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index] == false"  style="text-align: left">
                       <OptionDisplay v-if="Question.type == 'option'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></OptionDisplay>
                       <FillDisplay v-else-if="Question.type == 'fill'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></FillDisplay>
                       <AnswerDisplay v-else-if="Question.type == 'answer'" :QI="Question" :Bundle_Index="'Bundle_' + Bundle_Index" :Sub_Index="'Sub_' + Question_Index"></AnswerDisplay>
                       <MixDisplay v-else-if="Question.type == 'mix'" :QI="Question" :BI="'Bundle_' + Bundle_Index"></MixDisplay>
                   </el-row>
-                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index]" style="text-align: left; font-size: 14px">
-                      <el-col :offset="1">
-                          <label>{{Get_Collapse_Show(Question)}}</label>
-                      </el-col>
+                  <el-row v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index]" style="text-align: left; font-size: 14px; padding-left: 22px">
+                      <label>{{Get_Collapse_Show(Question)}}</label>
                   </el-row>
               </el-col>
           </el-row>
@@ -1158,6 +1167,8 @@ export default {
       downloadAnswerName: "",
       // 下载doc/docx格式时用的等待变量
       downloading: false,
+      // 分析报告的等待
+      analysing: false,
       // 等待信息
       Waiting_Text: "切分试卷中，请等待......"
     };
@@ -1208,7 +1219,6 @@ export default {
         return totalScore;
       },
       set: function(value) {
-        console.log(value);
         this.total_score = value;
       }
     },
@@ -1421,8 +1431,6 @@ export default {
 
         let formData = new FormData();
 
-        console.log(e.target.files);
-
         formData.append("files", e.target.files[0]);
         formData.append("paper_type", this.paper_type);
 
@@ -1617,7 +1625,7 @@ export default {
           emulateJSON: true
         }).then(
         function(data){
-          console.log(data);
+          data
         }
       );
 
@@ -1911,7 +1919,7 @@ export default {
     Del(index_out, index_in) {
 
       if (this.file_item[index_out][index_in].length != 0) {
-        console.log("It's not a divider.");
+        alert("这里不是分界线！");
       } 
 
       else {
@@ -3287,10 +3295,8 @@ export default {
         .post(this.backendIP + "/api/mathUpload", param, config, {
           emulateJSON: true
         })
-        .then(function(data) {
-          if(data.data){
-            this.$message.success("整卷上传已完成。");
-          }
+        .then(function() {
+          this.$message.success("整卷上传已完成。");
         });
 
       }else if(Control == 'export'){
@@ -3347,20 +3353,64 @@ export default {
                 URL.revokeObjectURL(objectUrl);
               }
             });
-      }
+      }else if(Control == 'analyse'){
 
+        this.analysing = true;
+
+        if(this.PaperTitle == ""){
+          this.$message.error("试卷标题不能为空！")
+          return
+        }
+
+        let config = {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+        };
+        let param = new FormData();
+
+        param.append('result_json', 
+                        JSON.stringify({
+                          "post_type": 1,
+                          "title": this.PaperTitle,
+                          "subject_type": this.SubjectType,
+                          "period_type": this.PeriodType,
+                          "questions": this.Questions,
+                        }, null, 4));
+
+        this.$http
+        .post(this.backendIP + "/api/mathUpload", param, config, {
+          emulateJSON: true
+        })
+        .then(function(data) {
+            this.analysing = false;
+            let Test_Json = data.data.Paper_Json
+            sessionStorage.PaperJson = JSON.stringify(Test_Json);
+            this.Open_PaperAnalyse();
+        });
+      }
+    },
+    Open_PaperAnalyse(){
+      this.$confirm("已获取分析报告，新窗口页面打开请按确定，本页面打开请按取消。").then( () => {
+        let routeData = this.$router.resolve({ path: '/paperAnalyse' });
+        window.open(routeData.href, '_blank');
+        this.$message.success("试题分析内容已在新页面展开。");
+        return
+      }).catch(() => {
+        this.$router.push("/paperAnalyse");
+        this.$message.success("试题分析内容已在本页面展开。");
+        return
+      })
     },
     // 以下是单题显示配套用的方法
     Ensure(){
       this.$confirm("您已经锁定了所有题目，确认审核完毕请点击确认提交，仍有更改请点击取消。").then( () => {
         this.Submit_Show = true;
-        console.log("Check");
         this.Submit();
         this.$message.success("已提交");
         return
       }).catch(() => {
         this.Submit_Show = true;
-        console.log("Cancel.");
         this.$message.info("已取消");
         return
       })
@@ -3373,8 +3423,6 @@ export default {
         this.Question_Check.push(false);
         this.TestData.doc[i].answer = this.TestData.doc[i].answer.split("::");
       }
-
-      console.log(this.TestData.doc.length);
 
     },
     Get_Question_Show(Stem, Type, Question_Index, Answer_Index = null){

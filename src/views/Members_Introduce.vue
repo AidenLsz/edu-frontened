@@ -1,6 +1,7 @@
 <template>
     <div>
         <el-row>
+            <!-- 老师 -->
             <el-row style="margin: 30px 0px 10px 0px">
                 <label style="font-size: 20px">指导老师</label>
             </el-row>
@@ -58,6 +59,7 @@
                 </el-col>
             </el-row>
             <el-divider></el-divider>
+            <!-- 团队成员 -->
             <el-row style="margin: 30px 0px 30px 0px">
                 <label style="font-size: 20px">团队成员</label>
             </el-row>
@@ -105,6 +107,153 @@
                     </el-row>
                 </el-col>
             </el-row>
+            <el-divider></el-divider>
+            <!-- 特任工程师 -->
+            <el-row style="margin: 30px 0px 30px 0px">
+                <label style="font-size: 20px">特任工程师</label>
+            </el-row>
+            <el-row v-for="Row_Index in Math.ceil(member_data.invitedEngineer.length/3)" :key="'IE_R_' + Row_Index" style="margin-left: 10vw; margin-right: 10vw; padding-left: 3vw">
+                <el-col :span="7" v-if="(Row_Index - 1) * 3 + 0 < member_data.invitedEngineer.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_InvitedEngineer_Img(Row_Index, 0)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.invitedEngineer[(Row_Index - 1) * 3 + 0].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.invitedEngineer[(Row_Index - 1) * 3 + 0].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.invitedEngineer[(Row_Index - 1) * 3 + 0].intro}}</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 1 < member_data.invitedEngineer.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_InvitedEngineer_Img(Row_Index, 1)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.invitedEngineer[(Row_Index - 1) * 3 + 1].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.invitedEngineer[(Row_Index - 1) * 3 + 1].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.invitedEngineer[(Row_Index - 1) * 3 + 1].intro}}</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 2 < member_data.invitedEngineer.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_InvitedEngineer_Img(Row_Index, 2)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.invitedEngineer[(Row_Index - 1) * 3 + 2].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.invitedEngineer[(Row_Index - 1) * 3 + 2].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px" >
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.invitedEngineer[(Row_Index - 1) * 3 + 2].intro}}</span>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <el-divider></el-divider>
+            <!-- 技术顾问 -->
+            <el-row style="margin: 30px 0px 30px 0px">
+                <label style="font-size: 20px">技术顾问</label>
+            </el-row>
+            <el-row v-for="Row_Index in Math.ceil(member_data.techConsultant.length/3)" :key="'TC_R_' + Row_Index" style="margin-left: 10vw; margin-right: 10vw; padding-left: 3vw">
+                <el-col :span="7" v-if="(Row_Index - 1) * 3 + 0 < member_data.techConsultant.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_TechConsultant_Img(Row_Index, 0)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.techConsultant[(Row_Index - 1) * 3 + 0].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.techConsultant[(Row_Index - 1) * 3 + 0].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.techConsultant[(Row_Index - 1) * 3 + 0].intro}}</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 1 < member_data.techConsultant.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_TechConsultant_Img(Row_Index, 1)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.techConsultant[(Row_Index - 1) * 3 + 1].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.techConsultant[(Row_Index - 1) * 3 + 1].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.techConsultant[(Row_Index - 1) * 3 + 1].intro}}</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 2 < member_data.techConsultant.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_TechConsultant_Img(Row_Index, 2)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.techConsultant[(Row_Index - 1) * 3 + 2].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.techConsultant[(Row_Index - 1) * 3 + 2].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px" >
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.techConsultant[(Row_Index - 1) * 3 + 2].intro}}</span>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <el-divider></el-divider>
+            <!-- 历任成员 -->
+            <el-row style="margin: 30px 0px 30px 0px">
+                <label style="font-size: 20px">历任成员</label>
+            </el-row>
+            <el-row v-for="Row_Index in Math.ceil(member_data.historyMembers.length/3)" :key="'HM_R_' + Row_Index" style="margin-left: 10vw; margin-right: 10vw; padding-left: 3vw">
+                <el-col :span="7" v-if="(Row_Index - 1) * 3 + 0 < member_data.historyMembers.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_HistoryMember_Img(Row_Index, 0)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.historyMembers[(Row_Index - 1) * 3 + 0].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.historyMembers[(Row_Index - 1) * 3 + 0].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.historyMembers[(Row_Index - 1) * 3 + 0].intro}}</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 1 < member_data.historyMembers.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_HistoryMember_Img(Row_Index, 1)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.historyMembers[(Row_Index - 1) * 3 + 1].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.historyMembers[(Row_Index - 1) * 3 + 1].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.historyMembers[(Row_Index - 1) * 3 + 1].intro}}</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 2 < member_data.historyMembers.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_HistoryMember_Img(Row_Index, 2)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.historyMembers[(Row_Index - 1) * 3 + 2].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.historyMembers[(Row_Index - 1) * 3 + 2].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px" >
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.historyMembers[(Row_Index - 1) * 3 + 2].intro}}</span>
+                    </el-row>
+                </el-col>
+            </el-row>
         </el-row>
     </div>
 </template>
@@ -117,6 +266,7 @@ export default {
     data(){
         return {
             member_data: {
+                // 指导教师
                 "teachers": [
                     {
                     "intro": "陈恩红，博士，教授，博导，国家杰出青年基金获得者，科技部重点领域创新团队负责人，CCF会士。中国科学技术大学计算机科学与技术学院副院长，语音及语言信息处理国家工程实验室副主任，大数据分析及应用安徽省重点实验室主任。",
@@ -137,6 +287,7 @@ export default {
                     "page": "http://staff.ustc.edu.cn/~huangzhy"
                     }
                 ],
+                // 团队成员
                 "students": [
                     {
                     "name": "童世炜",
@@ -254,9 +405,53 @@ export default {
                     "intro": "^V^"
                     }
                 ],
+                // 特邀工程师
+                "invitedEngineer": [
+                    {
+                    "name": "梁先锋",
+                    "mail": "liangxianfeng96@gmail.com",
+                    "intro": "做一条安静的咸鱼"
+                    },{
+                    "name": "韩浩宇",
+                    "mail": "hhy1212@mail.ustc.edu.cn",
+                    "intro": "一个只想安安静静coding的工具人"
+                    },{
+                    "name": "祝冠琪",
+                    "mail": "zgq@mail.ustc.edu.cn",
+                    "intro": "躺平"
+                    }
+                ],
+                // 技术顾问
+                "techConsultant": [
+                    {
+                    "name": "阴钰",
+                    "mail": "yxonic@gmail.com",
+                    "intro": "实际上喜欢写作但从来不写"
+                    },{
+                    "name": "高维博",
+                    "mail": "weibogao@mail.ustc.edu.cn",
+                    "intro": "Web在211养蝾螈。"
+                    },{
+                    "name": "张征",
+                    "mail": "zhangzheng@mail.ustc.edu.cn",
+                    "intro": "减肥永远在路上；ddl重度依赖者"
+                    }
+                ],
+                // 历任成员
+                "historyMembers": [
+                    {
+                    "name": "杨青",
+                    "mail": "yq_hf@mail.ustc.edu.cn",
+                    "intro": "中国科学技术大学2018级硕士研究生"
+                    }
+                ],
                 "img_path": {
-                    "何理扬": "/members/何理扬.jpg",
+                    // 指导教师
+                    "陈恩红": "/members/陈恩红.jpg",
                     "刘淇": "/members/刘淇.jpg",
+                    "黄振亚": "/members/黄振亚.jpeg",
+                    // 团队成员
+                    "何理扬": "/members/何理扬.jpg",
                     "包美凯": "/members/包美凯.jpg",
                     "吕瑞": "/members/吕瑞.jpg",
                     "宁雨亭": "/members/宁雨亭.jpg",
@@ -270,17 +465,25 @@ export default {
                     "翟佳伦": "/members/翟佳伦.jpg",
                     "覃龙虎": "/members/覃龙虎.jpg",
                     "金鑫": "/members/金鑫.jpg",
-                    "陈恩红": "/members/陈恩红.jpg",
                     "雷思琦": "/members/雷思琦.jpg",
                     "韩子勤": "/members/韩子勤.jpg",
                     "项子扬": "/members/项子扬.jpg",
                     "马一潇": "/members/马一潇.jpg",
                     "黄威": "/members/黄威.jpg",
-                    "黄振亚": "/members/黄振亚.jpeg",
                     "黄杰": "/members/黄杰.jpg",
                     "黄野": "/members/黄野.jpg",
                     "龚政": "/members/龚政.jpg",
-                    "黄小青": "/members/黄小青.jpg"
+                    "黄小青": "/members/黄小青.jpg",
+                    // 特邀工程师
+                    "梁先锋": "/members/梁先锋.jpeg",
+                    "韩浩宇": "/members/韩浩宇.jpeg",
+                    "祝冠琪": "/members/祝冠琪.jpeg",
+                    // 技术顾问
+                    "阴钰": "/members/阴钰.jpg",
+                    "高维博": "/members/高维博.jpeg",
+                    "张征": "/members/张征.jpeg",
+                    // 历任成员
+                    "杨青": "/members/杨青.jpeg"
                 }
             }
         }
@@ -294,6 +497,33 @@ export default {
             var student = this.member_data.students[i];
             if(this.member_data.img_path[student.name]){
                 return this.member_data.img_path[student.name];
+            }else{
+                return "/members/unknown.png"
+            }
+        },
+        Get_InvitedEngineer_Img(row, index){
+            var i = (row-1)*3 + index
+            var invitedEngineer = this.member_data.invitedEngineer[i];
+            if(this.member_data.img_path[invitedEngineer.name]){
+                return this.member_data.img_path[invitedEngineer.name];
+            }else{
+                return "/members/unknown.png"
+            }
+        },
+        Get_TechConsultant_Img(row, index){
+            var i = (row-1)*3 + index
+            var techConsultant = this.member_data.techConsultant[i];
+            if(this.member_data.img_path[techConsultant.name]){
+                return this.member_data.img_path[techConsultant.name];
+            }else{
+                return "/members/unknown.png"
+            }
+        },
+        Get_HistoryMember_Img(row, index){
+            var i = (row-1)*3 + index
+            var historyMember = this.member_data.historyMembers[i];
+            if(this.member_data.img_path[historyMember.name]){
+                return this.member_data.img_path[historyMember.name];
             }else{
                 return "/members/unknown.png"
             }

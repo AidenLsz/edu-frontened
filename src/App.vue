@@ -419,7 +419,7 @@ export default {
       this.ToTop();
     },
     show_members(){
-      this.$router.push({ path: "/Members" });
+      this.$router.push({ path: "/members" });
       this.ToTop();
     },
     login_show() {

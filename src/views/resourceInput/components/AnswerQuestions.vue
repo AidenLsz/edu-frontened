@@ -17,33 +17,28 @@
             <!-- 左边组，第一行是分值和显示分值的地方 -->
             <!-- 第二行是添加选项，预览题目效果 -->
             <el-col :span="6">
-                <el-row>
-                    <el-col :span="6" style="padding-top: 4px">
-                        <span style="font-size: 15px; font-weight: bold">分值</span>
-                    </el-col>
-                    <el-col :span="18">
-                        <el-input readonly v-model="questionInfo.score" size="mini" style="font-size: 15px"></el-input>
-                    </el-col>
+                <el-row type="flex" justify="start">
+                    <label style="padding-left: 5px; font-size: 15px; display: inline-block; width: 60px; padding-top:4px">分值：</label>
+                    <el-input type="number" min="1" max="100" step="0.1" v-model="questionInfo.score" size="mini" style="font-size: 15px; width: 100px; margin-left: 20px"></el-input>
+                    <label style="font-size: 15px; display: inline-block; width: 20px; padding-top:4px; margin-left: 20px">分</label>
                 </el-row>
                 <br/>
-                <el-row style="padding-left: 10px">
-                    <el-col :span="12">
-                        <el-button size="mini" style="font-size: 12px" @click="Sub_Questions_Add()">
-                            <i class="el-icon-edit"></i>
-                            添加小题
-                        </el-button>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-button size="mini" style="font-size: 12px" @click="Open_Preview()">
-                            <i class="el-icon-search"></i>
-                            预览本题
-                        </el-button>
-                    </el-col>
+                <el-row type="flex" justify="start">
+                    <el-button size="mini" style="font-size: 12px; margin-left: 5px" @click="Sub_Questions_Add()">
+                        <i class="el-icon-edit"></i>
+                        添加小题
+                    </el-button>
+                    <el-button size="mini" style="font-size: 12px; margin-left: 20px" @click="Open_Preview()">
+                        <i class="el-icon-search"></i>
+                        预览本题
+                    </el-button>
                 </el-row>
             </el-col>
             
             <el-col :span="2" style="padding-top: 4px">
-                <span style="font-size: 15px; font-weight: bold">题目</span>
+                <el-row type="flex" justify="center">
+                    <span style="font-size: 15px; font-weight: bold">题目</span>
+                </el-row>
             </el-col>
             <el-col :span="16">
                 <el-row>
@@ -57,7 +52,7 @@
                             placeholder="请输入题目内容（必填）">
                         </el-input>
                     </el-col>
-                    <el-col :span="5" :offset="1">
+                    <el-col :span="6" style="margin-left: -5px">
                         <el-row type="flex" justify="center">
                             <label>
                                 添加图片
@@ -129,13 +124,17 @@
                             </el-button>
                         </el-col>
                         <el-col :span="2" style="padding-top: 10px; font-size: 15px; font-weight: bold">
-                            <label>分值</label>
+                            <el-row type="flex" justify="center">
+                                <label>分值</label>
+                            </el-row>
                         </el-col>
                         <el-col :span="2" style="padding-top: 6px">
                             <el-input type="number" min="1" max="100" step="0.1" v-model="questionInfo.sub_questions_scores[index - 1]" size="mini" style="font-size: 15px"></el-input>
                         </el-col>
                         <el-col :span="2" style="padding-top: 10px; font-size: 15px; font-weight: bold">
-                            小题 {{String.fromCharCode(64 + index)}}
+                            <el-row type="flex" justify="start" style="padding-left: 20px">
+                                小题 {{String.fromCharCode(64 + index)}}
+                            </el-row>
                         </el-col>
                         <el-col :span="10" style="margin-left: 10px">
                             <el-input 
@@ -146,20 +145,22 @@
                                 resize="none"
                             ></el-input>
                         </el-col>
-                        <el-col :span="2" style="margin-top: 15px">
-                            <label>添加图片 ></label>
-                        </el-col>
-                        <el-col :span="2">
-                            <div 
-                                class="btn_file"
-                                style="margin-top:10px">
-                                <p><i class="el-icon-picture"></i></p>
-                                <input
-                                    type="file"
-                                    @change="uploadImg_Sub($event, index - 1)"
-                                    accept="image/png, image/jpeg"
-                                />
-                            </div>
+                            
+                        <el-col :span="3" :offset="1">
+                            <el-row type="flex" justify="center" style="margin-left: 5px">
+                                <label>添加图片</label>
+                            </el-row>
+                            <el-row type="flex" justify="center" style="margin-left: 5px">
+                                <div 
+                                    class="btn_file">
+                                    <p><i class="el-icon-picture"></i></p>
+                                    <input
+                                        type="file"
+                                        @change="uploadImg_Sub($event, index - 1)"
+                                        accept="image/png, image/jpeg"
+                                    />
+                                </div>
+                            </el-row>
                         </el-col>
                     </el-row>
                     <el-row style="margin-top: 15px">
@@ -195,8 +196,10 @@
         </el-row>
         <!-- 答案与答案图片 -->
         <el-row style="margin-top: 15px">
-            <el-col :span="2" :offset="1"  style="padding-top: 4px">
-                <span style="font-size: 15px; font-weight: bold">答案</span>
+            <el-col :span="3" style="padding-top: 4px">
+                <el-row type="flex" justify="center">
+                    <span style="font-size: 15px; font-weight: bold">答案</span>
+                </el-row>
             </el-col>
             <el-col :span="21">
                 <el-row>
@@ -262,8 +265,10 @@
         </el-row>
         <!-- 解析与解析图片 -->
         <el-row style="margin-top: 15px">
-            <el-col :span="2" :offset="1"  style="padding-top: 4px">
-                <span style="font-size: 15px; font-weight: bold">解析</span>
+            <el-col :span="3" style="padding-top: 4px">
+                <el-row type="flex" justify="center">
+                    <span style="font-size: 15px; font-weight: bold">解析</span>
+                </el-row>
             </el-col>
             <el-col :span="21">
                 <el-row>
@@ -329,7 +334,7 @@
         </el-row>
         <!-- 确认完成的按钮 -->
         <br/>
-        <el-row>
+        <el-row type="flex" justify="center">
             <el-button type="success" @click="Edit_Finish()">
                 <i class="el-icon-check"></i>
                 编辑完成
@@ -593,12 +598,12 @@ export default {
 
             var Result = true;
             
-            if(this.questionInfo.content == ""){
+            if(this.questionInfo.content == "" && this.questionInfo.content_images.length == 0){
                 Result = false
             }
 
             for(var i = 0; i < this.questionInfo.sub_questions.length; i++){
-                if(this.questionInfo.sub_questions[i] == ""){
+                if(this.questionInfo.sub_questions[i] == "" && this.questionInfo.sub_questions_images[i].length == 0){
                     Result = false
                 }
             }
@@ -628,6 +633,7 @@ export default {
   font-size: 20px;
   border-radius: 2px;
   border: 1px dashed black;
+  text-align: center;
   cursor: pointer;
 }
 input {
