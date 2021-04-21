@@ -1102,6 +1102,7 @@ export default {
     methods: {
         // 下载PDF格式的分析报告
         PDF_Download(){
+            window.scrollTo(0, 0);
 
             this.Part_Expand = [true, true, true, true];
             setTimeout(() => {
