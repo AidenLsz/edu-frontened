@@ -1,7 +1,7 @@
 // 这一页面主要用于测试各类新功能的显示是否符合具体要求，等待完成后再放到正式页面上去
 
 <template>
-    <div style="min-height: 600px">
+    <div style="min-height: 600px" ref="PaperAnalyseInfo">
     <!-- 准备开始写大题分析图表 -->
     <!-- QB即Question_Bundle，指题包 -->
     <el-dialog
@@ -23,7 +23,7 @@
         </el-row>
         <el-row :class="Get_Expand_Or_Collapse_QB(0)">
             <!-- 本大题的小题数量 -->
-            <el-row style="width: 67%; margin-left: 16.5%; font-size: 1.5rem" type="flex" justify="start">
+            <el-row style="width: 67%; margin-left: 16.5%; font-size: 1.5rem; text-align: left" type="flex" justify="start">
                 <label>此大题共{{Paper_Json_Question_Bundle_Info.sub_question.length}}道题目，各项指标如下：</label>
             </el-row>
             <!-- 三项指标的假表格 -->
@@ -78,7 +78,7 @@
             <el-row>
                 <!-- 知识点难度分析部分 -->
                 <!-- 总分析行 -->
-                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 1.5rem; margin-top: 30px">
+                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 1.5rem; margin-top: 30px; text-align: left">
                     <label>此大题共包含了&nbsp;&nbsp;{{Get_QB_Knowledge_Length()}}&nbsp;&nbsp;个知识点，<span v-if="Get_QB_Knowledge_Length() > 1">难度最大的知识点</span>为&nbsp;&nbsp;{{Get_QB_Knowledge_Difficult(true)}}&nbsp;&nbsp;
                         <span v-if="Get_QB_Knowledge_Length() > 1">，难度最小的知识点为&nbsp;&nbsp;{{Get_QB_Knowledge_Difficult(false)}}&nbsp;&nbsp;。</span>
                         <span v-else>。</span>
@@ -94,7 +94,7 @@
                 </el-row>
                 <!-- 知识点分值分布部分 -->
                 <!-- 总分析行 -->
-                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5%;">
+                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5%; text-align: left">
                     <label style=" text-align: left; margin-bottom: 20px">此大题总分为&nbsp;&nbsp;{{Paper_Json_Question_Bundle_Info.score}}&nbsp;&nbsp;分。
                         其中<span v-if="QB_KnowledgeScore_Name_List.length > 1">，分值最大</span>的知识点为&nbsp;&nbsp;{{QB_KnowledgeScore_Name_List[0]}}&nbsp;&nbsp;
                         {{QB_Get_Second_Score()}}<span v-if="QB_KnowledgeScore_Name_List.length > 1">
@@ -170,7 +170,7 @@
     </el-row>
     <el-row :class="Get_Expand_Or_Collapse(0)">
         <!-- 本卷大题数量 -->
-        <el-row style="width: 67vw; margin-left: 16.5vw; font-size: 1.5rem" type="flex" justify="start">
+        <el-row style="width: 67vw; margin-left: 16.5vw; font-size: 1.5rem; text-align: left" type="flex" justify="start">
             <label>本卷共{{Paper_Json.sub_question.length}}道大题，各项指标如下：</label>
         </el-row>
         <!-- 三项指标的假表格 -->
@@ -233,7 +233,7 @@
         <el-row :class="Paper_Total_Analyse_Hidden(true)">
             <!-- 知识点难度分析部分 -->
             <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px">
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; text-align: left">
                 <label>本卷共包含了&nbsp;&nbsp;{{Get_Paper_Knowledge_Length()}}&nbsp;&nbsp;个知识点，难度最大的知识点为&nbsp;&nbsp;{{Get_Paper_Knowledge_Difficult(true)}}&nbsp;&nbsp;，难度最小的知识点为&nbsp;&nbsp;{{Get_Paper_Knowledge_Difficult(false)}}&nbsp;&nbsp;。</label>
             </el-row>
             <!-- 提示行 -->
@@ -246,7 +246,7 @@
             </el-row>
             <!-- 知识点分值分布部分 -->
             <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw;">
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left">
                 <label>本卷总分为&nbsp;&nbsp;{{Paper_Json.score}}&nbsp;&nbsp;分。
                     其中，分值最大的知识点为&nbsp;&nbsp;{{KnowledgeScore_Name_List[0]}}&nbsp;&nbsp;
                     {{Paper_Total_Get_Second_Score()}}
@@ -263,7 +263,7 @@
             </el-row>
             <!-- 知识点点对分布部分 -->
             <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw;">
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left">
                 <label v-if="KnowledgePair_Name_List.length > 0">
                     共同出现次数最多的知识点为&nbsp;&nbsp;{{Paper_Total_Get_First_Pair()}}&nbsp;&nbsp;，
                     共同出现了&nbsp;&nbsp;{{KnowledgePair_List[0]}}&nbsp;&nbsp;次
@@ -295,7 +295,7 @@
                 <div id="Paper_Knowledge_Pair" class="Paper_Knowledge_Pair"></div>
             </el-row>
             <!-- 知识点覆盖程度部分 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw;">
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left">
                 <label>本卷覆盖的知识点比例尚待进一步分析。（下方区域是圆环图今后大致的占位区域）</label>
             </el-row>
             <el-row>
@@ -305,7 +305,7 @@
         <!-- 难度分析 -->
         <el-row :class="Paper_Total_Analyse_Hidden(false)">
             <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px">
+            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; text-align: left">
                 <label>本卷难度平均值为&nbsp;&nbsp;{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}&nbsp;&nbsp;，占比最大的题目难度区间为&nbsp;&nbsp;{{Max_Gap}}</label>
             </el-row>
             <!-- 提示行 -->
@@ -1105,7 +1105,7 @@ export default {
 
             this.Part_Expand = [true, true, true, true];
             setTimeout(() => {
-                html2canvas(document.body).then(
+                html2canvas(this.$refs["PaperAnalyseInfo"]).then(
                     canvas => {
 
                         var contentWidth = canvas.width;
