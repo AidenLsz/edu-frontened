@@ -360,6 +360,9 @@
             </el-row>
         </el-row>
     </el-row>
+    <el-row type="flex" justify="center" style="margin-bottom: 50px">
+        <el-button type="success" plain @click="PDF_Download()">保存当前页面为PDF文档</el-button>
+    </el-row>  
     </div>
 </template>
 <script>
@@ -367,6 +370,8 @@
 // 引入基本模板
 import * as echarts from 'echarts';
 import PaperAnalysePQRoot from './components/PaperAnalysePQRoot.vue';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 export default {
 
@@ -1095,6 +1100,46 @@ export default {
         window.scrollTo(0, 0);
     },
     methods: {
+        // 下载PDF格式的分析报告
+        PDF_Download(){
+
+            this.Part_Expand = [true, true, true, true];
+            setTimeout(() => {
+                html2canvas(document.body).then(
+                    canvas => {
+
+                        var contentWidth = canvas.width;
+                        var contentHeight = canvas.height;
+
+                        var pageHeight = contentWidth / 592.28 * 841.89;
+                        var leftHeight = contentHeight;
+
+                        var position = 0;
+
+                        var imgWidth = 595.28;
+                        var imgHeight = 592.28/contentWidth * contentHeight;
+
+                        var pageData = canvas.toDataURL('image/jpeg', 1.0);
+
+                        var pdf = new jsPDF('', 'pt', 'a4');
+                        if (leftHeight < pageHeight) {
+                            pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight );
+                        } else {
+                            while(leftHeight > 0) {
+                                pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
+                                leftHeight -= pageHeight;
+                                position -= 841.89;
+                                //避免添加空白页
+                                if(leftHeight > 0) {
+                                    pdf.addPage();
+                                }
+                            }
+                        }
+                        pdf.save("content.pdf");
+                    }
+                )
+            }, 100)
+        },
         // 处理对话框内应当显示的内容
         Change_Dialog_Info(Sub_Index, Dialog_Label)
         {
