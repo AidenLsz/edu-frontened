@@ -1,7 +1,11 @@
 // 这一页面主要用于测试各类新功能的显示是否符合具体要求，等待完成后再放到正式页面上去
 
 <template>
-    <div style="min-height: 600px" ref="PaperAnalyseInfo">
+    <div style="min-height: 600px" ref="PaperAnalyseInfo"
+    
+          v-loading="transing"
+          element-loading-text="转换中，请等待"
+          element-loading-spinner="el-icon-loading">
     <!-- 准备开始写大题分析图表 -->
     <!-- QB即Question_Bundle，指题包 -->
     <el-dialog
@@ -379,6 +383,8 @@ export default {
     name: "TestPage",
     data(){
         return {
+            // 保存标志
+            transing: false,
             Paper_Json: this.Paper_J,
             // 总体分析界面是否展开/折叠
             Part_Expand: [false, false, false, false],
@@ -1103,6 +1109,7 @@ export default {
         // 下载PDF格式的分析报告
         PDF_Download(){
             window.scrollTo(0, 0);
+            this.transing = true;
 
             this.Part_Expand = [true, true, true, true];
             setTimeout(() => {
@@ -1137,9 +1144,10 @@ export default {
                             }
                         }
                         pdf.save("content.pdf");
+                        this.transing = false;
                     }
                 )
-            }, 100)
+            }, 1)
         },
         // 处理对话框内应当显示的内容
         Change_Dialog_Info(Sub_Index, Dialog_Label)
