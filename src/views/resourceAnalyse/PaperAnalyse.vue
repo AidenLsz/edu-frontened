@@ -374,6 +374,7 @@ export default {
     name: "TestPage",
     data(){
         return {
+            Paper_Json: this.Paper_J,
             // 总体分析界面是否展开/折叠
             Part_Expand: [false, false, false, false],
             // 总体分析页面展开的是知识点分析还是难度分析的区分变量
@@ -431,7 +432,7 @@ export default {
     //    sessionStorage.removeItem('PaperJson')
     },
     props: {
-        Paper_Json:{
+        Paper_J:{
             type: Object,
             default: function(){
                 return {
