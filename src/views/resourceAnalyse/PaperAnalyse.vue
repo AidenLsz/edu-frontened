@@ -1122,12 +1122,12 @@ export default {
             window.scrollTo(0, 0);
             this.Part_Expand = [true, true, true, true];
             this.transing = true;
-            this.PDF_Download("Paper_Title");
-            this.PDF_Download("Paper_Total");
-            this.PDF_Download("Paper_Analyse");
-            this.PDF_Download("Paper_Similarity");
-            this.PDF_Download("Paper_Detail");
-            // this.PDF_Download("PaperAnalyseInfo");
+            // this.PDF_Download("Paper_Title");
+            // this.PDF_Download("Paper_Total");
+            // this.PDF_Download("Paper_Analyse");
+            // this.PDF_Download("Paper_Similarity");
+            // this.PDF_Download("Paper_Detail");
+            this.PDF_Download("PaperAnalyseInfo");
             
         },
         // 下载PDF格式的分析报告
@@ -1167,7 +1167,7 @@ export default {
                                 }
                             }
                         }
-                        if(part == "Paper_Detail"){
+                        if(part == "Paper_Detail" || part == "PaperAnalyseInfo"){
                             PDF.save("part_content.pdf")
                             PDF = new jsPDF('', 'pt', 'a4');
                             this.transing = false;
