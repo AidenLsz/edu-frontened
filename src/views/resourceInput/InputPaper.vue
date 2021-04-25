@@ -723,17 +723,17 @@
           </el-button>
         </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="primary" @click="paperShow = true" plain style="width: 200px; font-size: 16px" :disabled="Questions.length == 0">
+          <el-button type="primary" @click="paperShow = true" plain style="width: 200px; font-size: 16px"  :disabled="Blank_Paper()">
             <label>预览全卷</label>
           </el-button>
         </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')" :disabled="Questions.length == 0">
+          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')" :disabled="Blank_Paper()">
             <label>题目入库</label>
           </el-button>
         </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px" v-if="Authority_Check()" >
-          <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('export')" :disabled="Questions.length == 0">
+          <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('export')" :disabled="Blank_Paper()">
             <label>导出题目</label>
           </el-button>
         </el-row>
@@ -744,7 +744,7 @@
           type="flex" 
           justify="center" 
           style="margin-top: 30px">
-          <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('analyse')">
+          <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('analyse')" :disabled="Blank_Paper()">
             <label>试卷分析</label>
           </el-button>
         </el-row>
@@ -755,7 +755,7 @@
           type="flex" 
           justify="center" 
           style="margin-top: 30px">
-            <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('download')" :disabled="Questions.length == 0">
+            <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('download')" :disabled="Blank_Paper()">
               <label>下载试卷</label>
             </el-button>
         </el-row>
@@ -1280,6 +1280,20 @@ export default {
     this.ToTop();
   },
   methods: {
+    // 是否为实际空试卷检查
+    Blank_Paper(){
+      if(this.Questions.length == 0){
+        return true
+      }else{
+        for(let i = 0; i < this.Questions[i].Bundle_Questions.length; i++){
+          if(this.Questions[i].Bundle_Questions.length > 0){
+            return false
+          }
+        }
+        return true
+      }
+    },
+    // 权限检查
     Authority_Check(){
       var username = sessionStorage.getItem("user");
       if(username === "advanced" || username === "admin"){
@@ -3383,6 +3397,7 @@ export default {
           emulateJSON: true
         })
         .then(function(data) {
+          console.log(data.data)
             this.analysing = false;
             let Test_Json = data.data.Paper_Json
             sessionStorage.PaperJson = JSON.stringify(Test_Json);

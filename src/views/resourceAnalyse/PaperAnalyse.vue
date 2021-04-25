@@ -156,7 +156,7 @@
     </el-dialog>
     <div ref="Paper_Title">
         <el-row style="padding-top: 15px">
-            <label style="font-size: 2rem">xxx试卷分析报告</label>
+            <label style="font-size: 2rem">{{Paper_Json.title}}分析报告</label>
         </el-row>
         <el-row>
             <el-col :span="18" :offset="3">
@@ -461,6 +461,7 @@ export default {
                 return {
                     "id": "af6a45a3-46fa-41d6-ac7e-ae3842ce40fb",
                     "type": "Paper",
+                    "title": "Temp_Title",
                     "status": "OK",
                     "score": 31,
                     "difficulty_area_score": [

@@ -125,7 +125,7 @@
             </el-row>
         </el-col>
         <el-col :span="24" v-else>
-            <el-row type="flex" justify="start" style="margin-bottom: 10px">
+            <el-row type="flex" justify="start" style="margin-bottom: 10px" v-if="Question.score">
                 <label>（ 小题{{Question.score}}分 ）</label>
             </el-row>
             <el-row type="flex" justify="start" style="margin-bottom: 10px;">
@@ -232,11 +232,11 @@
                 </el-row>
                 <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
                     <el-col :span="12" style="text-align: left">
-                        相似试卷
+                        相似试题
                     </el-col>
                 </el-row>
                 <el-row type="flex" justify="start" style="padding-left: 45px">
-                    <label>与此试卷相似的试卷是xxxxxxx</label>
+                    <label>与此试卷相似的试题是xxxxxxx</label>
                 </el-row>
             </el-row>
         </el-col>
