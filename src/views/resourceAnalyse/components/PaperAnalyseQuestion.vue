@@ -58,6 +58,9 @@ export default {
       return this.Name_Q + "_Q_" + this.Sub_Index + "_" + After_Str;
     },
     Get_Options(optString){
+      if(typeof optString == 'object' && typeof optString.length == 'number'){
+        return optString;
+      }
       if(optString.length > 0){
         var tempList = optString.substring(1, optString.length-1).split(", ")
         var Result = []

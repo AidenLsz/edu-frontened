@@ -1,7 +1,11 @@
 // 这一页面主要用于测试各类新功能的显示是否符合具体要求，等待完成后再放到正式页面上去
 
 <template>
-    <div style="min-height: 600px">
+    <div style="min-height: 600px" ref="PaperAnalyseInfo"
+    
+          v-loading="transing"
+          element-loading-text="转换中，请等待"
+          element-loading-spinner="el-icon-loading">
     <!-- 准备开始写大题分析图表 -->
     <!-- QB即Question_Bundle，指题包 -->
     <el-dialog
@@ -23,7 +27,7 @@
         </el-row>
         <el-row :class="Get_Expand_Or_Collapse_QB(0)">
             <!-- 本大题的小题数量 -->
-            <el-row style="width: 67%; margin-left: 16.5%; font-size: 1.5rem" type="flex" justify="start">
+            <el-row style="width: 67%; margin-left: 16.5%; font-size: 1.5rem; text-align: left" type="flex" justify="start">
                 <label>此大题共{{Paper_Json_Question_Bundle_Info.sub_question.length}}道题目，各项指标如下：</label>
             </el-row>
             <!-- 三项指标的假表格 -->
@@ -78,7 +82,7 @@
             <el-row>
                 <!-- 知识点难度分析部分 -->
                 <!-- 总分析行 -->
-                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 1.5rem; margin-top: 30px">
+                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 1.5rem; margin-top: 30px; text-align: left">
                     <label>此大题共包含了&nbsp;&nbsp;{{Get_QB_Knowledge_Length()}}&nbsp;&nbsp;个知识点，<span v-if="Get_QB_Knowledge_Length() > 1">难度最大的知识点</span>为&nbsp;&nbsp;{{Get_QB_Knowledge_Difficult(true)}}&nbsp;&nbsp;
                         <span v-if="Get_QB_Knowledge_Length() > 1">，难度最小的知识点为&nbsp;&nbsp;{{Get_QB_Knowledge_Difficult(false)}}&nbsp;&nbsp;。</span>
                         <span v-else>。</span>
@@ -94,7 +98,7 @@
                 </el-row>
                 <!-- 知识点分值分布部分 -->
                 <!-- 总分析行 -->
-                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5%;">
+                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5%; text-align: left">
                     <label style=" text-align: left; margin-bottom: 20px">此大题总分为&nbsp;&nbsp;{{Paper_Json_Question_Bundle_Info.score}}&nbsp;&nbsp;分。
                         其中<span v-if="QB_KnowledgeScore_Name_List.length > 1">，分值最大</span>的知识点为&nbsp;&nbsp;{{QB_KnowledgeScore_Name_List[0]}}&nbsp;&nbsp;
                         {{QB_Get_Second_Score()}}<span v-if="QB_KnowledgeScore_Name_List.length > 1">
@@ -150,216 +154,229 @@
             </el-row>
         </el-row>
     </el-dialog>
-    <el-row style="padding-top: 15px">
-        <label style="font-size: 2rem">xxx试卷分析报告</label>
-    </el-row>
-    <el-row>
-        <el-col :span="18" :offset="3">
-            <el-divider style="width: 3px"></el-divider>
-        </el-col>
-    </el-row>
-    <!-- 综合分析 -->
-    <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(0)" :class="Get_Part_Row_Style(0)">
-        <el-col :span="12" style="text-align: left">
-            综合分析
-        </el-col>
-        <el-col :span="2" :offset="10">
-            <i class="el-icon-arrow-down" v-if="!Part_Expand[0]"></i>
-            <i class="el-icon-arrow-up" v-if="Part_Expand[0]"></i>
-        </el-col>
-    </el-row>
-    <el-row :class="Get_Expand_Or_Collapse(0)">
-        <!-- 本卷大题数量 -->
-        <el-row style="width: 67vw; margin-left: 16.5vw; font-size: 1.5rem" type="flex" justify="start">
-            <label>本卷共{{Paper_Json.sub_question.length}}道大题，各项指标如下：</label>
+    <div ref="Paper_Title">
+        <el-row style="padding-top: 15px">
+            <label style="font-size: 2rem">{{Paper_Json.title}}分析报告</label>
         </el-row>
-        <!-- 三项指标的假表格 -->
-        <!-- 表头项 -->
-        <el-row style="width: 67vw; background: WhiteSmoke; font-weight: bold; font-size: 1.5rem; margin-left: 16.5vw; margin-top: 30px; padding-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
-            <el-col :span="5" :offset="4">均值</el-col>
-            <el-col :span="5">方差</el-col>
-            <el-col :span="5">最大值</el-col>
-            <el-col :span="5">最小值</el-col>
-        </el-row>
-        <!-- 第一项 -->
-        <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
-            <el-col :span="4">难度</el-col>
-            <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}</el-col>
-            <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.min)}}</el-col>
-            <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.max)}}</el-col>
-            <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.std)}}</el-col>
-        </el-row>
-        <!-- 第二项 -->
-        <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
-            <el-col :span="4">指标2</el-col>
-            <el-col :span="5">0</el-col>
-            <el-col :span="5">0</el-col>
-            <el-col :span="5">0</el-col>
-            <el-col :span="5">0</el-col>
-        </el-row>
-        <!-- 第三项 -->
-        <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver">
-            <el-col :span="4">指标3</el-col>
-            <el-col :span="5">0</el-col>
-            <el-col :span="5">0</el-col>
-            <el-col :span="5">0</el-col>
-            <el-col :span="5">0</el-col>
-        </el-row>
-        <!-- 随意添加的一个假柱状图 -->
         <el-row>
-            <div id="Paper_Total_Bar" class="Paper_Total_Bar"></div>
+            <el-col :span="18" :offset="3">
+                <el-divider style="width: 3px"></el-divider>
+            </el-col>
         </el-row>
-    </el-row>
+    </div>
+    <div ref="Paper_Total">
+        <!-- 综合分析 -->
+        <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(0)" :class="Get_Part_Row_Style(0)">
+            <el-col :span="12" style="text-align: left">
+                综合分析
+            </el-col>
+            <el-col :span="2" :offset="10">
+                <i class="el-icon-arrow-down" v-if="!Part_Expand[0]"></i>
+                <i class="el-icon-arrow-up" v-if="Part_Expand[0]"></i>
+            </el-col>
+        </el-row>
+        <el-row :class="Get_Expand_Or_Collapse(0)">
+            <!-- 本卷大题数量 -->
+            <el-row style="width: 67vw; margin-left: 16.5vw; font-size: 1.5rem; text-align: left" type="flex" justify="start">
+                <label>本卷共{{Paper_Json.sub_question.length}}道大题，各项指标如下：</label>
+            </el-row>
+            <!-- 三项指标的假表格 -->
+            <!-- 表头项 -->
+            <el-row style="width: 67vw; background: WhiteSmoke; font-weight: bold; font-size: 1.5rem; margin-left: 16.5vw; margin-top: 30px; padding-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
+                <el-col :span="5" :offset="4">均值</el-col>
+                <el-col :span="5">方差</el-col>
+                <el-col :span="5">最大值</el-col>
+                <el-col :span="5">最小值</el-col>
+            </el-row>
+            <!-- 第一项 -->
+            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
+                <el-col :span="4">难度</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.min)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.max)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.std)}}</el-col>
+            </el-row>
+            <!-- 第二项 -->
+            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
+                <el-col :span="4">指标2</el-col>
+                <el-col :span="5">0</el-col>
+                <el-col :span="5">0</el-col>
+                <el-col :span="5">0</el-col>
+                <el-col :span="5">0</el-col>
+            </el-row>
+            <!-- 第三项 -->
+            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver">
+                <el-col :span="4">指标3</el-col>
+                <el-col :span="5">0</el-col>
+                <el-col :span="5">0</el-col>
+                <el-col :span="5">0</el-col>
+                <el-col :span="5">0</el-col>
+            </el-row>
+            <!-- 随意添加的一个假柱状图 -->
+            <el-row>
+                <div id="Paper_Total_Bar" class="Paper_Total_Bar"></div>
+            </el-row>
+        </el-row>
+    </div>
+    <div ref="Paper_Analyse">
     <!-- 分析详情 -->
-    <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(1)" :class="Get_Part_Row_Style(1)">
-        <el-col :span="12" style="text-align: left">
-            分析详情
-        </el-col>
-        <el-col :span="2" :offset="10">
-            <i class="el-icon-arrow-down" v-if="!Part_Expand[1]"></i>
-            <i class="el-icon-arrow-up" v-if="Part_Expand[1]"></i>
-        </el-col>
-    </el-row>
-    <el-row :class="Get_Expand_Or_Collapse(1)">
-        <el-row style="width: 18vw; margin-left: 41vw; margin-top: 10px; border: 1px solid #409EFD; border-radius: 10px; height: 30px">
-            <el-col :span="12" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;" :class="Check_Total_Switch(true)" v-on:click.native="Paper_Total_Analyse_Focus = true">
-                知识点分析
+        <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(1)" :class="Get_Part_Row_Style(1)">
+            <el-col :span="12" style="text-align: left">
+                分析详情
             </el-col>
-            <el-col :span="12" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;" :class="Check_Total_Switch(false)" v-on:click.native="Paper_Total_Analyse_Focus = false">
-                难度分析
+            <el-col :span="2" :offset="10">
+                <i class="el-icon-arrow-down" v-if="!Part_Expand[1]"></i>
+                <i class="el-icon-arrow-up" v-if="Part_Expand[1]"></i>
             </el-col>
         </el-row>
-        <!-- 知识点分析 -->
-        <el-row :class="Paper_Total_Analyse_Hidden(true)">
-            <!-- 知识点难度分析部分 -->
-            <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px">
-                <label>本卷共包含了&nbsp;&nbsp;{{Get_Paper_Knowledge_Length()}}&nbsp;&nbsp;个知识点，难度最大的知识点为&nbsp;&nbsp;{{Get_Paper_Knowledge_Difficult(true)}}&nbsp;&nbsp;，难度最小的知识点为&nbsp;&nbsp;{{Get_Paper_Knowledge_Difficult(false)}}&nbsp;&nbsp;。</label>
-            </el-row>
-            <!-- 提示行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem">
-                <label>各知识点平均难度为：</label>
-            </el-row>
-            <!-- 知识点难度分布柱状图 -->
-            <el-row>
-                <div id="Paper_Knowledge_Difficult_Analyse" class="Paper_Knowledge_Difficult_Analyse"></div>
-            </el-row>
-            <!-- 知识点分值分布部分 -->
-            <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw;">
-                <label>本卷总分为&nbsp;&nbsp;{{Paper_Json.score}}&nbsp;&nbsp;分。
-                    其中，分值最大的知识点为&nbsp;&nbsp;{{KnowledgeScore_Name_List[0]}}&nbsp;&nbsp;
-                    {{Paper_Total_Get_Second_Score()}}
-                    ，分值最小的知识点为&nbsp;&nbsp;{{KnowledgeScore_Name_List[KnowledgeScore_List.length - 1]}}&nbsp;&nbsp;
-                    ，仅占&nbsp;&nbsp;{{KnowledgeScore_List[KnowledgeScore_List.length - 1]}}&nbsp;&nbsp;分。</label>
-            </el-row>
-            <!-- 提示行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem">
-                <label>各知识点所占分值为：</label>
-            </el-row>
-            <!-- 知识点难度分布柱状图 -->
-            <el-row>
-                <div id="Paper_Knowledge_Score_Analyse" class="Paper_Knowledge_Score_Analyse"></div>
-            </el-row>
-            <!-- 知识点点对分布部分 -->
-            <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw;">
-                <label v-if="KnowledgePair_Name_List.length > 0">
-                    共同出现次数最多的知识点为&nbsp;&nbsp;{{Paper_Total_Get_First_Pair()}}&nbsp;&nbsp;，
-                    共同出现了&nbsp;&nbsp;{{KnowledgePair_List[0]}}&nbsp;&nbsp;次
-                    {{Paper_Total_Get_Second_Pair()}}
-                </label>
-                <label v-if="KnowledgePair_Name_List.length == 0">
-                    本卷中没有共同出现的知识点对。
-                </label>
-            </el-row>
-            <!-- 提示行 -->
-            <el-row v-if="KnowledgePair_Name_List.length > 0" type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem">
-                <label>知识点共现关系如下：</label>
-            </el-row>
-            <!-- 知识点点对分布表格展示部分 -->
-            <el-row v-if="KnowledgePair_Name_List.length > 0"  style="font-size: 1.5rem; margin-top: 30px; ">
-                <el-row style="background: #409EFD; color: white; margin: 0px 16.5vw;">
-                    <el-col :offset="2" :span="7"><label>知识点Ⅰ</label></el-col>
-                    <el-col :span="7"><label>知识点Ⅱ</label></el-col>
-                    <el-col :span="7"><label>出现次数</label></el-col>
-                </el-row>
-                <el-row v-for="(Knowledge_Pair, Pair_Index) in KnowledgePair_Name_List" :key="'T_P_Ku_Pair_' + Pair_Index" :class="Total_Table_Style(Pair_Index)">
-                    <el-col :offset="2" :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, 0)}}</label></el-col>
-                    <el-col :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, 1)}}</label></el-col>
-                    <el-col :span="7"><label>{{KnowledgePair_List[Pair_Index]}}</label></el-col>
-                </el-row>
-            </el-row>
-            <!-- 知识点点对分布共现关系的图的部分 -->
-            <el-row v-if="KnowledgePair_Name_List.length > 0">
-                <div id="Paper_Knowledge_Pair" class="Paper_Knowledge_Pair"></div>
-            </el-row>
-            <!-- 知识点覆盖程度部分 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw;">
-                <label>本卷覆盖的知识点比例尚待进一步分析。（下方区域是圆环图今后大致的占位区域）</label>
-            </el-row>
-            <el-row>
-                <div id="Paper_Knowledge_Cover" class="Paper_Knowledge_Cover"></div>
-            </el-row>
-        </el-row>
-        <!-- 难度分析 -->
-        <el-row :class="Paper_Total_Analyse_Hidden(false)">
-            <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px">
-                <label>本卷难度平均值为&nbsp;&nbsp;{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}&nbsp;&nbsp;，占比最大的题目难度区间为&nbsp;&nbsp;{{Max_Gap}}</label>
-            </el-row>
-            <!-- 提示行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem">
-                <label>各难度所占分值如下：</label>
-            </el-row>
-            <!-- 环状图 -->
-            <el-row>
-                <div id="Paper_Total_Difficult_Analyse" class="Paper_Total_Difficult_Analyse"></div>
-            </el-row>
-        </el-row>
-    </el-row>
-    <!-- 相似试卷 -->
-    <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(2)" :class="Get_Part_Row_Style(2)">
-        <el-col :span="12" style="text-align: left">
-            相似试卷
-        </el-col>
-        <el-col :span="2" :offset="10">
-            <i class="el-icon-arrow-down" v-if="!Part_Expand[2]"></i>
-            <i class="el-icon-arrow-up" v-if="Part_Expand[2]"></i>
-        </el-col>
-    </el-row>
-    <el-row :class="Get_Expand_Or_Collapse(2)" type="flex" justify="start" style="margin: 0px 16.5vw 30px 16.5vw">
-        <label>与此试卷相似的试卷是xxxxxxx</label>
-    </el-row>
-    <!-- 试卷详情 -->
-    <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(3)" :class="Get_Part_Row_Style(3)">
-        <el-col :span="12" style="text-align: left">
-            试卷详情
-        </el-col>
-        <el-col :span="2" :offset="10">
-            <i class="el-icon-arrow-down" v-if="!Part_Expand[3]"></i>
-            <i class="el-icon-arrow-up" v-if="Part_Expand[3]"></i>
-        </el-col>
-    </el-row>
-    <el-row :class="Get_Expand_Or_Collapse(3)">
-        <el-row v-for="(Sub_Ques, Sub_Index) in Paper_Json.sub_question" :key="Sub_Ques.id" style="margin: 30px 0px">
-            <el-row type="flex" justify="start" style="margin: 0px 16.5vw 10px 16.5vw">
-                <el-col :span="20" style="text-align: left">
-                    <label style="line-height: 28px; font-size: 1.5rem">第{{Get_Question_Bundle_Index((Sub_Index + 1) + "")}}大题 —— {{Sub_Ques.desc}}（共{{Sub_Ques.sub_question.length}}题，{{Sub_Ques.score}}分）：</label>
+        <el-row :class="Get_Expand_Or_Collapse(1)">
+            <el-row style="width: 18vw; margin-left: 41vw; margin-top: 10px; border: 1px solid #409EFD; border-radius: 10px; height: 30px">
+                <el-col :span="12" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;" :class="Check_Total_Switch(true)" v-on:click.native="Paper_Total_Analyse_Focus = true">
+                    知识点分析
                 </el-col>
-                <el-col :span="4">
-                    <el-row type="flex" justify="end">
-                        <el-button type="success" size="small" @click="Change_Dialog_Info(Sub_Index, (Sub_Index + 1) + '')">
-                            查看大题分析
-                        </el-button>
+                <el-col :span="12" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;" :class="Check_Total_Switch(false)" v-on:click.native="Paper_Total_Analyse_Focus = false">
+                    难度分析
+                </el-col>
+            </el-row>
+            <!-- 知识点分析 -->
+            <el-row :class="Paper_Total_Analyse_Hidden(true)">
+                <!-- 知识点难度分析部分 -->
+                <!-- 总分析行 -->
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; text-align: left">
+                    <label>本卷共包含了&nbsp;&nbsp;{{Get_Paper_Knowledge_Length()}}&nbsp;&nbsp;个知识点，难度最大的知识点为&nbsp;&nbsp;{{Get_Paper_Knowledge_Difficult(true)}}&nbsp;&nbsp;，难度最小的知识点为&nbsp;&nbsp;{{Get_Paper_Knowledge_Difficult(false)}}&nbsp;&nbsp;。</label>
+                </el-row>
+                <!-- 提示行 -->
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem">
+                    <label>各知识点平均难度为：</label>
+                </el-row>
+                <!-- 知识点难度分布柱状图 -->
+                <el-row>
+                    <div id="Paper_Knowledge_Difficult_Analyse" class="Paper_Knowledge_Difficult_Analyse"></div>
+                </el-row>
+                <!-- 知识点分值分布部分 -->
+                <!-- 总分析行 -->
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left">
+                    <label>本卷总分为&nbsp;&nbsp;{{Paper_Json.score}}&nbsp;&nbsp;分。
+                        其中，分值最大的知识点为&nbsp;&nbsp;{{KnowledgeScore_Name_List[0]}}&nbsp;&nbsp;
+                        {{Paper_Total_Get_Second_Score()}}
+                        ，分值最小的知识点为&nbsp;&nbsp;{{KnowledgeScore_Name_List[KnowledgeScore_List.length - 1]}}&nbsp;&nbsp;
+                        ，仅占&nbsp;&nbsp;{{KnowledgeScore_List[KnowledgeScore_List.length - 1]}}&nbsp;&nbsp;分。</label>
+                </el-row>
+                <!-- 提示行 -->
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem">
+                    <label>各知识点所占分值为：</label>
+                </el-row>
+                <!-- 知识点难度分布柱状图 -->
+                <el-row>
+                    <div id="Paper_Knowledge_Score_Analyse" class="Paper_Knowledge_Score_Analyse"></div>
+                </el-row>
+                <!-- 知识点点对分布部分 -->
+                <!-- 总分析行 -->
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left">
+                    <label v-if="KnowledgePair_Name_List.length > 0">
+                        共同出现次数最多的知识点为&nbsp;&nbsp;{{Paper_Total_Get_First_Pair()}}&nbsp;&nbsp;，
+                        共同出现了&nbsp;&nbsp;{{KnowledgePair_List[0]}}&nbsp;&nbsp;次
+                        {{Paper_Total_Get_Second_Pair()}}
+                    </label>
+                    <label v-if="KnowledgePair_Name_List.length == 0">
+                        本卷中没有共同出现的知识点对。
+                    </label>
+                </el-row>
+                <!-- 提示行 -->
+                <el-row v-if="KnowledgePair_Name_List.length > 0" type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem">
+                    <label>知识点共现关系如下：</label>
+                </el-row>
+                <!-- 知识点点对分布表格展示部分 -->
+                <el-row v-if="KnowledgePair_Name_List.length > 0"  style="font-size: 1.5rem; margin-top: 30px; ">
+                    <el-row style="background: #409EFD; color: white; margin: 0px 16.5vw;">
+                        <el-col :offset="2" :span="7"><label>知识点Ⅰ</label></el-col>
+                        <el-col :span="7"><label>知识点Ⅱ</label></el-col>
+                        <el-col :span="7"><label>出现次数</label></el-col>
                     </el-row>
-                </el-col>
+                    <el-row v-for="(Knowledge_Pair, Pair_Index) in KnowledgePair_Name_List" :key="'T_P_Ku_Pair_' + Pair_Index" :class="Total_Table_Style(Pair_Index)">
+                        <el-col :offset="2" :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, 0)}}</label></el-col>
+                        <el-col :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, 1)}}</label></el-col>
+                        <el-col :span="7"><label>{{KnowledgePair_List[Pair_Index]}}</label></el-col>
+                    </el-row>
+                </el-row>
+                <!-- 知识点点对分布共现关系的图的部分 -->
+                <el-row v-if="KnowledgePair_Name_List.length > 0">
+                    <div id="Paper_Knowledge_Pair" class="Paper_Knowledge_Pair"></div>
+                </el-row>
+                <!-- 知识点覆盖程度部分 -->
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left">
+                    <label>本卷覆盖的知识点比例尚待进一步分析。（下方区域是圆环图今后大致的占位区域）</label>
+                </el-row>
+                <el-row>
+                    <div id="Paper_Knowledge_Cover" class="Paper_Knowledge_Cover"></div>
+                </el-row>
             </el-row>
-            <el-row type="flex" justify="start" style="margin: 0px 16.5vw 10px 16.5vw">
-                <PaperAnalysePQRoot :PackedQues="Sub_Ques" :Index="Sub_Index" style="width: 100%"></PaperAnalysePQRoot>
+            <!-- 难度分析 -->
+            <el-row :class="Paper_Total_Analyse_Hidden(false)">
+                <!-- 总分析行 -->
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; text-align: left">
+                    <label>本卷难度平均值为&nbsp;&nbsp;{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}&nbsp;&nbsp;，占比最大的题目难度区间为&nbsp;&nbsp;{{Max_Gap}}</label>
+                </el-row>
+                <!-- 提示行 -->
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem">
+                    <label>各难度所占分值如下：</label>
+                </el-row>
+                <!-- 环状图 -->
+                <el-row>
+                    <div id="Paper_Total_Difficult_Analyse" class="Paper_Total_Difficult_Analyse"></div>
+                </el-row>
             </el-row>
         </el-row>
-    </el-row>
+    </div>
+    <div ref="Paper_Similarity">
+        <!-- 相似试卷 -->
+        <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(2)" :class="Get_Part_Row_Style(2)">
+            <el-col :span="12" style="text-align: left">
+                相似试卷
+            </el-col>
+            <el-col :span="2" :offset="10">
+                <i class="el-icon-arrow-down" v-if="!Part_Expand[2]"></i>
+                <i class="el-icon-arrow-up" v-if="Part_Expand[2]"></i>
+            </el-col>
+        </el-row>
+        <el-row :class="Get_Expand_Or_Collapse(2)" type="flex" justify="start" style="margin: 0px 16.5vw 30px 16.5vw">
+            <label>与此试卷相似的试卷是xxxxxxx</label>
+        </el-row>
+    </div>
+    <div ref="Paper_Detail">
+        <!-- 试卷详情 -->
+        <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(3)" :class="Get_Part_Row_Style(3)">
+            <el-col :span="12" style="text-align: left">
+                试卷详情
+            </el-col>
+            <el-col :span="2" :offset="10">
+                <i class="el-icon-arrow-down" v-if="!Part_Expand[3]"></i>
+                <i class="el-icon-arrow-up" v-if="Part_Expand[3]"></i>
+            </el-col>
+        </el-row>
+        <el-row :class="Get_Expand_Or_Collapse(3)">
+            <el-row v-for="(Sub_Ques, Sub_Index) in Paper_Json.sub_question" :key="Sub_Ques.id" style="margin: 30px 0px">
+                <el-row type="flex" justify="start" style="margin: 0px 16.5vw 10px 16.5vw">
+                    <el-col :span="20" style="text-align: left">
+                        <label style="line-height: 28px; font-size: 1.5rem">第{{Get_Question_Bundle_Index((Sub_Index + 1) + "")}}大题 —— {{Sub_Ques.desc}}（共{{Sub_Ques.sub_question.length}}题，{{Sub_Ques.score}}分）：</label>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-row type="flex" justify="end">
+                            <el-button type="success" size="small" @click="Change_Dialog_Info(Sub_Index, (Sub_Index + 1) + '')">
+                                查看大题分析
+                            </el-button>
+                        </el-row>
+                    </el-col>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin: 0px 16.5vw 10px 16.5vw">
+                    <PaperAnalysePQRoot :PackedQues="Sub_Ques" :Index="Sub_Index" style="width: 100%"></PaperAnalysePQRoot>
+                </el-row>
+            </el-row>
+        </el-row>
+    </div>
+    <el-row type="flex" justify="center" style="margin-bottom: 50px">
+        <el-button type="success" plain @click="PDF_Switch()">保存当前页面为PDF文档</el-button>
+    </el-row>  
     </div>
 </template>
 <script>
@@ -367,6 +384,10 @@
 // 引入基本模板
 import * as echarts from 'echarts';
 import PaperAnalysePQRoot from './components/PaperAnalysePQRoot.vue';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+
+var PDF = new jsPDF('', 'pt', 'a4');
 
 export default {
 
@@ -374,6 +395,9 @@ export default {
     name: "TestPage",
     data(){
         return {
+            // 保存标志
+            transing: false,
+            Paper_Json: this.Paper_J,
             // 总体分析界面是否展开/折叠
             Part_Expand: [false, false, false, false],
             // 总体分析页面展开的是知识点分析还是难度分析的区分变量
@@ -431,12 +455,13 @@ export default {
     //    sessionStorage.removeItem('PaperJson')
     },
     props: {
-        Paper_Json:{
+        Paper_J:{
             type: Object,
             default: function(){
                 return {
                     "id": "af6a45a3-46fa-41d6-ac7e-ae3842ce40fb",
                     "type": "Paper",
+                    "title": "Temp_Title",
                     "status": "OK",
                     "score": 31,
                     "difficulty_area_score": [
@@ -1094,6 +1119,67 @@ export default {
         window.scrollTo(0, 0);
     },
     methods: {
+        PDF_Switch(){
+            window.scrollTo(0, 0);
+            this.Part_Expand = [true, true, true, true];
+            this.transing = true;
+            // this.PDF_Download("Paper_Title");
+            // this.PDF_Download("Paper_Total");
+            // this.PDF_Download("Paper_Analyse");
+            // this.PDF_Download("Paper_Similarity");
+            // this.PDF_Download("Paper_Detail");
+            this.PDF_Download("PaperAnalyseInfo");
+            
+        },
+        // 下载PDF格式的分析报告
+        PDF_Download(part){
+
+            if(this.Part_Expand.indexOf(false) != -1){
+                this.Part_Expand = [true, true, true, true];
+            }
+            setTimeout(()=>{
+                html2canvas(this.$refs[part]).then(
+
+                    canvas => {
+
+                        var contentWidth = canvas.width;
+                        var contentHeight = canvas.height;
+
+                        var pageHeight = contentWidth / 592.28 * 841.89;
+                        var leftHeight = contentHeight;
+
+                        var position = 0;
+
+                        var imgWidth = 595.28;
+                        var imgHeight = 592.28/contentWidth * contentHeight;
+
+                        var pageData = canvas.toDataURL('image/jpeg', 1.0);
+
+                        if (leftHeight < pageHeight) {
+                            PDF.addImage(pageData, 'JPEG', 0, 20, imgWidth, imgHeight );
+                        } else {
+                            while(leftHeight > 0) {
+                                PDF.addImage(pageData, 'JPEG', 0, position + 20, imgWidth, imgHeight)
+                                leftHeight -= pageHeight;
+                                position -= 841.89;
+                                //避免添加空白页
+                                if(leftHeight > 0) {
+                                    PDF.addPage();
+                                }
+                            }
+                        }
+                        if(part == "Paper_Detail" || part == "PaperAnalyseInfo"){
+                            PDF.save("part_content.pdf")
+                            PDF = new jsPDF('', 'pt', 'a4');
+                            this.transing = false;
+                        }else{
+                            PDF.addPage();
+                        }
+                        return
+                    }
+                )
+            }, 1)     
+        },
         // 处理对话框内应当显示的内容
         Change_Dialog_Info(Sub_Index, Dialog_Label)
         {

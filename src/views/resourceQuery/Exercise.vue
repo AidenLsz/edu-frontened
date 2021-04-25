@@ -120,14 +120,21 @@
         </el-popover>
       </el-col>
     </el-row>
-    <el-row v-for="(Question, Question_Index) in question_list" :key="Question_Index" style="margin-bottom: 50px">
+    <el-row 
+      v-for="(Question, Question_Index) in question_list" 
+      :key="Question_Index" 
+      style="margin-bottom: 50px"
+      v-loading="Question_Analysing"
+      element-loading-text="正在加载分析报告..."
+      element-loading-spinner="el-icon-loading"
+      >
       <el-col :span="17" class="quesCard">
         <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
           <el-col style="padding-bottom: 15px">
             <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
           </el-col>
           <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
-            <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">选项{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown></el-row>
+            <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown></el-row>
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 15px">
@@ -239,6 +246,8 @@ export default {
       history_Period_Type: [],
       // 分析报告页是否显示
       analyseReport: false,
+      // 是否正在返回分析报告
+      Question_Analysing: false,
       // 用于分析显示的题目数据
       analyseData: {
         "id": "0b1b75ac-3053-45b5-9244-65b0dbb9d9f1",
@@ -308,8 +317,33 @@ export default {
     },
     // 查看单题分析报告
     Check_Analyse(ID, DatabaseName){
-      console.log(ID, DatabaseName)
-      this.analyseReport = true;
+
+      this.Question_Analysing = true;
+
+      let config = {
+          headers: { "Content-Type": "multipart/form-data" }
+      };
+
+      let param = new FormData();
+
+      if(DatabaseName == '公开题库'){
+        param.append("databasename", 'public');
+      }else if(DatabaseName == 'neea'){
+        param.append("databasename", 'neea');
+      }else if(DatabaseName == 'iflytek'){
+        param.append("databasename", 'iflytek');
+      }
+      param.append("ID", ID);
+
+      this.$http
+      .post(this.backendIP + "/api/questionAnalyse", param, config, {
+        emulateJSON: true
+      })
+      .then(function(data) {
+        this.Question_Analysing = false
+        this.analyseData = data.data.que_dic
+        this.analyseReport = true;
+      });    
     },
     ToTop(){
       window.scrollTo(0,0);
