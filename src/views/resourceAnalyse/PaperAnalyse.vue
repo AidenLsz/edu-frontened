@@ -6,6 +6,31 @@
           v-loading="transing"
           element-loading-text="转换中，请等待"
           element-loading-spinner="el-icon-loading">
+          <!-- 试卷分析路径跳转 -->
+    <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
+      <el-row>
+        <el-col :span="12">
+          <el-row>
+            <el-button @click="PAS(0)" circle style="height: 200px; width: 200px;"><img src="../../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="PAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
+              录入试卷进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="12">
+          <el-row>
+            <el-button @click="PAS(1)" circle style="height: 200px; width: 200px"><img src="../../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="PAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
+              选择题库中试卷进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-dialog>
     <!-- 准备开始写大题分析图表 -->
     <!-- QB即Question_Bundle，指题包 -->
     <el-dialog
@@ -154,6 +179,16 @@
             </el-row>
         </el-row>
     </el-dialog>
+    <el-row justify="start" type="flex">
+        <el-col style="padding-left: 25px; margin-top: 5vh">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item >分析</el-breadcrumb-item>
+            <el-breadcrumb-item ><span @click="PaperAnalyseSwitch()" style="cursor: pointer">试卷资源</span></el-breadcrumb-item>
+            <el-breadcrumb-item >分析报告</el-breadcrumb-item>
+        </el-breadcrumb>
+        </el-col>
+    </el-row>
     <div ref="Paper_Title">
         <el-row style="padding-top: 15px">
             <label style="font-size: 2rem">{{Paper_Json.title}}分析报告</label>
@@ -376,6 +411,7 @@
     </div>
     <el-row type="flex" justify="center" style="margin-bottom: 50px">
         <el-button type="success" plain @click="PDF_Switch()">保存当前页面为PDF文档</el-button>
+        <el-button type="success" plain @click="PaperAnalyseSwitch()">分析其他试卷</el-button>
     </el-row>  
     </div>
 </template>
@@ -392,11 +428,13 @@ var PDF = new jsPDF('', 'pt', 'a4');
 export default {
 
     components: { PaperAnalysePQRoot },
-    name: "TestPage",
+    name: "PaperAnalyse",
     data(){
         return {
             // 保存标志
             transing: false,
+            // 跳转至试卷分析的不同地点用的
+            PaperAnalyseSwitchFlag: false,
             Paper_Json: this.Paper_J,
             // 总体分析界面是否展开/折叠
             Part_Expand: [false, false, false, false],
@@ -1119,6 +1157,18 @@ export default {
         window.scrollTo(0, 0);
     },
     methods: {
+        PAS(index){
+            if(index == 0){
+                this.$router.push({ path: "/paperAnalyseInput" });
+                this.PaperAnalyseSwitchFlag = false;
+            }else{
+                alert("尚未完成");
+            }
+        },
+        // 跳转至试卷分析的不同位置的对话框
+        PaperAnalyseSwitch(){
+            this.PaperAnalyseSwitchFlag = true;
+        },
         PDF_Switch(){
             window.scrollTo(0, 0);
             this.Part_Expand = [true, true, true, true];

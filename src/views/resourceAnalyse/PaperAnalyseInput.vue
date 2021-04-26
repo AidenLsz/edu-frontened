@@ -1,5 +1,30 @@
 <template>
   <div style="margin-top: 5vh">
+    <!-- 试卷分析路径跳转 -->
+    <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
+      <el-row>
+        <el-col :span="12">
+          <el-row>
+            <el-button @click="PAS(0)" circle style="height: 200px; width: 200px;"><img src="../../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="PAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
+              录入试卷进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="12">
+          <el-row>
+            <el-button @click="PAS(1)" circle style="height: 200px; width: 200px"><img src="../../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="PAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
+              选择题库中试卷进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-dialog>
     <!-- 提供给非法输入格式的提示对话框 -->
     <el-dialog
         :visible.sync="showHint" 
@@ -659,21 +684,13 @@
       <el-col style="padding-left: 25px">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>资源录入</el-breadcrumb-item>
-          <el-breadcrumb-item>试卷资源</el-breadcrumb-item>
+          <el-breadcrumb-item >分析</el-breadcrumb-item>
+          <el-breadcrumb-item ><span @click="PaperAnalyseSwitch()" style="cursor: pointer">试卷资源</span></el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="4" style="padding-bottom: 50px; margin-top: 30px">
-        <!-- 切换页面 -->
-        <el-row type="flex" justify="center">
-          <el-button type="warning" plain @click="Router_Trans('/inputMarked')" style="width: 200px; font-size: 16px">
-            <span style="font-weight: bold">
-              切换至单题录入页面
-            </span>
-          </el-button>
-        </el-row>
         <!-- 不同题型 -->
         <el-row style="padding-top: 30px;">
           <el-row>
@@ -727,43 +744,22 @@
             <label>预览全卷</label>
           </el-button>
         </el-row>
-        <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')" :disabled="Blank_Paper()">
-            <label>题目入库</label>
-          </el-button>
-        </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px" v-if="Authority_Check()" >
           <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('export')" :disabled="Blank_Paper()">
             <label>导出题目</label>
           </el-button>
         </el-row>
-        <el-row 
-          v-loading="downloading"
+        <el-row
+          v-loading="analysing"
           element-loading-text="加载中，请等待"
           element-loading-spinner="el-icon-loading"
           type="flex" 
           justify="center" 
           style="margin-top: 30px">
-            <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('download')" :disabled="Blank_Paper()">
-              <label>下载试卷</label>
-            </el-button>
+          <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('analyse')" :disabled="Blank_Paper()">
+            <label>录入完成</label>
+          </el-button>
         </el-row>
-        <!-- <el-row type="flex" justify="center" style="padding-top: 30px; font-size: 18px">
-          <el-col :span="14">
-          <label>导出序号：</label>
-            <el-switch
-              v-model="Sequence_Questions"
-              active-color="#47A9FF"
-              inactive-color="#ccc"
-              active-value="1"
-              inactive-value="0">
-            </el-switch>
-          </el-col>
-          <el-col :span="6">
-            <label v-if="Sequence_Questions == '1'">连续</label>
-            <label v-else-if="Sequence_Questions == '0'">不连续</label>
-          </el-col>
-        </el-row> -->
       </el-col>
       <el-col :span="19" style="background: #F8FBFF; padding-top: 40px; min-height: 70.8vh; margin-top: 30px">
         <!-- 确认学科和学段的选择项 -->
@@ -909,14 +905,14 @@
 
 import FileSaver from "file-saver";
 
-import OptionDisplay from './components/OptionDisplay.vue'
-import OptionQuestions from './components/OptionQuestions.vue'
-import FillQuestions from "./components/FillQuestions.vue"
-import FillDisplay from "./components/FillDisplay.vue";
-import AnswerQuestions from "./components/AnswerQuestions.vue";
-import AnswerDisplay from "./components/AnswerDisplay.vue";
-import MixQuestions from "./components/MixQuestions.vue";
-import MixDisplay from "./components/MixDisplay.vue";
+import OptionDisplay from './../resourceInput/components/OptionDisplay.vue'
+import OptionQuestions from './../resourceInput/components/OptionQuestions.vue'
+import FillQuestions from "./../resourceInput/components/FillQuestions.vue"
+import FillDisplay from "./../resourceInput/components/FillDisplay.vue";
+import AnswerQuestions from "./../resourceInput/components/AnswerQuestions.vue";
+import AnswerDisplay from "./../resourceInput/components/AnswerDisplay.vue";
+import MixQuestions from "./../resourceInput/components/MixQuestions.vue";
+import MixDisplay from "./../resourceInput/components/MixDisplay.vue";
 
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from '../../common/components/ComplexInput.vue'
@@ -928,6 +924,7 @@ export default {
                 AnswerQuestions, AnswerDisplay,
                 MixQuestions, MixDisplay, Mathdown
                 },
+  name: "PaperAnalyseInput",
   data() {
     return {
       // 是否展开题包
@@ -1159,7 +1156,9 @@ export default {
       // 分析报告的等待
       analysing: false,
       // 等待信息
-      Waiting_Text: "切分试卷中，请等待......"
+      Waiting_Text: "切分试卷中，请等待......",
+      // 跳转至试卷分析的不同地点用的
+      PaperAnalyseSwitchFlag: false
     };
   },
   computed: {
@@ -1269,6 +1268,18 @@ export default {
     this.ToTop();
   },
   methods: {
+     PAS(index){
+      if(index == 0){
+        this.$router.push({ path: "/paperAnalyseInput" });
+        this.PaperAnalyseSwitchFlag = false;
+      }else{
+        alert("尚未完成");
+      }
+    },
+    // 跳转至试卷分析的不同位置的对话框
+    PaperAnalyseSwitch(){
+      this.PaperAnalyseSwitchFlag = true;
+    },
     // 是否为实际空试卷检查
     Blank_Paper(){
       if(this.Questions.length == 0){
@@ -3931,6 +3942,7 @@ export default {
         })
         .then(function(data) {
           if(data.data){
+            console.log(data.data);
             this.$message.success("试卷内容上传已完成。");
           }
         });

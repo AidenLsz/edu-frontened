@@ -1,5 +1,30 @@
 <template>
   <el-container id="app">
+    <!-- 试卷分析路径跳转 -->
+    <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
+      <el-row>
+        <el-col :span="12">
+          <el-row>
+            <el-button @click="PAS(0)" circle style="height: 200px; width: 200px;"><img src="./assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="PAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
+              录入试卷进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="12">
+          <el-row>
+            <el-button @click="PAS(1)" circle style="height: 200px; width: 200px"><img src="./assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="PAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
+              选择题库中试卷进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-dialog>
     <!-- 登录 -->
     <el-dialog :visible.sync="login_visible" width="70%">
       <el-row>
@@ -231,11 +256,9 @@
                           <span style="color: black;">试题资源</span>
                         </el-menu-item>
                       </router-link>
-                      <router-link to="/PaperAnalyse" :underline="false" @click.native="ToTop">
-                        <el-menu-item index="3-3">
-                          <span style="color: black;">试卷资源</span>
-                        </el-menu-item>
-                      </router-link>
+                      <el-menu-item index="3-3" @click="PaperAnalyseSwitch()">
+                        <span style="color: black;">试卷资源</span>
+                      </el-menu-item>
                     </el-submenu>
                     <router-link to="/estimate" :underline="false" @click.native="ToTop">
                       <el-menu-item index="4">
@@ -337,7 +360,9 @@ export default {
       school_reg: "",
       profession_reg: "",
       // activeIndex: 下拉菜单用的
-      activeIndex: ""
+      activeIndex: "",
+      // 跳转至试卷分析的不同地点用的
+      PaperAnalyseSwitchFlag: false
     };
   },
   watch:{
@@ -382,6 +407,18 @@ export default {
     // });
   },
   methods: {
+    PAS(index){
+      if(index == 0){
+        this.$router.push({ path: "/paperAnalyseInput" });
+        this.PaperAnalyseSwitchFlag = false;
+      }else{
+        alert("尚未完成");
+      }
+    },
+    // 跳转至试卷分析的不同位置的对话框
+    PaperAnalyseSwitch(){
+      this.PaperAnalyseSwitchFlag = true;
+    },
     Get_Priority(){
       if(sessionStorage.isAdmin){
         return true

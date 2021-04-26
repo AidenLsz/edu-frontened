@@ -1,6 +1,31 @@
 <template>
   <!--todo: polish the format-->
   <div class="home">
+    <!-- 试卷分析路径跳转 -->
+    <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
+      <el-row>
+        <el-col :span="12">
+          <el-row>
+            <el-button @click="PAS(0)" circle style="height: 200px; width: 200px;"><img src="../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="PAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
+              录入试卷进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="12">
+          <el-row>
+            <el-button @click="PAS(1)" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="PAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
+              选择题库中试卷进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-dialog>
     <!-- 功能 - 资源录入的统一接口 -->
     <el-dialog
       :visible.sync="functionStatus[0]" 
@@ -146,7 +171,7 @@
         </el-col>
         <el-col :span="6">
           <el-row>
-            <el-button @click="Router_Trans('/PaperAnalyse')" circle style="height: 200px; width: 200px"><img src="../assets/icon8.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+            <el-button @click="PaperAnalyseSwitch()" circle style="height: 200px; width: 200px"><img src="../assets/icon8.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
             <label style="margin-top: 30px; font-size: 20px; color: black">
@@ -379,7 +404,7 @@
         </el-col>
         <el-col :span="6">
           <el-row>
-            <el-button @click="Router_Trans('/PaperAnalyse')" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+            <el-button @click="PaperAnalyseSwitch()" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
             <label style="margin-top: 30px; font-size: 20px; color: black">
@@ -700,7 +725,8 @@ export default {
       resourceStatus: [false, false, false, false],
       Num_Paper: 0,
       Num_Question: 0,
-      Num_KU: 0
+      Num_KU: 0,
+      PaperAnalyseSwitchFlag: false
     };
   },
   mounted() {
@@ -715,6 +741,18 @@ export default {
     this.ToTop();
   },
   methods: {
+    PAS(index){
+      if(index == 0){
+        this.$router.push({ path: "/paperAnalyseInput" });
+        this.PaperAnalyseSwitchFlag = false;
+      }else{
+        alert("尚未完成");
+      }
+    },
+    // 跳转至试卷分析的不同位置的对话框
+    PaperAnalyseSwitch(){
+      this.PaperAnalyseSwitchFlag = true;
+    },
     ToTop(){
       window.scrollTo(0,0);
     },

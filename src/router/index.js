@@ -22,6 +22,7 @@ import TestPageList from "@/views/testPage/TestPageList";
 
 // 资源分析类页面
 import PaperAnalyse from "@/views/resourceAnalyse/PaperAnalyse";
+import PaperAnalyseInput from "@/views/resourceAnalyse/PaperAnalyseInput";
 import QuestionAnalyse from "@/views/resourceAnalyse/QuestionAnalyse";
 
 // 历史遗留问题类页面，留着防止报错无法回滚
@@ -88,6 +89,11 @@ const router = new Router({
       path: "/paperAnalyse",
       name: "PaperAnalyse",
       component: PaperAnalyse
+    },
+    {
+      path: "/paperAnalyseInput",
+      name: "PaperAnalyseInput",
+      component: PaperAnalyseInput,
     },
     {
       path: "/questionAnalyse",
