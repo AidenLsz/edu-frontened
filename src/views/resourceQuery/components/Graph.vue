@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg width="900" height="780"></svg>
+    <svg id="all" width="900" height="780"></svg>
   </div>
 </template>
 <script>
@@ -67,10 +67,10 @@ export default {
   },
   methods: {
     Type_Change(){
-      return
+      console.log(this.selected_type);
     },
     draw_graph() {
-      
+
       // 改线条颜色
       var directedLen = this.inward_arrow + this.outward_arrow;
       let _this = this;
@@ -81,7 +81,7 @@ export default {
 
       // 生成图
       // 先清空画布
-      d3.selectAll("svg > *").remove();
+      // d3.select("#all").remove();
 
       let state = {
         nodes: [
@@ -126,8 +126,10 @@ export default {
             width: 3,
             curved: false
           };
-        }   
+        }
       }
+
+      // console.log(state.links);
 
       let selectedNode;
       let nodeSize = 25;
@@ -137,7 +139,7 @@ export default {
       // 经典调色盘
       // 获取画布(SVG)对象，并添加宽度和高度属性
       // let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-      let svg = d3.select("svg");
+      let svg = d3.select("svg#all");
       let width = +svg.attr("width");
       let height = +svg.attr("height");
       // 给画布添加一个组，并给组添加名为everything的class
@@ -303,7 +305,7 @@ export default {
               d.fy = null;
             });
           } else if (index === 2) {
-            _this.$emit("Research", KnowledgePoint) 
+            _this.$emit("Research", KnowledgePoint)
           }
         });
       // 找到所有的被锁定或被隐藏的点
@@ -381,7 +383,7 @@ export default {
 
       function ticked() {
 
-        return function() {   
+        return function() {
           // 设置节点的位置
           // 若数据点的hidden属性为真，则display = none;直接隐藏起来
           node
@@ -391,7 +393,7 @@ export default {
               }
               return d.x;
             })
-            .attr("cy", function(d) { 
+            .attr("cy", function(d) {
               if (d.lock) {
                 d.fy = d.y;
               }
@@ -554,7 +556,7 @@ export default {
             "," +
             ty
           );
-        } 
+        }
         // 若为直线边
         else {
           return (
@@ -669,7 +671,7 @@ export default {
             if (hideFlag === 0) {
               // 非隐藏状态，且点击的是当前按钮时，会触发对应按钮的点击事件
               if (buttonFlag) {
-                
+
                 buttonFlag = 0;
                 // 把这个按钮对应的锁定和隐藏按钮都设置为null
                 // 然后将它们原本用来设置配套图片的链接地址也设为null
@@ -728,7 +730,7 @@ export default {
           // 绑定鼠标移入移除事件
           .on("mouseover", toolTip.show)
           .on("mouseout", toolTip.hide);
-        
+
         // 最后是设定链接，并将多余的重复部分剔除
         link = link.data(state.links, function(d) {
           return d.source + d.target;
@@ -775,7 +777,7 @@ export default {
 
       // 生成图
       // 先清空画布
-      d3.selectAll("svg > *").remove();
+      // d3.select("#all").remove();
       // 改线条颜色
       var directedLen = this.inward_arrow + this.outward_arrow;
       // 动态添加边属性
@@ -823,7 +825,7 @@ export default {
       }
 
       let L = this.neighbors_groups["kp2.0"]?this.neighbors_groups["kp2.0"]:[]
-      
+
 
 
       if(IA == 0 && L.length == OA){
@@ -876,7 +878,7 @@ export default {
       for(var Front = 0; Front < IA; Front++){
         Index = Math.floor(Math.random()*Front_Axis.length);
         while(Front_chosen_list[Index] == true){
-          Index = Math.floor(Math.random()*Front_Axis.length); 
+          Index = Math.floor(Math.random()*Front_Axis.length);
         }
         Front_chosen_list.splice(Index, 1, true);
         Row_Axis.push(Front_Axis[Index][0])
@@ -890,7 +892,7 @@ export default {
         }
         After_chosen_list.splice(Index, 1, true);
         Row_Axis.push(After_Axis[Index][0])
-        Col_Axis.push(After_Axis[Index][1])  
+        Col_Axis.push(After_Axis[Index][1])
       }
 
       for(var Combo = directedLen; Combo < L.length; Combo++){
@@ -988,7 +990,7 @@ export default {
       // var Flag = true;
 
       // if(Flag){
-      //   return 
+      //   return
       // }
 
       let selectedNode;
@@ -999,7 +1001,7 @@ export default {
       // 经典调色盘
       // 获取画布(SVG)对象，并添加宽度和高度属性
       // let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-      let svg = d3.select("svg");
+      let svg = d3.select("svg#all");
       let width = +svg.attr("width");
       let height = +svg.attr("height");
       // 给画布添加一个组，并给组添加名为everything的class
@@ -1179,7 +1181,7 @@ export default {
               d.fy = null;
             });
           } else if (index === 2) {
-            _this.$emit("Research", KnowledgePoint) 
+            _this.$emit("Research", KnowledgePoint)
           }
         });
       // 找到所有的被锁定或被隐藏的点
@@ -1257,7 +1259,7 @@ export default {
 
       function ticked() {
 
-        return function() {   
+        return function() {
           // 设置节点的位置
           // 若数据点的hidden属性为真，则display = none;直接隐藏起来
           node
@@ -1279,11 +1281,11 @@ export default {
                 // return 0
                 if (d.lock) {
                   d.fx = d.x;
-                } 
+                }
                 return d.x;
               }
             })
-            .attr("cy", function(d,i) { 
+            .attr("cy", function(d,i) {
               if(i == 0 && Lock_Switch){
                 d.lock = true
                 d.x = 390
@@ -1463,7 +1465,7 @@ export default {
             "," +
             ty
           );
-        } 
+        }
         // 若为直线边
         else {
           return (
@@ -1638,7 +1640,7 @@ export default {
           // 绑定鼠标移入移除事件
           .on("mouseover", toolTip.show)
           .on("mouseout", toolTip.hide);
-        
+
         // 最后是设定链接，并将多余的重复部分剔除
         link = link.data(state.links, function(d) {
           return d.source + d.target;
