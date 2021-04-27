@@ -697,7 +697,7 @@ The line of README
             <el-button v-popover:hint class="Math_Helper" size="mini" @click="Open_Helper()">&Sigma;</el-button>
           </div> -->
         </el-row> 
-        <div slot="right-toolbar-after" type="flex" justify="start">
+        <div slot="right-toolbar-after" type="flex" justify="start" @mousewheel.prevent="Common_Page_Change">
           <el-row>
             <el-col v-for="(count, index) in [0,1,2,3,4,5,6]" :key="index" :span="3">
               <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini" v-if="Symbol_Index(index)" @click="Add_Symbol(index)">
@@ -1085,6 +1085,16 @@ export default {
     }
   },
   methods: {
+    // 滚轮事件
+    Common_Page_Change(e){
+      if(e.wheelDeltaY < 0 && !(this.Common_Page_Index * 7 + 28 > this.Symbol_List.length)){
+        this.Common_Page_Index = this.Common_Page_Index + 1
+        e.stopPropagation;
+      }else if(e.wheelDeltaY > 0 && this.Common_Page_Index > 0){
+        this.Common_Page_Index = this.Common_Page_Index - 1
+        e.stopPropagation;
+      }
+    },
     // 添加符号
     Add_Symbol(index){
       this.content = this.content + this.Symbol_List[(this.Common_Page_Index * 7) + index];
