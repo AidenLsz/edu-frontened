@@ -3369,12 +3369,12 @@ export default {
             });
       }else if(Control == 'analyse'){
 
-        this.analysing = true;
-
         if(this.PaperTitle == ""){
           this.$message.error("试卷标题不能为空！")
           return
         }
+
+        this.analysing = true;
 
         let config = {
             headers: {

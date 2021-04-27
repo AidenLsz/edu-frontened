@@ -88,7 +88,7 @@
                 <el-col :span="5">0</el-col>
             </el-row>
             <!-- 随意添加的一个假柱状图 -->
-            <el-row style="display: none">
+            <el-row>
                 <div id="QB_Total_Bar" class="QB_Total_Bar"></div>
             </el-row>
         </el-row>
@@ -248,7 +248,7 @@
                 <el-col :span="5">0</el-col>
             </el-row>
             <!-- 随意添加的一个假柱状图 -->
-            <el-row style="display: none">
+            <el-row>
                 <div id="Paper_Total_Bar" class="Paper_Total_Bar"></div>
             </el-row>
         </el-row>
@@ -1543,7 +1543,7 @@ export default {
                 },
                 calculable: true,
                 legend: {
-                    data: ['指标1', '指标2', '指标3'],
+                    data: ['平均难度'],
                     itemGap: 20,
                     x: "right",
                     y: "top",
@@ -1556,7 +1556,7 @@ export default {
                 xAxis : [
                 {
                     type : 'category',
-                    data : ["大题1", "大题2", "大题3", "大题4"],
+                    data : [],
                     axisTick: {
                         alignWithLabel: true
                     },
@@ -1573,9 +1573,9 @@ export default {
                 yAxis : [
                 {
                     type : 'value',
-                    name : '数量',
+                    name : '平均难度',
                     min: 0.0,
-                    max: 0.7,
+                    max: 1.0,
                     axisLabel:{
                         show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
                         textStyle:{   //textStyle里面写y轴下的字体的样式
@@ -1592,25 +1592,30 @@ export default {
                 ],
                 series : [
                 {
-                    name:'指标1',
+                    name:'平均难度',
                     type:'bar',
                     barWidth: '20%',
-                    data: [0.4, 0.3, 0.2, 0.6]
+                    data: []
                 },
-                {
-                    name:'指标2',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.6, 0.2, 0.4, 0.6]
-                },
-                {
-                    name:'指标3',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.2, 0.4, 0.1, 0.4]
-                },
+                // {
+                //     name:'指标2',
+                //     type:'bar',
+                //     barWidth: '20%',
+                //     data: [0.6, 0.2, 0.4, 0.6]
+                // },
+                // {
+                //     name:'指标3',
+                //     type:'bar',
+                //     barWidth: '20%',
+                //     data: [0.2, 0.4, 0.1, 0.4]
+                // },
             ]
             };
+
+            for(let i = 0; i < this.Paper_Json.sub_question.length; i++){
+                option.xAxis[0].data.push("第" + (i+1) + "大题");
+                option.series[0].data.push(this.Paper_Json.sub_question[i].difficulty_statistics.mean);
+            }
 
             myChart.setOption(option);
 
@@ -1658,7 +1663,7 @@ export default {
                 },
                 calculable: true,
                 legend: {
-                    data: ['指标1', '指标2', '指标3'],
+                    data: ['平均难度'],
                     itemGap: 20,
                     x: "right",
                     y: "top",
@@ -1671,7 +1676,7 @@ export default {
                 xAxis : [
                 {
                     type : 'category',
-                    data : ["小题1", "小题2", "小题3", "小题4"],
+                    data : [],
                     axisTick: {
                         alignWithLabel: true
                     },
@@ -1688,9 +1693,9 @@ export default {
                 yAxis : [
                 {
                     type : 'value',
-                    name : '数量',
+                    name : '平均难度',
                     min: 0.0,
-                    max: 0.7,
+                    max: 1.0,
                     axisLabel:{
                         show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
                         textStyle:{   //textStyle里面写y轴下的字体的样式
@@ -1707,25 +1712,34 @@ export default {
                 ],
                 series : [
                 {
-                    name:'指标1',
+                    name:'平均难度',
                     type:'bar',
                     barWidth: '20%',
-                    data: [0.4, 0.3, 0.2, 0.6]
+                    data: []
                 },
-                {
-                    name:'指标2',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.6, 0.2, 0.4, 0.6]
-                },
-                {
-                    name:'指标3',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.2, 0.4, 0.1, 0.4]
-                },
+                // {
+                //     name:'指标2',
+                //     type:'bar',
+                //     barWidth: '20%',
+                //     data: [0.6, 0.2, 0.4, 0.6]
+                // },
+                // {
+                //     name:'指标3',
+                //     type:'bar',
+                //     barWidth: '20%',
+                //     data: [0.2, 0.4, 0.1, 0.4]
+                // },
             ]
             };
+
+            for(let i = 0; i < this.Paper_Json_Question_Bundle_Info.sub_question.length; i++){
+                option.xAxis[0].data.push("第" + (i+1) + "小题");
+                if(this.Paper_Json_Question_Bundle_Info.sub_question[i].difficulty){
+                    option.series[0].data.push(this.Paper_Json_Question_Bundle_Info.sub_question[i].difficulty);
+                }else{
+                    option.series[0].data.push(this.Paper_Json_Question_Bundle_Info.sub_question[i].difficulty_statistics.mean);
+                }
+            }
 
             myChart.setOption(option);
 
