@@ -403,6 +403,21 @@ export default {
                     "name": "包美凯",
                     "mail": "baomeikai@163.com",
                     "intro": "^V^"
+                    },
+                    {
+                    "name": "单明辉",
+                    "mail": "767743659@qq.com",
+                    "intro": "不想画画的程序猿不是金牌厨师"
+                    },
+                    {
+                    "name": "唐华楹",
+                    "mail": "iamthy@mail.ustc.edu.cn",
+                    "intro": "中国科学技术大学2021级研究生\n基于ddl的摸鱼科学与技术专业"
+                    },
+                    {
+                    "name": "赵辰阳",
+                    "mail": "zcy888@mail.ustc.edu.cn",
+                    "intro": "小小少年 不会烦恼 快乐多多 BUG少少"
                     }
                 ],
                 // 特邀工程师
@@ -474,6 +489,9 @@ export default {
                     "黄野": "/members/黄野.jpg",
                     "龚政": "/members/龚政.jpg",
                     "黄小青": "/members/黄小青.jpg",
+                    "单明辉": "/members/单明辉.jpeg",
+                    "唐华楹": "/members/唐华楹.jpeg",
+                    "赵辰阳": "/members/赵辰阳.jpeg",
                     // 特邀工程师
                     "梁先锋": "/members/梁先锋.jpeg",
                     "韩浩宇": "/members/韩浩宇.jpeg",
