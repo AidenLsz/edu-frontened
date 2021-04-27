@@ -24,6 +24,7 @@ import TestPageList from "@/views/testPage/TestPageList";
 import PaperAnalyse from "@/views/resourceAnalyse/PaperAnalyse";
 import PaperAnalyseInput from "@/views/resourceAnalyse/PaperAnalyseInput";
 import QuestionAnalyse from "@/views/resourceAnalyse/QuestionAnalyse";
+import QuestionAnalyseInput from "@/views/resourceAnalyse/QuestionAnalyseInput";
 
 // 历史遗留问题类页面，留着防止报错无法回滚
 // import Login from "@/components/Login";
@@ -99,6 +100,11 @@ const router = new Router({
       path: "/questionAnalyse",
       name: "QuestionAnalyse",
       component: QuestionAnalyse
+    },
+    {
+      path: "/questionAnalyseInput",
+      name: "QuestionAnalyseInput",
+      component: QuestionAnalyseInput
     },
     {
       path: "/inputPaper",

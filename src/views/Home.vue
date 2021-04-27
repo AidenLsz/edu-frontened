@@ -26,6 +26,31 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <!-- 试卷分析路径跳转 -->
+    <el-dialog :visible.sync="QuestionAnalyseSwitchFlag" width="70%">
+      <el-row>
+        <el-col :span="12">
+          <el-row>
+            <el-button @click="QAS(0)" circle style="height: 200px; width: 200px;"><img src="../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="QAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
+              录入试题进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="12">
+          <el-row>
+            <el-button @click="QAS(1)" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="QAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
+              搜索试题进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-dialog>
     <!-- 功能 - 资源录入的统一接口 -->
     <el-dialog
       :visible.sync="functionStatus[0]" 
@@ -158,7 +183,7 @@
       <el-row style="padding-top: 30px; background: white; padding-bottom: 30px">
         <el-col :span="6">
           <el-row>
-            <el-button @click="Router_Trans('/QuestionAnalyse')" circle style="height: 200px; width: 200px;"><img src="../assets/icon6.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+            <el-button @click="QuestionAnalyseSwitch()" circle style="height: 200px; width: 200px;"><img src="../assets/icon6.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
             <label style="margin-top: 30px; font-size: 20px; color: black">
@@ -352,7 +377,7 @@
         </el-col>
         <el-col :span="6">
           <el-row>
-            <el-button @click="Router_Trans('/QuestionAnalyse')" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+            <el-button @click="QuestionAnalyseSwitch()" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
             <label style="margin-top: 30px; font-size: 20px; color: black">
@@ -726,7 +751,8 @@ export default {
       Num_Paper: 0,
       Num_Question: 0,
       Num_KU: 0,
-      PaperAnalyseSwitchFlag: false
+      PaperAnalyseSwitchFlag: false,
+      QuestionAnalyseSwitchFlag: false
     };
   },
   mounted() {
@@ -741,6 +767,19 @@ export default {
     this.ToTop();
   },
   methods: {
+    QAS(index){
+      if(index == 0){
+        this.$router.push({ path: "/QuestionAnalyseInput" });
+        this.QuestionAnalyseSwitchFlag = false;
+      }else{
+        this.$router.push({ path: "/exercise" });
+        this.QuestionAnalyseSwitchFlag = false;
+      }
+    },
+    // 跳转至试题分析的不同位置的对话框
+    QuestionAnalyseSwitch(){
+      this.QuestionAnalyseSwitchFlag = true;
+    },
     PAS(index){
       if(index == 0){
         this.$router.push({ path: "/paperAnalyseInput" });

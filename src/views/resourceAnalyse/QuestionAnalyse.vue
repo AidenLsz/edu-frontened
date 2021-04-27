@@ -6,7 +6,7 @@
       </el-row>
       <el-row>
           <el-divider></el-divider>
-      </el-row>
+      </el-row>  
       <el-row>
       <el-col :span="24" v-if="Question.type == 'PackedQues'" type="flex" justify="start">
             <el-row type="flex" justify="start" style="margin-bottom: 10px">
@@ -417,7 +417,7 @@ export default {
       defaultProps: {
         label: "label",
         children: "children"
-      },
+      }
     }                        
   },
   methods: {
