@@ -6,6 +6,31 @@
           v-loading="transing"
           element-loading-text="转换中，请等待"
           element-loading-spinner="el-icon-loading">
+          <!-- 试卷分析路径跳转 -->
+    <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
+      <el-row>
+        <el-col :span="12">
+          <el-row>
+            <el-button @click="PAS(0)" circle style="height: 200px; width: 200px;"><img src="../../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="PAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
+              录入试卷进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="12">
+          <el-row>
+            <el-button @click="PAS(1)" circle style="height: 200px; width: 200px"><img src="../../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="PAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
+              选择题库中试卷进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-dialog>
     <!-- 准备开始写大题分析图表 -->
     <!-- QB即Question_Bundle，指题包 -->
     <el-dialog
@@ -47,7 +72,7 @@
                 <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.std)}}</el-col>
             </el-row>
             <!-- 第二项 -->
-            <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
+            <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver; display: none">
                 <el-col :span="4">指标2</el-col>
                 <el-col :span="5">0</el-col>
                 <el-col :span="5">0</el-col>
@@ -55,7 +80,7 @@
                 <el-col :span="5">0</el-col>
             </el-row>
             <!-- 第三项 -->
-            <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver">
+            <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver; display: none">
                 <el-col :span="4">指标3</el-col>
                 <el-col :span="5">0</el-col>
                 <el-col :span="5">0</el-col>
@@ -154,6 +179,16 @@
             </el-row>
         </el-row>
     </el-dialog>
+    <el-row justify="start" type="flex">
+        <el-col style="padding-left: 25px; margin-top: 5vh">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item >分析</el-breadcrumb-item>
+            <el-breadcrumb-item ><span @click="PaperAnalyseSwitch()" style="cursor: pointer">试卷资源</span></el-breadcrumb-item>
+            <el-breadcrumb-item >分析报告</el-breadcrumb-item>
+        </el-breadcrumb>
+        </el-col>
+    </el-row>
     <div ref="Paper_Title">
         <el-row style="padding-top: 15px">
             <label style="font-size: 2rem">{{Paper_Json.title}}分析报告</label>
@@ -189,7 +224,7 @@
                 <el-col :span="5">最小值</el-col>
             </el-row>
             <!-- 第一项 -->
-            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
+            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver; margin-bottom: 5vh">
                 <el-col :span="4">难度</el-col>
                 <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}</el-col>
                 <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.min)}}</el-col>
@@ -197,7 +232,7 @@
                 <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.std)}}</el-col>
             </el-row>
             <!-- 第二项 -->
-            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
+            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver; display: none">
                 <el-col :span="4">指标2</el-col>
                 <el-col :span="5">0</el-col>
                 <el-col :span="5">0</el-col>
@@ -205,7 +240,7 @@
                 <el-col :span="5">0</el-col>
             </el-row>
             <!-- 第三项 -->
-            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver">
+            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver; display: none">
                 <el-col :span="4">指标3</el-col>
                 <el-col :span="5">0</el-col>
                 <el-col :span="5">0</el-col>
@@ -304,10 +339,10 @@
                     <div id="Paper_Knowledge_Pair" class="Paper_Knowledge_Pair"></div>
                 </el-row>
                 <!-- 知识点覆盖程度部分 -->
-                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left">
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left; display: none">
                     <label>本卷覆盖的知识点比例尚待进一步分析。（下方区域是圆环图今后大致的占位区域）</label>
                 </el-row>
-                <el-row>
+                <el-row style="display: none">
                     <div id="Paper_Knowledge_Cover" class="Paper_Knowledge_Cover"></div>
                 </el-row>
             </el-row>
@@ -328,7 +363,7 @@
             </el-row>
         </el-row>
     </div>
-    <div ref="Paper_Similarity">
+    <div ref="Paper_Similarity"  style="display: none">
         <!-- 相似试卷 -->
         <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(2)" :class="Get_Part_Row_Style(2)">
             <el-col :span="12" style="text-align: left">
@@ -376,6 +411,7 @@
     </div>
     <el-row type="flex" justify="center" style="margin-bottom: 50px">
         <el-button type="success" plain @click="PDF_Switch()">保存当前页面为PDF文档</el-button>
+        <el-button type="success" plain @click="PaperAnalyseSwitch()">分析其他试卷</el-button>
     </el-row>  
     </div>
 </template>
@@ -392,11 +428,13 @@ var PDF = new jsPDF('', 'pt', 'a4');
 export default {
 
     components: { PaperAnalysePQRoot },
-    name: "TestPage",
+    name: "PaperAnalyse",
     data(){
         return {
             // 保存标志
             transing: false,
+            // 跳转至试卷分析的不同地点用的
+            PaperAnalyseSwitchFlag: false,
             Paper_Json: this.Paper_J,
             // 总体分析界面是否展开/折叠
             Part_Expand: [false, false, false, false],
@@ -1119,6 +1157,18 @@ export default {
         window.scrollTo(0, 0);
     },
     methods: {
+        PAS(index){
+            if(index == 0){
+                this.$router.push({ path: "/paperAnalyseInput" });
+                this.PaperAnalyseSwitchFlag = false;
+            }else{
+                alert("尚未完成");
+            }
+        },
+        // 跳转至试卷分析的不同位置的对话框
+        PaperAnalyseSwitch(){
+            this.PaperAnalyseSwitchFlag = true;
+        },
         PDF_Switch(){
             window.scrollTo(0, 0);
             this.Part_Expand = [true, true, true, true];
@@ -1493,7 +1543,7 @@ export default {
                 },
                 calculable: true,
                 legend: {
-                    data: ['指标1', '指标2', '指标3'],
+                    data: ['平均难度'],
                     itemGap: 20,
                     x: "right",
                     y: "top",
@@ -1506,7 +1556,7 @@ export default {
                 xAxis : [
                 {
                     type : 'category',
-                    data : ["大题1", "大题2", "大题3", "大题4"],
+                    data : [],
                     axisTick: {
                         alignWithLabel: true
                     },
@@ -1523,9 +1573,9 @@ export default {
                 yAxis : [
                 {
                     type : 'value',
-                    name : '数量',
+                    name : '平均难度',
                     min: 0.0,
-                    max: 0.7,
+                    max: 1.0,
                     axisLabel:{
                         show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
                         textStyle:{   //textStyle里面写y轴下的字体的样式
@@ -1542,25 +1592,30 @@ export default {
                 ],
                 series : [
                 {
-                    name:'指标1',
+                    name:'平均难度',
                     type:'bar',
                     barWidth: '20%',
-                    data: [0.4, 0.3, 0.2, 0.6]
+                    data: []
                 },
-                {
-                    name:'指标2',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.6, 0.2, 0.4, 0.6]
-                },
-                {
-                    name:'指标3',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.2, 0.4, 0.1, 0.4]
-                },
+                // {
+                //     name:'指标2',
+                //     type:'bar',
+                //     barWidth: '20%',
+                //     data: [0.6, 0.2, 0.4, 0.6]
+                // },
+                // {
+                //     name:'指标3',
+                //     type:'bar',
+                //     barWidth: '20%',
+                //     data: [0.2, 0.4, 0.1, 0.4]
+                // },
             ]
             };
+
+            for(let i = 0; i < this.Paper_Json.sub_question.length; i++){
+                option.xAxis[0].data.push("第" + (i+1) + "大题");
+                option.series[0].data.push(this.Paper_Json.sub_question[i].difficulty_statistics.mean);
+            }
 
             myChart.setOption(option);
 
@@ -1608,7 +1663,7 @@ export default {
                 },
                 calculable: true,
                 legend: {
-                    data: ['指标1', '指标2', '指标3'],
+                    data: ['平均难度'],
                     itemGap: 20,
                     x: "right",
                     y: "top",
@@ -1621,7 +1676,7 @@ export default {
                 xAxis : [
                 {
                     type : 'category',
-                    data : ["小题1", "小题2", "小题3", "小题4"],
+                    data : [],
                     axisTick: {
                         alignWithLabel: true
                     },
@@ -1638,9 +1693,9 @@ export default {
                 yAxis : [
                 {
                     type : 'value',
-                    name : '数量',
+                    name : '平均难度',
                     min: 0.0,
-                    max: 0.7,
+                    max: 1.0,
                     axisLabel:{
                         show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
                         textStyle:{   //textStyle里面写y轴下的字体的样式
@@ -1657,25 +1712,34 @@ export default {
                 ],
                 series : [
                 {
-                    name:'指标1',
+                    name:'平均难度',
                     type:'bar',
                     barWidth: '20%',
-                    data: [0.4, 0.3, 0.2, 0.6]
+                    data: []
                 },
-                {
-                    name:'指标2',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.6, 0.2, 0.4, 0.6]
-                },
-                {
-                    name:'指标3',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.2, 0.4, 0.1, 0.4]
-                },
+                // {
+                //     name:'指标2',
+                //     type:'bar',
+                //     barWidth: '20%',
+                //     data: [0.6, 0.2, 0.4, 0.6]
+                // },
+                // {
+                //     name:'指标3',
+                //     type:'bar',
+                //     barWidth: '20%',
+                //     data: [0.2, 0.4, 0.1, 0.4]
+                // },
             ]
             };
+
+            for(let i = 0; i < this.Paper_Json_Question_Bundle_Info.sub_question.length; i++){
+                option.xAxis[0].data.push("第" + (i+1) + "小题");
+                if(this.Paper_Json_Question_Bundle_Info.sub_question[i].difficulty){
+                    option.series[0].data.push(this.Paper_Json_Question_Bundle_Info.sub_question[i].difficulty);
+                }else{
+                    option.series[0].data.push(this.Paper_Json_Question_Bundle_Info.sub_question[i].difficulty_statistics.mean);
+                }
+            }
 
             myChart.setOption(option);
 

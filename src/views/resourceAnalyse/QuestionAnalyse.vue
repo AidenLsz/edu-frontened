@@ -6,7 +6,7 @@
       </el-row>
       <el-row>
           <el-divider></el-divider>
-      </el-row>
+      </el-row>  
       <el-row>
       <el-col :span="24" v-if="Question.type == 'PackedQues'" type="flex" justify="start">
             <el-row type="flex" justify="start" style="margin-bottom: 10px">
@@ -102,10 +102,10 @@
                         </el-row>
                     </el-row>
                     <!-- 树状结构 -->
-                    <el-row type="flex" justify="start" style="margin: 25px 0px 10px 0px">
+                    <el-row type="flex" justify="start" style="margin: 25px 0px 10px 0px;">
                         <label>此题包含的知识树状结构为：</label>
                     </el-row>
-                    <el-row type="flex" justify="start" class="Table_Unit" style="padding-top: 8px;">
+                    <el-row type="flex" justify="start" class="Table_Unit" style="padding-top: 8px; margin-bottom: 30px">
                         <el-tree 
                             :default-expand-all="true"
                             style="background: transparent" 
@@ -114,12 +114,12 @@
                     </el-row>
                 </el-col>
             </el-row>
-            <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+            <el-row type="flex" justify="start" class="Part_Row_Style_Expand" style="display: none">
                 <el-col :span="12" style="text-align: left">
                     相似试卷
                 </el-col>
             </el-row>
-            <el-row type="flex" justify="start" style="padding-left: 45px">
+            <el-row type="flex" justify="start" style="padding-left: 45px; display: none">
                 <label>与此试卷相似的试卷是xxxxxxx</label>
             </el-row>
             </el-row>
@@ -221,7 +221,7 @@
                         <el-row type="flex" justify="start" style="margin: 25px 0px 10px 0px">
                             <label>此题包含的知识树状结构为：</label>
                         </el-row>
-                        <el-row type="flex" justify="start" class="Table_Unit" style="padding-top: 8px; padding-bottom: 8px">
+                        <el-row type="flex" justify="start" class="Table_Unit" style="padding-top: 8px; padding-bottom: 8px; margin-bottom: 30px">
                             <el-tree 
                                 :default-expand-all="true"
                                 style="background: transparent" 
@@ -230,12 +230,12 @@
                         </el-row>
                     </el-col>
                 </el-row>
-                <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+                <el-row type="flex" justify="start" class="Part_Row_Style_Expand" style="display: none">
                     <el-col :span="12" style="text-align: left">
                         相似试题
                     </el-col>
                 </el-row>
-                <el-row type="flex" justify="start" style="padding-left: 45px">
+                <el-row type="flex" justify="start" style="padding-left: 45px; display: none">
                     <label>与此试卷相似的试题是xxxxxxx</label>
                 </el-row>
             </el-row>
@@ -417,7 +417,7 @@ export default {
       defaultProps: {
         label: "label",
         children: "children"
-      },
+      }
     }                        
   },
   methods: {
