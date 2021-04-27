@@ -72,7 +72,7 @@
                 <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.std)}}</el-col>
             </el-row>
             <!-- 第二项 -->
-            <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
+            <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver; display: none">
                 <el-col :span="4">指标2</el-col>
                 <el-col :span="5">0</el-col>
                 <el-col :span="5">0</el-col>
@@ -80,7 +80,7 @@
                 <el-col :span="5">0</el-col>
             </el-row>
             <!-- 第三项 -->
-            <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver">
+            <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver; display: none">
                 <el-col :span="4">指标3</el-col>
                 <el-col :span="5">0</el-col>
                 <el-col :span="5">0</el-col>
@@ -88,7 +88,7 @@
                 <el-col :span="5">0</el-col>
             </el-row>
             <!-- 随意添加的一个假柱状图 -->
-            <el-row>
+            <el-row style="display: none">
                 <div id="QB_Total_Bar" class="QB_Total_Bar"></div>
             </el-row>
         </el-row>
@@ -224,7 +224,7 @@
                 <el-col :span="5">最小值</el-col>
             </el-row>
             <!-- 第一项 -->
-            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
+            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver; margin-bottom: 5vh">
                 <el-col :span="4">难度</el-col>
                 <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}</el-col>
                 <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.min)}}</el-col>
@@ -232,7 +232,7 @@
                 <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.std)}}</el-col>
             </el-row>
             <!-- 第二项 -->
-            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
+            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver; display: none">
                 <el-col :span="4">指标2</el-col>
                 <el-col :span="5">0</el-col>
                 <el-col :span="5">0</el-col>
@@ -240,7 +240,7 @@
                 <el-col :span="5">0</el-col>
             </el-row>
             <!-- 第三项 -->
-            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver">
+            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver; display: none">
                 <el-col :span="4">指标3</el-col>
                 <el-col :span="5">0</el-col>
                 <el-col :span="5">0</el-col>
@@ -248,7 +248,7 @@
                 <el-col :span="5">0</el-col>
             </el-row>
             <!-- 随意添加的一个假柱状图 -->
-            <el-row>
+            <el-row style="display: none">
                 <div id="Paper_Total_Bar" class="Paper_Total_Bar"></div>
             </el-row>
         </el-row>
@@ -339,10 +339,10 @@
                     <div id="Paper_Knowledge_Pair" class="Paper_Knowledge_Pair"></div>
                 </el-row>
                 <!-- 知识点覆盖程度部分 -->
-                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left">
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left; display: none">
                     <label>本卷覆盖的知识点比例尚待进一步分析。（下方区域是圆环图今后大致的占位区域）</label>
                 </el-row>
-                <el-row>
+                <el-row style="display: none">
                     <div id="Paper_Knowledge_Cover" class="Paper_Knowledge_Cover"></div>
                 </el-row>
             </el-row>
@@ -363,7 +363,7 @@
             </el-row>
         </el-row>
     </div>
-    <div ref="Paper_Similarity">
+    <div ref="Paper_Similarity"  style="display: none">
         <!-- 相似试卷 -->
         <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(2)" :class="Get_Part_Row_Style(2)">
             <el-col :span="12" style="text-align: left">

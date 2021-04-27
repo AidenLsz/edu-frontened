@@ -1,5 +1,14 @@
 <template>
   <div style="margin-top: 5vh">
+    <!-- 查看分析报告 -->
+    <el-dialog
+        :visible.sync="analyseReport"
+        width="90%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="true">
+        <template slot="title"></template>
+        <QuestionAnalyse :Question="analyseData"></QuestionAnalyse>
+    </el-dialog>
     <!-- 试题分析路径跳转 -->
     <el-dialog :visible.sync="QuestionAnalyseSwitchFlag" width="70%">
       <el-row>
@@ -417,7 +426,13 @@
             <label>文件导入</label>
           </el-button>
         </el-row> -->
-        <el-row type="flex" justify="start" style="padding-top: 30px">
+        <el-row 
+          type="flex" 
+          justify="start" 
+          style="padding-top: 30px"
+          v-loading="Question_Analysing"
+          element-loading-text="加载中，请等待"
+          element-loading-spinner="el-icon-loading">
           <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')" :disabled="Type_Now == '-1'">
             <label>题目分析</label>
           </el-button>
@@ -461,6 +476,7 @@ import MixQuestions from "./../resourceInput/components/MixQuestions.vue";
 import MixDisplay from "./../resourceInput/components/MixDisplay.vue";
 
 import Mathdown from "../../common/components/Mathdown.vue";
+import QuestionAnalyse from "./QuestionAnalyse.vue"
 
 // import Vue from "vue";
 export default {
@@ -469,7 +485,7 @@ export default {
                 FillQuestions, FillDisplay, 
                 AnswerQuestions, AnswerDisplay,
                 MixQuestions, MixDisplay,
-                Mathdown},
+                Mathdown, QuestionAnalyse},
   data() {
     return {
       // 是否展开题型
@@ -641,8 +657,61 @@ export default {
           analyse_images: []
 
       },
-      QuestionAnalyseSwitchFlag: false
-        
+      QuestionAnalyseSwitchFlag: false,
+      // 分析报告的显示
+      analyseReport: false,
+      Question_Analysing: false,
+      // 分析报告用的数据
+      analyseData: {
+        "id": "0b1b75ac-3053-45b5-9244-65b0dbb9d9f1",
+        "type": "Question",
+        "level": 2,
+        "stem": "从$\\LUNALaTexPictureID{59dae23f-c8cd-4771-8711-d6a20d1c0118}$名男生和$3$名女生中选出$3$人，分别从事三项不同的工作，若这$3$人中至少有$1$名女生，则选派方案共有(  )种",
+        "options": "['$108$种', '$186$种', '$216$种', '$270$种']",
+        "answer": "$B$",
+        "analysis": "",
+        "difficulty": 0.4020228981971741,
+        "score": 1,
+        "knowledge_points_frontend": {
+          "kp": [
+              "排列、组合与二项式定理",
+              "代数",
+              "计数原理"
+          ],
+          "kp_layer": [
+              {
+                  "label": "代数",
+                  "children": [
+                      {
+                          "label": "不等式",
+                          "children": []
+                      },
+                      {
+                          "label": "计数原理",
+                          "children": [
+                              {
+                                  "label": "排列、组合与二项式定理",
+                                  "children": [
+                                      {
+                                          "label": "排列与组合的简单应用",
+                                          "children": []
+                                      }
+                                  ]
+                              }
+                          ]
+                      }
+                  ]
+              }
+          ],
+          "kp_priority": [
+              "代数",
+              "不等式",
+              "计数原理",
+              "排列、组合与二项式定理",
+              "排列与组合的简单应用"
+          ]
+        }
+      }    
     };
   },
 
@@ -1145,6 +1214,8 @@ export default {
     // 尝试进行导出
     PaperUpload(Control){
 
+      this.Question_Analysing = true;
+
       if(this.Symbol_Error){
         this.$message.error("仍有非法字符存在，请修改后重新尝试。")
         return null;
@@ -1350,6 +1421,8 @@ export default {
 
       if(Control == 'upload'){
 
+        var Question_ID = "";
+
         let config = {
             headers: { "Content-Type": "multipart/form-data" }
         };
@@ -1371,9 +1444,33 @@ export default {
         })
         .then(function(data) {
           if(data.data){
-            alert("用户录入题目的分析报告尚待完成。")
+
+            Question_ID = data.data.Question_ID
+
+            console.log(data.data.Question_ID)
+
+            config = {
+                headers: { "Content-Type": "multipart/form-data" }
+            };
+
+            param = new FormData();
+            param.append("ID", Question_ID);
+            param.append("databasename", "test")
+
+            this.$http
+            .post(this.backendIP + "/api/questionAnalyse", param, config, {
+              emulateJSON: true
+            })
+            .then(function(data) {
+              console.log(data.data)
+              this.Question_Analysing = false;
+              this.analyseData = data.data.que_dic
+              this.analyseReport = true;
+            });
           }
         });
+
+        
 
       }else if(Control == 'export'){
 
