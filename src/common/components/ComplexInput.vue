@@ -25,16 +25,18 @@ The line of README
       width="80%" 
       height="500px" 
       :visible.sync="helper_dialog" 
-      title="快速公式助手" 
       @close="Clear()" 
       top="2vh" 
       style="background: rgba(225,225,225,0.3); "
       :modal-append-to-body="false"
       :append-to-body="true">
+      <template slot="title">
+          <el-row type="flex" justify="center" style="font-size: 18px;">快速公式助手</el-row>  
+      </template>
       <el-container>
-        <el-aside width="22%" height="500px" style="box-shadow: 0px 0px 2px 2px #ddd; background: rgba(196,219,183,0.4); padding-top: 10px">
+        <el-aside width="22%" height="500px" style="box-shadow: 0px 0px 2px 2px #ddd; background: transparent; padding-top: 10px">
           <el-row>
-            <el-col :span="11" :offset="1" style="text-align: left;">上标</el-col>
+            <el-col :span="11" :offset="1" style="text-align: left">上标</el-col>
             <el-col :span="11" :offset="1" style="text-align: left">a^2</el-col>  
           </el-row>
           <el-row>                
@@ -58,7 +60,7 @@ The line of README
             <el-col :span="11" :offset="1" style="text-align: left">{}_1^2a_3^4</el-col>
           </el-row>
           <el-divider></el-divider>
-          <div style="padding-top: -10px;" >常见数学希腊符号表</div><br/>
+          <el-row type="flex" justify="center">常见数学希腊符号表</el-row>
             <el-table max-height="230px" :show-header="false" :data="symbols" style="font-size: 15px;" >
                 <el-table-column
                   prop="col1"
@@ -84,7 +86,7 @@ The line of README
         </el-aside>
         <el-container width="78%" height="500px">
           <el-header height="350px">
-            <el-tabs type="border-card" style="height: 340px; width: 102%; margin-left: -9px; background: rgba(196,219,183,0.4); box-shadow: 0px 0px 2px 2px #ddd;" v-model="latex_now" tab-position="top">
+            <el-tabs type="border-card" style="height: 340px; width: 102%; margin-left: -9px; background: transparent; box-shadow: 0px 0px 2px 2px #ddd;" v-model="latex_now" tab-position="top">
               <el-tab-pane name="常用符号及格式提示" label="常用符号及格式提示">
                 <el-form >
                   <el-row >
@@ -148,7 +150,7 @@ The line of README
                   </el-row>
                 </el-form>
                 <el-divider></el-divider>
-                <el-link href="https://www.cnblogs.com/wanghai0666/p/13950679.html" target="_blank">更多常见符号对照表</el-link>
+                <el-link href="https://www.cnblogs.com/wanghai0666/p/13950679.html" target="_blank" :underline="false">更多常见符号对照表</el-link>
               </el-tab-pane>
               <el-tab-pane name="各类括号的使用方法" label="各类括号的使用方法">
                 <el-row>
@@ -575,7 +577,7 @@ The line of README
           </el-header>
           <el-main>
             <el-row>
-              <el-col :span="2" style="font-weight:bold">
+              <el-col :span="2" style="font-weight:bold; text-align:center">
                 <el-row style="margin-bottom: 6px; padding-top: 5px">当前元素</el-row>
                 <el-row>LaTex格式</el-row>
               </el-col>
@@ -585,9 +587,9 @@ The line of README
               <el-col :span="1" style="font-size:30px; padding-left: 22px; padding-top: 5px">
                 ⇒
               </el-col>
-              <el-col :span="2" style="font-weight:bold">
-                <el-row style="margin-bottom: 6px; padding-top: 5px">效果</el-row>
-                <el-row>展示</el-row>
+              <el-col :span="2" style="font-weight:bold; text-align:center">
+                  <el-row style="margin-bottom: 6px; padding-top: 5px">效果</el-row>
+                  <el-row>展示</el-row>
               </el-col>
               <el-col :span="8" v-if="temp_latex">
                 <Mathdown :content="temp_latex" name="show" style="border: 2px dashed black; height: 72px; margin-top: -10px"></Mathdown>
@@ -602,7 +604,7 @@ The line of README
           </el-main>
           <el-footer height="87px">
             <el-row>
-              <el-col :span="2" style="font-weight:bold">
+              <el-col :span="2" style="font-weight:bold; text-align:center">
                 <el-row style="margin-bottom: 6px; padding-top: 5px">插入公式</el-row>
                 <el-row>LaTex格式</el-row>
               </el-col>
@@ -612,7 +614,7 @@ The line of README
               <el-col :span="1" style="font-size:30px; padding-left: 22px; padding-top: 5px">
                 ⇒
               </el-col>
-              <el-col :span="2" style="font-weight:bold">
+              <el-col :span="2" style="font-weight:bold; text-align:center">
                 <el-row style="margin-bottom: 6px; padding-top: 5px">效果</el-row>
                 <el-row>展示</el-row>
               </el-col>
@@ -635,12 +637,107 @@ The line of README
 
     <el-row style="padding-top: 15px; z-index: 1" type="flex" justify="center">
       <mavon-editor ref="mavoneditor" v-model="content" @imgAdd="New_Img_In" @imgDel="Del_Img" @fullScreen="Change_Class" :class="Get_Mavon_Class(MESinker)" :toolbars="selfToolBar">
-        <el-col slot="left-toolbar-after" :span="1">
-          <div>
+        <el-row slot="left-toolbar-after">
+          <el-col :span="24">
+            <el-row>
+              <el-col :span="2">
+                <el-row type="flex" justify="start">
+                  <img src="./assets/常用运算符.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                </el-row>
+              </el-col>
+              <el-col :span="2">
+                <el-row type="flex" justify="start">
+                  <img src="./assets/上下标.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                </el-row>
+              </el-col>
+              <el-col :span="2">
+                <el-row type="flex" justify="start">
+                  <img src="./assets/集合运算符.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                </el-row>
+              </el-col>
+              <el-col :span="2">
+                <el-row type="flex" justify="start">
+                  <img src="./assets/逻辑运算符.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                </el-row>
+              </el-col>
+              <el-col :span="2">
+                <el-row type="flex" justify="start">
+                  <img src="./assets/括号.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                </el-row>
+              </el-col>
+              <el-col :span="2">
+                <el-row type="flex" justify="start">
+                  <img src="./assets/箭头.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                </el-row>
+              </el-col>
+              <el-col :span="2">
+                <el-row type="flex" justify="start">
+                  <img src="./assets/微积分.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                </el-row>
+              </el-col>
+              <el-col :span="2">
+                <el-row type="flex" justify="start">
+                  <img src="./assets/三角函数.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                </el-row>
+              </el-col>
+              <el-col :span="2">
+                <el-row type="flex" justify="start">
+                  <img src="./assets/几何符号.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                </el-row>
+              </el-col>
+              <el-col :span="2">
+                <el-row type="flex" justify="start">
+                  <img src="./assets/矩阵.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                </el-row>
+              </el-col>
+            </el-row>
+          </el-col>
+          <!-- <div>
             <el-popover ref="hint" placement="top" content="提供LaTex格式的数学公式元素的辅助输入功能。注：显示区使用KaTex进行解析，可能和LaTex结果显示上有差异，但LaTex格式无误。" width="300" trigger="hover"></el-popover>
             <el-button v-popover:hint class="Math_Helper" size="mini" @click="Open_Helper()">&Sigma;</el-button>
-          </div>
-        </el-col>         
+          </div> -->
+        </el-row> 
+        <div slot="right-toolbar-after" type="flex" justify="start">
+          <el-row>
+            <el-col v-for="(count, index) in [0,1,2,3,4,5,6]" :key="index" :span="3">
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini" v-if="Symbol_Index(index)" @click="Add_Symbol(index)">
+                <Mathdown :name="'Common_Symbol_List_' + index" :content="Get_Symbol(index)" style="margin-top: -3px; margin-left: -2px"></Mathdown>
+              </button>
+              <p v-else>&nbsp;</p>
+            </el-col>
+            <el-col :span="3">
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini" :disabled="Common_Page_Index == 0" @click="Common_Page_Index = Common_Page_Index - 1">
+                <i class="el-icon-arrow-up"></i>
+              </button>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top: -20px">
+            <el-col v-for="(count, index) in [0,1,2,3,4,5,6]" :key="index" :span="3">
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini" v-if="Symbol_Index(index+7)" @click="Add_Symbol(index+7)">
+                <Mathdown :name="'Common_Symbol_List_' + (index + 7)" :content="Get_Symbol(index+7)" style="margin-top: -3px; margin-left: -2px"></Mathdown>
+              </button>
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" v-else>&nbsp;</button>
+            </el-col>
+            <el-col :span="3">
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini" :disabled="Common_Page_Index * 7 + 28 > Symbol_List.length" @click="Common_Page_Index = Common_Page_Index + 1">
+                <i class="el-icon-arrow-down"></i>
+              </button>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top: -20px">
+            <el-col v-for="(count, index) in [0,1,2,3,4,5,6]" :key="index" :span="3">
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini" v-if="Symbol_Index(index+14)" @click="Add_Symbol(index+14)">
+                <Mathdown :name="'Common_Symbol_List_' + (index + 14)" :content="Get_Symbol(index+14)" style="margin-top: -3px; margin-left: -2px"></Mathdown>
+              </button>
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" v-else>&nbsp;</button>
+            </el-col>
+            <el-col :span="3">
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini">
+                <i class="el-icon-caret-bottom"></i>
+              </button>
+            </el-col>
+          </el-row>
+        </div>        
       </mavon-editor>
     </el-row>
   </div>
@@ -939,7 +1036,20 @@ export default {
         preview: true // 预览
       },
       // 是否下沉mavonEditor
-      MESinker: false
+      MESinker: false,
+      // 按钮栏翻到多少页了
+      Common_Page_Index: 0,
+      // 当前显示的按钮内容
+      Symbol_List: ["$\\pm$", "$\\infty$", "$\=$", "$\\neq$", "~", "$\\times$", "$\\div$", 
+                    "$\!$", "$\\propto$", "$\<$", "$\\ll$", "$\>$", "$\\gg$", "$\\leq$", 
+                    "$\\geq$", "$\\mp$", "$\\cong$", "$\\approx$", "$\\equiv$", "$\\forall$", "$\\complement$",
+                    "$\\partial$", "$\\sqrt[]{}$", "$\\sqrt[3]{}$", "$\\sqrt[4]{}$", "$\\cup$", "$\\cap$", "$\\emptyset$",
+                    "$\\%$", "$^{\\circ}$", "$^{\\circ}F$", "$^{\\circ}C$", "$\\Delta$", "$\\nabla$", "$\\exists$",
+                    "$\\nexists$", "$\\in$", "$\\ni$", "$\\gets$", "$\\uparrow$", "$\\to$", "$\\downarrow$",
+                    "$\\leftrightarrow$", "$\\because$", "$\\therefore$", "$\+$", "$\-$", "$\\neg$", "$\\alpha$", 
+                    "$\\beta$", "$\\gamma$", "$\\delta$", "$\\varepsilon$", "$\\epsilon$", "$\\theta$", "$\\vartheta$", 
+                    "$\\mu$", "$\\pi$", "$\\rho$", "$\\sigma$", "$\\tau$", "$\\varphi$", "$\\omega$", 
+                    "$\\ast$", "$\\bullet$", "$\\vdots$", "$\\cdots$", "$\\ddots$", "$\\aleph$", "$\\beth$"],
     };
   },
   watch:{
@@ -975,6 +1085,26 @@ export default {
     }
   },
   methods: {
+    // 添加符号
+    Add_Symbol(index){
+      this.content = this.content + this.Symbol_List[(this.Common_Page_Index * 7) + index];
+    },
+    // 返回符号
+    Get_Symbol(index){
+      if((this.Common_Page_Index * 7) + index < this.Symbol_List.length){
+        return this.Symbol_List[(this.Common_Page_Index * 7) + index]
+      }else{
+        return ""
+      }
+    },
+    // 这个符号是否是一个有效的符号
+    Symbol_Index(index){
+      if((this.Common_Page_Index * 7) + index < this.Symbol_List.length){
+        return true
+      }else{
+        return false
+      }
+    },
     Get_Mavon_Class(value){
       if(value){
         setTimeout(()=>{this.$emit("Full_Change", value)}, 10);
@@ -1340,26 +1470,11 @@ export default {
 }
 .ME_Unfull{
   width: 70vw;
+  height: 600px;
 }
 </style>
 
 <style scoped type="text/css">
-.el-button {
-  background-color: #1a2930;
-  color: #fff;
-  border-color: #1a2930;
-}
-.el-button:hover {
-  background-color: #008080;
-  color: #fff;
-  border-color: #fff;
-}
-.el-button:focus {
-  background-color: #008080;
-  color: #fff;
-  border-color: #fff;
-  outline: none;
-}
 .Math_Helper {
   color: black; 
   font-size: 20px; 
