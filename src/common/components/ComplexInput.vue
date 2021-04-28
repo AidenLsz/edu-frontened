@@ -21,7 +21,7 @@ The line of README
 
 <template>
   <div>
-    <el-dialog 
+    <!-- <el-dialog 
       width="80%" 
       height="500px" 
       :visible.sync="helper_dialog" 
@@ -60,29 +60,7 @@ The line of README
             <el-col :span="11" :offset="1" style="text-align: left">{}_1^2a_3^4</el-col>
           </el-row>
           <el-divider></el-divider>
-          <el-row type="flex" justify="center">常见数学希腊符号表</el-row>
-            <el-table max-height="230px" :show-header="false" :data="symbols" style="font-size: 15px;" >
-                <el-table-column
-                  prop="col1"
-                  align="center"
-                  width="35">
-                </el-table-column>
-                <el-table-column
-                  prop="col2"
-                  align="left"
-                  width="85">
-                </el-table-column>
-                <el-table-column
-                  prop="col3"
-                  align="center"
-                  width="35">
-                </el-table-column>
-                <el-table-column
-                  prop="col4"
-                  align="left"
-                  width="85">
-                </el-table-column>
-            </el-table> 
+
         </el-aside>
         <el-container width="78%" height="500px">
           <el-header height="350px">
@@ -631,18 +609,89 @@ The line of README
             </el-row>
           </el-footer>
         </el-container>
-      </el-container>
+      </el-container> -->
       <!-- Mathdown组件需要命名name属性才能区别不同的组件，而且不能是纯数字，至少第一个不能是数字 -->
-    </el-dialog>
+    <!-- </el-dialog> -->
 
     <el-row style="padding-top: 15px; z-index: 1" type="flex" justify="center">
       <mavon-editor ref="mavoneditor" v-model="content" @imgAdd="New_Img_In" @imgDel="Del_Img" @fullScreen="Change_Class" :class="Get_Mavon_Class(MESinker)" :toolbars="selfToolBar">
+        <!-- 左侧其他常用功能分类 -->
         <el-row slot="left-toolbar-after">
           <el-col :span="24">
             <el-row>
               <el-col :span="2">
                 <el-row type="flex" justify="start">
-                  <img src="./assets/常用运算符.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  <el-popover
+                    placement="bottom-start"
+                    width="600"
+                    trigger="hover">
+                    <!-- Common_Binary_Operator_List -> CBOL -->
+                    <el-row type="flex" justify="start" style="margin-bottom: 30px" v-if="Part_Common_Page">
+                      常用二元运算符
+                    </el-row>
+                    <div v-if="Part_Common_Page">
+                      <el-row style="margin-top: -15px" v-for="Outer in Math.ceil(Part_Common_List.常用运算符.length/24)" :key="'CBOL_' + (Outer - 1)">
+                        <el-col :span="1" v-for="index in 24" :key="'CBOL_'  + (Outer - 1) + '_' + index">
+                          <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Part_Common_List_Index('常用运算符', (Outer - 1) * 24 + (index - 1))" @click="Add_Part_Common_List('常用运算符', (Outer - 1) * 24 + (index - 1))">
+                            <Mathdown :name="'Common_Binary_Operator_List_' + ((Outer - 1) * 24 + index)" :content="Part_Common_List.常用运算符[(Outer - 1) * 24 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                          </button>
+                          <div style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                        </el-col>
+                      </el-row>
+                    </div>
+                    <!-- Common_Relational_Operator_List -> CROL -->
+                    <el-row type="flex" justify="start" style="margin-bottom: 30px" v-if="Part_Common_Page">
+                      常用关系运算符
+                    </el-row>
+                    <div v-if="Part_Common_Page">
+                      <el-row style="margin-top: -15px" v-for="Outer in Math.ceil(Part_Common_List.二元运算符.length/24)" :key="'CROL_' + (Outer - 1)">
+                        <el-col :span="1" v-for="index in 24" :key="'CROL_'  + (Outer - 1) + '_' + index">
+                          <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Part_Common_List_Index('二元运算符', (Outer - 1) * 24 + (index - 1))" @click="Add_Part_Common_List('二元运算符', (Outer - 1) * 24 + (index - 1))">
+                            <Mathdown :name="'Common_Relational_Operator_List_' + ((Outer - 1) * 24 + index)" :content="Part_Common_List.二元运算符[(Outer - 1) * 24 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                          </button>
+                          <div style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                        </el-col>
+                      </el-row>
+                    </div>
+                    <!-- 换页按钮 -->
+                    <el-row type="flex" justify="center" style="margin: -15px auto 2px auto">
+                      <el-button type="text" size="big" style="font-size: 20px" v-if="Part_Common_Page" @click="Part_Common_Page = false"><i class="el-icon-arrow-down"></i></el-button>
+                      <el-button type="text" size="big" style="font-size: 20px" v-else @click="Part_Common_Page = true"><i class="el-icon-arrow-up"></i></el-button>
+                    </el-row>
+                    <!-- Common_Fractional_Operator_List -> CBOL -->
+                    <el-row type="flex" justify="start" style="margin-bottom: 30px" v-if="!Part_Common_Page">
+                      常用分式、二项式运算符
+                    </el-row>
+                    <div v-if="!Part_Common_Page">
+                      <el-row style="margin-top: -15px" v-for="Outer in Math.ceil(Part_Common_List.分式.length/6)" :key="'CFOL_' + (Outer - 1)">
+                        <el-col :span="4" v-for="index in 6" :key="'CFOL_'  + (Outer - 1) + '_' + index">
+                          <el-row type="flex" justify="center">
+                            <button style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Part_Common_List_Index('分式', (Outer - 1) * 6 + (index - 1))" @click="Add_Part_Common_List('分式', (Outer - 1) * 6 + (index - 1))">
+                              <Mathdown :name="'Common_Fractional_Operator_List_' + ((Outer - 1) * 6 + index)" :content="Part_Common_List.分式[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            </button>
+                            <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                          </el-row>
+                        </el-col>
+                      </el-row>
+                    </div>
+                    <!-- Common_Exponential_Operator_List -> CEOL -->
+                    <el-row type="flex" justify="start" style="margin-bottom: 30px" v-if="!Part_Common_Page">
+                      常用指数、对数运算符
+                    </el-row>
+                    <div v-if="!Part_Common_Page">
+                      <el-row style="margin-top: -15px" v-for="Outer in Math.ceil(Part_Common_List.指数.length/6)" :key="'CEOL_' + (Outer - 1)">
+                        <el-col :span="4" v-for="index in 6" :key="'CEOL_'  + (Outer - 1) + '_' + index">
+                          <el-row type="flex" justify="center">
+                            <button style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Part_Common_List_Index('指数', (Outer - 1) * 6 + (index - 1))" @click="Add_Part_Common_List('指数', (Outer - 1) * 6 + (index - 1))">
+                              <Mathdown :name="'Common_Exponential_Operator_List_' + ((Outer - 1) * 6 + index)" :content="Part_Common_List.指数[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            </button>
+                            <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                          </el-row>
+                        </el-col>
+                      </el-row>
+                    </div>
+                    <img slot="reference" src="./assets/常用运算符.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  </el-popover>
                 </el-row>
               </el-col>
               <el-col :span="2">
@@ -697,44 +746,65 @@ The line of README
             <el-button v-popover:hint class="Math_Helper" size="mini" @click="Open_Helper()">&Sigma;</el-button>
           </div> -->
         </el-row> 
+        <!-- 右侧插入常见符号的部分 -->
         <div slot="right-toolbar-after" type="flex" justify="start" @mousewheel.prevent="Common_Page_Change">
           <el-row>
             <el-col v-for="(count, index) in [0,1,2,3,4,5,6]" :key="index" :span="3">
-              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini" v-if="Symbol_Index(index)" @click="Add_Symbol(index)">
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Symbol_Index(index)" @click="Add_Symbol(index)">
                 <Mathdown :name="'Common_Symbol_List_' + index" :content="Get_Symbol(index)" style="margin-top: -3px; margin-left: -2px"></Mathdown>
               </button>
-              <p v-else>&nbsp;</p>
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</button>
             </el-col>
             <el-col :span="3">
-              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini" :disabled="Common_Page_Index == 0" @click="Common_Page_Index = Common_Page_Index - 1">
-                <i class="el-icon-arrow-up"></i>
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" :disabled="Common_Page_Index == 0" @click="Common_Page_Index = Common_Page_Index - 1">
+                <i class="el-icon-arrow-up" style="color: whitesmoke" v-if="Common_Page_Index == 0"></i>
+                <i class="el-icon-arrow-up" v-else></i>
               </button>
             </el-col>
           </el-row>
           <el-row style="margin-top: -20px">
             <el-col v-for="(count, index) in [0,1,2,3,4,5,6]" :key="index" :span="3">
-              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini" v-if="Symbol_Index(index+7)" @click="Add_Symbol(index+7)">
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Symbol_Index(index+7)" @click="Add_Symbol(index+7)">
                 <Mathdown :name="'Common_Symbol_List_' + (index + 7)" :content="Get_Symbol(index+7)" style="margin-top: -3px; margin-left: -2px"></Mathdown>
               </button>
-              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" v-else>&nbsp;</button>
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</button>
             </el-col>
             <el-col :span="3">
-              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini" :disabled="Common_Page_Index * 7 + 28 > Symbol_List.length" @click="Common_Page_Index = Common_Page_Index + 1">
-                <i class="el-icon-arrow-down"></i>
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" :disabled="Common_Page_Index * 7 + 21 >= Symbol_List.length" @click="Common_Page_Index = Common_Page_Index + 1">
+                <i class="el-icon-arrow-down" style="color: whitesmoke" v-if="Common_Page_Index * 7 + 21 >= Symbol_List.length"></i>
+                <i class="el-icon-arrow-down" v-else></i>
               </button>
             </el-col>
           </el-row>
           <el-row style="margin-top: -20px">
             <el-col v-for="(count, index) in [0,1,2,3,4,5,6]" :key="index" :span="3">
-              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini" v-if="Symbol_Index(index+14)" @click="Add_Symbol(index+14)">
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Symbol_Index(index+14)" @click="Add_Symbol(index+14)">
                 <Mathdown :name="'Common_Symbol_List_' + (index + 14)" :content="Get_Symbol(index+14)" style="margin-top: -3px; margin-left: -2px"></Mathdown>
               </button>
-              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" v-else>&nbsp;</button>
+              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</button>
             </el-col>
             <el-col :span="3">
-              <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none" size="mini">
-                <i class="el-icon-caret-bottom"></i>
-              </button>
+              <el-popover
+                placement="bottom"
+                trigger="hover">
+                <el-col style="margin: 0px; padding: 0px;">
+                  <el-row type="flex" justify="center" style="margin: 0px; margin-bottom: 5px">
+                    当前类型：{{Common_Symbol_Type}}
+                  </el-row>
+                  <el-row type="flex" justify="center" v-if="Common_Symbol_Type != '常用符号'" style="margin: 0px; margin-top: -2px">
+                    <el-button type="text" size="medium" @click="Common_Symbol_Type = '常用符号'">切换至常用符号</el-button>
+                  </el-row>
+                  <el-row type="flex" justify="center" v-if="Common_Symbol_Type != '希腊字母'" style="margin: 0px; margin-top: -2px">
+                    <el-button type="text" size="medium" @click="Common_Symbol_Type = '希腊字母'">切换至希腊字母</el-button>
+                  </el-row>
+                  <el-row type="flex" justify="center" v-if="Common_Symbol_Type != '字母符号'" style="margin: 0px; margin-top: -2px">
+                    <el-button type="text" size="medium" @click="Common_Symbol_Type = '字母符号'">切换至字母符号</el-button>
+                  </el-row>
+                </el-col>
+                <button slot="reference" style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini">
+                  <i class="el-icon-caret-bottom"></i>
+                </button>
+              </el-popover>
             </el-col>
           </el-row>
         </div>        
@@ -763,242 +833,6 @@ export default {
       // name: 图片名
       // info: base64转换后的数据段
       image_infos: [],
-      // 记录当前是否打开数学助手对话框
-      helper_dialog: false,  
-      // 记录当前应当显示哪一个LaTex公式的对话框的变量
-      latex_now: "常用符号及格式提示",
-      // 保存所有快速生成LaTex文本参数的Json段
-      latex: {
-        "常用符号及格式提示":{
-          name: "常用符号及格式提示",
-        },
-        "各类括号的使用方法": {
-          name: "各类括号的使用方法"
-        },
-        "三角函数": {
-          name: "三角函数",
-        },
-        "微分及导数": {
-          name: "微分及导数",
-        },
-        "对数": {
-          name: "对数",
-        },
-        "指数":{
-          name: "指数",
-        },
-        "最值": {
-          name: "最值",
-        },
-        "极限": {
-          name: "极限",
-        },
-        "投射": {
-          name: "投射",
-        },
-        "模运算及开根号": {
-          name: "模运算及开根号",
-        },
-        "类字母符号与常数": {
-          name: "类字母符号与常数"
-        }
-      },
-      // 记录当前元件应当显示的LaTex公式的结果
-      temp_latex: "",
-      // 记录当前公式应当显示的LaTex公式的结果
-      temp_latex_total: "",
-      // 保存当前分类，与latex_now结合判断使用哪部分语句作为输出
-      temp_param_type: "",
-      // 保存显示数学希腊符号的符号段
-      symbols: [
-        {
-          'col1': "α",
-          'col2': "\\alpha",
-          'col3': "β",
-          'col4': "\\beta"
-        },
-        {
-          'col1': "γ",
-          'col2': "\\gamma",
-          'col3': "δ",
-          'col4': "\\delta"
-        },
-        {
-          'col1': "ϵ",
-          'col2': "\\epsilon",
-          'col3': "ζ",
-          'col4': "\\zeta"
-        },
-        {
-          'col1': "η",
-          'col2': "\\eta",
-          'col3': "θ",
-          'col4': "\\theta"
-        },
-        {
-          'col1': "ι",
-          'col2': "\\iota",
-          'col3': "κ",
-          'col4': "\\kappa"
-        },
-        {
-          'col1': "λ",
-          'col2': "\\lambda",
-          'col3': "μ",
-          'col4': "\\mu"
-        },
-        {
-          'col1': "ν",
-          'col2': "\\nu",
-          'col3': "o",
-          'col4': "\\omicron"
-        },
-        {
-          'col1': "ξ",
-          'col2': "\\xi",
-          'col3': "π",
-          'col4': "\\pi"
-        },
-        {
-          'col1': "ρ",
-          'col2': "\\rho",
-          'col3': "σ",
-          'col4': "\\sigma"
-        },
-        {
-          'col1': "τ",
-          'col2': "\\tau",
-          'col3': "υ",
-          'col4': "\\upsilon"
-        },
-        {
-          'col1': "ϕ",
-          'col2': "\\phi",
-          'col3': "χ",
-          'col4': "\\chi"
-        },
-        {
-          'col1': "ψ",
-          'col2': "\\psi",
-          'col3': "ω",
-          'col4': "\\omega"
-        },
-        {
-          'col1': "A",
-          'col2': "\\Alpha",
-          'col3': "B",
-          'col4': "\\Beta"
-        },
-        {
-          'col1': "Γ",
-          'col2': "\\Gamma",
-          'col3': "Δ",
-          'col4': "\\Delta"
-        },
-        {
-          'col1': "E",
-          'col2': "\\Epsilon",
-          'col3': "Z",
-          'col4': "\\Zeta"
-        },
-        {
-          'col1': "H",
-          'col2': "\\Eta",
-          'col3': "Θ",
-          'col4': "\\Theta"
-        },
-        {
-          'col1': "I",
-          'col2': "\\Iota",
-          'col3': "K",
-          'col4': "\\Kappa"
-        },
-        {
-          'col1': "Λ",
-          'col2': "\\Lambda",
-          'col3': "M",
-          'col4': "\\Mu"
-        },
-        {
-          'col1': "N",
-          'col2': "\\Nu",
-          'col3': "O",
-          'col4': "\\Omicron"
-        },
-        {
-          'col1': "Ξ",
-          'col2': "\\Xi",
-          'col3': "Π",
-          'col4': "\\Pi"
-        },
-        {
-          'col1': "P",
-          'col2': "\\Rho",
-          'col3': "Σ",
-          'col4': "\\Sigma"
-        },
-        {
-          'col1': "T",
-          'col2': "\\Tau",
-          'col3': "Υ",
-          'col4': "\\Upsilon"
-        },
-        {
-          'col1': "Φ",
-          'col2': "\\Phi",
-          'col3': "X",
-          'col4': "\\Chi"
-        },
-        {
-          'col1': "Ψ",
-          'col2': "\\Psi",
-          'col3': "Ω",
-          'col4': "\\Omega"
-        }
-      ],
-      // 保存显示类字母符号和常数的符号段
-      alnum_like: [
-        {
-          char1: "∞",
-          str1: "\\infty",
-          char2: "ℵ",
-          str2: "\\aleph",
-          char3: "∁",
-          str3: "\\complement",
-          char4: "∍",
-          str4: "\\backepsilon",
-        },
-        {
-          char1: "ð",
-          str1: "\\eth",
-          char2: "Ⅎ",
-          str2: "\\Finv",
-          char3: "ℏ",
-          str3: "\\hbar",
-          char4: "I",
-          str4: "\\Im",
-        },
-        {
-          char1: "ı",
-          str1: "\\imath",
-          char2: "ȷ",
-          str2: "\\jmath",
-          char3: "k",
-          str3: "\\Bbbk",
-          char4: "ℓ",
-          str4: "\\ell",
-        },
-        {
-          char1: "℧",
-          str1: "\\mho",
-          char2: "℘",
-          str2: "\\wp",
-          char3: "R",
-          str3: "\\Re",
-          char4: "Ⓢ",
-          str4: "\\circledS",
-        }
-      ],
       // 处理自带的工具栏
       selfToolBar: {
         bold: true, // 粗体
@@ -1039,6 +873,38 @@ export default {
       MESinker: false,
       // 按钮栏翻到多少页了
       Common_Page_Index: 0,
+      Common_Symbol_Set: {
+        // 默认栏
+        '常用符号': ["$\\pm$", "$\\infty$", "$\=$", "$\\neq$", "~", "$\\times$", "$\\div$", 
+                    "$\!$", "$\\propto$", "$\<$", "$\\ll$", "$\>$", "$\\gg$", "$\\leq$", 
+                    "$\\geq$", "$\\mp$", "$\\cong$", "$\\approx$", "$\\equiv$", "$\\forall$", "$\\complement$",
+                    "$\\partial$", "$\\sqrt[]{}$", "$\\sqrt[3]{}$", "$\\sqrt[4]{}$", "$\\cup$", "$\\cap$", "$\\emptyset$",
+                    "$\\%$", "$^{\\circ}$", "$^{\\circ}F$", "$^{\\circ}C$", "$\\Delta$", "$\\nabla$", "$\\exists$",
+                    "$\\nexists$", "$\\in$", "$\\ni$", "$\\gets$", "$\\uparrow$", "$\\to$", "$\\downarrow$",
+                    "$\\leftrightarrow$", "$\\because$", "$\\therefore$", "$\+$", "$\-$", "$\\neg$", "$\\alpha$", 
+                    "$\\beta$", "$\\gamma$", "$\\delta$", "$\\varepsilon$", "$\\epsilon$", "$\\theta$", "$\\vartheta$", 
+                    "$\\mu$", "$\\pi$", "$\\rho$", "$\\sigma$", "$\\tau$", "$\\varphi$", "$\\omega$", 
+                    "$\\ast$", "$\\bullet$", "$\\vdots$", "$\\cdots$", "$\\ddots$", "$\\aleph$", "$\\beth$"],
+        // 希腊字母
+        '希腊字母': ["$\\alpha$", "$\\beta$", "$\\gamma$", "$\\delta$", "$\\varepsilon$", "$\\epsilon$", "$\\zeta$",
+                  "$\\eta$", "$\\theta$", "$\\vartheta$", "$\\iota$", "$\\kappa$", "$\\lambda$",  "$\\mu$",
+                  "$\\nu$", "$\\omicron$", "$\\xi$", "$\\pi$", "$\\varpi$", "$\\rho$", "$\\varrho$", "$\\sigma$", "$\\varsigma$",
+                  "$\\tau$", "$\\upsilon$", "$\\phi$", "$\\chi$", "$\\psi$", "$\\omega$",
+                  "$\\rm{A}$",  "$\\rm{B}$", "$\\Gamma$", "$\\Delta$", "$\\rm{E}$", "$\\rm{Z}$",
+                  "$\\rm{H}$", "$\\Theta$", "$\\rm{I}$", "$\\rm{K}$",  "$\\Lambda$", "$\\rm{M}$",
+                  "$\\rm{N}$", "$\\rm{O}$", "$\\Xi$", "$\\Pi$",  "$\\rm{P}$", "$\\Sigma$",
+                  "$\\rm{T}$", "$\\Upsilon$", "$\\Phi$", "$\\rm{X}$", "$\\Psi$", "$\\Omega$"],
+        // 其他字母类符号
+        '字母符号': ["$\\rm{F}$", "$\\Finv$", "$\\exists$", "$\\nexists$",
+                    "$\\forall$", "$\\complement$", "$\\partial$", "$\\hbar$", 
+                    "$\\mathcal{g}$", "$\\mathcal{H}$", "$\\mathcal{R}$", "$\\mathcal{L}$",
+                    "$\\mathcal{l}$", "$\\mathcal{B}$", "$\\mathcal{E}$", "$\\mathcal{F}$", "$\\mathcal{o}$", 
+                    "$\\mathfrak{H}$", "$\\mathfrak{h}$", "$\\mathfrak{l}$", "$\\mathfrak{R}$",
+                    "$\\mathbb{K}$", "$\\mathbb{Z}$", "$\\mathbb{R}$", "$\\mathbb{N}$", "$\\mathbb{Q}$", "$\\mathbb{P}$", "$\\mathbb{I}$",
+                    "$\\gimel$", "$\\daleth$", "$\\aleph$", "$\\beth$", "$\\infty$", "$\\backepsilon$", "$\\eth$", "$\\Im$", "$\\imath$",
+                    "$\\jmath$", "$\\ell$", "$\\mho$", "$\\wp$", "$\\Re$", "$\\circledS$"]
+      },
+      Common_Symbol_Type: '常用符号',
       // 当前显示的按钮内容
       Symbol_List: ["$\\pm$", "$\\infty$", "$\=$", "$\\neq$", "~", "$\\times$", "$\\div$", 
                     "$\!$", "$\\propto$", "$\<$", "$\\ll$", "$\>$", "$\\gg$", "$\\leq$", 
@@ -1050,9 +916,30 @@ export default {
                     "$\\beta$", "$\\gamma$", "$\\delta$", "$\\varepsilon$", "$\\epsilon$", "$\\theta$", "$\\vartheta$", 
                     "$\\mu$", "$\\pi$", "$\\rho$", "$\\sigma$", "$\\tau$", "$\\varphi$", "$\\omega$", 
                     "$\\ast$", "$\\bullet$", "$\\vdots$", "$\\cdots$", "$\\ddots$", "$\\aleph$", "$\\beth$"],
+      // 第一个按钮是否显示的是第一页，由于只有两页，所以可以直接判断
+      Part_Common_Page: true,
+      // 常用运算符按钮代表的功能列，分为 常用运算符，二元运算符，分式，指数 四个部分
+      Part_Common_List:{
+        "常用运算符": ["$\+$", "$\-$", "$\\div$", "$\\times$", "$\\pm$", "$\\mp$", "$\\propto$", "$\/$", "$\\ast$", "$\\circ$",
+                      "$\\bullet$", "$\\cdot$", "$\\cap$", "$\\cup$", "$\\uplus$", "$\\sqcap$", "$\\sqcup$", "$\\wedge$", "$\\vee$"],
+        "二元运算符": ["$\=$", "$\\neq$", "$\<$", "$\>$", "$\\leq$", "$\\geq$", "$\\nless$", "$\\nleq$", "$\\ngtr$", "$\\ngeq$", 
+                      "$\\equiv$", "$\\sim$", "$\\simeq$", "$\\approx$", "$\\cong$", "$\\not\\equiv$", "$\\not\\simeq$", "$\\not\\approx$", "$\\not\\cong$", "$\\propto$", 
+                      "$\\ll$", "$\\gg$", "$\\in$", "$\\ni$", "$\\notin$", "$\\subset$", "$\\supset$", "$\\subseteq$", "$\\supseteq$", "$\\prec$", 
+                      "$\\succ$", "$\\preceq$", "$\\succeq$", "$\\sqsubset$", "$\\sqsupset$", "$\\sqsubseteq$", "$\\sqsupseteq$", "$\\parallel$", "$\\bot$", "$\\vdash$", 
+                      "$\\dashv$", "$\\bowtie$", "$\\asymp$"],
+        "分式": ["$\\frac{a}{b}$", "$\\frac{d{a}}{d{b}}$", "$\\frac{\\nabla{a}}{\\nabla{b}}$", "$\\frac{\\partial{a}}{\\partial{b}}$", "$\\frac{\\delta{a}}{\\delta{b}}$", "$\\frac{\\pi}{2}$",
+                "$\\mathrm{a}/\\mathrm{b}$", "$\\mathrm{d{a}}/\\mathrm{d{b}}$", "$\\mathrm{\\nabla{a}}/\\mathrm{\\nabla{b}}$", "$\\mathrm{\\partial{a}}/\\mathrm{\\partial{b}}$", "$\\mathrm{\\delta{a}}/\\mathrm{\\delta{b}}$", "$\\mathrm{\\pi}/\\mathrm{2}$",
+                "$\\tfrac{a}{b}$", "$\\tfrac{d{a}}{d{b}}$", "$\\tfrac{\\nabla{a}}{\\nabla{b}}$", "$\\tfrac{\\partial{a}}{\\partial{b}}$", "$\\tfrac{\\delta{a}}{\\delta{b}}$", "$\\tfrac{\\pi}{2}$",
+                "$\\frac{a}{c + \\frac{a}{d}}$", "$\\dbinom{n}{r}$", "$\\binom{n}{n-r}$", "$\\mathrm{C}_n^r$", "$\\mathrm{C}_n^{n-r}$"],
+        "指数": ["$e^2$", "$a^b$", "$\\log {a}$", "$\\ln {a}$", "$\\lg {a}$", "$\\log_{a}^{b}$"]
+      }
     };
   },
   watch:{
+    Common_Symbol_Type(val){
+      this.Symbol_List = this.Common_Symbol_Set[val];
+      this.Common_Page_Index = 0;
+    },
     sour(val) {
       this.submit();
     },
@@ -1085,9 +972,20 @@ export default {
     }
   },
   methods: {
+    // 常用 - 长度检测
+    Part_Common_List_Index(part, index){
+      if(index >= this.Part_Common_List[part].length){
+        return false
+      }else{
+        return true
+      }
+    },
+    Add_Part_Common_List(part, index){
+      this.Add(this.Part_Common_List[part][index]);
+    },
     // 滚轮事件
     Common_Page_Change(e){
-      if(e.wheelDeltaY < 0 && !(this.Common_Page_Index * 7 + 28 > this.Symbol_List.length)){
+      if(e.wheelDeltaY < 0 && !(this.Common_Page_Index * 7 + 21 >= this.Symbol_List.length)){
         this.Common_Page_Index = this.Common_Page_Index + 1
         e.stopPropagation;
       }else if(e.wheelDeltaY > 0 && this.Common_Page_Index > 0){
@@ -1097,7 +995,7 @@ export default {
     },
     // 添加符号
     Add_Symbol(index){
-      this.content = this.content + this.Symbol_List[(this.Common_Page_Index * 7) + index];
+      this.Add(this.Symbol_List[(this.Common_Page_Index * 7) + index])
     },
     // 返回符号
     Get_Symbol(index){
@@ -1123,6 +1021,11 @@ export default {
         setTimeout(()=>{this.$emit("Full_Change", value)}, 10);
         return "ME_Unfull"
       }
+    },
+    // 添加至Content
+    Add(con){
+      this.content = this.content + con;
+      this.$message.success("已添加 " + con + " 至内容区。")
     },
     Change_Class(status, value){
       this.MESinker = status;
@@ -1220,29 +1123,29 @@ export default {
 
       }else if(this.temp_param_type == 'par2h'){
 
-        var temp_param2 = "\\mathrm{d}{变量占位符1}";
-        var temp_param3 = "\\mathrm{d}{变量占位符2}";
+        var temp_param2 = "$\\mathrm{d}{变量占位符1}";
+        var temp_param3 = "$\\mathrm{d}{变量占位符2}";
         
-        this.temp_latex = "$" + temp_param2 + "/" + temp_param3 + "$"
+        this.temp_latex = "$\\mathrm{d}{a}/\\mathrm{d}{b}$"
 
       }else if(this.temp_param_type == 'par1v'){
 
         var temp_param2 = "d{变量占位符1}";
         var temp_param3 = "d{变量占位符2}";
         
-        this.temp_latex = "$\\frac{" + temp_param2 + "}{" + temp_param3 + "}$"
+        this.temp_latex = "$\\frac{d{a}}{d{b}}$"
 
       }else if(this.temp_param_type == 'par2v'){
 
-        var temp_param2 = "\\mathrm{d}{变量占位符1}";
-        var temp_param3 = "\\mathrm{d}{变量占位符2}";
+        var temp_param2 = "$\\mathrm{d}{变量占位符1}";
+        var temp_param3 = "$\\mathrm{d}{变量占位符2}";
         
         this.temp_latex = "$\\frac{" + temp_param2 + "}{" + temp_param3 + "}$"
 
       }else if(this.temp_param_type == 'par'){
         
-        var temp_param2 = "\\partial {变量占位符1}";
-        var temp_param3 = "\\partial {变量占位符2}";
+        var temp_param2 = "$\\partial {变量占位符1}";
+        var temp_param3 = "$\\partial {变量占位符2}";
         
         this.temp_latex = "$\\frac{" + temp_param2 + "}{" + temp_param3 + "}$"
 
