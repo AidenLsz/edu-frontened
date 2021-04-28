@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 <template>
   <div class="ku" style="margin-top: 5vh">
-
     <el-dialog
         :visible.sync="simpleInput"
         title="LUNA输入助手"
@@ -272,7 +271,7 @@ export default {
       this.$emit('changeFullScreen', this.isFullscreen)
     },
     initFullScreen() {
-      this.fullEl = document.getElementById(this.activeName);
+      // this.fullEl = document.getElementById(this.activeName);
       if (screenfull.enabled) {
         screenfull.on('change', this.changeFullScreen)
       }
@@ -396,7 +395,23 @@ export default {
   }
 };
 </script>
-
+<style  lang="scss" >
+.tool-tip{
+  position:absolute;
+  width: 150px;
+  max-height:200px;
+  border-radius: 4px;
+  background-color:rgba(248,251, 255, .7);
+  border:solid 1px rgba(31,119,180,0.3);
+  overflow-y: scroll;
+}
+.tool-tip p{
+  margin: 6px;
+  color:#303133;
+  text-align: left;
+  text-indent: 2em;
+}
+</style>
 <style scoped lang="scss">
 .zoom-in-btn{
   position:absolute;
@@ -433,7 +448,7 @@ export default {
     background: rgba(248,251, 255, .7);
     width: 37.5%;
     height: 850px;
-    z-index: 100;
+    // z-index: 10;
     left: -3%;
     opacity:0;
 }

@@ -9,7 +9,7 @@
 <script>
 import * as d3 from "d3";
 import $ from "jquery";
-import {zoom} from './zoom.js'
+import {zoom,addTooltip} from './common.js'
 
 export default {
   props: {
@@ -47,6 +47,7 @@ export default {
       let nodes = [
           {
             name: this.node.name,
+            desc: this.node.description,
           }
       ];
 
@@ -59,6 +60,8 @@ export default {
         // console.log(i+1,r_idx-i,kg_group[r_idx-i].name);
         nodes[i + 1] = {
           name: kg_group[r_idx-i].name,
+          desc: kg_group[r_idx-i].annotation.split("description-")[1],
+
         };
         edges[i] = {
           source: 0,
@@ -138,15 +141,17 @@ export default {
         )
       // 绘制节点
       let _this=this
-      gs.append('circle')
+      let circle = gs.append('circle')
         .attr('r', 5)
         .attr('fill', function (d, i) {
           return colorScale(i)
         })
         .on('click',function(d){
+          console.log('d:',d);
           if(d.name!=_this.node.name)
             _this.$emit("search", d.name)
         })
+      addTooltip(d3.select('#costudy_container'),circle)
       // 文字
       gs.append('text')
         .attr('x', -6)
