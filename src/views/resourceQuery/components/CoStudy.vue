@@ -137,10 +137,15 @@ export default {
           .on('end', ended)
         )
       // 绘制节点
+      let _this=this
       gs.append('circle')
         .attr('r', 5)
         .attr('fill', function (d, i) {
           return colorScale(i)
+        })
+        .on('click',function(d){
+          if(d.name!=_this.node.name)
+            _this.$emit("search", d.name)
         })
       // 文字
       gs.append('text')
