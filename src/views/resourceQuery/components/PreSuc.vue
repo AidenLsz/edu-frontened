@@ -52,7 +52,6 @@ export default {
       let nodes = [
           {
             id:this.node.name,
-            name: this.node.name,
             community:1,
             // desc: this.node.description,
             // type: 0,
@@ -71,7 +70,6 @@ export default {
         if (i < this.inward_arrow) {
             nodes[i + 1] = {
               id:kg_group[i].name,
-              name: kg_group[i].name,
               community:0
               // desc: "this is " +kg_group[i].name,
               // type: 1,
@@ -92,7 +90,6 @@ export default {
         } else {
           nodes[i + 1] = {
             id:kg_group[i].name,
-            name: kg_group[i].name,
             community:2
             // desc: "this is " +kg_group[i].name,
             // type: 1,
@@ -194,11 +191,17 @@ export default {
       .enter()
       .append('g')
       .call(drag)
+
     // 绘制节点
+    let _this = this;
     gs.append('circle')
       .attr('r', 5)
       .attr('fill', function (d, i) {
         return colorScale(i)
+      })
+      .on('click',function(d){
+        if(d.id!=_this.node.name)
+          _this.$emit("search", d.id)
       })
     // 文字
     gs.append('text')
@@ -210,7 +213,7 @@ export default {
       .style("font-family", "sans-serif")
       .style("font-size", "0.8em")
       .text(function (d) {
-        return d.name
+        return d.id
       })
 
     zoom(svgDOM,svg)

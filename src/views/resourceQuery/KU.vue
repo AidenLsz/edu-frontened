@@ -89,13 +89,17 @@
                   :node="node"
                   :neighbors_groups="neighbors_groups"
                   :inward_arrow="inward_arrow"
-                  :outward_arrow="outward_arrow"/>
+                  :outward_arrow="outward_arrow"
+                  @search="search"
+                  />
                 </el-tab-pane>
                 <el-tab-pane :key="Math.random()" label="共同学习" name="costudy" id="costudy_container" class="svg-container">
                   <co-study
                     :node="node"
                     :neighbors_groups="neighbors_groups"
-                    :undirected_len="undirected_len"/>
+                    :undirected_len="undirected_len"
+                    @search="search"
+                    />
                 </el-tab-pane>
                 <el-tab-pane :key="Math.random()" label="层级关系" name="tree" id="tree_container" class="svg-container">
                   <tree
@@ -285,7 +289,9 @@ export default {
       window.scrollTo(0,0);
     },
     Research(val){
-      console.log(val);
+      this.submit(val);
+    },
+    search(val){
       this.submit(val);
     },
     ComplexInputFullChange(val){
