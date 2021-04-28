@@ -6,7 +6,7 @@
 <script>
 import * as d3 from "d3";
 import $ from "jquery";
-import {zoom} from './zoom.js'
+import {zoom} from './common.js'
 export default {
   data () {
     return {

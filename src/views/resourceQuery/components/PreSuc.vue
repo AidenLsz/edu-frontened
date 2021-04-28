@@ -1,11 +1,15 @@
 <template lang="html">
+  <!-- <div id="test"> -->
     <svg id="presuc" style="width: 100%;height: 100%;"/>
+  <!-- </div> -->
 </template>
 
 <script>
 import * as d3 from "d3";
+import d3Tip from "d3-tip";
 import $ from "jquery";
-import {zoom} from './zoom.js'
+import {zoom,addTooltip} from './common.js'
+d3.tip = d3Tip;
 
 export default {
   name: "",
@@ -53,13 +57,7 @@ export default {
           {
             id:this.node.name,
             community:1,
-            // desc: this.node.description,
-            // type: 0,
-            // hidden: false,
-            // lock: false,
-            // hideSymbol: null,
-            // lockSymbol: null,
-            // searchSymbol: null
+            desc: this.node.description,
           }
       ];
 
@@ -70,43 +68,26 @@ export default {
         if (i < this.inward_arrow) {
             nodes[i + 1] = {
               id:kg_group[i].name,
-              community:0
-              // desc: "this is " +kg_group[i].name,
-              // type: 1,
-              // hidden: false,
-              // lock: false,
-              // hideSymbol: null,
-              // lockSymbol: null,
-              // searchSymbol: null
+              community:0,
+              desc: kg_group[i].annotation.split("description-")[1],
             };
             edges[i] = {
             source: kg_group[i].name,
             target: this.node.name,
             relation: '',
             value: Math.random() * (1.6 - 1) + 1
-            // width: 3,
-            // curved: false
           };
         } else {
           nodes[i + 1] = {
             id:kg_group[i].name,
-            community:2
-            // desc: "this is " +kg_group[i].name,
-            // type: 1,
-            // hidden: false,
-            // lock: false,
-            // hideSymbol: null,
-            // lockSymbol: null,
-            // searchSymbol: null
+            community:2,
+            desc: kg_group[i].annotation.split("description-")[1],
           };
           edges[i] = {
             source: this.node.name,
             target: kg_group[i].name,
             relation: '',
             value: Math.random() * (1.6 - 1) + 1
-            // width: 3,
-            // curved: false
-            //
           };
         }
       }
@@ -194,15 +175,22 @@ export default {
 
     // 绘制节点
     let _this = this;
-    gs.append('circle')
+    let circle = gs.append('circle')
       .attr('r', 5)
       .attr('fill', function (d, i) {
         return colorScale(i)
       })
       .on('click',function(d){
-        if(d.id!=_this.node.name)
+        if(d.id!=_this.node.name){
+          // toolTip.hide()
           _this.$emit("search", d.id)
+        }
       })
+      addTooltip(d3.select("#presuc_container"),circle)
+
+      // .on("mouseover",toolTip.show)
+      // .on("mouseout", toolTip.hide);
+
     // 文字
     gs.append('text')
       .attr('x', -6)
@@ -215,7 +203,9 @@ export default {
       .text(function (d) {
         return d.id
       })
-
+    // svgDOM.on('click',function(){
+    //   toolTip.hide()
+    // })
     zoom(svgDOM,svg)
     function tick() {
       link
@@ -238,6 +228,7 @@ export default {
     }
 
       function dragStart(d) {
+        // isDragging = true;
         if (!d3.event.active) forceSim.alphaTarget(0.3).restart();
         d.fx = d.x;
         d.fy = d.y;
@@ -250,6 +241,7 @@ export default {
         if (!d3.event.active) forceSim.alphaTarget(0);
         d.fx = null;
         d.fy = null;
+        // isDragging = false;
       }
       function forceInABox() {
         function index(d) {
@@ -497,7 +489,8 @@ export default {
   }
 }
 </script>
-<style lang="css" >
+
+<style  lang="scss" >
 #presuc.groupbox rect.cell {
   fill: none;
   stroke: #000;
@@ -507,4 +500,6 @@ export default {
   stroke: #999;
   stroke-opacity: 0.6;
 }
+
+
 </style>
