@@ -437,13 +437,13 @@ export default {
             PaperAnalyseSwitchFlag: false,
             Paper_Json: this.Paper_J,
             // 总体分析界面是否展开/折叠
-            Part_Expand: [false, false, false, false],
+            Part_Expand: [true, false, false, false],
             // 总体分析页面展开的是知识点分析还是难度分析的区分变量
             Paper_Total_Analyse_Focus: true,
             // 占比最大的题目难度区间
             Max_Gap: "",
             // 大题分析页面是否展开/折叠
-            Part_Expand_QB: [false, false],
+            Part_Expand_QB: [true, false],
             // 以下属性只用于全卷分析这一节的内容，之后的大题分析环节我们交给函数去算
             // 知识点分值和知识点分值对应的名称
             KnowledgeScore_List: [],

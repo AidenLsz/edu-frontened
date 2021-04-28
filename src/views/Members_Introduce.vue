@@ -405,7 +405,7 @@ export default {
                     "intro": "^V^"
                     },
                     {
-                    "name": "单明辉",
+                    "name": "单明晖",
                     "mail": "767743659@qq.com",
                     "intro": "不想画画的程序猿不是金牌厨师"
                     },
@@ -489,7 +489,7 @@ export default {
                     "黄野": "/members/黄野.jpg",
                     "龚政": "/members/龚政.jpg",
                     "黄小青": "/members/黄小青.jpg",
-                    "单明辉": "/members/单明辉.jpeg",
+                    "单明晖": "/members/单明晖.jpeg",
                     "唐华楹": "/members/唐华楹.jpeg",
                     "赵辰阳": "/members/赵辰阳.jpeg",
                     // 特邀工程师

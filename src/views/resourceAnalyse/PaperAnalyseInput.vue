@@ -259,7 +259,7 @@
         <el-row style="margin: 0px 30px 0px 30px" type="flex" justify="start" v-if="paper_type == '1' && TestData.doc">
             <el-col :span="4">
               <p style="text-align: left">确认科目：</p>
-              <el-select v-model="TestData.subject_type" placeholder="请选择科目">
+              <el-select v-model="SubjectType" placeholder="请选择科目">
                 <el-option
                   v-for="item in Subject_List"
                   :key="item.value"
@@ -270,7 +270,7 @@
             </el-col>
             <el-col :span="4" :offset="2">
               <p style="text-align: left">确认学段：</p>
-              <el-select v-model="TestData.period_type" placeholder="请选择学段">
+              <el-select v-model="PeriodType" placeholder="请选择学段">
                 <el-option
                   v-for="item in Period_List"
                   :key="item.value"
@@ -386,7 +386,13 @@
         <el-row style="margin: 30px 50px" v-if="Submit_Show && paper_type == '1'">
             <el-button @click="Ensure()" type="success" plain>确认入库</el-button>
         </el-row>
-        <el-row v-for="(Question_Info, Question_Index) in TestData.doc" :key="Question_Index" style="border: 3px dashed black; background: #F8FBFF; margin: 30px">
+        <el-row 
+          v-loading="analysing"
+          element-loading-text="获取分析报告中，请等待..."
+          element-loading-spinner="el-icon-loading"
+          v-for="(Question_Info, Question_Index) in TestData.doc" 
+          :key="Question_Index" 
+          style="border: 3px dashed black; background: #F8FBFF; margin: 30px">
             <!-- 题型，上传用户，科目部分 -->
             <el-row type="flex" justify="start" style="margin: 30px 50px 0px 50px">
                 <el-col :span="1" style="text-align: left">
@@ -420,10 +426,10 @@
                     {{Question_Info.question_type}}
                 </el-col>
                 <el-col :span="3" style="text-align: left; padding-top: 1.2vh">
-                    提交者：{{Question_Info.source}}
+                    提交者：{{Get_Session_User()}}
                 </el-col>
                 <el-col :span="3" style="text-align: left; padding-top: 1.2vh">
-                    科目：{{Question_Info.subject}}
+                    科目：{{SubjectType}}
                 </el-col>
             </el-row>
             <!-- 题干部分 - 无小题 -->
@@ -1268,6 +1274,14 @@ export default {
     this.ToTop();
   },
   methods: {
+    // 获取登录用户
+    Get_Session_User(){
+      if(sessionStorage.user){
+        return sessionStorage.user
+      }else{
+        return "未登录用户"
+      }
+    },
      PAS(index){
       if(index == 0){
         this.$router.push({ path: "/paperAnalyseInput" });
@@ -1319,7 +1333,7 @@ export default {
         if(this.loading){
           this.Waiting_Text = "切分已超过预期时间，您可以选择继续等待，刷新页面或更换试卷重试。"
         }
-      }, 30000);
+      }, 33000);
 
       this.$http
         .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
@@ -1490,7 +1504,6 @@ export default {
             this.downloadAnswerName = this.downloadAnswerName + "_Answer";
             formData.append("math_input", "2");
           }
-          
           formData.append("From", "File_Import");
 
           let config = {
@@ -3742,6 +3755,8 @@ export default {
     },
     Submit(){
 
+      this.analysing = true;
+
       // var Docs = this.TestData.doc;
 
       // console.log("Start_Check.")
@@ -3942,7 +3957,10 @@ export default {
         })
         .then(function(data) {
           if(data.data){
-            console.log(data.data);
+            this.analysing = false;
+            let Test_Json = data.data.Paper_Json
+            sessionStorage.PaperJson = JSON.stringify(Test_Json);
+            this.Open_PaperAnalyse();
             this.$message.success("试卷内容上传已完成。");
           }
         });

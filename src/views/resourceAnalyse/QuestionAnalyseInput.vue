@@ -429,11 +429,16 @@
         <el-row 
           type="flex" 
           justify="start" 
-          style="padding-top: 30px"
-          v-loading="Question_Analysing"
-          element-loading-text="加载中，请等待"
-          element-loading-spinner="el-icon-loading">
-          <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')" :disabled="Type_Now == '-1'">
+          style="padding-top: 30px">
+          <el-button 
+            type="success" 
+            plain 
+            style="width: 200px; font-size: 16px" 
+            @click="PaperUpload('upload')" 
+            :disabled="Type_Now == '-1'"    
+            v-loading="Question_Analysing"
+            element-loading-text="加载中，请等待"
+            element-loading-spinner="el-icon-loading">
             <label>题目分析</label>
           </el-button>
         </el-row>
