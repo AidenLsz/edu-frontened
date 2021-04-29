@@ -14,7 +14,10 @@
         :visible.sync="analyseReport"
         width="90%"
         :modal-append-to-body="false"
-        :close-on-click-modal="true">
+        :close-on-click-modal="true"
+        v-loading="Question_Analysing"
+        element-loading-text="正在加载分析报告..."
+        element-loading-spinner="el-icon-loading">
         <template slot="title"></template>
         <QuestionAnalyse :Question="analyseData"></QuestionAnalyse>
     </el-dialog>
@@ -124,9 +127,6 @@
       v-for="(Question, Question_Index) in question_list" 
       :key="Question_Index" 
       style="margin-bottom: 50px"
-      v-loading="Question_Analysing"
-      element-loading-text="正在加载分析报告..."
-      element-loading-spinner="el-icon-loading"
       >
       <el-col :span="17" class="quesCard">
         <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
@@ -319,6 +319,7 @@ export default {
     Check_Analyse(ID, DatabaseName){
 
       this.Question_Analysing = true;
+      this.analyseReport = true;
 
       let config = {
           headers: { "Content-Type": "multipart/form-data" }
@@ -342,7 +343,6 @@ export default {
       .then(function(data) {
         this.Question_Analysing = false
         this.analyseData = data.data.que_dic
-        this.analyseReport = true;
       });    
     },
     ToTop(){

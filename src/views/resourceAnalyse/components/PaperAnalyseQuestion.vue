@@ -29,7 +29,7 @@
             </el-row>
           </el-col>
           <el-col :span="22">
-            <Mathdown :content="Question.analyse" :name="Get_Name('Analyse')"></Mathdown>
+            <Mathdown :content="Question.analysis" :name="Get_Name('Analyse')"></Mathdown>
           </el-col>
         </el-row>
   </div>
