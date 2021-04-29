@@ -14,12 +14,16 @@
         :visible.sync="analyseReport"
         width="90%"
         :modal-append-to-body="false"
-        :close-on-click-modal="true"
-        v-loading="Question_Analysing"
-        element-loading-text="正在加载分析报告..."
-        element-loading-spinner="el-icon-loading">
+        :close-on-click-modal="true">
         <template slot="title"></template>
-        <QuestionAnalyse :Question="analyseData"></QuestionAnalyse>
+        <el-row
+          v-loading="Question_Analysing"
+          element-loading-text="正在加载分析报告..."
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(211, 211, 211, 0.6)"
+          style="margin: 0px">
+          <QuestionAnalyse :Question="analyseData"></QuestionAnalyse>
+        </el-row>
     </el-dialog>
     <!-- 地址框 -->
     <el-row justify="start" type="flex">
