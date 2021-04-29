@@ -1179,7 +1179,8 @@ export default {
                            "$\\coprod_{x = a}^{b}$", 
                            "$\\begin{pmatrix} \\coprod_{x = a}^{b} \\end{pmatrix}$",
                            "$x\\prime$", "$x\\backprime$", "$f^{\\prime}$", "$f'$", "$f''$", "$f^{(3)}$", "$\\dot y$", "$\\ddot y$",
-                           "$\\lim u$", "$\\liminf v$", "$\\limsup w$", "$\\lim_{x \\to \\infty} \\frac{1}{n(n+1)}$"],
+                           "$\\lim u$", "$\\liminf v$", "$\\limsup w$", "$\\lim_{x \\to \\infty} \\frac{1}{n(n+1)}$", 
+                           "$\\dim x$", "$\\deg x$", "$\\det x$", "$\\ker\\phi$"],
       // 三角
       Part_Triangle_List: ["$\\sin {\\theta}$", "$\\cos {\\theta}$", "$\\tan {\\theta}$", 
                            "$\\csc {\\theta}$", "$\\sec {\\theta}$", "$\\cot {\\theta}$", 
@@ -1332,182 +1333,182 @@ export default {
     Update_Triangle(){
       this.temp_latex = "$\\" + this.temp_param_type+ " { 变量符号 }$";
     },
-    // 最值
-    Update_MinMax(){
-      if( this.temp_param_type == 'min'){
-        this.temp_latex = "$\\min(占位符，多个元素用英文逗号分隔)$";
-      }else if( this.temp_param_type == 'max'){
-        this.temp_latex = "$\\max(占位符，多个元素用英文逗号分隔)$";
-      }else if( this.temp_param_type == 'sup'){
-        this.temp_latex = "$\\sup {占位符}$";
-      }else if( this.temp_param_type == 'inf'){
-        this.temp_latex = "$\\inf {占位符}$";
-      }
-    },
-    // 极限
-    Update_Limit(){
-      if(this.temp_param_type != "limft"){
-        if(this.temp_param_type == "lim"){
-          this.temp_latex = "$\\lim {变量占位符}$"
-        }else if(this.temp_param_type == "limsup"){
-          this.temp_latex = "$\\limsup {变量占位符}$"
-        }else if(this.temp_param_type == "liminf"){
-          this.temp_latex = "$\\liminf {变量占位符}$"
-        }else if(this.temp_param_type == "dim"){
-          this.temp_latex = "$\\dim {变量占位符}$"
-        }else if(this.temp_param_type == "deg"){
-          this.temp_latex = "$\\deg {变量占位符}$"
-        }else if(this.temp_param_type == "det"){
-          this.temp_latex = "$\\det {变量占位符}$"
-        }else if(this.temp_param_type == "ker"){
-          this.temp_latex = "$\\ker {变量占位符}$"
-        }
-      }else if(this.temp_param_type == "limft"){
-        this.temp_latex = "$\\lim_{{变量名称} \\to {趋近目标}} {公式占位符}$";
-      }
-    },
-    // 投射
-    Update_Perspective(){
-      if(this.temp_param_type == 'pr'){
-        this.temp_latex = "$\\Pr {变量占位符}$";
-      }else if(this.temp_param_type == 'hom'){
-        this.temp_latex = "$\\hom {变量占位符}$";
-      }else if(this.temp_param_type == 'len'){
-        this.temp_latex = "$||{变量占位符}||$";
-      }else if(this.temp_param_type == 'arg'){
-        this.temp_latex = "$\\arg {变量占位符}$";
-      }
-    },
-    // 微分及导数
-    Update_Deri_or_Diff(){
-      if(this.temp_param_type == 'dt'){
-        this.temp_latex = "$d{变量占位符}$";
-      }else if(this.temp_param_type == 'mdt'){
-        this.temp_latex = "$\\mathrm{d}{变量占位符}$";
-      }else if(this.temp_param_type == 'partial'){
-        this.temp_latex = "$\\partial {变量占位符}$";
-      }else if(this.temp_param_type == 'nabla'){
-        this.temp_latex = "$\\nabla {变量占位符}$";
-      }else if(this.temp_param_type == 'par1h'){
+    // // 最值
+    // Update_MinMax(){
+    //   if( this.temp_param_type == 'min'){
+    //     this.temp_latex = "$\\min(占位符，多个元素用英文逗号分隔)$";
+    //   }else if( this.temp_param_type == 'max'){
+    //     this.temp_latex = "$\\max(占位符，多个元素用英文逗号分隔)$";
+    //   }else if( this.temp_param_type == 'sup'){
+    //     this.temp_latex = "$\\sup {占位符}$";
+    //   }else if( this.temp_param_type == 'inf'){
+    //     this.temp_latex = "$\\inf {占位符}$";
+    //   }
+    // },
+    // // 极限
+    // Update_Limit(){
+    //   if(this.temp_param_type != "limft"){
+    //     if(this.temp_param_type == "lim"){
+    //       this.temp_latex = "$\\lim {变量占位符}$"
+    //     }else if(this.temp_param_type == "limsup"){
+    //       this.temp_latex = "$\\limsup {变量占位符}$"
+    //     }else if(this.temp_param_type == "liminf"){
+    //       this.temp_latex = "$\\liminf {变量占位符}$"
+    //     }else if(this.temp_param_type == "dim"){
+    //       this.temp_latex = "$\\dim {变量占位符}$"
+    //     }else if(this.temp_param_type == "deg"){
+    //       this.temp_latex = "$\\deg {变量占位符}$"
+    //     }else if(this.temp_param_type == "det"){
+    //       this.temp_latex = "$\\det {变量占位符}$"
+    //     }else if(this.temp_param_type == "ker"){
+    //       this.temp_latex = "$\\ker {变量占位符}$"
+    //     }
+    //   }else if(this.temp_param_type == "limft"){
+    //     this.temp_latex = "$\\lim_{{变量名称} \\to {趋近目标}} {公式占位符}$";
+    //   }
+    // },
+    // // 投射
+    // Update_Perspective(){
+    //   if(this.temp_param_type == 'pr'){
+    //     this.temp_latex = "$\\Pr {变量占位符}$";
+    //   }else if(this.temp_param_type == 'hom'){
+    //     this.temp_latex = "$\\hom {变量占位符}$";
+    //   }else if(this.temp_param_type == 'len'){
+    //     this.temp_latex = "$||{变量占位符}||$";
+    //   }else if(this.temp_param_type == 'arg'){
+    //     this.temp_latex = "$\\arg {变量占位符}$";
+    //   }
+    // },
+    // // 微分及导数
+    // Update_Deri_or_Diff(){
+    //   if(this.temp_param_type == 'dt'){
+    //     this.temp_latex = "$d{变量占位符}$";
+    //   }else if(this.temp_param_type == 'mdt'){
+    //     this.temp_latex = "$\\mathrm{d}{变量占位符}$";
+    //   }else if(this.temp_param_type == 'partial'){
+    //     this.temp_latex = "$\\partial {变量占位符}$";
+    //   }else if(this.temp_param_type == 'nabla'){
+    //     this.temp_latex = "$\\nabla {变量占位符}$";
+    //   }else if(this.temp_param_type == 'par1h'){
 
-        var temp_param2 = "d{变量占位符1}";
-        var temp_param3 = "d{变量占位符2}";
+    //     var temp_param2 = "d{变量占位符1}";
+    //     var temp_param3 = "d{变量占位符2}";
         
-        this.temp_latex = "$" + temp_param2 + "/" + temp_param3 + "$"
+    //     this.temp_latex = "$" + temp_param2 + "/" + temp_param3 + "$"
 
-      }else if(this.temp_param_type == 'par2h'){
+    //   }else if(this.temp_param_type == 'par2h'){
 
-        var temp_param2 = "$\\mathrm{d}{变量占位符1}";
-        var temp_param3 = "$\\mathrm{d}{变量占位符2}";
+    //     var temp_param2 = "$\\mathrm{d}{变量占位符1}";
+    //     var temp_param3 = "$\\mathrm{d}{变量占位符2}";
         
-        this.temp_latex = "$\\mathrm{d}{a}/\\mathrm{d}{b}$"
+    //     this.temp_latex = "$\\mathrm{d}{a}/\\mathrm{d}{b}$"
 
-      }else if(this.temp_param_type == 'par1v'){
+    //   }else if(this.temp_param_type == 'par1v'){
 
-        var temp_param2 = "d{变量占位符1}";
-        var temp_param3 = "d{变量占位符2}";
+    //     var temp_param2 = "d{变量占位符1}";
+    //     var temp_param3 = "d{变量占位符2}";
         
-        this.temp_latex = "$\\frac{d{a}}{d{b}}$"
+    //     this.temp_latex = "$\\frac{d{a}}{d{b}}$"
 
-      }else if(this.temp_param_type == 'par2v'){
+    //   }else if(this.temp_param_type == 'par2v'){
 
-        var temp_param2 = "$\\mathrm{d}{变量占位符1}";
-        var temp_param3 = "$\\mathrm{d}{变量占位符2}";
+    //     var temp_param2 = "$\\mathrm{d}{变量占位符1}";
+    //     var temp_param3 = "$\\mathrm{d}{变量占位符2}";
         
-        this.temp_latex = "$\\frac{" + temp_param2 + "}{" + temp_param3 + "}$"
+    //     this.temp_latex = "$\\frac{" + temp_param2 + "}{" + temp_param3 + "}$"
 
-      }else if(this.temp_param_type == 'par'){
+    //   }else if(this.temp_param_type == 'par'){
         
-        var temp_param2 = "$\\partial {变量占位符1}";
-        var temp_param3 = "$\\partial {变量占位符2}";
+    //     var temp_param2 = "$\\partial {变量占位符1}";
+    //     var temp_param3 = "$\\partial {变量占位符2}";
         
-        this.temp_latex = "$\\frac{" + temp_param2 + "}{" + temp_param3 + "}$"
+    //     this.temp_latex = "$\\frac{" + temp_param2 + "}{" + temp_param3 + "}$"
 
-      }else if(this.temp_param_type == 'prime'){
+    //   }else if(this.temp_param_type == 'prime'){
 
-        this.temp_latex = "$\\prime$"
+    //     this.temp_latex = "$\\prime$"
 
-      }else if(this.temp_param_type == 'backprime'){
+    //   }else if(this.temp_param_type == 'backprime'){
 
-        this.temp_latex = "$\\backprime$"
+    //     this.temp_latex = "$\\backprime$"
 
-      }else if(this.temp_param_type == 'deri'){
+    //   }else if(this.temp_param_type == 'deri'){
         
-        this.temp_latex = "${变量占位符}^{(次数占位符)}$"
+    //     this.temp_latex = "${变量占位符}^{(次数占位符)}$"
 
-      }else if(this.temp_param_type == 'deridot1'){
+    //   }else if(this.temp_param_type == 'deridot1'){
 
-        this.temp_latex = "$\\dot {变量占位符}$";
+    //     this.temp_latex = "$\\dot {变量占位符}$";
 
-      }else if(this.temp_param_type == 'deridot2'){
+    //   }else if(this.temp_param_type == 'deridot2'){
 
-        this.temp_latex = "$\\ddot {变量占位符}$";
+    //     this.temp_latex = "$\\ddot {变量占位符}$";
 
-      }
-    },
-    // 模运算及开根号
-    Update_Mod_or_Sqrt(){
-      if(this.temp_param_type == 'bmod'){
-        this.temp_latex = "$\\bmod$"
-      }else if(this.temp_param_type == 'pmod'){
-        this.temp_latex = "$\\pmod {变量占位符}$";
-      }else if(this.temp_param_type == 'gcd'){
-        this.temp_latex = "$\\gcd (变量占位符，多个变量请用英文逗号分隔)$";
-      }else if(this.temp_param_type == 'lcm'){
-        this.temp_latex = "$\\operatorname{lcm}(变量占位符，多个变量请用英文逗号分隔)$"
-      }else if(this.temp_param_type == 'sqrt'){  
-        this.temp_latex = "$\\sqrt[次数占位符]{开根项占位符}$";
-      }else if(this.temp_param_type == 'surd'){
-        this.temp_latex = "$\\surd$";
-      }
-    },
-    // 默认页面
-    Update_Default(){
-      // 求和
-      if(this.temp_param_type == 'sum'){
-        this.temp_latex = "$\\sum_{变量名 = 起始值}^{目标值}$";
-      }else if(this.temp_param_type == 'msum'){
-        this.temp_latex = "$\\begin{matrix} \\sum_{变量名 = 起始值}^{ 目标值 } \\end{matrix}$"
-      }
-      // 求积
-      else if(this.temp_param_type == 'mul'){
-        this.temp_latex = "$\\prod_{变量名 = 起始值}^{目标值}$"
-      }else if(this.temp_param_type == 'mmul'){
-        this.temp_latex = "$\\begin{matrix} \\prod_{变量名 = 起始值}^{目标值} \\end{matrix}$"  
-      }
-      // 上积
-      else if(this.temp_param_type == 'cmul'){
-        this.temp_latex = "$\\coprod_{变量名 = 起始值}^{目标值}$"
-      }else if(this.temp_param_type == 'mcmul'){
-        this.temp_latex = "$\\begin{matrix} \\coprod_{变量名 = 起始值}^{目标值} \\end{matrix}$"  
-      }
-      // 积分，二重积分，三重积分
-      else if(this.temp_param_type == 'int'){
-        this.temp_latex = "$\\int_{区间下限}^{区间上限}$"
-      }else if(this.temp_param_type == 'iint'){
-        this.temp_latex = "$\\iint_{区间下限}^{区间上限}$"
-      }else if(this.temp_param_type == 'iiint'){
-        this.temp_latex = "$\\iiint_{区间下限}^{区间上限}$"
-      }
-      // 交并集
-      else if(this.temp_param_type == 'cap'){
-        this.temp_latex = "$集合A \\cap 集合B \\cap 集合C$";
-      }else if(this.temp_param_type == 'cup'){
-        this.temp_latex = "$集合A \\cup 集合B \\cup 集合C$";
-      }else if(this.temp_param_type == 'bcap'){
-        this.temp_latex = "$\\bigcap_{ 开始标记 }^{ 结束标记 }{ 集合名称 }$"
-      }else if(this.temp_param_type == 'bcup'){
-        this.temp_latex = "$\\bigcup_{ 开始标记 }^{ 结束标记 }{ 集合名称 }$"
-      }
-      // 闭合曲线曲面积分符号
-      else if(this.temp_param_type == 'oint'){
-        this.temp_latex = "$\\oint$"
-      }
-      // 分式被移动到这里了
-      else if(this.temp_param_type == 'frac'){
-        this.temp_latex = "$\\frac{ 分子部分 }{ 分母部分 }$"
-      }
-    },
+    //   }
+    // },
+    // // 模运算及开根号
+    // Update_Mod_or_Sqrt(){
+    //   if(this.temp_param_type == 'bmod'){
+    //     this.temp_latex = "$\\bmod$"
+    //   }else if(this.temp_param_type == 'pmod'){
+    //     this.temp_latex = "$\\pmod {变量占位符}$";
+    //   }else if(this.temp_param_type == 'gcd'){
+    //     this.temp_latex = "$\\gcd (变量占位符，多个变量请用英文逗号分隔)$";
+    //   }else if(this.temp_param_type == 'lcm'){
+    //     this.temp_latex = "$\\operatorname{lcm}(变量占位符，多个变量请用英文逗号分隔)$"
+    //   }else if(this.temp_param_type == 'sqrt'){  
+    //     this.temp_latex = "$\\sqrt[次数占位符]{开根项占位符}$";
+    //   }else if(this.temp_param_type == 'surd'){
+    //     this.temp_latex = "$\\surd$";
+    //   }
+    // },
+    // // 默认页面
+    // Update_Default(){
+    //   // 求和
+    //   if(this.temp_param_type == 'sum'){
+    //     this.temp_latex = "$\\sum_{变量名 = 起始值}^{目标值}$";
+    //   }else if(this.temp_param_type == 'msum'){
+    //     this.temp_latex = "$\\begin{matrix} \\sum_{变量名 = 起始值}^{ 目标值 } \\end{matrix}$"
+    //   }
+    //   // 求积
+    //   else if(this.temp_param_type == 'mul'){
+    //     this.temp_latex = "$\\prod_{变量名 = 起始值}^{目标值}$"
+    //   }else if(this.temp_param_type == 'mmul'){
+    //     this.temp_latex = "$\\begin{matrix} \\prod_{变量名 = 起始值}^{目标值} \\end{matrix}$"  
+    //   }
+    //   // 上积
+    //   else if(this.temp_param_type == 'cmul'){
+    //     this.temp_latex = "$\\coprod_{变量名 = 起始值}^{目标值}$"
+    //   }else if(this.temp_param_type == 'mcmul'){
+    //     this.temp_latex = "$\\begin{matrix} \\coprod_{变量名 = 起始值}^{目标值} \\end{matrix}$"  
+    //   }
+    //   // 积分，二重积分，三重积分
+    //   else if(this.temp_param_type == 'int'){
+    //     this.temp_latex = "$\\int_{区间下限}^{区间上限}$"
+    //   }else if(this.temp_param_type == 'iint'){
+    //     this.temp_latex = "$\\iint_{区间下限}^{区间上限}$"
+    //   }else if(this.temp_param_type == 'iiint'){
+    //     this.temp_latex = "$\\iiint_{区间下限}^{区间上限}$"
+    //   }
+    //   // 交并集
+    //   else if(this.temp_param_type == 'cap'){
+    //     this.temp_latex = "$集合A \\cap 集合B \\cap 集合C$";
+    //   }else if(this.temp_param_type == 'cup'){
+    //     this.temp_latex = "$集合A \\cup 集合B \\cup 集合C$";
+    //   }else if(this.temp_param_type == 'bcap'){
+    //     this.temp_latex = "$\\bigcap_{ 开始标记 }^{ 结束标记 }{ 集合名称 }$"
+    //   }else if(this.temp_param_type == 'bcup'){
+    //     this.temp_latex = "$\\bigcup_{ 开始标记 }^{ 结束标记 }{ 集合名称 }$"
+    //   }
+    //   // 闭合曲线曲面积分符号
+    //   else if(this.temp_param_type == 'oint'){
+    //     this.temp_latex = "$\\oint$"
+    //   }
+    //   // 分式被移动到这里了
+    //   else if(this.temp_param_type == 'frac'){
+    //     this.temp_latex = "$\\frac{ 分子部分 }{ 分母部分 }$"
+    //   }
+    // },
     // 上传Docx文件
     selectFile(e){
 
