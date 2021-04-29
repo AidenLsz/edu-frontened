@@ -1329,10 +1329,10 @@ export default {
         }
       }
     },
-    // 三角函数
-    Update_Triangle(){
-      this.temp_latex = "$\\" + this.temp_param_type+ " { 变量符号 }$";
-    },
+    // // 三角函数
+    // Update_Triangle(){
+    //   this.temp_latex = "$\\" + this.temp_param_type+ " { 变量符号 }$";
+    // },
     // // 最值
     // Update_MinMax(){
     //   if( this.temp_param_type == 'min'){
