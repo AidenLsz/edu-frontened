@@ -619,6 +619,7 @@ The line of README
         <el-row slot="left-toolbar-after">
           <el-col :span="24">
             <el-row>
+              <!-- 常用 -->
               <el-col :span="2">
                 <el-row type="flex" justify="start">
                   <el-popover
@@ -632,7 +633,11 @@ The line of README
                     <div v-if="Part_Common_Page">
                       <el-row style="margin-top: -15px" v-for="Outer in Math.ceil(Part_Common_List.常用运算符.length/24)" :key="'CBOL_' + (Outer - 1)">
                         <el-col :span="1" v-for="index in 24" :key="'CBOL_'  + (Outer - 1) + '_' + index">
-                          <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Part_Common_List_Index('常用运算符', (Outer - 1) * 24 + (index - 1))" @click="Add_Part_Common_List('常用运算符', (Outer - 1) * 24 + (index - 1))">
+                          <button 
+                            style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                            size="mini" 
+                            v-if="Part_Common_List_Index('常用运算符', (Outer - 1) * 24 + (index - 1))" 
+                            @click="Add_Part_Common_List('常用运算符', (Outer - 1) * 24 + (index - 1))">
                             <Mathdown :name="'Common_Binary_Operator_List_' + ((Outer - 1) * 24 + index)" :content="Part_Common_List.常用运算符[(Outer - 1) * 24 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
@@ -646,7 +651,11 @@ The line of README
                     <div v-if="Part_Common_Page">
                       <el-row style="margin-top: -15px" v-for="Outer in Math.ceil(Part_Common_List.二元运算符.length/24)" :key="'CROL_' + (Outer - 1)">
                         <el-col :span="1" v-for="index in 24" :key="'CROL_'  + (Outer - 1) + '_' + index">
-                          <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Part_Common_List_Index('二元运算符', (Outer - 1) * 24 + (index - 1))" @click="Add_Part_Common_List('二元运算符', (Outer - 1) * 24 + (index - 1))">
+                          <button 
+                            style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                            size="mini" 
+                            v-if="Part_Common_List_Index('二元运算符', (Outer - 1) * 24 + (index - 1))" 
+                            @click="Add_Part_Common_List('二元运算符', (Outer - 1) * 24 + (index - 1))">
                             <Mathdown :name="'Common_Relational_Operator_List_' + ((Outer - 1) * 24 + index)" :content="Part_Common_List.二元运算符[(Outer - 1) * 24 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
@@ -655,8 +664,12 @@ The line of README
                     </div>
                     <!-- 换页按钮 -->
                     <el-row type="flex" justify="center" style="margin: -15px auto 2px auto">
-                      <el-button type="text" size="big" style="font-size: 20px" v-if="Part_Common_Page" @click="Part_Common_Page = false"><i class="el-icon-arrow-down"></i></el-button>
-                      <el-button type="text" size="big" style="font-size: 20px" v-else @click="Part_Common_Page = true"><i class="el-icon-arrow-up"></i></el-button>
+                      <el-button type="text" size="big" style="font-size: 20px" v-if="Part_Common_Page" @click="Part_Common_Page = false">
+                        <i class="el-icon-arrow-down"></i>
+                      </el-button>
+                      <el-button type="text" size="big" style="font-size: 20px" v-else @click="Part_Common_Page = true">
+                        <i class="el-icon-arrow-up"></i>
+                      </el-button>
                     </el-row>
                     <!-- Common_Fractional_Operator_List -> CBOL -->
                     <el-row type="flex" justify="start" style="margin-bottom: 30px" v-if="!Part_Common_Page">
@@ -666,7 +679,11 @@ The line of README
                       <el-row style="margin-top: -15px" v-for="Outer in Math.ceil(Part_Common_List.分式.length/6)" :key="'CFOL_' + (Outer - 1)">
                         <el-col :span="4" v-for="index in 6" :key="'CFOL_'  + (Outer - 1) + '_' + index">
                           <el-row type="flex" justify="center">
-                            <button style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Part_Common_List_Index('分式', (Outer - 1) * 6 + (index - 1))" @click="Add_Part_Common_List('分式', (Outer - 1) * 6 + (index - 1))">
+                            <button 
+                              style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                              size="mini" 
+                              v-if="Part_Common_List_Index('分式', (Outer - 1) * 6 + (index - 1))" 
+                              @click="Add_Part_Common_List('分式', (Outer - 1) * 6 + (index - 1))">
                               <Mathdown :name="'Common_Fractional_Operator_List_' + ((Outer - 1) * 6 + index)" :content="Part_Common_List.分式[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                             </button>
                             <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
@@ -679,10 +696,14 @@ The line of README
                       常用指数、对数运算符
                     </el-row>
                     <div v-if="!Part_Common_Page">
-                      <el-row style="margin-top: -15px" v-for="Outer in Math.ceil(Part_Common_List.指数.length/6)" :key="'CEOL_' + (Outer - 1)">
+                      <el-row style="margin-top: -15px; margin: 0px" v-for="Outer in Math.ceil(Part_Common_List.指数.length/6)" :key="'CEOL_' + (Outer - 1)">
                         <el-col :span="4" v-for="index in 6" :key="'CEOL_'  + (Outer - 1) + '_' + index">
                           <el-row type="flex" justify="center">
-                            <button style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Part_Common_List_Index('指数', (Outer - 1) * 6 + (index - 1))" @click="Add_Part_Common_List('指数', (Outer - 1) * 6 + (index - 1))">
+                            <button 
+                              style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                              size="mini" 
+                              v-if="Part_Common_List_Index('指数', (Outer - 1) * 6 + (index - 1))" 
+                              @click="Add_Part_Common_List('指数', (Outer - 1) * 6 + (index - 1))">
                               <Mathdown :name="'Common_Exponential_Operator_List_' + ((Outer - 1) * 6 + index)" :content="Part_Common_List.指数[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                             </button>
                             <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
@@ -694,49 +715,238 @@ The line of README
                   </el-popover>
                 </el-row>
               </el-col>
+              <!-- 上下标 -->
               <el-col :span="2">
                 <el-row type="flex" justify="start">
-                  <img src="./assets/上下标.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  <el-popover
+                    placement="bottom-start"
+                    width="400"
+                    trigger="hover">
+                    <!-- Subscript_List -> SL -->
+                    <el-row v-for="Outer in Math.ceil(Part_Subscript_List.length/6)" :key="'SL_' + (Outer - 1)" style="margin: 0px">
+                      <el-col :span="4" v-for="index in 6" :key="'SL_'  + (Outer - 1) + '_' + index">
+                        <el-row type="flex" justify="center">
+                          <button 
+                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                            size="mini" 
+                            v-if="(Outer - 1) * 6 + (index - 1) < Part_Subscript_List.length" 
+                            @click="Add(Part_Subscript_List[(Outer - 1) * 6 + (index - 1)])">
+                            <Mathdown :name="'Subscript_List_' + ((Outer - 1) * 6 + index)" :content="Part_Subscript_List[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                          </button>
+                          <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                    <img slot="reference" src="./assets/上下标.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  </el-popover>
                 </el-row>
               </el-col>
+              <!-- 集合 -->
               <el-col :span="2">
                 <el-row type="flex" justify="start">
-                  <img src="./assets/集合运算符.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  <el-popover
+                    placement="bottom-start"
+                    width="600"
+                    trigger="hover">
+                    <!-- Set_Operator_List -> SOL -->
+                    <el-row v-for="Outer in Math.ceil(Part_Set_List.length/12)" :key="'SOL_' + (Outer - 1)" style="margin: 0px">
+                      <el-col :span="2" v-for="index in 12" :key="'SOL_'  + (Outer - 1) + '_' + index">
+                        <el-row type="flex" justify="center">
+                          <button 
+                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                            size="mini" 
+                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Set_List.length" 
+                            @click="Add(Part_Set_List[(Outer - 1) * 12 + (index - 1)])">
+                            <Mathdown :name="'Set_Operator_List_' + ((Outer - 1) * 12 + index)" :content="Part_Set_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                          </button>
+                          <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                    <img slot="reference" src="./assets/集合运算符.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  </el-popover>
                 </el-row>
               </el-col>
+              <!-- 逻辑 -->
               <el-col :span="2">
                 <el-row type="flex" justify="start">
-                  <img src="./assets/逻辑运算符.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  <el-popover
+                    placement="bottom-start"
+                    width="600"
+                    trigger="hover">
+                    <!-- Set_Logical_List -> SLL -->
+                    <el-row v-for="Outer in Math.ceil(Part_Logical_List.length/12)" :key="'SLL_' + (Outer - 1)" style="margin: 0px">
+                      <el-col :span="2" v-for="index in 12" :key="'SLL_'  + (Outer - 1) + '_' + index">
+                        <el-row type="flex" justify="center">
+                          <button 
+                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                            size="mini" 
+                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Logical_List.length" 
+                            @click="Add(Part_Logical_List[(Outer - 1) * 12 + (index - 1)])">
+                            <Mathdown :name="'Set_Logical_List_' + ((Outer - 1) * 12 + index)" :content="Part_Logical_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                          </button>
+                          <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                    <img slot="reference" src="./assets/逻辑运算符.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  </el-popover>
                 </el-row>
               </el-col>
+              <!-- 括号 -->
               <el-col :span="2">
                 <el-row type="flex" justify="start">
-                  <img src="./assets/括号.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  <el-popover
+                    placement="bottom"
+                    width="600"
+                    trigger="hover">
+                    <!-- Parentheses_List -> PL -->
+                    <el-row v-for="Outer in Math.ceil(Part_Parentheses_List.length/12)" :key="'PL_' + (Outer - 1)" style="margin: 0px">
+                      <el-col :span="2" v-for="index in 12" :key="'PL_'  + (Outer - 1) + '_' + index">
+                        <el-row type="flex" justify="center">
+                          <button 
+                            style="width: 50px; height: 75px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                            size="mini" 
+                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Parentheses_List.length && Part_Parentheses_List[(Outer - 1) * 12 + (index - 1)] != ''" 
+                            @click="Add(Part_Parentheses_List[(Outer - 1) * 12 + (index - 1)])">
+                            <Mathdown :name="'Parentheses_List_' + ((Outer - 1) * 12 + index)" :content="Part_Parentheses_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                          </button>
+                          <div style="width: 50px; height: 75px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                    <img slot="reference" src="./assets/括号.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  </el-popover>
                 </el-row>
               </el-col>
+              <!-- 箭头 -->
               <el-col :span="2">
                 <el-row type="flex" justify="start">
-                  <img src="./assets/箭头.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  <el-popover
+                    placement="bottom"
+                    width="600"
+                    trigger="hover">
+                    <!-- Arrow_List -> AL -->
+                    <el-row v-for="Outer in Math.ceil(Part_Arrow_List.length/12)" :key="'AL_' + (Outer - 1)" style="margin: 0px">
+                      <el-col :span="2" v-for="index in 12" :key="'AL_'  + (Outer - 1) + '_' + index">
+                        <el-row type="flex" justify="center">
+                          <button 
+                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                            size="mini" 
+                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Arrow_List.length && Part_Arrow_List[(Outer - 1) * 12 + (index - 1)] != ''" 
+                            @click="Add(Part_Arrow_List[(Outer - 1) * 12 + (index - 1)])">
+                            <Mathdown :name="'Arrow_List_' + ((Outer - 1) * 12 + index)" :content="Part_Arrow_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                          </button>
+                          <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                    <img slot="reference" src="./assets/箭头.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  </el-popover>
                 </el-row>
               </el-col>
+              <!-- 微积分 -->
               <el-col :span="2">
                 <el-row type="flex" justify="start">
-                  <img src="./assets/微积分.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  <el-popover
+                    placement="bottom"
+                    width="600"
+                    trigger="hover">
+                    <!-- Calculus_List -> CL -->
+                    <el-row v-for="Outer in Math.ceil(Part_Calculus_List.length/8)" :key="'CL_' + (Outer - 1)" style="margin: 0px">
+                      <el-col :span="3" v-for="index in 8" :key="'CL_'  + (Outer - 1) + '_' + index">
+                        <el-row type="flex" justify="center">
+                          <button 
+                            style="width: 75px; height: 75px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                            size="mini" 
+                            v-if="(Outer - 1) * 8 + (index - 1) < Part_Calculus_List.length && Part_Calculus_List[(Outer - 1) * 8 + (index - 1)] != ''" 
+                            @click="Add(Part_Calculus_List[(Outer - 1) * 8 + (index - 1)])">
+                            <Mathdown :name="'Calculus_List_' + ((Outer - 1) * 8 + index)" :content="Part_Calculus_List[(Outer - 1) * 8 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                          </button>
+                          <div style="width: 75px; height: 75px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                    <img slot="reference" src="./assets/微积分.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  </el-popover>
                 </el-row>
               </el-col>
+              <!-- 三角函数 -->
               <el-col :span="2">
                 <el-row type="flex" justify="start">
-                  <img src="./assets/三角函数.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  <el-popover
+                    placement="bottom"
+                    width="600"
+                    trigger="hover">
+                    <!-- Triangle_List -> TL -->
+                    <el-row v-for="Outer in Math.ceil(Part_Triangle_List.length/6)" :key="'TL_' + (Outer - 1)" style="margin: 0px">
+                      <el-col :span="4" v-for="index in 6" :key="'TL_'  + (Outer - 1) + '_' + index">
+                        <el-row type="flex" justify="center">
+                          <button 
+                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                            size="mini" 
+                            v-if="(Outer - 1) * 6 + (index - 1) < Part_Triangle_List.length && Part_Triangle_List[(Outer - 1) * 6 + (index - 1)] != ''" 
+                            @click="Add(Part_Triangle_List[(Outer - 1) * 6 + (index - 1)])">
+                            <Mathdown :name="'Triangle_List_' + ((Outer - 1) * 6 + index)" :content="Part_Triangle_List[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                          </button>
+                          <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                    <img slot="reference" src="./assets/三角函数.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  </el-popover>
                 </el-row>
               </el-col>
+              <!-- 几何符号 -->
               <el-col :span="2">
                 <el-row type="flex" justify="start">
-                  <img src="./assets/几何符号.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  <el-popover
+                    placement="bottom"
+                    width="600"
+                    trigger="hover">
+                    <!-- Geometry_List -> GL -->
+                    <el-row v-for="Outer in Math.ceil(Part_Geometry_List.length/12)" :key="'GL_' + (Outer - 1)" style="margin: 0px">
+                      <el-col :span="2" v-for="index in 12" :key="'GL_'  + (Outer - 1) + '_' + index">
+                        <el-row type="flex" justify="center">
+                          <button 
+                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                            size="mini" 
+                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Geometry_List.length && Part_Geometry_List[(Outer - 1) * 12 + (index - 1)] != ''" 
+                            @click="Add(Part_Geometry_List[(Outer - 1) * 12 + (index - 1)])">
+                            <Mathdown :name="'Geometry_List_' + ((Outer - 1) * 12 + index)" :content="Part_Geometry_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                          </button>
+                          <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                    <img slot="reference" src="./assets/几何符号.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  </el-popover>
                 </el-row>
               </el-col>
+              <!-- 矩阵 -->
               <el-col :span="2">
                 <el-row type="flex" justify="start">
-                  <img src="./assets/矩阵.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  <el-popover
+                    placement="bottom"
+                    width="600"
+                    trigger="hover">
+                    <!-- Matrix_List -> ML -->
+                    <el-row v-for="Outer in Math.ceil(Part_Matrix_List.length/4)" :key="'ML_' + (Outer - 1)" style="margin: 0px">
+                      <el-col :span="6" v-for="index in 4" :key="'ML_'  + (Outer - 1) + '_' + index">
+                        <el-row type="flex" justify="center">
+                          <button 
+                            style="width: 150px; height: 100px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
+                            size="mini" 
+                            v-if="(Outer - 1) * 4 + (index - 1) < Part_Matrix_List.length && Part_Matrix_List[(Outer - 1) * 4 + (index - 1)] != ''" 
+                            @click="Add(Part_Matrix_List[(Outer - 1) * 4 + (index - 1)])">
+                            <Mathdown :name="'Matrix_List_' + ((Outer - 1) * 4 + index)" :content="Part_Matrix_List[(Outer - 1) * 4 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                          </button>
+                          <div style="width: 150px; height: 100px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                    <img slot="reference" src="./assets/矩阵.png" width="100%" style="cursor: pointer; margin: 5px; margin-top: 10px"/>
+                  </el-popover>
                 </el-row>
               </el-col>
             </el-row>
@@ -932,7 +1142,71 @@ export default {
                 "$\\tfrac{a}{b}$", "$\\tfrac{d{a}}{d{b}}$", "$\\tfrac{\\nabla{a}}{\\nabla{b}}$", "$\\tfrac{\\partial{a}}{\\partial{b}}$", "$\\tfrac{\\delta{a}}{\\delta{b}}$", "$\\tfrac{\\pi}{2}$",
                 "$\\frac{a}{c + \\frac{a}{d}}$", "$\\dbinom{n}{r}$", "$\\binom{n}{n-r}$", "$\\mathrm{C}_n^r$", "$\\mathrm{C}_n^{n-r}$"],
         "指数": ["$e^2$", "$a^b$", "$\\log {a}$", "$\\ln {a}$", "$\\lg {a}$", "$\\log_{a}^{b}$"]
-      }
+      },
+      // 集合运算符
+      Part_Set_List: ["$\\forall$", "$\\exists$", "$\\nexists$", "$\\emptyset$", "$\\varnothing$", "$\\in$", "$\\not\\in$", "$\\ni$", "$\\not\\ni$", 
+                      "$\\subset$", "$\\subseteq$", "$\\subseteqq$", "$\\subsetneqq$", "$\\supset$", "$\\supseteq$", 
+                      "$\\supseteqq$", "$\\supsetneqq$", "$\\cup$", "$\\cap$", "$\\bigcap$", "$\\bigcup$"],
+      // 逻辑运算符
+      Part_Logical_List: ["$\\neg$", "$\p$", "$\q$", "$\\neg \p$", "$\\neg \q$", "$\\wedge$", "$\\vee$", "$\\bigwedge$", "$\\bigvee$"],
+      // 上下标
+      Part_Subscript_List: ["$\F_{a}^{}$", "$\F_{}^{b}$", "$\F_{a}^{b}$", "${}_{a}^{b}\F_{}^{}$", "${}_{}^{b}\F_{}^{}$", "${}_{a}^{b}\F_{c}^{d}$"],
+      // 括号
+      Part_Parentheses_List: ["$\( A \)$", "$\[ A \]$", "$\\{ A \\}$", "$\\langle A \\rangle$", "$\\lceil A \\rceil$", "$\\lfloor A \\rfloor$", 
+                              "$\\left| A \\right|$", "$\\left \\| A \\right \\|$", "$\[ A \[$", "$\] A \]$", "$\] A \[$", "$\( A \| B \)$", 
+                              "$\[ A \| B \]$", "$\\{ A \| B \\}$", "$\\langle A \| B \\rangle$", 
+                              "$\( A $", "$ A \)$", "$\[ A $", "$ A \]$", "$\\{ A $", "$ A \\}$", "$\\langle A $", "$ A \\rangle$",
+                              "$\\lceil A $", "$ A \\rceil$", "$\\lfloor A $", "$ A \\rfloor$", "$\| A $", "$ A \|$", "$\\| A $", "$ A \\|$", 
+                              "$\\left \\{\\frac{a}{b} \\right.$", "$\\left. \\frac{a}{b} \\right \\}$", 
+                              "$\\begin{cases} \\frac{n}{2}, & \\text{if } n\\text{ is even} \\\\ 3n+1, & \\text{if } n\\text{ is odd} \\end{cases}$", "", "",
+                              "$\\begin{pmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{pmatrix}$", "", "",
+                              "$\\begin{vmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{vmatrix}$", "", "",
+                              "$\\begin{bmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{bmatrix}$", "", "",
+                              "$\\begin{Bmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{Bmatrix}$", "", "",],
+      // 箭头
+      Part_Arrow_List: ["$\\uparrow$", "$\\Uparrow$", "$\\downarrow$", "$\\Downarrow$", "$\\updownarrow$", "$\\Updownarrow$", "$\\rightarrow$", "$\\Rightarrow$", "$\\leftarrow$", 
+                        "$\\Leftarrow$", "$\\leftrightarrow$", "$\\Leftrightarrow$", "$\\longrightarrow$", "$\\Longrightarrow$", "$\\longleftarrow$", "$\\Longleftarrow$", "$\\rightleftharpoons$", "$\\nearrow$", 
+                        "$\\searrow$", "$\\nLeftarrow$", "$\\nRightarrow$", "$\\rightleftarrows$", "$\\leftrightarrows$", "$\\rightrightarrows$", "$\\curvearrowright$", "$\\Longleftrightarrow$", "$\\leftrightsquigarrow$"],
+      // 微积分
+      Part_Calculus_List: ["$\d x$", "$\\mathrm{d} x$", "$\\partial x$", "$\\nabla x$", 
+                           "$\dy/\dx$", "$\\mathrm{d}y/\\mathrm{d}x$", "$\\frac{\dy}{\dx}$", 
+                           "$\\frac{\\mathrm{d}y}{\\mathrm{d}x}$", "$\\frac{\\partial^2}{\\partial x_1\\partial x_2}y$", 
+                           "$\\int_{a}^{b}$", "$\\iint_{a}^{b}$", "$\\iiint_{a}^{b}$", "$\\oint_{}^{}$", "$\\oint_{a}^{b}$",
+                           "$\\sum_{x = a}^{b}$", 
+                           "$\\begin{matrix} \\sum_{x = a}^{b} \\end{matrix}$", 
+                           "$\\prod_{x = a}^{b}$",
+                           "$\\begin{matrix} \\prod_{x = a}^{b} \\end{matrix}$", 
+                           "$\\coprod_{x = a}^{b}$", 
+                           "$\\begin{pmatrix} \\coprod_{x = a}^{b} \\end{pmatrix}$",
+                           "$x\\prime$", "$x\\backprime$", "$f^{\\prime}$", "$f'$", "$f''$", "$f^{(3)}$", "$\\dot y$", "$\\ddot y$",
+                           "$\\lim u$", "$\\liminf v$", "$\\limsup w$", "$\\lim_{x \\to \\infty} \\frac{1}{n(n+1)}$"],
+      // 三角
+      Part_Triangle_List: ["$\\sin {\\theta}$", "$\\cos {\\theta}$", "$\\tan {\\theta}$", 
+                           "$\\csc {\\theta}$", "$\\sec {\\theta}$", "$\\cot {\\theta}$", 
+                           "$\\sin^{-1} {\\theta}$", "$\\cos^{-1} {\\theta}$", "$\\tan^{-1} {\\theta}$", 
+                           "$\\csc^{-1} {\\theta}$", "$\\sec^{-1} {\\theta}$", "$\\cot^{-1} {\\theta}$", 
+                           "$\\sinh {\\theta}$", "$\\cosh {\\theta}$", "$\\tanh {\\theta}$", 
+                           "$\\mathrm{csch} {\\theta}$", "$\\mathrm{sech} {\\theta}$", "$\\coth {\\theta}$", 
+                           "$\\sinh^{-1} {\\theta}$", "$\\cosh^{-1} {\\theta}$", "$\\tanh^{-1} {\\theta}$", 
+                           "$\\mathrm{csch}^{-1} {\\theta}$", "$\\mathrm{sech}^{-1} {\\theta}$", "$\\coth^{-1} {\\theta}$", 
+                           "$\\sin {\\theta}$", "$\\cos {2\\theta}$", "$\\tan {\\theta} = \\frac{\\sin {\\theta}}{\\cos {\\theta}}$",  ],
+      // 几何
+      Part_Geometry_List: ["$\\Box$", "$\\Diamond$", "$\\Delta$", "$\\angle A$", "$\\circ$", "$\\perp$", "$\\vec{a}$", 
+                           "$\\overrightarrow{AB}$", "$\\overleftarrow{AB}$", "$\\overline{m+n}$", "$\\overline{AB}$", "$\\underline{m+n}$", "$\\underline{AB}$", "$\/\/$", 
+                           "$\\boxplus$", "$\\triangle$", "$\\odot$", "$\\overset{\\frown}{AB}$", "$\\lozenge$", "$\\blacklozenge$", "$\\measuredangle$"],
+      // 矩阵
+      Part_Matrix_List: ["$\\begin{pmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{pmatrix}$",
+                         "$\\begin{vmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{vmatrix}$",
+                         "$\\begin{Vmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{Vmatrix}$",
+                         "$\\begin{bmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{bmatrix}$",
+                         "$\\begin{Bmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{Bmatrix}$", 
+                         "$\\begin{pmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$",
+                         "$\\begin{vmatrix} 1 &   &   \\\\   & 1 &   \\\\   &   & 1 \\end{vmatrix}$",
+                         "$\\begin{bmatrix} 1 &   &   \\\\   & \\ddots &   \\\\   &   & 1 \\end{bmatrix}$",
+                         "$\\begin{bmatrix} 1 & \\dots  & 0 \\\\ \\vdots & \\ddots & \\vdots \\\\ 0 & \\dots & 1 \\end{bmatrix}$",
+                         "$\\begin{matrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{matrix}$",
+                         "$\\begin{matrix} 1 & 0 \\\\ 0 & 1 \\end{matrix}$",
+                         "$\\begin{matrix} a & b & c \\\\ d & e & f \\end{matrix}$",]
     };
   },
   watch:{
