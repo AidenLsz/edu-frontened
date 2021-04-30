@@ -614,7 +614,7 @@ The line of README
     <!-- </el-dialog> -->
 
     <el-row style="padding-top: 15px; z-index: 1" type="flex" justify="center">
-      <mavon-editor ref="mavoneditor" v-model="content" @imgAdd="New_Img_In" @imgDel="Del_Img" @fullScreen="Change_Class" :class="Get_Mavon_Class(MESinker)" :toolbars="selfToolBar">
+      <mavon-editor ref="mavoneditor" v-model="content" @CursorPosNow="Change_Cursor_Pos_Index" @imgAdd="New_Img_In" @imgDel="Del_Img" @fullScreen="Change_Class" :class="Get_Mavon_Class(MESinker)" :toolbars="selfToolBar">
         <!-- 左侧其他常用功能分类 -->
         <el-row slot="left-toolbar-after">
           <el-col :span="24">
@@ -1207,7 +1207,8 @@ export default {
                          "$\\begin{bmatrix} 1 & \\dots  & 0 \\\\ \\vdots & \\ddots & \\vdots \\\\ 0 & \\dots & 1 \\end{bmatrix}$",
                          "$\\begin{matrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{matrix}$",
                          "$\\begin{matrix} 1 & 0 \\\\ 0 & 1 \\end{matrix}$",
-                         "$\\begin{matrix} a & b & c \\\\ d & e & f \\end{matrix}$",]
+                         "$\\begin{matrix} a & b & c \\\\ d & e & f \\end{matrix}$",],
+      Cursor_Pos_Index: 0
     };
   },
   watch:{
@@ -1247,6 +1248,9 @@ export default {
     }
   },
   methods: {
+    Change_Cursor_Pos_Index(pos){
+      this.Cursor_Pos_Index = pos;
+    },
     // 常用 - 长度检测
     Part_Common_List_Index(part, index){
       if(index >= this.Part_Common_List[part].length){
@@ -1299,7 +1303,7 @@ export default {
     },
     // 添加至Content
     Add(con){
-      this.content = this.content + con;
+      this.content = this.content.substring(0, this.Cursor_Pos_Index) + con + this.content.substring(this.Cursor_Pos_Index);
       this.$message.success("已添加 " + con + " 至内容区。")
     },
     Change_Class(status, value){
