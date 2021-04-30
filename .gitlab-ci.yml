@@ -20,8 +20,8 @@ build:
   - cnpm install
   - npm run lint
   - npm run build
-  - ls -l dist
-  - cp -f src/components/mavon-editor.js dist/mavon-editor/dist/
+  - ls -l dist/js/
+  - cp -f src/components/mavon-editor.js dist/js/
   artifacts:
     paths:
     - dist/
