@@ -19,6 +19,7 @@ build:
   - npm install -g cnpm --registry=https://registry.npm.taobao.org
   - cnpm install
   - npm run lint
+  - \cp -f src/components/mavon-editor.js node_modules/mavon-editor/dist/
   - npm run build
   artifacts:
     paths:
