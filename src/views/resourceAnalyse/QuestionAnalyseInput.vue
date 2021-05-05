@@ -7,7 +7,7 @@
         :modal-append-to-body="false"
         :close-on-click-modal="true">
         <template slot="title"></template>
-        <QuestionAnalyse :Question="analyseData"></QuestionAnalyse>
+        <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
     </el-dialog>
     <!-- 试题分析路径跳转 -->
     <el-dialog :visible.sync="QuestionAnalyseSwitchFlag" width="70%">

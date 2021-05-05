@@ -1,245 +1,299 @@
 <!-- 作为递归自身的节点 -->
 <template>
-  <div style="margin: 0px 11.5vw 10px 11.5vw">
-      <el-row style="padding-top: 15px">
-          <label style="font-size: 2rem">试题分析报告</label>
-      </el-row>
-      <el-row>
-          <el-divider></el-divider>
-      </el-row>  
-      <el-row>
-        <el-col class="Ques_Card" :span="24" v-if="Question.type == 'PackedQues'" type="flex" justify="start">
-            <el-row type="flex" justify="start" style="margin-bottom: 10px">
-                <label v-if="Analyse">（ 此题{{Question.score}}分 ）</label>
-                <label v-else>（ 本节{{Question.score}}分 ）</label>
-            </el-row>
-            <el-row type="flex" justify="start" style="margin: 10px 0px">
-                <Mathdown :content="Question.desc" :name="'Q_Desc_'"></Mathdown>
-            </el-row>
-            <el-row v-if="All_Question_Show" style="min-height: 200px">
-                <PaperAnalysePackedQuestion :PackedQuestion="Question.sub_question" :Sub_Index="Index" :Name_P="'P_' + Index"  :Analyse="false" style="width: 100%"></PaperAnalysePackedQuestion>
-            </el-row>
-            <el-row v-if="All_Question_Show" type="flex" justify="center" style="font-size: 50px; color: #409EFF; cursor: pointer"  @click.native="Change_AQS()">
-                <i class="el-icon-arrow-up"></i>
-            </el-row>
-            <el-row type="flex" justify="start" style="margin-bottom: 10px; position: relative; height: 250px; overflow: hidden;" v-if="!All_Question_Show">
-                <div class="Hidden_Ques" ref="OverFlow_DIV" >
-                    <PaperAnalysePackedQuestion :PackedQuestion="Question.sub_question" :Sub_Index="Index" :Name_P="'P_' + Index"  :Analyse="false" style="width: 100%"></PaperAnalysePackedQuestion>
-                </div>
-                <div :class="Get_Display()" @click="Change_AQS()" v-if="Overflow_Flag">
-                    <el-row type="flex" justify="center" style="font-size: 50px; color: #409EFF;"><i class="el-icon-arrow-down"></i></el-row>
-                </div>
-            </el-row>
-        </el-col>
-        <el-col class="Ques_Card" :span="24" v-else>
-            <el-row type="flex" justify="start" style="margin-bottom: 10px" v-if="Question.score">
-                <label>（ 小题{{Question.score}}分 ）</label>
-            </el-row>
-            <el-row type="flex" justify="start" style="margin-bottom: 10px; min-height: 200px" v-if="All_Question_Show">
-                <PaperAnalyseQuestion :Question="Question" style="width: 100%"></PaperAnalyseQuestion>
-            </el-row>
-            <el-row v-if="All_Question_Show" type="flex" justify="center" class="Up_Arrow"  @click.native="Change_AQS()">
-                <i class="el-icon-arrow-up"></i>
-            </el-row>
-            <el-row type="flex" justify="start" style="margin-bottom: 10px; position: relative; height: 250px; overflow: hidden;" v-if="!All_Question_Show">
-                <div class="Hidden_Ques" ref="OverFlow_DIV">
-                    <PaperAnalyseQuestion :Question="Question" style="width: 100%"></PaperAnalyseQuestion>
-                </div>
-                <div :class="Get_Display()" @click="Change_AQS()" v-if="Overflow_Flag">
-                    <el-row type="flex" justify="center" style="font-size: 50px; color: #409EFF;"><i class="el-icon-arrow-down"></i></el-row>
-                </div>
-            </el-row>
-            
-        </el-col>
-        <el-row v-if="Expand_Ana">
-            <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
-                <el-col :span="12" style="text-align: left">
-                    基本信息
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px">
-                <el-col>
-                    <!-- 属性分析表格 -->
-                    <!-- <el-row type="flex" justify="start" style="margin: 10px 0px 10px 0px">
-                        <label>此题难度等属性分析如下：</label>
-                    </el-row> -->
-                    <el-row style="width: 100%">
-                        <!-- 第一行 -->
-                        <el-row style="width: 66.7%" class="Table_Unit_0">
-                            <!-- 左列 -->
-                            <el-col :span="6" style="padding-top: 8px;">
-                                <el-row type="flex" justify="start">
-                                <label>此题难度</label>
-                                </el-row>
-                            </el-col>
-                            <!-- 右列 -->
-                            <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
-                                <el-row type="flex" justify="start">
-                                    <span v-if="Question.difficulty">{{Question.difficulty}}</span>
-                                    <span v-else>{{Question.difficulty_statistics.mean}}</span>
-                                    
-                                </el-row>
-                            </el-col>
-                        </el-row>
-                        <!-- 第二行 -->
-                        <el-row style="width: 66.7%" class="Table_Unit_1">
-                            <!-- 左列 -->
-                            <el-col :span="6" style="padding-top: 8px;">
-                                <el-row type="flex" justify="start">
-                                <label style="text-align: left">考察知识点</label>
-                                </el-row>
-                            </el-col>
-                            <!-- 右列 -->
-                            <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
-                                <el-row v-for="(item, index) in Question.knowledge_points_frontend.kp" :key="index" type="flex" justify="start">
-                                <el-tag style="background: transparent; color: black" effect="plain" class="kp_tag">
-                                    <el-badge 
-                                        :hidden="Question.knowledge_points_frontend.kp_priority.indexOf(item) == -1" 
-                                        :value="Question.knowledge_points_frontend.kp_priority.indexOf(item) + 1" 
-                                        class="kp_badge"
-                                        type="primary">
-                                    {{ item }}
-                                    </el-badge>
-                                </el-tag>
-                                </el-row>
-                            </el-col>
-                        </el-row>
-                        <!-- 第三行 -->
-                        <el-row style="width: 66.7%" class="Table_Unit_0">
-                            <!-- 左列 -->
-                            <el-col :span="6" style="padding-top: 8px;">
-                                <el-row type="flex" justify="start">
-                                    <label style="text-align: left">区分度</label>
-                                </el-row>
-                            </el-col>
-                            <!-- 右列 -->
-                            <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
-                                <el-row type="flex" justify="start">
-                                    <span style="text-align: left">{{Question.discrimination}}</span>
-                                </el-row>
-                            </el-col>
-                        </el-row>
-                        <!-- 第四行 -->
-                        <el-row style="width: 66.7%" class="Table_Unit_1">
-                            <!-- 左列 -->
-                            <el-col :span="6" style="padding-top: 8px;">
-                                <el-row type="flex" justify="start">
-                                    <label style="text-align: left">试题来源</label>
-                                </el-row>
-                            </el-col>
-                            <!-- 右列 -->
-                            <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
-                                <el-row type="flex" justify="start">
-                                    <span style="text-align: left">{{Question.database}}</span>
-                                </el-row>
-                            </el-col>
-                        </el-row>
-                        <!-- 第五行 -->
-                        <el-row style="width: 66.7%" class="Table_Unit_0">
-                            <!-- 左列 -->
-                            <el-col :span="6" style="padding-top: 8px;">
-                                <el-row type="flex" justify="start">
-                                    <label style="text-align: left">试题题型</label>
-                                </el-row>
-                            </el-col>
-                            <!-- 右列 -->
-                            <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
-                                <el-row type="flex" justify="start">
-                                    <span style="text-align: left">{{Question.que_type}}</span>
-                                </el-row>
-                            </el-col>
-                        </el-row>
-                        <!-- 第六行 -->
-                        <el-row style="width: 66.7%" class="Table_Unit_1">
-                            <!-- 左列 -->
-                            <el-col :span="6" style="padding-top: 8px;">
-                                <el-row type="flex" justify="start">
-                                    <label style="text-align: left">适用学段</label>
-                                </el-row>
-                            </el-col>
-                            <!-- 右列 -->
-                            <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
-                                <el-row type="flex" justify="start">
-                                    <span style="text-align: left">{{Question.period}}</span>
-                                </el-row>
-                            </el-col>
-                        </el-row>
-                        <!-- 第七行 -->
-                        <el-row style="width: 66.7%" class="Table_Unit_0">
-                            <!-- 左列 -->
-                            <el-col :span="6" style="padding-top: 8px;">
-                                <el-row type="flex" justify="start">
-                                    <label style="text-align: left">试题学科</label>
-                                </el-row>
-                            </el-col>
-                            <!-- 右列 -->
-                            <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
-                                <el-row type="flex" justify="start">
-                                    <span style="text-align: left">{{Question.subject}}</span>
-                                </el-row>
-                            </el-col>
-                        </el-row>
-                        <!-- 第八行 -->
-                        <el-row style="width: 66.7%" class="Table_Unit_1">
-                            <!-- 左列 -->
-                            <el-col :span="6" style="padding-top: 8px;">
-                                <el-row type="flex" justify="start">
-                                    <label style="text-align: left">试题质量</label>
-                                </el-row>
-                            </el-col>
-                            <!-- 右列 -->
-                            <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
-                                <el-row type="flex" justify="start">
-                                    <span style="text-align: left">{{Question.quality}}</span>
-                                </el-row>
-                            </el-col>
-                        </el-row>
-                    </el-row>
-                    <!-- 树状结构 -->
-                    <el-row type="flex" justify="start" style="margin: 25px 0px 10px 0px">
-                        <label>此题包含的知识树状结构为：</label>
-                    </el-row>
-                    <el-row type="flex" justify="start" class="Ques_Card" style="min-height: 0px; padding-bottom: 20px">
-                        <el-tree 
-                            :default-expand-all="true"
-                            style="background: transparent" 
-                            :data="Question.knowledge_points_frontend.kp_layer" 
-                            :props="defaultProps"></el-tree>
-                    </el-row>
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
-                <el-col :span="12" style="text-align: left">
-                    相似试题
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px">
-                <el-col :span="12">
-                    <el-row type="flex" justify="start" style="line-height: 30px;">
-                        <label>按当前相关性依据排序的情况下，与本题关联程度较高的&nbsp;&nbsp;{{Similar_Question_List.length}}&nbsp;&nbsp;道试题如下：</label>
-                    </el-row>
-                </el-col>
-                <el-col :span="12">
-                    <el-row type="flex" justify="end" style="height: 30px; line-height: 30px;">
-                        <label style="margin-right: 15px">相关性依据：</label>
-                        <el-select v-model="Sort_By" placeholder="请选择" size="mini">
-                            <el-option
-                                v-for="item in Sort_Condition"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                                style="font-size: 12px">
-                            </el-option>
-                        </el-select>
-                    </el-row>
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px" v-for="(Ques, Ques_Index) in Similar_Question_List" :key="'Similar_Ques_' + Ques_Index">
-                <label>{{Ques}}</label>
-            </el-row>
+    <div style="margin: 0px 10vw 10px 10vw" ref="QuestionInfo">
+        <el-row style="padding-top: 15px">
+            <label style="font-size: 2rem">试题分析报告</label>
         </el-row>
-    </el-row>
-  </div>
+        <el-row>
+            <el-divider></el-divider>
+        </el-row>  
+        <el-row>
+            <el-col class="Ques_Card" :span="24" v-if="Question.type == 'PackedQues'" type="flex" justify="start">
+                <el-row type="flex" justify="start" style="margin-bottom: 10px">
+                    <label v-if="Analyse">（ 此题{{Question.score}}分 ）</label>
+                    <label v-else>（ 本节{{Question.score}}分 ）</label>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin: 10px 0px">
+                    <Mathdown :content="Question.desc" :name="'Q_Desc_'"></Mathdown>
+                </el-row>
+                <el-row v-if="All_Question_Show" style="min-height: 200px">
+                    <PaperAnalysePackedQuestion :PackedQuestion="Question.sub_question" :Sub_Index="Index" :Name_P="'P_' + Index"  :Analyse="false" style="width: 100%"></PaperAnalysePackedQuestion>
+                </el-row>
+                <el-row v-if="All_Question_Show" type="flex" justify="center" style="font-size: 50px; color: #409EFF; cursor: pointer"  @click.native="Change_AQS()">
+                    <i class="el-icon-arrow-up"></i>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 10px; position: relative; height: 250px; overflow: hidden;" v-if="!All_Question_Show">
+                    <div class="Hidden_Ques" ref="OverFlow_DIV" >
+                        <PaperAnalysePackedQuestion :PackedQuestion="Question.sub_question" :Sub_Index="Index" :Name_P="'P_' + Index"  :Analyse="false" style="width: 100%"></PaperAnalysePackedQuestion>
+                    </div>
+                    <div :class="Get_Display()" @click="Change_AQS()" v-if="Overflow_Flag">
+                        <el-row type="flex" justify="center" style="font-size: 50px; color: #409EFF;"><i class="el-icon-arrow-down"></i></el-row>
+                    </div>
+                </el-row>
+            </el-col>
+            <el-col class="Ques_Card" :span="24" v-else>
+                <el-row type="flex" justify="start" style="margin-bottom: 10px" v-if="Question.score">
+                    <label>（ 小题{{Question.score}}分 ）</label>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 10px; min-height: 200px" v-if="All_Question_Show">
+                    <PaperAnalyseQuestion :Question="Question" style="width: 100%"></PaperAnalyseQuestion>
+                </el-row>
+                <el-row v-if="All_Question_Show" type="flex" justify="center" class="Up_Arrow"  @click.native="Change_AQS()">
+                    <i class="el-icon-arrow-up"></i>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 10px; position: relative; height: 250px; overflow: hidden;" v-if="!All_Question_Show">
+                    <div class="Hidden_Ques" ref="OverFlow_DIV">
+                        <PaperAnalyseQuestion :Question="Question" style="width: 100%"></PaperAnalyseQuestion>
+                    </div>
+                    <div :class="Get_Display()" @click="Change_AQS()" v-if="Overflow_Flag">
+                        <el-row type="flex" justify="center" style="font-size: 50px; color: #409EFF;"><i class="el-icon-arrow-down"></i></el-row>
+                    </div>
+                </el-row>
+                
+            </el-col>
+            <el-row v-if="Expand_Ana">
+                <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+                    <el-col :span="12" style="text-align: left">
+                        基本信息
+                    </el-col>
+                </el-row>
+                <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px">
+                    <el-col>
+                        <!-- 属性分析表格 -->
+                        <!-- <el-row type="flex" justify="start" style="margin: 10px 0px 10px 0px">
+                            <label>此题难度等属性分析如下：</label>
+                        </el-row> -->
+                        <el-row style="width: 100%">
+                            <!-- 第一行 -->
+                            <el-row style="width: 66.7%" class="Table_Unit_0">
+                                <!-- 左列 -->
+                                <el-col :span="6" style="padding-top: 8px;">
+                                    <el-row type="flex" justify="start">
+                                    <label>此题难度</label>
+                                    </el-row>
+                                </el-col>
+                                <!-- 右列 -->
+                                <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                    <el-row type="flex" justify="start">
+                                        <span v-if="Question.difficulty">{{Question.difficulty}}</span>
+                                        <span v-else>{{Question.difficulty_statistics.mean}}</span>
+                                        
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                            <!-- 第二行 -->
+                            <el-row style="width: 66.7%" class="Table_Unit_1">
+                                <!-- 左列 -->
+                                <el-col :span="6" style="padding-top: 8px;">
+                                    <el-row type="flex" justify="start">
+                                    <label style="text-align: left">考察知识点</label>
+                                    </el-row>
+                                </el-col>
+                                <!-- 右列 -->
+                                <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                    <el-row v-for="(item, index) in Question.knowledge_points_frontend.kp" :key="index" type="flex" justify="start">
+                                    <el-tag style="background: transparent; color: black" effect="plain" class="kp_tag">
+                                        <el-badge 
+                                            :hidden="Question.knowledge_points_frontend.kp_priority.indexOf(item) == -1" 
+                                            :value="Question.knowledge_points_frontend.kp_priority.indexOf(item) + 1" 
+                                            class="kp_badge"
+                                            type="primary">
+                                        {{ item }}
+                                        </el-badge>
+                                    </el-tag>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                            <!-- 第三行 -->
+                            <el-row style="width: 66.7%" class="Table_Unit_0">
+                                <!-- 左列 -->
+                                <el-col :span="6" style="padding-top: 8px;">
+                                    <el-row type="flex" justify="start">
+                                        <label style="text-align: left">区分度</label>
+                                    </el-row>
+                                </el-col>
+                                <!-- 右列 -->
+                                <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                    <el-row type="flex" justify="start">
+                                        <span style="text-align: left">{{Question.discrimination}}</span>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                            <!-- 第四行 -->
+                            <el-row style="width: 66.7%" class="Table_Unit_1">
+                                <!-- 左列 -->
+                                <el-col :span="6" style="padding-top: 8px;">
+                                    <el-row type="flex" justify="start">
+                                        <label style="text-align: left">试题来源</label>
+                                    </el-row>
+                                </el-col>
+                                <!-- 右列 -->
+                                <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                    <el-row type="flex" justify="start">
+                                        <span style="text-align: left">{{Question.database}}</span>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                            <!-- 第五行 -->
+                            <el-row style="width: 66.7%" class="Table_Unit_0">
+                                <!-- 左列 -->
+                                <el-col :span="6" style="padding-top: 8px;">
+                                    <el-row type="flex" justify="start">
+                                        <label style="text-align: left">试题题型</label>
+                                    </el-row>
+                                </el-col>
+                                <!-- 右列 -->
+                                <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                    <el-row type="flex" justify="start">
+                                        <span style="text-align: left">{{Question.que_type}}</span>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                            <!-- 第六行 -->
+                            <el-row style="width: 66.7%" class="Table_Unit_1">
+                                <!-- 左列 -->
+                                <el-col :span="6" style="padding-top: 8px;">
+                                    <el-row type="flex" justify="start">
+                                        <label style="text-align: left">适用学段</label>
+                                    </el-row>
+                                </el-col>
+                                <!-- 右列 -->
+                                <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                    <el-row type="flex" justify="start">
+                                        <span style="text-align: left">{{Question.period}}</span>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                            <!-- 第七行 -->
+                            <el-row style="width: 66.7%" class="Table_Unit_0">
+                                <!-- 左列 -->
+                                <el-col :span="6" style="padding-top: 8px;">
+                                    <el-row type="flex" justify="start">
+                                        <label style="text-align: left">试题学科</label>
+                                    </el-row>
+                                </el-col>
+                                <!-- 右列 -->
+                                <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                    <el-row type="flex" justify="start">
+                                        <span style="text-align: left">{{Question.subject}}</span>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                            <!-- 第八行 -->
+                            <el-row style="width: 66.7%" class="Table_Unit_1">
+                                <!-- 左列 -->
+                                <el-col :span="6" style="padding-top: 8px;">
+                                    <el-row type="flex" justify="start">
+                                        <label style="text-align: left">试题质量</label>
+                                    </el-row>
+                                </el-col>
+                                <!-- 右列 -->
+                                <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                    <el-row type="flex" justify="start">
+                                        <span style="text-align: left">{{Question.quality}}</span>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                        </el-row>
+                        <!-- 树状结构 -->
+                        <el-row type="flex" justify="start" style="margin: 25px 0px 10px 0px">
+                            <label>此题包含的知识树状结构为：</label>
+                        </el-row>
+                        <el-row type="flex" justify="start" class="Ques_Card" style="min-height: 0px; padding-bottom: 20px">
+                            <el-tree 
+                                :default-expand-all="true"
+                                style="background: transparent" 
+                                :data="Question.knowledge_points_frontend.kp_layer" 
+                                :props="defaultProps"></el-tree>
+                        </el-row>
+                    </el-col>
+                </el-row>
+                <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+                    <el-col :span="12" style="text-align: left">
+                        相似试题
+                    </el-col>
+                </el-row>
+                <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px; margin-bottom: 30px">
+                    <el-col :span="12">
+                        <el-row type="flex" justify="start" style="line-height: 30px;">
+                            <label>按当前相关性依据排序的情况下，与本题关联程度较高的&nbsp;&nbsp;{{Similar_Question_List.length}}&nbsp;&nbsp;道试题如下：</label>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-row type="flex" justify="end" style="height: 30px; line-height: 30px;">
+                            <label style="margin-right: 15px">相关性依据：</label>
+                            <el-select v-model="Sort_By" placeholder="请选择" size="mini">
+                                <el-option
+                                    v-for="item in Sort_Condition"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    style="font-size: 12px">
+                                </el-option>
+                            </el-select>
+                        </el-row>
+                    </el-col>
+                </el-row>
+                    <el-row 
+                        v-for="(Question, Question_Index) in Similar_Question_List" 
+                        :key="Question_Index" 
+                        style="margin-bottom: 50px"
+                        >
+                        <el-col :span="24" class="quesCard">
+                            <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
+                                <el-col style="padding-bottom: 15px">
+                                    <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
+                                </el-col>
+                                <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
+                                    <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown></el-row>
+                                </el-col>
+                            </el-row>
+                            <el-row style="margin-bottom: 15px; padding-top: 15px">
+                                <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
+                                    所属题库：{{Question.database}}
+                                </el-col>
+                                <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
+                                    学科：{{Question.subject}}
+                                </el-col>
+                                <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
+                                    题型：{{Question.type}}
+                                </el-col>
+                                <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
+                                    学段：{{Question.period}}
+                                </el-col>
+                                <el-col :span="2" :offset="10" style="line-height: 40px">
+                                    <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">详情</el-button>
+                                </el-col>
+                                <el-col :span="3" style="line-height: 40px">
+                                    <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id, Question.database)">查看分析报告</el-button>
+                                </el-col>
+                            </el-row>
+                            <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: 20px; border-top: 1px dashed black">
+                                <el-col>
+                                    <span style="margin-bottom: 10px; display: block">答案：</span><Mathdown :content="Question.answer" :name="'Q_' + Question_Index + '_Answer'"></Mathdown>
+                                </el-col>
+                            </el-row>
+                            <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; padding-bottom: 20px">
+                                <el-col>
+                                    <span style="margin-bottom: 20px; display: block">解析：</span><Mathdown :content="Question.analysis" :name="'Q_' + Question_Index + '_Analysis'"></Mathdown>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                    <el-row 
+                        v-if="Similar_Question_List.length == 0" 
+                        style="margin: 50px 60px; height: 44vh; font-size: 30px"
+                        v-loading="loading"
+                        element-loading-text="加载中，请等待"
+                        element-loading-spinner="el-icon-loading">
+                        
+                    </el-row>
+            </el-row>
+            <el-row type="flex" justify="center" style="margin-bottom: 50px">
+                <el-button type="success" plain @click="PDF_Switch()">保存当前页面为PDF文档</el-button>
+            </el-row> 
+        </el-row>
+    </div>
 </template>
  
 <script>
@@ -248,23 +302,28 @@ import PaperAnalyseQuestion from "./components/PaperAnalyseQuestion.vue";
 import PaperAnalysePackedQuestion from './components/PaperAnalysePackedQues.vue'
 import Mathdown from "../../common/components/Mathdown.vue"
 
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+
+var PDF = new jsPDF('', 'pt', 'a4');
+
 export default {
   name: "QuestionAnalyse",
   props: {
-    Question: {
+    Ques: {
         type: Object,
         default: function(){
             return {
                 "analysis": "\u5982\u56fe\uff0c\u505a\u51fa\u7ea6\u675f\u6761\u4ef6$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$\u6240\u8868\u793a\u7684\u53ef\u884c\u57df\u3002\u6613\u5f97A\u7684\u5750\u6807\u4e3a$A(1,0)$\u3002\u5f53\u76ee\u6807\u51fd\u6570\u7ecf\u8fc7A\u70b9\u65f6\uff0cz\u53d6\u5f97\u6700\u5927\u503c\uff0c\u53ef\u5f97$z=x+7 y$\u7684\u6700\u5927\u503c\u4e3a$1+7 \\times 0=1$", 
                 "answer": "1", 
-                "database": "\u516c\u5f00\u9898\u5e93", 
+                "database": "公开题库", 
                 "id": "96ac6512-8aed-11eb-8fbd-b46bfc50aa29", 
                 "options": [], 
-                "period": "\u5927\u5b66", 
-                "stem": "\u82e5$x,y$\u6ee1\u8db3\u7ea6\u675f\u6761\u4ef6$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$\uff0c\u5219$z=x+7 y$\u7684\u6700\u5927\u503c\u4e3a$\\underline{}$", 
+                "period": "高中", 
+                "stem": "若$x,y$满足约束条件$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$，则$z=x+7 y$的最大值为$\\underline{}$", 
                 "subject": "数学", 
                 "type": "Question",
-                "que_type": "\u5176\u4ed6",
+                "que_type": "其他",
                 "difficulty": 0.2, 
                 "discrimination": 0.3, 
 
@@ -369,6 +428,11 @@ export default {
             },],
         Sort_By: 'default',
         Overflow_Flag: true, 
+        // 是否展开这道题的详细内容
+        Expand_List: [],
+        // 是否正在加载中
+        loading: true,
+        Question: this.Ques
     }         
   },
   methods: {
@@ -388,7 +452,58 @@ export default {
     },
     // 搜索相近题目
     Search_Similar_Questions(){
-        this.Similar_Question_List = ["1", "2", "3", "4", "5"]
+        
+        this.loading = true;
+
+        let config = {
+            headers: { "Content-Type": "multipart/form-data" }
+        };
+
+        let param = new FormData();
+
+        var database_list = [];
+        if(sessionStorage.isAdmin){
+            database_list = ['public', 'neea', 'iflytek']
+        }else{
+            database_list = ['public']
+        }
+
+        var content = ""
+
+        if(this.Question.desc){
+            content = this.Question.desc;
+        }else{
+            content = this.Question.stem
+        }
+
+        let subject_list = [this.Question.subject]
+        let period_list = []
+
+        var data = JSON.stringify({
+            "content": content,
+            "size": 5,
+            "database": database_list,
+            "page_count": 1,
+            "subject": subject_list,
+            "period": period_list
+        })
+
+        param.append("data", data);
+
+        this.$http
+        .post(this.backendIP + "/api/search", param, config, {
+            emulateJSON: true
+        })
+        .then(function(data) {
+            this.Expand_List = [];
+            this.Similar_Question_List = [];
+            var quess = data.data.results;
+            for(var i = 0; i < quess.length; i++){
+                this.Similar_Question_List.push(quess[i])
+                this.Expand_List.push(false);
+            }
+            this.loading = false;
+        });  
     },
     // 判断是否显示
     Get_Display(){
@@ -397,7 +512,112 @@ export default {
         }else{
             return 'Hidden'
         }
-    }
+    },
+    // 修改是否展开
+    Expand(Index){
+      this.Expand_List.splice(Index, 1, !this.Expand_List[Index]);
+    },
+    // 查看单题分析报告
+    Check_Analyse(ID, DatabaseName){
+
+      let config = {
+          headers: { "Content-Type": "multipart/form-data" }
+      };
+
+      let param = new FormData();
+
+      if(DatabaseName == '公开题库'){
+        param.append("databasename", 'public');
+      }else if(DatabaseName == 'neea'){
+        param.append("databasename", 'neea');
+      }else if(DatabaseName == 'iflytek'){
+        param.append("databasename", 'iflytek');
+      }
+      param.append("ID", ID);
+
+      this.$http
+      .post(this.backendIP + "/api/questionAnalyse", param, config, {
+        emulateJSON: true
+      })
+      .then(function(data) {
+        this.Question = data.data.que_dic;
+        this.Search_Similar_Questions();
+      });    
+
+      this.$nextTick(function(){	
+            let height = this.$refs.OverFlow_DIV.clientHeight;
+            if(height > 250){
+                this.Overflow_Flag = true;
+            }	else{
+                this.Overflow_Flag = false;
+            }
+        })
+    },
+    // 返回选项标签
+    Get_Option_Label(Index){
+      return String.fromCharCode(Index + 65)
+    },
+    PDF_Switch(){
+        window.scrollTo(0, 0);
+        this.Part_Expand = [true, true, true, true];
+        this.transing = true;
+        // this.PDF_Download("Paper_Title");
+        // this.PDF_Download("Paper_Total");
+        // this.PDF_Download("Paper_Analyse");
+        // this.PDF_Download("Paper_Similarity");
+        // this.PDF_Download("Paper_Detail");
+        this.PDF_Download("QuestionInfo");
+        
+    },
+    // 下载PDF格式的分析报告
+    PDF_Download(part){
+
+        if(this.Part_Expand.indexOf(false) != -1){
+            this.Part_Expand = [true, true, true, true];
+        }
+        setTimeout(()=>{
+            html2canvas(this.$refs[part]).then(
+
+                canvas => {
+
+                    var contentWidth = canvas.width;
+                    var contentHeight = canvas.height;
+
+                    var pageHeight = contentWidth / 592.28 * 841.89;
+                    var leftHeight = contentHeight;
+
+                    var position = 0;
+
+                    var imgWidth = 595.28;
+                    var imgHeight = 592.28/contentWidth * contentHeight;
+
+                    var pageData = canvas.toDataURL('image/jpeg', 1.0);
+
+                    if (leftHeight < pageHeight) {
+                        PDF.addImage(pageData, 'JPEG', 0, 20, imgWidth, imgHeight );
+                    } else {
+                        while(leftHeight > 0) {
+                            PDF.addImage(pageData, 'JPEG', 0, position + 20, imgWidth, imgHeight)
+                            leftHeight -= pageHeight;
+                            position -= 841.89;
+                            //避免添加空白页
+                            if(leftHeight > 0) {
+                                PDF.addPage();
+                            }
+                        }
+                    }
+                    if(part == "QuestionInfo"){
+                        PDF.save("Question_Analyse_Report_" + this.Question.id + ".pdf")
+                        PDF = new jsPDF('', 'pt', 'a4');
+                        this.transing = false;
+                    }else{
+                        PDF.addPage();
+                    }
+                    return
+                }
+            )
+        }, 1)     
+    },
   }
 };
 </script>
@@ -477,6 +697,7 @@ export default {
     cursor: pointer;
     z-index: 3;
 }
+/* 题目内容的卡片 */
 .Ques_Card{
     background: white;
     border-radius: 15px;
@@ -485,5 +706,10 @@ export default {
     margin: 15px 0px 30px 0px;
     box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.5);
     -webkit-box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.5);
+}
+/* 相似题目的卡片 */
+.quesCard{
+  background: #F8FBFF; 
+  border: 1px dashed black;
 }
 </style>
