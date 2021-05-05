@@ -44,8 +44,8 @@ export function addTooltip(svgContainer,circle){
           Tooltip.html('<p>'+content+'</p>')
 
           if(!screenfull.isFullscreen){
-            Tooltip.style("left", d.x*1.05+"px")
-            .style("top", d.y*0.95+"px")
+            Tooltip.style("left", d.x+(d3.event.pageX-d.x)*0.6+"px")
+            .style("top", d.y+"px")
             .style("width", "150px")
             .style("font-size", "12px")
             .style("line-height", "15px")
@@ -64,6 +64,7 @@ export function addTooltip(svgContainer,circle){
       };
       console.log(mouseout);
       circle.on("mouseover",mouseover)
-      .on("mouseout", mouseout);
+      .on("mouseout", mouseout)
+      // .on("click",mouseout)
 
 }

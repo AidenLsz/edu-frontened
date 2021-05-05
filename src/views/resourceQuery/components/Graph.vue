@@ -360,6 +360,7 @@ export default {
 
         }
         circle.on('click', function(d) {
+            $(".tool-tip").hide()
             _this.$emit("search", d.name)
         })
         addTooltip(d3.select("#graph_container"),circle)

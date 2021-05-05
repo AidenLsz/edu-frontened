@@ -183,14 +183,10 @@ export default {
       })
       .on('click',function(d){
         if(d.id!=_this.node.name){
-          // toolTip.hide()
           _this.$emit("search", d.id)
         }
       })
       addTooltip(d3.select("#presuc_container"),circle)
-
-      // .on("mouseover",toolTip.show)
-      // .on("mouseout", toolTip.hide);
 
     // 文字
     gs.append('text')
@@ -204,9 +200,6 @@ export default {
       .text(function (d) {
         return d.id
       })
-    // svgDOM.on('click',function(){
-    //   toolTip.hide()
-    // })
     zoom(svgDOM,svg)
     function tick() {
       link
