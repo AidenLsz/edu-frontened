@@ -103,8 +103,10 @@ export default {
         if (d.depth && d.data.name.length !== 4) d.children = null
       })
 
-      let svg = d3
+      let svgDOM = d3
         .select('svg.d3-tree-vi')
+
+      let svg=svgDOM.append('g')
         .attr("viewBox", "0 0 " + $('#tree').width() + " " + $('#tree').height() )
         .attr("preserveAspectRatio", "xMidYMid meet");
         // .attr('viewBox', [margin.left, margin.top, width, dx])
@@ -117,7 +119,8 @@ export default {
       const gNode = svg.append('g')
         .attr('cursor', 'pointer')
         .attr('pointer-events', 'all')
-      zoom(svg,gNode,gLink)
+      zoom(svgDOM,svg)
+      // zoom(svg,gNode,gLink)
       function update (source) {
         const duration = d3.event && d3.event.altKey ? 2500 : 250
         const nodes = root.descendants().reverse()
@@ -136,7 +139,7 @@ export default {
 
         const height = right.x - left.x + margin.top + margin.bottom
         // console.log(width,height);
-        const transition = svg.transition()
+        const transition = svgDOM.transition()
           .duration(duration)
           .attr('viewBox', [-margin.left, left.x - margin.top, width, height])
           // .attr('viewBox', ['25%', '25%', '100%', 380])

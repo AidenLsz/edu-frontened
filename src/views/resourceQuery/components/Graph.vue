@@ -245,6 +245,11 @@ export default {
         color: 2,
         grey:false
       },{
+        name: "知识点",
+        value: "3",
+        color: 3,
+        grey:false
+      },{
         name: "上级节点",
         value: "1",
         color: 1,

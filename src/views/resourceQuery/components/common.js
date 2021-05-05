@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import screenfull from 'screenfull'
 
-export  function zoom(svg,...args){
+export  function zoom(svg,g){
   let zoomHandler = d3.zoom()
     .on('zoom', zoomActions)
     .scaleExtent([1 / 2, 8])
@@ -11,12 +11,9 @@ export  function zoom(svg,...args){
 
   // Zoom functions
   function zoomActions () {
-    for (let g of args) {
-      g.attr('transform', d3.event.transform)
-    }
+    g.attr('transform', d3.event.transform)
   }
 }
-// const colorDict=["#c5e1a5","#ffc0cb","#fdfd96","#1f77b4","#ffa500","#006400"];
 const colorDict=["#c5e1a5","#87CEFA","#fdfd96","#1f77b4","#6495ED","#006400"];
 
 export function color(d){
@@ -62,9 +59,6 @@ export function addTooltip(svgContainer,circle){
               // .duration(duration)
               .style("display", "none");
       };
-      console.log(mouseout);
       circle.on("mouseover",mouseover)
       .on("mouseout", mouseout)
-      // .on("click",mouseout)
-
 }
