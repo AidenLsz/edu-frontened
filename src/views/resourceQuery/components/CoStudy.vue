@@ -1,8 +1,5 @@
 <template lang="html">
-    <div v-if="undirected_len==0">
-        无共同学习节点
-    </div>
-    <svg v-else id="costudy" style="width: 100%;height: 100%;">
+    <svg id="costudy" style="width: 100%;height: 100%;">
     </svg>
 </template>
 
