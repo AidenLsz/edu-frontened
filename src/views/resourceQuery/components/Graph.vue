@@ -759,33 +759,3 @@ export default {
   }
 }
 </script>
-
-<style lang="css" >
-button {
-  position: absolute;
-}
-
-#orange {
-  top: 1em;
-  left: 1em;
-}
-
-#green {
-  top: 1em;
-  left: 8em;
-}
-#yellow {
-  top: 1em;
-  left: 16em;
-}
-.node {
-	/* stroke: white;
-	stroke-width: 2px; */
-}
-
-.link {
-	stroke: grey;
-	stroke-width: 1px;
-}
-
-</style>
