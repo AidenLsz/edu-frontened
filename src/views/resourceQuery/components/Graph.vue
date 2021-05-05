@@ -66,7 +66,7 @@ export default {
     this.draw_graph()
   },
   methods: {
-    handlePresucData() {
+    handleData() {
       let data = {}
       let nodes = [];
       let nodeCount = 0;
@@ -78,7 +78,7 @@ export default {
         id: nodeCount++,
         name: this.node.name,
         community: 3,
-        group: "0",
+        group: "3",
         desc: this.node.description,
       })
       //前驱后继
@@ -88,7 +88,7 @@ export default {
           id: nodeCount,
           name: ng[i].name,
           community: 0,
-          group: "1",
+          group: "0",
           desc: ng[i].annotation.split("description-")[1],
         })
         edges.push({
@@ -104,7 +104,7 @@ export default {
           id: nodeCount,
           name: ng[i].name,
           community: 5,
-          group: "1",
+          group: "5",
           desc: ng[i].annotation.split("description-")[1],
         })
         edges.push({
@@ -135,11 +135,10 @@ export default {
       //层级关系
       let nh = this.neighbors_hierarchy
       for (let i = 0; i < this.superior_layer; i++, nodeCount++, edgeCount++) {
-
         nodes.push({
           id: nodeCount,
           name: nh[i],
-          group: "3",
+          group: "1",
           community: 1,
         })
         edges.push({
@@ -155,7 +154,7 @@ export default {
           id: nodeCount,
           name: nh[i],
           community: 4,
-          group: "3",
+          group: "4",
         })
         edges.push({
           id: edgeCount,
@@ -206,7 +205,7 @@ export default {
         .force('x', d3.forceX(width / 2).strength(0.02))
         .force('y', d3.forceY(height / 2).strength(0.04));
 
-      var data = this.handlePresucData()
+      var data = this.handleData()
       var nodeByID = {};
 
       //	data read and store
@@ -229,18 +228,30 @@ export default {
 
       let _this = this
       const dataDict = [{
-        name: "前驱后继",
-        value: "1",
+        name: "前驱节点",
+        value: "0",
+        color: 0,
+        grey:false
+      },
+      {
+        name: "后继节点",
+        value: "5",
         color: 5,
         grey:false
-      },{
-        name: "共同学习",
+      },
+      {
+        name: "共同学习节点",
         value: "2",
         color: 2,
         grey:false
       },{
-        name: "层级关系",
-        value: "3",
+        name: "上级节点",
+        value: "1",
+        color: 1,
+        grey:false
+      },{
+        name: "下级节点",
+        value: "4",
         color: 4,
         grey:false
       }]
@@ -377,7 +388,7 @@ export default {
           .attr("stroke-opacity", 0.4)
           .attr('stroke-width', 1)
           .attr("marker-end", (d) => {
-            return (d.targetGroup == "2" || d.targetGroup == "3") ? "none" : "url(#arrow)"
+            return (d.sourceGroup == "0" || d.targetGroup == "5") ? "url(#arrow)":"none"
           })
         svg.append("defs").append("marker")
           .attr("id", "arrow")
