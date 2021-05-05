@@ -9,7 +9,7 @@
 <script>
 import * as d3 from "d3";
 import $ from "jquery";
-import {zoom,addTooltip} from './common.js'
+import {zoom,addTooltip,color} from './common.js'
 
 export default {
   props: {
@@ -43,10 +43,10 @@ export default {
   },
   methods:{
     draw_graph(){
-
       let nodes = [
           {
             name: this.node.name,
+            community:3,
             desc: this.node.description,
           }
       ];
@@ -61,7 +61,7 @@ export default {
         nodes[i + 1] = {
           name: kg_group[r_idx-i].name,
           desc: kg_group[r_idx-i].annotation.split("description-")[1],
-
+          community:2,
         };
         edges[i] = {
           source: 0,
@@ -79,11 +79,6 @@ export default {
       .attr("viewBox", "0 0 " + width + " " + height )
       .attr("preserveAspectRatio", "xMidYMid meet");
       let g = svg.append('g');
-
-      // 设置一个颜色比例尺
-      let colorScale = d3.scaleOrdinal()
-        .domain(d3.range(nodes.length))
-        .range(d3.schemeCategory10)
 
       // 新建一个力导向图
       let forceSimulation = d3.forceSimulation()
@@ -129,11 +124,6 @@ export default {
         .data(nodes)
         .enter()
         .append('g')
-        .attr('transform', function (d) {
-          let cirX = d.x
-          let cirY = d.y
-          return 'translate(' + cirX + ',' + cirY + ')'
-        })
         .call(d3.drag()
           .on('start', started)
           .on('drag', dragged)
@@ -143,11 +133,11 @@ export default {
       let _this=this
       let circle = gs.append('circle')
         .attr('r', 5)
-        .attr('fill', function (d, i) {
-          return colorScale(i)
+        .attr("stroke", "black")
+        .attr('fill', function (d) {
+          return color(d.community)
         })
         .on('click',function(d){
-          console.log('d:',d);
           if(d.name!=_this.node.name)
             _this.$emit("search", d.name)
         })

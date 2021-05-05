@@ -8,7 +8,7 @@
 import * as d3 from "d3";
 import d3Tip from "d3-tip";
 import $ from "jquery";
-import {zoom,addTooltip} from './common.js'
+import {zoom,addTooltip,color} from './common.js'
 d3.tip = d3Tip;
 
 export default {
@@ -56,7 +56,7 @@ export default {
       let nodes = [
           {
             id:this.node.name,
-            community:1,
+            community:3,
             desc: this.node.description,
           }
       ];
@@ -77,10 +77,10 @@ export default {
             relation: '',
             value: Math.random() * (1.6 - 1) + 1
           };
-        } else {
+        } else if(i<this.inward_arrow +this.outward_arrow){
           nodes[i + 1] = {
             id:kg_group[i].name,
-            community:2,
+            community:5,
             desc: kg_group[i].annotation.split("description-")[1],
           };
           edges[i] = {
@@ -106,9 +106,9 @@ export default {
         .attr('class', 'groupbox')
         .attr("viewBox", "0 0 " + width + " " + height )
         .attr("preserveAspectRatio", "xMidYMid meet");
-      let colorScale = d3.scaleOrdinal()
-        .domain(d3.range(data.nodes.length))
-        .range(d3.schemeCategory10)
+      // let colorScale = d3.scaleOrdinal()
+      //   .domain(d3.range(data.nodes.length))
+      //   .range(d3.schemeCategory10)
       var svg = svgDOM.append('g');
       var groupingForce = forceInABox()
         .strength(0.025)
@@ -177,8 +177,9 @@ export default {
     let _this = this;
     let circle = gs.append('circle')
       .attr('r', 5)
-      .attr('fill', function (d, i) {
-        return colorScale(i)
+      .attr("stroke", "black")
+      .attr('fill', function (d) {
+        return color(d.community)
       })
       .on('click',function(d){
         if(d.id!=_this.node.name){
@@ -493,13 +494,7 @@ export default {
 <style  lang="scss" >
 #presuc.groupbox rect.cell {
   fill: none;
-  stroke: #000;
   stroke-width: 0px;
 }
-#presuc.groupbox .links line {
-  stroke: #999;
-  stroke-opacity: 0.6;
-}
-
 
 </style>
