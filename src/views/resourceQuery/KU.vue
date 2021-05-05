@@ -50,8 +50,13 @@
     </el-row>
 
     <el-row class="panel-body" v-loading="loading" style="" v-if="FullChange">
+      <div class="panel-btn" id="openBtn" @click="openPanel()">
+        <i class="el-icon-arrow-right"></i>
+      </div>
       <el-card class="box-card left">
-        <div class="el-notification__closeBtn el-icon-close" @click="closePanel()"></div>
+        <div class="panel-btn" id="closeBtn" @click="closePanel()">
+          <i class="el-icon-arrow-left"></i>
+        </div>
         <div class="container">
           <div class="intro">
             <el-row type="flex" justify="start">
@@ -117,12 +122,6 @@
 
       <el-col>
         <div class="graph" id="graph_container">
-          <!-- <el-row>
-            <el-col :span="6"><p style="color: #409EFD; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>知识点</p></el-col>
-            <el-col :span="6"><p style="color: #EDB664; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>前驱后继</p></el-col>
-            <el-col :span="6"><p style="color: #9ECCAB; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>共同学习</p></el-col>
-            <el-col :span="6"><p style="color: #F1939C; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>层级关系</p></el-col>
-          </el-row> -->
           <Graph
             :node="node"
             :neighbors_groups="neighbors_groups"
@@ -241,6 +240,9 @@ export default {
         left: '0%',
         opacity: 1
       },'easeInOutExpo')
+      $('#openBtn').hide()
+      $('#closeBtn').show()
+
       // $('.box-card.left').css('display','block')
     },
     closePanel(){
@@ -248,6 +250,8 @@ export default {
         left: '-50%',
         opacity: 0,
       }, 'easeInOutExpo')
+      $('#openBtn').show()
+      $('#closeBtn').hide()
       // setTimeout(function(){ $('.box-card.left').css('display','none') }, 1000);
     },
     handleSwitchTabs(){
@@ -429,6 +433,7 @@ export default {
   margin-left: 5vw;
   margin-right: 5vw;
 }
+
 .box-card {
     position: absolute;
     margin-left: 15px;
@@ -438,6 +443,19 @@ export default {
     // z-index: 10;
     left: -3%;
     opacity:0;
+}
+.panel-btn{
+  position: absolute;
+  top:50%;
+  font-size: 30px;
+  font-weight:bold;
+  color: #bbb;
+}
+#openBtn{
+  left:15px;
+}
+#closeBtn{
+  right:0;
 }
 .container {
   display: flex;
