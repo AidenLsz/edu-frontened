@@ -2,18 +2,33 @@ import * as d3 from "d3";
 import screenfull from 'screenfull'
 
 export  function zoom(svg,g){
-  let zoomHandler = d3.zoom()
-    .on('zoom', zoomActions)
-    .scaleExtent([1 / 2, 8])
-
-  svg.call(zoomHandler).on('dblclick.zoom', null)
-  zoomHandler(svg)
-
-  // Zoom functions
-  function zoomActions () {
-    g.attr('transform', d3.event.transform)
+  console.log(g);
+  // let zoomHandler = d3.zoom()
+  //   .on('zoom', zoomActions)
+  //   .scaleExtent([1 / 2, 8])
+  //
+  // svg.call(zoomHandler).on('dblclick.zoom', null)
+  // zoomHandler(svg)
+  //
+  // // Zoom functions
+  // function zoomActions () {
+  //   for (let g of args) {
+  //     g.attr('transform', d3.event.transform)
+  //   }
+  // }
+  // 放大显示的函数
+  function zoomed() {
+    g.attr("transform", d3.event.transform||"");
   }
+
+  let zoom = d3
+    .zoom()
+    .scaleExtent([1 / 8, 1.5])
+    .on("zoom", zoomed);
+  // svg.call(zoom);
+  zoom(svg);
 }
+// const colorDict=["#c5e1a5","#ffc0cb","#fdfd96","#1f77b4","#ffa500","#006400"];
 const colorDict=["#c5e1a5","#87CEFA","#fdfd96","#1f77b4","#6495ED","#006400"];
 
 export function color(d){
