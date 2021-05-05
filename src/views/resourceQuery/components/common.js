@@ -2,7 +2,6 @@ import * as d3 from "d3";
 import screenfull from 'screenfull'
 
 export  function zoom(svg,g){
-  console.log(g);
   // let zoomHandler = d3.zoom()
   //   .on('zoom', zoomActions)
   //   .scaleExtent([1 / 2, 8])
