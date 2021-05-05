@@ -116,24 +116,25 @@
       </el-card>
 
       <el-col>
-        <div class="graph">
-          <el-row>
+        <div class="graph" id="graph_container">
+          <!-- <el-row>
             <el-col :span="6"><p style="color: #409EFD; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>知识点</p></el-col>
             <el-col :span="6"><p style="color: #EDB664; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>前驱后继</p></el-col>
             <el-col :span="6"><p style="color: #9ECCAB; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>共同学习</p></el-col>
             <el-col :span="6"><p style="color: #F1939C; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>层级关系</p></el-col>
-          </el-row>
+          </el-row> -->
           <Graph
             :node="node"
             :neighbors_groups="neighbors_groups"
             :neighbors_hierarchy="neighbors_hierarchy"
             :inward_arrow="inward_arrow"
             :outward_arrow="outward_arrow"
+            :undirected_len="undirected_len"
             :superior_layer="superior_layer"
             :inferior_layer="inferior_layer"
             :selected_type="checkList"
-            @Research="Research"
-          ></Graph>
+            @search="search"
+            />
         </div>
       </el-col>
     </el-row>
@@ -240,12 +241,14 @@ export default {
         left: '0%',
         opacity: 1
       },'easeInOutExpo')
+      // $('.box-card.left').css('display','block')
     },
     closePanel(){
       $('.box-card.left').animate({
-        left: '-3%',
-        opacity: 0
+        left: '-50%',
+        opacity: 0,
       }, 'easeInOutExpo')
+      // setTimeout(function(){ $('.box-card.left').css('display','none') }, 1000);
     },
     handleSwitchTabs(){
       this.key1+=3
@@ -259,7 +262,6 @@ export default {
         })
         return false
       }
-      // console.log(screenfull,screenfull);
       if (this.fullEl) {
         screenfull.toggle(this.fullEl)
       } else {
@@ -342,6 +344,7 @@ export default {
           } else {
             this.openPanel();
             this.initFullScreen();
+            this.activeName="presuc"
             this.node = data.data.node;
             this.neighbors_groups = data.data.neighbors_groups;
             this.neighbors_hierarchy = data.data.neighbors_hierarchy;
@@ -395,23 +398,7 @@ export default {
   }
 };
 </script>
-<style  lang="scss" >
-.tool-tip{
-  position:absolute;
-  width: 150px;
-  max-height:200px;
-  border-radius: 4px;
-  background-color:rgba(248,251, 255, .7);
-  border:solid 1px rgba(31,119,180,0.3);
-  overflow-y: scroll;
-}
-.tool-tip p{
-  margin: 6px;
-  color:#303133;
-  text-align: left;
-  text-indent: 2em;
-}
-</style>
+
 <style scoped lang="scss">
 .zoom-in-btn{
   position:absolute;
@@ -482,6 +469,7 @@ export default {
   background-color: #fff;
 }
 .graph {
+  // position: relative;
   border: 1px solid #fff;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 3px;

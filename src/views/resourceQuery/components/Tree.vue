@@ -6,7 +6,7 @@
 <script>
 import * as d3 from "d3";
 import $ from "jquery";
-import {zoom} from './common.js'
+import {zoom,color} from './common.js'
 export default {
   data () {
     return {
@@ -54,6 +54,7 @@ export default {
         data={
           'name': this.neighbors_hierarchy[i].name,
           'value': 1,
+          community:1,
           'children': []
         }
       }
@@ -62,13 +63,15 @@ export default {
     mid_data={
       'name': this.node.name,
       'value': 1,
-      'children': []
+      'children': [],
+      community:3
     }
     for (let i = 0; i < this.inferior_layer; i++) {
         mid_data.children.push({
           'name': this.neighbors_hierarchy[i+this.superior_layer],
           'value': 1,
-          'children': []
+          'children': [],
+          community:4
         })
     }
     if(!data){
@@ -154,9 +157,11 @@ export default {
           })
 
         nodeEnter.append('circle')
-          .attr('r', 3)
-          .attr('fill', d => d._children ? '#1f77b4' : '#97CBFF')
-
+          .attr('r', 4)
+          .attr("stroke", "black")
+          .attr('fill', function (d) {
+            return color(d.data.community)
+          })
 
         nodeEnter.append('text')
           .attr("opacity", 0.6)

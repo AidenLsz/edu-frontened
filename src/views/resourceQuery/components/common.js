@@ -16,7 +16,12 @@ export  function zoom(svg,...args){
     }
   }
 }
+// const colorDict=["#c5e1a5","#ffc0cb","#fdfd96","#1f77b4","#ffa500","#006400"];
+const colorDict=["#c5e1a5","#87CEFA","#fdfd96","#1f77b4","#6495ED","#006400"];
 
+export function color(d){
+    return colorDict[d];
+}
 export function addTooltip(svgContainer,circle){
 
       let Tooltip = svgContainer
@@ -25,13 +30,22 @@ export function addTooltip(svgContainer,circle){
       // let duration = 300;
 
       let mouseover = (d)=>{
+          let content = d.desc||"暂无描述"
           Tooltip.transition()
               // .duration(duration)
-              .style("display", "block");
-          Tooltip.html('<p>'+d.desc+'</p>')
+              .style("display", "block")
+              .style("position", "absolute")
+              .style("background", "#ddd")
+              .style("padding", "8px")
+              .style("border-radius", "10px")
+              .style("text-align", "left")
+              .style("text-indent", "2em")
+
+          Tooltip.html('<p>'+content+'</p>')
+
           if(!screenfull.isFullscreen){
-            Tooltip.style("left", d.x+10+"px")
-            .style("top", d.y+10+"px")
+            Tooltip.style("left", d.x*1.05+"px")
+            .style("top", d.y*0.95+"px")
             .style("width", "150px")
             .style("font-size", "12px")
             .style("line-height", "15px")
@@ -48,23 +62,8 @@ export function addTooltip(svgContainer,circle){
               // .duration(duration)
               .style("display", "none");
       };
+      console.log(mouseout);
       circle.on("mouseover",mouseover)
       .on("mouseout", mouseout);
-      // var toolTip = d3.tip()
-      //   .attr("class", "d3-tip")
-      //   // .rootElement(function(){
-      //   //   return svgDOM
-      //   //   // return document.getElementById('presuc');
-      //   // })
-      //   // .rootElement(document.getElementById('test'))
-      //   .direction('e')
-      //   .style('background-color','rgba(248,251, 255, .7)')
-      //   .style('border','solid 1px rgba(31,119,180,0.3)')
-      //   // .offset([0, 0])
-      //   .rootElement(document.body)
-      //   .html(function(d) {
-      //     return "<p>" + d.desc + "</p>";
-      //   });
-      // gs.call(toolTip);
-      //
+
 }
