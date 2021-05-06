@@ -1,10 +1,9 @@
 /* eslint-disable camelcase */
 <template>
   <div class="ku" style="margin-top: 5vh">
-
     <el-dialog
-        :visible.sync="simpleInput" 
-        title="LUNA输入助手" 
+        :visible.sync="simpleInput"
+        title="LUNA输入助手"
         width="65%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
@@ -27,7 +26,7 @@
     <el-row type="flex" justify="start" class="SearchArea">
         <el-col :span="20">
           <el-input class="SearchInput" v-model="ku_name" type="text" @keyup.enter.native="submit(ku_name)">
-            
+
           </el-input>
         </el-col>
         <el-col :span="1">
@@ -50,224 +49,91 @@
         </el-col>
     </el-row>
 
-    <!-- <el-row>
-      <form @submit.prevent="submit(ku_name)" style="margin-top: 20px; margin-left: 5vw;">
-        <el-row type="flex" class="row-bg" justify="start" v-if="!complex_input_flag">
-          <el-col :span="10">
-            <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
-          </el-col>
-          <el-col :span="3" :offset="1">
-            <el-button type="primary"  @click="Open_CI()">切换多格式输入</el-button>
-          </el-col>
-          <el-col :span="2">
-            <el-button type="primary"  value="提交" @click="submit(ku_name)" :disabled="knowledgeSystem == ''">检索</el-button>
-          </el-col>
-          <el-col :span="4" :offset="3">
-            <el-select v-model="knowledgeSystem" placeholder="请选择知识体系" v-if="false">
-              <el-option
-                v-for="item in KS_List"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-        </el-row>
-
-        <el-row type="flex" class="row-bg" justify="start" v-if="complex_input_flag">
-          <el-col :span="18" :offset="1">
-            <ComplexInput @Update_CI="UCI" @Update_Image="UCII" ref="CI" @Full_Change="ComplexInputFullChange"></ComplexInput>
-          </el-col>
-          <el-col :span="3" type="flex" justify="center">
-            <el-select v-model="knowledgeSystem" placeholder="请选择知识体系" style="margin-top: 6vh" v-if="false">
-              <el-option
-                v-for="item in KS_List"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-button type="primary"  @click="Close_CI()" style="margin-top: 7vh">切换简单输入</el-button>
-            <el-button type="primary" value="提交" @click="submit(ku_name)"  style="margin-top: 3vh" :disabled="knowledgeSystem == ''">检索</el-button>        
-          </el-col>
-        </el-row> -->
-        <!-- <el-row type="flex" class="row-bg" justify="center">
-          <el-col :span="22">
-            <el-input v-model="ku_name" placeholder="请输入内容"></el-input>
-          </el-col>
-          <el-button type="submit" value="提交" @click="submit(ku_name)"
-            >检索</el-button
-          >
-        </el-row> 
-      </form>
-    </el-row> -->
-    <!-- main -->
-    <el-row v-loading="loading" style="padding-top: 5vh; margin-left: 5vw; margin-right: 5vw" v-if="FullChange">
-      <el-col :span="9">
-        <div class="result" style="background: #F8FBFF">
-          <el-row type="flex" justify="start">
-            <h4 style="color: #0a1612; font-weight: bold">知识单元简介</h4>
-          </el-row>
-          <el-row type="flex" justify="start" class="title">
-            {{ node.name }}
-            <!-- {{ node.type }} -->
-          </el-row>
-          <el-row type="flex" justify="start" class="content">
-            <el-col>
-              {{ (node.description || "").split("...")[0] }}
-              <a
-                v-if="ku_name.length > 0"
-                v-bind:href="url"
-                target="_blank"
-                :underline="false"
-              >
-              </a>
-            </el-col>
-          </el-row>
+    <el-row class="panel-body" v-loading="loading" style="" v-if="FullChange">
+      <div class="panel-btn" id="openBtn" @click="openPanel()">
+        <i class="el-icon-arrow-right"></i>
+      </div>
+      <el-card class="box-card left">
+        <div class="panel-btn" id="closeBtn" @click="closePanel()">
+          <i class="el-icon-arrow-left"></i>
+        </div>
+        <div class="container">
+          <div class="intro">
+            <el-row type="flex" justify="start">
+              <h4 style="color: #0a1612; font-weight: bold">知识单元简介</h4>
+            </el-row>
+            <el-row type="flex" justify="start" class="title">
+              {{ node.name }}
+            </el-row>
+            <el-row type="flex" justify="start" class="content">
+              <el-col>
+                {{ (node.description || "").split("...")[0] }}
+                <a
+                  v-if="ku_name.length > 0"
+                  v-bind:href="url"
+                  target="_blank"
+                  :underline="false"
+                >
+                </a>
+              </el-col>
+            </el-row>
+          </div>
           <el-divider></el-divider>
-          <el-row type="flex" justify="start">
-            <el-col :span="24">
+          <el-row class="detail">
+            <el-col>
               <el-row>
                 <h4 style="color: #0a1612; float: left; font-weight: bold">知识关系</h4>
               </el-row>
-              <el-tabs
-                value="rjb_new"
-                @tab-click="dataSource"
-                type="card"
-                ref="ss"
-                style="height: 200px; margin-top: -10px; margin-left: 10px;"
-                id="tabs"
-              >
-                <el-tab-pane
-                  label="人教版新"
-                  name="rjb_new"
-                  id="rjb_new"
-                  ref="rjb_new"
-                >
-                  <el-row type="flex" justufy="start" :gutter="40">
-                    <el-checkbox-group v-model="checkList" id="checkbox">
-                      <el-col :span="4">
-                        <el-checkbox label="前驱后继">前驱后继</el-checkbox>
-                      </el-col>
-                      <el-col :span="1">
-                        <h6>{{ directed_len }}</h6>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-checkbox label="共同学习">共同学习</el-checkbox>
-                      </el-col>
-                      <el-col :span="1">
-                        <h6>{{ undirected_len }}</h6>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-checkbox label="层级结构">层级结构</el-checkbox>
-                      </el-col>
-                      <el-col :span="1">
-                        <h6>{{ layerLength }}</h6>
-                      </el-col>
-                    </el-checkbox-group>
-                  </el-row>
-                  <el-row
-                    v-for="(entities, group, group_index) in neighbors_groups"
-                    :key="group_index"
-                    style="background: #F8FBFF"
-                  >
-                    <el-row
-                      v-if="group == 'kp2.0'"
-                      class="label"
-                      type="flex"
-                      justify="start"
-                    >
-                      <el-popover
-                        placement="top-start"
-                        v-for="(entity, index) in entities"
-                        :key="index"
-                        :title="entity.name"
-                        width="300"
-                        trigger="hover"
-                        style="background: #F8FBFF"
-                      >
-                        <el-tag size="mini">{{
-                          (entity.annotation || "").split(";")[0].split("-")[1]
-                        }}</el-tag>
-                        <el-tag size="mini">{{
-                          (entity.annotation || "").split(";")[1].split("-")[1]
-                        }}</el-tag>
-                        <el-tag size="mini">{{
-                          (entity.annotation || "").split(";")[2].split("-")[1]
-                        }}</el-tag>
-                        <el-tag size="mini">{{
-                          (entity.annotation || "").split(";")[3].split("-")[1]
-                        }}</el-tag>
-                        <h6>
-                          {{
-                            entity.annotation
-                              .split("description")[1]
-                              .split("...")[0]
-                          }}
-                        </h6>
-                        <el-tag style="background: #F8FBFF; color: #4FA5FD; border: 1px solid #4FA5FD; margin: 0.35vw 0.5vw" slot="reference" @click="submit(entity.name)">{{
-                          entity.name
-                        }}</el-tag>
-                      </el-popover>
-                    </el-row>
-                  </el-row>
+              <el-tabs v-model="activeName" :stretch="true" :lazy="true" @click="handleSwitchTabs()" >
+                <el-button type="text" class="zoom-in-btn" size="small" @click="handleFullScreen()">
+                  <i class="el-icon-full-screen"></i>
+                </el-button>
+                <el-tab-pane :key="Math.random()" label="前驱后继" name="presuc" id="presuc_container" class="svg-container">
+                  <pre-suc
+                  :node="node"
+                  :neighbors_groups="neighbors_groups"
+                  :inward_arrow="inward_arrow"
+                  :outward_arrow="outward_arrow"
+                  @search="search"
+                  />
                 </el-tab-pane>
-                <!-- 尝试加考试院数据 -->
-                <el-tab-pane
-                  v-if="root_view"
-                  label="考试院"
-                  name="root_data"
-                  id="root_data"
-                  ref="root_data"
-                >
-                  <el-row
-                    v-for="(entities, group, group_index) in neighbors_groups"
-                    :key="group_index"
-                  >
-                    <el-row
-                      v-if="group == 'kp2.0'"
-                      class="label"
-                      type="flex"
-                      justify="start"
-                    >
-                      <el-popover
-                        placement="top-start"
-                        v-for="(entity, index) in entities"
-                        :key="index"
-                        :title="entity.name"
-                        width="200"
-                        trigger="hover"
-                        :content="entity.annotation"
-                      >
-                        <el-tag slot="reference">{{ entity.name }}</el-tag>
-                      </el-popover>
-                    </el-row>
-                  </el-row>
+                <el-tab-pane :key="Math.random()" label="共同学习" name="costudy" id="costudy_container" class="svg-container">
+                  <co-study
+                    :node="node"
+                    :neighbors_groups="neighbors_groups"
+                    :undirected_len="undirected_len"
+                    @search="search"
+                    />
+                </el-tab-pane>
+                <el-tab-pane :key="Math.random()" label="层级关系" name="tree" id="tree_container" class="svg-container">
+                  <tree
+                    :node="node"
+                    :neighbors_hierarchy="neighbors_hierarchy"
+                    :superior_layer="superior_layer"
+                    :inferior_layer="inferior_layer"
+                    />
                 </el-tab-pane>
               </el-tabs>
             </el-col>
           </el-row>
         </div>
-      </el-col>
-      <el-col :span="15">
-        <div class="graph">
-          <el-row>
-            <el-col :span="6"><p style="color: #409EFD; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>知识点</p></el-col>
-            <el-col :span="6"><p style="color: #EDB664; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>前驱后继</p></el-col>
-            <el-col :span="6"><p style="color: #9ECCAB; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>共同学习</p></el-col>
-            <el-col :span="6"><p style="color: #F1939C; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>层级关系</p></el-col>
-          </el-row>
+
+      </el-card>
+
+      <el-col>
+        <div class="graph" id="graph_container">
           <Graph
             :node="node"
             :neighbors_groups="neighbors_groups"
             :neighbors_hierarchy="neighbors_hierarchy"
             :inward_arrow="inward_arrow"
             :outward_arrow="outward_arrow"
+            :undirected_len="undirected_len"
             :superior_layer="superior_layer"
             :inferior_layer="inferior_layer"
             :selected_type="checkList"
-            @Research="Research"
-          ></Graph>
+            @search="search"
+            />
         </div>
       </el-col>
     </el-row>
@@ -275,15 +141,27 @@
 </template>
 
 <script>
+import $ from 'jquery'
+import * as d3 from "d3";
+import PreSuc from "./components/PreSuc.vue";
+import CoStudy from "./components/CoStudy.vue";
+import Tree from "./components/Tree.vue";
 import Graph from "./components/Graph.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
+import screenfull from 'screenfull'
+
 export default {
-  components: { Graph, ComplexInput },
+  components: {
+    Graph,
+    ComplexInput,PreSuc,CoStudy,Tree },
   name: "KU",
   data() {
     return {
+      activeName:"presuc",
       ku_name: "",
       ku_type: "kp2.0",
+      fullEl: document.getElementById(this.activeName+'_container'),
+      isFullscreen: false,
       // 节点。邻居节点，层级结构
       node: {},
       neighbors_groups: {},
@@ -293,7 +171,8 @@ export default {
       checkList: ["前驱后继", "共同学习", "层级结构"],
       // 前驱后继，共同学习，向内箭头，向外箭头
       directed_len: "",
-      undirected_len: "",
+      // undirected_len: "",
+      undirected_len: 0,
       inward_arrow: 0,
       outward_arrow: 0,
       // 上级层，下级层
@@ -336,12 +215,17 @@ export default {
     };
   },
   mounted() {
+    $('.panel-btn').hide()
     this.root_view = sessionStorage.user === "root";
+    console.log(this.root_view);
     if (this.$route.params.name) {
       this.ku_name = this.$route.params.name;
       this.submit(this.ku_name);
     }
     this.ToTop();
+  },
+  beforeDestroy() {
+    this.destroyFullScreen()
   },
   watch: {
     sour() {
@@ -352,6 +236,58 @@ export default {
     }
   },
   methods: {
+    openPanel() {
+      $('.box-card.left').animate({
+        left: '0%',
+        opacity: 1
+      },'easeInOutExpo')
+      $('#openBtn').hide()
+      $('#closeBtn').show()
+
+      // $('.box-card.left').css('display','block')
+    },
+    closePanel(){
+      $('.box-card.left').animate({
+        left: '-50%',
+        opacity: 0,
+      }, 'easeInOutExpo')
+      $('#openBtn').show()
+      $('#closeBtn').hide()
+      // setTimeout(function(){ $('.box-card.left').css('display','none') }, 1000);
+    },
+    handleSwitchTabs(){
+      this.key1+=3
+    },
+    handleFullScreen() {
+      this.fullEl = document.getElementById(this.activeName+'_container');
+      if (!screenfull.enabled) {
+        this.$message({
+          message: 'you browser can not work',
+          type: 'warning'
+        })
+        return false
+      }
+      if (this.fullEl) {
+        screenfull.toggle(this.fullEl)
+      } else {
+        screenfull.toggle()
+      }
+    },
+    changeFullScreen() {
+      this.isFullscreen = screenfull.isFullscreen
+      this.$emit('changeFullScreen', this.isFullscreen)
+    },
+    initFullScreen() {
+      // this.fullEl = document.getElementById(this.activeName);
+      if (screenfull.enabled) {
+        screenfull.on('change', this.changeFullScreen)
+      }
+    },
+    destroyFullScreen() {
+      if (screenfull.enabled) {
+        screenfull.off('change', this.changeFullScreen)
+      }
+    },
     changeInput() {
       this.simpleInput = !this.simpleInput;
     },
@@ -359,6 +295,9 @@ export default {
       window.scrollTo(0,0);
     },
     Research(val){
+      this.submit(val);
+    },
+    search(val){
       this.submit(val);
     },
     ComplexInputFullChange(val){
@@ -390,6 +329,8 @@ export default {
       this.url =
         "https://baike.baidu.com/search/word?word=" + encodeURI(this.ku_name);
       this.loading = true;
+      d3.selectAll("svg>*").remove();
+
       this.$http
         .post(
           this.backendIP + "/api/ku",
@@ -406,12 +347,15 @@ export default {
             this.loading = false;
             alert("输入知识点不存在！");
           } else {
+            this.openPanel();
+            this.initFullScreen();
+            this.activeName="presuc"
             this.node = data.data.node;
             this.neighbors_groups = data.data.neighbors_groups;
             this.neighbors_hierarchy = data.data.neighbors_hierarchy;
-            for(var ind = 0; ind < this.neighbors_hierarchy.length; ind++){
-              if(this.neighbors_hierarchy[ind] == this.node.name){
-                this.neighbors_hierarchy[ind] = this.neighbors_hierarchy[ind] + " "
+            for(let i = 0; i < this.neighbors_hierarchy.length; i++){
+              if(this.neighbors_hierarchy[i] == this.node.name){
+                this.neighbors_hierarchy[i] = this.neighbors_hierarchy[i] + " "
               }
             }
             this.inward_arrow = data.data.pre_len;
@@ -434,7 +378,8 @@ export default {
         )
         .then(function(data) {
           this.directed_len = "(" + (data.data.pre_len + data.data.suc_len) + ")";
-          this.undirected_len = "(" + data.data.undirected_len + ")";
+          // this.undirected_len = "(" + data.data.undirected_len + ")";
+          this.undirected_len =  data.data.undirected_len;
           this.layerLength = "(" + (data.data.sup_len + data.data.inf_len) + ")";
         });
     },
@@ -460,6 +405,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.zoom-in-btn{
+  position:absolute;
+  top:-10px;
+  right:0px;
+  color:#ADADAD;
+  font-size: 18px;
+  display: block;
+}
 .ku {
   // background: url("../assets/sub_bg.png") repeat;
   background-size: 100%;
@@ -474,18 +427,69 @@ export default {
   margin-top: 15px;
   margin-left: 20px;
 }
-.result {
-  border: 1px solid #fff;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
+
+.panel-body{
+  position:relative;
+  padding-top: 5vh;
+  margin-left: 5vw;
+  margin-right: 5vw;
+}
+
+.box-card {
+    position: absolute;
+    margin-left: 15px;
+    background: rgba(248,251, 255, .7);
+    width: 37.5%;
+    height: 850px;
+    // z-index: 10;
+    left: -3%;
+    opacity:0;
+}
+.panel-btn{
+  position: absolute;
+  top:0;
+  font-size: 30px;
+  font-weight:bold;
+  color: #bbb;
+}
+#openBtn{
+  top:5vh;
+  left:15px;
+}
+#closeBtn{
+  right:0;
+}
+.container {
+  display: flex;
+  width:100%;
+  flex-flow: column;
   padding-left: 5%;
   padding-right: 5%;
   padding-top: 5%;
-  height: 850px;
+  height: 800px;
+}
+.intro{
+  max-height:40%;
+}
+.intro >.content{
+  max-height:180px;
+  overflow-y: scroll;
+}
+.detail{
+  flex:1;
+}
+.detail .el-tab-pane{
+  overflow-y: scroll;
+}
+.svg-container{
+  height:380px;
+}
+.svg-container:fullscreen{
+  height: 100%;
   background-color: #fff;
-  // border-right: 14px solid #fff;
 }
 .graph {
+  // position: relative;
   border: 1px solid #fff;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 3px;
@@ -520,6 +524,8 @@ export default {
 }
 .el-col {
   border-radius: 4px;
+}
+.el-tabs__nav.is-top{
 }
 </style>
 
@@ -594,11 +600,10 @@ export default {
   padding-top: 12px;
 }
 .SearchArea{
-  margin-left: 5vw; 
+  margin-left: 5vw;
   border: 1px solid Silver;
-  width: 60%; 
+  width: 60%;
   border-radius: 18px;
-  box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
   -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
 }
 </style>
