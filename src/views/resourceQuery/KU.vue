@@ -215,6 +215,7 @@ export default {
     };
   },
   mounted() {
+    $('.panel-btn').hide()
     this.root_view = sessionStorage.user === "root";
     console.log(this.root_view);
     if (this.$route.params.name) {
@@ -446,12 +447,13 @@ export default {
 }
 .panel-btn{
   position: absolute;
-  top:50%;
+  top:0;
   font-size: 30px;
   font-weight:bold;
   color: #bbb;
 }
 #openBtn{
+  top:30px;
   left:15px;
 }
 #closeBtn{
