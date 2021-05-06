@@ -1,6 +1,11 @@
 <!-- 作为递归自身的节点 -->
 <template>
-    <div style="margin: 0px 10vw 10px 10vw" ref="QuestionInfo">
+    <div 
+        style="margin: 0px 10vw 10px 10vw" 
+        ref="QuestionInfo"
+        v-loading="transing"
+        element-loading-text="转换中，请等待"
+        element-loading-spinner="el-icon-loading">
         <el-row style="padding-top: 15px">
             <label style="font-size: 2rem">试题分析报告</label>
         </el-row>
@@ -52,12 +57,12 @@
                 
             </el-col>
             <el-row v-if="Expand_Ana">
-                <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+                <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(0)" :class="Get_Part_Row_Style(0)">
                     <el-col :span="12" style="text-align: left">
                         基本信息
                     </el-col>
                 </el-row>
-                <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px">
+                <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px" :class="Get_Expand_Or_Collapse(0)">
                     <el-col>
                         <!-- 属性分析表格 -->
                         <!-- <el-row type="flex" justify="start" style="margin: 10px 0px 10px 0px">
@@ -208,12 +213,12 @@
                         </el-row>
                     </el-col>
                 </el-row>
-                <el-row type="flex" justify="start" class="Part_Row_Style_Expand">
+                <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(1)" :class="Get_Part_Row_Style(1)">
                     <el-col :span="12" style="text-align: left">
                         相似试题
                     </el-col>
                 </el-row>
-                <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px; margin-bottom: 30px">
+                <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px; margin-bottom: 30px" :class="Get_Expand_Or_Collapse(1)">
                     <el-col :span="12">
                         <el-row type="flex" justify="start" style="line-height: 30px;">
                             <label>按当前相关性依据排序的情况下，与本题关联程度较高的&nbsp;&nbsp;{{Similar_Question_List.length}}&nbsp;&nbsp;道试题如下：</label>
@@ -238,6 +243,7 @@
                         v-for="(Question, Question_Index) in Similar_Question_List" 
                         :key="Question_Index" 
                         style="margin-bottom: 50px"
+                        :class="Get_Expand_Or_Collapse(1)"
                         >
                         <el-col :span="24" class="quesCard">
                             <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
@@ -261,8 +267,8 @@
                                 <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
                                     学段：{{Question.period}}
                                 </el-col>
-                                <el-col :span="2" :offset="10" style="line-height: 40px">
-                                    <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">详情</el-button>
+                                <el-col :span="4" :offset="8" style="line-height: 40px">
+                                    <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">查看答案与解析</el-button>
                                 </el-col>
                                 <el-col :span="3" style="line-height: 40px">
                                     <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id, Question.database)">查看分析报告</el-button>
@@ -406,6 +412,8 @@ export default {
   },
   data(){
     return {
+        // 是否正在转换PDF
+        transing: false,
         // 展开试题分析的部分
       Expand_Ana: true,
       defaultProps: {
@@ -432,10 +440,27 @@ export default {
         Expand_List: [],
         // 是否正在加载中
         loading: true,
-        Question: this.Ques
+        Question: this.Ques,
+        Part_Expand: [true, false]
     }         
   },
   methods: {
+        // 展开下级展示区域
+        Expand_Or_Collapse(index){
+            this.Part_Expand.splice(index, 1, !this.Part_Expand[index])
+        },
+        // 修改下级展示区域的Style
+        Get_Expand_Or_Collapse(index){
+            if(!this.Part_Expand[index])
+                return "Hidden"
+            return ""
+        },
+        // 返回功能条的样式
+        Get_Part_Row_Style(index){
+            if(this.Part_Expand[index])
+                return "Part_Row_Style_Expand"
+            return "Part_Row_Style_Collapse"
+        },
     Init(){
       window.scrollTo(0,0);
     },
@@ -559,7 +584,7 @@ export default {
     },
     PDF_Switch(){
         window.scrollTo(0, 0);
-        this.Part_Expand = [true, true, true, true];
+        this.Part_Expand = [true, true];
         this.transing = true;
         // this.PDF_Download("Paper_Title");
         // this.PDF_Download("Paper_Total");
@@ -630,16 +655,26 @@ export default {
   margin-bottom: 30px;
   padding: 10px 20px
 }
+.Part_Row_Style_Collapse{
+    border-left: 15px solid #409EFD; 
+    background: 	#F8FBFF; 
+    padding-left: 30px;
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    cursor: pointer;
+}
 .Part_Row_Style_Expand{
     border-left: 15px solid #409EFD; 
-    background: 	transparent; 
-    width: 100%; 
+    background: 	white; 
     padding-left: 30px;
     font-size: 1.5rem;
     font-weight: bold;
-    margin: 20px 0px 10px 0px;
     padding-top: 5px;
     padding-bottom: 5px;
+    cursor: pointer;
 }
 .kp_badge {
   padding-right: 8px;
