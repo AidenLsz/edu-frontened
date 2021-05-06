@@ -12,11 +12,11 @@
 
       <el-row style="padding: 1vh 5vw 0 5vw">
         <el-col :span="11">
-          <ComplexInput @Update_CI="UCI_Left" @Update_Image="UCII_Left" @Full_Change="FullChange_L" ref="CI_Left" :class="OpacityCheck(0)"></ComplexInput>
+          <ComplexInput @Update_CI="UCI_Left" @Update_Image="UCII_Left" @Full_Change="FullChange_L" :Mathdown_Special="'_0'" ref="CI_Left" :class="OpacityCheck(0)"></ComplexInput>
         </el-col>
 
         <el-col :span="11" :offset="2">
-          <ComplexInput @Update_CI="UCI_Right" @Update_Image="UCII_Right" @Full_Change="FullChange_R" ref="CI_Right" :class="OpacityCheck(1)"></ComplexInput>
+          <ComplexInput @Update_CI="UCI_Right" @Update_Image="UCII_Right" @Full_Change="FullChange_R" :Mathdown_Special="'_1'" ref="CI_Right" :class="OpacityCheck(1)"></ComplexInput>
         </el-col>
       </el-row>
 

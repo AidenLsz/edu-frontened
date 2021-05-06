@@ -638,7 +638,7 @@ The line of README
                             size="mini" 
                             v-if="Part_Common_List_Index('常用运算符', (Outer - 1) * 24 + (index - 1))" 
                             @click="Add_Part_Common_List('常用运算符', (Outer - 1) * 24 + (index - 1))">
-                            <Mathdown :name="'Common_Binary_Operator_List_' + ((Outer - 1) * 24 + index)" :content="Part_Common_List.常用运算符[(Outer - 1) * 24 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            <Mathdown :name="'Common_Binary_Operator_List_' + ((Outer - 1) * 24 + index) + Mathdown_Name_Special" :content="Part_Common_List.常用运算符[(Outer - 1) * 24 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                         </el-col>
@@ -656,7 +656,7 @@ The line of README
                             size="mini" 
                             v-if="Part_Common_List_Index('二元运算符', (Outer - 1) * 24 + (index - 1))" 
                             @click="Add_Part_Common_List('二元运算符', (Outer - 1) * 24 + (index - 1))">
-                            <Mathdown :name="'Common_Relational_Operator_List_' + ((Outer - 1) * 24 + index)" :content="Part_Common_List.二元运算符[(Outer - 1) * 24 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            <Mathdown :name="'Common_Relational_Operator_List_' + ((Outer - 1) * 24 + index) + Mathdown_Name_Special" :content="Part_Common_List.二元运算符[(Outer - 1) * 24 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                         </el-col>
@@ -684,7 +684,7 @@ The line of README
                               size="mini" 
                               v-if="Part_Common_List_Index('分式', (Outer - 1) * 6 + (index - 1))" 
                               @click="Add_Part_Common_List('分式', (Outer - 1) * 6 + (index - 1))">
-                              <Mathdown :name="'Common_Fractional_Operator_List_' + ((Outer - 1) * 6 + index)" :content="Part_Common_List.分式[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                              <Mathdown :name="'Common_Fractional_Operator_List_' + ((Outer - 1) * 6 + index) + Mathdown_Name_Special" :content="Part_Common_List.分式[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                             </button>
                             <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                           </el-row>
@@ -704,7 +704,7 @@ The line of README
                               size="mini" 
                               v-if="Part_Common_List_Index('指数', (Outer - 1) * 6 + (index - 1))" 
                               @click="Add_Part_Common_List('指数', (Outer - 1) * 6 + (index - 1))">
-                              <Mathdown :name="'Common_Exponential_Operator_List_' + ((Outer - 1) * 6 + index)" :content="Part_Common_List.指数[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                              <Mathdown :name="'Common_Exponential_Operator_List_' + ((Outer - 1) * 6 + index) + Mathdown_Name_Special" :content="Part_Common_List.指数[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                             </button>
                             <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                           </el-row>
@@ -731,7 +731,7 @@ The line of README
                             size="mini" 
                             v-if="(Outer - 1) * 6 + (index - 1) < Part_Subscript_List.length" 
                             @click="Add(Part_Subscript_List[(Outer - 1) * 6 + (index - 1)])">
-                            <Mathdown :name="'Subscript_List_' + ((Outer - 1) * 6 + index)" :content="Part_Subscript_List[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            <Mathdown :name="'Subscript_List_' + ((Outer - 1) * 6 + index) + Mathdown_Name_Special" :content="Part_Subscript_List[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                         </el-row>
@@ -757,7 +757,7 @@ The line of README
                             size="mini" 
                             v-if="(Outer - 1) * 12 + (index - 1) < Part_Set_List.length" 
                             @click="Add(Part_Set_List[(Outer - 1) * 12 + (index - 1)])">
-                            <Mathdown :name="'Set_Operator_List_' + ((Outer - 1) * 12 + index)" :content="Part_Set_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            <Mathdown :name="'Set_Operator_List_' + ((Outer - 1) * 12 + index) + Mathdown_Name_Special" :content="Part_Set_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                         </el-row>
@@ -783,7 +783,7 @@ The line of README
                             size="mini" 
                             v-if="(Outer - 1) * 12 + (index - 1) < Part_Logical_List.length" 
                             @click="Add(Part_Logical_List[(Outer - 1) * 12 + (index - 1)])">
-                            <Mathdown :name="'Set_Logical_List_' + ((Outer - 1) * 12 + index)" :content="Part_Logical_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            <Mathdown :name="'Set_Logical_List_' + ((Outer - 1) * 12 + index) + Mathdown_Name_Special" :content="Part_Logical_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                         </el-row>
@@ -809,7 +809,7 @@ The line of README
                             size="mini" 
                             v-if="(Outer - 1) * 12 + (index - 1) < Part_Parentheses_List.length && Part_Parentheses_List[(Outer - 1) * 12 + (index - 1)] != ''" 
                             @click="Add(Part_Parentheses_List[(Outer - 1) * 12 + (index - 1)])">
-                            <Mathdown :name="'Parentheses_List_' + ((Outer - 1) * 12 + index)" :content="Part_Parentheses_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            <Mathdown :name="'Parentheses_List_' + ((Outer - 1) * 12 + index) + Mathdown_Name_Special" :content="Part_Parentheses_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 50px; height: 75px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                         </el-row>
@@ -835,7 +835,7 @@ The line of README
                             size="mini" 
                             v-if="(Outer - 1) * 12 + (index - 1) < Part_Arrow_List.length && Part_Arrow_List[(Outer - 1) * 12 + (index - 1)] != ''" 
                             @click="Add(Part_Arrow_List[(Outer - 1) * 12 + (index - 1)])">
-                            <Mathdown :name="'Arrow_List_' + ((Outer - 1) * 12 + index)" :content="Part_Arrow_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            <Mathdown :name="'Arrow_List_' + ((Outer - 1) * 12 + index) + Mathdown_Name_Special" :content="Part_Arrow_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                         </el-row>
@@ -861,7 +861,7 @@ The line of README
                             size="mini" 
                             v-if="(Outer - 1) * 8 + (index - 1) < Part_Calculus_List.length && Part_Calculus_List[(Outer - 1) * 8 + (index - 1)] != ''" 
                             @click="Add(Part_Calculus_List[(Outer - 1) * 8 + (index - 1)])">
-                            <Mathdown :name="'Calculus_List_' + ((Outer - 1) * 8 + index)" :content="Part_Calculus_List[(Outer - 1) * 8 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            <Mathdown :name="'Calculus_List_' + ((Outer - 1) * 8 + index) + Mathdown_Name_Special" :content="Part_Calculus_List[(Outer - 1) * 8 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 75px; height: 75px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                         </el-row>
@@ -887,7 +887,7 @@ The line of README
                             size="mini" 
                             v-if="(Outer - 1) * 6 + (index - 1) < Part_Triangle_List.length && Part_Triangle_List[(Outer - 1) * 6 + (index - 1)] != ''" 
                             @click="Add(Part_Triangle_List[(Outer - 1) * 6 + (index - 1)])">
-                            <Mathdown :name="'Triangle_List_' + ((Outer - 1) * 6 + index)" :content="Part_Triangle_List[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            <Mathdown :name="'Triangle_List_' + ((Outer - 1) * 6 + index) + Mathdown_Name_Special" :content="Part_Triangle_List[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                         </el-row>
@@ -913,7 +913,7 @@ The line of README
                             size="mini" 
                             v-if="(Outer - 1) * 12 + (index - 1) < Part_Geometry_List.length && Part_Geometry_List[(Outer - 1) * 12 + (index - 1)] != ''" 
                             @click="Add(Part_Geometry_List[(Outer - 1) * 12 + (index - 1)])">
-                            <Mathdown :name="'Geometry_List_' + ((Outer - 1) * 12 + index)" :content="Part_Geometry_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            <Mathdown :name="'Geometry_List_' + ((Outer - 1) * 12 + index) + Mathdown_Name_Special" :content="Part_Geometry_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                         </el-row>
@@ -939,7 +939,7 @@ The line of README
                             size="mini" 
                             v-if="(Outer - 1) * 4 + (index - 1) < Part_Matrix_List.length && Part_Matrix_List[(Outer - 1) * 4 + (index - 1)] != ''" 
                             @click="Add(Part_Matrix_List[(Outer - 1) * 4 + (index - 1)])">
-                            <Mathdown :name="'Matrix_List_' + ((Outer - 1) * 4 + index)" :content="Part_Matrix_List[(Outer - 1) * 4 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
+                            <Mathdown :name="'Matrix_List_' + ((Outer - 1) * 4 + index) + Mathdown_Name_Special" :content="Part_Matrix_List[(Outer - 1) * 4 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
                           <div style="width: 150px; height: 100px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</div>
                         </el-row>
@@ -961,7 +961,7 @@ The line of README
           <el-row>
             <el-col v-for="(count, index) in [0,1,2,3,4,5,6]" :key="index" :span="3">
               <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Symbol_Index(index)" @click="Add_Symbol(index)">
-                <Mathdown :name="'Common_Symbol_List_' + index" :content="Get_Symbol(index)" style="margin-top: -3px; margin-left: -2px"></Mathdown>
+                <Mathdown :name="'Common_Symbol_List_' + index + Mathdown_Name_Special" :content="Get_Symbol(index)" style="margin-top: -3px; margin-left: -2px"></Mathdown>
               </button>
               <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</button>
             </el-col>
@@ -975,7 +975,7 @@ The line of README
           <el-row style="margin-top: -20px">
             <el-col v-for="(count, index) in [0,1,2,3,4,5,6]" :key="index" :span="3">
               <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Symbol_Index(index+7)" @click="Add_Symbol(index+7)">
-                <Mathdown :name="'Common_Symbol_List_' + (index + 7)" :content="Get_Symbol(index+7)" style="margin-top: -3px; margin-left: -2px"></Mathdown>
+                <Mathdown :name="'Common_Symbol_List_' + (index + 7) + Mathdown_Name_Special" :content="Get_Symbol(index+7)" style="margin-top: -3px; margin-left: -2px"></Mathdown>
               </button>
               <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</button>
             </el-col>
@@ -989,7 +989,7 @@ The line of README
           <el-row style="margin-top: -20px">
             <el-col v-for="(count, index) in [0,1,2,3,4,5,6]" :key="index" :span="3">
               <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" size="mini" v-if="Symbol_Index(index+14)" @click="Add_Symbol(index+14)">
-                <Mathdown :name="'Common_Symbol_List_' + (index + 14)" :content="Get_Symbol(index+14)" style="margin-top: -3px; margin-left: -2px"></Mathdown>
+                <Mathdown :name="'Common_Symbol_List_' + (index + 14) + Mathdown_Name_Special" :content="Get_Symbol(index+14)" style="margin-top: -3px; margin-left: -2px"></Mathdown>
               </button>
               <button style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" v-else>&nbsp;</button>
             </el-col>
@@ -1033,6 +1033,10 @@ export default {
     Get_Out_Content: {
       type: String,
       default: ""
+    },
+    Mathdown_Special: {
+      type: String,
+      default: "_0"
     }
   },
   data() {
@@ -1208,7 +1212,8 @@ export default {
                          "$\\begin{matrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{matrix}$",
                          "$\\begin{matrix} 1 & 0 \\\\ 0 & 1 \\end{matrix}$",
                          "$\\begin{matrix} a & b & c \\\\ d & e & f \\end{matrix}$",],
-      Cursor_Pos_Index: 0
+      Cursor_Pos_Index: 0,
+      Mathdown_Name_Special: this.Mathdown_Special
     };
   },
   watch:{
@@ -1305,6 +1310,7 @@ export default {
     Add(con){
       this.content = this.content.substring(0, this.Cursor_Pos_Index) + con + this.content.substring(this.Cursor_Pos_Index);
       this.$message.success("已添加 " + con + " 至内容区。")
+      this.Cursor_Pos_Index = this.Cursor_Pos_Index + con.length;
     },
     Change_Class(status, value){
       this.MESinker = status;
