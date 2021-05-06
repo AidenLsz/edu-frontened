@@ -53,16 +53,15 @@ export function addTooltip(svgContainer,circle){
               .style("text-indent", "2em")
 
           Tooltip.html('<p>'+content+'</p>')
-
+                 .style("left", d3.event.offsetX+25+"px")
+                 .style("top", d3.event.offsetY+"px")
           if(!screenfull.isFullscreen){
-            Tooltip.style("left", d.x+(d3.event.pageX-d.x)*0.6+"px")
-            .style("top", d.y+"px")
+            Tooltip
             .style("width", "150px")
             .style("font-size", "12px")
             .style("line-height", "15px")
           }else{
-            Tooltip.style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY-350) + "px")
+            Tooltip
             .style("width", "250px")
             .style("font-size", "16px")
             .style("line-height", "18px")
