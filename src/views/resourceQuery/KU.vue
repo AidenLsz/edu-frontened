@@ -453,7 +453,7 @@ export default {
   color: #bbb;
 }
 #openBtn{
-  top:45px;
+  top:5vh;
   left:15px;
 }
 #closeBtn{
