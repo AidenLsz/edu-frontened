@@ -4,7 +4,7 @@
   "private": true,
   "description": "A Vue.js project of edu_kg",
   "scripts": {
-    "serve": "vue-cli-service serve --mode test",
+    "serve": "vue-cli-service serve --mode test --hot",
     "build": "vue-cli-service build --mode production",
     "test": "vue-cli-service build --mode test",
     "test:unit": "vue-cli-service test:unit",
