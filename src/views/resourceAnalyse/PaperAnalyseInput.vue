@@ -3410,6 +3410,11 @@ export default {
           emulateJSON: true
         })
         .then(function(data) {
+            if(data.data.Paper_Json.status == 'FAIL'){
+              alert("解析失败，请稍后重新尝试...");
+              this.analysing = false;
+              return 
+            }
             this.analysing = false;
             let Test_Json = data.data.Paper_Json
             sessionStorage.PaperJson = JSON.stringify(Test_Json);
