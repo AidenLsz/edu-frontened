@@ -84,7 +84,7 @@ export default {
   methods:{
     draw_graph(data){
       // let margin = ({ left: 60 ,top: 50, right: 120, bottom:120 })
-      let margin = ({ left: 60 ,top: 15, right: 30, bottom:30 })
+      let margin = ({ left: 60 ,top: 30, right: 30, bottom:30 })
 
       let width = $('#tree').width()
 
@@ -121,7 +121,7 @@ export default {
         .attr('cursor', 'pointer')
         .attr('pointer-events', 'all')
       zoom(svgDOM,svg)
-      let [legend,] = addLegend(svgDOM,5,['current','sup','inf'])
+      let [legend,] = addLegend(svg,5,['current','sup','inf'])
       function update (source) {
         const duration = d3.event && d3.event.altKey ? 2500 : 250
         const nodes = root.descendants().reverse()
@@ -148,7 +148,9 @@ export default {
         legend
         .transition(transition)
         .attr("transform", (d, i) => {
-          return `translate(${width-150},${i * 23+left.x-margin.top})`
+          // return `translate(${width-150},${i * 23+left.x-($('#tree').height()-height)/2})`
+          // ($('#tree').height()-height)
+          return `translate(${width-150},${i * 23-height})`
         })
         // Update the nodes…
         const node = gNode.selectAll('g')
