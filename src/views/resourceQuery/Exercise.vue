@@ -1,5 +1,11 @@
 <template>
-  <div class="exercise" style="margin-bottom: 40px; margin-top: 5vh">
+  <div 
+    class="exercise" 
+    style="margin-bottom: 40px; margin-top: 5vh"
+    v-loading="Question_Analysing"
+    element-loading-text="正在加载分析报告..."
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(211, 211, 211, 0.6)">
     <el-dialog
         :visible.sync="simpleInput" 
         title="LUNA输入助手" 
@@ -17,12 +23,8 @@
         :close-on-click-modal="true">
         <template slot="title"></template>
         <el-row
-          v-loading="Question_Analysing"
-          element-loading-text="正在加载分析报告..."
-          element-loading-spinner="el-icon-loading"
-          element-loading-background="rgba(211, 211, 211, 0.6)"
           style="margin: 0px">
-          <QuestionAnalyse :Ques.sync="analyseData"></QuestionAnalyse>
+          <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
         </el-row>
     </el-dialog>
     <!-- 地址框 -->
@@ -254,55 +256,61 @@ export default {
       Question_Analysing: false,
       // 用于分析显示的题目数据
       analyseData: {
-        "id": "0b1b75ac-3053-45b5-9244-65b0dbb9d9f1",
-        "type": "Question",
-        "level": 2,
-        "stem": "从$\\LUNALaTexPictureID{59dae23f-c8cd-4771-8711-d6a20d1c0118}$名男生和$3$名女生中选出$3$人，分别从事三项不同的工作，若这$3$人中至少有$1$名女生，则选派方案共有(  )种",
-        "options": "['$108$种', '$186$种', '$216$种', '$270$种']",
-        "answer": "$B$",
-        "analysis": "",
-        "difficulty": 0.4020228981971741,
-        "score": 1,
-        "knowledge_points_frontend": {
-          "kp": [
-              "排列、组合与二项式定理",
-              "代数",
-              "计数原理"
-          ],
-          "kp_layer": [
-              {
-                  "label": "代数",
-                  "children": [
-                      {
-                          "label": "不等式",
-                          "children": []
-                      },
-                      {
-                          "label": "计数原理",
-                          "children": [
-                              {
-                                  "label": "排列、组合与二项式定理",
-                                  "children": [
-                                      {
-                                          "label": "排列与组合的简单应用",
-                                          "children": []
-                                      }
-                                  ]
-                              }
-                          ]
-                      }
-                  ]
-              }
-          ],
-          "kp_priority": [
-              "代数",
-              "不等式",
-              "计数原理",
-              "排列、组合与二项式定理",
-              "排列与组合的简单应用"
-          ]
-        }
-      }
+                "analysis": "\u5982\u56fe\uff0c\u505a\u51fa\u7ea6\u675f\u6761\u4ef6$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$\u6240\u8868\u793a\u7684\u53ef\u884c\u57df\u3002\u6613\u5f97A\u7684\u5750\u6807\u4e3a$A(1,0)$\u3002\u5f53\u76ee\u6807\u51fd\u6570\u7ecf\u8fc7A\u70b9\u65f6\uff0cz\u53d6\u5f97\u6700\u5927\u503c\uff0c\u53ef\u5f97$z=x+7 y$\u7684\u6700\u5927\u503c\u4e3a$1+7 \\times 0=1$", 
+                "answer": "1", 
+                "database": "公开题库", 
+                "id": "96ac6512-8aed-11eb-8fbd-b46bfc50aa29", 
+                "options": [], 
+                "period": "高中", 
+                "stem": "若$x,y$满足约束条件$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$，则$z=x+7 y$的最大值为$\\underline{}$", 
+                "subject": "数学", 
+                "type": "Question",
+                "que_type": "其他",
+                "difficulty": 0.2, 
+                "discrimination": 0.3, 
+
+                "quality": 0.6,
+                "knowledge_points_frontend": {
+                    "kp": [
+                        "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212", 
+                        "\u4ee3\u6570", 
+                        "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898", 
+                        "\u4e0d\u7b49\u5f0f"
+                    ], 
+                    "kp_layer": [
+                        {
+                        "children": [
+                            {
+                            "children": [
+                                {
+                                "children": [
+                                    {
+                                    "children": [], 
+                                    "label": "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898"
+                                    }, 
+                                    {
+                                    "children": [], 
+                                    "label": "\u4e8c\u5143\u4e00\u6b21\u4e0d\u7b49\u5f0f\uff08\u7ec4\uff09\u8868\u793a\u7684\u5e73\u9762\u533a\u57df"
+                                    }
+                                ], 
+                                "label": "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212"
+                                }
+                            ], 
+                            "label": "\u4e0d\u7b49\u5f0f"
+                            }
+                        ], 
+                        "label": "\u4ee3\u6570"
+                        }
+                    ], 
+                    "kp_priority": [
+                            "\u4ee3\u6570", 
+                            "\u4e0d\u7b49\u5f0f", 
+                            "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212", 
+                            "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898", 
+                            "\u4e8c\u5143\u4e00\u6b21\u4e0d\u7b49\u5f0f\uff08\u7ec4\uff09\u8868\u793a\u7684\u5e73\u9762\u533a\u57df"
+                    ]
+                    },
+                }
     };
   },
   watch:{
@@ -323,7 +331,6 @@ export default {
     Check_Analyse(ID, DatabaseName){
 
       this.Question_Analysing = true;
-      this.analyseReport = true;
 
       let config = {
           headers: { "Content-Type": "multipart/form-data" }
@@ -345,9 +352,10 @@ export default {
         emulateJSON: true
       })
       .then(function(data) {
-        this.Question_Analysing = false
-        this.analyseData = data.data.que_dic
-        console.log(this.analyseData);
+        console.log("Get Question Analyse Report.")
+        this.analyseData = data.data.que_dic;
+        this.analyseReport = true;
+        this.Question_Analysing = false;
       });    
     },
     ToTop(){
