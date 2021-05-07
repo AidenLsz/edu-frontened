@@ -6,7 +6,7 @@
 import * as d3 from "d3";
 import $ from "jquery";
 import {
-  zoom,color,addTooltip
+  zoom,color,addTooltip,addLegend
 } from './common.js'
 
 export default {
@@ -223,76 +223,24 @@ export default {
       //	filtered types
       var typeFilterList = [];
 
-
-
-
       let _this = this
-      const dataDict = [{
-        name: "前驱节点",
-        value: "0",
-        color: 0,
-        grey:false
-      },
-      {
-        name: "后继节点",
-        value: "5",
-        color: 5,
-        grey:false
-      },
-      {
-        name: "共同学习节点",
-        value: "2",
-        color: 2,
-        grey:false
-      },{
-        name: "知识点",
-        value: "3",
-        color: 3,
-        grey:false
-      },{
-        name: "上级节点",
-        value: "1",
-        color: 1,
-        grey:false
-      },{
-        name: "下级节点",
-        value: "4",
-        color: 4,
-        grey:false
-      }]
-      var legend = svg.selectAll("legend")
-        .data(dataDict)
-        .enter().append("g")
-        .attr("transform", (d, i) => `translate(${width - 120},${i * 30+80})`)
-        .on("click",function(d){
-            d.grey=!d.grey
-            var id = d.value;
-            if (typeFilterList.includes(id)) {
-              typeFilterList.splice(typeFilterList.indexOf(id), 1)
-            } else {
-              typeFilterList.push(id);
-            }
-            filter();
-            update();
-        });
-      let legendCircle;
-      legendCircle = legend.append("circle")
-        .attr("cx", 0)
-        .attr("cy", 0)
-        .attr("r", radius)
-        .attr("stroke", "black")
-        .attr("fill", (d)=>{
-          if(d.grey){
-            return "grey"
-          }
-          return color(d.color)
-        })
+      var [legend,legendCircle] =addLegend(svg,radius,['current','pre','suc','costudy','sup','inf'])
+      legend.attr("transform", (d, i) => `translate(${width-120},${i * 30+80})`)
 
-      legend.append("text")
-        .attr("x", 15)
-        .attr("y", 5)
-        .style("font-family", "Trebuchet MS")
-        .text(d => d.name);
+      legend.on("click",function(d){
+          if (d.value=="3") {
+            return;
+          }
+          d.grey=!d.grey
+          var id = d.value;
+          if (typeFilterList.includes(id)) {
+            typeFilterList.splice(typeFilterList.indexOf(id), 1)
+          } else {
+            typeFilterList.push(id);
+          }
+          filter();
+          update();
+      });
       update(true);
 
       //	general update pattern for updating the graph
@@ -303,7 +251,7 @@ export default {
             if(d.grey){
               return "grey"
             }
-            return color(d.color)
+            return d.color
           })
         }
 
@@ -321,7 +269,7 @@ export default {
           //	ENTER
           circle = node.append('circle')
             .attr('r', 5)
-            .attr("stroke", "black")
+            // .attr("stroke", "black")
             .attr('fill', function(d) {
               return color(d.community)
             })
@@ -355,7 +303,7 @@ export default {
           //	ENTER
           circle = newNode.append('circle')
             .attr('r', 5)
-            .attr("stroke", "black")
+            // .attr("stroke", "black")
             .attr('fill', function(d) {
               return color(d.community)
             })
@@ -393,7 +341,7 @@ export default {
           .attr("stroke-opacity", 0.4)
           .attr('stroke-width', 1)
           .attr("marker-end", (d) => {
-            return (d.sourceGroup == "0" || d.targetGroup == "5") ? "url(#arrow)":"none"
+            return (d.targetGroup != "2") ? "url(#arrow)":"none"
           })
         svg.append("defs").append("marker")
           .attr("id", "arrow")
