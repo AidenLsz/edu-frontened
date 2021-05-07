@@ -50,12 +50,16 @@
     </el-row>
 
     <el-row class="panel-body" v-loading="loading" style="" v-if="FullChange">
-      <div class="panel-btn" id="openBtn" @click="openPanel()">
+      <!-- <div class="panel-btn" id="openBtn" @click="openPanel()">
         <i class="el-icon-arrow-right"></i>
+      </div> -->
+      <div class="tab panel-btn" id="openBtn" @click="openPanel()">
+            <span>简介</span>
+          <div class="arrow"></div>
       </div>
       <el-card class="box-card left">
         <div class="panel-btn" id="closeBtn" @click="closePanel()">
-          <i class="el-icon-arrow-left"></i>
+          <i class="el-icon-close"></i>
         </div>
         <div class="container">
           <div class="intro">
@@ -122,6 +126,13 @@
 
       <el-col>
         <div class="graph" id="graph_container">
+          <!-- <el-row>
+            <el-col :span="6"><p style="color: #409EFD; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>知识点</p></el-col>
+            <el-col :span="6"><p style="color: #EDB664; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>前驱后继</p></el-col>
+            <el-col :span="6"><p style="color: #9ECCAB; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>共同学习</p></el-col>
+            <el-col :span="6"><p style="color: #F1939C; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>层级关系</p></el-col>
+          </el-row> -->
+
           <Graph
             :node="node"
             :neighbors_groups="neighbors_groups"
@@ -454,11 +465,36 @@ export default {
 }
 #openBtn{
   top:5vh;
-  left:15px;
+  // left:15px;
 }
 #closeBtn{
   right:0;
 }
+.tab
+{
+    position: absolute;
+    width: 40px;
+    height: 100px;
+    border-radius: 0px 10px 10px 0px;
+    background-color: #eef1f7;
+    cursor:default;
+    span{
+      line-height: 30px;
+      font-size:22px;
+      color: #909194;
+    }
+    .arrow
+    {
+      border-color: #eef1f7 transparent transparent #eef1f7;
+      border-style: solid;
+      border-width: 20px 20px 20px 20px;
+      height:0;
+      width:0;
+      position:absolute;
+      bottom:-33.5px;
+    }
+}
+
 .container {
   display: flex;
   width:100%;
