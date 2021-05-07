@@ -127,7 +127,6 @@ export function addLegend(svg, radius, legendArray) {
       data.push(dataDict[d])
     }
   }
-  console.log(data);
   var legend = svg.selectAll("legend")
     .data(data)
     .enter().append("g")
