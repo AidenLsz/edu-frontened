@@ -1,5 +1,78 @@
 <template>
   <div style="margin-top: 5vh">
+    <!-- 数学试题手动切分用的对话框 -->
+    <el-dialog
+      :visible.sync="userCutMath" 
+      title="数学试题手动调整切分" 
+      width="90%" 
+      @close="User_Cut_Math_Close()"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false">
+      <el-row>
+        <el-col v-if="complex_Input">
+            <el-row>
+                <label>复杂输入框，请在需要时自行复制至目标输入框</label>
+            </el-row>
+            <ComplexInput></ComplexInput>
+            <el-row>
+                <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
+            </el-row>
+        </el-col>
+        <el-col v-if="!complex_Input">
+            <el-row>
+                <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
+            </el-row>
+        </el-col>
+      </el-row>
+      <el-divider></el-divider>
+      <el-row style="width: 85%; margin-left: 6.75vw">
+        <el-row v-for="(Question, index) in userCutTestData" :key="index" style="margin-bottom: 5vh; border: 2px dashed black; padding: 10px 20px; background: rgba(0,255,255,0.04)">
+          <el-row type="flex" justify="center">
+            <el-button type="text" size="medium" :disabled="index == 0" @click="Math_Merge_To_Front(index)">向前合并</el-button>
+          </el-row>
+          <el-row>
+            <el-col :span="18">
+              <el-row type="flex" justify="start" v-for="(Stem, sindex) in Question.Stem" :key="index + '_Q_Stem_' + sindex">
+                <el-col :span="18">
+                  <el-row type="flex" justify="start">
+                    <Mathdown :content="Stem" :name="'Q_' + index + '_Stem_' + sindex"></Mathdown>
+                  </el-row>
+                </el-col>
+                <el-col :span="2"><el-button type="text" size="mini" :disabled="sindex == 0" @click="Math_Front_Cut(index, sindex)">前切</el-button></el-col>
+                <el-col :span="2"><el-button type="text" size="mini" :disabled="sindex == Question.Stem.length - 1" @click="Math_Back_Cut(index, sindex)">后切</el-button></el-col>
+              </el-row>
+            </el-col>
+            <el-col :span="6">
+              <el-row type="flex" justify="start" style="margin-bottom: 2vh">
+                <span>正确答案：</span>
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-bottom: 2vh">
+                <el-input
+                  type="textarea"
+                  :rows="2"
+                  :placeholder="'在此输入题目' + (index+1) + '的正确答案（可选）'"
+                  resize="none"
+                  v-model="Question.Answer"></el-input>
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-bottom: 2vh">
+                <span>解析内容：</span>
+              </el-row>
+              <el-row type="flex" justify="start">
+                <el-input
+                  type="textarea"
+                  :rows="2"
+                  :placeholder="'在此输入题目' + (index+1) + '的解析内容（可选）'"
+                  resize="none"
+                  v-model="Question.Analyse"></el-input>
+              </el-row>
+            </el-col>
+          </el-row>
+          <el-row type="flex" justify="center">
+            <el-button type="text" size="medium" :disabled="index == userCutTestData.length - 1" @click="Math_Merge_To_Back(index)">向后合并</el-button>
+          </el-row>
+        </el-row>
+      </el-row>
+    </el-dialog>
     <!-- 试卷分析路径跳转 -->
     <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
       <el-row>
@@ -94,6 +167,7 @@
         @close="Import_Paper_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
+        <!-- 选择录入样式 -->
         <el-row type="flex" justify="start">
           <label style="font-weight: bold; line-height: 40px; padding-left: 30px">请选择科目信息：</label>
           <el-select
@@ -115,7 +189,7 @@
               </el-select>
           <label style="font-weight: bold; line-height: 40px; padding-left: 30px">*支持doc，docx格式的文件</label>
         </el-row>
-        
+        <!-- 数学试卷录入格式，试题、试题 + 答案、同卷 -->
         <el-row v-if="paper_type == '1'">
           <el-row
             type="flex"
@@ -157,6 +231,7 @@
             </el-col>
           </el-row>
         </el-row>
+        <!-- 试卷导入 -->
         <el-row type="flex" justify="start" v-if="paper_type != ''">
           <el-col :span="12" v-if="paper_type == '0'">
             <el-row type="flex" justify="start" style="line-height: 40px">
@@ -222,6 +297,7 @@
             </el-row>
           </el-col>
         </el-row>
+        <!-- 英语文件导出格式 -->
         <el-row 
           v-if="Type_Visible() && paper_type == '0'"
           style="padding-top: 15px"
@@ -253,9 +329,11 @@
             </el-row>
           </el-col>
         </el-row>
+        <!-- 试卷标题 -->
         <el-row style="margin: 30px 50px 20px 50px">
             {{TestData.title}}
         </el-row>
+        <!-- 二次确认科目和学段 -->
         <el-row style="margin: 0px 30px 0px 30px" type="flex" justify="start" v-if="paper_type == '1' && TestData.doc">
             <el-col :span="4">
               <p style="text-align: left">确认科目：</p>
@@ -283,6 +361,7 @@
               <el-button @click="showHint = true" size="medium" type="danger">非法格式提示</el-button>
             </el-col>
         </el-row>
+        <!-- 英语手动切分 -->
         <el-row v-if="paper_type == '0'">
           <el-col
             v-for="(item, index_out) in file_item"
@@ -374,6 +453,7 @@
             </el-col>
           </el-col>
         </el-row>
+        <!-- 加载等待框 -->
         <el-row 
           v-if="file_item.length == 0 && !(TestData.doc)"
           v-loading="loading"
@@ -383,9 +463,16 @@
           >
 
         </el-row>
-        <el-row style="margin: 30px 50px" v-if="Submit_Show && paper_type == '1'">
-            <el-button @click="Ensure()" type="success" plain>确认入库</el-button>
+        <!-- 顶部确认入库按钮 -->
+        <el-row style="margin: 30px 50px" v-if="paper_type == '1' && TestData.doc">
+          <el-col :span="6" :offset="6">
+            <el-button @click="Ensure()" type="success" plain :disabled="!(Submit_Show)">确认入库</el-button>
+          </el-col>
+          <el-col :span="6">
+            <el-button @click="User_Cut_Math()" type="success" plain>手动切分</el-button>
+          </el-col>
         </el-row>
+        <!-- 因为只有数学才有TestData.doc，所以这里直接遍历就可以了 -->
         <el-row 
           v-loading="analysing"
           element-loading-text="获取分析报告中，请等待..."
@@ -448,7 +535,8 @@
                   <ComplexInput 
                     v-if="Show_ComplexInput(Question_Index, 'stem')"
                     @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Show(Question_Info.question_stem, 'stem', Question_Index).substring(5)"></ComplexInput>
+                    :Get_Out_Content="Get_Question_Show(Question_Info.question_stem, 'stem', Question_Index).substring(5)"
+                    :Mathdown_Special="'Q_' + Question_Index + '_Stem'"></ComplexInput>
                 </el-row>
               </el-col>
             </el-row>
@@ -469,7 +557,8 @@
                   <ComplexInput 
                     v-if="Show_ComplexInput(Question_Index, 'sub_question', Sub_Question_Index)"
                     @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Sub_Question(Sub_Question, Question_Index, Sub_Question_Index)"></ComplexInput>
+                    :Get_Out_Content="Get_Sub_Question(Sub_Question, Question_Index, Sub_Question_Index)"
+                    :Mathdown_Special="'Q_' + Question_Index + '_SQI_' + Sub_Question_Index"></ComplexInput>
                 </el-row>
               </el-col>
             </el-row>
@@ -492,7 +581,8 @@
                   <ComplexInput 
                     v-if="Show_ComplexInput(Question_Index, 'option', Option_Index)"
                     @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Options(Question_Option, Option_Index, Question_Index).substring(4)"></ComplexInput>
+                    :Get_Out_Content="Get_Question_Options(Question_Option, Option_Index, Question_Index).substring(4)"
+                    :Mathdown_Special="'Q_' + Question_Index + '_Option_' + Option_Index"></ComplexInput>
                 </el-row>
               </el-col>
               <!-- <el-row type="flex" justify="start" style="margin: 30px 50px; background: red" v-if="Show_ComplexInput(Question_Index, 'option', Option_Index)">
@@ -517,7 +607,8 @@
                   <ComplexInput 
                     v-if="Show_ComplexInput(Question_Index, 'answer', Answer_Index)"
                     @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Show(Answer, 'answer', Question_Index, Answer_Index).substring(6)"></ComplexInput>
+                    :Get_Out_Content="Get_Question_Show(Answer, 'answer', Question_Index, Answer_Index).substring(6)"
+                    :Mathdown_Special="'Q_' + Question_Index + '_Answer'"></ComplexInput>
                  </el-row>
                </el-col>
             </el-row>
@@ -537,19 +628,25 @@
                   <ComplexInput 
                     v-if="Show_ComplexInput(Question_Index, 'analyse')"
                     @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Show(Question_Info.analysis, 'analyse', Question_Index).substring(5)"></ComplexInput>
+                    :Get_Out_Content="Get_Question_Show(Question_Info.analysis, 'analyse', Question_Index).substring(5)"
+                    :Mathdown_Special="'Q_' + Question_Index + '_Analyse'"></ComplexInput>
                 </el-row>
               </el-col>
             </el-row>
         </el-row>
+        <!-- 英语的文件导出 -->
         <el-row v-if="paper_type == '0'">
           <el-button type="primary" @click="saveFile(format)" :disabled="Download_Show(format)">导出文件</el-button>
         </el-row>
-        <el-row v-if="paper_type == '1'">
-          <el-col :span="4" :offset="4">
+        <!-- 数学的文件导出 -->
+        <el-row v-if="paper_type == '1' && TestData.doc">
+          <el-col :span="4" :offset="2">
             <el-button :disabled="!(Submit_Show)" @click="Ensure()" type="success" plain>
               确认入库
             </el-button>
+          </el-col>
+          <el-col :span="4">
+            <el-button @click="User_Cut_Math()" type="success" plain>手动切分</el-button>
           </el-col>
           <el-col :span="4">
             <el-button :disabled="downloadPaper == ''" @click="saveMathFile(0)" type="primary" plain>
@@ -1164,7 +1261,11 @@ export default {
       // 等待信息
       Waiting_Text: "切分试卷中，请等待......",
       // 跳转至试卷分析的不同地点用的
-      PaperAnalyseSwitchFlag: false
+      PaperAnalyseSwitchFlag: false,
+      // 用户手动切分数学试卷
+      userCutMath: false,
+      // 手动切分时的试卷内容
+      userCutTestData: []
     };
   },
   computed: {
@@ -1274,6 +1375,121 @@ export default {
     this.ToTop();
   },
   methods: {
+    // 向前切分数学试题
+    Math_Front_Cut(index, sindex){
+
+      let Ques = this.userCutTestData[index];
+      let New_Ques = {
+        'Stem': [],
+        'Answer': "",
+        'Analysis': ""
+      }
+
+      for(let i = 0; i < sindex; i++){
+        New_Ques.Stem.push(Ques.Stem[i])
+      }
+      New_Ques.Answer = Ques.Answer
+      New_Ques.Analysis = Ques.Analysis
+
+      Ques.Stem.splice(0, sindex)
+      this.userCutTestData.splice(index, 1, Ques)
+      if(index > 0){
+        this.userCutTestData.splice(index, 0, New_Ques)
+      }else{
+        this.userCutTestData.splice(0, 0, New_Ques)
+      }
+
+
+    },
+    // 向后切分数学试题
+    Math_Back_Cut(index, sindex){
+
+      let Ques = this.userCutTestData[index];
+      let New_Ques = {
+        'Stem': [],
+        'Answer': "",
+        'Analysis': ""
+      }
+
+      for(let i = 0; i <= sindex; i++){
+        New_Ques.Stem.push(Ques.Stem[i])
+      }
+      New_Ques.Answer = Ques.Answer
+      New_Ques.Analysis = Ques.Analysis
+
+      Ques.Stem.splice(0, sindex + 1)
+      this.userCutTestData.splice(index, 1, Ques)
+      this.userCutTestData.splice(index, 0, New_Ques)
+
+    },
+    // 向前合并数学试题
+    Math_Merge_To_Front(index){
+
+      let Ques_A = this.userCutTestData[index-1];
+      let Ques_B = this.userCutTestData[index];
+
+      for(let i = 0; i < Ques_B.Stem.length; i++){
+        Ques_A.Stem.push(Ques_B.Stem[i])
+      }
+
+      if(Ques_A.Answer != Ques_B.Answer){
+        Ques_A.Answer = Ques_A.Answer + "\n" + Ques_B.Answer;
+      }
+      Ques_A.Analysis = Ques_A.Analysis + "\n" + Ques_B.Analysis;
+
+      this.userCutTestData.splice(index, 1);
+    },
+    // 向后合并数学试题
+    Math_Merge_To_Back(index){
+      let Ques_A = this.userCutTestData[index];
+      let Ques_B = this.userCutTestData[index + 1];
+
+      for(let i = 0; i < Ques_B.Stem.length; i++){
+        Ques_A.Stem.push(Ques_B.Stem[i])
+      }
+
+      Ques_B.Stem = Ques_A.Stem;
+
+      if(Ques_B.Answer != Ques_A.Answer){
+        Ques_B.Answer = Ques_A.Answer + "\n" + Ques_B.Answer;
+      }
+      Ques_B.Analysis = Ques_A.Analysis + "\n" + Ques_B.Analysis;
+
+      this.userCutTestData.splice(index, 1);
+    },
+    User_Cut_Math_Close(){
+      this.userCutMath = false;
+    },
+    // 手动切分数学试题
+    User_Cut_Math(){
+      this.importPaperDialog = false;
+      this.userCutTestData = [];
+      for(let Ques_Index = 0; Ques_Index < this.TestData.doc.length; Ques_Index++){
+        let Temp_Item = {
+          'Stem': [],
+          'Answer': "",
+          'Analysis': ""
+        }
+        let Ques_Now = this.TestData.doc[Ques_Index];
+
+        Temp_Item.Stem.push(Ques_Now.question_stem);
+
+        for(let j = 0; j < Ques_Now.sub_questions.length; j++){
+          Temp_Item.Stem.push(Ques_Now.sub_questions[j])
+        }
+
+        for(let j = 0; j < Ques_Now.question_options.length; j++){
+          Temp_Item.Stem.push(Ques_Now.question_options[j])
+        }
+
+        Temp_Item.Answer = Ques_Now.answer.join("\n");
+        Temp_Item.Analysis = Ques_Now.analysis;
+
+        this.userCutTestData.push(Temp_Item);
+
+      }
+      this.userCutMath = true;
+    },
     // 获取登录用户
     Get_Session_User(){
       if(sessionStorage.user){

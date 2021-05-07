@@ -62,7 +62,7 @@
                         基本信息
                     </el-col>
                 </el-row>
-                <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px" :class="Get_Expand_Or_Collapse(0)">
+                <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px; margin-bottom: 20px" :class="Get_Expand_Or_Collapse(0)">
                     <el-col>
                         <!-- 属性分析表格 -->
                         <!-- <el-row type="flex" justify="start" style="margin: 10px 0px 10px 0px">
