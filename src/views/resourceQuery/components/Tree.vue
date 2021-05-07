@@ -137,18 +137,15 @@ export default {
           if (node.x > right.x) right = node
         })
         let margin = ({ left: 60 ,top: 50, right: 120, bottom:120 })
-        const height = right.x - left.x + margin.top + margin.bottom
-        // console.log(width,height);
+        const height = $('#tree').height()
         const transition = svgDOM.transition()
           .duration(duration)
           .attr('viewBox', [-margin.left, left.x - margin.top, width, height])
-          // .attr('viewBox', ['25%', '25%', '100%', 380])
-          // .tween('resize', window.ResizeObserver ? null : () => () => svg.dispatch('toggle'))
+          // .attr('viewBox', [0, 0, width, height])
+          .tween('resize', window.ResizeObserver ? null : () => () => svg.dispatch('toggle'))
         let [legend,] = addLegend(svg,5,['current','sup','inf'])
         legend.transition(transition)
-              .attr("transform", (d, i) => {
-          return `translate(${$('#tree').width()-160},${i * 23-140})`
-        })
+        .attr("transform", (d, i) => `translate(${width-160},${i * 23-90})`)
 
         // Update the nodes…
         const node = gNode.selectAll('g')
