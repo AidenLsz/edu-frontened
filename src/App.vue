@@ -172,6 +172,19 @@
           </el-row>
           <el-row style="margin: 20px 0px">
             <el-col :span="5"  style="text-align-last: justify; display: inline-block; text-align: justify; padding: 1.5vh 1vw 0 0">
+              <span style="font-weight: bold">手机号码</span>
+            </el-col>
+            <el-col :span="18" :offset="1">
+              <el-input
+                type="text"
+                v-model="phone_reg"
+                auto-complete="off"
+                placeholder="请输入您的手机号码"
+              ></el-input>
+            </el-col>
+          </el-row>
+          <!-- <el-row style="margin: 20px 0px">
+            <el-col :span="5"  style="text-align-last: justify; display: inline-block; text-align: justify; padding: 1.5vh 1vw 0 0">
               <span style="font-weight: bold">工作单位</span>
             </el-col>
             <el-col :span="18" :offset="1">
@@ -195,7 +208,7 @@
                 placeholder="请输入您的职业"
               ></el-input>
             </el-col>
-          </el-row>
+          </el-row> -->
           <el-row style="margin: 20px 0px">
             <el-col :span="15">
               <el-input
@@ -220,7 +233,7 @@
         </el-col>
       </el-row>
     </el-dialog>
-    <el-header style="height: 70px;">
+    <el-header style="height: 70px;" v-show="$route.name!='user'">
       <div id="header-sticky" class="sticky-menu">
         <el-row>
           <el-col :span="4" style="padding-top: 20px; padding-left: 30px">
@@ -297,7 +310,7 @@
                       <el-menu-item index="5">
                         <span style="color: red;">管理员页面</span>
                       </el-menu-item>
-                    </router-link>                  
+                    </router-link>
                   </el-submenu>
                 </el-menu>
               </el-col>
@@ -330,7 +343,7 @@
       </div>
     </el-header>
     <el-main>
-      <router-view></router-view>
+      <router-view :key="$route.fullPath"></router-view>
     </el-main>
     <!-- footer -->
     <el-footer>
@@ -363,6 +376,7 @@ export default {
     return {
       root: false, // root用户
       isAdmin: false,
+      isUser:false,
       username: "",
       login_visible: false,
       register_visible: false,
@@ -380,6 +394,7 @@ export default {
       imgCode_reg: "",
       verifyCode_reg: "",
       email_reg: "",
+      phone_reg: "",
       school_reg: "",
       profession_reg: "",
       // activeIndex: 下拉菜单用的
@@ -412,6 +427,9 @@ export default {
     }
   },
   mounted() {
+    if(this.$route.name=='user'){
+        this.isUser=true
+    }
     var user = sessionStorage.getItem("user");
     if (user) {
       this.username = user;
@@ -429,6 +447,14 @@ export default {
     //     $("#header-sticky").addClass("sticky-menu");
     //   }
     // });
+  },
+  updated(){
+    var user = sessionStorage.getItem("user");
+    if (user) {
+      this.username = user;
+    }else{
+      this.username = ""
+    }
   },
   methods: {
     QAS(index){
@@ -512,13 +538,33 @@ export default {
       1)
     },
     register() {
-      // this.$router.push({ path: "/register" });
-      console.log(this.account_reg);
-      console.log(this.pass_reg);
-      console.log(this.pass_reg2);
-      console.log(this.email_reg);
-      console.log(this.school_reg);
-      console.log(this.profession_reg);
+      if (this.verifyCode.toUpperCase() !== this.imgCode.toUpperCase()) {
+        alert("验证码错误");
+      }
+      this.$http
+        .post(
+          this.backendIP + "/api/register",
+          {
+            username: this.account_reg,
+            password: this.pass_reg,
+            phone:this.phone_reg,
+            email:this.email_reg
+          },
+          { emulateJSON: true }
+        )
+        .then(function(data) {
+          if (data.status != 200) { //eslint-disable-line
+            alert("注册失败");
+            return;
+          }
+          sessionStorage.accessToken = data.body.access_token;
+          sessionStorage.user = this.account_reg;
+          sessionStorage.isAdmin = true;
+          this.register_visible = false;
+          this.$router.push("/user");
+          location.reload();
+        })
+
     },
     login_admin() {
       this.$router.push({ path: "/admin" });
@@ -548,37 +594,43 @@ export default {
     },
     // 登录
     login() {
-      if (this.verifyCode.toUpperCase() === this.imgCode.toUpperCase()) {
-        this.$http
-          .post(
-            this.backendIP + "/api/login",
-            {
-              user: this.account,
-              password: this.pass
-            },
-            { emulateJSON: true }
-          )
-          .then(function(data) {
-            console.log(data.data);
-            if (data.data == 1) { //eslint-disable-line
-              sessionStorage.user = this.account;
-              sessionStorage.isAdmin = true;
-              this.login_visible = false;
-              this.$router.push("/");
-              location.reload();
-            } else {
-              alert("登录失败");
-            }
-          });
-      } else {
-        alert("验证码错误");
-      }
-    },
+      // if (this.verifyCode.toUpperCase() !== this.imgCode.toUpperCase()) {
+      //   alert("验证码错误");
+      //   return;
+      // }
+      this.$http
+        .post(
+          this.backendIP + "/api/login",
+          {
+            username: this.account,
+            password: this.pass
+          },
+          {
+            emulateJSON: true,
+          }
+        )
+        .then(function(data) {
+          if (data.status != 200) { //eslint-disable-line
+            alert("登录失败");
+            return;
+          }
+          sessionStorage.accessToken = data.body.access_token;
+          sessionStorage.user = this.account;
+          sessionStorage.isAdmin = true;
+          this.login_visible = false;
+          this.$router.push("/user");
+          location.reload();
+        });
+    }
   },
 };
 </script>
+<style>
+html,body,#app{
+  min-height: 100vh;
+}
+</style>
 <style scoped lang="scss">
-
 .el-header .el-menu--horizontal /deep/ .el-submenu.is-active .el-submenu__title{
   border-bottom: none;
 }
@@ -767,6 +819,7 @@ export default {
 
 </style>
 <style scoped>
+
 .el-dropdown-menu__item:focus,
 .el-dropdown-menu__item:not(.is-disable):hover {
   background-color: #1a2930 !important;
