@@ -8,7 +8,7 @@
 import * as d3 from "d3";
 import d3Tip from "d3-tip";
 import $ from "jquery";
-import {zoom,addTooltip,color} from './common.js'
+import {zoom,addTooltip,color,addLegend} from './common.js'
 d3.tip = d3Tip;
 
 export default {
@@ -177,7 +177,7 @@ export default {
     let _this = this;
     let circle = gs.append('circle')
       .attr('r', 5)
-      .attr("stroke", "black")
+      // .attr("stroke", "black")
       .attr('fill', function (d) {
         return color(d.community)
       })
@@ -201,6 +201,11 @@ export default {
         return d.id
       })
     zoom(svgDOM,svg)
+    // var [legend,legendCircle] =
+    let [legend,] = addLegend(svg,5,['current','pre','suc'])
+    legend.attr("transform", (d, i) => `translate(${width-100},${i * 23+20})`)
+
+
     function tick() {
       link
         .attr('x1', function(d) {
