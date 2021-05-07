@@ -473,25 +473,25 @@ export default {
 .tab
 {
     position: absolute;
-    width: 40px;
-    height: 100px;
+    width: 30px;
+    height: 90px;
     border-radius: 0px 10px 10px 0px;
     background-color: #eef1f7;
     cursor:default;
     span{
-      line-height: 30px;
-      font-size:22px;
+      // line-height: 19px;
+      font-size:18px;
       color: #909194;
     }
     .arrow
     {
       border-color: #eef1f7 transparent transparent #eef1f7;
       border-style: solid;
-      border-width: 20px 20px 20px 20px;
+      border-width: 15px 15px 15px 15px;
       height:0;
       width:0;
       position:absolute;
-      bottom:-33.5px;
+      bottom:-23px;
     }
 }
 
