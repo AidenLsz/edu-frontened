@@ -26,6 +26,9 @@ import PaperAnalyseInput from "@/views/resourceAnalyse/PaperAnalyseInput";
 import QuestionAnalyse from "@/views/resourceAnalyse/QuestionAnalyse";
 import QuestionAnalyseInput from "@/views/resourceAnalyse/QuestionAnalyseInput";
 
+//用户管理页面
+import User from "@/views/user";
+
 // 历史遗留问题类页面，留着防止报错无法回滚
 // import Login from "@/components/Login";
 // import InputMarkedPreview from "@/components/InputMarkedPreview";
@@ -110,6 +113,11 @@ const router = new Router({
       path: "/inputPaper",
       name: "inputPaper",
       component: InputPaper,
+    },
+    {
+      path: "/user",
+      name: "user",
+      component: User,
     },
     // {
     //   path: "/inputMarkedPreview",
