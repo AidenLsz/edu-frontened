@@ -22,7 +22,7 @@
           element-loading-spinner="el-icon-loading"
           element-loading-background="rgba(211, 211, 211, 0.6)"
           style="margin: 0px">
-          <QuestionAnalyse :Question="analyseData"></QuestionAnalyse>
+          <QuestionAnalyse :Ques.sync="analyseData"></QuestionAnalyse>
         </el-row>
     </el-dialog>
     <!-- 地址框 -->
@@ -347,6 +347,7 @@ export default {
       .then(function(data) {
         this.Question_Analysing = false
         this.analyseData = data.data.que_dic
+        console.log(this.analyseData);
       });    
     },
     ToTop(){
