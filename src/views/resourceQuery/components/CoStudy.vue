@@ -6,7 +6,7 @@
 <script>
 import * as d3 from "d3";
 import $ from "jquery";
-import {zoom,addTooltip,color} from './common.js'
+import {zoom,addTooltip,color,addLegend} from './common.js'
 
 export default {
   props: {
@@ -130,7 +130,7 @@ export default {
       let _this=this
       let circle = gs.append('circle')
         .attr('r', 5)
-        .attr("stroke", "black")
+        // .attr("stroke", "black")
         .attr('fill', function (d) {
           return color(d.community)
         })
@@ -139,6 +139,8 @@ export default {
             _this.$emit("search", d.name)
         })
       addTooltip(d3.select('#costudy_container'),circle)
+      let [legend,] = addLegend(svg,5,['current','costudy'])
+      legend.attr("transform", (d, i) => `translate(${width-100},${i * 23+20})`)
       // 文字
       gs.append('text')
         .attr('x', -6)
