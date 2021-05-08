@@ -419,6 +419,17 @@ export default {
                     "mail": "zcy888@mail.ustc.edu.cn",
                     "intro": "小小少年 不会烦恼 快乐多多 BUG少少"
                     }
+                    ,
+                    {
+                    "name": "马爽",
+                    "mail": "mashuang2@mail.ustc.edu.cn",
+                    "intro": "脊索动物门、哺乳纲、灵长目、类人猿超科、人属、人种的一个个体。"
+                    },
+                    {
+                    "name": "高海涵",
+                    "mail": "kd193104@mail.ustc.edu.cn",
+                    "intro": "中科大18级本科，现从事数据挖掘、机器学习和NLP方面的科研"
+                    }
                 ],
                 // 特邀工程师
                 "invitedEngineer": [
@@ -431,9 +442,9 @@ export default {
                     "mail": "hhy1212@mail.ustc.edu.cn",
                     "intro": "一个只想安安静静coding的工具人"
                     },{
-                    "name": "祝冠琪",
-                    "mail": "zgq@mail.ustc.edu.cn",
-                    "intro": "躺平"
+                    "name": "王新",
+                    "mail": "shenai@mail.ustc.edu.cn",
+                    "intro": "中国科学技术大学2018级硕士"
                     }
                 ],
                 // 技术顾问
@@ -492,10 +503,12 @@ export default {
                     "单明晖": "/members/单明晖.jpeg",
                     "唐华楹": "/members/唐华楹.jpeg",
                     "赵辰阳": "/members/赵辰阳.jpeg",
+                    "马爽": "/members/马爽.jpeg",
+                    "高海涵": "/members/高海涵.jpeg",
                     // 特邀工程师
                     "梁先锋": "/members/梁先锋.jpeg",
                     "韩浩宇": "/members/韩浩宇.jpeg",
-                    "祝冠琪": "/members/祝冠琪.jpeg",
+                    "王新": "/members/王新.jpeg",
                     // 技术顾问
                     "阴钰": "/members/阴钰.jpg",
                     "高维博": "/members/高维博.jpeg",
