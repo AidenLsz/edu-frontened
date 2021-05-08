@@ -725,6 +725,19 @@
           </el-row>
         </el-col>
       </el-row>
+      <el-row type="flex" justify="center" style="margin-bottom: 40px">
+        <el-button-group>
+          <el-button round @click="changeCountButton('Question')" ref="countButtonQuestion" :class="Get_Count_Style('Question')">
+            试题资源
+          </el-button>
+          <el-button round @click="changeCountButton('Paper')" ref="countButtonPaper" :class="Get_Count_Style('Paper')">
+            试卷资源
+          </el-button>
+          <el-button round @click="changeCountButton('KU')" ref="countButtonKU" :class="Get_Count_Style('KU')">
+            知识单元
+          </el-button>
+        </el-button-group>
+      </el-row>
       <el-row>
         <div id="data_chart" class="data_chart"></div>
       </el-row>
@@ -737,6 +750,8 @@
 import $ from "jquery";
 
 import * as echarts from 'echarts';
+
+var BarChart;
 
 export default {
   components: { },
@@ -751,8 +766,13 @@ export default {
       Num_Paper: 0,
       Num_Question: 0,
       Num_KU: 0,
+      Paper_Data: [],
+      Question_Data: [],
+      KU_Data: [],
+      Chart_Data: {},
       PaperAnalyseSwitchFlag: false,
-      QuestionAnalyseSwitchFlag: false
+      QuestionAnalyseSwitchFlag: false,
+      Count_Type: "Question"
     };
   },
   mounted() {
@@ -767,6 +787,19 @@ export default {
     this.ToTop();
   },
   methods: {
+    // 调整首页统计表格的内容
+    changeCountButton(type){
+      this.Count_Type = type;
+      this.Redraw_Bar();
+    },
+    Get_Count_Style(type){
+      if(type == this.Count_Type){
+        return "resourceButton"
+      }else{
+        return "sleepingButton"
+      }
+    },
+    // 获取首页统计表格的按钮的样式
     QAS(index){
       if(index == 0){
         this.$router.push({ path: "/QuestionAnalyseInput" });
@@ -832,37 +865,12 @@ export default {
     OpenResources(index){
       this.resourceStatus.splice(index, 1, true);
     },
-    Init_Bar(){
-      
-      let config = {
-          headers: { "Content-Type": "multipart/form-data" }
-      };
-      let param = new FormData();
-
-      this.$http
-      .post(this.backendIP + "/api/count", param, config, {
-        emulateJSON: true
-      })
-      .then(function(data) {
-
-        var Chart_Data = {};
-
-        var Paper_Data = [];
-        var Question_Data = [];
-        var KU_Data = [];
-
-        Chart_Data = data.data;
-
-        this.Num_Paper = Chart_Data.num_paper;
-        this.Num_Question = Chart_Data.num_question;
-        this.Num_KU = Chart_Data.num_knowledge;
-        for(var index = 0; index < Chart_Data.num_sub.length; index ++){
-          Paper_Data.push(Chart_Data.num_sub[index].paper);
-          Question_Data.push(Chart_Data.num_sub[index].question);
-          KU_Data.push(Chart_Data.num_sub[index].knowledge);
-        }
-
-        let myChart = echarts.init(document.getElementById('data_chart'));
+    // 重绘统计表图
+    Redraw_Bar(){
+      if (BarChart != null && BarChart != "" && BarChart != undefined) {
+        BarChart.dispose();//销毁
+      }
+      BarChart = echarts.init(document.getElementById('data_chart'));
         let option = {
           grid: {
             x: 70,
@@ -881,7 +889,7 @@ export default {
               },
               padding: [5,5,40,25]
           },
-          color: ['#626C91','#6BE6C1','#3FB1E3'],
+          color: ['#409EFD'],
           tooltip : {
               trigger: 'axis',
               axisPointer : {
@@ -898,7 +906,7 @@ export default {
           },
           calculable: true,
           legend: {
-              data: ['试卷', '试题', '知识单元'],
+              data: [],
               itemGap: 20,
               x: "right",
               y: "top",
@@ -911,7 +919,7 @@ export default {
           xAxis : [
           {
               type : 'category',
-              data : Chart_Data.list_sub,
+              data : this.Chart_Data.list_sub,
               axisTick: {
                   alignWithLabel: true
               },
@@ -943,31 +951,71 @@ export default {
               }
           }
           ],
-          series : [
-          {
-              name:'试卷',
-              type:'bar',
-              barWidth: '20%',
-              data: Paper_Data
-          },
-          {
+          series: []
+      };
+
+      if(this.Count_Type == 'Question'){
+        option.legend.data = ['试题']
+        option.series = [{
               name:'试题',
               type:'bar',
-              barWidth: '20%',
-              data: Question_Data
-          },
-          {
+              barWidth: '30%',
+              data: this.Question_Data
+          }]
+      }else if(this.Count_Type == 'Paper'){
+        option.legend.data = ['试卷']
+        option.series = [{
+              name:'试卷',
+              type:'bar',
+              barWidth: '30%',
+              data: this.Paper_Data
+          }]
+      }else if(this.Count_Type == 'KU'){
+        option.legend.data = ['知识单元']
+        option.series = [{
               name:'知识单元',
               type:'bar',
-              barWidth: '20%',
-              data: KU_Data
-          },
-          ]
-      };
-      myChart.setOption(option);
+              barWidth: '30%',
+              data: this.KU_Data
+          }]
+      }
+      console.log(option.series)
+      BarChart.setOption(option);
   
       //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-      window.addEventListener('resize',function() {myChart.resize()});
+      window.addEventListener('resize',function() {BarChart.resize()});
+    },
+    // 初始化统计表图
+    Init_Bar(){
+      
+      let config = {
+          headers: { "Content-Type": "multipart/form-data" }
+      };
+      let param = new FormData();
+
+      this.$http
+      .post(this.backendIP + "/api/count", param, config, {
+        emulateJSON: true
+      })
+      .then(function(data) {
+
+        this.Chart_Data = {};
+
+        this.Paper_Data = [];
+        this.Question_Data = [];
+        this.KU_Data = [];
+
+        this.Chart_Data = data.data;
+
+        this.Num_Paper = this.Chart_Data.num_paper;
+        this.Num_Question = this.Chart_Data.num_question;
+        this.Num_KU = this.Chart_Data.num_knowledge;
+        for(var index = 0; index < this.Chart_Data.num_sub.length; index ++){
+          this.Paper_Data.push(this.Chart_Data.num_sub[index].paper);
+          this.Question_Data.push(this.Chart_Data.num_sub[index].question);
+          this.KU_Data.push(this.Chart_Data.num_sub[index].knowledge);
+        }
+        this.Redraw_Bar();
       });
     }
   }

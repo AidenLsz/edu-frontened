@@ -13,22 +13,22 @@
           </el-col>
         </el-row>
         <el-row type="flex" justify="start" style="margin: 20px 0px" v-if="Question.answer != ''">
-          <el-col :span="2">
+          <el-col :span="3">
             <el-row type="flex" justify="start">
               <label>正确答案：</label>
             </el-row>
           </el-col>
-          <el-col :span="22">
+          <el-col :span="21">
             <Mathdown :content="Question.answer" :name="Get_Name('Answer')"></Mathdown>
           </el-col>
         </el-row>
         <el-row type="flex" justify="start" style="margin: 20px 0px" v-if="Question.analyse != ''">
-          <el-col :span="2">
+          <el-col :span="3">
             <el-row type="flex" justify="start">
               <label>参考解析：</label>
             </el-row>
           </el-col>
-          <el-col :span="22">
+          <el-col :span="21">
             <Mathdown :content="Question.analysis" :name="Get_Name('Analyse')"></Mathdown>
           </el-col>
         </el-row>

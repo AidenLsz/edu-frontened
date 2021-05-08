@@ -3,7 +3,7 @@
     <div 
         style="margin: 0px 10vw 10px 10vw" 
         ref="QuestionInfo"
-        v-loading="transing"
+        v-loading="loading"
         element-loading-text="转换中，请等待"
         element-loading-spinner="el-icon-loading">
         <el-row style="padding-top: 15px">
@@ -62,7 +62,7 @@
                         基本信息
                     </el-col>
                 </el-row>
-                <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px" :class="Get_Expand_Or_Collapse(0)">
+                <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px; margin-bottom: 20px" :class="Get_Expand_Or_Collapse(0)">
                     <el-col>
                         <!-- 属性分析表格 -->
                         <!-- <el-row type="flex" justify="start" style="margin: 10px 0px 10px 0px">
@@ -399,7 +399,7 @@ export default {
     this.Init();
   },
   mounted(){
-        this.Search_Similar_Questions();
+
         this.$nextTick(function(){	
             let height = this.$refs.OverFlow_DIV.clientHeight;
             if(height > 250){
@@ -409,11 +409,14 @@ export default {
             }
         })
 
+        setTimeout(()=>{
+            this.Search_Similar_Questions();
+        }, 10)
   },
   data(){
     return {
-        // 是否正在转换PDF
-        transing: false,
+        // 是否正在转换PDF或加载中
+        loading: false,
         // 展开试题分析的部分
       Expand_Ana: true,
       defaultProps: {
@@ -438,8 +441,6 @@ export default {
         Overflow_Flag: true, 
         // 是否展开这道题的详细内容
         Expand_List: [],
-        // 是否正在加载中
-        loading: true,
         Question: this.Ques,
         Part_Expand: [true, false]
     }         
@@ -528,6 +529,7 @@ export default {
                 this.Expand_List.push(false);
             }
             this.loading = false;
+            this.Init();
         });  
     },
     // 判断是否显示
@@ -544,6 +546,8 @@ export default {
     },
     // 查看单题分析报告
     Check_Analyse(ID, DatabaseName){
+
+    this.loading = true;
 
       let config = {
           headers: { "Content-Type": "multipart/form-data" }
@@ -567,6 +571,7 @@ export default {
       .then(function(data) {
         this.Question = data.data.que_dic;
         this.Search_Similar_Questions();
+        this.loading = false;
       });    
 
       this.$nextTick(function(){	
@@ -585,7 +590,7 @@ export default {
     PDF_Switch(){
         window.scrollTo(0, 0);
         this.Part_Expand = [true, true];
-        this.transing = true;
+        this.loading = true;
         // this.PDF_Download("Paper_Title");
         // this.PDF_Download("Paper_Total");
         // this.PDF_Download("Paper_Analyse");
@@ -634,7 +639,7 @@ export default {
                     if(part == "QuestionInfo"){
                         PDF.save("Question_Analyse_Report_" + this.Question.id + ".pdf")
                         PDF = new jsPDF('', 'pt', 'a4');
-                        this.transing = false;
+                        this.loading = false;
                     }else{
                         PDF.addPage();
                     }
