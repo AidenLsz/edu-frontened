@@ -429,6 +429,11 @@ export default {
                     "name": "高海涵",
                     "mail": "kd193104@mail.ustc.edu.cn",
                     "intro": "中科大18级本科，现从事数据挖掘、机器学习和NLP方面的科研"
+                    },
+                    {
+                    "name": "姚方舟",
+                    "mail": "bfsudcs_fanzy@163.com",
+                    "intro": "never goona look back"
                     }
                 ],
                 // 特邀工程师
@@ -505,6 +510,7 @@ export default {
                     "赵辰阳": "/members/赵辰阳.jpeg",
                     "马爽": "/members/马爽.jpeg",
                     "高海涵": "/members/高海涵.jpeg",
+                    "姚方舟": "/members/姚方舟.jpeg",
                     // 特邀工程师
                     "梁先锋": "/members/梁先锋.jpeg",
                     "韩浩宇": "/members/韩浩宇.jpeg",
