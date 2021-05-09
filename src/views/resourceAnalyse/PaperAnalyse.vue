@@ -42,12 +42,12 @@
         :close-on-click-modal="true">
         <!-- 综合分析的部分 -->
         <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse_QB(0)" :class="Get_Part_Row_Style_QB(0)">
-            <el-col :span="14" style="text-align: left">
-                综合分析
-            </el-col>
-            <el-col :span="2" :offset="8">
-                <i class="el-icon-arrow-down" v-if="!Part_Expand_QB[0]"></i>
-                <i class="el-icon-arrow-up" v-if="Part_Expand_QB[0]"></i>
+            <el-col :span="14" style="text-align: left; line-height: 30px">
+                <el-row type="flex" justify="start">
+                    <i class="el-icon-arrow-up" v-if="Part_Expand_QB[0]" style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                    <i class="el-icon-arrow-down" v-else style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                    综合分析
+                </el-row>
             </el-col>
         </el-row>
         <el-row :class="Get_Expand_Or_Collapse_QB(0)">
@@ -94,12 +94,12 @@
         </el-row>
         <!-- 分析详情 -->
         <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse_QB(1)" :class="Get_Part_Row_Style_QB(1)">
-            <el-col :span="14" style="text-align: left">
-                知识点分析
-            </el-col>
-            <el-col :span="2" :offset="8">
-                <i class="el-icon-arrow-down" v-if="!Part_Expand_QB[1]"></i>
-                <i class="el-icon-arrow-up" v-if="Part_Expand_QB[1]"></i>
+            <el-col :span="14" style="text-align: left; line-height: 30px">
+                <el-row type="flex" justify="start">
+                    <i class="el-icon-arrow-up" v-if="Part_Expand_QB[1]" style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                    <i class="el-icon-arrow-down" v-else style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                    知识点分析
+                </el-row>
             </el-col>
         </el-row>
         <el-row :class="Get_Expand_Or_Collapse_QB(1)">
@@ -202,12 +202,12 @@
     <div ref="Paper_Total">
         <!-- 综合分析 -->
         <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(0)" :class="Get_Part_Row_Style(0)">
-            <el-col :span="12" style="text-align: left">
-                综合分析
-            </el-col>
-            <el-col :span="2" :offset="10">
-                <i class="el-icon-arrow-down" v-if="!Part_Expand[0]"></i>
-                <i class="el-icon-arrow-up" v-if="Part_Expand[0]"></i>
+            <el-col :span="12" style="text-align: left; line-height: 30px">
+                <el-row type="flex" justify="start">
+                    <i class="el-icon-arrow-up" v-if="Part_Expand[0]" style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                    <i class="el-icon-arrow-down" v-else style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                    综合分析
+                </el-row>
             </el-col>
         </el-row>
         <el-row :class="Get_Expand_Or_Collapse(0)">
@@ -256,12 +256,12 @@
     <div ref="Paper_Analyse">
     <!-- 分析详情 -->
         <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(1)" :class="Get_Part_Row_Style(1)">
-            <el-col :span="12" style="text-align: left">
-                分析详情
-            </el-col>
-            <el-col :span="2" :offset="10">
-                <i class="el-icon-arrow-down" v-if="!Part_Expand[1]"></i>
-                <i class="el-icon-arrow-up" v-if="Part_Expand[1]"></i>
+            <el-col :span="12" style="text-align: left; line-height: 30px">
+                <el-row type="flex" justify="start">
+                    <i class="el-icon-arrow-up" v-if="Part_Expand[1]" style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                    <i class="el-icon-arrow-down" v-else style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                    分析详情
+                </el-row>
             </el-col>
         </el-row>
         <el-row :class="Get_Expand_Or_Collapse(1)">
@@ -366,12 +366,12 @@
     <div ref="Paper_Similarity"  style="display: none">
         <!-- 相似试卷 -->
         <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(2)" :class="Get_Part_Row_Style(2)">
-            <el-col :span="12" style="text-align: left">
-                相似试卷
-            </el-col>
-            <el-col :span="2" :offset="10">
-                <i class="el-icon-arrow-down" v-if="!Part_Expand[2]"></i>
-                <i class="el-icon-arrow-up" v-if="Part_Expand[2]"></i>
+            <el-col :span="12" style="text-align: left; line-height: 30px">
+                <el-row type="flex" justify="start">
+                    <i class="el-icon-arrow-up" v-if="Part_Expand[2]" style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                    <i class="el-icon-arrow-down" v-else style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                    相似试卷
+                </el-row>
             </el-col>
         </el-row>
         <el-row :class="Get_Expand_Or_Collapse(2)" type="flex" justify="start" style="margin: 0px 16.5vw 30px 16.5vw">
@@ -381,12 +381,12 @@
     <div ref="Paper_Detail">
         <!-- 试卷详情 -->
         <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(3)" :class="Get_Part_Row_Style(3)">
-            <el-col :span="12" style="text-align: left">
-                试卷详情
-            </el-col>
-            <el-col :span="2" :offset="10">
-                <i class="el-icon-arrow-down" v-if="!Part_Expand[3]"></i>
-                <i class="el-icon-arrow-up" v-if="Part_Expand[3]"></i>
+            <el-col :span="12" style="text-align: left; line-height: 30px">
+                <el-row type="flex" justify="start">
+                    <i class="el-icon-arrow-up" v-if="Part_Expand[3]" style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                    <i class="el-icon-arrow-down" v-else style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                    试卷详情
+                </el-row>
             </el-col>
         </el-row>
         <el-row :class="Get_Expand_Or_Collapse(3)">
