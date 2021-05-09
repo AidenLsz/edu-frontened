@@ -58,8 +58,12 @@
             </el-col>
             <el-row v-if="Expand_Ana">
                 <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(0)" :class="Get_Part_Row_Style(0)">
-                    <el-col :span="12" style="text-align: left">
-                        基本信息
+                    <el-col :span="12" style="text-align: left; line-height: 30px">
+                        <el-row type="flex" justify="start">
+                            <i class="el-icon-arrow-up" v-if="Part_Expand[0]" style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                            <i class="el-icon-arrow-down" v-else style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                            相似试题
+                        </el-row>
                     </el-col>
                 </el-row>
                 <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px; margin-bottom: 20px" :class="Get_Expand_Or_Collapse(0)">
@@ -110,7 +114,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 第三行 -->
-                            <el-row style="width: 66.7%" class="Table_Unit_0">
+                            <el-row style="width: 66.7%; display: none" class="Table_Unit_0">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
@@ -125,7 +129,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 第四行 -->
-                            <el-row style="width: 66.7%" class="Table_Unit_1">
+                            <el-row style="width: 66.7%" class="Table_Unit_0">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
@@ -140,7 +144,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 第五行 -->
-                            <el-row style="width: 66.7%" class="Table_Unit_0">
+                            <el-row style="width: 66.7%" class="Table_Unit_1">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
@@ -155,7 +159,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 第六行 -->
-                            <el-row style="width: 66.7%" class="Table_Unit_1">
+                            <el-row style="width: 66.7%" class="Table_Unit_0">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
@@ -170,7 +174,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 第七行 -->
-                            <el-row style="width: 66.7%" class="Table_Unit_0">
+                            <el-row style="width: 66.7%" class="Table_Unit_1">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
@@ -185,7 +189,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 第八行 -->
-                            <el-row style="width: 66.7%" class="Table_Unit_1">
+                            <el-row style="width: 66.7%; display: none" class="Table_Unit_1">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
@@ -214,8 +218,12 @@
                     </el-col>
                 </el-row>
                 <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(1)" :class="Get_Part_Row_Style(1)">
-                    <el-col :span="12" style="text-align: left">
-                        相似试题
+                    <el-col :span="12" style="text-align: left; line-height: 30px">
+                        <el-row type="flex" justify="start">
+                            <i class="el-icon-arrow-up" v-if="Part_Expand[1]" style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                            <i class="el-icon-arrow-down" v-else style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
+                            相似试题
+                        </el-row>
                     </el-col>
                 </el-row>
                 <el-row type="flex" justify="start" style="padding-left: 45px; margin-top: 20px; margin-bottom: 30px" :class="Get_Expand_Or_Collapse(1)">
