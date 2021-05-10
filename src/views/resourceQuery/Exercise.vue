@@ -89,7 +89,7 @@
                 class="picSearch"
                 type="file"
                 @change="pictureSearch($event)"
-                accept=".jpeg, .png"
+                accept=".jpeg, .png, .jpg"
                 ref="picSearchInput"
                 multiple="false"
               />
@@ -271,6 +271,8 @@ export default {
       analyseReport: false,
       // 是否正在返回分析报告
       Question_Analysing: false,
+      // 暂存的图片内容
+      Cache_Pic: "",
       // 用于分析显示的题目数据
       analyseData: {
                 "analysis": "\u5982\u56fe\uff0c\u505a\u51fa\u7ea6\u675f\u6761\u4ef6$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$\u6240\u8868\u793a\u7684\u53ef\u884c\u57df\u3002\u6613\u5f97A\u7684\u5750\u6807\u4e3a$A(1,0)$\u3002\u5f53\u76ee\u6807\u51fd\u6570\u7ecf\u8fc7A\u70b9\u65f6\uff0cz\u53d6\u5f97\u6700\u5927\u503c\uff0c\u53ef\u5f97$z=x+7 y$\u7684\u6700\u5927\u503c\u4e3a$1+7 \\times 0=1$", 
@@ -333,7 +335,7 @@ export default {
   watch:{
     sour(val) {
       this.submit();
-    }
+    },
   },
   mounted(){
     this.ToTop()
@@ -341,10 +343,41 @@ export default {
   methods: {
     // 照片上传
     pictureSearch(event){
-
       if(event.target.files){
+        // 获取图片
         let Pic = event.target.files[0];
-        this.submit(Pic);
+        // 保存读取内容用的临时变量
+        var Picresult = "";
+        // 获取this对象
+        const _this = this;
+        // 重置input组件
+        this.$refs.picSearchInput.value = "";
+        // Promise方法避免异步操作
+        var promise = new Promise(function(resolve, reject){
+          // 用文件读取来读取图片的base64格式代码
+          var reader = new FileReader();
+          reader.readAsDataURL(Pic);
+          reader.onloadend = function (e) { 
+            let _this = this;
+            Picresult = e.target.result;
+            // 这里是为了先处理一下现在没有暂存图片内容的情况，防止后面忘记写，有备无患
+            this.content = "";
+            if(this.Cache_Pic == ""){
+              this.Cache_Pic = Picresult;
+              this.Page_Index = 1;
+            }
+            // 提供resolve信息让then方法去捕捉
+            resolve('1');
+          };
+        });
+        promise.then(function(){
+          // 用捕捉到的this对象来进行搜索
+          _this.submit(Picresult);
+        }).catch(function(error){
+          // 报错了就打印错误
+          console.log(error)
+        })
+        
       }else{
         return 
       }
@@ -460,9 +493,30 @@ export default {
       }
       return true
     },
-    submit(Pic = null) {
+    submit(Pic = "") {
 
       this.loading = true;
+
+      // Pic不为空字符串，则代表使用了图片搜索，新图片页数置为1，旧图片视作重新搜索，也置为1
+      // 而且使用图片搜索时，为了防止和普通的文字搜索混淆，把content改写为空字符串
+      // 如果与缓存的图片不一致，则说明是新图片，需要替换图片内容
+      if(Pic != ""){
+        this.content = "";
+        if(Pic != this.Cache_Pic){
+          this.Cache_Pic = Pic;
+        }
+        this.Page_Index = 1;
+      }
+      // 默认传入一个空字符串，这代表了使用文字搜索或者同一张图片的换页操作
+      // 文字栏为空，Pic也为空字符串而触发了submit函数，说明应该是换页，继续流程即可
+      // 文字栏不为空，Pic为空字符串，说明应该是文字搜索，此时应当清理图片缓存
+      else{
+        if(this.content != ""){
+          this.Page_Index = 1;
+          this.Cache_Pic = "";
+        }
+      }
+      // 后续逻辑和原先一致
 
       if(this.content != this.old_content){
         this.Page_Index = 1;
@@ -479,7 +533,6 @@ export default {
       if(!this.Same_Check(this.history_Period_Type, this.Period_Type)){
         this.Page_Index = 1;
       }
-
 
       this.history_Period_Type = this.Period_Type;
 
@@ -498,10 +551,8 @@ export default {
         }
       }
 
-      if(Pic != null){
-        param.append('pic', Pic)
-        this.content = "";
-        this.Page_Index = 1;
+      if(this.Cache_Pic != ""){
+        param.append('pic', this.Cache_Pic);
       }
 
       var data = JSON.stringify({
