@@ -466,7 +466,12 @@
         <!-- 顶部确认入库按钮 -->
         <el-row style="margin: 30px 50px" v-if="paper_type == '1' && TestData.doc">
           <el-col :span="6" :offset="6">
-            <el-button @click="Ensure()" type="success" plain :disabled="!(Submit_Show)">确认入库</el-button>
+            <el-button v-if="Submit_Show" @click="Ensure()" type="success" plain>
+              确认入库
+            </el-button>
+            <el-button v-else @click="Check_All()" type="success" plain>
+              全部确认
+            </el-button>
           </el-col>
           <el-col :span="6">
             <el-button @click="User_Cut_Math()" type="success" plain>手动切分</el-button>
@@ -641,8 +646,11 @@
         <!-- 数学的文件导出 -->
         <el-row v-if="paper_type == '1' && TestData.doc">
           <el-col :span="4" :offset="2">
-            <el-button :disabled="!(Submit_Show)" @click="Ensure()" type="success" plain>
+            <el-button v-if="Submit_Show" @click="Ensure()" type="success" plain>
               确认入库
+            </el-button>
+            <el-button v-else @click="Check_All()" type="success" plain>
+              全部确认
             </el-button>
           </el-col>
           <el-col :span="4">
@@ -1375,6 +1383,15 @@ export default {
     this.ToTop();
   },
   methods: {
+    // 将所有题目状况更改为已确认
+    Check_All(){
+      for(let i = 0; i < this.Question_Check.length; i++){
+        if(!this.Question_Check[i]){
+          this.Question_Check.splice(i, 1, true);
+        }
+      }
+      this.Submit_Show = true;
+    },
     // 向前切分数学试题
     Math_Front_Cut(index, sindex){
 
@@ -1697,6 +1714,9 @@ export default {
     },
     selectPaperFile(e) {
 
+      this.TestData = {};
+      this.Waiting_Text = "切分试卷中，请等待......"
+
       if(this.temp_File && this.math_standby == "0"){
         this.temp_File = "";
       }
@@ -1766,6 +1786,9 @@ export default {
       }
     },
     selectAnswerFile(e) {
+
+      this.TestData = {};
+      this.Waiting_Text = "切分试卷中，请等待......"
 
       if(this.temp_File && this.math_standby == "1"){
         this.temp_File = "";
@@ -3635,6 +3658,10 @@ export default {
             let Test_Json = data.data.Paper_Json
             sessionStorage.PaperJson = JSON.stringify(Test_Json);
             this.Open_PaperAnalyse();
+        }).catch(() => {
+          alert("解析失败，请稍后重新尝试...");
+          this.analysing = false;
+          return 
         });
       }
     },
@@ -4184,6 +4211,10 @@ export default {
             this.Open_PaperAnalyse();
             this.$message.success("试卷内容上传已完成。");
           }
+        }).catch(() => {
+          alert("解析失败，请稍后重新尝试...");
+          this.analysing = false;
+          return 
         });
 
     },
