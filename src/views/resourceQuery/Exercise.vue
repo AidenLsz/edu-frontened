@@ -61,7 +61,7 @@
     <!-- 搜索框行 -->
     <el-row type="flex" justify="start" class="SearchArea">
       <!-- enter.native才能监听到组件化的事件，要注意一下 -->
-        <el-col :span="20">
+        <el-col :span="19">
           <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit">
             
           </el-input>
@@ -75,12 +75,29 @@
           <el-divider direction="vertical"></el-divider>
         </el-col>
         <el-col :span="1">
-          <el-button type="text" style="font-size: 18px; color: black; display: block; margin-left: -5px"  size="small" @click="simpleInput = true">
-            ∑
+          <el-button type="text" style="font-size: 22px; color: black; display: block; margin-left: -6px;"  size="small" @click="simpleInput = true">
+            &Sigma;
           </el-button>
         </el-col>
         <el-col :span="1">
-          <el-button type="text" style="font-size: 20px; display: block; margin-left: -8px;" size="small" @click="submit()">
+          <el-row type="flex" justify="start" style="line-height: 40px">
+            <div class="picSearchArea">
+              <p style="display: inline-block">
+                <i class="el-icon-camera-solid" style="font-size: 22px;"></i>
+              </p>
+              <input
+                class="picSearch"
+                type="file"
+                @change="pictureSearch($event)"
+                accept=".jpeg, .png"
+                ref="picSearchInput"
+                multiple="false"
+              />
+            </div>
+          </el-row>
+        </el-col>
+        <el-col :span="1">
+          <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit()">
             <i class="el-icon-search"></i>
           </el-button>
         </el-col>
@@ -322,10 +339,15 @@ export default {
     this.ToTop()
   },
   methods: {
-    // 添加监听器
-    addEnterListener(){
-      var Input = document.getElementById("ExerciseInput");
-      Input.addEventListener()
+    // 照片上传
+    pictureSearch(event){
+
+      if(event.target.files){
+        let Pic = event.target.files[0];
+        this.submit(Pic);
+      }else{
+        return 
+      }
     },
     // 查看单题分析报告
     Check_Analyse(ID, DatabaseName){
@@ -438,7 +460,7 @@ export default {
       }
       return true
     },
-    submit() {
+    submit(Pic = null) {
 
       this.loading = true;
 
@@ -458,6 +480,7 @@ export default {
         this.Page_Index = 1;
       }
 
+
       this.history_Period_Type = this.Period_Type;
 
       this.question_list = [];
@@ -473,6 +496,12 @@ export default {
         if(this.database_aim[i]){
           database_list.push(this.database_name[i])
         }
+      }
+
+      if(Pic != null){
+        param.append('pic', Pic)
+        this.content = "";
+        this.Page_Index = 1;
       }
 
       var data = JSON.stringify({
@@ -701,5 +730,24 @@ export default {
   border-radius: 18px;
   box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
   -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
+}
+// 照相机按钮使用的区域
+.picSearchArea{
+  position: relative;
+  background-color: transparent;
+  height: 36px;
+  padding-top: 4px;
+  color: #409EFF;
+  cursor: pointer;
+  margin-left: -7px;
+}
+// 照相机按钮使用的样式
+.picSearch{
+  position: absolute;
+  top: 0;
+  right: 0;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
 }
 </style>
