@@ -493,7 +493,7 @@ export default {
                     "宁雨亭": "/members/宁雨亭.jpg",
                     "张鑫": "/members/张鑫.jpg",
                     "房松涛": "/members/房松涛.jpg",
-                    "曹智": "/members/曹智.png",
+                    "曹智": "/members/曹智.jpg",
                     "杨哲": "/members/杨哲.jpg",
                     "毛清扬": "/members/毛清扬.jpg",
                     "洪玉婷": "/members/洪玉婷.jpg",
@@ -526,7 +526,7 @@ export default {
                     "高维博": "/members/高维博.jpeg",
                     "张征": "/members/张征.jpeg",
                     // 历任成员
-                    "杨青": "/members/杨青.jpeg"
+                    "杨青": "/members/杨青.jpg"
                 }
             }
         }
