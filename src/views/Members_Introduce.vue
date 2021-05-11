@@ -434,6 +434,11 @@ export default {
                     "name": "姚方舟",
                     "mail": "bfsudcs_fanzy@163.com",
                     "intro": "never goona look back"
+                    },
+                    {
+                    "name": "林鑫",
+                    "mail": "linx@mail.ustc.edu.cn",
+                    "intro": "中国科学技术大学2019级研究生在读"
                     }
                 ],
                 // 特邀工程师
@@ -511,6 +516,7 @@ export default {
                     "马爽": "/members/马爽.jpeg",
                     "高海涵": "/members/高海涵.jpeg",
                     "姚方舟": "/members/姚方舟.jpeg",
+                    "林鑫": "/members/林鑫.jpeg",
                     // 特邀工程师
                     "梁先锋": "/members/梁先锋.jpeg",
                     "韩浩宇": "/members/韩浩宇.jpeg",

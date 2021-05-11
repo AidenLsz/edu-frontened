@@ -72,8 +72,8 @@
           </el-button>
         </el-col>
         <el-col :span="4" v-if="Cache_Pic[0] != ''">
-          <el-row type="flex" justify="start" style="border: 1px solid red; border-radius: 15px; height: 42px">
-            <el-image :src="Cache_Pic[0]" style="height: 36px; width: 60px; margin-top: 3px; margin-left: 30px;" :preview-src-list="Cache_Pic"></el-image>
+          <el-row type="flex" justify="start" style="border: 1px solid red; border-radius: 15px; height: 36px; margin: 3px">
+            <el-image :src="Cache_Pic[0]" style="height: 30px; width: 60px; margin-top: 3px; margin-left: 30px;" :preview-src-list="Cache_Pic"></el-image>
             <el-button type="text" 
               style="font-size: 20px; color: rgba( 0, 0, 0, 0.4); margin-left: 10px; width: 40px; display: block" 
               size="small" 

@@ -651,48 +651,6 @@ export default {
 
         Flag = true
       },
-
-    TestData(val){
-      var Ques = val.doc;
-      for(var item in Ques){
-        var checkNow = item.question_stem;
-        if(!this.ChecK_Do(checkNow)){
-          return false
-        }
-
-        checkNow = item.question_options;
-        for(var i in checkNow){
-          if(!this.ChecK_Do(i)){
-            return false
-          }
-        }
-
-        checkNow = item.sub_questions;
-        for(i in checkNow){
-          if(!this.ChecK_Do(i)){
-            return false
-          }
-        }
-
-        checkNow = item.answer;
-        for(i in checkNow){
-          if(!this.ChecK_Do(i)){
-            return false
-          }
-        }
-
-        checkNow = item.analysis;
-        for(i in checkNow){
-          if(!this.ChecK_Do(i)){
-            return false
-          }
-        }
-
-      }
-
-      this.Symbol_Error = false;
-    }
-
   },
   mounted(){
     this.Init_Question_Check()
@@ -812,18 +770,36 @@ export default {
             analyse_images: [],
         }
 
+        let temp_val = ""
+
         if(this.Type_Now == 'option'){
+            temp_val = this.Normal_Char_Check(val);
+          if(temp_val != false){
+            this.Temp_OptionQuestionInfo = temp_val;
+          }else{
             this.Temp_OptionQuestionInfo = val;
-            this.Normal_Char_Check(val);
+          }
         }else if(this.Type_Now == 'fill'){
-            this.Temp_FillQuestionInfo = val;
-            this.Normal_Char_Check(val);
+            temp_val = this.Normal_Char_Check(val);
+            if(temp_val != false){
+              this.Temp_FillQuestionInfo = temp_val;
+            }else{
+              this.Temp_FillQuestionInfo = val;
+            }
         }else if(this.Type_Now == 'answer'){
-            this.Temp_AnswerQuestionInfo = val;
-            this.Normal_Char_Check(val);
+            temp_val = this.Normal_Char_Check(val);
+            if(temp_val != false){
+              this.Temp_AnswerQuestionInfo = temp_val;
+            }else{
+              this.Temp_AnswerQuestionInfo = val;
+            }
         }else if(this.Type_Now == 'mix'){
-            this.Temp_MixQuestionInfo = val;
-            this.Mix_Char_Check(val);
+            temp_val = this.Mix_Char_Check(val);
+            if(temp_val != false){
+              this.Temp_MixQuestionInfo = temp_val;
+            }else{
+              this.Temp_MixQuestionInfo = val;
+            }
         }
 
         this.Close_Editor();
@@ -853,18 +829,36 @@ export default {
     // 重写编辑后，把新数据直接覆盖上去
     ReEdit_Questions(val){
 
+        let temp_val = ""
+
         if(this.Type_Now == 'option'){
+            temp_val = this.Normal_Char_Check(val);
+          if(temp_val != false){
+            this.Temp_OptionQuestionInfo = temp_val;
+          }else{
             this.Temp_OptionQuestionInfo = val;
-            this.Normal_Char_Check(val);
+          }
         }else if(this.Type_Now == 'fill'){
-            this.Temp_FillQuestionInfo = val;
-            this.Normal_Char_Check(val);
+            temp_val = this.Normal_Char_Check(val);
+            if(temp_val != false){
+              this.Temp_FillQuestionInfo = temp_val;
+            }else{
+              this.Temp_FillQuestionInfo = val;
+            }
         }else if(this.Type_Now == 'answer'){
-            this.Temp_AnswerQuestionInfo = val;
-            this.Normal_Char_Check(val);
+            temp_val = this.Normal_Char_Check(val);
+            if(temp_val != false){
+              this.Temp_AnswerQuestionInfo = temp_val;
+            }else{
+              this.Temp_AnswerQuestionInfo = val;
+            }
         }else if(this.Type_Now == 'mix'){
-            this.Temp_MixQuestionInfo = val;
-            this.Mix_Char_Check(val);
+            temp_val = this.Mix_Char_Check(val);
+            if(temp_val != false){
+              this.Temp_MixQuestionInfo = temp_val;
+            }else{
+              this.Temp_MixQuestionInfo = val;
+            }
         }
 
         this.Close_Editor();
@@ -875,133 +869,194 @@ export default {
     Mix_Char_Check(val){
 
       var Check_Now = val.content;
-      if(Check_Now!= "" && !this.ChecK_Do(Check_Now)){
+      var result = this.ChecK_Do(Check_Now);
+      if(Check_Now!= "" && result[1]){
+        this.$alert("请将题干内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+          confirmButtonText: '确定'
+        });
         return false
+      }else if(Check_Now!= "" && !result[1]){
+        val.content = result[0];
       }
 
       var Check_Now_List = val.answer;
       Check_Now_List = Check_Now_List.split("::");
       for(var j = 0; j < Check_Now_List.length; j++){
-        var item = Check_Now_List[j]      
-        if(item != "" && !this.ChecK_Do(item)){
+        var item = Check_Now_List[j]
+        result = this.ChecK_Do(item);
+        if(item != "" && result[1]){
+          this.$alert("请将答案内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+            confirmButtonText: '确定'
+          });
           return false
+        }else if(item != "" && !result[1]){
+          Check_Now_List.splice(j, 1, result[0])
         }
       }
+      val.answer = Check_Now_List.join("\n");
 
       Check_Now = val.analyse;
-      if(Check_Now!= "" && !this.ChecK_Do(Check_Now)){
+      if(Check_Now!= "" && result[1]){
+        this.$alert("请将解析内容中自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+          confirmButtonText: '确定'
+        });
         return false
+      }else if(Check_Now!= "" && !result[1]){
+        val.analyse = result[0];
       }
 
       Check_Now_List = val.sub_questions;
       for(var len = 0; len < Check_Now_List.length; len++){
         item = Check_Now_List[len]
-        if(!this.Normal_Char_Check(item)){
-          return false
-        }
+        result = this.Normal_Char_Check(item)
+        val.sub_questions.splice(len, 1, result)
       }
 
       this.Symbol_Error = false;
+
+      return val;
 
     },
     // 检测是否有非法字符 - 选择-填空-解答
     Normal_Char_Check(val){
 
       var Check_Now = val.content;
-      if(!this.ChecK_Do(Check_Now)){
+      var result = this.ChecK_Do(Check_Now);
+      if(Check_Now!= "" && result[1]){
+        this.$alert("请将题干内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+          confirmButtonText: '确定'
+        });
         return false
+      }else if(Check_Now!= "" && !result[1]){
+        val.content = result[0];
       }
 
       var Check_Now_List = val.answer;
-
-      if(Check_Now_List.indexOf("::") != -1){
-
-        Check_Now_List = Check_Now_List.split("::");
-
-        for(var j = 0; j < Check_Now_List.length; j++){
-
-          var item = Check_Now_List[j]
-          
-          if(item != "" && !this.ChecK_Do(item)){
-            return false
-          }
-
-        }
-      }else{
-        if(Check_Now_List != "" && !this.ChecK_Do(Check_Now_List)){
+      Check_Now_List = Check_Now_List.split("::");
+      for(let j = 0; j < Check_Now_List.length; j++){
+        var item = Check_Now_List[j]
+        result = this.ChecK_Do(item);
+        if(item != "" && result[1]){
+          this.$alert("请将答案内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+            confirmButtonText: '确定'
+          });
           return false
+        }else if(item != "" && !result[1]){
+          Check_Now_List.splice(j, 1, result[0])
         }
       }
+      val.answer = Check_Now_List.join("\n");
 
       Check_Now = val.analyse;
-      if(Check_Now != "" && !this.ChecK_Do(Check_Now)){
+      result = this.ChecK_Do(Check_Now);
+      if(Check_Now!= "" && result[1]){
+        this.$alert("请将解析内容中自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+          confirmButtonText: '确定'
+        });
         return false
+      }else if(Check_Now!= "" && !result[1]){
+        val.analyse = result[0];
       }
 
       if(val.type == 'option'){
         Check_Now_List = val.options;
-        for(var opi = 0; opi < Check_Now_List.length; opi++){
-
+        for(let opi = 0; opi < Check_Now_List.length; opi++){
           item = Check_Now_List[opi]
-          
-          if(item != "" && !this.ChecK_Do(item)){
+          result = this.ChecK_Do(item);
+          if(item != "" && result[1]){
+            this.$alert("请将选项内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+              confirmButtonText: '确定'
+            });
             return false
+          }else if(item != "" && !result[1]){
+            Check_Now_List.splice(opi, 1, result[0])
           }
         }
+        val.options = Check_Now_List;
       }else if(val.type == 'answer'){
         Check_Now_List = val.sub_questions;
-        for(opi = 0; opi < Check_Now_List.length; opi++){
+        for(let opi = 0; opi < Check_Now_List.length; opi++){
           item = Check_Now_List[opi]
-          if(item != "" && !this.ChecK_Do(item)){
+          result = this.ChecK_Do(item);
+          if(item != "" && result[1]){
+            this.$alert("请将选项内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+              confirmButtonText: '确定'
+            });
             return false
+          }else if(item != "" && !result[1]){
+            Check_Now_List.splice(opi, 1, result[0])
           }
         }
+        val.sub_questions = Check_Now_List;
       }
 
       this.Symbol_Error = false;
+
+      return val;
     },
     // 负责实际检查的部分
-    ChecK_Do(Check_Now){
+    ChecK_Do(content){
 
-      var Flag = true;
+      let remakeContent = "";
 
-      var Img_Catcher = new RegExp("<img src='(.*?)'>")
-      var Result_List = Img_Catcher.exec(Check_Now);
+      var latexFlag = false;
+      let symbolError = false;
+      let Regx = /[A-Za-z0-9]/;
 
-      if(Result_List != null){
-        for(var rl = 0; rl < Result_List.length; rl++){
-          var Temp_Catcher = new RegExp(Result_List[rl])
-          Check_Now = Check_Now.replace(Temp_Catcher, "");
-        }
+      var Img_Catcher = new RegExp('<img src="(.*?)">', 'g')
+      var Result_List = Img_Catcher.exec(content);
+
+      var Img_SE = [];
+
+      while(Result_List != null){
+        var Temp_Catcher = '<img src="' + Result_List[1] + '">';
+        var Start = content.indexOf(Temp_Catcher);
+        Img_SE.push([Start, Start + Temp_Catcher.length])
+        Result_List = Img_Catcher.exec(content);
       }
+      
+      var Img_Index = 0;
 
-      for(var c = 0; c < Check_Now.length; c++){
+      for(var i = 0; i < content.length; i++){
         
-        if(Check_Now[c] == '$'){
-          if(Flag){
-            Flag = false;
-            this.Symbol_Error = true;
-          }else{
-            Flag = true;
-            this.Symbol_Error = false;
-          }
+        if(content[i] == '$' && !latexFlag){
+            latexFlag = true;
+        }else if(content[i] == '$' && latexFlag){
+            latexFlag = false;
         }
 
-        if(!(Check_Now.charCodeAt(c) > 255 || this.ch_pun_list.indexOf(Check_Now[c]) != -1 || this.en_pun_list.indexOf(Check_Now[c]) != -1 || Check_Now[c] == ' ' || Check_Now.charCodeAt(c) == 10) 
-            && Flag 
-            && Check_Now[c] != '$'){
-          this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
-          this.Symbol_Error = true;
-          return false;
+        if(Img_SE.length > 0 && i >= Img_SE[Img_Index][0] && i <= Img_SE[Img_Index][1]){
+          remakeContent = remakeContent + content[i];
+          continue;
+        }else if(Img_SE.length > 0 && i > Img_SE[Img_Index][1] && Img_Index < Img_SE.length - 1){
+          Img_Index = Img_Index + 1
+        }
+
+        if(!latexFlag){
+            if (Regx.test(content[i])) {
+                if(remakeContent[remakeContent.length - 1] == '$'){
+                    remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
+                }else{
+                    remakeContent = remakeContent + "$" + content[i] + "$";
+                }
+            }
+            // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
+            else if(!(content.charCodeAt(i) > 255 || 
+                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 || 
+                      content[i] == ' ' || content[i] == '$' || 
+                      content.charCodeAt(i) == 10) 
+                    && !symbolError){
+              symbolError = true;
+              this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符 " + content[i] + " ！", offset: 40});
+            }
+            else {
+              remakeContent = remakeContent + content[i];
+            }
+        }else{
+            remakeContent = remakeContent + content[i];
         }
       }
-      if(Flag){
-        return true;
-      }
-      else{
-        this.$message.error("请勿输入非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
-        return false
-      }
+      return [remakeContent, latexFlag]
     },
     // 一起关掉
     Close_Editor(){
@@ -1349,69 +1404,67 @@ export default {
 
     },
     // 以下是单题显示配套用的方法
-    Ensure(){
-      this.$confirm("您已经锁定了所有题目，确认审核完毕请点击确认提交，仍有更改请点击取消。").then( () => {
-        this.$message.success("已提交");
-        this.Submit_Show = true;
-        this.Submit();
-      }).catch(() => {
-        this.$message.info("已取消");
-        this.Submit_Show = true;
-      })
-    },
-    Submit(){
+    // Ensure(){
+    //   this.$confirm("您已经锁定了所有题目，确认审核完毕请点击确认提交，仍有更改请点击取消。").then( () => {
+    //     this.$message.success("已提交");
+    //     this.Submit_Show = true;
+    //     this.Submit();
+    //   }).catch(() => {
+    //     this.$message.info("已取消");
+    //     this.Submit_Show = true;
+    //   })
+    // },
+    // Submit(){
 
-      var Docs = this.TestData.doc;
+    //   var Docs = this.TestData.doc;
 
-      for(var i = 0; i < Docs.length; i++){
+    //   for(var i = 0; i < Docs.length; i++){
 
-        var Ques = Docs[i]
+    //     var Ques = Docs[i]
 
-        var stem = Ques.question_stem;
-        if(!this.ChecK_Do(stem)){
-          this.$message.error("第"+ (i+1).toString() + "题题干内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
-          return false;
-        }
+    //     var stem = Ques.question_stem;
+    //     if(!this.ChecK_Do(stem)){
+    //       this.$message.error("第"+ (i+1).toString() + "题题干内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+    //       return false;
+    //     }
 
-        var answer = Ques.answer;
-        for(var j = 0; j < answer.length; j++){
+    //     var answer = Ques.answer;
+    //     for(var j = 0; j < answer.length; j++){
 
-          var item = answer[j]
+    //       var item = answer[j]
             
-          if(item != "" && !this.ChecK_Do(item)){
-            this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
-            return false
-          }
+    //       if(item != "" && !this.ChecK_Do(item)){
+    //         this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+    //         return false
+    //       }
 
-        }
+    //     }
 
-        var analyse = Ques.analysis;
-        if(!this.ChecK_Do(analyse)){
-          this.$message.error("第"+ (i+1).toString() + "题解析内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
-          return false;
-        }
+    //     var analyse = Ques.analysis;
+    //     if(!this.ChecK_Do(analyse)){
+    //       this.$message.error("第"+ (i+1).toString() + "题解析内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+    //       return false;
+    //     }
       
-        var options = Ques.question_options;
-        for(j = 0; j < options.length; j++){
-          if(!this.ChecK_Do(options[j])){
-            this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
-            return false;
-          }
-        }
+    //     var options = Ques.question_options;
+    //     for(j = 0; j < options.length; j++){
+    //       if(!this.ChecK_Do(options[j])){
+    //         this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+    //         return false;
+    //       }
+    //     }
 
-        var sub_Ques = Ques.sub_questions;
-        for(j = 0; j < sub_Ques.length; j++){
-          if(!this.ChecK_Do(sub_Ques[j])){
-            this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
-            return false;
-          }
-        }
+    //     var sub_Ques = Ques.sub_questions;
+    //     for(j = 0; j < sub_Ques.length; j++){
+    //       if(!this.ChecK_Do(sub_Ques[j])){
+    //         this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
+    //         return false;
+    //       }
+    //     }
 
-      }
+    //   }
 
-      console.log(this.TestData);
-      console.log("Ready To Upload. Waiting for database design.")
-    },
+    // },
     Init_Question_Check(){
 
       this.Question_Check = [];
