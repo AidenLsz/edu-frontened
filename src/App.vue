@@ -594,10 +594,10 @@ export default {
     },
     // 登录
     login() {
-      // if (this.verifyCode.toUpperCase() !== this.imgCode.toUpperCase()) {
-      //   alert("验证码错误");
-      //   return;
-      // }
+      if (this.verifyCode.toUpperCase() !== this.imgCode.toUpperCase()) {
+        alert("验证码错误");
+        return;
+      }
       this.$http
         .post(
           this.backendIP + "/api/login",
