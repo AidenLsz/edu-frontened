@@ -61,28 +61,42 @@
     <!-- 搜索框行 -->
     <el-row type="flex" justify="start" class="SearchArea">
       <!-- enter.native才能监听到组件化的事件，要注意一下 -->
-        <el-col :span="19">
+        <el-col :span="19" v-if="Cache_Pic[0] == ''">
           <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit">
             
           </el-input>
         </el-col>
-        <el-col :span="1">
+        <el-col :span="1" v-if="Cache_Pic[0] == ''">
           <el-button type="text" style="font-size: 20px; color: black;" size="small" v-if="content != ''" @click="content = ''">
             <i class="el-icon-close"></i>
           </el-button>
         </el-col>
-        <el-col :span="1">
+        <el-col :span="4" v-if="Cache_Pic[0] != ''">
+          <el-row type="flex" justify="start" style="border: 1px solid red; border-radius: 15px; height: 42px">
+            <el-image :src="Cache_Pic[0]" style="height: 36px; width: 60px; margin-top: 3px; margin-left: 30px;" :preview-src-list="Cache_Pic"></el-image>
+            <el-button type="text" 
+              style="font-size: 20px; color: rgba( 0, 0, 0, 0.4); margin-left: 10px; width: 40px; display: block" 
+              size="small" 
+              @click="Clear_Pic">
+              <i class="el-icon-close"></i>
+            </el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="1" v-if="Cache_Pic[0] == ''">
+          <el-divider direction="vertical"></el-divider>
+        </el-col>
+        <el-col :span="1" :offset="16" v-if="Cache_Pic[0] != ''">
           <el-divider direction="vertical"></el-divider>
         </el-col>
         <el-col :span="1">
-          <el-button type="text" style="font-size: 22px; color: black; display: block; margin-left: -6px;"  size="small" @click="simpleInput = true">
+          <el-button type="text" style="font-size: 22px; color: #409EFF; display: block; margin-left: -6px;"  size="small" @click="simpleInput = true">
             &Sigma;
           </el-button>
         </el-col>
         <el-col :span="1">
           <el-row type="flex" justify="start" style="line-height: 40px">
             <div class="picSearchArea">
-              <p style="display: inline-block">
+              <p style="display: inline-block;">
                 <i class="el-icon-camera-solid" style="font-size: 22px;"></i>
               </p>
               <input
@@ -272,7 +286,7 @@ export default {
       // 是否正在返回分析报告
       Question_Analysing: false,
       // 暂存的图片内容
-      Cache_Pic: "",
+      Cache_Pic: [""],
       // 用于分析显示的题目数据
       analyseData: {
                 "analysis": "\u5982\u56fe\uff0c\u505a\u51fa\u7ea6\u675f\u6761\u4ef6$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$\u6240\u8868\u793a\u7684\u53ef\u884c\u57df\u3002\u6613\u5f97A\u7684\u5750\u6807\u4e3a$A(1,0)$\u3002\u5f53\u76ee\u6807\u51fd\u6570\u7ecf\u8fc7A\u70b9\u65f6\uff0cz\u53d6\u5f97\u6700\u5927\u503c\uff0c\u53ef\u5f97$z=x+7 y$\u7684\u6700\u5927\u503c\u4e3a$1+7 \\times 0=1$", 
@@ -341,6 +355,10 @@ export default {
     this.ToTop()
   },
   methods: {
+    // 清除图片
+    Clear_Pic(){
+      this.Cache_Pic.splice(0, 1, "");
+    },
     // 照片上传
     pictureSearch(event){
       if(event.target.files){
@@ -358,13 +376,13 @@ export default {
           var reader = new FileReader();
           reader.readAsDataURL(Pic);
           reader.onloadend = function (e) { 
-            let _this = this;
             Picresult = e.target.result;
             // 这里是为了先处理一下现在没有暂存图片内容的情况，防止后面忘记写，有备无患
-            this.content = "";
-            if(this.Cache_Pic == ""){
-              this.Cache_Pic = Picresult;
-              this.Page_Index = 1;
+            _this.content = "";
+            console.log(_this.Cache_Pic);
+            if(_this.Cache_Pic[0] == ""){
+              _this.Cache_Pic.splice(0, 1, Picresult);
+              _this.Page_Index = 1;
             }
             // 提供resolve信息让then方法去捕捉
             resolve('1');
@@ -495,6 +513,8 @@ export default {
     },
     submit(Pic = "") {
 
+      console.log(Pic, this.Cache_Pic[0])
+
       this.loading = true;
 
       // Pic不为空字符串，则代表使用了图片搜索，新图片页数置为1，旧图片视作重新搜索，也置为1
@@ -502,8 +522,8 @@ export default {
       // 如果与缓存的图片不一致，则说明是新图片，需要替换图片内容
       if(Pic != ""){
         this.content = "";
-        if(Pic != this.Cache_Pic){
-          this.Cache_Pic = Pic;
+        if(Pic != this.Cache_Pic[0]){
+          this.Cache_Pic.splice(0, 1, Pic);
         }
         this.Page_Index = 1;
       }
@@ -513,7 +533,7 @@ export default {
       else{
         if(this.content != ""){
           this.Page_Index = 1;
-          this.Cache_Pic = "";
+          this.Cache_Pic.splice(0, 1, "");
         }
       }
       // 后续逻辑和原先一致
@@ -551,8 +571,8 @@ export default {
         }
       }
 
-      if(this.Cache_Pic != ""){
-        param.append('pic', this.Cache_Pic);
+      if(this.Cache_Pic[0] != ""){
+        param.append('pic', this.Cache_Pic[0]);
       }
 
       var data = JSON.stringify({
@@ -800,5 +820,6 @@ export default {
   overflow: hidden;
   cursor: pointer;
   opacity: 0;
+  width: 34px;
 }
 </style>
