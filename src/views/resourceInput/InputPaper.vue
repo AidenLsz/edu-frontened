@@ -3994,11 +3994,17 @@ export default {
       var Result_List = Img_Catcher.exec(content);
 
       var Img_SE = [];
+      var Start = 0;
 
       while(Result_List != null){
         var Temp_Catcher = '<img src="' + Result_List[1] + '">';
-        var Start = content.indexOf(Temp_Catcher);
-        Img_SE.push([Start, Start + Temp_Catcher.length])
+        if(Img_SE.length > 0){
+          Start = content.indexOf(Temp_Catcher, Img_SE[Img_SE.length - 1][1]);
+        }
+        else{
+          Start = content.indexOf(Temp_Catcher);
+        }
+        Img_SE.push([Start, Start + Temp_Catcher.length - 1])
         Result_List = Img_Catcher.exec(content);
       }
       
@@ -4048,69 +4054,69 @@ export default {
     },
     Submit(){
 
-      // var Docs = this.TestData.doc;
+      var Docs = this.TestData.doc;
 
-      // for(var i = 0; i < Docs.length; i++){
+      for(var i = 0; i < Docs.length; i++){
 
-      //   var Ques = Docs[i]
+        var Ques = Docs[i]
 
-      //   var stem = Ques.question_stem;
-      //   var result = this.ChecK_Do(stem);
-      //   if(result[1]){
-      //     this.$message.error({message: "请将第 "+ (i+1).toString() + " 题题干内容中自己输入的Latex公式完整包裹在$$符号之内！"
-      //               , offset: 80});
-      //     return false;
-      //   }else{
-      //     Docs[i].question_stem = result[0]
-      //   }
+        var stem = Ques.question_stem;
+        var result = this.ChecK_Do(stem);
+        if(result[1]){
+          this.$message.error({message: "请将第 "+ (i+1).toString() + " 题题干内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                    , offset: 80});
+          return false;
+        }else{
+          Docs[i].question_stem = result[0]
+        }
 
-      //   var answer = Ques.answer;
-      //   for(let j = 0; j < answer.length; j++){
-      //     let item = answer[j]
-      //     result = this.ChecK_Do(item);
-      //     if(result[1]){
-      //       this.$message.error({message: "请将第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容中自己输入的Latex公式完整包裹在$$符号之内！"
-      //                 , offset: 80});
-      //       return false;
-      //     }else{
-      //       Docs[i].answer.splice(j, 1, result[0])
-      //     }
-      //   }
+        var answer = Ques.answer;
+        for(let j = 0; j < answer.length; j++){
+          let item = answer[j]
+          result = this.ChecK_Do(item);
+          if(result[1]){
+            this.$message.error({message: "请将第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                      , offset: 80});
+            return false;
+          }else{
+            Docs[i].answer.splice(j, 1, result[0])
+          }
+        }
 
-      //   var analyse = Ques.analysis;
-      //   result = this.ChecK_Do(analyse);
-      //   if(result[1]){
-      //     this.$message.error({message: "请将第"+ (i+1).toString() + "题解析内容中自己输入的Latex公式完整包裹在$$符号之内！"
-      //               , offset: 80});
-      //     return false;
-      //   }else{
-      //     Docs[i].analysis = result[0]
-      //   }
+        var analyse = Ques.analysis;
+        result = this.ChecK_Do(analyse);
+        if(result[1]){
+          this.$message.error({message: "请将第"+ (i+1).toString() + "题解析内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                    , offset: 80});
+          return false;
+        }else{
+          Docs[i].analysis = result[0]
+        }
       
-      //   var options = Ques.question_options;
-      //   for(let j = 0; j < options.length; j++){
-      //     result = this.ChecK_Do(options[j]);
-      //     if(result[1]){
-      //       this.$message.error({message: "请将第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容中自己输入的Latex公式完整包裹在$$符号之内！"
-      //                 , offset: 80});
-      //       return false;
-      //     }else{
-      //       Docs[i].question_options.splice(j, 1, result[0])
-      //     }
-      //   }
+        var options = Ques.question_options;
+        for(let j = 0; j < options.length; j++){
+          result = this.ChecK_Do(options[j]);
+          if(result[1]){
+            this.$message.error({message: "请将第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                      , offset: 80});
+            return false;
+          }else{
+            Docs[i].question_options.splice(j, 1, result[0])
+          }
+        }
 
-      //   var sub_Ques = Ques.sub_questions;
-      //   for(let j = 0; j < sub_Ques.length; j++){
-      //     result = this.ChecK_Do(sub_Ques[j]);
-      //     if(result[1]){
-      //       this.$message.error({message: "请将第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容中自己输入的Latex公式完整包裹在$$符号之内！"
-      //                 , offset: 80});
-      //       return false;
-      //     }else{
-      //       Docs[i].sub_questions.splice(j, 1, result[0])
-      //     }
-      //   }
-      // }
+        var sub_Ques = Ques.sub_questions;
+        for(let j = 0; j < sub_Ques.length; j++){
+          result = this.ChecK_Do(sub_Ques[j]);
+          if(result[1]){
+            this.$message.error({message: "请将第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                      , offset: 80});
+            return false;
+          }else{
+            Docs[i].sub_questions.splice(j, 1, result[0])
+          }
+        }
+      }
 
       // this.TestData.doc = Docs;
 

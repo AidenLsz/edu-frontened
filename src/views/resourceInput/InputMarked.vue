@@ -1007,12 +1007,18 @@ export default {
       var Result_List = Img_Catcher.exec(content);
 
       var Img_SE = [];
+      var Start = 0;
 
       while(Result_List != null){
-        var Temp_Catcher = '<img src="' + Result_List[1] + '">';
-        var Start = content.indexOf(Temp_Catcher);
-        Img_SE.push([Start, Start + Temp_Catcher.length])
-        Result_List = Img_Catcher.exec(content);
+          var Temp_Catcher = '<img src="' + Result_List[1] + '">';
+          if(Img_SE.length > 0){
+              Start = content.indexOf(Temp_Catcher, Img_SE[Img_SE.length - 1][1]);
+          }
+          else{
+              Start = content.indexOf(Temp_Catcher);
+          }
+          Img_SE.push([Start, Start + Temp_Catcher.length - 1])
+          Result_List = Img_Catcher.exec(content);
       }
       
       var Img_Index = 0;
