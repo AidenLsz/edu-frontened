@@ -62,7 +62,7 @@
     <el-row type="flex" justify="start" class="SearchArea">
       <!-- enter.native才能监听到组件化的事件，要注意一下 -->
         <el-col :span="19" v-if="Cache_Pic[0] == ''">
-          <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit">
+          <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit(0, '')">
             
           </el-input>
         </el-col>
@@ -111,7 +111,7 @@
           </el-row>
         </el-col>
         <el-col :span="1">
-          <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit()">
+          <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit(0, '')">
             <i class="el-icon-search"></i>
           </el-button>
         </el-col>
@@ -390,7 +390,7 @@ export default {
         });
         promise.then(function(){
           // 用捕捉到的this对象来进行搜索
-          _this.submit(Picresult);
+          _this.submit(1, Picresult);
         }).catch(function(error){
           // 报错了就打印错误
           console.log(error)
@@ -425,7 +425,6 @@ export default {
         emulateJSON: true
       })
       .then(function(data) {
-        console.log("Get Question Analyse Report.")
         this.analyseData = data.data.que_dic;
         this.analyseReport = true;
         this.Question_Analysing = false;
@@ -435,7 +434,11 @@ export default {
       window.scrollTo(0,0);
     },
     BackToTop(){
-      this.submit();
+      if(this.Cache_Pic[0].length > 0){
+        this.submit(1, this.Cache_Pic[0]);
+      }else{
+        this.submit(0, "");
+      }
       window.scrollTo(0,0);
     },
     // 修改翻页内容
@@ -511,31 +514,27 @@ export default {
       }
       return true
     },
-    submit(Pic = "") {
-
-      console.log(Pic, this.Cache_Pic[0])
+    submit(type, Pic = "") {
 
       this.loading = true;
 
-      // Pic不为空字符串，则代表使用了图片搜索，新图片页数置为1，旧图片视作重新搜索，也置为1
+      // type为1，代表图片搜索，只有当传入的图片和原来的不一样，才需要替换页数为1
       // 而且使用图片搜索时，为了防止和普通的文字搜索混淆，把content改写为空字符串
       // 如果与缓存的图片不一致，则说明是新图片，需要替换图片内容
-      if(Pic != ""){
+      if(type != 0){
         this.content = "";
         if(Pic != this.Cache_Pic[0]){
           this.Cache_Pic.splice(0, 1, Pic);
+          this.Page_Index = 1;
         }
-        this.Page_Index = 1;
       }
       // 默认传入一个空字符串，这代表了使用文字搜索或者同一张图片的换页操作
       // 文字栏为空，Pic也为空字符串而触发了submit函数，说明应该是换页，继续流程即可
       // 文字栏不为空，Pic为空字符串，说明应该是文字搜索，此时应当清理图片缓存
       else{
-        if(this.content != ""){
-          this.Page_Index = 1;
-          this.Cache_Pic.splice(0, 1, "");
-        }
+        this.Cache_Pic = [""];
       }
+
       // 后续逻辑和原先一致
 
       if(this.content != this.old_content){
@@ -571,7 +570,7 @@ export default {
         }
       }
 
-      if(this.Cache_Pic[0] != ""){
+      if(this.Cache_Pic[0].length > 0){
         param.append('pic', this.Cache_Pic[0]);
       }
 
