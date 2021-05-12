@@ -92,6 +92,8 @@
 
 <script>
 import vueImgVerify from "@/common/components/vue-img-verify.vue";
+import axios from 'axios'
+// import qs from 'qs'
 export default {
   components: { vueImgVerify },
   data(){
@@ -122,7 +124,7 @@ export default {
       }
     }
     var validatePhoneCode =(rule,value,callback) =>{
-      if (value.toUpperCase() !== this.phoneCodeOrigin.toUpperCase()) {
+      if (value !== this.phoneCodeOrigin) {
         callback(new Error('手机验证码错误！'));
       }else{
         callback()
@@ -131,7 +133,7 @@ export default {
     return {
       visible:false,
       imgCodeOrigin:"",
-      phoneCodeOrgin:'',
+      phoneCodeOrigin:'',
       disabled:false,
       phoneCode:"",
       valiBtn:'获取验证码',
@@ -142,8 +144,8 @@ export default {
         username: '',
         password: '',
         email: '',
-        // phone: '',
-        phone: '19916935265'
+        phone: '',
+        // phone: '19916935265'
       },
       rules: {
         username:[
@@ -210,19 +212,26 @@ export default {
              if(err){
                  return;
              }
-             // this.tackBtn();   //验证码倒数60秒
-             // let fd = new FormData();  //POST 请求需要 转化为Form
-             // fd.append('phoneNumber[]', this.ruleForm.phone);
-             // fd.append('phoneNumber[]', this.ruleForm.phone);
-             // fd.append('code[]', this.getRandomCode(4));
+             this.tackBtn();   //验证码倒数60秒
+             this.phoneCodeOrigin=this.getRandomCode(4)
              let fd ={
-               'phoneNumber':[this.ruleForm.phone],
-               'code':[this.getRandomCode(4)]
+               'phoneNumber':['+86'+this.ruleForm.phone],
+               'code':[this.phoneCodeOrigin]
              }
-             this.$http.post(this.getPhoneCodeUrl,fd,
-               { emulateJSON: true })
+             // let postCfg = {
+             //    headers: {'Content-Type': 'application/json;charset=UTF-8'}
+             // };
+             axios.post(this.getPhoneCodeUrl,
+               JSON.stringify(fd),
+               // qs.stringify(fd),
+               // { emulateJSON: true }
+             )
              .then( res => {
-                 console.log(res);
+                 // console.log(res);
+                 if (res.status==200) {
+                   // let data =JSON.parse(res.data[0])
+                   console.log('发送成功');
+                 }
              })
           })
       })
@@ -255,31 +264,29 @@ export default {
     register() {
       this.$refs[this.formName].validate((valid) => {
         if (!valid) {
-          console.log('error submit!!');
           return false;
         }
+        this.$http
+          .post(
+            this.backendIP + "/api/register",
+            this.ruleForm,
+            { emulateJSON: true }
+          )
+          .then(function(data) {
+            if (data.status != 200) { //eslint-disable-line
+              alert("注册失败");
+              return;
+            }
+            sessionStorage.accessToken = data.body.access_token;
+            sessionStorage.user = this.account_reg;
+            sessionStorage.isAdmin = true;
+            this.visible = false;
+            this.$router.push("/user");
+          })
+          .catch(()=>{
+            alert('用户名或手机号已注册！');
+          })
       });
-
-      this.$http
-        .post(
-          this.backendIP + "/api/register",
-          this.ruleForm,
-          { emulateJSON: true }
-        )
-        .then(function(data) {
-          console.log(data);
-          if (data.status != 200) { //eslint-disable-line
-            alert("注册失败");
-            return;
-          }
-          sessionStorage.accessToken = data.body.access_token;
-          sessionStorage.user = this.account_reg;
-          sessionStorage.isAdmin = true;
-          this.visible = false;
-          this.$router.push("/user");
-          location.reload();
-        })
-
     },
     getimgCodeOrigin(code){
       this.imgCodeOrigin = code;
