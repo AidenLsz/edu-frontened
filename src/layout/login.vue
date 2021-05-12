@@ -111,7 +111,7 @@ export default {
           this.backendIP + "/api/login",
           {
             username: this.account,
-            password: this.pass
+            password: this.password
           },
           {
             emulateJSON: true,

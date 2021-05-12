@@ -93,6 +93,7 @@
 <script>
 import vueImgVerify from "@/common/components/vue-img-verify.vue";
 import axios from 'axios'
+import md5 from 'js-md5'
 // import qs from 'qs'
 export default {
   components: { vueImgVerify },
@@ -177,6 +178,7 @@ export default {
         ],
         phoneCode:[
           { required: true, message: '请输入手机验证码', trigger: 'blur' },
+          // { required: false, message: '请输入手机验证码', trigger: 'blur' },
           { validator: validatePhoneCode, trigger: ['blur'] }
         ]
       }
@@ -266,10 +268,16 @@ export default {
         if (!valid) {
           return false;
         }
+        let fd={
+          username:this.ruleForm.username,
+          password:md5(this.ruleForm.password),
+          phone:this.ruleForm.phone,
+          email:this.ruleForm.email,
+        }
         this.$http
           .post(
             this.backendIP + "/api/register",
-            this.ruleForm,
+            fd,
             { emulateJSON: true }
           )
           .then(function(data) {
