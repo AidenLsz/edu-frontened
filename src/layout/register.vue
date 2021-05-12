@@ -136,8 +136,8 @@ export default {
       phoneCode:"",
       valiBtn:'获取验证码',
       formName:'loginForm',
-      // getPhoneCodeUrl:'https://send-message-service-166-production.env.bdaa.pro/v1',
-      getPhoneCodeUrl:'http://localhost:2025',
+      getPhoneCodeUrl:'https://send-message-service-166-production.env.bdaa.pro/v1',
+      // getPhoneCodeUrl:'http://localhost:2025',
       ruleForm: {
         username: '',
         password: '',
