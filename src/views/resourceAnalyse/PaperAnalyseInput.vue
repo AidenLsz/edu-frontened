@@ -4056,7 +4056,8 @@ export default {
                       content.charCodeAt(i) == 10) 
                     && !symbolError){
               symbolError = true;
-              this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符 " + content[i] + " ！", offset: 40});
+              this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符，或将其包裹于$$符号之内" + content[i] + " ！", offset: 40});
+              remakeContent = remakeContent + content[i];
             }
             else {
               remakeContent = remakeContent + content[i];
