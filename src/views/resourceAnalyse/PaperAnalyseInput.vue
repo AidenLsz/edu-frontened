@@ -26,6 +26,9 @@
       </el-row>
       <el-divider></el-divider>
       <el-row style="width: 85%; margin-left: 6.75vw">
+        <el-row style="margin-top: 2vh; margin-bottom: 3vh" type="flex" justify="center">
+          <el-button @click="Re_Cut_TestData()" size="medium" type="success" plain>修正完成，再次切分</el-button>
+        </el-row>
         <el-row v-for="(Question, index) in userCutTestData" :key="index" style="margin-bottom: 5vh; border: 2px dashed black; padding: 10px 20px; background: rgba(0,255,255,0.04)">
           <el-row type="flex" justify="center">
             <el-button type="text" size="medium" :disabled="index == 0" @click="Math_Merge_To_Front(index)">向前合并</el-button>
@@ -43,6 +46,12 @@
               </el-row>
             </el-col>
             <el-col :span="6">
+              <el-row type="flex" justify="start" style="margin-bottom: 2vh">
+                <span>本题分值：</span>
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-bottom: 2vh">
+                <el-input-number size="mini" v-model="testDataScore[index]"></el-input-number>
+              </el-row>
               <el-row type="flex" justify="start" style="margin-bottom: 2vh">
                 <span>正确答案：</span>
               </el-row>
@@ -70,6 +79,9 @@
           <el-row type="flex" justify="center">
             <el-button type="text" size="medium" :disabled="index == userCutTestData.length - 1" @click="Math_Merge_To_Back(index)">向后合并</el-button>
           </el-row>
+        </el-row>
+        <el-row style="margin-top: 2vh; margin-bottom: 3vh" type="flex" justify="center">
+          <el-button @click="Re_Cut_TestData()" size="medium" type="success" plain>修正完成，再次切分</el-button>
         </el-row>
       </el-row>
     </el-dialog>
@@ -523,6 +535,11 @@
                 <el-col :span="3" style="text-align: left; padding-top: 1.2vh">
                     科目：{{SubjectType}}
                 </el-col>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin: 30px 50px; height: 26px; line-height: 26px">
+              <label style="margin-right: 20px">本题分值：</label>
+              <el-input-number size="mini" v-model="testDataScore[Question_Index]"></el-input-number>
+              <label style="margin-left: 20px">分</label>
             </el-row>
             <!-- 题干部分 - 无小题 -->
             <el-row type="flex" justify="start" style="margin: 30px 50px;">
@@ -1273,7 +1290,9 @@ export default {
       // 用户手动切分数学试卷
       userCutMath: false,
       // 手动切分时的试卷内容
-      userCutTestData: []
+      userCutTestData: [],
+      // TestData对应的分值
+      testDataScore: []
     };
   },
   computed: {
@@ -1383,6 +1402,14 @@ export default {
     this.ToTop();
   },
   methods: {
+    //请求重新切分
+    Re_Cut_TestData(){
+      for(let i = 0; i < this.testDataScore.length; i++){
+        this.userCutTestData[i].Score = this.testDataScore[i];
+        console.log(this.userCutTestData[i])
+      }
+      this.userCutMath = false;
+    },
     // 将所有题目状况更改为已确认
     Check_All(){
       for(let i = 0; i < this.Question_Check.length; i++){
@@ -1416,7 +1443,7 @@ export default {
         this.userCutTestData.splice(0, 0, New_Ques)
       }
 
-
+      this.testDataScore.splice(index, 0, this.testDataScore[index])
     },
     // 向后切分数学试题
     Math_Back_Cut(index, sindex){
@@ -1437,6 +1464,8 @@ export default {
       Ques.Stem.splice(0, sindex + 1)
       this.userCutTestData.splice(index, 1, Ques)
       this.userCutTestData.splice(index, 0, New_Ques)
+      
+      this.testDataScore.splice(index, 0, this.testDataScore[index])
 
     },
     // 向前合并数学试题
@@ -1455,6 +1484,9 @@ export default {
       Ques_A.Analysis = Ques_A.Analysis + "\n" + Ques_B.Analysis;
 
       this.userCutTestData.splice(index, 1);
+      
+      this.testDataScore[index - 1] = this.testDataScore[index] + this.testDataScore[index - 1];
+      this.testDataScore.splice(index, 1); 
     },
     // 向后合并数学试题
     Math_Merge_To_Back(index){
@@ -1473,6 +1505,9 @@ export default {
       Ques_B.Analysis = Ques_A.Analysis + "\n" + Ques_B.Analysis;
 
       this.userCutTestData.splice(index, 1);
+      
+      this.testDataScore[index + 1] = this.testDataScore[index] + this.testDataScore[index + 1];
+      this.testDataScore.splice(index, 1); 
     },
     User_Cut_Math_Close(){
       this.userCutMath = false;
@@ -3710,6 +3745,11 @@ export default {
       for(var i = 0; i < this.TestData.doc.length; i++){
         this.Question_Check.push(false);
         this.TestData.doc[i].answer = this.TestData.doc[i].answer.split("::");
+        if(i < 16){
+          this.testDataScore.push(5);
+        }else{
+          this.testDataScore.push(12);
+        }
       }
 
     },
@@ -4079,6 +4119,8 @@ export default {
       this.analysing = true;
 
       var Docs = this.TestData.doc;
+
+      Docs[i].question_score = this.testDataScore[i];
 
       for(var i = 0; i < Docs.length; i++){
 

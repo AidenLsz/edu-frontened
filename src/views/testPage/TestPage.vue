@@ -2,6 +2,7 @@
 
 <template>
     <div style="min-height: 600px">
+        <el-input-number v-model="Num[0].a"></el-input-number>
         <el-row style="margin-top: 30px">
             手动输入内容测试区
         </el-row>
@@ -24,6 +25,9 @@
             <el-button @click="bugDataIndex -= 1" :disabled="bugDataIndex == 0">上一题</el-button>
             <el-button @click="bugCheck(bugDataIndex)">转化测试</el-button>
             <el-button @click="bugDataIndex += 1" :disabled="bugDataIndex == bugData.length - 1">下一题</el-button>
+        </el-row>
+        <el-row v-if="bugData[bugDataIndex].question_score">
+            <el-input-number v-model="bugData[bugDataIndex].question_score"></el-input-number>
         </el-row>
         <el-row>
             <Mathdown :content="bugData[bugDataIndex].question_stem" :name="'Q_Stem'"></Mathdown>
@@ -72,10 +76,19 @@ export default {
     name: "TestPage",
     data(){
         return {
+            Num: [
+                {
+                    'a': 0
+                },
+                {
+                    'b': 0
+                },
+            ],
             content: "",
             remakeContent: "手动输入内容展示（默认值）",
             bugData: [
                 {
+                    "question_score": 5,
                     "question_stem": "（1）设<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADUAAAAlCAYAAADiMKHrAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACO0lEQVR4nO2Yv0vkQBTHH4quByqHXCEIp/gDWQWLExtFUBEbRRAVwUKba+wsLIUrLO7+AQtBGxULQUQQCwsVsbBULO5QK1FsbPxxh4pw932+hM3NJtndbNZMJF/4sMlkEt43mX1vZogiRYqUpnaCDsBNo+AZFCvtXeAIPIKfYFC5vpfzyDxqElxQsqk4uAb9oJTE4BVoe+sAvegEfAYP9L+peTCh9B0Gm8bxC/gLinIdoBeVGb+qqTNQo/QtAbeWczampSlTqqnf4INNPzZVYhyHztQfsg/4ztIvdKbe5fBboOREMUSJRMEKnakGkpTeR5LSO8ElaLf00daUmZqtfDKudYNj8AR+kaR0u/vUop1SPI6nwQyoMNr47VRl+iBdVACWwVfwHdyAbXAOWi397N62SvmbRZ1CXCcKLefjJEOhN5hw/FcPuAcDQQfilzpIDI04XA/V8GPxf4cL3phPz0tl3g9c1WIY2iWpFSxOHo0+mAtEnMoPwBRYJCmES2AL1AYYl6+qJlmw2c2cdVDgS/tmkkUgT3uejF8eDZVZPHMv+7CyE2fLQ/AFxEgy4zeSqZCTeG74MfeheRebiitt+SQbLDGHe9xMabe050DqwSyYc+mX6ktpM2PnnSSztqyQfC0nhcYUi+seD8UNkq9lKtNZilamTHFd5H2JPIfr2n8pDqBOaeP6xztIhcndXxUKU/ugiSTb8QbLKlhzuUd7U7x1vE5SdHnInYIflNjPs1M6Kd3T0j5SpEiZ6R/wZauyA1R7RwAAAABJRU5ErkJggg==\">，则<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAMCAYAAAC5tzfZAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAhklEQVR4nGNgoBLgBeJqIG4FYjmoGBsQK+HSwArES4E4BarpDRDvBuLbQOyMSxMn1FQYCAfi30AcTKwzHYH4MxBHEKvBFog/AXEssRosgPgjECcTq8EEiD8A8SEg5oeKMQOxLi4NoKA+DMQlQLwQiF8C8WIg3gHEWsTaqgDE/kDMTawG6gMA4acS9mivflQAAAAASUVORK5CYII=\">的共轭复数为（A）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAUCAYAAAAZb7T/AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABG0lEQVR4nGNgGAWjAAT2AjErtQzzBeKvQKxCgRkGQDwdiB8C8U8gfg7Ea4HYEEnNfiBmocAOOEgB4hdA/ImBOEffAWIdLOI/gPg8EJsDMQcQCwNxBhC/A2JeajgUGYAsUgPiBwyUO9oUi/g9qHqQ/H8gliDLlWhACEo/YKDM0ciAHYiVgLgBiHcDMRNU/AMDlRwNAw8YqOPoGAZIiIIwyMHISYNujoZFKz7sg6aHmQES0nOAeBepjka3EF9I4nI0OiAmecAAKFmAMrkylD/okgcogAyxiD9GEh+Ujj4JxMYMkCJPBognA/FNBkhyAQGqORpkEHoaNSHD0RZAvBqIHwHxdwZIUTcViKWg8shJVYEK7h4Fo2AUjIKhCACHjU6x6uBKawAAAABJRU5ErkJggg==\">（B）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAAUCAYAAAAUccS4AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA+0lEQVR4nO2VzQpBQRiGv0QkihU7xQILKdm5EvfAHbgBeztZKKUsuACxsrOytlByCfKXOt5pZjJNwjFTlHnraeqbma9nTjMdIpf/y9RWozq4gMSH+yugC3bgLMYByClrZiaCMk2wJTPZK1iCKoiAFGiBjQ1BNSuQAXsyky1ptQA4griY94gfxChJMZrIqmFCedABfaV+IguyMjZkG8S/IGMEgsrcz8myhEABTEBPqb+UlXdF8kzmkayf/XqiQjD8rqyfmD6wolZjkkxQvomfkl2AMnHJLBiCubLGiixr4mmkffaogTHxn8EBrEGb7odXr1PMVNjFxcXli7kBOulAWdlf9tgAAAAASUVORK5CYII=\">（C）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAUCAYAAAAHpoRMAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA8klEQVR4nGNgGAWDC+wmVmEkEP8CYgEKLDMC4tlA/ASIf0LpxUCsCJXfS4whuUD8iEjHfABiERxyf4D4NBCbADEHEIsDcS0Q3yHGETBwEYjlgfgLFRyjiybGzAAJJZDcf6gj8QJBKE2pY5AByFJ1IJ4KxHOhYj+IcQwMUMsxOQyQUADhlUDMQi3HwIIXH1bAYhYrEGsC8UYgnkktx6ADYqMJBnihjmCht2NAoaiJJsYJxN+gjqC7Y44AsT4QswOxMhCvYoBEFQOxjgEpQk8HuCzE5xhrIF7HACnsQKFxG4g7gZiPATXt8RBy0CgYBaNgyAMA9vVJT6OOrFIAAAAASUVORK5CYII=\">（D）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAUCAYAAAAHpoRMAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA6UlEQVR4nGNgGAWDC+wmVmEkEP8CYgEyLTIC4tlA/ASIf0LpxUCsiKRmLzEG5QLxIwod8weITwOxCRBzALE4ENcC8R1SDboIxPJA/IVCx+iiiTEzQEKJCyr/H+pQvEAQSlPiGGQAslAdiKcC8Vwk8R/EOAYGqOGYHAZICIDwSiBmGUjHgAArEGsC8UYgnklNx8DiGoZJcSwv1AGw0KFbyIAcrYkmxgnE35AcQFfHHAFifSBmB2JlIF7FAIkqGCDKMSBF/9GwCImOsQbidQyQwg4UGreBuBOI+ZAcCzObh0SzR8EoGAVDDwAArNs8Lhpl3cQAAAAASUVORK5CYII=\">",
                     "question_options": [],
                     "question_type": "选择题",
@@ -328,7 +341,7 @@ export default {
                     "subject": "user_input"
                 }
             ],
-            bugDataIndex: 19,
+            bugDataIndex: 0,
             // 用于输入符号提示的部分
             en_pun_list: [',','.','?','!',':',';','\'','"','(',')','&nbsp','_','/','|','\\','<','>'],
             ch_pun_list: ['，','。','！','？','：','；','‘','’','“','”','（','）','&nbsp','、','《','》'],
