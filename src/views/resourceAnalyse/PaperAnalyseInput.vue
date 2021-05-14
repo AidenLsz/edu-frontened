@@ -1406,7 +1406,6 @@ export default {
     Re_Cut_TestData(){
       for(let i = 0; i < this.testDataScore.length; i++){
         this.userCutTestData[i].Score = this.testDataScore[i];
-        console.log(this.userCutTestData[i])
       }
       this.userCutMath = false;
     },
@@ -4116,13 +4115,9 @@ export default {
 
       this.analysing = true;
 
-      console.log("Start Submit")
-
       var Docs = this.TestData.doc;
 
       for(var i = 0; i < Docs.length; i++){
-
-        console.log("Add_Score_To_" + i)
 
         var Ques = Docs[i]
 
@@ -4186,7 +4181,6 @@ export default {
         }
       }
 
-      console.log("Check_Pass.")
 
       // let config = {
       //     headers: { "Content-Type": "multipart/form-data" }
