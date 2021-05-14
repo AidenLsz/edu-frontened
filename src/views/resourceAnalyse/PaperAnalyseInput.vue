@@ -4044,8 +4044,6 @@ export default {
     // 负责实际检查的部分
     ChecK_Do(content){
 
-      console.log(content);
-
       let remakeContent = "";
 
       var latexFlag = false;
@@ -4118,13 +4116,17 @@ export default {
 
       this.analysing = true;
 
-      var Docs = this.TestData.doc;
+      console.log("Start Submit")
 
-      Docs[i].question_score = this.testDataScore[i];
+      var Docs = this.TestData.doc;
 
       for(var i = 0; i < Docs.length; i++){
 
+        console.log("Add_Score_To_" + i)
+
         var Ques = Docs[i]
+
+        Docs[i].question_score = this.testDataScore[i];
 
         var stem = Ques.question_stem;
         var result = this.ChecK_Do(stem);
@@ -4184,7 +4186,7 @@ export default {
         }
       }
 
-      // console.log("Check_Pass.")
+      console.log("Check_Pass.")
 
       // let config = {
       //     headers: { "Content-Type": "multipart/form-data" }
