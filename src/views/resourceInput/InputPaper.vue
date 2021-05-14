@@ -26,6 +26,9 @@
       </el-row>
       <el-divider></el-divider>
       <el-row style="width: 85%; margin-left: 6.75vw">
+        <el-row style="margin-top: 2vh; margin-bottom: 3vh" type="flex" justify="center">
+          <el-button @click="Re_Cut_TestData()" size="medium" type="success" plain>修正完成，再次切分</el-button>
+        </el-row>
         <el-row v-for="(Question, index) in userCutTestData" :key="index" style="margin-bottom: 5vh; border: 2px dashed black; padding: 10px 20px; background: rgba(0,255,255,0.04)">
           <el-row type="flex" justify="center">
             <el-button type="text" size="medium" :disabled="index == 0" @click="Math_Merge_To_Front(index)">向前合并</el-button>
@@ -43,6 +46,12 @@
               </el-row>
             </el-col>
             <el-col :span="6">
+              <el-row type="flex" justify="start" style="margin-bottom: 2vh">
+                <span>本题分值：</span>
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-bottom: 2vh">
+                <el-input-number size="mini" v-model="testDataScore[index]"></el-input-number>
+              </el-row>
               <el-row type="flex" justify="start" style="margin-bottom: 2vh">
                 <span>正确答案：</span>
               </el-row>
@@ -70,6 +79,9 @@
           <el-row type="flex" justify="center">
             <el-button type="text" size="medium" :disabled="index == userCutTestData.length - 1" @click="Math_Merge_To_Back(index)">向后合并</el-button>
           </el-row>
+        </el-row>
+        <el-row style="margin-top: 2vh; margin-bottom: 3vh" type="flex" justify="center">
+          <el-button @click="Re_Cut_TestData()" size="medium" type="success" plain>修正完成，再次切分</el-button>
         </el-row>
       </el-row>
     </el-dialog>
@@ -438,9 +450,14 @@
 
         </el-row>
         <!-- 顶部确认入库按钮 -->
-        <el-row style="margin: 30px 50px" v-if="paper_type == '1'">
+        <el-row style="margin: 30px 50px" v-if="paper_type == '1' && TestData.doc">
           <el-col :span="6" :offset="6">
-            <el-button @click="Ensure()" type="success" plain :disabled="!(Submit_Show)">确认入库</el-button>
+            <el-button v-if="Submit_Show" @click="Ensure()" type="success" plain>
+              确认入库
+            </el-button>
+            <el-button v-else @click="Check_All()" type="success" plain>
+              全部确认
+            </el-button>
           </el-col>
           <el-col :span="6">
             <el-button @click="User_Cut_Math()" type="success" plain>手动切分</el-button>
@@ -486,6 +503,11 @@
                 <el-col :span="3" style="text-align: left; padding-top: 1.2vh">
                     科目：{{Question_Info.subject}}
                 </el-col>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin: 30px 50px; height: 26px; line-height: 26px">
+              <label style="margin-right: 20px">本题分值：</label>
+              <el-input-number size="mini" v-model="testDataScore[Question_Index]"></el-input-number>
+              <label style="margin-left: 20px">分</label>
             </el-row>
             <!-- 题干部分 - 无小题 -->
             <el-row type="flex" justify="start" style="margin: 30px 50px;">
@@ -607,10 +629,13 @@
           <el-button type="primary" @click="saveFile(format)" :disabled="Download_Show(format)">导出文件</el-button>
         </el-row>
         <!-- 数学，文件导出区域 -->
-        <el-row v-if="paper_type == '1'">
+        <el-row v-if="paper_type == '1' && TestData.doc">
           <el-col :span="4" :offset="2">
-            <el-button :disabled="!(Submit_Show)" @click="Ensure()" type="success" plain>
+            <el-button v-if="Submit_Show" @click="Ensure()" type="success" plain>
               确认入库
+            </el-button>
+            <el-button v-else @click="Check_All()" type="success" plain>
+              全部确认
             </el-button>
           </el-col>
           <el-col :span="4">
@@ -1259,7 +1284,9 @@ export default {
       // 用户手动切分数学试卷
       userCutMath: false,
       // 手动切分时的试卷内容
-      userCutTestData: []
+      userCutTestData: [],
+      // TestData对应的分值
+      testDataScore: []
     };
   },
   computed: {
@@ -1369,6 +1396,26 @@ export default {
     this.ToTop();
   },
   methods: {
+    //请求重新切分
+    Re_Cut_TestData(){
+      for(let i = 0; i < this.testDataScore.length; i++){
+        this.userCutTestData[i].Score = this.testDataScore[i];
+        console.log(this.userCutTestData[i])
+      }
+      this.userCutMath = false;
+    },
+    Show_Score(score){
+      console.log(score)
+    },
+    // 将所有题目状况更改为已确认
+    Check_All(){
+      for(let i = 0; i < this.Question_Check.length; i++){
+        if(!this.Question_Check[i]){
+          this.Question_Check.splice(i, 1, true);
+        }
+      }
+      this.Submit_Show = true;
+    },
     // 向前切分数学试题
     Math_Front_Cut(index, sindex){
 
@@ -1392,7 +1439,7 @@ export default {
       }else{
         this.userCutTestData.splice(0, 0, New_Ques)
       }
-
+      this.testDataScore.splice(index, 0, this.testDataScore[index])
 
     },
     // 向后切分数学试题
@@ -1414,6 +1461,7 @@ export default {
       Ques.Stem.splice(0, sindex + 1)
       this.userCutTestData.splice(index, 1, Ques)
       this.userCutTestData.splice(index, 0, New_Ques)
+      this.testDataScore.splice(index, 0, this.testDataScore[index])
 
     },
     // 向前合并数学试题
@@ -1432,6 +1480,8 @@ export default {
       Ques_A.Analysis = Ques_A.Analysis + "\n" + Ques_B.Analysis;
 
       this.userCutTestData.splice(index, 1);
+      this.testDataScore[index - 1] = this.testDataScore[index] + this.testDataScore[index - 1];
+      this.testDataScore.splice(index, 1); 
     },
     // 向后合并数学试题
     Math_Merge_To_Back(index){
@@ -1450,6 +1500,8 @@ export default {
       Ques_B.Analysis = Ques_A.Analysis + "\n" + Ques_B.Analysis;
 
       this.userCutTestData.splice(index, 1);
+      this.testDataScore[index + 1] = this.testDataScore[index] + this.testDataScore[index + 1];
+      this.testDataScore.splice(index, 1); 
     },
     User_Cut_Math_Close(){
       this.userCutMath = false;
@@ -1671,6 +1723,9 @@ export default {
     },
     selectPaperFile(e) {
 
+      this.TestData = {};
+      this.Waiting_Text = "切分试卷中，请等待......"
+
       if(this.temp_File && this.math_standby == "0"){
         this.temp_File = "";
       }
@@ -1741,6 +1796,9 @@ export default {
       }
     },
     selectAnswerFile(e) {
+
+      this.TestData = {};
+      this.Waiting_Text = "切分试卷中，请等待......"
 
       if(this.temp_File && this.math_standby == "1"){
         this.temp_File = "";
@@ -2550,14 +2608,21 @@ export default {
     // 查找次序依次为题目包，点击添加按钮的包序号，然后访问这个包下保存题目和题目折叠信息的条目
     New_Questions(val){
 
+        let temp_val = "";
+
         if(val.type != 'mix'){
-          this.Normal_Char_Check(val);
+          temp_val = this.Normal_Char_Check(val);
         }else{
-          this.Mix_Char_Check(val)
+          temp_val = this.Mix_Char_Check(val)
         }
 
-        this.Questions[this.Question_Bundle_Add_Index].Bundle_Questions.push(val);
-        this.Questions[this.Question_Bundle_Add_Index].Bundle_Questions_Collapse.push(false);
+        if(temp_val != false){
+          this.Questions[this.Question_Bundle_Add_Index].Bundle_Questions.push(temp_val);
+          this.Questions[this.Question_Bundle_Add_Index].Bundle_Questions_Collapse.push(false);
+        }else{
+          this.Questions[this.Question_Bundle_Add_Index].Bundle_Questions.push(val);
+          this.Questions[this.Question_Bundle_Add_Index].Bundle_Questions_Collapse.push(false);
+        }
 
         this.Question_Bundle_Add_Index = -1;
 
@@ -2603,12 +2668,18 @@ export default {
     // 重写编辑后，把新数据直接覆盖上去
     ReEdit_Questions(val){
 
+        let temp_val = ""
+
         if(val.type != 'mix'){
-          this.Normal_Char_Check(val);
+          temp_val = this.Normal_Char_Check(val);
         }else{
-          this.Mix_Char_Check(val)
+          temp_val = this.Mix_Char_Check(val)
         }
-        this.Questions[this.Question_Bundle_Add_Index].Bundle_Questions.splice(this.Index_Edit_Record, 1, val);
+        if(temp_val != false){
+          this.Questions[this.Question_Bundle_Add_Index].Bundle_Questions.splice(this.Index_Edit_Record, 1, temp_val);
+        }else{
+          this.Questions[this.Question_Bundle_Add_Index].Bundle_Questions.splice(this.Index_Edit_Record, 1, val);
+        }
 
         this.Close_Editor();
         this.Reset_Params();
@@ -3515,6 +3586,10 @@ export default {
         })
         .then(function() {
           this.$message.success("整卷上传已完成。");
+        }).catch(() => {
+          alert("过程出现错误，请稍后重新尝试...");
+          this.analysing = false;
+          return 
         });
 
       }else if(Control == 'export'){
@@ -3570,6 +3645,10 @@ export default {
                 link.click()
                 URL.revokeObjectURL(objectUrl);
               }
+            }).catch(() => {
+              alert("下载过程出现问题，请稍后重新尝试...");
+              this.analysing = false;
+              return 
             });
       }else if(Control == 'analyse'){
 
@@ -3605,6 +3684,10 @@ export default {
             let Test_Json = data.data.Paper_Json
             sessionStorage.PaperJson = JSON.stringify(Test_Json);
             this.Open_PaperAnalyse();
+        }).catch(() => {
+          alert("解析失败，请稍后重新尝试...");
+          this.analysing = false;
+          return 
         });
       }
     },
@@ -3640,6 +3723,11 @@ export default {
       for(var i = 0; i < this.TestData.doc.length; i++){
         this.Question_Check.push(false);
         this.TestData.doc[i].answer = this.TestData.doc[i].answer.split("::");
+        if(i < 16){
+          this.testDataScore.push(5);
+        }else{
+          this.testDataScore.push(12);
+        }
       }
 
     },
@@ -3806,200 +3894,273 @@ export default {
     Mix_Char_Check(val){
 
       var Check_Now = val.content;
-      if(Check_Now!= "" && !this.ChecK_Do(Check_Now)){
+      var result = this.ChecK_Do(Check_Now);
+      if(Check_Now!= "" && result[1]){
+        this.$alert("请将题干内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+          confirmButtonText: '确定'
+        });
         return false
+      }else if(Check_Now!= "" && !result[1]){
+        val.content = result[0];
       }
 
       var Check_Now_List = val.answer;
       Check_Now_List = Check_Now_List.split("::");
       for(var j = 0; j < Check_Now_List.length; j++){
         var item = Check_Now_List[j]
-        if(item != "" && !this.ChecK_Do(item)){
+        result = this.ChecK_Do(item);
+        if(item != "" && result[1]){
+          this.$alert("请将答案内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+            confirmButtonText: '确定'
+          });
           return false
+        }else if(item != "" && !result[1]){
+          Check_Now_List.splice(j, 1, result[0])
         }
       }
+      val.answer = Check_Now_List.join("\n");
 
       Check_Now = val.analyse;
-      if(Check_Now!= "" && !this.ChecK_Do(Check_Now)){
+      if(Check_Now!= "" && result[1]){
+        this.$alert("请将解析内容中自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+          confirmButtonText: '确定'
+        });
         return false
+      }else if(Check_Now!= "" && !result[1]){
+        val.analyse = result[0];
       }
 
       Check_Now_List = val.sub_questions;
       for(var len = 0; len < Check_Now_List.length; len++){
         item = Check_Now_List[len]
-        if(!this.Normal_Char_Check(item)){
-          return false
-        }
+        result = this.Normal_Char_Check(item)
+        val.sub_questions.splice(len, 1, result)
       }
 
       this.Symbol_Error = false;
+
+      return val;
 
     },
     // 检测是否有非法字符 - 选择-填空-解答
     Normal_Char_Check(val){
 
       var Check_Now = val.content;
-      if(!this.ChecK_Do(Check_Now)){
+      var result = this.ChecK_Do(Check_Now);
+      if(Check_Now!= "" && result[1]){
+        this.$alert("请将题干内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+          confirmButtonText: '确定'
+        });
         return false
+      }else if(Check_Now!= "" && !result[1]){
+        val.content = result[0];
       }
 
       var Check_Now_List = val.answer;
-      if(Check_Now_List.indexOf("::") != -1){
-
-        Check_Now_List = Check_Now_List.split("::");
-
-        for(var j = 0; j < Check_Now_List.length; j++){
-
-          var item = Check_Now_List[j]
-          
-          if(item != "" && !this.ChecK_Do(item)){
-            return false
-          }
-
-        }
-      }else{
-        if(Check_Now_List != "" && !this.ChecK_Do(Check_Now_List)){
+      Check_Now_List = Check_Now_List.split("::");
+      for(let j = 0; j < Check_Now_List.length; j++){
+        var item = Check_Now_List[j]
+        result = this.ChecK_Do(item);
+        if(item != "" && result[1]){
+          this.$alert("请将答案内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+            confirmButtonText: '确定'
+          });
           return false
+        }else if(item != "" && !result[1]){
+          Check_Now_List.splice(j, 1, result[0])
         }
       }
+      val.answer = Check_Now_List.join("\n");
 
       Check_Now = val.analyse;
-      if(Check_Now != "" && !this.ChecK_Do(Check_Now)){
+      result = this.ChecK_Do(Check_Now);
+      if(Check_Now!= "" && result[1]){
+        this.$alert("请将解析内容中自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+          confirmButtonText: '确定'
+        });
         return false
+      }else if(Check_Now!= "" && !result[1]){
+        val.analyse = result[0];
       }
 
       if(val.type == 'option'){
         Check_Now_List = val.options;
-        for(var opi = 0; opi < Check_Now_List.length; opi++){
-
+        for(let opi = 0; opi < Check_Now_List.length; opi++){
           item = Check_Now_List[opi]
-          
-          if(item != "" && !this.ChecK_Do(item)){
+          result = this.ChecK_Do(item);
+          if(item != "" && result[1]){
+            this.$alert("请将选项内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+              confirmButtonText: '确定'
+            });
             return false
+          }else if(item != "" && !result[1]){
+            Check_Now_List.splice(opi, 1, result[0])
           }
         }
+        val.options = Check_Now_List;
       }else if(val.type == 'answer'){
         Check_Now_List = val.sub_questions;
-        for(opi = 0; opi < Check_Now_List.length; opi++){
+        for(let opi = 0; opi < Check_Now_List.length; opi++){
           item = Check_Now_List[opi]
-          if(item != "" && !this.ChecK_Do(item)){
+          result = this.ChecK_Do(item);
+          if(item != "" && result[1]){
+            this.$alert("请将选项内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+              confirmButtonText: '确定'
+            });
             return false
+          }else if(item != "" && !result[1]){
+            Check_Now_List.splice(opi, 1, result[0])
           }
         }
+        val.sub_questions = Check_Now_List;
       }
 
       this.Symbol_Error = false;
+
+      return val;
     },
     // 负责实际检查的部分
-    ChecK_Do(Check_Now){
+    ChecK_Do(content){
 
-      var Flag = true;
+      console.log(content);
+
+      let remakeContent = "";
+
+      var latexFlag = false;
+      let symbolError = false;
+      let Regx = /[A-Za-z0-9]/;
 
       var Img_Catcher = new RegExp('<img src="(.*?)">', 'g')
-      var Result_List = Img_Catcher.exec(Check_Now);
+      var Result_List = Img_Catcher.exec(content);
 
       var Img_SE = [];
+      var Start = 0;
 
       while(Result_List != null){
         var Temp_Catcher = '<img src="' + Result_List[1] + '">';
-        var Start = Check_Now.indexOf(Temp_Catcher);
-        Img_SE.push([Start, Start + Temp_Catcher.length])
-        Result_List = Img_Catcher.exec(Check_Now);
+        if(Img_SE.length > 0){
+          Start = content.indexOf(Temp_Catcher, Img_SE[Img_SE.length - 1][1]);
+        }
+        else{
+          Start = content.indexOf(Temp_Catcher);
+        }
+        Img_SE.push([Start, Start + Temp_Catcher.length - 1])
+        Result_List = Img_Catcher.exec(content);
       }
       
       var Img_Index = 0;
 
-      for(var c = 0; c < Check_Now.length; c++){
+      for(var i = 0; i < content.length; i++){
         
-        if(Check_Now[c] == '$'){
-          if(Flag){
-            Flag = false;
-            this.Symbol_Error = true;
-          }else{
-            Flag = true;
-            this.Symbol_Error = false;
-          }
+        if(content[i] == '$' && !latexFlag){
+            latexFlag = true;
+        }else if(content[i] == '$' && latexFlag){
+            latexFlag = false;
         }
 
-        if(Img_SE.length > 0 && c >= Img_SE[Img_Index][0] && c <= Img_SE[Img_Index][1]){
+        if(Img_SE.length > 0 && i >= Img_SE[Img_Index][0] && i <= Img_SE[Img_Index][1]){
+          remakeContent = remakeContent + content[i];
           continue;
-        }else if(Img_SE.length > 0 && c > Img_SE[Img_Index][1]){
+        }else if(Img_SE.length > 0 && i > Img_SE[Img_Index][1] && Img_Index < Img_SE.length - 1){
           Img_Index = Img_Index + 1
         }
 
-        if(!(Check_Now.charCodeAt(c) > 255 || this.ch_pun_list.indexOf(Check_Now[c]) != -1 || this.en_pun_list.indexOf(Check_Now[c]) != -1 || Check_Now[c] == ' ' || Check_Now.charCodeAt(c) == 10) 
-            && Flag 
-            && Check_Now[c] != '$'){
-          this.$message.error({message: "请修正非法字符 " + Check_Now[c] + " ，或将字母，罗马符号及数字包裹在$$之间进行输入",
-                            offset: 40});
-          this.Symbol_Error = true;
-          return false;
+        if(!latexFlag){
+            if (Regx.test(content[i])) {
+                if(remakeContent[remakeContent.length - 1] == '$'){
+                    remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
+                }else{
+                    remakeContent = remakeContent + "$" + content[i] + "$";
+                }
+            }
+            // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
+            else if(!(content.charCodeAt(i) > 255 || 
+                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 || 
+                      content[i] == ' ' || content[i] == '$' || 
+                      content.charCodeAt(i) == 10) 
+                    && !symbolError){
+              symbolError = true;
+              this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符，或将其包裹于$$符号之内" + content[i] + " ！", offset: 40});
+              remakeContent = remakeContent + content[i];
+            }
+            else {
+              remakeContent = remakeContent + content[i];
+            }
+        }else{
+            remakeContent = remakeContent + content[i];
         }
       }
-      if(Flag){
-        return true;
-      }
-      else{
-        this.$message.error("请修正非法字符，或将字母，罗马符号及数字包裹在$$之间进行输入");
-        return false;
-      }
+      return [remakeContent, latexFlag]
     },
     Submit(){
 
-      // var Docs = this.TestData.doc;
+      var Docs = this.TestData.doc;
 
-      // console.log("Start_Check.")
+      for(var i = 0; i < Docs.length; i++){
 
-      // for(var i = 0; i < Docs.length; i++){
+        var Ques = Docs[i]
 
-      //   var Ques = Docs[i]
+        Docs[i].question_score = this.testDataScore[i];
 
-      //   var stem = Ques.question_stem;
-      //   if(!this.ChecK_Do(stem)){
-      //     this.$message.error({message: "第 "+ (i+1).toString() + " 题题干内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
-      //                         , offset: 80});
-      //     return false;
-      //   }
+        var stem = Ques.question_stem;
+        var result = this.ChecK_Do(stem);
+        if(result[1]){
+          this.$message.error({message: "请将第 "+ (i+1).toString() + " 题题干内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                    , offset: 80});
+          return false;
+        }else{
+          Docs[i].question_stem = result[0]
+        }
 
-      //   var answer = Ques.answer;
-      //   for(var j = 0; j < answer.length; j++){
+        var answer = Ques.answer;
+        for(let j = 0; j < answer.length; j++){
+          let item = answer[j]
+          result = this.ChecK_Do(item);
+          if(result[1]){
+            this.$message.error({message: "请将第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                      , offset: 80});
+            return false;
+          }else{
+            Docs[i].answer.splice(j, 1, result[0])
+          }
+        }
 
-      //     var item = answer[j]
-            
-      //     if(item != "" && !this.ChecK_Do(item)){
-      //       this.$message.error({message: "第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
-      //                         , offset: 80});
-      //       return false
-      //     }
-
-      //   }
-
-      //   var analyse = Ques.analysis;
-      //   if(!this.ChecK_Do(analyse)){
-      //     this.$message.error({message: "第"+ (i+1).toString() + "题解析内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
-      //                         , offset: 80});
-      //     return false;
-      //   }
+        var analyse = Ques.analysis;
+        result = this.ChecK_Do(analyse);
+        if(result[1]){
+          this.$message.error({message: "请将第"+ (i+1).toString() + "题解析内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                    , offset: 80});
+          return false;
+        }else{
+          Docs[i].analysis = result[0]
+        }
       
-      //   var options = Ques.question_options;
-      //   for(j = 0; j < options.length; j++){
-      //     if(!this.ChecK_Do(options[j])){
-      //       this.$message.error({message: "第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
-      //                         , offset: 80});
-      //       return false;
-      //     }
-      //   }
+        var options = Ques.question_options;
+        for(let j = 0; j < options.length; j++){
+          result = this.ChecK_Do(options[j]);
+          if(result[1]){
+            this.$message.error({message: "请将第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                      , offset: 80});
+            return false;
+          }else{
+            Docs[i].question_options.splice(j, 1, result[0])
+          }
+        }
 
-      //   var sub_Ques = Ques.sub_questions;
-      //   for(j = 0; j < sub_Ques.length; j++){
-      //     if(!this.ChecK_Do(sub_Ques[j])){
-      //       this.$message.error({message: "第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入"
-      //                         , offset: 80});
-      //       return false;
-      //     }
-      //   }
+        var sub_Ques = Ques.sub_questions;
+        for(let j = 0; j < sub_Ques.length; j++){
+          result = this.ChecK_Do(sub_Ques[j]);
+          if(result[1]){
+            this.$message.error({message: "请将第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                      , offset: 80});
+            return false;
+          }else{
+            Docs[i].sub_questions.splice(j, 1, result[0])
+          }
+        }
+      }
 
-      // }
+      // this.TestData.doc = Docs;
 
       // console.log("Check_Pass.")
 
@@ -4148,6 +4309,10 @@ export default {
           if(data.data){
             this.$message.success("试卷内容上传已完成。");
           }
+        }).catch(() => {
+          alert("解析失败，请稍后重新尝试...");
+          this.analysing = false;
+          return 
         });
 
     },

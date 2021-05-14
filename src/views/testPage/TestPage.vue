@@ -2,2804 +2,566 @@
 
 <template>
     <div style="min-height: 600px">
-    <!-- 准备开始写大题分析图表 -->
-    <!-- QB即Question_Bundle，指题包 -->
-    <el-dialog
-        :visible.sync="Question_Bundle_Analyse"
-        :title="'第' + Get_Question_Bundle_Index(this.Question_Bundle_Index) + '大题分析'" 
-        width="80%"
-        @close="Part_Expand_QB = [false, false];"
-        :modal-append-to-body="false"
-        :close-on-click-modal="true">
-        <!-- 综合分析的部分 -->
-        <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse_QB(0)" :class="Get_Part_Row_Style_QB(0)">
-            <el-col :span="4" style="text-align: left">
-                综合分析
-            </el-col>
-            <el-col :span="2" :offset="18">
-                <i class="el-icon-arrow-down" v-if="!Part_Expand_QB[0]"></i>
-                <i class="el-icon-arrow-up" v-if="Part_Expand_QB[0]"></i>
+        <el-input-number v-model="Num[0].a"></el-input-number>
+        <el-row style="margin-top: 30px">
+            手动输入内容测试区
+        </el-row>
+        <el-row style="margin-top: 10px">
+            <el-col :span="12" :offset="6">
+                <el-input v-model="content"></el-input>
             </el-col>
         </el-row>
-        <el-row :class="Get_Expand_Or_Collapse_QB(0)">
-            <!-- 本大题的小题数量 -->
-            <el-row style="width: 67%; margin-left: 16.5%; font-size: 16px" type="flex" justify="start">
-                <label>此大题共{{Paper_Json_Question_Bundle_Info.sub_question.length}}道题目，各项指标如下：</label>
-            </el-row>
-            <!-- 三项指标的假表格 -->
-            <!-- 表头项 -->
-            <el-row style="width: 67%; margin-left: 16.5%; background: WhiteSmoke; font-weight: bold; font-size: 16px; margin-top: 30px; padding-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
-                <el-col :span="5" :offset="4">均值</el-col>
-                <el-col :span="5">方差</el-col>
-                <el-col :span="5">最大值</el-col>
-                <el-col :span="5">最小值</el-col>
-            </el-row>
-            <!-- 第一项 -->
-            <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
-                <el-col :span="4">难度</el-col>
-                <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.mean)}}</el-col>
-                <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.min)}}</el-col>
-                <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.max)}}</el-col>
-                <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.std)}}</el-col>
-            </el-row>
-            <!-- 第二项 -->
-            <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
-                <el-col :span="4">指标2</el-col>
-                <el-col :span="5">0</el-col>
-                <el-col :span="5">0</el-col>
-                <el-col :span="5">0</el-col>
-                <el-col :span="5">0</el-col>
-            </el-row>
-            <!-- 第三项 -->
-            <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver">
-                <el-col :span="4">指标3</el-col>
-                <el-col :span="5">0</el-col>
-                <el-col :span="5">0</el-col>
-                <el-col :span="5">0</el-col>
-                <el-col :span="5">0</el-col>
-            </el-row>
-            <!-- 随意添加的一个假柱状图 -->
-            <el-row>
-                <div id="QB_Total_Bar" class="QB_Total_Bar"></div>
-            </el-row>
+        <el-row style="margin-top: 10px">
+            <el-button @click="contentRemake()">转化测试</el-button>
         </el-row>
-        <!-- 分析详情 -->
-        <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse_QB(1)" :class="Get_Part_Row_Style_QB(1)">
-            <el-col :span="4" style="text-align: left">
-                知识点分析
-            </el-col>
-            <el-col :span="2" :offset="18">
-                <i class="el-icon-arrow-down" v-if="!Part_Expand_QB[1]"></i>
-                <i class="el-icon-arrow-up" v-if="Part_Expand_QB[1]"></i>
-            </el-col>
+        <el-row style="margin-top: 10px">
+            {{remakeContent}}
         </el-row>
-        <el-row :class="Get_Expand_Or_Collapse_QB(1)">
-            <!-- 知识点分析 -->
-            <el-row>
-                <!-- 知识点难度分析部分 -->
-                <!-- 总分析行 -->
-                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 16px; margin-top: 30px">
-                    <label>此大题共包含了&nbsp;&nbsp;{{Get_QB_Knowledge_Length()}}&nbsp;&nbsp;个知识点，<span v-if="Get_QB_Knowledge_Length() > 1">难度最大的知识点</span>为&nbsp;&nbsp;{{Get_QB_Knowledge_Difficult(true)}}&nbsp;&nbsp;
-                        <span v-if="Get_QB_Knowledge_Length() > 1">，难度最小的知识点为&nbsp;&nbsp;{{Get_QB_Knowledge_Difficult(false)}}&nbsp;&nbsp;。</span>
-                        <span v-else>。</span>
-                        </label>
-                </el-row>
-                <!-- 提示行 -->
-                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 16px">
-                    <label>各知识点平均难度为：</label>
-                </el-row>
-                <!-- 知识点难度分布柱状图 -->
-                <el-row>
-                    <div id="QB_Knowledge_Difficult_Analyse" class="QB_Knowledge_Difficult_Analyse"></div>
-                </el-row>
-                <!-- 知识点分值分布部分 -->
-                <!-- 总分析行 -->
-                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 16px; margin-top: 30px; margin-right: 16.5%;">
-                    <label style=" text-align: left; margin-bottom: 20px">此大题总分为&nbsp;&nbsp;{{Paper_Json_Question_Bundle_Info.score}}&nbsp;&nbsp;分。
-                        其中<span v-if="QB_KnowledgeScore_Name_List.length > 1">，分值最大</span>的知识点为&nbsp;&nbsp;{{QB_KnowledgeScore_Name_List[0]}}&nbsp;&nbsp;
-                        {{QB_Get_Second_Score()}}<span v-if="QB_KnowledgeScore_Name_List.length > 1">
-                        ，分值最小的知识点为&nbsp;&nbsp;{{QB_KnowledgeScore_Name_List[QB_KnowledgeScore_List.length - 1]}}&nbsp;&nbsp;
-                        ，仅占&nbsp;&nbsp;{{QB_KnowledgeScore_List[QB_KnowledgeScore_List.length - 1]}}&nbsp;&nbsp;分。
-                        </span>
-                        <span v-else>
-                            ，占&nbsp;&nbsp;{{QB_KnowledgeScore_List[0]}}&nbsp;&nbsp;分。
-                        </span>
-                    </label>
-                </el-row>
-                <!-- 提示行 -->
-                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 16px">
-                    <label>各知识点所占分值为：</label>
-                </el-row>
-                <!-- 知识点难度分布柱状图 -->
-                <el-row>
-                    <div id="QB_Knowledge_Score_Analyse" class="QB_Knowledge_Score_Analyse"></div>
-                </el-row>
-                <!-- 知识点点对分布部分 -->
-                <!-- 总分析行 -->
-                <el-row type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 16px; margin-top: 30px; margin-right: 16.5%; text-align: left">
-                    <label v-if="QB_KnowledgePair_Name_List.length > 0" style=" text-align: left">
-                        共同出现次数最多的知识点为&nbsp;&nbsp;{{QB_Get_First_Pair()}}&nbsp;&nbsp;，
-                        共同出现了&nbsp;&nbsp;{{QB_KnowledgePair_List[0]}}&nbsp;&nbsp;次
-                        {{QB_Get_Second_Pair()}}
-                    </label>
-                    <label v-if="QB_KnowledgePair_Name_List.length == 0">
-                        此大题中没有共同出现的知识点对。
-                    </label>
-                </el-row>
-                <!-- 提示行 -->
-                <el-row v-if="QB_KnowledgePair_Name_List.length > 0" type="flex" justify="start" style="width: 67%; margin-left: 16.5%; font-size: 16px">
-                    <label>知识点共现关系如下：</label>
-                </el-row>
-                <!-- 知识点点对分布表格展示部分 -->
-                <el-row v-if="QB_KnowledgePair_Name_List.length > 0"  style="font-size: 16px; margin-top: 30px; ">
-                    <el-row style="background: #409EFD; color: white; margin: 0px 16.5vw;">
-                        <el-col :offset="2" :span="7"><label>知识点Ⅰ</label></el-col>
-                        <el-col :span="7"><label>知识点Ⅱ</label></el-col>
-                        <el-col :span="7"><label>出现次数</label></el-col>
-                    </el-row>
-                    <el-row v-for="(QB_Knowledge_Pair, Pair_Index) in QB_KnowledgePair_Name_List" :key="'QB_Ku_Pair_' + Pair_Index" :class="Total_Table_Style(Pair_Index)">
-                        <el-col :offset="2" :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(QB_Knowledge_Pair, 0)}}</label></el-col>
-                        <el-col :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(QB_Knowledge_Pair, 1)}}</label></el-col>
-                        <el-col :span="7"><label>{{QB_KnowledgePair_List[Pair_Index]}}</label></el-col>
-                    </el-row>
-                </el-row>
-                <!-- 知识点点对分布共现关系的图的部分 -->
-                <el-row v-if="QB_KnowledgePair_Name_List.length > 0">
-                    <div id="QB_Knowledge_Pair" class="QB_Knowledge_Pair"></div>
-                </el-row>
-            </el-row>
+        <el-divider></el-divider>
+        <el-row style="margin-top: 10px">
+            试卷导入内容测试区
         </el-row>
-    </el-dialog>
-    <el-row style="padding-top: 15px">
-        <label style="font-size: 22px">xxx试卷分析报告</label>
-    </el-row>
-    <el-row>
-        <el-col :span="18" :offset="3">
-            <el-divider style="width: 3px"></el-divider>
-        </el-col>
-    </el-row>
-    <!-- 综合分析 -->
-    <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(0)" :class="Get_Part_Row_Style(0)">
-        <el-col :span="2">
-            综合分析
-        </el-col>
-        <el-col :span="2" :offset="20">
-            <i class="el-icon-arrow-down" v-if="!Part_Expand[0]"></i>
-            <i class="el-icon-arrow-up" v-if="Part_Expand[0]"></i>
-        </el-col>
-    </el-row>
-    <el-row :class="Get_Expand_Or_Collapse(0)">
-        <!-- 本卷大题数量 -->
-        <el-row style="width: 67vw; margin-left: 16.5vw; font-size: 16px" type="flex" justify="start">
-            <label>本卷共{{Paper_Json.sub_question.length}}道大题，各项指标如下：</label>
+        <el-row style="margin-top: 10px">
+            <el-button @click="bugDataIndex -= 1" :disabled="bugDataIndex == 0">上一题</el-button>
+            <el-button @click="bugCheck(bugDataIndex)">转化测试</el-button>
+            <el-button @click="bugDataIndex += 1" :disabled="bugDataIndex == bugData.length - 1">下一题</el-button>
         </el-row>
-        <!-- 三项指标的假表格 -->
-        <!-- 表头项 -->
-        <el-row style="width: 67vw; background: WhiteSmoke; font-weight: bold; font-size: 16px; margin-left: 16.5vw; margin-top: 30px; padding-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
-            <el-col :span="5" :offset="4">均值</el-col>
-            <el-col :span="5">方差</el-col>
-            <el-col :span="5">最大值</el-col>
-            <el-col :span="5">最小值</el-col>
+        <el-row v-if="bugData[bugDataIndex].question_score">
+            <el-input-number v-model="bugData[bugDataIndex].question_score"></el-input-number>
         </el-row>
-        <!-- 第一项 -->
-        <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
-            <el-col :span="4">难度</el-col>
-            <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}</el-col>
-            <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.min)}}</el-col>
-            <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.max)}}</el-col>
-            <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.std)}}</el-col>
-        </el-row>
-        <!-- 第二项 -->
-        <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
-            <el-col :span="4">指标2</el-col>
-            <el-col :span="5">0</el-col>
-            <el-col :span="5">0</el-col>
-            <el-col :span="5">0</el-col>
-            <el-col :span="5">0</el-col>
-        </el-row>
-        <!-- 第三项 -->
-        <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver">
-            <el-col :span="4">指标3</el-col>
-            <el-col :span="5">0</el-col>
-            <el-col :span="5">0</el-col>
-            <el-col :span="5">0</el-col>
-            <el-col :span="5">0</el-col>
-        </el-row>
-        <!-- 随意添加的一个假柱状图 -->
         <el-row>
-            <div id="Paper_Total_Bar" class="Paper_Total_Bar"></div>
+            <Mathdown :content="bugData[bugDataIndex].question_stem" :name="'Q_Stem'"></Mathdown>
         </el-row>
-    </el-row>
-    <!-- 分析详情 -->
-    <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(1)" :class="Get_Part_Row_Style(1)">
-        <el-col :span="2">
-            分析详情
-        </el-col>
-        <el-col :span="2" :offset="20">
-            <i class="el-icon-arrow-down" v-if="!Part_Expand[1]"></i>
-            <i class="el-icon-arrow-up" v-if="Part_Expand[1]"></i>
-        </el-col>
-    </el-row>
-    <el-row :class="Get_Expand_Or_Collapse(1)">
-        <el-row style="width: 18vw; margin-left: 41vw; margin-top: 10px; border: 1px solid #409EFD; border-radius: 10px; height: 30px">
-            <el-col :span="12" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;" :class="Check_Total_Switch(true)" v-on:click.native="Paper_Total_Analyse_Focus = true">
-                知识点分析
-            </el-col>
-            <el-col :span="12" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;" :class="Check_Total_Switch(false)" v-on:click.native="Paper_Total_Analyse_Focus = false">
-                难度分析
-            </el-col>
+        <el-row>
+            <span>{{bugData[bugDataIndex].question_stem}}</span>
         </el-row>
-        <!-- 知识点分析 -->
-        <el-row :class="Paper_Total_Analyse_Hidden(true)">
-            <!-- 知识点难度分析部分 -->
-            <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px; margin-top: 30px">
-                <label>本卷共包含了&nbsp;&nbsp;{{Get_Paper_Knowledge_Length()}}&nbsp;&nbsp;个知识点，难度最大的知识点为&nbsp;&nbsp;{{Get_Paper_Knowledge_Difficult(true)}}&nbsp;&nbsp;，难度最小的知识点为&nbsp;&nbsp;{{Get_Paper_Knowledge_Difficult(false)}}&nbsp;&nbsp;。</label>
-            </el-row>
-            <!-- 提示行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px">
-                <label>各知识点平均难度为：</label>
-            </el-row>
-            <!-- 知识点难度分布柱状图 -->
+        <el-row v-for="(option, index) in bugData[bugDataIndex].question_options" :key="'Q_' + index + '_option'">
             <el-row>
-                <div id="Paper_Knowledge_Difficult_Analyse" class="Paper_Knowledge_Difficult_Analyse"></div>
-            </el-row>
-            <!-- 知识点分值分布部分 -->
-            <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px; margin-top: 30px; margin-right: 16.5vw;">
-                <label>本卷总分为&nbsp;&nbsp;{{Paper_Json.score}}&nbsp;&nbsp;分。
-                    其中，分值最大的知识点为&nbsp;&nbsp;{{KnowledgeScore_Name_List[0]}}&nbsp;&nbsp;
-                    {{Paper_Total_Get_Second_Score()}}
-                    ，分值最小的知识点为&nbsp;&nbsp;{{KnowledgeScore_Name_List[KnowledgeScore_List.length - 1]}}&nbsp;&nbsp;
-                    ，仅占&nbsp;&nbsp;{{KnowledgeScore_List[KnowledgeScore_List.length - 1]}}&nbsp;&nbsp;分。</label>
-            </el-row>
-            <!-- 提示行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px">
-                <label>各知识点所占分值为：</label>
-            </el-row>
-            <!-- 知识点难度分布柱状图 -->
-            <el-row>
-                <div id="Paper_Knowledge_Score_Analyse" class="Paper_Knowledge_Score_Analyse"></div>
-            </el-row>
-            <!-- 知识点点对分布部分 -->
-            <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px; margin-top: 30px; margin-right: 16.5vw;">
-                <label v-if="KnowledgePair_Name_List.length > 0">
-                    共同出现次数最多的知识点为&nbsp;&nbsp;{{Paper_Total_Get_First_Pair()}}&nbsp;&nbsp;，
-                    共同出现了&nbsp;&nbsp;{{KnowledgePair_List[0]}}&nbsp;&nbsp;次
-                    {{Paper_Total_Get_Second_Pair()}}
-                </label>
-                <label v-if="KnowledgePair_Name_List.length == 0">
-                    本卷中没有共同出现的知识点对。
-                </label>
-            </el-row>
-            <!-- 提示行 -->
-            <el-row v-if="KnowledgePair_Name_List.length > 0" type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px">
-                <label>知识点共现关系如下：</label>
-            </el-row>
-            <!-- 知识点点对分布表格展示部分 -->
-            <el-row v-if="KnowledgePair_Name_List.length > 0"  style="font-size: 16px; margin-top: 30px; ">
-                <el-row style="background: #409EFD; color: white; margin: 0px 16.5vw;">
-                    <el-col :offset="2" :span="7"><label>知识点Ⅰ</label></el-col>
-                    <el-col :span="7"><label>知识点Ⅱ</label></el-col>
-                    <el-col :span="7"><label>出现次数</label></el-col>
-                </el-row>
-                <el-row v-for="(Knowledge_Pair, Pair_Index) in KnowledgePair_Name_List" :key="'T_P_Ku_Pair_' + Pair_Index" :class="Total_Table_Style(Pair_Index)">
-                    <el-col :offset="2" :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, 0)}}</label></el-col>
-                    <el-col :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, 1)}}</label></el-col>
-                    <el-col :span="7"><label>{{KnowledgePair_List[Pair_Index]}}</label></el-col>
-                </el-row>
-            </el-row>
-            <!-- 知识点点对分布共现关系的图的部分 -->
-            <el-row v-if="KnowledgePair_Name_List.length > 0">
-                <div id="Paper_Knowledge_Pair" class="Paper_Knowledge_Pair"></div>
-            </el-row>
-            <!-- 知识点覆盖程度部分 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 16px; margin-top: 30px; margin-right: 16.5vw;">
-                <label>本卷覆盖的知识点比例尚待进一步分析。（下方区域是圆环图今后大致的占位区域）</label>
+                <Mathdown :content="option" :name="'Q_Stem'" + index></Mathdown>
             </el-row>
             <el-row>
-                <div id="Paper_Knowledge_Cover" class="Paper_Knowledge_Cover"></div>
+                <span>{{option}}</span>
             </el-row>
         </el-row>
-        <!-- 难度分析 -->
-        <el-row :class="Paper_Total_Analyse_Hidden(false)">
-            <!-- 总分析行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 18px; margin-top: 30px">
-                <label>本卷难度平均值为&nbsp;&nbsp;{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}&nbsp;&nbsp;，占比最大的题目难度区间为&nbsp;&nbsp;{{Max_Gap}}</label>
-            </el-row>
-            <!-- 提示行 -->
-            <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 18px">
-                <label>各难度所占分值如下：</label>
-            </el-row>
-            <!-- 环状图 -->
+        <el-row v-for="(option, index) in bugData[bugDataIndex].sub_questions" :key="'Q_' + index + '_sub'">
             <el-row>
-                <div id="Paper_Total_Difficult_Analyse" class="Paper_Total_Difficult_Analyse"></div>
-            </el-row>
-        </el-row>
-    </el-row>
-    <!-- 相似试卷 -->
-    <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(2)" :class="Get_Part_Row_Style(2)">
-        <el-col :span="2">
-            相似试卷
-        </el-col>
-        <el-col :span="2" :offset="20">
-            <i class="el-icon-arrow-down" v-if="!Part_Expand[2]"></i>
-            <i class="el-icon-arrow-up" v-if="Part_Expand[2]"></i>
-        </el-col>
-    </el-row>
-    <el-row :class="Get_Expand_Or_Collapse(2)" type="flex" justify="start" style="margin: 0px 16.5vw 30px 16.5vw">
-        <label>与此试卷相似的试卷是xxxxxxx</label>
-    </el-row>
-    <!-- 试卷详情 -->
-    <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(3)" :class="Get_Part_Row_Style(3)">
-        <el-col :span="2">
-            试卷详情
-        </el-col>
-        <el-col :span="2" :offset="20">
-            <i class="el-icon-arrow-down" v-if="!Part_Expand[3]"></i>
-            <i class="el-icon-arrow-up" v-if="Part_Expand[3]"></i>
-        </el-col>
-    </el-row>
-    <el-row :class="Get_Expand_Or_Collapse(3)">
-        <el-row v-for="(Sub_Ques, Sub_Index) in Paper_Json.sub_question" :key="Sub_Ques.id" style="margin: 30px 0px">
-            <el-row type="flex" justify="start" style="margin: 0px 16.5vw 30px 16.5vw">
-                <el-col :span="6" style="text-align: left">
-                    <label style="line-height: 28px; font-size: 16px">第{{Get_Question_Bundle_Index((Sub_Index + 1) + "")}}大题（共{{Sub_Ques.sub_question.length}}题，{{Sub_Ques.score}}分）：</label>
-                </el-col>
-                <el-col :span="2">
-                    <el-button type="primary" plain size="mini" @click="Change_Dialog_Info(Sub_Index, (Sub_Index + 1) + '')">
-                        查看大题分析
-                    </el-button>
-                </el-col>
+                <Mathdown :content="option" :name="'Q_Sub' + index"></Mathdown>
             </el-row>
             <el-row>
-                <PaperAnalysePQRoot :PackedQues="Sub_Ques"></PaperAnalysePQRoot>
+                <span>{{option}}</span>
             </el-row>
         </el-row>
-    </el-row>
+        <el-row>
+            <Mathdown :content="bugData[bugDataIndex].answer[0]" :name="'Q_Stem'"></Mathdown>
+        </el-row>
+        <el-row>
+            <span>{{bugData[bugDataIndex].answer[0]}}</span>
+        </el-row>
+        <el-row>
+            <Mathdown :content="bugData[bugDataIndex].analysis" :name="'Q_Stem'"></Mathdown>
+        </el-row>
+        <el-row>
+            <span>{{bugData[bugDataIndex].analysis}}</span>
+        </el-row>
     </div>
 </template>
+
 <script>
 
-// 引入基本模板
-import * as echarts from 'echarts';
-import PaperAnalysePQRoot from '../resourceAnalyse/components/PaperAnalysePQRoot.vue';
+import Mathdown from "./../../common/components/Mathdown.vue"
 
 export default {
 
-    components: { PaperAnalysePQRoot },
+    components: { Mathdown },
     name: "TestPage",
     data(){
         return {
-            // 测试显示用数据的节点
-            Paper_Json:{ 
-                "id": "",
-                "type": "",
-                "status": "",
-                "score": 0,
-                "difficulty_area_score": [],
-                "difficulty_statistics": {},
-                "knowledge_knowledge2num": {},
-                "knowledge2score": {},
-                "knowledge2difficulty": {},
-                "sub_question": []
-            },
-            // 总体分析界面是否展开/折叠
-            Part_Expand: [false, false, false, false],
-            // 总体分析页面展开的是知识点分析还是难度分析的区分变量
-            Paper_Total_Analyse_Focus: true,
-            // 占比最大的题目难度区间
-            Max_Gap: "",
-            // 大题分析页面是否展开/折叠
-            Part_Expand_QB: [false, false],
-            // 以下属性只用于全卷分析这一节的内容，之后的大题分析环节我们交给函数去算
-            // 知识点分值和知识点分值对应的名称
-            KnowledgeScore_List: [],
-            KnowledgeScore_Name_List: [],
-            // 知识点对的次数和知识点对对应的名称
-            KnowledgePair_List: [],
-            KnowledgePair_Name_List: [],
-            // 想了想，还是用公共变量吧
-            // 知识点分值和知识点分值对应的名称
-            QB_KnowledgeScore_List: [],
-            QB_KnowledgeScore_Name_List: [],
-            // 知识点对的次数和知识点对对应的名称
-            QB_KnowledgePair_List: [],
-            QB_KnowledgePair_Name_List: [],
-            // 当前正在查看的大题分析的序号
-            Question_Bundle_Index: "1",
-            // 大题分析的对话框是否显示
-            Question_Bundle_Analyse: false,
-            // 用来显示大题分析内容图表的变量
-            Paper_Json_Question_Bundle_Info: {
-                "id": "43482c08-8c71-4166-8490-2d991ba5be0a",
-                "type": "PackedQues",
-                "score": 4,
-                "difficulty_statistics": {
-                    "mean": 0.4028695672750473,
-                    "min": 0.29554620385169983,
-                    "max": 0.5101929306983948,
-                    "std": 0.10732336342334747
+            Num: [
+                {
+                    'a': 0
                 },
-                "knowledge_knowledge2num": {
-                    "解析几何::代数": 1
+                {
+                    'b': 0
                 },
-                "knowledge2difficulty": {
-                    "解析几何": 0.4028695672750473,
-                    "代数": 0.5101929306983948
+            ],
+            content: "",
+            remakeContent: "手动输入内容展示（默认值）",
+            bugData: [
+                {
+                    "question_score": 5,
+                    "question_stem": "（1）设<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADUAAAAlCAYAAADiMKHrAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACO0lEQVR4nO2Yv0vkQBTHH4quByqHXCEIp/gDWQWLExtFUBEbRRAVwUKba+wsLIUrLO7+AQtBGxULQUQQCwsVsbBULO5QK1FsbPxxh4pw932+hM3NJtndbNZMJF/4sMlkEt43mX1vZogiRYqUpnaCDsBNo+AZFCvtXeAIPIKfYFC5vpfzyDxqElxQsqk4uAb9oJTE4BVoe+sAvegEfAYP9L+peTCh9B0Gm8bxC/gLinIdoBeVGb+qqTNQo/QtAbeWczampSlTqqnf4INNPzZVYhyHztQfsg/4ztIvdKbe5fBboOREMUSJRMEKnakGkpTeR5LSO8ElaLf00daUmZqtfDKudYNj8AR+kaR0u/vUop1SPI6nwQyoMNr47VRl+iBdVACWwVfwHdyAbXAOWi397N62SvmbRZ1CXCcKLefjJEOhN5hw/FcPuAcDQQfilzpIDI04XA/V8GPxf4cL3phPz0tl3g9c1WIY2iWpFSxOHo0+mAtEnMoPwBRYJCmES2AL1AYYl6+qJlmw2c2cdVDgS/tmkkUgT3uejF8eDZVZPHMv+7CyE2fLQ/AFxEgy4zeSqZCTeG74MfeheRebiitt+SQbLDGHe9xMabe050DqwSyYc+mX6ktpM2PnnSSztqyQfC0nhcYUi+seD8UNkq9lKtNZilamTHFd5H2JPIfr2n8pDqBOaeP6xztIhcndXxUKU/ugiSTb8QbLKlhzuUd7U7x1vE5SdHnInYIflNjPs1M6Kd3T0j5SpEiZ6R/wZauyA1R7RwAAAABJRU5ErkJggg==\">，则<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAMCAYAAAC5tzfZAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAhklEQVR4nGNgoBLgBeJqIG4FYjmoGBsQK+HSwArES4E4BarpDRDvBuLbQOyMSxMn1FQYCAfi30AcTKwzHYH4MxBHEKvBFog/AXEssRosgPgjECcTq8EEiD8A8SEg5oeKMQOxLi4NoKA+DMQlQLwQiF8C8WIg3gHEWsTaqgDE/kDMTawG6gMA4acS9mivflQAAAAASUVORK5CYII=\">的共轭复数为（A）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAUCAYAAAAZb7T/AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABG0lEQVR4nGNgGAWjAAT2AjErtQzzBeKvQKxCgRkGQDwdiB8C8U8gfg7Ea4HYEEnNfiBmocAOOEgB4hdA/ImBOEffAWIdLOI/gPg8EJsDMQcQCwNxBhC/A2JeajgUGYAsUgPiBwyUO9oUi/g9qHqQ/H8gliDLlWhACEo/YKDM0ciAHYiVgLgBiHcDMRNU/AMDlRwNAw8YqOPoGAZIiIIwyMHISYNujoZFKz7sg6aHmQES0nOAeBepjka3EF9I4nI0OiAmecAAKFmAMrkylD/okgcogAyxiD9GEh+Ujj4JxMYMkCJPBognA/FNBkhyAQGqORpkEHoaNSHD0RZAvBqIHwHxdwZIUTcViKWg8shJVYEK7h4Fo2AUjIKhCACHjU6x6uBKawAAAABJRU5ErkJggg==\">（B）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAAUCAYAAAAUccS4AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA+0lEQVR4nO2VzQpBQRiGv0QkihU7xQILKdm5EvfAHbgBeztZKKUsuACxsrOytlByCfKXOt5pZjJNwjFTlHnraeqbma9nTjMdIpf/y9RWozq4gMSH+yugC3bgLMYByClrZiaCMk2wJTPZK1iCKoiAFGiBjQ1BNSuQAXsyky1ptQA4griY94gfxChJMZrIqmFCedABfaV+IguyMjZkG8S/IGMEgsrcz8myhEABTEBPqb+UlXdF8kzmkayf/XqiQjD8rqyfmD6wolZjkkxQvomfkl2AMnHJLBiCubLGiixr4mmkffaogTHxn8EBrEGb7odXr1PMVNjFxcXli7kBOulAWdlf9tgAAAAASUVORK5CYII=\">（C）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAUCAYAAAAHpoRMAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA8klEQVR4nGNgGAWDC+wmVmEkEP8CYgEKLDMC4tlA/ASIf0LpxUCsCJXfS4whuUD8iEjHfABiERxyf4D4NBCbADEHEIsDcS0Q3yHGETBwEYjlgfgLFRyjiybGzAAJJZDcf6gj8QJBKE2pY5AByFJ1IJ4KxHOhYj+IcQwMUMsxOQyQUADhlUDMQi3HwIIXH1bAYhYrEGsC8UYgnkktx6ADYqMJBnihjmCht2NAoaiJJsYJxN+gjqC7Y44AsT4QswOxMhCvYoBEFQOxjgEpQk8HuCzE5xhrIF7HACnsQKFxG4g7gZiPATXt8RBy0CgYBaNgyAMA9vVJT6OOrFIAAAAASUVORK5CYII=\">（D）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAUCAYAAAAHpoRMAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA6UlEQVR4nGNgGAWDC+wmVmEkEP8CYgEyLTIC4tlA/ASIf0LpxUCsiKRmLzEG5QLxIwod8weITwOxCRBzALE4ENcC8R1SDboIxPJA/IVCx+iiiTEzQEKJCyr/H+pQvEAQSlPiGGQAslAdiKcC8Vwk8R/EOAYGqOGYHAZICIDwSiBmGUjHgAArEGsC8UYgnklNx8DiGoZJcSwv1AGw0KFbyIAcrYkmxgnE35AcQFfHHAFifSBmB2JlIF7FAIkqGCDKMSBF/9GwCImOsQbidQyQwg4UGreBuBOI+ZAcCzObh0SzR8EoGAVDDwAArNs8Lhpl3cQAAAAASUVORK5CYII=\">",
+                    "question_options": [],
+                    "question_type": "选择题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
                 },
-                "knowledge2score": {
-                    "解析几何": 4,
-                    "代数": 2
+                {
+                    "question_stem": "（2）设集合<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAAYCAYAAAAVgCMkAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAGkElEQVR4nO2ba4xfQxjGX9Wu1TYodalrgwpJqcaWujSqxYdGNFIk5QMicW8iWhISJYhLRKII0lAbl0ZI1J0gtW6J+y0o0SKsqGvd4ha23ifvTHZ2ds45M3PObnf7f3/Jk/7PmTkz7848Z87MnFMiRVEURVEURVEURVGUjYczWT+yvmGdtYFjUZQhzdasDqOJJfnGO/nGN1Dv2SQ36HeR+dtZf0XmXc+axTqc9XV6aC3BZNa/rDWsuTXKGUe9vtjSS9vUSYN2qFEPSPUMSPHNxkByv05nLSW5ad4syDOS9TrrN9a1rH1rh0n0E2saa0Rk/pyOPJh1ReI1Pgex7matNfV/zrqZ+pu9SUax3mD90FB5x7A+Ion/LdYhTj3Hs96rUbbrn3u9NDxc4Jfvzb/TatQDUj0DQr4pao/hAu7H9QGtNenJ/YoG+ZbVw5oQSL/UpHflRuyxOevXxGtSB4DdWAtZmyTW42Ib+nmSkXUzU+4y1gM1yq3iOpK2bmIAmMrqZs0mGbROIDHKziZ9iwbqgX9+JvFPh5c2mvVqzfJBjmeA75uq9hgOwJdV90JSv+IGv4jE7Kd7afuz7iN5It0YH2MpY0kMYxnDOpJ1gJcPg9FE89vvyLJrDmXdSmK+32vEaQeAXbzz+7A+jIw7FRjzK9aelH5j7sS6mPWMc24562Qv32LWNea33xc5wD9nkDzpX/TSMAtbWrN8kOMZ4Pumqj2KwLJ3Pusu1ssVeXN9EVtHzACQ1K8rWHuQTItWOOfbSMw0wVR4SkEwoemIqy+8a7YhmVFYMPreburY1ZzbzsQyzhz7HVl2zZdO3XUGAB8MKBgQH2YtiIw7BbQLbn7sX2xFcQMA+gjTvSdN/tuor/G6TUwuWNa8ZH5jVvNHRqwu+Hsnsc4jafPjnLRzSNbuLoPlGeD7pqo9LGjXmayrSZbGuJkeNX/jJConNrbcOtB+/7BuIWkTbHh3kfjGktSv75NMla8nWee3mfMIDBsJU0g6ZUpsgSWgQy4gMawL1nUfkIx+GL0eInmiudf5o17VNU1yFUkb9JjfAxHDIyRtDqoGAPTFEpINsedInmrtgXx/B85hRrPGOca+xjyStWMO1j8w5iesT52y7iDZJ6hDrmfsta5vqtoDZT7O+oX1GutK1gxKb5uy2OrWYQfQG0gGCpSPm381yXLMEtWv2KjpMr+PMAUfRTIq3mnOn0rScLkGsXSY8j9m7RhIR7DYwXyCtbeXVrQHUHZN02BUxd+ADVH39WITMeBJibXySHNcNADAPG+TdO7lJHsSZRQZfrVzjOkq2hZ9MzY6YgH+ecE5nmvKOd8co61GJ5bpUsczIHYAsO0xwpSFmxP9gU3kw6i3X1Ioiq3JOlxw83c5x1H9ijWnXduPMkFhzYanit3pvonEdCFSp3MwA9Zc9wfKQmetIxktQ2mhAaDsmiL8mFPXwAdS3zcmZTHE1vUnFbdft5MP5nmHZAC4jKoHgJgpL55UWN61UTrwzxLvXBfJtBT1hnwzWJ6x6blLADwQsTeANwXoN8zQzqXqJUBsbE3U4bI76zPnOKpfF1Hftf2DJNPco51z2JBYlhFQEdtT//fzMHYnyWYk6p/qpRctAcquqYs1qv9mBNPvdwc4hqolAPYiMDBjCfAs6yQKLwGWmzQXbNrZTS/8jaGnYiy+fwD2IHpMXP6rwVxyPANCm4Bl7VHEtuY61PdKRLw5voitw/rS/65iDvXOxqL7FQ2yn3OMXdvTnGP8IdgXWBBTWCShHUo8RWab3yup/3ovNABUXVMX29BPk0zhsATANxAYEBcPcAwpm4B4lfWUyY+3H+4mIH7bjUW8GsK0FK+97OZUqC9gxNgPqHz/WO4habuFkeVUkeMZ4Pumqj2aYiC9aX2JMjFTwCtSfMuA/Zd5Jk/lWwBsSMDYmKJguj85kAeFrTSVYSrnj5y5jPGCw810onM83dQJU9uPPvyOjLmmCWayHiP5Ag1vFDCtWmTqGIgY2ql8CVAG+vQS6vsaEBzLWkXyREA/znDSYJR1Xn48STor6sKA6PrH/5gG62rsQs+iZsjxDAg9OMraI+cNhU9VbE3Uga9csVzA4IV2wYxhjpMe6tchBYLGu+7YD3Va7ZPOwQCf6sJIq7zznVT/s12wF8msqSlSPQNa0TdF/TqkuJDkw5GB+L8ASjWY8f1HMh2ev4FjiSXVM6DVfDMc+zWKVutIpRnUN4qiKIqiKIqiKIqiKIqitA7/A8H1CRQaG3XrAAAAAElFTkSuQmCC\">，则<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAATCAYAAADF7c7rAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABx0lEQVR4nO2VTShEURTHD2kUykeUEiLJAmlMPhYWShZqFnZ2FkgSFgplYSFrm5FiKMnHWhZIVpJEIkVZYCMbrFhIxv92z6vrvjujuaNE71+/mnvPuef/ztzzZog8/T9lgwBTFiMvTckrSdAzS6mVa4jXKPHSBL2oDsyACLiLkRfmHJEbVPYjCXpua7EkMAVuwSxot6jvUjN4YMNqQzzI8ReQrMVsGnQ8n/l8myF+BVIsa7s0DEbBOxjXYnlgByyDA8NZ2waF5yDJm7qkr83kgEPLukatAj/YNxReI3mrpyTHSpdtg8KzFnRwjQEl1kJyPE1e32HUGfCBMfAB8nm/E4yAVPAGuqKY2uicPYXEZDyS/MEj9uyxrOtSBjjiz5UkH1g0UgQ2Sb5zAd73G87bNCg8j5V1PckvdprX6yRv90fUBOaV9Q3YYJy/g16SN+gjt2waFJ5hbW+FPcrBRQyvuEd0CPQp6xAndit7cyTfQZNsGtQ9hQrBK9gFJxY1o2qJ5Ig4quIHUCUMF6Oct2lQ93Q0yfUWLGq6VAC2wBPYAw2GnEbOEaNzDSYMOfE0WKF5tmrxdHAP+uOo+edUDDJ/+yE8efLkyahPZAJwbXMpiRgAAAAASUVORK5CYII=\"> （A）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAUCAYAAADhj08IAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABGklEQVR4nGNgGAWUA24gnkgnu14A8X8oJggWA7E5mpg7EF8C4h9AfBmIPchwBBMQ78fhCIIOcwTiWWhiegwQn3kBMT+UfgEVJwXUUOKw6UDsiia2CIhT0cTSgHghCY6yBuLnQCxFrsOuALE0mtgDIJZHEwPx7xPpKEGoGd54HEHQYa+BmB1N7BcQs6KJgfg/iXTYGiDuI+AIgg77DcSMRDrsBxGOygDiM0DMRqnDsIXYAwbyo/IbA6I4wIaJdhi2NIYt8adCxckBZOdKFzQxAwZIjgKVXXxQGsTXh/Lf0sNhoHJsJhZxTwZIaP6E0l5QcVDRsoIEB5EdlSAAKvnNiLRsHhDLEKkWGyCpSgLVlZMosGwUjIJRQAkAAH8YUU5IJ2sYAAAAAElFTkSuQmCC\">（B）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAUCAYAAADlep81AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABEUlEQVR4nGNgGAXEg/9Q/IBO9k0EYi58Cv7jEHcH4ktA/AOILwOxBxmWMwHxfjQ7zIF4AakO0gPiF0DsBcT8UPoFVJwUUIPFQSAwG4htSXHQIiBORRNLA+KFJDjGGoifA7EUFjvcgHgKKQ56AMTyaGIg/n0iHSMINcMbhx0yDJDkQLSDfgExK5oYiP+TSAetAeI+PHZwAPErajjoBxGOyQDiM0DMhscOJqgdRDvoAQP5UfaNAVGUYMMgQHIIYUvUqVBxcgDFaciAAZJDQGUPH5QG8fWh/LcUOojkXAYCnkB8hQGSkEG0F1TcFYhXkOAQbFE2k4FAOURK1TGPARLk5AKCJTW9wSQGAnXZKBgFwwIAAFUgUSugV8+CAAAAAElFTkSuQmCC\">（C）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAAUCAYAAAAUccS4AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABFElEQVR4nGNgGAW0B/+h+MEAuwMEJgIxFz4F/ykwPAmIf5Chzx2IL0H1gmhXqLg5EC/Ap5Fcx5YC8T0g/kOiPj0gfgHEXkDMD8TeUL42VH42ENvi0kyuY68AsRQD6Y5dBMSpaGJZQDwXynYD4im4NJPrWEEoTapjHwCxPJqYMhDfhrJlGCBJAyugJM2CAKmO/QXErGhinED8FcrmAOJXuDQPFsd+gbKZoGqwAmyO/Y+ECTmG2slgUIUstgyWCcTzoGy6pVk+IH5LQL0BED8HYg+oelARBiq6dKDyNCkN/jNgJhdQ4b6CCL2eDJCi7ycQX4Y6HAZmMhAoZ6lV3YKiUoYC/QRrsMEEJjEQaBuMglEwCqgMADotSdVL4Y2xAAAAAElFTkSuQmCC\">（D）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAAUCAYAAAAUccS4AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABJ0lEQVR4nGNgGAX0A9xAPHGA3fACiP9DMV6wGIjNybAgCYh/kKjHHYgvQfWBaFc0ebyOdQTiWSRaCAKlQHwPiP+QoEePARKCXkDMD8TeUL42khq8jp3OgOk7YsAVIJZiIM2xi4A4FU0sC4jnIvHxOhZkqTQJFsKAIJQmxbEPgFgeTUwZiG8j8fE69jUQs5NgITogxbG/gJgVTYwTiL8i8fE69jcQM5JgITqghmO/IPFJDtn/SJiQY+iaDMhNszBAaQbLBOJ5SHyCpYELCRaiA2TH8gHxWzxqDYD4ORB7QNWCijBQ0aWDpIZgOTuTDEf+Z8BMLqAicAUBfZ4MkNj8CcSXoQ5HNxcvANVgZiQ6FhsARacMmXqJrm5BbYNJZFoyCkbBKBiqAAANl0n4aW+8LgAAAABJRU5ErkJggg==\">",
+                    "question_options": [],
+                    "question_type": "选择题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
                 },
-                "sub_question": [{},
-                {}]
-            }
+                {
+                    "question_stem": "（3）设<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM8AAAAUCAYAAAAqeGmzAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAFJ0lEQVR4nO1Za4iWRRQ+q9VaYW1Ktw2ysAumViaR3YwotyzphkGG0o/MH3YhCLsQ3elKRII/CiKCigi6R5B2v1ih0h8trMgftWmpWxoVJJY9D2c+HGbn+u63rbLzwMPue8688877vOfMnJlPpKKioqKiYjjhnaEeQAauBp8DHx3qgVRU2Hi3sP3J4NPgevBv8AfwKfCQhG8m+KOxnQ/uiNBFl+nnzcKx/p+IvUvM5+oSa+/TZrDQrmfFYqJEl6HUom3goD8FTwA7wW7RFWF5wtcLngaeISpI6OVD9o/Ae9ryBoOD2MeM+VxdYu13x+RJxUsIufHixR7gDPBG8AZwXOmoHYwHXwf7wD/Bt6R/BreuTwK/NO2+ACc5bY52+j4A3JrwbQCniQrSK2UB0mH6uAQ8S1STiwL3l4B9fQz+Zcb3Bjjd+OaB34DbzN+5xu7TcXpg3C3EfK4usfaxfk4ErwOvEZ3tBwJ3hudKMRtcLfodWAF0S3viJYTceOkHftSV4CLwHPOgsz3tYsu7mxjsjwKMAkeLiuxb/njN/cV40+4R8P3AOPcGJ4LPgvcnfJeKCkIhZnqeaz/fxVHGzr5uFg2S38AHA/fnaEKN14h+HGpykOmb/h5wLXgquK9p862xx3R83Lwjx/YZeLE1ppDP1SWkQcg+AnwGXAbOAueAm8BbGuoSetYOM1a+90LwJcveNF5KdMlKHi5TnNWONddjwH9Fs3Ug+F38M5JPpMnWNYNqq+e+W2Wn6E8U+ELPjdkvF9XgFMt2t+g7dQT6SYFlYE/EN8Oxse7+UOI6LhH9bky400Vn6vkJnw8l2twLfiVaqbSwGLws0EcuYsHKZ/VZ7ZrGS4kuyeThLMIZb5FlOxdcl7oxAwxAzp4U+i7wiMCgeL2ndd3hadPCXuDxoocO7n4k5vM9N2Z/APzcsV1r2o4K9JMCS4z9A74+j6/L2EM6+sAk+66BL1ebfcA/RFcCG9R+RGRcObCfxVWF5ekW6b9StSteWgjpkkwelhKcYbstG0uJlwPtS5digrP3Q+AvokfAqeU6Z+CHgz8X+kqS523wYcfG2bXX0zZXE+5zSpKH15uta1dHHxjc2xr4crWZZWzHBdq79zYt2z4RXenHePztjpeQLsnkuU10VrPBWvb21I0NQME3ewaVEoP/H+n4D7b6CvlifabsDNDrrWvObpydFgf6yAEDoqRsO0+0bHNh6zjO8XEj/X3C50OuNlcZW5dl4+w+IXB/CexncXUbbV13Sn7ypOIlV5dk8twE/gSONNc8xdkOXpC6MQN8OE+MWFuy1LlS9GSkSfK8J7rxo4isV7mkP5nwxfqM2VunOkssG08fuSk+NNBHDpgcX8vOAwN+0DtFE6TH+Li6UC+e+qw19piO/MF5grEzCFaJHm7EfD7kajPZ2KZaNpZD7uFNE2wEjwGniK4ELJ2ZpFx9HpOy5InFS64uyeQ5UPQEiPX98+Ad4D+is+RhqZsT4N6JtSZPNViWvCb++tVdwl3bmeZe/ujFfQODirV/Z8LnIjdALhTdpN8HvgouFZ2ZpsVfNws8xeHpGX+840z4guiGl3CPqucZu09Hzqw86HlF9ISIG+YV4BXmnpjPh9IDA1YrLGtfFD29GulpVwqu9L+K6sLK5wPRFYhaLJBwyVcSLyW6JJOH4Isz48fmNN6NURIgLXAC4Sw10M3wro5Sbbga8LeV/QZnOLsEspJnuKDkkGO4oWrTH1WLioqKioqKioqKioqKioqKPPwH83488prEDUwAAAAASUVORK5CYII=\"> 则（A）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAASCAYAAAAQeC39AAAACXBIWXMAAA7DAAAOwwHHb6hkAAACA0lEQVR4nO3WTUgVURTA8ZOmhRsLEotAkMCiXmQuzBKikGhnGwvyk1pVIkXRQtLCrRAipFCotCgQl6YbKUJcRSQRqAtbpbgxitAkF2n/473CdZp5TfOevM0c+C3ezJkz586cuTyROOLwxjW8wJNMN5LuyEcP3ma6ke2IMTzOdBMaWTiP27iDIz45H3AXhSHqLaIep23Ny8hOsaZGAs24gUrsSJZ8Bu/Rhip8wVWfvLMYwDe8Qg12+eQVYR0v8QA3sYDnKdTUBTzFOKptnvbZFbSoCnzHCfs7B79wOOgCIg+NeIOvYr6ncuf8Jbuwc86xW/iNvRFr6kP/jN3OsXZb96/QpzCFh86xUiyJGc0wUWRvMItp7EMHPnrydBR1sYci1DyIH7jnydOX4DfeG2OgNyt2jl3HRIibu0202SZmxCxMR6rbk6eNrsjWJx625hXbZ1nYplrFzKkbgz5NeUPHpgGvxYxNL0455+dx33PNOwxFrFknZmH7nXx9U8eDiulupLtXjv19EqtoCsjXN9wv5kMfETNe3g+9wDbR5xyrxTJKItY8ijUxu+BmtOBZQJ8bY/NJzI6o/xQe4aeYp5vwyZ8UM+fJtuaLYjYfHb1hjGIOFwLyw9QUW083j04xu63ukLnJLtBNQp9kwT8KR4kDOIadaaqnO6qO35401Ysjjjj+I/4A+5drBW0AUBEAAAAASUVORK5CYII=\">（B）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAASCAYAAAAQeC39AAAACXBIWXMAAA7DAAAOwwHHb6hkAAACCUlEQVR4nO3WTUhUURTA8aOmhZsSGtLNgAgaZfSxMDWQRKRWuqlFWYqu+kCUpEVoitsgIjBBUXFhEC792EQh0ioiCcFc6CrDjVJEH9gi7X+4V3ld39M3zAxDMAd+i7lz5sy5b869jEg6/u9oxhj6Ut1IouMwnmEm1Y0kI17icaqbSEas4QYq0IaryHJy3uMejsVQtxR3cQsXkJGAmpmotn2243hQYhRbeI5O3MYqRp28KozgCyZxBQcDauoGBjCLOpv7CU/iqKlRiXfoQo2teS0oud5u7KJn7Q7+IM8nPxeNeI11MeezzMnRL17GIc/aQ1vXL8LULMdXnLavs7GBkoCa0osPzpqOom62KOhDNqK24SV8xFExm/mGDidXG3HHO2xNnYAFdHvyzuC7mNH0DR2Bp86aFv4l/z7xoCa6bBOLtonLYh7KuRCbCFuzytYs9OS14M1ehT7jvrP2FuMB+To2N/FKzNj047zn/QbbRL5nTX+pU3v0sF/NB2LOkzdeyO4fZCcitokhz9p1/ECxk6tPbVjMQZ8SM65+B/0ENsXcgtvRikGf3LA19ebUmzvbvj6L32jy35bIJTEHUEdvAtNYQa1P7pyYcxPmatZ6enk8EnPb6g2ZE0dNHcd5MTei/kvqwU8xk1W6XzMFOIkDIRoPE3qj6vgdSVA9vSR0iiIJqpeOdKQjxvgLpilrDJ6v6Y0AAAAASUVORK5CYII=\">（C）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAASCAYAAAAQeC39AAAACXBIWXMAAA7DAAAOwwHHb6hkAAACDElEQVR4nO2WQUhVQRSGT5kpbVRQyk0QgoYpqYtKBUlCdGWbXGRq1CoLURQXkhptBZGgAqOihYK0zNpEEuFKxJDAWuiqpE2hSBq6KP0OMy+m673P955P3ub+8C3u3DP/nJl75nBFQoVydQPG4GGqE0m2suARvE91IgehtzCc6iQiKoE7cAuq4ZDn/Rx0w/EYvH5AC1RCJzRBmk9cPJ4RHYZa69sFp4MCdQOj8AEa4Qp8hRFPXA08hxWYtHEZPn4nYRvG4S60w3d44RMbq2dEVTAL/XDJ5nk1KFiDliDTGRuA2wHxx6ANpuCnmPt0znl/2W7sojOmXn8gJ0FP1QVYhbP2OR02ocjPUDezBj2ecZ3kVzpe6dfRQ1iEz5AL92HeE6elqJstSNBTq2oBBp24MvglpjR3qcEuWBHDgkFJ9NskvtgktKQeeOI00d/yf1XE41lj8zzlxN2E6SCTa3bCCWdMv1RplIW1bFrhnZiyeQznnffL0OuZMwMv9+HZJ+Y+uZqQ3Qf4T8XwV0wXjKgDnvjE6qk9E3PRX4spL+9FzxNzUE+dsWZYh8IEPVXaObXTptvnctiC6/7bMtIy0eYxJKaTaYc86hP3UcxdjNaa68VcaPV8BW/gG9QFxMfiqdJy/CSmI+pfzT3YEFMJJdEmarfS8sveY4F4lA9n4EiS/LRJ6FfPS5JfqFCh4tQOCvRrDK51V1EAAAAASUVORK5CYII=\">（D）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAASCAYAAAAQeC39AAAACXBIWXMAAA7DAAAOwwHHb6hkAAACBUlEQVR4nO2WTUhVQRTHj6klblJI1I0QQkkpVgszA0lEapUbW/Rl6MqKMIoW0StxG0QIGhgqLgqiZdkmDAlXEkkE6aJWKW6UItLQReXvvJlgGu59z+f1Y3P/8Fvcuef+58zMmcMViRVrK9QGT6B3uxPZaO2GPhjb7kQ2Q6/hQaYfVcJV6IDjkOW9fw83oDgDzx3QAJ1wHSoies7DBThmPc9AdliwLqAf3sJpaIGv8NCLq4ch+AYvbdyuFEnUwTtIQKP1PBvBswz+wlO4A5dhDobDEtCJv0CeM3YXroTE50MrvIEFMXVf48XUwneots+5sAz7I3g224WdcMY0x99Q6BvqYn7ATW9cEwk9Yke6i7oJn2EK9oipgE9wz4k7BD/FlOZ6PFXd8MGL1VLUxZb7JqfsiyNrmDAsiYRNYtomUW899zpx7TAewVOlpdrjxeoG/JL/qy2p8zaJEmdMT6oqxcRaNhdhVEzZPIKjzvvbYu6Tq2cBSWXiqZqFW97YBDwPMjwAf8R0wX+6Bo8DYvUkBsVc9BExZRB00bXLaffKtc+HYQUuRfAsEnMAA87YOViEfQHxSelxavO4L6bjaIfcGRA3KeYupmvNWjofxXRE/VPogiUxu1u5Ts+TYpqP5voCXsEMNKX5LtlVtPwK0gWuUdokdCeLNsjPVSkchJxN8I4VK1YKrQIZa2sMgAF21wAAAABJRU5ErkJggg==\">",
+                    "question_options": [],
+                    "question_type": "选择题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "（4）若向量<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAOCAYAAAAbvf3sAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAkklEQVR4nGNgoBJgB2JvIC4E4gIg9gFiRlyKXYD4MRBfB+L9QPwfiL8CMTM2xW5A/BuItwAxGxBHQDUcx6aYB4hfQhWoQsW6ofyp2DQkQyXvIYnthYqlYNPQA5XcBOWzQd0OEjPCpqERKrkHyi+G8n9BNWMAOSC+C1X0Aog3QtmgQJiGTQMIgIJOHYiFcCkYDgAAZEIiXM4okYwAAAAASUVORK5CYII=\">、<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAASCAYAAABvqT8MAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAqUlEQVR4nGNgoDcoAOIlUFxLjAYVIL4DxP+BeDYxGtiB+BdUQxYxGoyhikHYAYjDgbgQiO1waUhF0rANiFcg2ViJTcN0qOQXIJaEiq2Cir3BpuEkVHItkthqqNhfIGZCVswMxN+gksVI4tehYnfQTddBcn8AVEwKSawLXUMckmQOVGwalP8MiEXRNfRDJe8D8QEg/gDlXwJifWweRgaMQKwJxIqEFA5FAAAhbzEzTBiyGQAAAABJRU5ErkJggg==\">满足：<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAUCAYAAAAOTSQ2AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA20lEQVR4nGNgGAXUA/8HSC/NLaBEbxIQ/6GlBeTqLQXie8Tox6WAHYi9gbgQiAuA2AeIGankuCtALEWu41yA+DEQXwfi/VA1X4GYGY/e/0RgGBDEYzdex7kB8W8g3gLEbEAcAVVznAi9pAKSHMcDxC+hYqpQsW4of+pAOy4Zyr+HJLYXKpZCQC8p0UqW43qg/E1QPihav0LFjMgxnAS7CSpohPL3QPnFUP4vBohDB9RxckB8Fyr2Aog3QtmgDDKNio4jJsqxWgAqLtSBWIhIS2gKRuvWUTAKBiMAAPUuYNG2MCGwAAAAAElFTkSuQmCC\">，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEIAAAAUCAYAAAA5g+sCAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACIUlEQVR4nO2XO0hcURCGT4y4Eq0ECzUGAhEjCIKCVpEE1CYp0iWVjbERC2UrCwsLLVTQSHRJoiAoJigpEoKVop3YBnGbaFBBfBUWarGLrP+4v+zJxXvuw7tgcX/42J2ZO2dmz859KRUqlJMKwMcs1+gCs6TXEpPaj7Jc35VmQEOWazwDf0EKfLXEpPa0izVywDeuMUc7ML0CXwJaK2WIRUCCx3TcEpfNeWHIfwCmwDFo4+ck/YEoBpptYtL8a9Ct0qP9xqGwaSPqGBdegndct5HxFvDJkC+nzw6opP0c7IJRQ46n/jdA2S3+JrAH4mCFP+AcPDQUNm1Eu8psxCL4rjIT0gMegz82uQNgk8foKqe/P4j+ZcQiFp/8O0nwG+SB91xozW4RyrQRMcbPQAl98/SdgHxw5LC+W/nqXxL0cSkEh0ysoG+I9rglN+WCG63T/qH5Fui7BLkqPSF3lZf+/5N1ItqYtK35lun74NCE3UTIOF4wHtX8cfrkbhLURPju33qNGGbSL9oyWuf01To0YbcR1SozIW/pK9V8g8p8jfAi3/3Luduk2X1MWqIdpZ3goibZbUSryvzoTvomaO+DYuV813Ar3/3Lc8RnzX4Ctph8AH7ye5LNm2S3ESOM/QOr4JS2TEANj5EeTM8RbnWX/q+fLOs1W85puV8XBdCYVXJhrgJPNZ/bJ0u38t2/vGuMBdiIV0nte/GuESpUqFChLLoCNwao2ARloZsAAAAASUVORK5CYII=\">，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAAAUCAYAAAAuoXvLAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAChUlEQVR4nO2XT4hOURjGjzF/xEJNWcxgQSN/EjVqphRRw4aF3VixwEYWNFIWlizG1DBh8q+mRmhkQVJTRCxkYyGZkj+hhLGQjIVJn+fpPl/fuWfOvfd831yk7lO/vnue8933fe/9znvv+YwpVChvzQEn/2H+/eCSOOLMsa7ZfzGfV8Og0xqvBSPgC5gAz8BB0JBrmRW1gZegBM47c6xrKCBGHbiiGJc1riXfFG0E5xyPJz4Aq8AssALcA4MBhaaplOA3gZ+a3+uZ50WsS4k7A1wE42CXPi/IryVfTLzoTY7HE9scbxH45iTZAg6YaMluTSnIjuvTGs2RDaBbcddrfjM4lRKXbfgWLNV4GXgHTtSYLya2z/yU5GXNBR903AXegzETrSwmYivOzIiRdIP2WAXfBldN5Rc+DBaApwnnHgPP9R1bC+UfrSFfTFyOTQnJbe0EvSb6NSfBLdAItivwo4AYSTdoUHPfQYu8EXl8DrLNPwfED1VWvph4sVmtwXZ7AlrBJwVaornjGp/2nFcKgHqs4+vWudfk/QL1JvqF81JWvpiyVlAHeAHaTfQAZJDX1vxdebsDCvOtILblD831WP6YPL5t8lxBIfliSnoGcVUdAg/BYnl9CnJTY7bYhLz2gOJ8N2ilqaymbfJaLY9tnfYMqlYh+WJiP3Y5Hvty1EQPuHrLLwe5o3GPxlz+jQHF+W7QDivuPnlnNOZLYZ7JfotVo5B8MXEfdNbxxq0gLq/0+RHc0PGkkmTJd4P65b8B98FXjbliVus7rC9tH1SNQvJNEXfSHYEJ2MPcbzRPp8oEsa2Xm2jPVVboTjqvfF7xv9jAHypiumJdef8XK1SoUKFC/6t+A9ouz4iEDK1EAAAAAElFTkSuQmCC\">，则<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAUCAYAAAB1aeb6AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAz0lEQVR4nGNgGAUI8B+NXwDES6C4lgR9VLFcBYjvQMVn09tydiD+BRXPorflxlAxEHYA4nAgLgRiO3pYnopk+TYgXsGACIlKPPr+E8BEWT4dKvYFiCWhYqugYm/w6CMLoBtyEiq2FklsNVTsLxAz0cpyZiD+BhUrRhK/DhW7g0MfjE9RsOsgKQ6AikkhiXXhsZwsgGxIHJJFOVCxaVD+MyAWpaXl/VD+fSA+AMQfoPxLQKyPRx9VLEcGjECsCcSKJOqjiuW00jd4LB8FwxsAAIftXQdxn3QRAAAAAElFTkSuQmCC\">（A）2（B）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAWCAYAAAArdgcFAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAn0lEQVR4nGNgGAWDHfwnAlNkOM0AzQxHNtgKiFcB8Rsg/grEV4C4BIhZqWE4iH0IiPWAmAOItYB4PxBPp5bhKmjyikD8iRqGYwP8QPyMVobHA3EXLQwGBdE5BojrSTYIn+FmQHwLiI2INRjdMGyGMwJxGRAfBmIlQgajG4aeOpCBJBDvBOJWIGYh4AicFuDS8JqBwrKFKoURMRaMAuoBAP8gOFwnOJcyAAAAAElFTkSuQmCC\">（C）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAQCAYAAAAvf+5AAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAOklEQVR4nGNgGFQgA4i/ElJUBcT3gfgHPkUsQHwRiOUJKWQEYgEg5iCkEAaGhUJQ8PxHw1+IMZnGAACwVBCgigVpKwAAAABJRU5ErkJggg==\">（D）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAoCAYAAADg+OpoAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA20lEQVR4nGNgGAV0BP+JwFSziC6A7hZZAfEqIH4DxF+B+AoQlwAxKzUtgbEPAbEeEHMAsRYQ7wfi6bSwSAVNXhGIP1HbImyAH4if0cOieCDuorUloGA8xwDxFUWG4rPIDIhvAbEROZagG4zNIkYgLgPiw0CsRIol6AajpzJkIAnEO4G4FYhZCDiIKMtwaX7NQOWyjqoF5aCwaBQMLkBMNU0KHgX0BTRtIyADmrYR0C2iWRuBEKBaG4EQoEobgRAgq41AKiCrjUAKoEobgRCgahsBH6B6G2EUDC4AAIuxY8RsqwZqAAAAAElFTkSuQmCC\">",
+                    "question_options": [],
+                    "question_type": "选择题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "（5）有6名男医生、5名女医生，从中选出2名男医生、1名女医生组成一个医疗小组，则不同的选法共有（A）60种（B）70种（C）75种（D）150种",
+                    "question_options": [],
+                    "question_type": "选择题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "（6）已知椭圆<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJgAAAAoCAYAAAACCDNUAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAFX0lEQVR4nO2ad6gdRRTGj4kFNcY8Yyf6NEZsKMZKROPT2BFRFBERg4IFjWJF7AULWIkgiBGNFRU76B+K+pfYC4oFQY29xSiioiQavy9nLs6b7N7d2d3Zd2/u+cHH253dnTP79tw5M3NGxDAMwzCMHuEU6GfoO+jUAbBrtMxSaBY0E/pmAOwaY8QM6KoBsmu0yKbQOdBKA2LXaJg1of2gnYPyDaE9odugNaDfG7a7irM7IyjfATo4oV2jZaZAt0N/ifYaZD3oSehL0fEQ1fSHHoLugf4UdbYO90F/J7RrjAHjoPehu6EJ0BPQJi3Y3ULUiXbxyk6E7mzBttEyh0NLoGehbVu0+xN0hnc+FzquRftGS6wmuvb0dMt2n4Ee9M4/gdZvuQ1GYhgi74LOl+VDVmouhRa4411FHc7oMVaF9hINLYdAm0c+f4vojI68AD3XXNMKOUDUqTcS7T33btF2EWtBNye2cTJ0P3RNYjuEHQnfZ/WYh06A3hDtCWZDV0A/yP+zsFDfB8/zuaO9893dfXSylSNfoAqToH+h+dCjiW2dDv0WcT9D946J2tKB78+Z80MN13so9IHo6sDboh0Q2QO6o2wl14o619pBOUMNnWTLoHxdWd7BUsCZ6K8R938MLYQ2TtOcZVwEfS7llz32h25N15xRvApd0GB906FvRd+BvnGk6HcfdtfvhXYrqoShkLO+rTOusedhrxCugveKg02DdnLHk6H3oIMStof/j3ehqVLeweZJfrjmuh0Xg8+C5oguSvuMh95y14YK7DBs/SE6VJjl6jywRn2EPe/soIw/sBvc8WHQ9UWV0GDegJj/0CUZ5b3iYAxVH0IPQO+IvnAV+J55Q4GOvhb9oU1y7SrrYOxVs2azHKu+KeoIPF4smn0IobPw/X6BHhZ1mnEZ923j2sk1SKbGznZtPLdifYTvHEYDZmpeccfTvONMhl2j5uRc73UHI8wWTGyhLT4xDsYPOT4oGxEN5VPdOf9yjNNtrMoQxS1Hr0NfQVeLfuAOx4p+q+leGdcCP61Yn7j6wujFSdQX7pg/ts+6tHnZAI4ONjPnetsOVrYnGWtiHGxxcM7egmt0Z3plR4n2ZmXZTnQWx0nYU66Moeql4L7LRR28Sn0kz8EWuGPmeBd1q5iDtqXOQBb90IM1Qaxj1+nBRqB/ZHTY5CRrXkR7+b1uktEO8Tx0ZXAfQ2EZx82qjxSFyMIebCvRf94+GdeYsH5cyjlY0cfppm50c7A6NovsFlFnDHah6LjRh2HqtIJ6GNK4Q/c10ZDG9S4/pP0IneSdcwJBh7mkYn2Eg/zjgzK2vzPILxyDEXos1078rnCye5Ar8oPQg8US42DsmfwhyHmiY5jOwJqzSDp8uN2ow76iC6jsCR8RnSWHg/Ipro4bvbKLRUNZuPRUpr4O7K24E5iTEI5zjxB12s3c9VKzyInOEB2KK/Fc2+B6yjHSXIisuje+joOl2I+fFUoXFjzDNaS53vkG0EfQy6Ih7DJXD8dPE4JnGVq5uMkk/jpdbHAsTYe5DnoMetHZ2L5ifT50Iva43PrEmbq/5DJfSqyDdRhyDfLXYppysJR74/NSJL20Hz9cyeeH5vCk7EeOgdujuKaZegdv1Ep+Ht0Gv1VCZIq98UUpkl7Yj99GLrJNGFIZ7aJykalJuTc+L0Vi+/FXUMIUCLftpNobn5ciGU5o0xhDslIgTJim2huflyJZlNCmMUaMSHwKpC6xKRKjT2kiBVKFOikSo48YkfopkCrUSZEYfUTVFEhdYlMkRp8SmwJpgpgUidHnxKRAmqJsisRYQUiZAimirRSJYRiGYRiGYfQc/wEhhplz5UWacwAAAABJRU5ErkJggg==\">的左、右焦点为<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAWCAYAAADJqhx8AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAq0lEQVR4nGNgGAXYAC8QmxDArPgM0AHi6UD8H4h3AfESNPwRiFkIucIVaoAsmjgfEJ8ixhvlQPwaTUwViHmAmJsYA1YwQJyPDE4AsSAxmkHgFtQFN6D4JhDfJVYzKBb+AXEokpg2EK8l1gA7BkgAqiCJgfwuQawBBUD8CYgZ0cQjgPgdMQYsBOJDWMSvQ12GE0gD8Q6oLU+hbHkkeQ5CBhADBtaA/0h4FCABAP2fJg/JGBvvAAAAAElFTkSuQmCC\">、<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAWCAYAAADNX8xBAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA0ElEQVR4nGNgGAXkAF4gNiGAWYkxSAeIpwPxfyDeBcRL0PBHIGYh1lWuUINk0cT5gPgUsYaAQDkQv0YTUwViHiDmJsWgFQwQbyGDE0AsSIohIHAL6qIbUHwTiO+Saggo1v4BcSiSmDYQryXVIDsGSECrIImBwkaCVIMKgPgTEDOiiacC8RsgfgnEhcQYtBCID2ERB7nSHYjNGSBpCSeQBuIdQPwOiJ9C2fJY1BkCcS8xLsIHZIC4DIiZKDFEDohnADEzA8SbZIP7UANgeBSQCAD7/Sjw4NjGmgAAAABJRU5ErkJggg==\">，离心率为<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAoCAYAAADkDTpVAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA8ElEQVR4nO2VsQ7BUBSG70SMJmKQGMQgYTJ6L5sYbB6ARCxewGJj4x3MBjFYDAYTn1Rpbqo5bU9ruV/yJW1vcv6mve1vjCMDHgJTB2RKbgE9XOAJ73jEOVY1hvvHO+xiEWs4wb1mQNNaL+NVKyBICdu4xLF2wMB8t+dUe7hPATu4wVHSYZLtWcezdLg9MOy8YV2r4EVwI58B9q6x17fGe7mvbdrCNc6kAcGhYY+njyvjfWg3PODwHRYLlR/YXwMc+SKpQ6kOXTLp3yCZ9K8doN6/v1Dr3zDU+jeK2P2bFFH/Skndv5KA1P0bhVr/OvLnCTLFZo3sh0gyAAAAAElFTkSuQmCC\">，过<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAWCAYAAADNX8xBAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA0ElEQVR4nGNgGAXkAF4gNiGAWYkxSAeIpwPxfyDeBcRL0PBHIGYh1lWuUINk0cT5gPgUsYaAQDkQv0YTUwViHiDmJsWgFQwQbyGDE0AsSIohIHAL6qIbUHwTiO+Saggo1v4BcSiSmDYQryXVIDsGSECrIImBwkaCVIMKgPgTEDOiiacC8RsgfgnEhcQYtBCID2ERB7nSHYjNGSBpCSeQBuIdQPwOiJ9C2fJY1BkCcS8xLsIHZIC4DIiZKDFEDohnADEzA8SbZIP7UANgeBSQCAD7/Sjw4NjGmgAAAABJRU5ErkJggg==\">的直线<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAASCAYAAABit09LAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAYklEQVR4nGNgoDXIBOIlQNxKSKEgEC8A4uXEmHoMiEsJKWIC4i9A7EJIoRYQ/wdiIUIKo4H4AUHHAUEvEK8nRuF+IK4lRuF7IPYhpEiJAeIRKUIKg4H4HxDvAGJ+YqwfsgAAvewO3Jtt+kEAAAAASUVORK5CYII=\">交C于A、B两点. 若<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADEAAAAVCAYAAADvoQY8AAAACXBIWXMAAA7DAAAOwwHHb6hkAAACQklEQVR4nO2WTUhUURTHjzmTVpOpWZRTC0VFNy1S2iQYRBgI6kJbRDsRN+lGXBgI2iLcBBJEitsW7UIwv0pbhIikuFBwdqJF5RcFSo2Q6P/MvSNnXu++95hJRZg//Jj3zj33vnPePee+IUoqqROhK6BE3J8FZS7kuPiXggLgP+TYI0oFc2BN2ArBc7AHJsFrCyvgrsF/CHSDHjADVkGF12CexpnEY7CsA7gm7De17bbNnFmQZbFF/cuF7TTYAm+9BHIHfAP3vTgLcUnwm67TAVSLsUbwl1SpRHUVXAbnbdaK+p8TNr7eAX1eguEtLALvvcV+oH5SZREklUSnGOsFCxb/l6DSsBb7z4v7AHgFvoJ8t0DugWf6ugPUuE3QugXeiPsfYEDcfwY/QUgQBpcM67H/FzACxsE6mAbFXoLhSdn6mrf5A0hxmXMKfATXhe2dDoLl1wE3i3E+AEKG9aL+LZZncBltgItOwVRRbAmw2sADp0mk6vc7GBQskSopftN2Te0DeYb1TIdArbabSjCiMXDBYuNGnCD1JuzEp8oUyADpgofigZzkLsU2qZNM/p2kmj3XNJGzfGIY4219ZBjj5qyysfPBwEm0k2rSRYfn8tkvP3Z2/jfAJnhhWCdS81z7AcN4Gqnd8Flsw+A3xTY0i7/WozqJP2CbVGNyv5VafPnECuskgtpnQ/gP6d9PoIkc+rMedIFMB1pBg2mBBHQG/KLYnYhL/Ikf8UBvog8y6L8kcdw68UlwP+zRv/+1kkrqqLUPklGB5qjaUX8AAAAASUVORK5CYII=\">的周长为<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAWCAYAAADXYyzPAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA7UlEQVR4nGNgGAWjgHjwnwhMM4sHBFDFYiYg3k+CYchBaQrE84D4GRD/BOJHQDwHiCWIMaiGDIuR2UeAWB+I2YFYCoh7gPgoIUOsgfg5VAO5FquiyQsC8Ud8BoAUPABibywGEmsxMuAEYm0gXgzErfgMWAPEfUQYSIzFFQyIuJ+BT3MGEJ8BYjYSLcanBmSWHhDvAeJGXIq+MRDO/NgsIcZxckD8ggh1WA3FZTk2viKamDgQvyHXYkIOQubvZYAkKlB2UgfirUA8k1gL8ZWz+ILeFog3MEAKkK9AfAOI66GOoAqgacE/KC0eBSQBAFP3VQuIPCK8AAAAAElFTkSuQmCC\">，则<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAASCAYAAACEnoQPAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAApklEQVR4nGNgGIyABYitgDgGiH2BWJ1YjdFAfBqIG4E4HoirgPghEF8HYlt8GuuA+DIQi6CJKwDxLyB2xKXRFYj/ArEBDvltQCyIS/MJIN6Hz1m4gDQQ/wfiUnI0e0I1u5KjOQCq2ZAczSpQze5Y5ISAeB0Qy+MzYC0QrwdiRiQxHiDeCcTdhGwHKVwGxKeAeAIQL4CyUwm6GwkIALEuEEuiuWLEAwA+9hnHv4np7wAAAABJRU5ErkJggg==\">的方程为（A）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAAAnCAYAAACsTw7IAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACsElEQVR4nO2ZW4hNURjHP7dMLiO5TkbOg0KUO/PgTsmDPMmzSJMHlxdFYyZ58aZ4otRxSZRLCTXkxaUot5SihCQ8iEJR0vj/fXs3p50z5+x1zrf2OWfWr37NmdWp/zrf2Wuvdb4tEggEaph2+AV+hFsbONOZHrgq8nUDZ1bMUtjRDzKdmAJ39YPMogyHa+C8xPgk2AaPwmb4uYqZQ6LMtsT4XLjWKNOZVngc/hQtCmmBF+E70XsCreZkR8PT8DscFI3x7wX4yyizIji5F/AYHAUvwwnGmdNFizC7YGwHPGyc68wm+BtehVM95A2AX0W39ZgTcIOHbCeGwW/wvMfMGzAfvR4I38CRHvPLhkvsJNwL/8BZnnIPwpfR65XwnKfc1BwRnSC5K3oP8sF60fvQGNGraYGn3FR0wo0F/y8XnfQVD9njo6y86BVsyW74wTijLCbC9ynez/sOf3eNs5nOP7qinE+GGWVTqkDcIeNDKYvyXHqXtwVN8KHosaIuCsRtnUU5Cx/DdQ4Zg6X3MFnMp9F7uTvyVD5W6qRAhFdOs4e5FJJZgdJ8m1niVKBSH6wvi9HXFVRJXmGmy5dSV0ssC0KBShAKVARu88nl9zbLCTU0i+Ep0UuRjSs2zdmfGWGYuQReEn2SwQYaz0ZbDPOciXeGW3AmHApz8Ixo0Swzb8IZosthvugOtN0o05l4spMT4+wTPzLObE2Mr4D3jDKrBpv5/M10DW7znM027G3Pmak4JPrNsnm2P4N8ZraXfFfG8B60CD6Bmz3mLoR3RJdfXbBMtMvog9WiLdicp7xUxDfMlsQ4t/77xtnsiR+A3aIHzZokLtB1OE10ic2BD+Aew1zuYDxa7BPt3ZAcfGWY6Qw7e3wuxoPiD/gM7hR9hmUBC8Knp//7NV6TBQoEAoFq8heZBsMjZqtZCwAAAABJRU5ErkJggg==\">（B）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAAAnCAYAAABdRFVFAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACQ0lEQVR4nO2YPUgcQRTHnxGTqGAwSCIiSsTTQohoCBYiiAgSEQQhlV3AKlUCUQtRLOy0sRAlYgpJoYVfEAiiQkARC9FCxcoiRYjBJoWFiV//x9uD5RBvVufuzXH7gx/sDsfcn9nZnTdDFBIS4hhd8AQeww/KWZzjCrbAOvhXOYuz1MAR7RAuUgy74QPtIBrkwGb4Oqb9KWyE4zCT5BVLO4rgGPwPI15bHpyDP0kGJWpakgF34Ax8DGdhhWoix3gDL+F3+Eo5i3Nkwd9wTTuIa/Br9Rl+JPm2NClmca7w5Bqm1btehFuKWZwqPPtgp+++Cl7AH/CJSiLBZuH5Dp5b6ssK91n6bRaen+DRPfNY57YwXFRy4Vkf086zto3sFp57JLVcygwOv65f4D+Y7WsfJZn+JoXnlYFMvkGepBMvTKn3mwZfWztcUsqTUEyfpJ9fsMd330+JW75TauYw8ySlQ5RtMt+2BH0YgQfH5A9MZ8FNfcejF/7xrnnTuxkge1BSbuY0er8rh9Mk3xzNPEnDJEwuyerEK9dyAnMEnfXOsEuyTSjTDmICnwhOkawkZyQHXpOw0FL//ArVetdcg/A5UoelvhMOT7t1WA0fkVSXw3DDUv/v4QH8CvfhW0v9JgUenEhMGz9hmzvkZ7DAYn8qcGnP+x1eSYaUszgF1yDRr/u4chYneQhfwhU4qJzFWUpIzpfTHn6NXsS0PSc51017eHBWST7EvJRXwm9wQjOUK/D5ygJJEXgKD+EAyUCFhISEhNyRa0i5nZDWBcAHAAAAAElFTkSuQmCC\">（C）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAnCAYAAACout71AAAACXBIWXMAAA7DAAAOwwHHb6hkAAACuUlEQVR4nO2ZTYhNYRjHH8a3CVco0vgIiVIIRWqSEimlrCyUsrIig4WoqdlMsVA+IqmZZsGCWEw+QljIwscCCwtT1MTMbJCS7//T815znM659573nOe973XOr37d+7731v/pPV/PfS9RQUFBA7IHDsEPcF8Ocq35DTfBNfBjDnJTsxwez1GuFbPhQTgyJ7mxTIAb4arQ/FTYCs/CJpLLIUuaTO660PxSuFUx15pZ8DT8DheauUnwCnxLUmjZLJkML8JvcHxg/iT8oZibihHwGbwEx8HLcJGD3DkkC7E+MLcNXneQbc1m+AvegCsd5vbDQ4HxUfK8JRgN38O7jnOvwmuB8RNyczZbwZfeebif5FLY4DD7MBww7/ke+chhdmK4V9li3vPRfewwu5Xk4CyA3ST3KC85AncGxvx4/gnvkzyZtJlI8pTjJ+At5azdJssrkjzWn5P8VJmvVAvTBt+QZ+0GU6kgvsxWmPclktZku3I9L0h6xoZaqL3wFeyBL+GOlDnVZEo11FUXqhU0A05zUUiIui9UrUe23vhSx19cFZT0AFnVVUuI7dkR9Z00eVmdlbk9o5LiXV2+FeTrPfP/JKq1X0uyL8X/hnwhadgOkOwyZA23Cvyj/B38al7PwekKWdbEtfY8fgCXkWzmLYH34BmFGu6QbP3OhWPMK49vK2RZE9fal3/RB5kHPynU8BlOCc2VlLKsSdLa825Cv0INXfAUbCG5tFvMuEshKzW1LNQu2KmQzf+2dNO/T6QeM+8d1RaKL8OnpLNH1U6yV8/3wfL98CY8ppCVmkoLtRq+puGtkawZJLlPBuHxQMR3607UQvFeOv9b+5B0N9W4BYlaqCHFTGvCCzWT5PTvgKMqfC8LLsBeuBiONa+9Zt4b4lr7wZjPNBaqGZ6AfSQNZ58ZNytkFRQUFDQcfwDBWdsUNW6udAAAAABJRU5ErkJggg==\">（D）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAnCAYAAACout71AAAACXBIWXMAAA7DAAAOwwHHb6hkAAACcklEQVR4nO2ZQUgVQRjHP3saqZAYEiiCKNlBITCxoAhEAlEDIfDUQQiEwFNi2UG8eQny4KGCDh3CQyKFndSDYh0iSO1gHTxIeNBKLwl60Er/H7Patrx9b2d3Z3Zeuz/4we68B9//7ezszM4jSkhIyEF64Bb8Du/GoK5vDmArvAx/xqBuYBrgoxjV9UUlvA9PxKSuK0XwOmxytJ+BzfApTJEYDmGSsupedbTXwxsK6/qmAj6G+7DWajsNX8E1EkGPDJMS+BzuwUJb+yj8pbBuIPLgEnwJT8FxeF5D3SoSF+Kara0TvtFQ2zdt8A+cgo0a667DAdv5EBm+JCiA3+Cs5rqv4aTtfIH03M2+4KH3DPaRGAotGms/gD+sY35GvtdYWxpeq7Rbx9y7HzTWbibROefgCxLPKCMZhLds5zw9/4bzJGYm1RSTmOV4BpxRXOu2VcsoZKb1TyReVWoUZWHuwVUybLnBZArEw+yidVxKYmlyU3GeZRJrxpy6UL3wCxyDn2FXwDrZZEo95IqEbIHOwjIdQRxEfqG89mzUmJLjGF2BZDvIVy4vRfzeHem+E6ReWHdlbO8oWYzLZVogU5+Z/yfplvZXSOxL8b8hOyQWbP0kdhlUwdu+c2Rob7st7fn8LbxAYjOvjsSPeKIwyyAZfKHclvZHb/R2quG2ohy8d77hksUIZJb2vJuwrijDV9ghkSUyvITrhg8V1J6AI5JZIiNbOB6GixT+HtUd+BGelMgSKZnCXYIr9HdrJEx2yfz3w39IF4r30vnf2nekdlPNSxZjcIYrh9NwGOZn+J6OLEbgdrtvunym8kfkxNBLSEhI0M0hssjZCBGr+6kAAAAASUVORK5CYII=\">",
+                    "question_options": [],
+                    "question_type": "选择题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "（7）曲线<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAAXCAYAAABAtbxOAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABxklEQVR4nO2WyytFURTGl0RcrzwSBpQ8koHyGEgkTJioW6L8A0oSEwYyMTZRTAwkGTAgRiIk5WYgUhiZeuUqU6/rW62tdtc59x72fUTnq1/ts+4+a69119p7HyJXrly5Cq0+8BTvIH6iPFCgxskg3WbeFQjEJKIIqQL4gAcMgxSbeWz/U4mxBsAayNRsAfqeiKPEEkEHaAqyV4N6kPCLAD3KZ0OQPYekMr0kLfUCrsGg+n0IHIGMMP4dJZYFFtQiqZp9BtxaOAwHqwjMgVdQrmxcBa5Gjwq+hqStqsAOmFXv8eGwDJJCJGVVRUuVqInNmq0bbDp52UZc6VOwQpLAKkm19kFl0NxicGiwVkjdgDHteRKMGPrsBB9gC9Qpm5+sK+03XMtW62BDez4h+Yd1OW3FL3E73YE9zfZI4fdQRDUOHtSY94XP0B+34jwYJUm4Tdl3Qbuh7x+pVQVQBpZI9piJpkGXGnMnHKtxC7gEjSR7rxBMkSQcFaWBN5ITctvQ1wTo15756ngHBySnsBeck5zE92AR5BquGVJn4BmURnORWIjbrlaNs0mOZ2/8womc+MbnfucL8YLk8vw3yif5snblypW5PgHTnmMDXwvKuAAAAABJRU5ErkJggg==\">在点<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAUCAYAAAB1aeb6AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA00lEQVR4nGNgGAUIwA3EE6loHsgsLmIVLwZiczSxJCD+Q4KFyOpBZi0gRpMjEM9CEysF4ntA/J9Ii7Gpnw3EtoQ0TgdiVzSxK0AsRYLl2NS7AfEUYjRKo4kJQmliLcemXgaILxHS+BqI2XHIEWs5NvUcQPyKkIbfQMxIA8uZgPgXIQ0D6nNscU4Ny4mKc1BqdyFgGB8QvyXRcqJSOyifz8RiCDpeQcBSdAwyk2A+BwFQCWeGR34eAyQYiQVEl3AgACrbJ5FgOCEAMovosn0UjAKaAQCA2zm9KgsghQAAAABJRU5ErkJggg==\">处切线的斜率等于（A）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAASCAYAAAC5DOVpAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA1klEQVR4nO3SvwsBYRzH8ScGBgaT2CQRYsWkGI0muzIazSw2f4LdblASBptJSZHN4NeoLgvvpzvRRd1zZeJbr7p7nu7zfO/bI8RPVg49nHDBAnU47YTdMEYSbiQwRcduWNi0FsPBeK5ghSs2qKke4McWRcyQMrqOY4SSSlgVLaH/ftS0F8HQapD8eA4PzkIfg9nOSlAWa6SNdxnmtdrFoxxoYILQy7qcT0ElKIABmuJ5t+SwNeSxRAYuBNFG/1PYUbyfi2bsl4V+keXV2KMLn0q3//pi3QExPC86TlfShQAAAABJRU5ErkJggg==\">（B）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAOCAYAAAD5YeaVAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAcUlEQVR4nGNgoBCEA/F1IP4FxHeBOBuXQkcgPgbE+kDMAcSaQLwbiAOxKd4PxOpoYnJAfBib4rdA/B8LfotN8Rsg5sXlRnSwF4idiVVsB8TXgNiSAeJBSSBuhhqCFQQB8SUGSNC9BOKFQCxMrG1DGgAAN9YW4oahoo0AAAAASUVORK5CYII=\">（C）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQCAYAAAAiYZ4HAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAdklEQVR4nGNgGPTACohXAfEbIP4KxFeAuASIWXFp+A/Eh4BYD4g5gFgLiPcD8XR8GlTQxBSB+BMpzuQH4mekaIgH4i5iFYOcdw5qC0FgBsS3gNiIkEJGIC4D4sNArERIsSQQ7wTiViBmQRL/j0vDa6gkNjxYAQCySBh8VSudrQAAAABJRU5ErkJggg==\">（D）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAQCAYAAAAvf+5AAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAOklEQVR4nGNgGFQgA4i/ElJUBcT3gfgHPkUsQHwRiOUJKWQEYgEg5iCkEAaGhUJQ8PxHw1+IMZnGAACwVBCgigVpKwAAAABJRU5ErkJggg==\">",
+                    "question_options": [],
+                    "question_type": "选择题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "（8）正四棱锥的顶点都在同一球面上. 若该棱锥的高为4，底面边长为2，则该球的表面积为（A）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAmCAYAAADX7PtfAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABEUlEQVR4nGNgGAXDEYgB8WwgfgzEP6D0LCAWRVKTBMR/qGXhXiCeAcQKQMwGpUH83VD5UiC+B8T/qWXhZyAWQBMTBOJPUPYVIJZCs/A/AYwXLALiqUAsB8SsUHoqVBxmOcwSZIDNYKJCgRmIF6O5cClUHJ9hZFvYBMQ7gFgLiDmg9E4grqeVha8ZIHGEDED8V7Sy8A0OC9/QysK5QLwNiDWAmB1Kb4OK08RCHiDuA+L7DJCMfx/K50EyhJgsQHS2GAWjgCRAKAWSi0fBKGBgAuL9DHRMEDX0tNAaiJ8zYLZraAJA7ZkHQOwN5dPcwjUMkKoKBmhqYQYQn2GAtFXpYuE3hkFQfNG9nKSrz0ZrhBEKAAbHehTHeYyyAAAAAElFTkSuQmCC\">（B）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAASCAYAAABFGc6jAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAx0lEQVR4nGNgGAVUBElA/AeLuBAQTwHix0D8FYiPArEnuZaUAvE9IP6PJs4FxIeAOAaIRYFYDIjXY1FHNLgCxFJYDKgC4lQ0MTmoOkIYKxCE0ugKzgBxJBCfA+LvQHwNiLOBmBGHelxiBBV9BuJ9QGwAxJxAbAy1NJvaFoEShy6aGMiya9S26CUDxCfIAJRAvlLboo1AbIImZsQASTxUtcgeiE9BDQf5zJABkkBScagnaBG+5BnCAImTH1A6A4sebOaMglGACgDLoEap84vuaQAAAABJRU5ErkJggg==\">（C）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAArklEQVR4nGNgGPGAEYgzgPgaEH+H0iGUGJgJxKeA2BCIuYDYBIjPAbEduQaCXGSAJmYGxBuA+D8BjBV8A2JONDGQS19A2dg04jQMBK4zQLyLDHSB+De5BuYxQMLQAOpSfSDeB8SfyDWQCWooyKWgWD4LxFFAfJpcA0GS8mhioGRUTomB64FYDIhFgDgGiA8wICKKZAO9gPgYAyS2nwDxZCAWRNKInkQIJptRMAgAAM2tNgrGedHSAAAAAElFTkSuQmCC\">（D）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAmCAYAAADTGStiAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABIElEQVR4nGNgGAUjFVgB8SogfgPEX4H4ChCXADErEP/HgX9Rw2KQQYeAWA+IOYBYC4j3A/F0qBw6KADipdSyWAVNTBGIPwGxA5o4ExDfAWIzBtyhAcNkAX4gfoZF3A+Ij6E5Gh2QbSkIxANxFxbxvUAcTiuLQcF+jgHia2SgA8SPgZiFFhaD4u4WEBthkZsNxBVEWEKSxYxAXAbEh4FYCYu8MBC/hdJUs1gSiHcCcSsD7mCsBOJZRFpCtMWvGfBnCZBjQHGrg8UC9KxDcXYaBaOAIkCokKcUj4JRQBQAtTxAzSG6J5qagbDYGoifA7EUPS0WBOIHQOwN5dPN4jVA3IfEp4vFGUB8BojZ6G3xN4ZBVCQOWBk8ID4drX1GAU4AABZ1d/c4DBvUAAAAAElFTkSuQmCC\">",
+                    "question_options": [],
+                    "question_type": "选择题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "（9）已知双曲线C的离心率为2，焦点为<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAVCAYAAABPPm7SAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAvElEQVR4nGNgGJaAG4hNCGA+fAaoA/FEIP4PxAeAeAkafgNVgxdYQg3QxSJ3B4gZCRmQA8TfgZgFSUwOiIWAmJeQZhCYD8Sn0MRWA7ExMZpB4BIQvwPiG0j4KxCzEaOZA4h/A3Eqkhg/EJ8h1nZzBkgAIjuXnQESBkSBLCD+xUCkc7GBOUB8Hot4MBC/AmIeXBqlgXgHEL8F4pdQtjaS/DUg/oPPAEIAFLg/KDGAYcANAPn/PxQLUOKKQQYAhBsmu4PwAiAAAAAASUVORK5CYII=\">、<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAWCAYAAADNX8xBAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA0ElEQVR4nGNgGAXkAF4gNiGAWYkxSAeIpwPxfyDeBcRL0PBHIGYh1lWuUINk0cT5gPgUsYaAQDkQv0YTUwViHiDmJsWgFQwQbyGDE0AsSIohIHAL6qIbUHwTiO+Saggo1v4BcSiSmDYQryXVIDsGSECrIImBwkaCVIMKgPgTEDOiiacC8RsgfgnEhcQYtBCID2ERB7nSHYjNGSBpCSeQBuIdQPwOiJ9C2fJY1BkCcS8xLsIHZIC4DIiZKDFEDohnADEzA8SbZIP7UANgeBSQCAD7/Sjw4NjGmgAAAABJRU5ErkJggg==\">，点A在C上. 若<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFsAAAAVCAYAAAApZJKFAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACfklEQVR4nO2Xz0tVQRTHT2H1RMOQCDV1IaSFYOYPWoTuFVy1jHYZuWvTwlXQPxC0iEAQFA3aBQm6KDBaRC1yIWSJGBEIz0QKRFCk+h7mCvPmvXPuzL3vRcn9wgdkZpzv+Q7z4z6iTJkyZSq7dsAZp60G9MVQp8zZBNoD/CqhSuRiadkkX7WzAzwEv8FrMOOQB5eF+U6AT2A1STEeugqegk2wCz6DB+C0h0+aXKy4bJJvbGd/VNSVEn0csEqY7x74Cn5R8QLEFuOhA/AO9IAcaAPPwEtPn6S5WHHZNF+18w7YAyetthZQrxg1gjfgBplAg6HFeIgXu9tpO0Vmlzd5+CTJxfLJpvmqnRPgg9M2S+YYS5oGA+BCVNBdT7+DaLxGn+LLyjvzljMXyyeb5qt2ckHbZO6oQ3j35IR5rpG591jHwE8wFVpMQvEue+7pE5qL5ZtN8xU7+YjxURu12mqoeEcc6jiZB8c+xotgObSYBDoHlsjc3XE+oblYIdkkX7Wzl8xR6XUKbRXm4HtwA8xZfCNzPVR7+CW9Ri6Bj2C4QrlYIdkkX7XzNtinwkdEEj8sb8k8LjkL3j0czL0Ly7Wzx8B7kj/V0uZihWaTfNXOJ2SOpqvrZL5v7fGPwVCJsT1RQWMhxXiIr40X4BEV3rNr4GKMj5TrFvgOtsB9qz00m+RbsvM8WIhM89HfXdbYFTI7g8fzB/48mcdltkQxr6KC1sFN32I8tEHyVSMtdlwu/t8R0Bnlq02YzfUtUkj46sDxaf3SKIkPP7KTlfQNLeqoLnYDGCf9F2Rq32yxiZrJ/Njhh/MHOPuXfFXZn2hpCvrX9IUK7/6jlC1Tpkz/r/4AmJbwhMXwYEYAAAAASUVORK5CYII=\">，则<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFIAAAAVCAYAAADVcblPAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAC+klEQVR4nO2X24vNURTHl/swbvEgt6EkaWTkkoaE8qCEpJSSGHkwiWfxJn+ABx6YUjJeXB6kyGVEKCGljGs0Ec245ZprfL+t9Wv22ee3f+fMPsrE71uf5jd777V/+6yz1l7riOTKlSvXX9FoMNH5vxrMLMFgb48Ym26lH+CX/X0H7oBDYFmZ9n3BQ9DqjE0Cu23fi7afS4etkQptupXowCrQQzQqJoMN4BY4AwaWsN8G2sBPMMAZrxd1yrQUmwf2Pl8xNhVpDjgPPoKX4CxYClaJRtRX8BhssfXjwTFb+xm0gCU2lzjSV29wHOzJOAdT+hJYK+qAemduM/gC+jhjNWAYGBTYL8YmWnTiXTAf9LeXMIIYEW02zsjit3oDNICrYI2t59xKWz9Gwo6kxoL3UvjBXDWDuaJRTEc2OnMHwHVv/REwI+OzxdhQyfWURZHOSfr9xfHl3tgU8AS8EXWwL/9lQ1PWvBCNaF/zwEF77imaHfud+dv23nsOn0Tv1JBibKLFgjAiZbw9MP4BrBYtBrxndknhpZ0VkVSaI+k4pvRIZ+wyuGnP3O872OjMDxHNkJBibCoSUy3NYR2BcToyuV+mg53guWiRoLIcWSPpqb3J9jjp8Ez0buba2aIR7qZkP9svpBibRFGpzUIRSm1/vFY0tX2NEi061RJ2ZC9wVIqLDe/kK6LVvMqh0Q5cZ8/fpGspGWNTkRaA+9JZbIaLRshT8Ej07qKD+IGuiRYbOospw8jkt7xYtDCJFLY/bF+Y9utEU6pFiqvlXrP3lbQu60GTaPuUJp7jlWgHscMZz7JhcWTGlWrFuqxFopWYrcJbcAJMkM72h98sI3GrrV8IToPXtp79YZ3NJWnBKs40ZkdwGKyQwr6NKXtKNJKbvfPMAhdsHxYHXift9s5aby3XsFWbaucc55wtZNNq5/zjjvwXxJ+UTWWuZcYwaHJHemK13y7a9Jer3JGe2OTvE70q2Hum9a5pyh3piXd3qR8Bvtz2plzH58qV6//Qb6nl2gP6cIjhAAAAAElFTkSuQmCC\">（A）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAlCAYAAABLRGl/AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAkElEQVR4nGNgGAX4gDcQfwFiDXI0JwPxCyD+RK4B54FYDYgfkGuAEJQm2wAYGDWAAgM+APF/NGxBiUtGAQkAPeSx4ZEI5jJA/G5AjuY4IL4FxI/JMUALiN8AsT4Q3yDVAG4gvgrEKVA+yQYsgmIYIMmAZKjt3OQa8I0Bf0p0IdYgZEByGFDNAFD1RhUvDGcAALnDNtlhvT9QAAAAAElFTkSuQmCC\">（B）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAmCAYAAAAfgBGJAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAxklEQVR4nGNgGFkgD4hfkaKhDojvA/EbYjVwAPFZIFYlRRMTEPMBsQApmmBgxGsCBfl/NPyEVBtHJEAPNXQ8VIE5EC8C4hdA/IMBkoMnAjEvLg0sDBAP7wVibSBmB2IFIF4IxMsIaZJFE9cF4ovEOpUbiA2BeDMQZxKjoQNq618gbiDWFhAA+ckUiM8AcQopGkHACohP4JKEBYQkmrgx1Da8mrYBsTrUefpAfByIq/A5xRGItzBAIvcLEF8G4kIgZsTvgxEIAGUoMl9sQo/TAAAAAElFTkSuQmCC\">（C）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAoCAYAAADg+OpoAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA90lEQVR4nO2WPQvCMBCGg184Ci6Cjorg5OjgIPpjBCcRHMVN8Mc4OKvgpiiCs6uOxcXBsb6hESS0EmPvdMgLD6QJ3AMN3EUIF8b4BsQmYgm7qAlm4Apu4Ai6cUtSar0ANZAFdbAHAwpRSTtvgEOcoqhUwY5DNAR9aom8ow3IfFv0nagFTqBiI9ELh4mSYAyWoPiJRC/sa9+vkYVXYAQSaq8ALrayMIks7InwPmclekpY2g6byOW/YjKmTXH5XdIiGNketWgK1tSiDjiDMqUoryRtkKMUzcFErclEPbAVwTOLVHQX0R3AetCZhPSOWEXyjc3661z48gAgN2VRYz1nWAAAAABJRU5ErkJggg==\">（D）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAoCAYAAADg+OpoAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABNUlEQVR4nO3Wv0vDQBjG8RcVlS5dLSpOUiuWOpTq4ND/RhdBSh21i/9Bd4eOQkFwEax0EQR/gIMuLi4FHYqLDp2s3+MSlCNKjHeHQh74QHqF9yFNyZ1IGo8ZxmCtyEu8F62hjWe84AbrtkvGgusTLGISy7hEzUXRjPH9Kq5tFn2VPC58FG1jy3WJekbnGP/t0O+KqrjHfJISc3BU0Sga6GD6JyXm4KHx+XPU4FPsYCRYm0IvaVlUiRrcl+j3XKKisMTLa8dbUZq/lTjbdFxp/GcFLTxhgAc0kbVZEm7dXSxhAnPYx4GLolljvYA7m0VmMqJ31ENsuirZE313b8G106hnVBZ94tlwXaZSwZXNgeGfIWesl0Qfha0XHWNB9E9XxBl2bRapVHGER7ziFnX5OJik+ed5B+h0Y+d/baUiAAAAAElFTkSuQmCC\">",
+                    "question_options": [],
+                    "question_type": "选择题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "（10）等比数列<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAVCAYAAABVAo5cAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABc0lEQVR4nO3UTStFQRjA8YeLvKQkUbqJhShih7oWt2RNrEhSwk6ysRHiM1jY8wWUPTtigwUrykuU15S3Iv7TjO7c43TO3Et3dZ/6dc6Z+8w8c+bMHZFsZCj6cIIP1KbYN2r6nWPCtdMBBpGXYrGfiCCGJ+S6dLhDZZrF7FAFy1wSH1Hh065mG8ckptCU5ji/4gWlnrYO7GAWXTjFSMg4N6gOSijAAI487e24R6t5jphJtYQU3MQMivx+bMQXLtFstefgEHNWm/r9VcI3lVryWzNu3C+hEOPYs9pipkOd1TaM7ZBiKjawhJKgJPVG7yg2z2pJzjw5q1h2KHiNGoe8pN01Lfrj55tn9R3fMJriOIHxYCWq6z52sYYF0f8vtey9ondzmzUhb8Fyl4LH6JbEKaGu9ZJ8GFRJ4kRaFL0SYuU34FkcT5ohXOBTgs/SLXPtEX0YqIiafleeSfw51K5dMffz6PzPwf2iH2Pmfl30W2Yj8/ENXulBVGPtsGAAAAAASUVORK5CYII=\">中，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAWCAYAAABDhYU9AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABKElEQVR4nGNgGAWjYBQMCmAFxKuA+A0QfwXiK0BcAsSsA+koGPgPxIeAWA+IOYBYC4j3A/F0QhpZgNgViAuAOA+I5WnkOBU0MUUg/oRPkz0QnwbiUiB2BuKPQOxIgoWEMD7AD8TPcEnaAPFbIFaH8oWA+B8QCxLpOEpBPBB3YZNgAuIbDJAQgwEXIL5HB0eBACiKzzFAQg8DgKITFEpSSGJlQLyWBAvIjVYzIL4FxEa4DK6EKkAGu4C4GsoWB+J3JDiUGMDIAAmAw0CshE9hMRA/BWJmKN8OiP8AsReUv4KBcIImBUgC8U4gbmWAlA4wgNUOUQZIQXgciJcCcS0Q/2WA+CoOiG9S2XGvGUjM0aBQUwNiYTTxh8RoHmgwqB02qENuFIwCSgEAJxBM8ap7DKQAAAAASUVORK5CYII=\">，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAWCAYAAACsR+4DAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABKUlEQVR4nO3UMUsDMRjG8WAdip20uLh0U7oKItiiiHZx0VFw7SKICKIgxe/QoV/BUT+AugkK2k0HqSg4iC1FStei1v/LRSihwUZi65AHfsPlQu65HDmlQkJC+p62xcDzqxLDyGEH20j5bKTjXGwBN9jDEppYdHjYTzrnFvGKBi6xals4izdM6esxfGK0x2IukWIl/awEMrhF3pw4hHsV7dR3lvH0B6VsmcGDOSifUHZnomNsH8cOC7t8ym4ZQcscPEDFGDtFwXHxXiPrmIdqGo/mxF28IKav5/GOFY9lzGJnSCOuS5WxZU4cxx2ucIRDfOBCL3KOOjY8FZODdqKiUykn/xrrtsmyW5NIWu7PouapmJfIjsk/bU5Fb/hvsokqnrE24C4hIV7yBXCRUN6xhc0+AAAAAElFTkSuQmCC\">，则数列<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAVCAYAAAAw73wjAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACFElEQVR4nO2Wz0tUURTHj45ZiUToGK5KCHPRICIq4Y8YCkVtVYsSV5lIIQMuXGm4jRRa9w/o1q1C6MqgciGkbRLEWkRJiDEM0w9r/B7PGbxzfTP3vYHBhDnwYd579557vnPuPec9oqIVLcMGwCfwF4TBPkiBcwWKV6cxOOZQEMeP4B4oM57xQoUSShrrFvgexCkBLljPCi00bb+DxPkJKq1nttBBksz/AuugB+yRHJGwMS8EboMxpT6P2J5WCv6A8hxCo2ATdIIK0AhekWTjouHTBVbBhIr9Cu464sdBlUvkWfAQrHmMmUJZ1B1rnDOVMoS2g10Q0fvzusYVh4Y3JJnPuv0RDfQZNDiEfgPVHnMSKrQEfACTxtgN8lcozXR0hFqyTeJ/HQMrDqE7HkJZXFKF3tRAl43xUZKdcNkSeKpactoZFRXKIZQD9lvj1+lo6/lMblnj82Dah1DO5iUf8w7NVfVRkorvICmmJrCofix0nKRw0n24laTQHuQZO6slrcnpN5P5duL2xJXP7WlNRcfVrwZsgLdgFkzpmu9AL0mPbqPju5YWWuFX6DZJayn160DSO3eMe/a9Rpk9tRa8J8nsc/DEms8F/SNATHoEvoB/ViDTOMuPSQ49C5gDL3ysvay/LHZYr+tIvis4ZiyIUD/WB16TbPc2mCF3pV4FL/X6GUkr+i/tPhjR6wXQfYJainY67ACTIm7/N/T/FAAAAABJRU5ErkJggg==\">的前8项和等于（A）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAASCAYAAABvqT8MAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAmElEQVR4nGNgGBJACIinAPFjIP4KxEeB2BOXYi4gPgTEMUAsCsRiQLweiP/j0lAFxKloYnL4NJwB4kggPgfE34H4GhBnAzEjLg2fgXgfEBsAMScQG0M1Z+PS8AeIddHEjKE2YQUvoSYjA1BAfMWlYSMQm6CJGQHxFVwa7IH4FFQRyCZDBkhAoIccCghhgLj5B5TOwKd4RAAAla8cIKHzSyYAAAAASUVORK5CYII=\">（B）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAASCAYAAABvqT8MAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAaUlEQVR4nGNgGPTgPw6MVwPJNpCsYQIQPwfi90B8DIj9CWmYAsTqQMwNxNZAfBmIU0ix1RSIb5OigQuIf+FzkjyamBEQ38WnYTcQawIxB1TxGSDOwaXBBojXMUBC6SMQnwLiCKIcPpwBAKMBGySQ2m6DAAAAAElFTkSuQmCC\">（C）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQCAYAAAAiYZ4HAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAS0lEQVR4nGNgGDKACYj3A/F/YjXUkKLBGoifA7EUMRoEgfgBEHtD+QQ1rAHiPiQ+Xg0ZQHwGiNmI1fANqgAXJgoQrZBkDWQ7aQAAADjbG8teW0lJAAAAAElFTkSuQmCC\">（D）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAASCAYAAACNdSR1AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAjUlEQVR4nGNgGJTAFIjnAfEzIP4JxI+AeA4QS2BT/B+IjwCxPhCzA7EUEPcA8VFcilXRxASB+CMhJ3ECsTYQLwbiVnwKK6C2gPAMQqaCABsQ6wHxHiBuJEYDCMgB8QtsEiBrFdHExIH4DS7FexkgHgMFnToQbwXimdgU2wLxBgZIpHwF4htAXA/VOPwBAA5xGmA/KgR8AAAAAElFTkSuQmCC\">",
+                    "question_options": [],
+                    "question_type": "选择题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "（11）已知二面角<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAAUCAYAAAAp46XeAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABd0lEQVR4nO3UPyjEYRzH8e+J8idFxyRKbLJZxCCzpIRFKQxWJRZJFolByWBQillCQv5kuLJZDBY2iQghmc7723OXX9fv7rq+N+n51Gu4p9/zve/ze57nJ+Ljky2j2MKSsU4Ur/Z28psKrGHXWKcTF/Z28p9zzBprjGMl10n9iCd8IYYWYyPBRPCGbmOdDUxhFff4xAFqMk2aQw+qUY5h3BobCaZR3IurNda5wjsmUZWwKW6BOeUDRcZmkhnAk7GG9vKD6ZRxvc/fKAibpIMjuMSz/B3PF2MzwSzgyFijWdyulaaMa/+6uEjYpGXsoRWViYf0bsSy/Fk8RXGGZ08wb6wziP2Q8XZxGxMaPX7RwG99E2dYz9BsrtFT0GessSjhd+sUQ+km3Yn7gJSgCdvivkITxmaSqRe3Iw3GOsfijqVeoTLUiduAHUlz3zQduBF3Wa8xhkN0GZtJplfc4vTOVRvqPKJN3CL1jj1gBoXWBn18fHx8/mV+AUrzTGFGIg7oAAAAAElFTkSuQmCC\">为<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAASCAYAAACuLnWgAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABMUlEQVR4nO3TTSuEURTA8aOkDGFhFtLssCVvjaZRFpOarKUkwgaxxQeY5FOwslIzX8BqspgRi1GSdxuFlZfCiv/tnindrpmesZw59Vs89z7nnueeex+RWvwzmrGFK3zgFEuoRwx5fOIGK5ozps9PWChXoAEHWEYnWpDCN6Z1kSm0YhgXmMMlJtCDV837M9aw6YzV4QEZbDhzg7jWXSTRpUXaShXJYhaHYltlFthGE87Q58l5xAzu8YzFUgVEX8phBCF0I409vCDsyTlGtNzCv+Mdo85YSAu8od2TcxK0yB06POMF3KLXM2faFQlSxLQl4YwVd7KDdWeuX+yhB4oBsV8d08XNbdnHrtjzMVd4UuwVHcI55oMWMTEuts/FH878mI06F8cRvsS2drWSArWokvgBFsg+woajmQwAAAAASUVORK5CYII=\">，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADEAAAASCAYAAADypDaEAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAB30lEQVR4nO2WzSvEQRjHH++21kHKy4HUKuEgkVpFXORKCVcvJ6TWH7COchLJhQsHOVDkLQ6ScCAnIUUreSnJwXup9Z2eWTs7Fr8pu1vab31q5pmdZ55n5pn5LVF4NAIawrRWyJQAlkFhJIPIBg6lbwdlGqUgF8SFOzgrsgEP2FdsBWAYeMEM6AdD4BicyXFV7yA51IH+JDc4B28gUbFXEidRpNiypG1A8xHRJHLAOuggDq5EGesBTxRYPnnydy7Nj2kSjdKPV66xA5wmgauaBuXEwQuHrcrYBNhW+qlgFhzItirTJPpAPUgnvn8t4MJg/qeqwbhsi9dFlNOwMi6C9YAV4tO6B2sgM4ivvyina5BiMkGUyCbxTvi0B7Zk2yYDU08mCcyDExCv+TNJIha0EZfQLfnL6tF6+KwucAkWFK6kI7GIUzou1uZ1S7tDs5skMQgWQQVxWcaAWgp8HX9VGnGt2+XCPlwywHzQCV7p646PgTsKfMVMk3gAGUpfJCE+lFOWM4BGQV0Qew1xEuKSibuyq41XgRfQG2SuSRKnoJ24ZMUXXjwuogLcVib7/ho8g0ltTBztBvmfPLFbN8SXegmsEl/u5m98myQhNuOI+CE5JC7ROdBkcX5UUUX1H/QBocdotKZ/RAAAAAAASUVORK5CYII=\">，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAASCAYAAAAg9DzcAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABv0lEQVR4nO2VzytEURTHD/kx+VlKmJCEWfu5kT/AijULFJOVnT2JbESSpiyUyE4p+RFNJgsLRaykKJFioZDJjxjf0z2j65mnuW9mYfG+9WneO/e8c0/3nHOHyNX/kBfUaO/ZoMFCPagEaUnYrwcsglknH6eDU3Cm2XxgEkTAKhgH0+AEXIG6P+LNyHchkGXjky/xQk4SHgSX4BPkavZG2bhWs+WADzBnE2sCPIFecAG2gcfGd1P8jVQC9kCnJNeirfWDF1IViKpQ/EZjxBoDd6Tah1UEDsEayIjhz74dpgkvSJLVksiAtsaneKC9cxm5785BsSXOkNirLHau2A5YoZ+9Xyb7+UySbZYEWCngAcxr63w63CpcuiC4J1WNCpNNbNQOHmXfuJRKquG9mm0XHMszl/AV+LV1bo1lcE32wxSvRshw4Lg/b0j1VxSe/neQSeoKi8ivrm4bu6nWyWDgCsA+qf7yaPi1ZPj5jX4PyxR4BnkJJnxLBgPHl3VrDHv0GusDAXBkWW8idWUNO8vxW6UU58BxD26AMFiyrPEfQVAChSUxPgUeOC7fFqme60owWVab7MMxy5MQz5UrV4noC+xMXtym3Cn9AAAAAElFTkSuQmCC\">，A为垂足，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAAUCAYAAADC1B7dAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAB9UlEQVR4nO2WSyhFQRjHP65HHmVBNjdZkGdWKMkGK8mru7BAio0FCxGJsrHBRslCIUkSGyGvHQsKZcVGsvKM5BFRHv/PDG7HOOc0cm3Ov36LO9/M95gz880l8p0GQZkP4/25gsAySPqvBFwgC1SAEpAix8NBhhfpJJIM/aM8IsHVb52Ugy3QBapBC9gHB6AODIBXMA26wQg4BPMg/gefPD9AI5c8sKqx7lPtYBdEG8b59y3wgFyZYKKXPRjMglMQpfCrW1Aj6NdY96588EziKKk0CWJBE7gBfgZ7HInEmxVrdQsaBa0kTsURuAMLwG1n8TpYszFv3GTeE4mOZpRuQTvgmsSx5y/Pd2oULFktdMugbTaC7IE+xXiY9NGjsOkUFAgeQYdhPEKOm/orkEELLIJwN+NjWaWwFUkfHoVNp6A0El/H2EH9SRTkMltcKoNmWgTJlvNSFbYJcA5CFDadgipJdE6jcsC21eKPC12osPHbMwWSQT24p++7UwxeZBIq6RTUS6IBGLUCauw44KTnSHzSD/Fuz9DXRR8GG172AOn8AjSY+NYpiBPnI1dLYlNjwJAixx/Fl3qMxKPKl54fzE2ZKDcN7iyX4Bgskvgrw52R34kEC986BZ2ROF5c2AM4AZ0aft67CF9ILsL41jhy5MiRo3/TG8l+ZfCl2hPzAAAAAElFTkSuQmCC\">，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAASCAYAAAA+PQxvAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABJ0lEQVR4nO3UMUtCURjG8ZPakA02BAUNkuZmbdXcKIEYJiENDX0BJ8U5QpxqCKKGgqihJYggSAKXmnIXJ/0ACrVH9r+dM0jc6PVcrpMv/JZ7n3vOc4dzlLKbAO7RwQOClut4nhNcYxLnOPVzM+cv17GLDJIe19tXuvzRMB9t4w2H2EMRLbSRHsh9IiRccwZneJSWKKGJuV/PZ/GBvGURZ+o4kAQ38IW1P97fIGFZZALv2JKEX/EiXHjYIkvoI/pfcMEEyz4V2UFXEkyZIimfilRRkwQzpsiqT0WeUZEEY6bIpsu7MG6x4qFIDzlh9mcz58oODDybwh0uXfLSIotK/2RcWmQaV2jgGBdKX2wFpY+fbZGsKfKEeWkZZyJYVvokuRUYz3hGPt8FdDfjj2enRwAAAABJRU5ErkJggg==\">，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFUAAAAUCAYAAAD88XGTAAAACXBIWXMAAA7DAAAOwwHHb6hkAAADbElEQVR4nO2XWYiOURjHH8Yy9n3LGgbZjREuhOwuJFvIdmMpTcaFO7kw0VyQyZZ1UNSH3Gg0ahBZG2UvSRhLRCRMlrL9/z3n6zvfO+ddPkXk/devb773nO885zzvs5wRiRXrf1U70MtnrCbIBXPAdPN3lhmrD/IsBoPeoMnv3Oyf0GfwA3wD78FdkAAzRR0SJjroFnjuGJsCroINYCEoABXgJcgHOWCjsV8KisBOs4cLYPgvnsnWVPARdLGeDQQ7wBPwxez9KOgnKX946QtGg0dm//ODjHKRhqAGaAB6ggXgErgMWoRsegV4bAy3tZ6vBJWgs2d+HXAPFJrvuea3tgP5MovN3gaF2A/SUvACfJB0p3Lda2AoyAatRF/yG0n5w6X7YKJoVr4D9fwM+y1CJ+8GhwM23VrU+YxqOmayeT5CNPLH+vyODp1g/l4MvoqWAlt1RTPnYID9MN0E3cEzqe7UXMd8Riwj18+pD8F40EPUqd49pxnwW6SR6Ftu6jNeAsaAjqJOXW2enxM9UBQxDW/7jDGaKhz7daWnzSgzt7n59DrVFl9eN7AOnDDrF5vf8OzXwTLRMjdJtGS8Es1mp7yb6eCYw0XzHM+ZOgnrOw0dA23Ad7Dez6hHrLn7fcZYv8ojrhMkP6cuktTZT4qWPzp1n2gNZSQOAKfA9kwMBkUq5XIqa95Z0QhNipuiE8aZTc6IYLu2sZ/vGOtq1il0jGWqoEitJVoiDoDjPnOYqZ9As6gGw9K/Sqqn/xLRBlBqUSnqhNnmc2QE264mldQa0bqc49hv1PRPKsipSTG934L2PuOsp/1D1kjbpJ9Teb3xNiq+LTYnOjzbgjWGB5prPmc51mOEs/mFNSk6m9egoqiHCJGrUXkdxMbMEsZG1ccz1lg0UsNuQmkGkk7l4RgZ88B50SbR0jN/m2jB9oqXdjpzFTgEzoimVlKMhK3gtPXc26R4sGmiWbBJot2To8jl1CuiL4+NqpNoAN0xYxdFaymDhVdMZmJJJgbtyz+7He+QR0TTOMuaR+NlohGU8KzBol5u1uGddTnYA26AzWCX6AtaK1pHmWKswa9Fo6PMfGcG7AVDMjlAgKrEfYkfJnrZZydnBD4AW0Tv2WzAzM6n5vf8x6bA7PuvEDOAh2AkZIXMjRUrVqxYsWLF+of0ExfX4oj/p8mKAAAAAElFTkSuQmCC\">，则异面直线AB与CD所成角的余弦值为（A）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAlCAYAAABLRGl/AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAkElEQVR4nGNgGAX4gDcQfwFiDXI0JwPxCyD+RK4B54FYDYgfkGuAEJQm2wAYGDWAAgM+APF/NGxBiUtGAQkAPeSx4ZEI5jJA/G5AjuY4IL4FxI/JMUALiN8AsT4Q3yDVAG4gvgrEKVA+yQYsgmIYIMmAZKjt3OQa8I0Bf0p0IdYgZEByGFDNAFD1RhUvDGcAALnDNtlhvT9QAAAAAElFTkSuQmCC\">（B）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAoCAYAAADg+OpoAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA90lEQVR4nO2WPQvCMBCGg184Ci6Cjorg5OjgIPpjBCcRHMVN8Mc4OKvgpiiCs6uOxcXBsb6hESS0EmPvdMgLD6QJ3AMN3EUIF8b4BsQmYgm7qAlm4Apu4Ai6cUtSar0ANZAFdbAHAwpRSTtvgEOcoqhUwY5DNAR9aom8ow3IfFv0nagFTqBiI9ELh4mSYAyWoPiJRC/sa9+vkYVXYAQSaq8ALrayMIks7InwPmclekpY2g6byOW/YjKmTXH5XdIiGNketWgK1tSiDjiDMqUoryRtkKMUzcFErclEPbAVwTOLVHQX0R3AetCZhPSOWEXyjc3661z48gAgN2VRYz1nWAAAAABJRU5ErkJggg==\">（C）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAoCAYAAADkDTpVAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABEklEQVR4nGNgGAU0AP8JYKpYQFNAUwtghpsD8SIgfgHEP4D4HhD3AzEPNSxggdJ7gVgbiNmBWAGIl0AtpZoFsmhyhkB8lhoWoANuIDYC4q1AnEZtCzqgYn+BuJbahsMAKA7MgPg8ECdSYhih5GkHxEdIMRzdQBgfFsmSaPKgpHuCGAuQDfyPxke2YBsQqzNAgsgAiE8CcRkpFiAbiu4bRyDewgDJaF+A+BIQ5wMxI6kWwAynefFA8wJuFNAPEKoOicWjgHaAjQFSaz2hlQU9QHyAVha4AvEDINaghQUiQPwYiG2BWIIWFmwC4gYom+oWZDNAqkJmWlnwnQF3jr1DTYtggCZxQBcLQA1bugTRKKAuAACx62USNxI1aAAAAABJRU5ErkJggg==\">（D）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAmCAYAAAAbdcG0AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAtklEQVR4nGNgGAXIIA+I35GjsQ6I7wPxB1I1cgDxWSBWJUczExDzAbEAOZphYFQzkQAUVf/R8AtyXTAK8AD0UMaGRwEasAHitQyQ8uszEF8A4nRiNLIwQEJ0NxBrMUDSuQEQnwbiImI1y6CJWzBAyjWygDoQnyJXcykQ55OjEeTno0DMSqpGByC+BcTKpGhiBuJ6BkioS5OiEaR4DxBXM0AqABCQAOInhDSCFL9hwJ6bCGoeCQAATOAxiqoFGwUAAAAASUVORK5CYII=\">",
+                    "question_options": [],
+                    "question_type": "选择题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "（12）函数<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAAUCAYAAAAp46XeAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACIElEQVR4nO2WO0hcQRSGj4qoq1HcDSkSQQgqgtgYNYWGrGETMc2CYGUhFqms1MIVxLSCWLiEBKOgECyMoJgqpBBSqYgokqQQbVWUFDYWvv/DzOI43Ht3ZnclEO4PH/fOnDPvMw8iX75sFQIxMAXeg6DMLwTjFvWwbyCzXUtPRWAHdJMY5Dp4JG1fwHOLuth3JpOdS1ddYE9JP5DfFvA5hfomwQsTxxwQAU1afg2oB1kpNK6qGXwDP2U71YrtE3it+QekX4OWz2FcJf/fgA8mjZeAaXAGCpT8ODjQfK8N0NUP/oIFEnvupWL7BZ5o/o/BR3AOKmVesSyf8C0D2yaDY5XLjqlLHSUx4+kqj0RHww62Y2nXxdGyCeZAPvhKt6tGMu/IphP7YEBJD4NemwpcxKF9RSJCdPGg3cK+TZb7Dp5ptmwSkWasRbCkpDfo7myxUgnLd2DXpU23lWPlgkOw7GCzXrmYUoBjfcWmsIf40Jh3sTntORavJp+IfSQm7JVmt9pzrLCsqILE3RO1KeyhVTDoYuOBRxzyx8Bb+c/RtKbZjU/LhPilcEHi5PxhU9BDfM2cglYXO99zE1reEOhU0nwlXZK4ShL7lssY3XOqtsAJeGpb0EW1JCYs5OHDUdJoUafxC4VDsE7+l5I4ftstGkqmERIHlZc4YuIWdbKv0duyB/wBs+A36LBoJJlGSTytgskc71P8gH34Lzvgy9d/rBsdSmcDctAAxQAAAABJRU5ErkJggg==\">的图像与函数<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAAUCAYAAADGIc7gAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACOElEQVR4nO2WTUiVQRSGj0lWVIaYIBJZoCDlQiQMFUFKQsGoTRAo4sZVSiAuXWhQG1FSi5AyhYwiWrbSIFwI/SxKsMCFLty4F7GUfnxf5lwcx+92Z/B+G7kvPHzzd2bO/J35RDLKaL86Cgb1m0rD4ES87qRPz0CdZ9tL4HWMvqRNNWAi0OYJaPJpeAg0yN5VKxOzQjmBAydTPrgNekAXKBFztGwnj6kvlx3bk+CipuvBpM+ANOJx+ANyrfI+8Et2T+w3+JeCM07/WaAXzIIW0Aj+gmbwFRRbbQvBqPpSrmWc7BtQqvkCsOwzMapInbpmldWCj74d/EcPxUzqsOYv6FgccxUcj7D5DN6pzUtQYdVxodZDHFgB/Va+EzwI6SBCVWJ2+bxV1iZmQtRP2ZmwrStiJj8t0YFlSwKuCLd7xsq/B9VOm9Cj+FTMbtkaEbMbVLIdyxaz0F8i6oJ3rBusaac8699DjJNoAdx3yhbBPU27d4yi42Pgrpi7dsOpD7pjFHeHK87z/Ai0hxgn0TftK6EOHSPhLKNio2MzAG5q+oWYBc626uvFMyomdARsqtGcmGdgv2Lk4yl4q3Cn7OPKd2zcas/o2W7lz6lP9Oeslj0Wz3fM1iewISZypUu8Q3yDGLb5fs079bH8efCRrNQ03zCG2VbPQVLpquy+X3lgCdxy2vEfcUj8/hUZeLz+Fe+AH2BKzFlu8THy1HUxke0VeA4+yN5JxSpGmdNiolEcOiXRIT2jjA6itgEiN3AgfDSnswAAAABJRU5ErkJggg==\">的图像关于直线<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAAUCAYAAAAp46XeAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABuElEQVR4nO2WyyvEURTHz+QRprBAmoWSRykW5JGywlAe2Sr8AbKxsGRvYWeHxUwpi7GwUxZSZINCYWkhj2ykLLyK75nfnfz6md+51zwi3W996nfPvfc87tzHEFlZWWVYYXACnsEZGM5GEHZekA3HghrBHRgCxaAP3II2vwlFoBe0e+wloEEIJBWXo3x2eezsr1X1p6IImPTYJsC634QQWATv9FVMUE2oFgJJxfHCrCifQZd9HjyCgMv2YUCpGnsJajyxysG9kGc82AHYAPlgjZwtIEm3LUMqsW6XrQdsa/xKegGFPvY8aWJYJbMFOpP0/2SFE7oCc672DJjVVSCIi0i2oK8gV5rInddg3zCQyYUSA5uu9h5o9oxJd1uWkcG2XALTytmAJmmWSXH8Sz0o/1Xg2MCvpCh9v1DGSbhQWAtgUH3HVBIB/+FxmRTHtyUvFp/fZTCqGa9TEzlPAefKTwHfyDegw28Cn4ExV7sOvIFdUCkEMimODz+fhwjYIf2CmagfnJJz/i7ASAZ8pqxD8ATqfzOJTKkWtKhvfu+OKP3t+Gc0Bc7BKjn//f5NYQlVkHNFW1lZEX0CNAhlKRZXDqMAAAAASUVORK5CYII=\">对称，则<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAAUCAYAAAAp46XeAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACIElEQVR4nO2WO0hcQRSGj4qoq1HcDSkSQQgqgtgYNYWGrGETMc2CYGUhFqms1MIVxLSCWLiEBKOgECyMoJgqpBBSqYgokqQQbVWUFDYWvv/DzOI43Ht3ZnclEO4PH/fOnDPvMw8iX75sFQIxMAXeg6DMLwTjFvWwbyCzXUtPRWAHdJMY5Dp4JG1fwHOLuth3JpOdS1ddYE9JP5DfFvA5hfomwQsTxxwQAU1afg2oB1kpNK6qGXwDP2U71YrtE3it+QekX4OWz2FcJf/fgA8mjZeAaXAGCpT8ODjQfK8N0NUP/oIFEnvupWL7BZ5o/o/BR3AOKmVesSyf8C0D2yaDY5XLjqlLHSUx4+kqj0RHww62Y2nXxdGyCeZAPvhKt6tGMu/IphP7YEBJD4NemwpcxKF9RSJCdPGg3cK+TZb7Dp5ptmwSkWasRbCkpDfo7myxUgnLd2DXpU23lWPlgkOw7GCzXrmYUoBjfcWmsIf40Jh3sTntORavJp+IfSQm7JVmt9pzrLCsqILE3RO1KeyhVTDoYuOBRxzyx8Bb+c/RtKbZjU/LhPilcEHi5PxhU9BDfM2cglYXO99zE1reEOhU0nwlXZK4ShL7lssY3XOqtsAJeGpb0EW1JCYs5OHDUdJoUafxC4VDsE7+l5I4ftstGkqmERIHlZc4YuIWdbKv0duyB/wBs+A36LBoJJlGSTytgskc71P8gH34Lzvgy9d/rBsdSmcDctAAxQAAAABJRU5ErkJggg==\">的反函数是（A）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAAUCAYAAADGIc7gAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACOElEQVR4nO2WTUiVQRSGj0lWVIaYIBJZoCDlQiQMFUFKQsGoTRAo4sZVSiAuXWhQG1FSi5AyhYwiWrbSIFwI/SxKsMCFLty4F7GUfnxf5lwcx+92Z/B+G7kvPHzzd2bO/J35RDLKaL86Cgb1m0rD4ES87qRPz0CdZ9tL4HWMvqRNNWAi0OYJaPJpeAg0yN5VKxOzQjmBAydTPrgNekAXKBFztGwnj6kvlx3bk+CipuvBpM+ANOJx+ANyrfI+8Et2T+w3+JeCM07/WaAXzIIW0Aj+gmbwFRRbbQvBqPpSrmWc7BtQqvkCsOwzMapInbpmldWCj74d/EcPxUzqsOYv6FgccxUcj7D5DN6pzUtQYdVxodZDHFgB/Va+EzwI6SBCVWJ2+bxV1iZmQtRP2ZmwrStiJj8t0YFlSwKuCLd7xsq/B9VOm9Cj+FTMbtkaEbMbVLIdyxaz0F8i6oJ3rBusaac8699DjJNoAdx3yhbBPU27d4yi42Pgrpi7dsOpD7pjFHeHK87z/Ai0hxgn0TftK6EOHSPhLKNio2MzAG5q+oWYBc626uvFMyomdARsqtGcmGdgv2Lk4yl4q3Cn7OPKd2zcas/o2W7lz6lP9Oeslj0Wz3fM1iewISZypUu8Q3yDGLb5fs079bH8efCRrNQ03zCG2VbPQVLpquy+X3lgCdxy2vEfcUj8/hUZeLz+Fe+AH2BKzFlu8THy1HUxke0VeA4+yN5JxSpGmdNiolEcOiXRIT2jjA6itgEiN3AgfDSnswAAAABJRU5ErkJggg==\">（B）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD4AAAAUCAYAAADV9o4UAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACRElEQVR4nO2WT0hUQRzHf7aWlLIiWYQeFO0QG2iEGFHhIiZbiRJdQoMk8CSCiMcQRG8dSksM0lzBSqqDnUXbiwc3gg7VoYNQHrpGQZKm9v0xs+w0+8eZt6Ne3hc+MDPvve/Mm5nf/IbIl6/91mFwHxx04PUAFDnw2RNFwUVHXnXgmSOvXdUlMOXYcxxcNnkxAJrkIFSdIjGDLrYg6yi4CfpBD6gCD8EVSx8ODR7vOa09CEIgDCZMjILyxU1ZTmgI/Ab5SttfsL0DJzT/PHAXxEA7uCrfi4APoMJkkIrKSEwYj/e0bDsCXoNqcAx8sTHjwTQrbQ1gyXJQ6cQHziIld06N7Os4+A4KPfrGwRtwCMyCWtnOE/3DxugbGFTqvSRWPRfVgw1QqbTdAauyvEbeQ6mRxATOU+rh+AccMDV6KU0SilFqHNlu9SdgQfN4BOZkOd2K631kSk98NvFixbV26xXvAz+lYTn4ZPNxBn2k/3cRi+NvQJa9xDiLf+4xiV25BdqUZ1YxzjpPYobPkEgJnR4GpIt/bFSpd8k+rsk6H1IRD773KPmzL0gsUkDWw2R4qidUQCI2pkkcasYxkkUt4BeJE/cViTNDDQdOoZOWnpwhbit1TovrJMbMO3WMDPO4qmUSKSxk+2EWcQxz2uH8y1vzvfY8Ci446sv45nYSnJXlYvAO3HI0CE6Nw0q9BKyA69p7Lu/qI2R4V+8Gn8EMiTjpcNB5Qq3gK3gOnoK34IZD/5zFF4nSXfTnneT1kuLLly87/QPoSHPsY4QXMwAAAABJRU5ErkJggg==\">（C）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD4AAAAUCAYAAADV9o4UAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACR0lEQVR4nO2WT0jUQRTHX24qmiiihayHwjqEQYpIIiUtobH9IYkuUYEReBJBxKMIYjcPWSYGZW2gJupBz5HtpYMrgofq0CEoD17DILE/6vc1b3Ead3Nm1/3h4feFD8zMb/68+c1784bIl6/9rjzwAGRb9B0ABZk1xztFwDnLvrVgLHOmeKcG8MJxzDBosukYAI2yiK6TpP6gjYvthUrATdAF2kEFGASXjH7s+mxvndFeCCpBCDyzWbBQOv6Rclx94Ac4qLX9Bpu7UGazqKYDoBtEwS1wWeYJgyVw1OgfJPVD2N5T0pYPpsFxcBh8sl08KItd1NrOg3due0hJfCHN0bZnnRZbjoAVcCjJuBiYBTlgAlRJO//Iby4GfAW9Wr2D1KlnUmfAL3BMa7sHlqW8RslD7QKpH/Sadl5+6yDL1ohJmSSuKO2MIxdXN/smSjNPwRuj7TGYkfL/TpzvJj6smNHufOKdYFUmLAcfXAanqPf0r5exOD57pJwoxlm8uSekvHIDNGvfnGKcVU/qZKpJpYS7LoNTFG/skVZvFRuuSJ0vsXCCcf20vdlXpA4pIPUQWd7qceWSio2XpC416xhJQ1fBd1I38hSpO0UPF06xI8YYzgAtWp3T3k9SNrOnDpFlHtc1TyqFVboOTEMcw5yWOD+z6y4a3yPgrOVc1i+3E6BGykVgAdyxXCRdceq8r9WLwWdw3ejn8lZ/SJZv9TbwEYySipPbNoP2SNfAFzAOnoO34IaH6/99KJR6uaAh9rRkKcuXL19u2gK3hHPsBSA7/AAAAABJRU5ErkJggg==\">（D）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAAAUCAYAAAAwaEt4AAAACXBIWXMAAA7DAAAOwwHHb6hkAAACUElEQVR4nO2XS0hWQRTHj2mlGRi+kAIlKEhypSZk6sIeJlYu2hS0FiQEEVeiRiDuxDREfNaiB5qLdoGgFgpR7QxbRKAIrloEUgvx+f8zI803mN65jRr2/eEHd87MPffM+c48PpGoojroSgDt4LAHX50g0YOff0JPwSVPvi6A55587auKwaBnn93gapCBseAKKLLs2SAfxPmN649KBXdBPagBp0EXKHf0c0zUfAose5KoOZWC/iCOkvTAFYlcf63gJzhk2NYDcMJtHhIDmsFbUYm5of1wcp9BlqO/k+CxqPlkaxvnNSIq2Rngq4szBlNq2C6Dd45BhVEHGJffm2uujiUZfJdwmyWT/Qm8BkfAS5Cj+7gCFl2czYMmo10HHoQIykUs92WQadiqwKx+Zl/Y04j7CBM8Ci5afasSuRK21TB4Y7RZLXnWGJelZNvjt/hmHxizbNwcR/TzVhUTxC/FylgA7y0791SnimGF/BBVhqfAtMvLITUDHlq2b6BBP4fZYyjOoRfUgjVQYfQ57TEUy42/ANdiD7gXIiBXMfmPjHa1jqFMt3kqXQ/htw3c1M9D+jubSyfwqbSpo2BJ1IVqUlTWd1sMnmX9SsPqYWLSdH8JGHD02SiRP+pZUXvVlKhqYbID3WNMfQC/wDnXF/9Cx8F5UVf/Oh2DqSeg0NO3ePN9FmTgGVHHI8X7zEdwx1MQO+kaaDHaKWAOVFrjfP5X4v0m0PF/H3wRlUVuhHuVFOqWqCvCC1FVMQFu7+H3d1S6qOv4fonH+4H5xxtVVP+5NgDZF3fMzEuEIAAAAABJRU5ErkJggg==\">",
+                    "question_options": [],
+                    "question_type": "选择题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "（13）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAAAsCAYAAADGiP4LAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACvUlEQVR4nO2Zz0sWQRjHh34YSZBoGIgRlVeh0kPaJbGCOlTnvEU3Tx08euskpAkRQiha1CFCvFgQ0T/QIajoxzUkiKzQPIiR+n2Y0XfefXde5tl1Z+Z9mw98YHfdeffr7Ozs7IwQkUgkEon8rzTC87A7cbwVHneUYbfK0Js43glPO8pgpA1OwDV4TB1rhrPwkKMMB+EMXIUN2vFJ+MlRhqrsgu/hIyFb1DN41HGGE3ADntGODahMQXAN/oMvhGzaPvgBb2n7I/CGpywV7IM/4XOPGebhU23/o5BdgHfoEZuCQ6KymbtkGC6o7VPwJbP8TbgIvwv5eBo5AMcYP3wXXlTbFOo1M9hOQRnoBh0R8iXRX+VcuqmUe7927Bc8Cc/Cb9Uu9AR2WYaiu3Zd2+9WIV/BvZa/sVM0wXU4DecszqdhwZS2/0WUKuitqdAFeD9zRP98FrIvbLc8/yHsUdtX4Qr8Ay+ZCjyAfTkCuqZDlAaDLfAdvMwofwWOqm3qf6j/pEdzwVSA7sBhdkx/DAr5tnoMPwjZCjhQBb9R23fgMlyCt00Ffgs5dK8l6LOmJWNZ6re+cgr8zXihWoVG/sucAskWtFGAOnsSf1sx5CoqA7sF1VoflBe9D7KC3mLnCokSJvpbzAoaB93LcKEsj1cRcDNMi9I4yBoaSXMnmlz88zZwctBIejLLRbjfYkQIFcTJQN9i46L8W6wwQqgcIpQcFYQSLJQcFejBfE6gb+UIYSGhDL2CfE2g6xlCWEgoI9m0fUygJzOEsJCwTdqz73oCPS1DCAsJxo6xqAn0tMGeaRAawkKCsYLyTqBzrpuWwflCgukumSqIM4GeNU+1DN4WEtKadxrcCfQ8WZIZvC4k2FYQwZ1Az5LF1UcwC/3O6eHyTqDnyRIUpjuXdwK9rjA17TwT6HVFkM9+JBKJ1Bub1XDoKLu1iHYAAAAASUVORK5CYII=\">的展开式中<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAYCAYAAACbU/80AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABTElEQVR4nO3UzysEYRzH8S+KKES5OCBcHEji4EcpSQ7r4uDg7iDlIgcHRwcXR0nJSUpJipQD5R8gaf+BrQ2Rq/xa76fnmXqazO4zkxml+dSrZmb3M9/ZZ5tHJE0a98zhCQ9YjLETmAImMIznGDslM4D1BDo/pgXLKIurU4Nx9PuuN2EUW6jCh/VZhekM+TrdyAR0AtOMTbyh3VxrwBFyov/Tgu9m9djFqxnkZRvvAZ2iUUt1gz1U4xAdJTqtZsigdW0GB65D/VFL94Uz9Dp27rFkna9hPuoDVOIR5yE6x6JXy8ut6JUJnXLsiP41allHHHsryJvjLlxGGa6ygUlzfIorx96Y6Aduw751j1BZxax13oNPXIh+RYul1nxXvREnUYb/Ru7wInrzSSSd6DPHjaJf36mkhqssICt6z7jGdJLDvahtuu4vBqf5H/kGguVAe33xpNAAAAAASUVORK5CYII=\">的系数为  .（用数字作答）",
+                    "question_options": [],
+                    "question_type": "填空题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "（14）设<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAOCAYAAAAbvf3sAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAfElEQVR4nGNgoBBwAbELEJuiiQsBsRo2DVJAPA2IfwOxKlSMD4jXAbE0LlsYgfg8EK8EYg4gXoXLdGTgCcT/gHgHEBsTUgwCrED8Aoj3EaMY5KTZQFwExP+B2ImQhl4g9oKyNwLxSXyKa4A4GomvDcR/gfggEPMT47xhCQDG5REA6c0KRQAAAABJRU5ErkJggg==\">、<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAApElEQVR4nGNgoCJgBmIXILZGE9cGYhMgZsSlkR+I5wPxLyDmRBKfBMTPCdkqD8T/gdgWScwfiDcR4+RnQFyOxK8D4kJiNK4H4o1I/LNArEaMxgogfgVlqwLxcWI0gYADA8SfKkC8mAHiR6IANxD/YYCE8C5iNcHABSD+CMRKhBSCnGUEZQsC8XkgDiLGhmwgvgbES4H4KhCHkuI8MSAWIUXDIAcA0tsYsLkpDSwAAAAASUVORK5CYII=\">满足约束条件<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAABCCAYAAAD9nTBbAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAEtUlEQVR4nO2bW6gVVRzG/6KlJZg3NDUURQuSUqx80BIro7yAoPjUQxCYQU/lSX2QpMK8v/iQilKUCNpDF0vUSMUs1MISTZHwcvDhdDgmeEEw8/Z9rLVxXO6ZNWtmr5nZsj74MXvWnnXZ/5lZM/P/9ogEBQUFNb+2gE/KHkQzqQ9oBcNLHodPvQqOgKvgKHgtb4PTwA95G6mongbtYAp4RC/bdbk3PQwmgeeM8t7g8YxtdtZtjjfKR4JnQSe9fgqsATNAzwz9fAlmG2VvgS8ytHWXbiV8NxB8Cv4HI3RZD/A1GJSxP+7tz8E18FCkfDX4J7I+CrSAneAy2A8+As+DLin6aQVDjDKun8ky6KiSAkZxj/8p6iLRDXwl2Y+umobofl+IlE0HW2O2Z788KpeBP8DFhG1r4g55wCjj+n+ugzVlCxg1GdwEO8AzeTvUagPzI+sfgHdjtu0KXgZLwSFRAfve0n5cwK46j9RQmoCxI06Yuy3tRLHpG/BdZJ2BiB65nJznitpJPCUPgI/BBLk3EPXUKiWekuvBe3rbl/J2qLUAdOjPnB/3G99z0l8LZkrjJv3ZujyXbAFbJeqSTPGIOJi3Q62Jum/eB24UNYc1UqNFXUR479VDL7k+DpzP03BSwBaC1yPrvPTfAHtFXe3yqDu4LuqK+WPMuGzYxLn3L1ETPZfc8a+AzXkGnqZjXzosagIfVmCfn4HHCuwvl3j6jdGfe4m6XZlR3nDcdctY+tY74DjYBI6BWQX129TqB/qWPYigAlXmpN+UCgFzVAiYo0LAHBUC5qgQMEcxYCsk5/OVg/jwyyTkv+CKqGc8ZlbTpGwaJabc+YjEnByfM8+CDeDRNJUZsFZRefpGKu7IZfnPovJdzKQ+CfaIyt8XJY7hF1FpcCYnmYpfCX5NU3kbmBrzXR4TJClgprU3FFzSn9OaJKaYM+NzKQN/MsXYRhhlfLa9aKlnVR4TxGVuZKqoLfI5jUnCU5iGCI0RJh8ZcGZnmaUd5dA3++DOYE5ucZoKvkwQl4C9AZZH1m0mCZcXwO9giagscFeH/mpaIHdya2vTVmqUCZI14cfTk06QmZBMMklogDBgv4n6u8OLki1g1IOi5tOfwIdpKjTKBMnS7ljwt9zJkUVlM0k4JhoiNEZokPCU3C7Ke3jKYZw1DRb1G63yZYIktcs254F9Ep9ttZkkpjhp0zDhqXUqxdiGGmX9Rd3qWOXLBIlrd4AoN5sTbNTBNrefKP5MEra7S9Rkz1P5CVF3C+tEXdQSTRJfJkhcu+ck3RyXZJLkNUh4MflW1DzJm+cTYJGo4FlNkio/GlXSJKlSwJreJClawSTJoGCS3E8q2pcMCgqyKpyOjgoBc1QImKOKDlgVTBDqTVHPqs4qOmBVMEHeB6clw2+foyu9HfO9jzdBqmCC8KgeKI4BY16qQ1fq0A2Y8vEmSD0VbYL00kungPFHt+hKLXq9nny8CWKqLBPE23Tk402Qmso0QTIFrKw3QaiyTRAvAfPxJkjZJkhNXgLW6DdBqmCC1OvTan7Uq2TKx5sgVTBB6m2f+g2RKj8aFWmCpH5DpEoBawoTpEoBawoTpEoBo4IJEhQUFBRUnm4DN4+ZsLP/o8sAAAAASUVORK5CYII=\"> 则<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD4AAAAUCAYAAADV9o4UAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAB30lEQVR4nO2VyytFQRzHB3E9LiJRKCWkWHltbkpigVtKWVnaiBUpFpI/wLWwsLFQHgsSkQUWJAspYsPGxgrJhmLh/f2ZuTWd5s6Zw+Vcdb71qTO/M4/vb56MefLk6R8oHuyCD7eNRFMmyYywKCaeCUbBGMgTMT8o+GZ/qaAJ1Fri2aBM084umQC4BvmWuglivIClfgWoAXGqznxgHnSDcXAHtsAFqLSYsiMsMjYFXkCpiGWAFaafTF3iWeAStCnq0sLNgGeQIsUnGZ8opahiolTuBY+gXmPCRDTLJ2ARJIMlpl9tki7xZTChqVskYrLvdrBuYjYIHkCzSWUDtYB3sAmqFf9Nd1EPOAJJlrZWXYEhqUzHt9/OJCVLSQcj/Hey1cOinXQDduwGl8ZQ6clw3FWwJpWPmc0uo+1BSXcaGjQRbfVpMCDMNRq0cXJTq+oOg1vxTXfLga6DOsaTpgvNL2J04ZU7MKFSCLSKb1qFQ4M2P028QcRLwBzjZ1ypdLAPBsEC42dkFmyAQgcmrKK3tksq07PyBvYYv4EjySRx3VZPA6+M3/DbDvx+zRSdcZ+TRjGmU3APit028tuixaoS3/TW0xPa4Z6dv1MfOGf8qJ6x6F7QMa9ckOO2CU+eYkSfOwN673FpWM8AAAAASUVORK5CYII=\">的最大值为 .",
+                    "question_options": [],
+                    "question_type": "填空题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "（15）直线<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAWCAYAAAD0OH0aAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAcklEQVR4nGNgGH4gDYiXAHEXsRoEgHguEK8jxZbDQFxDrGJGIP4ExF7EalAH4v9ALEmshkggfk6sYhDoBuKtpGjYC8TNpGh4B8SBUHYElI8TKDJAPCwP5V+H8nGCYKiCHUAsBMQchDRgA7TV8B8JDysAAD1OGCNeSUFOAAAAAElFTkSuQmCC\">和<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAWCAYAAADwza0nAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAlElEQVR4nGNgGHkgDYiXAHEXqRoFgHguEK8jx9bDQFxDqiZGIP4ExF6kalQH4v9ALEmqxkggfk6qJhDoBuKt5GjcC8TN5Gh8B8SBUHYqEL8B4pdAXIhPkyIDJGDkoXwQ2x2IzYH4Iz6NwVDFO4BYCEncEIh7SXM4A4MMEJcBMRMpmuSAeAYQM0NdQjS4D9UAwyMOAADhTBsE4CdAHgAAAABJRU5ErkJggg==\">是圆<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEMAAAAXCAYAAABQ1fKSAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAB2klEQVR4nO2WTygFQRzHh0f5U0RSpESeA6UQitRLSjgo5eTg5OSCAw5yk5MLJeXgIAcO/txwIBzkIA44OL6D/Es5uPB4vr9mXtbL7szO9mxe861P7Uyz8/3u7sz8ljEjIyOjxGgQPIF7MJJEXlqKgg7QBF6SyMuTasHsP/RqBuuMr7hXcAlGQZruhCVgDKQqjo/qGml4qWQ5AjUgA1SBAzBvd0MWaAcNcf35IAQWQYCpP6TTuIDwaonrrwbdGl4qWSri+srAs90NxWABvIOg6MsBGyAsJoyhGsBOuWAZvIFMS/8ciCh6RSVEJPkoQ9hpQAo4B2uMLyfaZ5WSSZ3COqlUjGm19PWALU0/txoAM7JBneAT7IB6F5PrfKlbMG5pT4FhF566oi1zxvjKd1Q6uAP7Hg1VttMm2La0KWDQZuxv8+tsk0ZwA+pkBrRNlhgvOzRhm2Iwu7AyTYAHcU0v4cSDn0z0bFShjkG5yg1U17vENX2xUw/mKi8jxL5P+hXGz4xEqAjsgmn289/C9pCdBP2WNpW5D3DI+MnrViovI1sEosqyp+GhqkemV3H+XBeM/3YrLd1kE22J2OGVx3gp7/Uvjr8aAtdgFVyBPn/j+K9CUOB3CCMjI1f6Ap/fe/CTWHO1AAAAAElFTkSuQmCC\">的两条切线. 若<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAWCAYAAAD0OH0aAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAcklEQVR4nGNgGH4gDYiXAHEXsRoEgHguEK8jxZbDQFxDrGJGIP4ExF7EalAH4v9ALEmshkggfk6sYhDoBuKtpGjYC8TNpGh4B8SBUHYElI8TKDJAPCwP5V+H8nGCYKiCHUAsBMQchDRgA7TV8B8JDysAAD1OGCNeSUFOAAAAAElFTkSuQmCC\">与<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAWCAYAAADwza0nAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAlElEQVR4nGNgGHkgDYiXAHEXqRoFgHguEK8jx9bDQFxDqiZGIP4ExF6kalQH4v9ALEmqxkggfk6qJhDoBuKt5GjcC8TN5Gh8B8SBUHYqEL8B4pdAXIhPkyIDJGDkoXwQ2x2IzYH4Iz6NwVDFO4BYCEncEIh7SXM4A4MMEJcBMRMpmuSAeAYQM0NdQjS4D9UAwyMOAADhTBsE4CdAHgAAAABJRU5ErkJggg==\">的交点为<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAUCAYAAAB1aeb6AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABQ0lEQVR4nGNgGAUIwA3EE6loHsgsLmIVLwZiczSxJCD+g0ePKRDPA+JnQPwTiB8B8RwgloCatYAYix2BeBaaWCkQ3wPi/3j0geSOALE+ELMDsRQQ9wDxUaj8bCC2JWT5dCB2RRO7AjWMkOWqaGKCQPwRynYD4imELAdZJI3FEJgFxABOINZmgERfK1RMBogvEdL4mgESbNgAMZZXQNWB8AwkcQ4gfkVI828gZqTAchBgA2I9IN4DxI1QMSYg/kVII6U+RwZyQPwCyibK59jinBjLQXKKaGLiQPwGyiYqzkGp3YWA5XxA/BaL3F4GSEIDhZw6EG8F4plQeaJSuyOSBmSD0fEKNDWgPLyBAVLIfAXiG0Bcz4CIwpkMRORzEABlETM88qCSTIYYg6CA6BIOBEBl+yQSDCcEQGYRXbaPglFAMwAAioJDeReWKFsAAAAASUVORK5CYII=\">，则<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAWCAYAAAD0OH0aAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAcklEQVR4nGNgGH4gDYiXAHEXsRoEgHguEK8jxZbDQFxDrGJGIP4ExF7EalAH4v9ALEmshkggfk6sYhDoBuKtpGjYC8TNpGh4B8SBUHYElI8TKDJAPCwP5V+H8nGCYKiCHUAsBMQchDRgA7TV8B8JDysAAD1OGCNeSUFOAAAAAElFTkSuQmCC\">与<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAWCAYAAADwza0nAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAlElEQVR4nGNgGHkgDYiXAHEXqRoFgHguEK8jx9bDQFxDqiZGIP4ExF6kalQH4v9ALEmqxkggfk6qJhDoBuKt5GjcC8TN5Gh8B8SBUHYqEL8B4pdAXIhPkyIDJGDkoXwQ2x2IzYH4Iz6NwVDFO4BYCEncEIh7SXM4A4MMEJcBMRMpmuSAeAYQM0NdQjS4D9UAwyMOAADhTBsE4CdAHgAAAABJRU5ErkJggg==\">的夹角的正切值等于 .",
+                    "question_options": [],
+                    "question_type": "填空题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "等差数列<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAVCAYAAABVAo5cAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABc0lEQVR4nO3UTStFQRjA8YeLvKQkUbqJhShih7oWt2RNrEhSwk6ysRHiM1jY8wWUPTtigwUrykuU15S3Iv7TjO7c43TO3Et3dZ/6dc6Z+8w8c+bMHZFsZCj6cIIP1KbYN2r6nWPCtdMBBpGXYrGfiCCGJ+S6dLhDZZrF7FAFy1wSH1Hh065mG8ckptCU5ji/4gWlnrYO7GAWXTjFSMg4N6gOSijAAI487e24R6t5jphJtYQU3MQMivx+bMQXLtFstefgEHNWm/r9VcI3lVryWzNu3C+hEOPYs9pipkOd1TaM7ZBiKjawhJKgJPVG7yg2z2pJzjw5q1h2KHiNGoe8pN01Lfrj55tn9R3fMJriOIHxYCWq6z52sYYF0f8vtey9ondzmzUhb8Fyl4LH6JbEKaGu9ZJ8GFRJ4kRaFL0SYuU34FkcT5ohXOBTgs/SLXPtEX0YqIiafleeSfw51K5dMffz6PzPwf2iH2Pmfl30W2Yj8/ENXulBVGPtsGAAAAAASUVORK5CYII=\">的前n项和为<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA80lEQVR4nGNgGJGABYhtgTgaiP2AWIMcQ+yA+AoQtwNxPBBXAvELID5NiiE8QPwBiL3RxOOAeD0pBgUA8X8g5kUTlwZic1IM8oEatAiI5UnRiA5YgXgJ1LB/QHwEiFOBmJ1cA0Gx1ATEd6CG7qfEdSDACMSToIZJEqtJF4hbsIiDYuw9ELMRa1AaEJ+EugIGOID4GBC3EWsICIQA8U0gPsMA8c5sIL4MdSU/AyTc+IDYDIiZiDFQGIh1GCDRzwIVk2CApPZQIJ4IxDGkuBAZgLy7B8pOBuJwcg1SBeLJUDbI22rkGgRyQSKUfQCIrck1aIgBABZIJLbAsPiIAAAAAElFTkSuQmCC\">. 已知<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAAVCAYAAADfLRcdAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABc0lEQVR4nO2UTStFURSGFwPJwEWKoYiIgQFCyMAPwI25MjCgm/ADxI8gI+XPKEQpEVP5CBH5SPGs9rk59tnu3bfOZeC89QzOuvuu9e69114iiRIl8tE4PEODFR+CHXiBU5j6XVtRzcA5PMl3sy1wBROQgj44g7F8CUvE7HIO5qEzRrP70AQXltk1WLTWDsJermQ9sA3LMAJHMOthQq/uIw8DUBOst81qnQ4rpx7aA1S6CnbBHXSHYjfQ72G2UNlm76Hase4YWu2g7uIAVkKxRniHitgsfsk2qydY5Vh3Ig6zenp6Vc2h2CQcehb3bYOfzGobtFs5s22QsostiXmlYW3ApqfZQmWbXYcFa41uzvnAMnALZcF3m5jxkgm+R+ESauPxGjGrV62jKy3mQfWKmbVp15/VhPbsLmzBKlyL2Zm2iLbDWwxmHyXaHtkpMBzUfxUzY6dzJSoV07N1jt/Kg0JxnWzRlZgthsKjqf6PvST6v/oE6AtbvMlud78AAAAASUVORK5CYII=\">，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAVCAYAAABPPm7SAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAy0lEQVR4nGNgGAWDFzABsQMQ5wFxARBrk6LZAohPAnENEDsD8X0gTiBWszkQvwNifSifGYi/AbEeMZoZgfgyENchiekA8XcgZiHGAGsg/g/EikhicUB8ghjNIFAOxI/QxJYA8VRiDSgC4tdAzArlg8LhBxAnA3EqEL+BytfgMkAEiC8C8WkgXgrEDUD8CYhPMUC85ssACcxfDHjCBBT/qkAshkMeJDeHKP9gAZJAXI3PdnxAFohnMUDC5wsQC5BqACg1/kfCJBswiAEAZDAiQckoHpIAAAAASUVORK5CYII=\">为整数，且<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAVCAYAAAAAY20CAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABpUlEQVR4nO2VzytEURTHj5/JIEmsJDambGwIyULKr4XChixsbBUbC7/KErGxMAs726H8A0y2ys+FKGVLsbCR/Prc7h2N8d7Me2/eU2q+9Wlmzrx7vvfec86MSFZZBaZcaINRGIImE/sX3s1wAeswATNwDY9Q5ONGA/FWDz3AeFK8FW782mWQ3r3wCTVJ8RLznVuFoF/0jaqbbQjau9skiaYxs1Oe6P5dgBg8w6H5rOKpejlT7+8NbMO7SXYM01DmYO0uPMEprIm+teI/8v6lepgTXXaVTPVgKM2aPdEHOIFV6BF3B8jEO6VmTaIuB8/mQzsswpHoFjqAedHD6Pan2I23NMKKRbwTPqDWpbmSGsAB2IBLse9tX7wnRfdvTkJM9aXq7aiz/XqWE+9KuBd9KZYagSuTaBMicAZbUAVhKIUWKLBY/ya63KkIe/COz9GOyWF7gLgqRJe0DgpNrBrOYQyWRf9DBiErb6U+uIVXcXAAO8XM6yBMeU3iUXfys5LlbhOoG4mY90vQ4dvW3OlFPFZgWPSgKe2LrsJfK3HGXFcgq6ws9AWBhmuuYqA8RQAAAABJRU5ErkJggg==\">.",
+                    "question_options": [],
+                    "question_type": "解答题",
+                    "sub_questions": [
+                        "（Ⅰ）求<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAVCAYAAABVAo5cAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABc0lEQVR4nO3UTStFQRjA8YeLvKQkUbqJhShih7oWt2RNrEhSwk6ysRHiM1jY8wWUPTtigwUrykuU15S3Iv7TjO7c43TO3Et3dZ/6dc6Z+8w8c+bMHZFsZCj6cIIP1KbYN2r6nWPCtdMBBpGXYrGfiCCGJ+S6dLhDZZrF7FAFy1wSH1Hh065mG8ckptCU5ji/4gWlnrYO7GAWXTjFSMg4N6gOSijAAI487e24R6t5jphJtYQU3MQMivx+bMQXLtFstefgEHNWm/r9VcI3lVryWzNu3C+hEOPYs9pipkOd1TaM7ZBiKjawhJKgJPVG7yg2z2pJzjw5q1h2KHiNGoe8pN01Lfrj55tn9R3fMJriOIHxYCWq6z52sYYF0f8vtey9ondzmzUhb8Fyl4LH6JbEKaGu9ZJ8GFRJ4kRaFL0SYuU34FkcT5ohXOBTgs/SLXPtEX0YqIiafleeSfw51K5dMffz6PzPwf2iH2Pmfl30W2Yj8/ENXulBVGPtsGAAAAAASUVORK5CYII=\">的通项公式；",
+                        "（Ⅱ）设<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEMAAAAqCAYAAADoMebhAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACKklEQVR4nO2YTyhlURzHf4ZmLPyZNEoSCyUlm0kSJbESG/kXSs0CqSlSFv7EQlaymBrZWGJhqWY2ijU28mdroUSRJiGkmfn+nHtzuj2eO++cd94x51Of3n3n/W7nd3/v/vndQ+RwOBxvn054Dz+aTsQ0g/CIXDEe2YP58IpcMSjL+3TFkHDFkHDFkNBejC9wEX7XOYkitBcjE87BdZ2TKCIul8kanNE9SQw8wD8BP+ma7Bx2wCoSDU4LfKdrskSmgESll+AY7IcncOEV+0b6x4LmqU9ZH00kkq6Rxr6SONAMEwmZZAruBMbaSRSoIP7pmOUH/BYYmyBx534fZd83d5nw/WE4MLYNlxXPE61o8TQiOd6P8s2yG17CwpgO3UIa4DWchKskLhleN2iExTAdlsMUUwmaIheWwGQSZ8wubIPTJJ4u/zV+e94M+0wmYhq+X8x72/zoLTeYi3H48ujxtn/Ceg1zcLtfCwc8ixTHW0Ml3IKjsA4ew1aF8dZQAS9gqff9A4lV7+ce5WHjrSEJHsBxaawM/vJ+izXeKqpJNHn50lgv3FAUbxUj8DAwtgJnFcVbxRA8paeO9jO8g12K4oPwItUZTP2XZHXDS3Xc2W6SWEzi14AbEi+G/GoQbP/DxvvcwjS4D39TghaD4X6Be4Rsaeyl9j9sPOMXg4vwQAlcjOcI2/5Hio+0vmJdMcK2/9Hi/TODsa4YYdv/aPF+MeQzJY0cDofDoY6/Vgy39RFXrdgAAAAASUVORK5CYII=\">，求数列<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAVCAYAAABVAo5cAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABkUlEQVR4nO2UTShEURTHD1M+QjakWchHkxRZEKlZKmY1ZIFEsrCQsrHCAjtlazfZITaysrSQhSxk6TNDIVnKxkf8j3Nebs+buZewmn/9evfdd+45951z7iXK6J/UDk7AC5gDy2DJcW0JeAXXYMI14A4YAzmgGCyAA/f9Ugg0gUeQ77LgHNQY75sg8Y2Anq5ApYthEkR8C0dBIxgHAyDvB35S6haU67gUvIF1knqOgGOw7eDnFNSlM+CaxUn+KKRzMQ0YN+y6dK7BEpBLMQ8Kgj5G1MkdaDbmp8GZzzaqtm2WgFXgRm37ggxyQT/JkcjSuQ36eiSG1UmFJeAKWARFFju6B2EdX5LUzhRvYt/mBDoie9o/lCRJMR9i/pM14xun8Ykkra5+rLpQww7wTFLHLZIm4A7uBYWgliRdLSTlCApY7RJwD/TQZ6eyykA9SSd774dgCEyCWcM2WwM9UIoO9atTd8d3Ymsau119cpqndOzdpdztMy7BXMUd6nUvX9Kx33QepG6S6461Cgb/OmBGgXoHD5FJsGH/MlMAAAAASUVORK5CYII=\">的前n项和<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAVCAYAAABPPm7SAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAuklEQVR4nGNgGHZAF4hNCGBBXJrZgPgpEM+B4lVA/B+ItyCJPQRiC1wGGALxaiS+J9QAaSSxi0DMicsAASCWQeLXAPELNDU6uDRjA+uBeBspGtDBIyBuIVezCAPE/4HkGuAONUCeXAOqgPgtuZpBYA0Q7yZHowYQ7wDij0D8GIhnQsV5oHK8QGwGxKykGiwOxJeAOAqIm4C4iBzXHYTS/kCcR6pmRQaEd+qB2IZUA4KBOBXK3gR1xXABANAqIJPxCebEAAAAAElFTkSuQmCC\">."
+                    ],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "如图，三棱柱<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFQAAAAYCAYAAABk8drWAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACcUlEQVR4nO2XT4hNURzHj5AJIyRi0szCnwXKxEqINP4kZUNCWVmxoEyKUhZKSUmKHTZYmGGBkORvxI7FlKihZkGaxZQNMT6/7u/mvOPMve+8d96bps63Pr177zn3nM+9797zfs+YlJSUlJRGpwParf1WWOmwAubDOM/5E2AV7IVtsLgJjr6EeueJ6j8NvsID69hSuAjDcB1OwwXoh3cw2+q7B97CSdgHx+Az9MGaesRKHH0J8c4T3f8sfIFvzvEuFbOfik49dkD3T8B7mOWc2wE/YX0tQgGOvlTjnSe6/yK4B0d0wnlW21H47vRfrf12qvhvWD7C2DLujFChQEdfyrzzNMT/NiyBDTrhVqvtBjy09ufAE3gGk+A1PA6dsIYUOfpS5p0nuv9mOK/b8k2I7HGr/QN8gvvwFIbglskW/jbt3x1TqAZHX4q880T3nwgvTOUj3Q83dVsm/2MqX5Ep8BKewxYV6oolVIOjL2XeeaL7HzbZIn/HQtadj9q+Vidc6Jx3So/v0M/OgDmHHep19KXMO3/lt5tw/xEjv2iynkyGFguZVL5dKVEOmexVcWs3uSgpJxao0CbP+DOh15TXjPU67oJB57wi7wGrfzX+Bz3je3PJZAu8m/ypk9rrql6QHSl4f8Fu3e8x2dpky081Wa14phqROh37zP9PepH3gNO/zN83fkXGw134AZedto3wSgcYUkRAFnYpHx7pRPYvrEx+Dd7AObii2/uLJEpSraMU6evMvwtuU9fBAu8WU3mDyvzd/k3LdFgGc03x37tGJPSCff2L/Eflho5mYtzQmP3HdEIqhmb0T0lJSUlJSRnT+QumTtgnvkJH3AAAAABJRU5ErkJggg==\">中，点<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAYCAYAAAD3Va0xAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAqUlEQVR4nGNgGAXUAgpALE+pIXxA/BKId1JqUC8QPwLiV5QYogbE24C4BIj/A7EUuQZtAGJtIHaGGuRNjiEeQDwJyhaEGlRNqiGsQHwEagAMPADiNaQaVMgACeAtSPgNEN8hxRARID4ExFxAzIGEW4H4HxAnAvE7YgyawQAJXHQQygAJp4dQGidgBuKtQPwViOejybkB8XGoAZcJGUQKGFwG/UfCo2BIAwA2lCYaD96BCwAAAABJRU5ErkJggg==\">在平面<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAASCAYAAAA+PQxvAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABrElEQVR4nO3UTShEURQH8CORfIUQ+ShCFEpYSKQ0SbJgoRRZWNhKapTNZIMVFmKHjSx8pIZGkSI1WClJykZYUBZTVmL8T/e83K7n9ZrJbk79mnn33nffv3fvu0SxiqxKoFi7ToMGQz0UQZzN/QnQDAPQDRWRhMiAV9jT2qphCcKwDjOwCA9wBdna2EG4BB8MwaSMu5Fwrmtebnw22j0SpEBra5S2EbmekmBZxr2l8AEtbkNUgh8m5AG5Wp8XXozxbTKuFzrgE2r/mPsA0t0G2YUqmTQsv1ZtyGRW5cEJHEMinMOR2wc5VRcsyP8cCeLV+u/gHgISIASbkAqFMn482hC8y88gU2t7JPUWuPir+YI+rZ8DBEm9kU4J4ok2yBipDerXvMGt9LfKg8qN+2bpZ4/wb100IfjTO4VkSNLwQ3jzpcAoqaUwzwxepmsoo997Sp9/m9SZ41jL0G7T3i+TN8EaqX2hVw+pT9Jari3YMcLykh7CtFOAeFKH1jusGH285kEJEhJPpN7AvkwekHFW8Z7hw+4C5mCV1Jc07BTiP4tP5hrIJ/vjP1axclXf5I1cOQQZ1pkAAAAASUVORK5CYII=\">内的射影<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAv0lEQVR4nGNgGIyAF4hNkLAxEKsDMSexBugA8XQg/g/Ey4G4E4gXAPFDIF4LxNLEGOIKNUAeSYwLiPcA8R0g5iZkQDkQv8Uibgg1OIGQASuAeDcWcU6oAa2EDLgFxF1YxKWhBpTh0wyKhX9AHIFFLhZqgAM+A+ygitSwyG0D4ntAzIzPgAIg/gTEjFhsB7nMB59mEFgIxIeQ+GxAnM0AiZUEfBpBAbQDiN8B8VMg3g7EO4H4KBD3AbEiIZuHKAAAVmkj3pQHxxMAAAAASUVORK5CYII=\">在<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAASCAYAAABFGc6jAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABKElEQVR4nO3Tv0tCYRTG8RMVRESotFRDTjVIkKvgEGEZIrg0FTj1BwS1FAQNThFEk1tNTVkNFbg0hKDopoOLQ7kprS1BP76Xe4Z7L97ymkvUgQ+8nMPrc198X5G/WkHMuMyGEMEGkpjrNWQcLeQ7zNZRwQHS2MUT6oh6DTpCE21Hfx81TDj6Qbxi0UvILO6wjQ9MaT+GNyy47DP2+L0EXSOEJQ1KaL+Eey8/9FXFcaJrvwbtYVrXO/0IGUZB7Md/xAVWNSjWj6AtMS/AjcUzGkhpUPinIcYtesAoRiwyeBfzAhhBKx32BnAp7m/OVlkx/3xnrWmA8T5yuMKAZT4m5ls7/C5gELd4waljtoyiBlX1Q85RxjHOdL3ZzUl6KR/mMSn20/3XL6xPDb83NgWwLo4AAAAASUVORK5CYII=\">上，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE4AAAAUCAYAAAAjvwuMAAAACXBIWXMAAA7DAAAOwwHHb6hkAAADI0lEQVR4nO2XW4iNURTHl1vuw0iEZF7w4DIzkaQxSGPMTIrCw4x4GhGJIkUpD0pJCcWD3B7w4PaAkDTGNbeHoZmIHIwMSchlxu34/1vr1Dd7vosz51BT379+ne9be/Zee69v77X2iMSK1dGVB0YEtHUFU8AiMAeMNntfMNFhAhgOOv3DuWZNSeMn+ADqwD4w7S/754A34IJPWxW4AzaDJWADeA4awGKwx3wfBVvBbpCwOQxqz2JMDPwyUA++2e98T3up+WgGD8Bss5eBl+CFxxaopMcZd8FYsBI8AftBl4j+283RW8e+ySY10LHnge9gBigx/97dWmi2FVETD9FycNvG6iW6m++DYjAeNIFy0M9+m8zeKHo6imxNoUoG2HuDW6JBDNIocA6stXGGmp0B+QUKAvqxTy5YD945bUU21sKoiYeo3sf3JHAaHAbVTttScAi8BpNFg9cY5SQocNR0cC+knRMZA2baOBVmZ8AvRzmGjoGLnvfBoAbUgu4+84wipa+gp9OfO487KyFt8zHfn4F5osFj0MrCJh7kOCXuus8BfZkDdtpzrvXfCIbZ87owx6bH4Ck4D66AT+CUaMrIRMyhhY5tHPghmia6OW18b0nXSdiOCwocHV0TDVhKCXBc9EtxzJIIvwzOb2l9JOnvOrga0TdKq0RzHI8rd16+6AnghwkKXHO6TqKO6l0f+xrR5HnGA3MVC8pcG9P94q6K7e9GOvYtZs/kqHYWDR53Hqsq002laIVPSPBRTUtBgWNOuCltiwOrZK219/DABXMHFdiYpT5jDgAnbaKrRXeAe2fjR2hIdxGO3EpN8XrCYuRXHKrNnrYTigvoI5rsWc4f2WDudWSvaDFwtcDGmgpOiOYqb1A4Nu962+ydVazWGYMXZOahynQX4Shp/nkX5Ifm5btG9Njyw7IAMEfn2C/f89vjhPD68BE8FL2/ucFhAM+CL+CA0zZLdHdynDrre0Q0z+wAB+2ZX5bFg8XgPXhlz7yeXBINbIVkLt7NbohWV1bIXdI6HzMPc50t9lueBZ9ZVX/RajZEOsi/UbFixYoVK1as/6E/hLrNcGYRENQAAAAASUVORK5CYII=\">，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAASCAYAAADCKCelAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABc0lEQVR4nO3UPSiFURzH8b8yIsrgJSnFRBEWIstNBoPFQikGq+VmUMqEzSIrCwYvm5AoE7KIDLcYlE0Gk/JyfU/nXPdxLu55XrrT86tP97mn8zz3d5/nPEckTuFSig5LO+pQZM0tRhdGMYimwtXUacYK0tjAApbxgCtUmnkjuMQcxjBj5tyiO2SHcby6Tk6YsvWesU4zNolZXHuKZ9KAN/SEKJrEPd5dT5jGkzXWJ7qsupMfaP3j3AOU+a6YzQ1qxEfZTRx6vlfhFCc4x3GAEuk8MuUqzKdz2RTusG9KvmBL9AukLpwMUNZvnMqq3eATw56xEpyJfsFU2UTk1XLjVLZXdKFGa3xRso+sLcCPuy4DX2WnRD92e09VSyJlLtz/y3lqZ9gRvR9HEaeya6LXqTdDorcktTS2sSs//4xaOkeYD9/xO/+WrRV9957xaI73TAl1PGDmqfW7jgssYVX0DjERUcl8yyNQytGCasldMnHixCFfEchhWdtGv08AAAAASUVORK5CYII=\">，<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFMAAAAWCAYAAAC8J6DfAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACBklEQVR4nO2WyysFURzHfzeUdPPKBguPbhQRFhZKkq5HUiyUoqz8AQoLSlnYkJINO1YW8lqgbCgUURYoJQsslEcWykZ5fE/nTF3TXPObuWd251ufms6c8z3fMzNnfofIyMjIyEi3CkFBnHvJoA70gQ5Qqnlujn/QGbQpHTyBXYd7veAMTIB+MAruwTWo1zA3xz/oDJbEy1oBr+ADXIEhkOLFZAY8gGdb+zi4BDm29kLwCRo9x/XuH3SGWP2AA1AJUkEZ2AfzXIMSsEPyDQizPNUeBV+gKs44MSbLV2S+f1fAGewS64/Y2orAO9dgE5SDJmXWrtpPwJ6PMG5Y4vj7yZBIJidlgEfORK1gTl1nKeMxkK+uhz0G54rjH3QGrsQ/esqtk/ipHtHfbXIHVkEbyYVEAwhHTP+gM3Aktvw5ya/zXw2SLDpbMYgqdgs6SS6k2uPk3C3F8febwW8mu2rBDahxm0BURlG10khWLYtJ8E3yhy8maXEYmw3WKf6ZlKMIw7+BmaEHvCWQxa4QGAGHoJgzYIFkwbGrm+QCxNltDWwoc0thkmfR6QTCWuL4c/pck3sR4SpXeYuPKjmm3dE/CWyTPJAu2u41g2M18ILkw14Gp2AWLKnrAU3Bwwx/Tp9U0vcwX8hfxWcrE1SQfGshl75B+bv10bZYI/MwtUn7VjQyMjIy0qNfRYWwLmPjmkMAAAAASUVORK5CYII=\">.",
+                    "question_options": [],
+                    "question_type": "解答题",
+                    "sub_questions": [
+                        "（Ⅰ）证明：<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEMAAAAYCAYAAAChg0BHAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACVklEQVR4nO2WW6hNQRiAf9dOHCeiJLeTcimXyHkiJB0cpaRIUR48eKVIeVCUywshRUp4QcrlASG5RW5PIqSUSx5O5EF5IY7vP/Ovmr1as/fsfRZK89VXa83a8///njUza0QSiUSifFpxbOBZX5yFa3ApTvxLNSmtEq4rYxC25ZyJo7FXvQlbsBOvFTxbjU9wO67FrfgeX+DsyPi98TR24Sm772ldPlPwsMXXPHvwEL7DpzgsMl83e8X9wc5c+zZ8VhBsHP7AORGx9c0cw0+4Dj/j0R7WVUS7uMHwZ1Gbta2PzCcT8Apuso4jvOA/cXqgn76tloj4B8S9oWxpTcIPuK/BukJsETfQPvOs7/KIOru5iJNxgXVcYu0P8WZskAC7xC2nUbn2MfgKdzRQV4gzeN27H4638Rb2jyl2MR606yGWVPeEkXa9OSbIHyBUVzVe4xu8infwK57H5piE/fCeJct4i2exwwpojyq9XKrVFUK/Jr9wpdc2EO+Lmxk12Shuc7rkqWtOR3iZuMGYEROoZKrVFWKuuHrH59p3Wnufagn163AXB2CTp3bWEZ5mQRYV9B0qbvrpN3wVfqmWqE5q1dUcyLlB3LLInyl0IJ/XSnpE3MaUZ4W4QdAD1jm8kEugxegmtdvuX9rvyyKmrqKcJ8UNoo8eDr9L5dKpQKfLZfyGx3PPFuIDS6QHlfniDkiPcT+ewEfizgoZTQWFNUI9dWVLQtGNXjdMnSkf7Vo/xzfsuqOE2ioYjFPFfeeLjrZlzoxY/kXOKNJgGF2e/3PORCKRSCQ8fgND85h2+/T02wAAAABJRU5ErkJggg==\">；",
+                        "（Ⅱ）设直线<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAYCAYAAAALQIb7AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAzklEQVR4nGNgGAXDFSgAsTwF8kQDPiB+CcQ7yZQnCfQC8SMgfkWmPNFADYi3AXEJEP8HYikS5UkCG4BYG4idoYZ5kyhPNPAA4klQtiDUsGoS5IkGrEB8BGoIDDwA4jVEypMEChkgkb4FCb8B4jtEyhMNRID4EBBzATEHEm4F4n9ArEhAHpQVIoD4HTGWzWCARDg6CGWAxMtGAvK2QHwdysYJmIF4KxB/BeL5aHJuQHwCasBfqDp0+eNQ+UtA7EDIMmqD4WnZfyQ8CkbBIAQAGYdCO2j7y0UAAAAASUVORK5CYII=\">与平面<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAWCAYAAACG9x+sAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABqElEQVR4nO2VTyhFQRTGRymKV0gkiQXZUF6shLJ4SVJWFigrKxY2UhZKUcrGQtmywQYbCUn+pMQOpZRi8XZ6C0vi+qY5at5075szdS1kvvrVvdM35zv3z8wI4eXlZSoB2gxaQQ3IM7z5oB2MgH7QGFGT63PJjlQTWAUB2ASLYAU8g1tQQb5hcAPmwCiYAS/gAXRq9bg+l2yrUlSkVhtL0tg4mAV3oNyYVwfeQTfdc30u2SxNg1djrIOKzINP0BIxdx+UUiMcn0v2oK3xH22BI+2+EpyCc3ANThg1rpg+l+wCbpFH8AQOwBl4A7tCLT75JqYs86uZPpfsBLeANH6J7M9VBC7BPTWWstToZfpcsi+4RboovMEYX6BxSdJSY4Dpc81m/UKTQn02c9/dE+rTykI9IfPKwI5Qu0c9wzcBMg7Z6RB/qNaFWjC65OHzAYbAtlD/pB5SDA7BkjZm88lzIHDITof4syQXnlw4GTLLa7nVHVNon9bEhlC70TJYo+sxo57NV6g1xMnW/bGoBDSDKpH7mM/lc20o1geIQ3/6AQKN3/B7ef0LfQOzNZBIZMHQswAAAABJRU5ErkJggg==\">的距离为<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAs0lEQVR4nGNgGAWDDfwngCkymCaAJgYjG2oKxPOA+BkQ/wTiR0A8B4glKDUYxD4CxPpAzA7EUkDcA8RHqWGwKpq8IBB/pNRgZMAJxNpAvBiIW6llcAUDIqnNoJahMMAGxHpAvAeIG0k1hJhkJgfELwgZim4QNr4impg4EL8hZDt6FsVm8F4GSKSBkps6EG8F4pmEDEY2DFsw2ALxBgZIBvkKxDeAuB5qCVGA4sKF7gaPIAAAZLY4Qhp1PTsAAAAASUVORK5CYII=\">，求二面角<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAYCAYAAABdlmuNAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACH0lEQVR4nO2XTUhVQRiGv8gosqJECovoLqwWFii6EhUkbhYRuMlFCdGiVRuFIigQXASBCBGC7axNuehvUVIhUmootcuFEAYatCjEhdDGKH2GGS7nDqlzZ06kMi88cM6ZM9/73e/M3xWJioqKWv/KwKH/5LUTaiyq4SBsSsmzCGqhFc7CUZ8gu+A7vE4pqUK9jkEvLMIjuA09MA2fYG+g5wX4CJ1wEW7ADExCfSGBuuEr/AhMKMQrK7pQyZFWZZ5dCfDrgAkotZ5nYAEaXQMdgQG4apLaH5BUiNd1mLXerzPvtXj6qeL/hspl2lUue1yDPYcKOGGSOuOZVKhXP7xJ3O+DtzAMWz39xmHIs2+eTsFdc60qq5K/mUZgD6/P8AVewTuYh2eiF3ofHTAe1zz757QFRiV/6E3D49DAHl6qGH8kf4oVw3sY8fQ8LbpQWc/+ObWLXlRfJFBrxJRD30WLUK8GE+ew1e+WeW5PPRf/ZtNW5ZDfslI7gJr722FbApWY+rKXYC7EoAAvdVxoEz3V7DOTKuikp2+56EI1/aWtBJ6Kw7nxnugF1dY5E3xG3EaKi1bzUueYB6KLmZQ6FP6C8wHeT0Svc8kPsEP0Ga5rpY6b4SX8hD6r7SSMiU5+QsIL5eo1b/gmeiFXW/ag6B8TugOrojyED3AH7pvry4Fx85TWiFoL2g3HoUzS+0uU00Yq1D9TITtaVFRUVFRU1LrTEinYiljoSEWNAAAAAElFTkSuQmCC\">的大小."
+                    ],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "设每个工作日甲、乙、丙、丁4人需使用某种设备的概率分别为0.6、0.5、0.5、0.4，各人是否需使用设备相互独立.",
+                    "question_options": [],
+                    "question_type": "解答题",
+                    "sub_questions": [
+                        "（Ⅰ）求同一工作日至少3人需使用设备的概率；",
+                        "（Ⅱ）<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAQCAYAAAAbBi9cAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAuklEQVR4nNXQMQuBQRzH8WORKCllfbJJongJNt6F8iaYZHgy2CijLGZJFu+CwWw0GTAofK/7Xz3j3WN6fvXpuv/w63+nVFLSQDsiI/NmZFZyKZrghidCZJHGVOb6rLtuNcQXnchsgZ5rgU0BdxzlPsLAt8QmlK1mGMct0SnjhdM/JTpdXPFBLW5JCxtU8MY6TkmAHXJyX0lZ4FNSxF6Z/7GpKvO8uWvJEhec0ZdZHgc8lPn4LVI+myU8P0jnII8JnM+KAAAAAElFTkSuQmCC\">表示同一工作日需使用设备的人数，求<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAQCAYAAAAbBi9cAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAuklEQVR4nNXQMQuBQRzH8WORKCllfbJJongJNt6F8iaYZHgy2CijLGZJFu+CwWw0GTAofK/7Xz3j3WN6fvXpuv/w63+nVFLSQDsiI/NmZFZyKZrghidCZJHGVOb6rLtuNcQXnchsgZ5rgU0BdxzlPsLAt8QmlK1mGMct0SnjhdM/JTpdXPFBLW5JCxtU8MY6TkmAHXJyX0lZ4FNSxF6Z/7GpKvO8uWvJEhec0ZdZHgc8lPn4LVI+myU8P0jnII8JnM+KAAAAAElFTkSuQmCC\">的数学期望."
+                    ],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "已知抛物线<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHQAAAAYCAYAAAArrNkGAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAEUklEQVR4nO2YaYhOURjHH4b4YNdgsmQrIwyDkGxjyRKRZQglSwiFT5KlLGUnkbJFGUvJUoRkyR6NNcQXCs0HWWLs+//vnNtc9z333PuOOzMm91+/5s659z7n3PM85znPeUVixYoVK1asWKVBU8ErkAcmlPBY/jtVAD3AWNAP1I/A5k+QBQaCRxHYK25VAatKeAxlwVpQMZmXpoBrYB4YB5aKWllXRDnFxIMk7HcD85MZkEVdwEE9vnxwHYyPyLZX+0CLIrJt0hBR8/oJXAXtdTvnb1NYI2vAZVDJ085V+gO8N7zTVMI7tBGYHXYwASonKphOgHRRUcuPvgMmR9SHo/5gZcQ2beJ3PBWV0aqC0aK2qlR9n8GVEWRkMPgCmhjuMQWfBu8M99wOLQ96g46eZzJBX7AR1AAvggYTQnQog6yOp539n3P9n6Hb2oqakIlgFhih29yqB+oa+touid9ksz8N1HY9kwJydXs1yzc52gtGetqWi8qaVDZYHGTkJjhsuc8JDHJodbALvBGV7yk6mWnxoxSkaD+HlhP/tO6QG/Ad7cAZ1/+M7tuitpEtogqyU/pbOCbHgfx7QBKzk+jvq+LTn8n+UfAEVHY91wvsAa/BbtATlPGx+UxU4LvF94/r65bgrM+7v9VQ1GRNtTwTxqFUurbl3m+YZlfbBhChFoFJnrYb4Jjrf04Wx8g0tlnUqmHQpYpZzwP69LM/xvAsg36GfofF4QJJLDo/GN5rLipwKGal+7YBDdID6Gx5JqxDGXWMQvek7hBV3Ra1OolKtymuNmaIz2CAq43Z4xvYCb6CI6CxxW6+5Z7N/syA8XIr4jbEjLXV1W6qVejQW/qaAZNnMzxclEObWZ4J61DqJNimr/lxj8Wcykx9FDbl9gEPQQNPextRe627/0ba1jDwVlQKtMm2Qm32g4KYDt0giQ41pVymaCflBq5QJ012NdxjZLCq4n4Q1qFLwD19zUotaML+RlyNLBBY7XoLJIrHmJeeNqY8rrocMBd8F/WdfrLtoTb7pvMiU+50UUcsBvpCSQxCzne2p22ZFBRFgXsoxbST42lLE7XMOehkVihTOKOWexMLkMygzgspVqWsvudIQYHhHc96UenPqTq5T3IFMDVn6baLYL+lH1a5HXzu+dn3pluuMAY2tyMWR73EvyhiXzy2dBcVSKNEpdha+n6oKpfnHRYGl8A63TmvnbSRjEPZMVf8TlGTURRiKn8hwT90nBd1EKcDOZGcqAvy5wrgxDEAD/n0xXPoCp97Jvs8YridxSzCFcmVGebYQg0VtYVwf2YF7Q4oHmtah7QjNUErKYgGR8k4lGI6ydP2SkqcVB6hWLDwLM1U5d2bwsr0S1GU9sMqqV+KbLIVLHQoHesc1Jl2uId2j6LjvxDHxPGlRWDL9FtulPbDqFC/5RZWPMPSiUw7PGP1K45OA8SVc7cU2y9xcWX6VYOxYsWKFStWrFj/pH4Bd+cNsvQ4cacAAAAASUVORK5CYII=\">的焦点为<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAARCAYAAADUryzEAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAlUlEQVR4nGNgGJaAD4hN8GA9QgYYAPE8IP4PxJuAeAkSXgfEJ4hxRTAQ/wFiTjRxOyCeTowBLUB8DU1MF4jZgJidGAO2AvEyNLFLxGiEgWdA/AKIb0DxXSDeQqxmcQZIADohifkzQLxFFPCAGiCMJCYExILEGlAJxE+IVYwNrGIgwb/IQBqIdwDxByB+BGXzU+KSIQIAUOIcVvNzImAAAAAASUVORK5CYII=\">，直线<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAVCAYAAADM+lfpAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABCElEQVR4nGNgGAWjYPADDiC+DMR3BtohIDAJiA8wEOkYViB2AWJzNHEjINam0CGeQHwfag5RjhEE4sVA/BGImaBi7EC8AYh3IKljAeL/BPAJJPViQPwUiK2BWIZYx4CABtQw5JAoA+JWYg3AArYAcT2UTZJjGIH4AxCnIIktAWJXMh2SA8RHgJiZHMeAwB4gngNlgwwBxTUnkjwp0fQdj5oLxDimDYivQtmgEFlAik8IAJJDxh+I/wGxABDvA2LdgXSMBAMkGBcC8SwqOUKAgcxoAoHHDJDsKEQlx5AEVIDYAMoGlQvXgdhuIBwCAhlAfAWIlwHxOSD2GCiHwIAoEPMNtCNGwaAFAIBwRL2dPF9FAAAAAElFTkSuQmCC\">与<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAARCAYAAADtyJ2fAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAApUlEQVR4nGNgoCJgBWIXIDZHEzcCYh18GgWBeDEQfwRiJiTD1gHxHkK2agDxfyDWRhIrAuIOQhoZgfgDEKcgiS0EYg9CGhmgzpoDZTMD8X0g5iJGYxsQX4WyXaE2EgX8gfgfEAsA8T4g1iVWowQDJIBANs0iVhMMPAbip0AsREihChAbQNliQHwdiO2IsSEDiK8A8TIgPs9AZPDDgCgQ85GiYbgCAP3OGBPWxbpzAAAAAElFTkSuQmCC\">轴的交点为<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAARCAYAAAACCvahAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAnUlEQVR4nGNgGDaAD4hN0LAeEPMQo9kAiOcB8X8gngPEHUA8H4i/AHElMQYEA/FfIOZGEiuFikkR0twCxNfRxFKhrlEipHkrEC9DE9sCxFcIaQSBZ0A8jQESWI5APBsqpkNIozjUeYsYIIHVAMTRQMxFjK0eUM0ixChGB6DoeESORhBYBcQbSdUkDcQ7gPgDED8E4m1AzEquCwYxAAALuhz0qRj9iwAAAABJRU5ErkJggg==\">，与<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAVCAYAAABPPm7SAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAApUlEQVR4nGNgGNaAHYgdgDgGiD2AWJYUzelAfBKIq4A4AYhbgfgdEB8DYilCmnuB+DAQc6OJg1zxD4h58Wn2B+JfQKyIRQ7kpT2EbD8PxOsJKcIFFID4PxBnkGuAL9QAS3INCIEaoEKuARp4XKANxCuAmJOQIZuBeCGamCQQXwTiRGJcwQ/E64D4CBD3A/EyID4KxD7EaEYGwkCsC8RipGocBQMBAPkUGTr8ZK/dAAAAAElFTkSuQmCC\">的交点为<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAVCAYAAACZm7S3AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA3ElEQVR4nOXRvwtBURjG8eNXyWyw6bIZjMpiY7GZyGBXUgaD3SImMln9A0oWm4WUQdkoq6wsJL7HvdN1znVnnvos9+059/QeIX4uXqRQRgERt8Uc1uiggiYOaH0rFnFE1PbdwB1ZXTGOK/Ka+RJjXXmEvcOt5lioBh6cMXAo7zBRDeQ2n6hpiiHchLm8jxhWuaQpy+d6IKYa+nFBXTGTb75CT3PwO21sELQdKvcwtX3/iA9dbNHHEDM0rL+7ivxDQpjPVkXYuoHrA2TSOAlzkZJqH44JIImMdYO/zgs6PiT9P8rlywAAAABJRU5ErkJggg==\">，且<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFcAAAAnCAYAAAB66tStAAAACXBIWXMAAA7DAAAOwwHHb6hkAAADOElEQVR4nO2ZW6gOURTHF467TogIpYMncpKkpPiQS3nCixPlyQtJnaJ44YGSyANJESUkL64HDx6IdKQkuT0gh5Jb8kDK7fiv1p5M09571j5mvsnX/tev5tt7zfmvtWdm7z1ziKKioqKiouxqAt0WnlaZVKOIB/dL1Uk0quLglige3G/gEPgAPoJrYHaVSTWKkjl3N5gEhoAloAvUqkursbUanKs6iUbVdHC36iT+d/G08BuMyLS3gdP1TydMPId99vT3BjPBKrAcjE71NYMZHloDvWxK5tzzYCIYCOaC52Rf1FwetlxbTXxWvpo1XqqARSSPHi8ma8BmkqK2mv5p4ChJ8RfAiRRnwe3QZByqgYvgPfgEboAFjliXRzrXI2AXOEayzduSisurWeOVG7ASvATjM+0t4AdYaH6vAD9J7qi0+O46GJpMAfJ5cK6/wOBU2ybTNob0NWu8nAH8+H0FSx3ndIKT5ngHeJzpnwr6gf6hyRQgnwfn+iTTtpbkbq6RvmaNlzOAH5tnnnN4E3/THHeAU5n+hzleru8FaTp9SXvkK9iW6yWTb0jNGi9rQC+SN6EDnnMekcyxrDfgLcmHFOaFSVjjVYZ8HpwrT1W8mM0Dh00bP2khNWu8rAG8MvKds8ERPwh8J5noR5nY+an+ZSSPn8arDLk8klyPkyxm20l2A1xPSM0aL2dAizFqc8Tz1oQXgAkkr6EcOzzVz8fDcryqmBaSXLP7ZVZIzRovZ0DyFWqjJZb3f3fAXvObtzBdvj8emoxFeRehW+nBub5yeITUrPHyBuwE98CATAI8J3Wk2s+QbO61qnJayMtVW7PGyxvQB+wBD8B+kkXgCmgnuZJjwVVzXpc5bvaZaJMpQFmPbK6XQV/LeXk1a7yCAvhqTSbZoqwjma+aPGZ5qnq3oFFIzf80uIlmgXf0d46zzU0aFTG4/GJyn+RNqiwPlqbmQgaXxY8Sf+iYQ/YVV6MiCt8HrlP5g8vKq7keT2LdtJjkJWUKuQc3qgcaCV6TfGYcR3FwCxV/ctxmjuPgFqj14BbJdokVB7dA8b/WXW9nri9wUT1UvHNLVBzcEjSU4rQQFRUVFRVVvv4ABQAKlzXMnBAAAAAASUVORK5CYII=\">.",
+                    "question_options": [],
+                    "question_type": "解答题",
+                    "sub_questions": [
+                        "（Ⅰ）求<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAVCAYAAABPPm7SAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAApUlEQVR4nGNgGNaAHYgdgDgGiD2AWJYUzelAfBKIq4A4AYhbgfgdEB8DYilCmnuB+DAQc6OJg1zxD4h58Wn2B+JfQKyIRQ7kpT2EbD8PxOsJKcIFFID4PxBnkGuAL9QAS3INCIEaoEKuARp4XKANxCuAmJOQIZuBeCGamCQQXwTiRGJcwQ/E64D4CBD3A/EyID4KxD7EaEYGwkCsC8RipGocBQMBAPkUGTr8ZK/dAAAAAElFTkSuQmCC\">的方程；",
+                        "（Ⅱ）过<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAARCAYAAADUryzEAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAlUlEQVR4nGNgGJaAD4hN8GA9QgYYAPE8IP4PxJuAeAkSXgfEJ4hxRTAQ/wFiTjRxOyCeTowBLUB8DU1MF4jZgJidGAO2AvEyNLFLxGiEgWdA/AKIb0DxXSDeQqxmcQZIADohifkzQLxFFPCAGiCMJCYExILEGlAJxE+IVYwNrGIgwb/IQBqIdwDxByB+BGXzU+KSIQIAUOIcVvNzImAAAAAASUVORK5CYII=\">的直线<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAASCAYAAABit09LAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAZklEQVR4nGNgGDQgB4iXAHEFIYWCQLwOiCcTY+oVIE4mpIgDiP8AsREhhaZA/AuI2QkpTAPiC4Rdx8AwDYgXEKPwOBDnE1LEBMRfgNiOkEINIP4HxPyEFEYA8W8g3grELIQUD0YAAPbyDpVRnFB5AAAAAElFTkSuQmCC\">与<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAASCAYAAACEnoQPAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAn0lEQVR4nGNgGHaAHYgdgDgGiD2AWJZYjelAfAqIq4E4HohbgPgdEB8jZEgvVBEPmjjI9n9AzIdLoz8Q/wJiZSxyIG/swWfreSDegE8BLqAAxP+BOIMczb5QzVbkaA6BalYnR7MGVLMtFjlNIF4BxJz4DNgMxEvQxCSB+AIQJxKynR+I1wHxUSDuB+KlULYPIY3IQBiIdYFYjBRNQwQAABW9GU0ici9AAAAAAElFTkSuQmCC\">相交于<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAARCAYAAAACCvahAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAmklEQVR4nGNgGNZADYglyNEoB8TfgXgKOZqXAvETID5CqkYLIF4IxJOA+BMQM5KieQ8QSwNxEhD/B2IlYjVGAnEdlG0M1RxIjEYOID4MxJxQPjsQ/wbiRmI0VwHxPSDegoRBIb6BkEZxIN4LtR0ZrwDi+4Q0zwZiGyzilQwQf/Nj08QEdd4XIJ6BJhcLxBehmkHxLUrIBYMYAAB8Xhza5nMMgwAAAABJRU5ErkJggg==\">、<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAARCAYAAAACCvahAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAtklEQVR4nGNgGDaAD4hN0LAREEsQo9kAiOcB8X8gngPEHUA8C4jfAvE2IGYmZEAwEP8FYi4ksRiogRaENLcA8TU0sQyoZmVCmrcC8VIkvgoQ3wbiGYQ0gsAzIL4OxDuA+BgQfwbiyUDMREijONR5zkhiYkD8CGoAXuAB1SyMJr6OATMcMEAl1BZ0APLzCkKaVwHxRjSxPCD+ygBJMFiBNAMkgD4A8UMoG5QoDgDxWiA2JWTrEAEAgeQlJarkhzIAAAAASUVORK5CYII=\">两点，若<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAARCAYAAADHeGwwAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABLklEQVR4nGNgGAVUAmpALI7E5wdiEzRsCMQS5BguB8TfgXgikhjIsHlA/B+I5wBxBxDPAuJ3QLwZiJlIsWApED8F4gNo4sFA/BeIuZDE4qGWmhBruAXUpVOB+D2aXAsQX0MTy4BaoECsBbuBWAqIU7Bo3MoA8R0MqADxbSCeQazhkUBcA2WbQC3wR5J/BsTXgXgHEB8D4s9APImByPDnAOLDQMwJ5bMD8W8grofyxaEWOiPpEQPiR1BLCIIqIL4HxFuQMCglrYfKe0AtEEbTtxGIrxAyHOS6vVBfIOOVUEtBoBLqWnRwF4iXELJgNhDbYBGvhroalMlWQV2LDAqB+CsQG+EymJEBkkm+APE0NLlYIL4EtQCUXD8C8UMGSARvA+KDQLwGiE0JuX4UYAAAPhVBJpQ9VsEAAAAASUVORK5CYII=\">的垂直平分线<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAASCAYAAACAa1QyAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAsElEQVR4nGNgGCiQCcRLgLgVixwHEP/ApkkQiBcA8XJSNIHAMSAuRRNLB+LbQPwfiK+ia2AC4i9A7IIkFgnEt4DYDoi/A7EGuiYtqGlCSGInoIaAnPcNm9OigfgBmtgHIOaCavqKTVMvEK8nVdN+IK5FEzsJxM5QTV+waXoPxD5YnHwTiG2hmjSRJZUYIIEghcWwbCC+C5W/hSwRDMT/gHgHEPNj0Yg3cnEBsjQNFQAA7zQmMSxNxX8AAAAASUVORK5CYII=\">与<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAASCAYAAACEnoQPAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAn0lEQVR4nGNgGHaAHYgdgDgGiD2AWJZYjelAfAqIq4E4HohbgPgdEB8jZEgvVBEPmjjI9n9AzIdLoz8Q/wJiZSxyIG/swWfreSDegE8BLqAAxP+BOIMczb5QzVbkaA6BalYnR7MGVLMtFjlNIF4BxJz4DNgMxEvQxCSB+AIQJxKynR+I1wHxUSDuB+KlULYPIY3IQBiIdYFYjBRNQwQAABW9GU0ici9AAAAAAElFTkSuQmCC\">相交于<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAARCAYAAAA/mJfHAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA90lEQVR4nGNgGLFAGIhNoFgWjzppJHU8uBRZA/ECIP4PxAdwqOEF4gdA/AiIO4BYHJ/rwoH4JRD/BmJ+LPLTgPgNEM/BZwgMgGyrgLouBE3ODSr/FohziDFsBxBLAfFjIJ6PJA5y5U4gVoNaZE2MYZeg9Ewgfg7EjFD+bCA2A2J/IP7HgCfgYUASiHdB2f5QFxgDsTcQt0HFG4D4FjGu8gLiTiibG4h/AnE/A8R77FDxjUC8ihjDqoA4Eom/mwESq8ZIYg+h6ggCkI2aSHxHBkhSgQEhBojXPfEZAkrRoFj8wAAJMzUsalKA+CjUsMNAbE+M64YZAAAjqC20M150AQAAAABJRU5ErkJggg==\">、<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA10lEQVR4nGNgGJZACIhNoJgfTY4NSQ6ERbAZYAXE84D4PxDPR5OTBuIOIH4NpbVxuSIYiD8A8V8g1keTkwDiPYS80QLEqUD8Doh3ocl5AnE3IQO2ALESEBcxQLzigSRXBcRRhAy4CsSMDJBAuwvEl4CYCSq3Bog18WkWBeIDSPxwqCuSofzLQMyMzwA3IO5HEzsBxM+AWAqIjxNwPUMZEMehiVlDXQEK/emEDFgGxLpYxNdBDUnDpVEDiHcA8XuoTRZo8qpA/AuITQm5AB8AhT4LJQYMQgAArkokt3cMrsYAAAAASUVORK5CYII=\">两点，且<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAARCAYAAAACCvahAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAmklEQVR4nGNgGNZADYglyNEoB8TfgXgKOZqXAvETID5CqkYLIF4IxJOA+BMQM5KieQ8QSwNxEhD/B2IlYjVGAnEdlG0M1RxIjEYOID4MxJxQPjsQ/wbiRmI0VwHxPSDegoRBIb6BkEZxIN4LtR0ZrwDi+4Q0zwZiGyzilQwQf/Nj08QEdd4XIJ6BJhcLxBehmkHxLUrIBYMYAAB8Xhza5nMMgwAAAABJRU5ErkJggg==\">、<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAARCAYAAAA/mJfHAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA90lEQVR4nGNgGLFAGIhNoFgWjzppJHU8uBRZA/ECIP4PxAdwqOEF4gdA/AiIO4BYHJ/rwoH4JRD/BmJ+LPLTgPgNEM/BZwgMgGyrgLouBE3ODSr/FohziDFsBxBLAfFjIJ6PJA5y5U4gVoNaZE2MYZeg9Ewgfg7EjFD+bCA2A2J/IP7HgCfgYUASiHdB2f5QFxgDsTcQt0HFG4D4FjGu8gLiTiibG4h/AnE/A8R77FDxjUC8ihjDqoA4Eom/mwESq8ZIYg+h6ggCkI2aSHxHBkhSgQEhBojXPfEZAkrRoFj8wAAJMzUsalKA+CjUsMNAbE+M64YZAAAjqC20M150AQAAAABJRU5ErkJggg==\">、<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAARCAYAAAACCvahAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAtklEQVR4nGNgGDaAD4hN0LAREEsQo9kAiOcB8X8gngPEHUA8C4jfAvE2IGYmZEAwEP8FYi4ksRiogRaENLcA8TU0sQyoZmVCmrcC8VIkvgoQ3wbiGYQ0gsAzIL4OxDuA+BgQfwbiyUDMREijONR5zkhiYkD8CGoAXuAB1SyMJr6OATMcMEAl1BZ0APLzCkKaVwHxRjSxPCD+ygBJMFiBNAMkgD4A8UMoG5QoDgDxWiA2JWTrEAEAgeQlJarkhzIAAAAASUVORK5CYII=\">、<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA10lEQVR4nGNgGJZACIhNoJgfTY4NSQ6ERbAZYAXE84D4PxDPR5OTBuIOIH4NpbVxuSIYiD8A8V8g1keTkwDiPYS80QLEqUD8Doh3ocl5AnE3IQO2ALESEBcxQLzigSRXBcRRhAy4CsSMDJBAuwvEl4CYCSq3Bog18WkWBeIDSPxwqCuSofzLQMyMzwA3IO5HEzsBxM+AWAqIjxNwPUMZEMehiVlDXQEK/emEDFgGxLpYxNdBDUnDpVEDiHcA8XuoTRZo8qpA/AuITQm5AB8AhT4LJQYMQgAArkokt3cMrsYAAAAASUVORK5CYII=\">四点在同一圆上，求<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAASCAYAAABit09LAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAZklEQVR4nGNgGDQgB4iXAHEFIYWCQLwOiCcTY+oVIE4mpIgDiP8AsREhhaZA/AuI2QkpTAPiC4Rdx8AwDYgXEKPwOBDnE1LEBMRfgNiOkEINIP4HxPyEFEYA8W8g3grELIQUD0YAAPbyDpVRnFB5AAAAAElFTkSuQmCC\">的方程."
+                    ],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                },
+                {
+                    "question_stem": "函数<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIcAAAAlCAYAAABoM/rvAAAACXBIWXMAAA7DAAAOwwHHb6hkAAADr0lEQVR4nO2aXYhNURTHF2OYyUxNQpKPKRlhSDIR0Q35yAMvUjyYF54UKYXEgxelUUhiiBIhD8iTlAcpHw8K8+qBZBSaNPmYiP/q7JMz29nna9a55x7Wr/7duz/uvWufs85ee6+7iRRFURRFURRFURQlL4ZDy6GdRnOhldBCq18zNLu6pilFshh6Au2HVkBvoW3QSegn1G76NULXoekF2KgUwCLoEzTHlEdBA9A0U2anuQPVQ5ehedU2UCmGYVAPdCBQtwDqM20Mh5pf0F1oaVWtUwplGXk3fkqgbjt0P1Cug15DT/MyogXaA3VDh6GJpr4B6jKvcRyHmoTs+UHeRUnyu0Tp7JRCcrwu9kGvrDpeU3SZ9zx7nCFvgcprj/XSBvAihqeuHdAY6B40y7Sdo+RTFU93VwXtYgdJerPT2JmVzeTF+hZTlh5vGLuhXmiEKc+HvkNbTPkotMG8v0TefayTNGCTMcCPYU3mPa+QL6T8rtPQWiG7kjpHFjtdcCxvCanfRd7UPWC1S443jLHQc+gxeYvNQ9AX6BF5M1dnoG8reY7zkAaHocwsgW6Qt+LlPXN7oI1/3B54I0XvrSvQRQnDaLBz+GGmw9jKF+iZsSOLnS5czvGCvAveb7VXSG68Lji/0QaNy/l3/oKnrffQbWgvtCrQxhd/qtV/AkXvrXkAdoz08W9wlCZZ/Rus8jVoBnmzG8fjnox2unA5xxjzajtH1HhLD8eyr9DqkLZ30GjH51x7aw5H/UK2hTlHR6Bcb+p6M9jpwuUcPrZzSI635uAULD+xYVMWO02943NRe2uOyyMFbAtzjmarz0foG2Wz0//ONLOZ7RyM1Hhrjq3QG0db1Mzh2ltHPUkSYcVeoH4gLyymtdOF1MxhjzXqO2sWXszddLSFxXImam8tGYOTOsfLDHa6SOscQx1v3MOSlxLxADroaGPHWRNSH7W3rlA+u5WwMsPO0Z3BThdpnaNC+e9WCoGfrM/QOkc75w/OW3Wc4+8MlFtp8N76FMns+4PTclNImekL1F1JaacLl3OEhUTOQUiNt+bgLChPt+Mj+hSZIU1DNTKkNkWON3eOQLdi+vA0foySZSpPUP7/NbhIY6cURY43V/hCnqU/yR2lnMStkZR/AOl0v499tLBtCDYqBSGd7mfCjhZulDBWKQapdH/c0UKlhEik+ydT/NFCpYRIpPuTHC1USoZUuj/uaKFSQqTS/XFHC5WSIZnujzpaOFPEWqXUFHa0UFEURfmv+Q0vLEAIwvtPJQAAAABJRU5ErkJggg==\"><img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACkAAAAUCAYAAAAQhBSFAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABpElEQVR4nO2VyyuFQRjGX+RWSkRy2ShJkVwWrlvEsUU2LGxFFtgoK9LZCCu2zpaIHXvlWv4ChKTkkv3xvM2cYxrfXEpfZ/M99es0c+byvPO97wxRpPCUC1ZAeQb23gDFPgO3wHC4XtKKgW/QINvN4ABk2Sa1g/1wfaU1BV7AF/2aZK2BcdvEOBgz/MfRdYNpMAc6AsZcgAVQ7WHyBtSDO81kCzi0TTwHTQH9beCMRK72STNLAeN6wA54AydgAhQZ9iqVv7rJPPBhM/kAKrS+VvAuDaTECw9Z1ikAo+BYbrgL+kF2wFjdJMk5habFOT9KtD7+LHGlXQaS9DcYk/iWmAVX4Al0eph8BVWmBfWT7JKGGpW+QfDoaTBlcgZcgmdPk9aT1HNynkRUqtbJkdhQPhgBR3LDBBgAOQFjdZPOnNSrm0/gk0SOsWrlAsuG+Zy32yQK5xRMkrlwTCad1c335J7S5gq8JpGXCRnEPbglUQi6+JMughqHMRYHm9ToBavkuCdZ/OLElDZXZB2o9Nj4v/J6cVicExxNJt7uTfJ8uyNFiuTQD3KbUdPAy4i+AAAAAElFTkSuQmCC\">.",
+                    "question_options": [],
+                    "question_type": "解答题",
+                    "sub_questions": [],
+                    "answer": [
+                        ""
+                    ],
+                    "analysis": "",
+                    "source": "user_input",
+                    "subject": "user_input"
+                }
+            ],
+            bugDataIndex: 0,
+            // 用于输入符号提示的部分
+            en_pun_list: [',','.','?','!',':',';','\'','"','(',')','&nbsp','_','/','|','\\','<','>'],
+            ch_pun_list: ['，','。','！','？','：','；','‘','’','“','”','（','）','&nbsp','、','《','》'],
         }
     },
     mounted() {
-      this.Init()
+
     },
     methods: {
-        // 处理对话框内应当显示的内容
-        Change_Dialog_Info(Sub_Index, Dialog_Label)
-        {
-            this.Question_Bundle_Index = Dialog_Label;
-
-            this.Paper_Json_Question_Bundle_Info = this.Paper_Json.sub_question[Sub_Index];
-
-            this.QB_KnowledgePair_Name_List = [];
-            this.QB_KnowledgePair_List = [];
-
-            this.QB_KnowledgeScore_Name_List = [];
-            this.QB_KnowledgeScore_List = [];
-
-            var Temp_Score_Dict_2 = this.Paper_Json_Question_Bundle_Info.knowledge2score;
-            while(Object.keys(Temp_Score_Dict_2).length > this.QB_KnowledgeScore_List.length){
-                var Temp_Ku_Max_Score_2 = -1;
-                var Temp_Ku_Max_Name_2 = "";
-                for(var Ku_2 in Temp_Score_Dict_2){
-                    if(this.QB_KnowledgeScore_Name_List.indexOf(Ku_2) == -1 && Temp_Score_Dict_2[Ku_2] > Temp_Ku_Max_Score_2){
-                        Temp_Ku_Max_Score_2 = Temp_Score_Dict_2[Ku_2]
-                        Temp_Ku_Max_Name_2 = Ku_2
-                    }
-                }
-                this.QB_KnowledgeScore_Name_List.push(Temp_Ku_Max_Name_2)
-                this.QB_KnowledgeScore_List.push(Temp_Ku_Max_Score_2)
-            }
-
-            var Temp_Pair_Dict_2 = this.Paper_Json_Question_Bundle_Info.knowledge_knowledge2num;
-            while(Object.keys(Temp_Pair_Dict_2).length > this.QB_KnowledgePair_List.length){
-                var Temp_Pair_Max_Count_2 = -1;
-                var Temp_Pair_Max_Name_2 = "";
-                for(var Pair_2 in Temp_Pair_Dict_2){
-                    if(this.QB_KnowledgePair_Name_List.indexOf(Pair_2) == -1 && Temp_Pair_Dict_2[Pair_2] > Temp_Pair_Max_Count_2){
-                        Temp_Pair_Max_Count_2 = Temp_Pair_Dict_2[Pair_2]
-                        Temp_Pair_Max_Name_2 = Pair_2
-                    }
-                }
-                this.QB_KnowledgePair_Name_List.push(Temp_Pair_Max_Name_2)
-                this.QB_KnowledgePair_List.push(Temp_Pair_Max_Count_2)
-            }
-
-            console.log(this.QB_KnowledgePair_Name_List)
-            
-            this.Question_Bundle_Analyse = true;
-
-            setTimeout(() => {
-                this.Init_QB_Total_Bar();
-                this.Init_QB_Knowledge_Difficult_Analyse();
-                this.Init_QB_Knowledge_Score_Analyse();
-                this.Init_QB_Knowledge_Pair();
-            }, 100)
-
-        },
-        // 调整对话框下显示的数据的序号
-        Get_Question_Bundle_Index(Bundle_Index){
-            var Char_List = ["一","二","三","四","五","六","七","八","九"];
-            if(Bundle_Index.length == 1 && Bundle_Index != "0"){
-                return Char_List[parseInt(Bundle_Index) - 1]
-            }else if(Bundle_Index.length == 2){
-                if(Bundle_Index[1] == "0" && Bundle_Index[1] == "1"){
-                    return "十"
-                }else if(Bundle_Index[1] == "0" && Bundle_Index[1] != "1"){
-                    return Char_List[parseInt(Bundle_Index[0]) - 1] + "十"
-                }else if(Bundle_Index[1] != "0" && Bundle_Index[1] == "1"){
-                    return "十" + Char_List[parseInt(Bundle_Index[1]) - 1]
-                }else if(Bundle_Index[1] != "0" && Bundle_Index[1] != "1"){
-                    return Char_List[parseInt(Bundle_Index[0]) - 1] + "十" + Char_List[parseInt(Bundle_Index[1]) - 1]
-                }
-            }
-        },
-        // 调整数据长度
-        Reduce_Length(Data){
-            Data = Data + "";
-            return Data.substring(0, 4);
-        },
-        // 返回全卷知识点的长度
-        Get_Paper_Knowledge_Length(){
-            return Object.keys(this.Paper_Json.knowledge2score).length;
-        },
-        // 返回大题知识点的长度
-        Get_QB_Knowledge_Length(){
-            return Object.keys(this.Paper_Json_Question_Bundle_Info.knowledge2score).length;
-        },
-        // 切分知识点对并返回对应部分
-        Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, index){
-            var Pair = Knowledge_Pair.split("::")
-            return Pair[index]
-        },
-        // 返回全卷知识点分值排序的次选点信息
-        Paper_Total_Get_Second_Score(){
-            if(this.KnowledgeScore_Name_List.length < 3){
-                return ""
-            }else if(this.KnowledgeScore_Name_List.length == 3){
-                return "，其次是 " + this.KnowledgeScore_Name_List[1]
-            }else if(this.KnowledgeScore_Name_List.length > 3){
-                return "，其次是 " + this.KnowledgeScore_Name_List[1] + " 和 " + this.KnowledgeScore_Name_List[2]
-            }
-        },
-        // 返回大题知识点分值排序的次选点信息
-        QB_Get_Second_Score(){
-            if(this.QB_KnowledgeScore_Name_List.length < 3){
-                return ""
-            }else if(this.QB_KnowledgeScore_Name_List.length == 3){
-                return "，其次是 " + this.KnowledgeScore_Name_List[1]
-            }else if(this.QB_KnowledgeScore_Name_List.length > 3){
-                return "，其次是 " + this.QB_KnowledgeScore_Name_List[1] + " 和 " + this.QB_KnowledgeScore_Name_List[2]
-            }
-        },
-        // 返回全卷知识点对排序的首选点信息
-        Paper_Total_Get_First_Pair(){
-            return this.KnowledgePair_Name_List[0].replace(/::/, " 和 ")
-        },
-        // 返回全卷知识点对排序的次选点信息
-        Paper_Total_Get_Second_Pair(){
-            if(this.KnowledgePair_Name_List.length == 1){
-                return "。"
-            }else if(this.KnowledgePair_Name_List.length == 2){
-                return "，其次为 " + this.KnowledgePair_Name_List[1].replace(/::/, " 和 ") + "。"
-            }else if(this.KnowledgePair_Name_List.length > 2){
-                return "，其次为 " + this.KnowledgePair_Name_List[1].replace(/::/, " 和 ") 
-                    + " 与 " + this.KnowledgePair_Name_List[2].replace(/::/, " 和 ") + "。"
-            }
-        },
-        // 返回大题知识点对排序的首选点信息
-        QB_Get_First_Pair(){
-            return this.QB_KnowledgePair_Name_List[0].replace(/::/, " 和 ")
-        },
-        // 返回大题知识点对排序的次选点信息
-        QB_Get_Second_Pair(){
-            if(this.QB_KnowledgePair_Name_List.length == 1){
-                return "。"
-            }else if(this.QB_KnowledgePair_Name_List.length == 2){
-                return "，其次为 " + this.QB_KnowledgePair_Name_List[1].replace(/::/, " 和 ") + "。"
-            }else if(this.QB_KnowledgePair_Name_List.length > 2){
-                return "，其次为 " + this.QB_KnowledgePair_Name_List[1].replace(/::/, " 和 ") 
-                    + " 与 " + this.QB_KnowledgePair_Name_List[2].replace(/::/, " 和 ") + "。"
-            }
-        },
-        // 返回全卷知识点最难和最简单
-        Get_Paper_Knowledge_Difficult(Part){
-            var D = 0;
-            if(Part){
-                D = -1;
-                var D_Ku = ""
-                for(var i in this.Paper_Json.knowledge2difficulty){
-                    if(this.Paper_Json.knowledge2difficulty[i] > D){
-                        D = this.Paper_Json.knowledge2difficulty[i]
-                        D_Ku = i
-                    }
-                }
-                return D_Ku
+        contentRemake(){
+            let result = this.contentRemake_Do(this.content);
+            if(!result[1]){
+                this.remakeContent = result[0]
             }else{
-                D = 1;
-                var E_Ku = ""
-                for(var j in this.Paper_Json.knowledge2difficulty){
-                    if(this.Paper_Json.knowledge2difficulty[j] < D){
-                        D = this.Paper_Json.knowledge2difficulty[j]
-                        E_Ku = j
-                    }
-                }
-                return E_Ku
+                this.remakeContent = "请将自己输入的Latex公式正确包裹在$$符号之内！";
             }
         },
-        // 返回大题知识点最难和最简单
-        Get_QB_Knowledge_Difficult(Part){
-            var D = 0;
-            if(Part){
-                D = -1;
-                var D_Ku = ""
-                for(var i in this.Paper_Json_Question_Bundle_Info.knowledge2difficulty){
-                    if(this.Paper_Json_Question_Bundle_Info.knowledge2difficulty[i] > D){
-                        D = this.Paper_Json_Question_Bundle_Info.knowledge2difficulty[i]
-                        D_Ku = i
-                    }
+        contentRemake_Do(content){
+
+            let remakeContent = "";
+
+            var latexFlag = false;
+            let Regx = /[A-Za-z0-9]/;
+
+            var Img_Catcher = new RegExp('<img src="(.*?)">', 'g')
+            var Result_List = Img_Catcher.exec(content);
+
+            var Img_SE = [];
+            var Start = 0;
+
+            while(Result_List != null){
+                var Temp_Catcher = '<img src="' + Result_List[1] + '">';
+                if(Img_SE.length > 0){
+                    Start = content.indexOf(Temp_Catcher, Img_SE[Img_SE.length - 1][1]);
                 }
-                return D_Ku
-            }else{
-                D = 1;
-                var E_Ku = ""
-                for(var j in this.Paper_Json_Question_Bundle_Info.knowledge2difficulty){
-                    if(this.Paper_Json_Question_Bundle_Info.knowledge2difficulty[j] < D){
-                        D = this.Paper_Json_Question_Bundle_Info.knowledge2difficulty[j]
-                        E_Ku = j
-                    }
+                else{
+                    Start = content.indexOf(Temp_Catcher);
                 }
-                return E_Ku
+                Img_SE.push([Start, Start + Temp_Catcher.length - 1])
+                Result_List = Img_Catcher.exec(content);
             }
-        },
-        // 返回首页分析的表格样式
-        Total_Table_Style(index){
-            if(index%2 == 1){
-                return "Total_Table_Single"
-            }else{
-                return "Total_Table_Double"
-            }
-        },
-        // 返回全卷分析选项的样式，指知识点分析/难度分析
-        Check_Total_Switch(Part){
-            if(Part == this.Paper_Total_Analyse_Focus){
-                return "Paper_Total_Analyse_Focus"
-            }else{
-                return "Paper_Total_Analyse_Unfocus"
-            }
-        },
-        // 返回功能条的样式
-        Get_Part_Row_Style(index){
-            if(this.Part_Expand[index])
-                return "Part_Row_Style_Expand"
-            return "Part_Row_Style_Collapse"
-        },
-        // 返回功能条的样式 - 题包
-        Get_Part_Row_Style_QB(index){
-            if(this.Part_Expand_QB[index])
-                return "Part_Row_Style_Expand"
-            return "Part_Row_Style_Collapse"
-        },
-        // 展开下级展示区域
-        Expand_Or_Collapse(index){
-            this.Part_Expand.splice(index, 1, !this.Part_Expand[index])
-        },
-        // 展开下级显示区域 - 题包
-        Expand_Or_Collapse_QB(index){
-            this.Part_Expand_QB.splice(index, 1, !this.Part_Expand_QB[index])
-        },
-        // 修改下级展示区域的Style
-        Get_Expand_Or_Collapse(index){
-            if(!this.Part_Expand[index])
-                return "Hidden"
-            return ""
-        },
-        // 修改下级展示区域的Style - 题包
-        Get_Expand_Or_Collapse_QB(index){
-            if(!this.Part_Expand_QB[index])
-                return "Hidden"
-            return ""
-        },
-        // 全卷分析的不同模块区域是否显示
-        Paper_Total_Analyse_Hidden(Part){
-            if(Part == this.Paper_Total_Analyse_Focus){
-                return ""
-            }else{
-                return "Hidden"
-            }
-        },
-        // 对话框是否显示
-        Hidden_Or_Not(Question_Bundle_Analyse){
-            if(!Question_Bundle_Analyse)
-                return "Hidden"
-            return ""
-        },
-        // 获取占比最大难度区间
-        Get_Max_Difficult_Gap(){
-            var Max_Gap = Math.max.apply(Math, this.Paper_Json.difficulty_area_score);
-            var Result = "";
-            for(var i = 0; i < 10; i++){
-                if(this.Paper_Json.difficulty_area_score[i] == Max_Gap){
-                    if(Result == ""){
-                        if(i != 9){
-                            Result = "0." + i + " - 0." + (i + 1);
-                        }
-                        else{
-                            Result = "0." + i + " - 1.0";
-                        }
-                    }else{
-                        if(i != 9){
-                            Result = Result + "、0." + i + " - 0." + (i + 1);
-                        }
-                        else{
-                            Result = Result + "、0." + i + " - 1.0";
+                  
+            var Img_Index = 0;
+
+            for(let i = 0; i < content.length; i++){
+                
+                if(content[i] == '$' && !latexFlag){
+                    latexFlag = true;
+                }else if(content[i] == '$' && latexFlag){
+                    latexFlag = false;
+                }
+
+                
+                if(Img_SE.length > 0 && i >= Img_SE[Img_Index][0] && i <= Img_SE[Img_Index][1]){
+                    remakeContent = remakeContent + content[i];
+                    continue;
+                }else if(Img_SE.length > 0 && i > Img_SE[Img_Index][1] && Img_Index < Img_SE.length - 1){
+                    Img_Index = Img_Index + 1
+                }
+
+                if(!latexFlag){
+                    if (Regx.test(content[i])) {
+                        if(remakeContent[remakeContent.length - 1] == '$'){
+                            remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
+                        }else{
+                            remakeContent = remakeContent + "$" + content[i] + "$";
                         }
                     }
-                }
-            }
-            this.Max_Gap = Result;
-        },
-        // 初始化总体的那张柱状图的方法
-        Init_Paper_Total_Bar(){
-
-            let myChart = echarts.init(document.getElementById('Paper_Total_Bar'));
-
-            let option = {
-                grid: {
-                x: 70,
-                y: 90,
-                x2: 30,
-                y2: 35
-                },
-                title: {
-                    text: "各大题指标变化趋势",
-                    x: "center",
-                    y: "top",
-                    textStyle: { 
-                        fontSize: 16,
-                        fontStyle: 'normal',
-                        fontWeight: 'bold',
-                    },
-                    padding: [5,5,40,25]
-                },
-                color: ["#00B0F0", "#FFC000", "#92D050"],
-                tooltip : {
-                    trigger: 'axis',
-                    axisPointer : {
-                        type : 'shadow',
-                        label : {
-                            show: true
-                        }
-                    },
-                    textStyle: { 
-                        fontSize: 14,
-                        fontStyle: 'normal',
-                        align: 'left'
-                    },
-                },
-                calculable: true,
-                legend: {
-                    data: ['指标1', '指标2', '指标3'],
-                    itemGap: 20,
-                    x: "right",
-                    y: "top",
-                    padding: [5,30,40,5],
-                    textStyle: { 
-                        fontSize: 14,
-                        fontStyle: 'normal',
-                    },
-                },
-                xAxis : [
-                {
-                    type : 'category',
-                    data : ["大题1", "大题2", "大题3", "大题4"],
-                    axisTick: {
-                        alignWithLabel: true
-                    },
-                    axisLabel:{
-                        show:true,  //这里的show用于设置是否显示x轴下的字体 默认为true
-                        interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
-                        textStyle:{   //textStyle里面写x轴下的字体的样式
-                            color:'black',
-                            fontSize:14
-                        }
-                    },
-                }
-                ],
-                yAxis : [
-                {
-                    type : 'value',
-                    name : '数量',
-                    min: 0.0,
-                    max: 0.7,
-                    axisLabel:{
-                        show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
-                        textStyle:{   //textStyle里面写y轴下的字体的样式
-                            color:'black',
-                            fontSize:14
-                        }
-                    },
-                    nameTextStyle:{
-                        color:"black", 
-                        fontSize:14,  
-                        padding:[30, 35, 15, 10]
+                    else {
+                        remakeContent = remakeContent + content[i];
                     }
-                }
-                ],
-                series : [
-                {
-                    name:'指标1',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.4, 0.3, 0.2, 0.6]
-                },
-                {
-                    name:'指标2',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.6, 0.2, 0.4, 0.6]
-                },
-                {
-                    name:'指标3',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.2, 0.4, 0.1, 0.4]
-                },
-            ]
-            };
-
-            myChart.setOption(option);
-
-            //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-            window.addEventListener('resize',function() {myChart.resize()});
-
-        },
-        // 初始化大题分析的那张柱状图的方法
-        Init_QB_Total_Bar(){
-
-            let myChart = echarts.init(document.getElementById('QB_Total_Bar'));
-
-            let option = {
-                grid: {
-                x: 70,
-                y: 90,
-                x2: 30,
-                y2: 35
-                },
-                title: {
-                    text: "大题指标变化趋势",
-                    x: "center",
-                    y: "top",
-                    textStyle: { 
-                        fontSize: 16,
-                        fontStyle: 'normal',
-                        fontWeight: 'bold',
-                    },
-                    padding: [5,5,40,25]
-                },
-                color: ["#00B0F0", "#FFC000", "#92D050"],
-                tooltip : {
-                    trigger: 'axis',
-                    axisPointer : {
-                        type : 'shadow',
-                        label : {
-                            show: true
-                        }
-                    },
-                    textStyle: { 
-                        fontSize: 14,
-                        fontStyle: 'normal',
-                        align: 'left'
-                    },
-                },
-                calculable: true,
-                legend: {
-                    data: ['指标1', '指标2', '指标3'],
-                    itemGap: 20,
-                    x: "right",
-                    y: "top",
-                    padding: [5,30,40,5],
-                    textStyle: { 
-                        fontSize: 14,
-                        fontStyle: 'normal',
-                    },
-                },
-                xAxis : [
-                {
-                    type : 'category',
-                    data : ["小题1", "小题2", "小题3", "小题4"],
-                    axisTick: {
-                        alignWithLabel: true
-                    },
-                    axisLabel:{
-                        show:true,  //这里的show用于设置是否显示x轴下的字体 默认为true
-                        interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
-                        textStyle:{   //textStyle里面写x轴下的字体的样式
-                            color:'black',
-                            fontSize:14
-                        }
-                    },
-                }
-                ],
-                yAxis : [
-                {
-                    type : 'value',
-                    name : '数量',
-                    min: 0.0,
-                    max: 0.7,
-                    axisLabel:{
-                        show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
-                        textStyle:{   //textStyle里面写y轴下的字体的样式
-                            color:'black',
-                            fontSize:14
-                        }
-                    },
-                    nameTextStyle:{
-                        color:"black", 
-                        fontSize:14,  
-                        padding:[30, 35, 15, 10]
-                    }
-                }
-                ],
-                series : [
-                {
-                    name:'指标1',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.4, 0.3, 0.2, 0.6]
-                },
-                {
-                    name:'指标2',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.6, 0.2, 0.4, 0.6]
-                },
-                {
-                    name:'指标3',
-                    type:'bar',
-                    barWidth: '20%',
-                    data: [0.2, 0.4, 0.1, 0.4]
-                },
-            ]
-            };
-
-            myChart.setOption(option);
-
-            //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-            window.addEventListener('resize',function() {myChart.resize()});
-
-        },
-        // 初始化总体的难度分析的那张环形图的方法
-        Init_Paper_Total_Difficult_Analyse(){
-
-            var chartDom = document.getElementById('Paper_Total_Difficult_Analyse');
-            var myChart = echarts.init(chartDom);
-            var option;
-
-            option = {
-                tooltip: {
-                    trigger: 'item'
-                },
-                legend: {
-                    top: '18%',
-                    right: '15%',
-                    orient: 'vertical'
-                },
-                title: {
-                    text: "各难度区间分值图",
-                    x: "center",
-                    y: "top",
-                    textStyle: { 
-                        fontSize: 16,
-                        fontStyle: 'normal',
-                        fontWeight: 'bold',
-                    },
-                    padding: [15, 5, 5, 5]
-                },
-                series: [
-                    {
-                        name: '难度区间',
-                        type: 'pie',
-                        radius: ['40%', '80%'],
-                        center: ["50%", "55%"], 
-                        avoidLabelOverlap: false,
-                        label: {
-                            show: false,
-                            position: 'center',
-                            color: 'black',
-                            fontSize: '12',
-                        },
-                        emphasis: {
-                            label: {
-                                show: true,
-                                fontSize: '24',
-                                fontWeight: 'bold'
-                            }
-                        },
-                        labelLine: {
-                            show: false
-                        },
-                        data: []
-                    }
-                ]
-            };
-
-            for(var i = 0; i < this.Paper_Json.difficulty_area_score.length; i++){
-                var name_End = ""
-                if(i != 9){
-                    name_End = "0." + (i + 1);
                 }else{
-                    name_End = "1.0";
+                    remakeContent = remakeContent + content[i];
                 }
-                option.series[0].data.push(
-                    {
-                        value: this.Paper_Json.difficulty_area_score[i], 
-                        name: "0." + i + "-" + name_End
-                    }
-                )
             }
 
-            myChart.setOption(option);
-            window.addEventListener('resize',function() {myChart.resize()});
-
+            return [remakeContent, latexFlag]
         },
-        // 初始化总体的知识点难度分布的那张柱状图的方法
-        Init_Paper_Knowledge_Difficult_Analyse(){
+        bugCheck(i){
 
-            let myChart = echarts.init(document.getElementById('Paper_Knowledge_Difficult_Analyse'));
+            var Docs = this.bugData;
 
-            let option = {
-                grid: {
-                x: 70,
-                y: 90,
-                x2: 30,
-                y2: 35
-                },
-                title: {
-                    text: "知识点平均难度",
-                    x: "center",
-                    y: "top",
-                    textStyle: { 
-                        fontSize: 16,
-                        fontStyle: 'normal',
-                        fontWeight: 'bold',
-                    },
-                    padding: [5,5,40,25]
-                },
-                color: ["#409EFD"],
-                tooltip : {
-                    trigger: 'axis',
-                    axisPointer : {
-                        type : 'shadow',
-                        label : {
-                            show: true
-                        }
-                    },
-                    textStyle: { 
-                        fontSize: 14,
-                        fontStyle: 'normal',
-                        align: 'left'
-                    },
-                },
-                calculable: true,
-                legend: {
-                    data: ['平均难度'],
-                    itemGap: 20,
-                    x: "right",
-                    y: "top",
-                    padding: [5,30,40,5],
-                    textStyle: { 
-                        fontSize: 14,
-                        fontStyle: 'normal',
-                    },
-                },
-                xAxis : [
-                    {
-                        type : 'category',
-                        data : [],
-                        axisTick: {
-                            alignWithLabel: true
-                        },
-                        axisLabel:{
-                            show:true,  //这里的show用于设置是否显示x轴下的字体 默认为true
-                            interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
-                            textStyle:{   //textStyle里面写x轴下的字体的样式
-                                color:'black',
-                                fontSize:14
-                            }
-                        },
-                    }
-                ],
-                yAxis : [
-                    {
-                        type : 'value',
-                        name : '平均难度',
-                        min: 0.0,
-                        max: 0.7,
-                        axisLabel:{
-                            show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
-                            textStyle:{   //textStyle里面写y轴下的字体的样式
-                                color:'black',
-                                fontSize:14
-                            }
-                        },
-                        nameTextStyle:{
-                            color:"black", 
-                            fontSize:14,  
-                            padding:[30, 35, 15, 10]
-                        }
-                    }
-                ],
-                series : [
-                    {
-                        name:'平均难度',
-                        type:'bar',
-                        barWidth: '20%',
-                        data: []
-                    }
-                ]
-            };
+            var Ques = Docs[i]
 
-            for(var knowledgePoint in this.Paper_Json.knowledge2difficulty){
-                option.xAxis[0].data.push(knowledgePoint);
-                option.series[0].data.push(this.Paper_Json.knowledge2difficulty[knowledgePoint])
-            }
-
-            myChart.setOption(option);
-
-            //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-            window.addEventListener('resize',function() {myChart.resize()});
-        },
-        // 初始化总体的知识点分数分布的那张饼图的方法
-        Init_Paper_Knowledge_Score_Analyse(){
-
-            var chartDom = document.getElementById('Paper_Knowledge_Score_Analyse');
-            var myChart = echarts.init(chartDom);
-            var option;
-
-            option = {
-                tooltip: {
-                    trigger: 'item',
-                    formatter: '{a} <br/>{b}：{c} 分<br/>占比：({d}%)'
-                },
-                // roseType: 'radius',
-                legend: {
-                    top: '18%',
-                    right: '15%',
-                    orient: 'vertical'
-                },
-                title: {
-                    text: "各知识点平均分值图",
-                    x: "center",
-                    y: "top",
-                    textStyle: { 
-                        fontSize: 16,
-                        fontStyle: 'normal',
-                        fontWeight: 'bold',
-                    },
-                    padding: [15, 5, 5, 5]
-                },
-                series: [
-                    {
-                        name: '分值与比例',
-                        type: 'pie',
-                        radius: ['30%', '65%'],
-                        center: ["50%", "55%"], 
-                        avoidLabelOverlap: false,
-                        label: {
-                            show: true,
-                            // position: 'center',
-                            color: 'black',
-                            fontSize: '14',
-                        },
-                        emphasis: {
-                            label: {
-                                show: true,
-                                fontSize: '18',
-                                fontWeight: 'bold',
-                            }
-                        },
-                        labelLine: {
-                            show: true,
-                            lineStyle: {
-                                color: 'red'
-                            },
-                            length: 20,
-                            length2: 0
-                        },
-                        data: [],
-                    }
-                ]
-            };
-
-            for(var i = 0; i < this.KnowledgeScore_Name_List.length; i++){
-                option.series[0].data.push(
-                    {
-                        value: this.KnowledgeScore_List[i], 
-                        name: this.KnowledgeScore_Name_List[i]
-                    }
-                )
-            }
-
-            myChart.setOption(option);
-            window.addEventListener('resize',function() {myChart.resize()});
-
-        },
-        // 初始化总体的知识点点对分布的那张关系图的办法
-        Init_Paper_Knowledge_Pair(){
-
-            let myChart = echarts.init(document.getElementById('Paper_Knowledge_Pair'));
-
-            let option = {
-                grid: {
-                    x: 600,
-                    y: 600,
-                    x2: 600,
-                    y2: 400
-                },
-                title: {
-                    text: "知识点对共现关系图",
-                    x: "center",
-                    y: "top",
-                    textStyle: { 
-                        fontSize: 16,
-                        fontStyle: 'normal',
-                        fontWeight: 'bold',
-                    },
-                    padding: [5,5,40,25]
-                },
-                tooltip : {},
-                label: {
-                    normal: {
-                        show: true
-                    }
-                },
-                legend: {
-                    data: ['知识点'],
-                    itemGap: 20,
-                    x: "right",
-                    y: "top",
-                    padding: [5,30,70,5],
-                    textStyle: { 
-                        fontSize: 14,
-                        fontStyle: 'normal',
-                    },
-                },
-                series : [
-                {
-                    name:'知识点对共现关系图',
-                    type: 'graph',
-                    layout: 'circular',
-                    symbolSize: 20,
-                    focusNodeAdjacency: true,
-                    categories: [
-                        {
-                            name: "知识点",
-                            itemStyle: {
-                                color: "#409EFD"
-                            }
-                        }
-                    ],
-                    zoom: 0.8,
-                    circular: {
-                        rotateLabel: false
-                    },
-                    label: {
-                        show: true,
-                            textStyle: {
-                                fontSize: 14
-                            },
-                            position: 'right',
-                            formatter: '{b}'
-                    },
-                    data: [],
-                    links: [],
-                    lineStyle: {
-                        opacity: 0.7,
-                        width: 2,
-                        curveness: 0.7
-                    }
-                }
-            ]
-            };
-
-            var Temp_Ku_Name_List = []
-
-            for(var j in this.Paper_Json.knowledge2difficulty){
-                option.series[0].data.push({
-                    name: j,
-                    category: 0
-                })
-                Temp_Ku_Name_List.push(j)
-            }
-
-            for(var i = 0; i < this.KnowledgePair_Name_List.length; i++){
-                var Pair = this.KnowledgePair_Name_List[i]
-                var From = Pair.split("::")[0]
-                var To = Pair.split("::")[1]
-                option.series[0].links.push({
-                    source: Temp_Ku_Name_List.indexOf(From),
-                    target: Temp_Ku_Name_List.indexOf(To),
-                    value: this.KnowledgePair_List[i],
-                    lineStyle: {
-                        color: this.Paper_Total_Ku_Pair_LineStyle(i)
-                    }
-                })
-            }
-
-            myChart.setOption(option);
-
-            //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-            window.addEventListener('resize',function() {myChart.resize()});
-
-        },
-        // 初始化大题的知识点难度分布的那张柱状图的方法
-        Init_QB_Knowledge_Difficult_Analyse(){
-
-            let myChart = echarts.init(document.getElementById('QB_Knowledge_Difficult_Analyse'));
-
-            let option = {
-                grid: {
-                x: 70,
-                y: 90,
-                x2: 30,
-                y2: 35
-                },
-                title: {
-                    text: "知识点平均难度",
-                    x: "center",
-                    y: "top",
-                    textStyle: { 
-                        fontSize: 16,
-                        fontStyle: 'normal',
-                        fontWeight: 'bold',
-                    },
-                    padding: [5,5,40,25]
-                },
-                color: ["#409EFD"],
-                tooltip : {
-                    trigger: 'axis',
-                    axisPointer : {
-                        type : 'shadow',
-                        label : {
-                            show: true
-                        }
-                    },
-                    textStyle: { 
-                        fontSize: 14,
-                        fontStyle: 'normal',
-                        align: 'left'
-                    },
-                },
-                calculable: true,
-                legend: {
-                    data: ['平均难度'],
-                    itemGap: 20,
-                    x: "right",
-                    y: "top",
-                    padding: [5,30,40,5],
-                    textStyle: { 
-                        fontSize: 14,
-                        fontStyle: 'normal',
-                    },
-                },
-                xAxis : [
-                    {
-                        type : 'category',
-                        data : [],
-                        axisTick: {
-                            alignWithLabel: true
-                        },
-                        axisLabel:{
-                            show:true,  //这里的show用于设置是否显示x轴下的字体 默认为true
-                            interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
-                            textStyle:{   //textStyle里面写x轴下的字体的样式
-                                color:'black',
-                                fontSize:14
-                            }
-                        },
-                    }
-                ],
-                yAxis : [
-                    {
-                        type : 'value',
-                        name : '平均难度',
-                        min: 0.0,
-                        max: 0.7,
-                        axisLabel:{
-                            show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
-                            textStyle:{   //textStyle里面写y轴下的字体的样式
-                                color:'black',
-                                fontSize:14
-                            }
-                        },
-                        nameTextStyle:{
-                            color:"black", 
-                            fontSize:14,  
-                            padding:[30, 35, 15, 10]
-                        }
-                    }
-                ],
-                series : [
-                    {
-                        name:'平均难度',
-                        type:'bar',
-                        barWidth: '20%',
-                        data: []
-                    }
-                ]
-            };
-
-            for(var knowledgePoint in this.Paper_Json_Question_Bundle_Info.knowledge2difficulty){
-                option.xAxis[0].data.push(knowledgePoint);
-                option.series[0].data.push(this.Paper_Json_Question_Bundle_Info.knowledge2difficulty[knowledgePoint])
-            }
-
-            myChart.setOption(option);
-
-            //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-            window.addEventListener('resize',function() {myChart.resize()});
-        },
-        // 初始化大题的知识点分数分布的那张饼图的方法
-        Init_QB_Knowledge_Score_Analyse(){
-
-            var chartDom = document.getElementById('QB_Knowledge_Score_Analyse');
-            var myChart = echarts.init(chartDom);
-            var option;
-
-            option = {
-                tooltip: {
-                    trigger: 'item',
-                    formatter: '{a} <br/>{b}：{c} 分<br/>占比：({d}%)'
-                },
-                // roseType: 'radius',
-                legend: {
-                    top: '18%',
-                    right: '15%',
-                    orient: 'vertical'
-                },
-                title: {
-                    text: "各知识点平均分值图",
-                    x: "center",
-                    y: "top",
-                    textStyle: { 
-                        fontSize: 16,
-                        fontStyle: 'normal',
-                        fontWeight: 'bold',
-                    },
-                    padding: [15, 5, 5, 5]
-                },
-                series: [
-                    {
-                        name: '分值与比例',
-                        type: 'pie',
-                        radius: ['30%', '65%'],
-                        center: ["50%", "55%"], 
-                        avoidLabelOverlap: false,
-                        label: {
-                            show: true,
-                            // position: 'center',
-                            color: 'black',
-                            fontSize: '14',
-                        },
-                        emphasis: {
-                            label: {
-                                show: true,
-                                fontSize: '18',
-                                fontWeight: 'bold',
-                            }
-                        },
-                        labelLine: {
-                            show: true,
-                            lineStyle: {
-                                color: 'red'
-                            },
-                            length: 20,
-                            length2: 0
-                        },
-                        data: [],
-                    }
-                ]
-            };
-
-            for(var i = 0; i < this.QB_KnowledgeScore_Name_List.length; i++){
-                option.series[0].data.push(
-                    {
-                        value: this.QB_KnowledgeScore_List[i], 
-                        name: this.QB_KnowledgeScore_Name_List[i]
-                    }
-                )
-            }
-
-            myChart.setOption(option);
-            window.addEventListener('resize',function() {myChart.resize()});
-
-        },
-        // 初始化大题的知识点点对分布的那张关系图的办法
-        Init_QB_Knowledge_Pair(){
-
-            let myChart = echarts.init(document.getElementById('QB_Knowledge_Pair'));
-
-            let option = {
-                grid: {
-                    x: 600,
-                    y: 600,
-                    x2: 600,
-                    y2: 400
-                },
-                title: {
-                    text: "知识点对共现关系图",
-                    x: "center",
-                    y: "top",
-                    textStyle: { 
-                        fontSize: 16,
-                        fontStyle: 'normal',
-                        fontWeight: 'bold',
-                    },
-                    padding: [5,5,40,25]
-                },
-                tooltip : {},
-                label: {
-                    normal: {
-                        show: true
-                    }
-                },
-                legend: {
-                    data: ['知识点'],
-                    itemGap: 20,
-                    x: "right",
-                    y: "top",
-                    padding: [5,30,70,5],
-                    textStyle: { 
-                        fontSize: 14,
-                        fontStyle: 'normal',
-                    },
-                },
-                series : [
-                {
-                    name:'知识点对共现关系图',
-                    type: 'graph',
-                    layout: 'circular',
-                    symbolSize: 20,
-                    focusNodeAdjacency: true,
-                    categories: [
-                        {
-                            name: "知识点",
-                            itemStyle: {
-                                color: "#409EFD"
-                            }
-                        }
-                    ],
-                    zoom: 0.8,
-                    circular: {
-                        rotateLabel: false
-                    },
-                    label: {
-                        show: true,
-                            textStyle: {
-                                fontSize: 14
-                            },
-                            position: 'right',
-                            formatter: '{b}'
-                    },
-                    data: [],
-                    links: [],
-                    lineStyle: {
-                        opacity: 0.7,
-                        width: 2,
-                        curveness: 0.7
-                    }
-                }
-            ]
-            };
-
-            var Temp_Ku_Name_List = []
-
-            for(var j in this.Paper_Json_Question_Bundle_Info.knowledge2difficulty){
-                option.series[0].data.push({
-                    name: j,
-                    category: 0
-                })
-                Temp_Ku_Name_List.push(j)
-            }
-
-            for(var i = 0; i < this.QB_KnowledgePair_Name_List.length; i++){
-                var Pair = this.QB_KnowledgePair_Name_List[i]
-                var From = Pair.split("::")[0]
-                var To = Pair.split("::")[1]
-                option.series[0].links.push({
-                    source: Temp_Ku_Name_List.indexOf(From),
-                    target: Temp_Ku_Name_List.indexOf(To),
-                    value: this.QB_KnowledgePair_List[i],
-                    lineStyle: {
-                        color: this.Paper_Total_Ku_Pair_LineStyle(i)
-                    }
-                })
-            }
-
-            myChart.setOption(option);
-
-            //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-            window.addEventListener('resize',function() {myChart.resize()});
-
-        },
-        // 返回不同颜色
-        Paper_Total_Ku_Pair_LineStyle(index){
-            if(index < 3){
-                return 'red'
+            var stem = Ques.question_stem;
+            var result = this.ChecK_Do(stem);
+            if(result[1]){
+                this.$message.error({message: "请将第 "+ (i+1).toString() + " 题题干内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                            , offset: 80});
+                return false;
             }else{
-                return '#CCC'
-            }
-        },
-        // 初始化数据的方法，不要动，放到最下面就得了
-        // 千把来行着实太长了，展开了翻起来都费劲
-        Init(){
-            this.Paper_Json = {
-            "id": "af6a45a3-46fa-41d6-ac7e-ae3842ce40fb",
-            "type": "paper",
-            "status": "OK",
-            "score": 31,
-            "difficulty_area_score": [
-                0,
-                0,
-                2,
-                12,
-                3,
-                2,
-                12,
-                0,
-                0,
-                0
-            ],
-            "difficulty_statistics": {
-                "mean": 0.47843202083341535,
-                "min": 0.29554620385169983,
-                "max": 0.6161502003669739,
-                "std": 0.11606908316104704
-            },
-            "knowledge_knowledge2num": {
-                "解析几何::代数": 1
-            },
-            "knowledge2score": {
-                "解析几何": 4,
-                "代数": 10,
-                "立体几何与平面几何": 1,
-                "三角函数": 10,
-                "统计与概率": 4
-            },
-            "knowledge2difficulty": {
-                "解析几何": 0.4028695672750473,
-                "代数": 0.5552377372980117,
-                "立体几何与平面几何": 0.4640635550022125,
-                "三角函数": 0.5189290523529053,
-                "统计与概率": 0.3971267342567444
-            },
-            "sub_question": [
-                {
-                    "id": "43482c08-8c71-4166-8490-2d991ba5be0a",
-                    "type": "PackedQues",
-                    "score": 4,
-                    "difficulty_statistics": {
-                        "mean": 0.4028695672750473,
-                        "min": 0.29554620385169983,
-                        "max": 0.5101929306983948,
-                        "std": 0.10732336342334747
-                    },
-                    "knowledge_knowledge2num": {
-                        "解析几何::代数": 1
-                    },
-                    "knowledge2difficulty": {
-                        "解析几何": 0.4028695672750473,
-                        "代数": 0.5101929306983948
-                    },
-                    "knowledge2score": {
-                        "解析几何": 4,
-                        "代数": 2
-                    },
-                    "sub_question": [
-                        {
-                            "id": "812f1b6f-cd74-41a0-9504-dc4fb9d3871b",
-                            "type": "Question",
-                            "difficulty": 0.29554620385169983,
-                            "knowledge_points": {
-                                "id": "812f1b6f-cd74-41a0-9504-dc4fb9d3871b",
-                                "一级知识点": [
-                                    "解析几何"
-                                ],
-                                "二级知识点": [
-                                    "圆锥曲线与方程"
-                                ],
-                                "三级知识点": [
-                                    "圆锥曲线",
-                                    "直线与圆锥曲线的关系"
-                                ],
-                                "四级知识点": [
-                                    "椭圆的定义、标准方程及简单几何性质",
-                                    "直线与椭圆的位置关系及其简单应用"
-                                ],
-                                "first_label": [
-                                    "1176327025812840448"
-                                ],
-                                "second_label": [
-                                    "1176329055835004928"
-                                ],
-                                "third_label": [
-                                    "1176333276336627712",
-                                    "1176333304631402496"
-                                ],
-                                "fourth_label": [
-                                    "1186906659990282315",
-                                    "1186906659990282318"
-                                ],
-                                "topk": [
-                                    [
-                                        "解析几何"
-                                    ],
-                                    [
-                                        "解析几何",
-                                        "圆锥曲线与方程"
-                                    ],
-                                    [
-                                        "解析几何",
-                                        "圆锥曲线与方程",
-                                        "圆锥曲线"
-                                    ],
-                                    [
-                                        "解析几何",
-                                        "圆锥曲线与方程",
-                                        "直线与圆锥曲线的关系"
-                                    ],
-                                    [
-                                        "解析几何",
-                                        "圆锥曲线与方程",
-                                        "直线与圆锥曲线的关系",
-                                        "直线与椭圆的位置关系及其简单应用"
-                                    ]
-                                ],
-                                "topk_label": [
-                                    [
-                                        1176327025812840448
-                                    ],
-                                    [
-                                        1176327025812840448,
-                                        1176329055835004928
-                                    ],
-                                    [
-                                        1176327025812840448,
-                                        1176329055835004928,
-                                        1176333276336627712
-                                    ],
-                                    [
-                                        1176327025812840448,
-                                        1176329055835004928,
-                                        1176333304631402496
-                                    ],
-                                    [
-                                        1176327025812840448,
-                                        1176329055835004928,
-                                        1176333304631402496,
-                                        1186906659990282318
-                                    ]
-                                ]
-                            },
-                            "score": 2
-                        },
-                        {
-                            "id": "3bd039b1-f8e1-425d-aea9-9b33990fe172",
-                            "type": "Question",
-                            "difficulty": 0.5101929306983948,
-                            "knowledge_points": {
-                                "id": "3bd039b1-f8e1-425d-aea9-9b33990fe172",
-                                "一级知识点": [
-                                    "代数",
-                                    "解析几何"
-                                ],
-                                "二级知识点": [
-                                    "函数概念与基本初等函数I"
-                                ],
-                                "三级知识点": [
-                                    "函数及其基本性质"
-                                ],
-                                "四级知识点": [],
-                                "first_label": [
-                                    "1176326814415724544",
-                                    "1176327025812840448"
-                                ],
-                                "second_label": [
-                                    "1176327246953324544"
-                                ],
-                                "third_label": [
-                                    "1176329475902939136"
-                                ],
-                                "fourth_label": [],
-                                "topk": [
-                                    [
-                                        "代数"
-                                    ],
-                                    [
-                                        "解析几何"
-                                    ],
-                                    [
-                                        "代数",
-                                        "函数概念与基本初等函数I"
-                                    ],
-                                    [
-                                        "代数",
-                                        "函数概念与基本初等函数I",
-                                        "函数及其基本性质"
-                                    ],
-                                    [
-                                        "代数",
-                                        "函数概念与基本初等函数I",
-                                        "函数及其基本性质",
-                                        "函数的概念"
-                                    ]
-                                ],
-                                "topk_label": [
-                                    [
-                                        1176326814415724544
-                                    ],
-                                    [
-                                        1176327025812840448
-                                    ],
-                                    [
-                                        1176326814415724544,
-                                        1176327246953324544
-                                    ],
-                                    [
-                                        1176326814415724544,
-                                        1176327246953324544,
-                                        1176329475902939136
-                                    ],
-                                    [
-                                        1176326814415724544,
-                                        1176327246953324544,
-                                        1176329475902939136,
-                                        1186906659990282350
-                                    ]
-                                ]
-                            },
-                            "score": 2
-                        }
-                    ]
-                },
-                {
-                    "id": "9d7f1411-677a-4e69-b34e-e87f28e95a78",
-                    "type": "PackedQues",
-                    "score": 13,
-                    "difficulty_statistics": {
-                        "mean": 0.6014587627007411,
-                        "min": 0.4640635550022125,
-                        "max": 0.6161502003669739,
-                        "std": 0.03978468727873507
-                    },
-                    "knowledge_knowledge2num": {},
-                    "knowledge2difficulty": {
-                        "立体几何与平面几何": 0.4640635550022125,
-                        "代数": 0.6096665263175964,
-                        "三角函数": 0.6161502003669739
-                    },
-                    "knowledge2score": {
-                        "立体几何与平面几何": 1,
-                        "代数": 6,
-                        "三角函数": 6
-                    },
-                    "sub_question": [
-                        {
-                            "id": "67856dca-708c-4aa2-9fd7-8850e3edafaf",
-                            "type": "PackedQues",
-                            "score": 13,
-                            "difficulty_statistics": {
-                                "mean": 0.6014587627007411,
-                                "min": 0.4640635550022125,
-                                "max": 0.6161502003669739,
-                                "std": 0.03978468727873507
-                            },
-                            "knowledge_knowledge2num": {},
-                            "knowledge2difficulty": {
-                                "立体几何与平面几何": 0.4640635550022125,
-                                "代数": 0.6096665263175964,
-                                "三角函数": 0.6161502003669739
-                            },
-                            "knowledge2score": {
-                                "立体几何与平面几何": 1,
-                                "代数": 6,
-                                "三角函数": 6
-                            },
-                            "sub_question": [
-                                {
-                                    "id": "7c2bcff3-0f75-4062-ab0d-8a9441a74d03",
-                                    "type": "Question",
-                                    "difficulty": 0.4640635550022125,
-                                    "knowledge_points": {
-                                        "id": "7c2bcff3-0f75-4062-ab0d-8a9441a74d03",
-                                        "一级知识点": [
-                                            "立体几何与平面几何"
-                                        ],
-                                        "二级知识点": [
-                                            "几何证明选讲（选考内容）"
-                                        ],
-                                        "三级知识点": [
-                                            "直线与圆的位置关系（选）"
-                                        ],
-                                        "四级知识点": [
-                                            "圆内接四边形的性质定理与判定定理"
-                                        ],
-                                        "first_label": [
-                                            "1176326911555805184"
-                                        ],
-                                        "second_label": [
-                                            "1176328518028763136"
-                                        ],
-                                        "third_label": [
-                                            "1176331976379211776"
-                                        ],
-                                        "fourth_label": [
-                                            "1186906659990282265"
-                                        ],
-                                        "topk": [
-                                            [
-                                                "立体几何与平面几何"
-                                            ],
-                                            [
-                                                "立体几何与平面几何",
-                                                "几何证明选讲（选考内容）"
-                                            ],
-                                            [
-                                                "立体几何与平面几何",
-                                                "立体几何初步",
-                                                "空间几何体"
-                                            ],
-                                            [
-                                                "立体几何与平面几何",
-                                                "几何证明选讲（选考内容）",
-                                                "直线与圆的位置关系（选）"
-                                            ],
-                                            [
-                                                "立体几何与平面几何",
-                                                "几何证明选讲（选考内容）",
-                                                "直线与圆的位置关系（选）",
-                                                "圆内接四边形的性质定理与判定定理"
-                                            ]
-                                        ],
-                                        "topk_label": [
-                                            [
-                                                1176326911555805184
-                                            ],
-                                            [
-                                                1176326911555805184,
-                                                1176328518028763136
-                                            ],
-                                            [
-                                                1176326911555805184,
-                                                1176328401812987904,
-                                                1176331650112692224
-                                            ],
-                                            [
-                                                1176326911555805184,
-                                                1176328518028763136,
-                                                1176331976379211776
-                                            ],
-                                            [
-                                                1176326911555805184,
-                                                1176328518028763136,
-                                                1176331976379211776,
-                                                1186906659990282265
-                                            ]
-                                        ]
-                                    },
-                                    "score": 1
-                                },
-                                {
-                                    "id": "ef94592e-3828-430c-a629-e23b68f392f3",
-                                    "type": "PackedQues",
-                                    "score": 12,
-                                    "difficulty_statistics": {
-                                        "mean": 0.6129083633422852,
-                                        "min": 0.6096665263175964,
-                                        "max": 0.6161502003669739,
-                                        "std": 0.0032418370246887207
-                                    },
-                                    "knowledge_knowledge2num": {},
-                                    "knowledge2difficulty": {
-                                        "代数": 0.6096665263175964,
-                                        "三角函数": 0.6161502003669739
-                                    },
-                                    "knowledge2score": {
-                                        "代数": 6,
-                                        "三角函数": 6
-                                    },
-                                    "sub_question": [
-                                        {
-                                            "id": "86ed5c6a-53b0-4dd5-8a70-9860b90897bc",
-                                            "type": "Question",
-                                            "difficulty": 0.6096665263175964,
-                                            "knowledge_points": {
-                                                "id": "86ed5c6a-53b0-4dd5-8a70-9860b90897bc",
-                                                "一级知识点": [
-                                                    "代数"
-                                                ],
-                                                "二级知识点": [
-                                                    "导数及其应用"
-                                                ],
-                                                "三级知识点": [],
-                                                "四级知识点": [],
-                                                "first_label": [
-                                                    "1176326814415724544"
-                                                ],
-                                                "second_label": [
-                                                    "1176327510267535360"
-                                                ],
-                                                "third_label": [],
-                                                "fourth_label": [],
-                                                "topk": [
-                                                    [
-                                                        "代数"
-                                                    ],
-                                                    [
-                                                        "三角函数"
-                                                    ],
-                                                    [
-                                                        "代数",
-                                                        "导数及其应用"
-                                                    ],
-                                                    [
-                                                        "三角函数",
-                                                        "基本初等函数II"
-                                                    ],
-                                                    [
-                                                        "三角函数",
-                                                        "基本初等函数II",
-                                                        "三角函数的图象与性质"
-                                                    ]
-                                                ],
-                                                "topk_label": [
-                                                    [
-                                                        1176326814415724544
-                                                    ],
-                                                    [
-                                                        1176326884557070336
-                                                    ],
-                                                    [
-                                                        1176326814415724544,
-                                                        1176327510267535360
-                                                    ],
-                                                    [
-                                                        1176326884557070336,
-                                                        1176331222201409536
-                                                    ],
-                                                    [
-                                                        1176326884557070336,
-                                                        1176331222201409536,
-                                                        1176331414615105536
-                                                    ]
-                                                ]
-                                            },
-                                            "score": 6
-                                        },
-                                        {
-                                            "id": "bf446a82-96d6-45fc-ad44-2733d1db8128",
-                                            "type": "Question",
-                                            "difficulty": 0.6161502003669739,
-                                            "knowledge_points": {
-                                                "id": "bf446a82-96d6-45fc-ad44-2733d1db8128",
-                                                "一级知识点": [
-                                                    "三角函数"
-                                                ],
-                                                "二级知识点": [
-                                                    "基本初等函数II"
-                                                ],
-                                                "三级知识点": [],
-                                                "四级知识点": [],
-                                                "first_label": [
-                                                    "1176326884557070336"
-                                                ],
-                                                "second_label": [
-                                                    "1176331222201409536"
-                                                ],
-                                                "third_label": [],
-                                                "fourth_label": [],
-                                                "topk": [
-                                                    [
-                                                        "代数"
-                                                    ],
-                                                    [
-                                                        "三角函数"
-                                                    ],
-                                                    [
-                                                        "代数",
-                                                        "函数概念与基本初等函数I"
-                                                    ],
-                                                    [
-                                                        "三角函数",
-                                                        "基本初等函数II"
-                                                    ],
-                                                    [
-                                                        "三角函数",
-                                                        "基本初等函数II",
-                                                        "三角函数的图象与性质"
-                                                    ]
-                                                ],
-                                                "topk_label": [
-                                                    [
-                                                        1176326814415724544
-                                                    ],
-                                                    [
-                                                        1176326884557070336
-                                                    ],
-                                                    [
-                                                        1176326814415724544,
-                                                        1176327246953324544
-                                                    ],
-                                                    [
-                                                        1176326884557070336,
-                                                        1176331222201409536
-                                                    ],
-                                                    [
-                                                        1176326884557070336,
-                                                        1176331222201409536,
-                                                        1176331414615105536
-                                                    ]
-                                                ]
-                                            },
-                                            "score": 6
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "id": "ac789714-5394-45f8-9641-966a74a31c67",
-                    "type": "PackedQues",
-                    "score": 12,
-                    "difficulty_statistics": {
-                        "mean": 0.37724650899569195,
-                        "min": 0.36151546239852905,
-                        "max": 0.3971267342567444,
-                        "std": 0.014831327958718265
-                    },
-                    "knowledge_knowledge2num": {},
-                    "knowledge2difficulty": {
-                        "统计与概率": 0.3971267342567444,
-                        "三角函数": 0.37309733033180237
-                    },
-                    "knowledge2score": {
-                        "统计与概率": 4,
-                        "三角函数": 4
-                    },
-                    "sub_question": [
-                        {
-                            "id": "e45b0d29-1444-445f-b71f-f733100f7e91",
-                            "type": "PackedQues",
-                            "score": 8,
-                            "difficulty_statistics": {
-                                "mean": 0.3793210983276367,
-                                "min": 0.36151546239852905,
-                                "max": 0.3971267342567444,
-                                "std": 0.017805635929107666
-                            },
-                            "knowledge_knowledge2num": {},
-                            "knowledge2difficulty": {
-                                "统计与概率": 0.3971267342567444
-                            },
-                            "knowledge2score": {
-                                "统计与概率": 4
-                            },
-                            "sub_question": [
-                                {
-                                    "id": "ded078a1-20bd-4354-b847-e7b71a02dd40",
-                                    "type": "Question",
-                                    "difficulty": 0.36151546239852905,
-                                    "knowledge_points": {
-                                        "id": "ded078a1-20bd-4354-b847-e7b71a02dd40",
-                                        "一级知识点": [],
-                                        "二级知识点": [
-                                            "概率"
-                                        ],
-                                        "三级知识点": [],
-                                        "四级知识点": [],
-                                        "first_label": [],
-                                        "second_label": [
-                                            "1176328941892542464"
-                                        ],
-                                        "third_label": [],
-                                        "fourth_label": [],
-                                        "topk": [
-                                            [
-                                                "代数"
-                                            ],
-                                            [
-                                                "三角函数"
-                                            ],
-                                            [
-                                                "统计与概率"
-                                            ],
-                                            [
-                                                "统计与概率",
-                                                "概率"
-                                            ],
-                                            [
-                                                "统计与概率",
-                                                "概率",
-                                                "概率初步"
-                                            ]
-                                        ],
-                                        "topk_label": [
-                                            [
-                                                1176326814415724544
-                                            ],
-                                            [
-                                                1176326884557070336
-                                            ],
-                                            [
-                                                1176326977637064704
-                                            ],
-                                            [
-                                                1176326977637064704,
-                                                1176328941892542464
-                                            ],
-                                            [
-                                                1176326977637064704,
-                                                1176328941892542464,
-                                                1176332504010072064
-                                            ]
-                                        ]
-                                    },
-                                    "score": 4
-                                },
-                                {
-                                    "id": "f5c073b3-e0c7-45e4-b8b4-53c97792a3fa",
-                                    "type": "Question",
-                                    "difficulty": 0.3971267342567444,
-                                    "knowledge_points": {
-                                        "id": "f5c073b3-e0c7-45e4-b8b4-53c97792a3fa",
-                                        "一级知识点": [
-                                            "统计与概率"
-                                        ],
-                                        "二级知识点": [
-                                            "概率"
-                                        ],
-                                        "三级知识点": [
-                                            "随机变量及其分布"
-                                        ],
-                                        "四级知识点": [
-                                            "离散型随机变量及其分布列",
-                                            "离散型随机变量的均值、方差"
-                                        ],
-                                        "first_label": [
-                                            "1176326977637064704"
-                                        ],
-                                        "second_label": [
-                                            "1176328941892542464"
-                                        ],
-                                        "third_label": [
-                                            "1176332538164289536"
-                                        ],
-                                        "fourth_label": [
-                                            "1186906659990282284",
-                                            "1186906659990282289"
-                                        ],
-                                        "topk": [
-                                            [
-                                                "统计与概率"
-                                            ],
-                                            [
-                                                "统计与概率",
-                                                "概率"
-                                            ],
-                                            [
-                                                "统计与概率",
-                                                "概率",
-                                                "随机变量及其分布",
-                                                "离散型随机变量及其分布列"
-                                            ],
-                                            [
-                                                "统计与概率",
-                                                "概率",
-                                                "随机变量及其分布",
-                                                "离散型随机变量的均值、方差"
-                                            ]
-                                        ],
-                                        "topk_label": [
-                                            [
-                                                1176326977637064704
-                                            ],
-                                            [
-                                                1176326977637064704,
-                                                1176328941892542464
-                                            ],
-                                            [
-                                                1176326977637064704,
-                                                1176328941892542464,
-                                                1176332538164289536,
-                                                1186906659990282284
-                                            ],
-                                            [
-                                                1176326977637064704,
-                                                1176328941892542464,
-                                                1176332538164289536,
-                                                1186906659990282289
-                                            ]
-                                        ]
-                                    },
-                                    "score": 4
-                                }
-                            ]
-                        },
-                        {
-                            "id": "b51bc253-90eb-4968-ba5f-79be3cc808b8",
-                            "type": "PackedQues",
-                            "score": 4,
-                            "difficulty_statistics": {
-                                "mean": 0.37309733033180237,
-                                "min": 0.37309733033180237,
-                                "max": 0.37309733033180237,
-                                "std": 0.0
-                            },
-                            "knowledge_knowledge2num": {},
-                            "knowledge2difficulty": {
-                                "三角函数": 0.37309733033180237
-                            },
-                            "knowledge2score": {
-                                "三角函数": 4
-                            },
-                            "sub_question": [
-                                {
-                                    "id": "7db9674f-17be-4b48-bff8-0989d31cb93c",
-                                    "type": "Question",
-                                    "difficulty": 0.37309733033180237,
-                                    "knowledge_points": {
-                                        "id": "7db9674f-17be-4b48-bff8-0989d31cb93c",
-                                        "一级知识点": [
-                                            "三角函数"
-                                        ],
-                                        "二级知识点": [
-                                            "基本初等函数II"
-                                        ],
-                                        "三级知识点": [
-                                            "三角函数的图象与性质"
-                                        ],
-                                        "四级知识点": [],
-                                        "first_label": [
-                                            "1176326884557070336"
-                                        ],
-                                        "second_label": [
-                                            "1176331222201409536"
-                                        ],
-                                        "third_label": [
-                                            "1176331414615105536"
-                                        ],
-                                        "fourth_label": [],
-                                        "topk": [
-                                            [
-                                                "三角函数"
-                                            ],
-                                            [
-                                                "三角函数",
-                                                "基本初等函数II"
-                                            ],
-                                            [
-                                                "三角函数",
-                                                "基本初等函数II",
-                                                "任意角的三角函数"
-                                            ],
-                                            [
-                                                "三角函数",
-                                                "基本初等函数II",
-                                                "三角函数的图象与性质"
-                                            ],
-                                            [
-                                                "三角函数",
-                                                "基本初等函数II",
-                                                "任意角的三角函数",
-                                                "任意角的三角函数（正弦、余弦、正切）的定义"
-                                            ]
-                                        ],
-                                        "topk_label": [
-                                            [
-                                                1176326884557070336
-                                            ],
-                                            [
-                                                1176326884557070336,
-                                                1176331222201409536
-                                            ],
-                                            [
-                                                1176326884557070336,
-                                                1176331222201409536,
-                                                1176328191527362560
-                                            ],
-                                            [
-                                                1176326884557070336,
-                                                1176331222201409536,
-                                                1176331414615105536
-                                            ],
-                                            [
-                                                1176326884557070336,
-                                                1176331222201409536,
-                                                1176328191527362560,
-                                                1186906659990282328
-                                            ]
-                                        ]
-                                    },
-                                    "score": 4
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "id": "da5146bf-6f05-47d5-bd2b-d77b77a6e576",
-                    "type": "PackedQues",
-                    "score": 2,
-                    "difficulty_statistics": {
-                        "mean": 0.4369961768388748,
-                        "min": 0.4020228981971741,
-                        "max": 0.47196945548057556,
-                        "std": 0.034973278641700745
-                    },
-                    "knowledge_knowledge2num": {},
-                    "knowledge2difficulty": {
-                        "代数": 0.4369961768388748
-                    },
-                    "knowledge2score": {
-                        "代数": 2
-                    },
-                    "sub_question": [
-                        {
-                            "id": "0b1b75ac-3053-45b5-9244-65b0dbb9d9f1",
-                            "type": "Question",
-                            "difficulty": 0.4020228981971741,
-                            "knowledge_points": {
-                                "id": "0b1b75ac-3053-45b5-9244-65b0dbb9d9f1",
-                                "一级知识点": [
-                                    "代数"
-                                ],
-                                "二级知识点": [
-                                    "计数原理"
-                                ],
-                                "三级知识点": [
-                                    "排列、组合与二项式定理"
-                                ],
-                                "四级知识点": [],
-                                "first_label": [
-                                    "1176326814415724544"
-                                ],
-                                "second_label": [
-                                    "1176327587170099200"
-                                ],
-                                "third_label": [
-                                    "1176330753466966016"
-                                ],
-                                "fourth_label": [],
-                                "topk": [
-                                    [
-                                        "代数"
-                                    ],
-                                    [
-                                        "代数",
-                                        "不等式"
-                                    ],
-                                    [
-                                        "代数",
-                                        "计数原理"
-                                    ],
-                                    [
-                                        "代数",
-                                        "计数原理",
-                                        "排列、组合与二项式定理"
-                                    ],
-                                    [
-                                        "代数",
-                                        "计数原理",
-                                        "排列、组合与二项式定理",
-                                        "排列与组合的简单应用"
-                                    ]
-                                ],
-                                "topk_label": [
-                                    [
-                                        1176326814415724544
-                                    ],
-                                    [
-                                        1176326814415724544,
-                                        1176327353807413248
-                                    ],
-                                    [
-                                        1176326814415724544,
-                                        1176327587170099200
-                                    ],
-                                    [
-                                        1176326814415724544,
-                                        1176327587170099200,
-                                        1176330753466966016
-                                    ],
-                                    [
-                                        1176326814415724544,
-                                        1176327587170099200,
-                                        1176330753466966016,
-                                        1186906659990282414
-                                    ]
-                                ]
-                            },
-                            "score": 1
-                        },
-                        {
-                            "id": "4bc1ada9-0364-45be-8f80-4960c9327c20",
-                            "type": "Question",
-                            "difficulty": 0.47196945548057556,
-                            "knowledge_points": {
-                                "id": "4bc1ada9-0364-45be-8f80-4960c9327c20",
-                                "一级知识点": [
-                                    "代数"
-                                ],
-                                "二级知识点": [
-                                    "集合"
-                                ],
-                                "三级知识点": [
-                                    "集合间的关系与运算"
-                                ],
-                                "四级知识点": [],
-                                "first_label": [
-                                    "1176326814415724544"
-                                ],
-                                "second_label": [
-                                    "1176327112077090816"
-                                ],
-                                "third_label": [
-                                    "1176329262698078208"
-                                ],
-                                "fourth_label": [],
-                                "topk": [
-                                    [
-                                        "代数"
-                                    ],
-                                    [
-                                        "代数",
-                                        "集合"
-                                    ],
-                                    [
-                                        "代数",
-                                        "集合",
-                                        "集合间的关系与运算"
-                                    ],
-                                    [
-                                        "代数",
-                                        "集合",
-                                        "集合间的关系与运算",
-                                        "集合之间的基本关系"
-                                    ],
-                                    [
-                                        "代数",
-                                        "集合",
-                                        "集合间的关系与运算",
-                                        "集合的基本运算"
-                                    ]
-                                ],
-                                "topk_label": [
-                                    [
-                                        1176326814415724544
-                                    ],
-                                    [
-                                        1176326814415724544,
-                                        1176327112077090816
-                                    ],
-                                    [
-                                        1176326814415724544,
-                                        1176327112077090816,
-                                        1176329262698078208
-                                    ],
-                                    [
-                                        1176326814415724544,
-                                        1176327112077090816,
-                                        1176329262698078208,
-                                        1186906659990282342
-                                    ],
-                                    [
-                                        1176326814415724544,
-                                        1176327112077090816,
-                                        1176329262698078208,
-                                        1186906659990282343
-                                    ]
-                                ]
-                            },
-                            "score": 1
-                        }
-                    ]
-                }
-            ]
+                Docs[i].question_stem = result[0]
             }
 
-            var Temp_Score_Dict = this.Paper_Json.knowledge2score;
-            while(Object.keys(Temp_Score_Dict).length > this.KnowledgeScore_List.length){
-                var Temp_Ku_Max_Score = -1;
-                var Temp_Ku_Max_Name = "";
-                for(var Ku in Temp_Score_Dict){
-                    if(this.KnowledgeScore_Name_List.indexOf(Ku) == -1 && Temp_Score_Dict[Ku] > Temp_Ku_Max_Score){
-                        Temp_Ku_Max_Score = Temp_Score_Dict[Ku]
-                        Temp_Ku_Max_Name = Ku
+            var answer = Ques.answer;
+            for(let j = 0; j < answer.length; j++){
+                let item = answer[j]
+                result = this.ChecK_Do(item);
+                if(result[1]){
+                    this.$message.error({message: "请将第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                            , offset: 80});
+                    return false;
+                }else{
+                    Docs[i].answer.splice(j, 1, result[0])
+                }
+            }
+
+            var analyse = Ques.analysis;
+            result = this.ChecK_Do(analyse);
+            if(result[1]){
+                this.$message.error({message: "请将第"+ (i+1).toString() + "题解析内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                            , offset: 80});
+                return false;
+                }else{
+                    Docs[i].analysis = result[0]
+            }
+        
+            var options = Ques.question_options;
+            for(let j = 0; j < options.length; j++){
+                result = this.ChecK_Do(options[j]);
+                if(result[1]){
+                    this.$message.error({message: "请将第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                            , offset: 80});
+                    return false;
+                }else{
+                    Docs[i].question_options.splice(j, 1, result[0])
+                }
+            }
+
+            var sub_Ques = Ques.sub_questions;
+            for(let j = 0; j < sub_Ques.length; j++){
+                result = this.ChecK_Do(sub_Ques[j]);
+                if(result[1]){
+                    this.$message.error({message: "请将第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容中自己输入的Latex公式完整包裹在$$符号之内！"
+                            , offset: 80});
+                    return false;
+                }else{
+                    Docs[i].sub_questions.splice(j, 1, result[0])
+                }
+            }
+            
+
+        },
+        // 负责实际检查的部分
+        ChecK_Do(content){
+
+        let remakeContent = "";
+
+        var latexFlag = false;
+        let symbolError = false;
+        let Regx = /[A-Za-z0-9]/;
+
+        var Img_Catcher = new RegExp('<img src="(.*?)">', 'g')
+        var Result_List = Img_Catcher.exec(content);
+
+        var Img_SE = [];
+        var Start = 0;
+
+        while(Result_List != null){
+            var Temp_Catcher = '<img src="' + Result_List[1] + '">';
+            if(Img_SE.length > 0){
+                Start = content.indexOf(Temp_Catcher, Img_SE[Img_SE.length - 1][1]);
+            }
+            else{
+                Start = content.indexOf(Temp_Catcher);
+            }
+            Img_SE.push([Start, Start + Temp_Catcher.length - 1])
+            Result_List = Img_Catcher.exec(content);
+        }
+        
+        var Img_Index = 0;
+
+        for(var i = 0; i < content.length; i++){
+            
+            if(content[i] == '$' && !latexFlag){
+                latexFlag = true;
+            }else if(content[i] == '$' && latexFlag){
+                latexFlag = false;
+            }
+
+            if(Img_SE.length > 0 && i >= Img_SE[Img_Index][0] && i <= Img_SE[Img_Index][1]){
+                remakeContent = remakeContent + content[i];
+                continue;
+            }else if(Img_SE.length > 0 && i > Img_SE[Img_Index][1] && Img_Index < Img_SE.length - 1){
+                Img_Index = Img_Index + 1
+                i = i - 1;
+                continue;
+            }
+
+            if(!latexFlag){
+                if (Regx.test(content[i])) {
+                    if(remakeContent[remakeContent.length - 1] == '$'){
+                        remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
+                    }else{
+                        remakeContent = remakeContent + "$" + content[i] + "$";
                     }
                 }
-                this.KnowledgeScore_Name_List.push(Temp_Ku_Max_Name)
-                this.KnowledgeScore_List.push(Temp_Ku_Max_Score)
-            }
-
-            var Temp_Pair_Dict = this.Paper_Json.knowledge_knowledge2num;
-            while(Object.keys(Temp_Pair_Dict).length > this.KnowledgePair_List.length){
-                var Temp_Pair_Max_Count = -1;
-                var Temp_Pair_Max_Name = "";
-                for(var Pair in Temp_Pair_Dict){
-                    if(this.KnowledgePair_Name_List.indexOf(Pair) == -1 && Temp_Pair_Dict[Pair] > Temp_Pair_Max_Count){
-                        Temp_Pair_Max_Count = Temp_Pair_Dict[Pair]
-                        Temp_Pair_Max_Name = Pair
-                    }
+                // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
+                else if(!(content.charCodeAt(i) > 255 || 
+                        this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 || 
+                        content[i] == ' ' || content[i] == '$' || 
+                        content.charCodeAt(i) == 10) 
+                        && !symbolError){
+                symbolError = true;
+                this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符，或将其包裹于$$符号之内" + content[i] + " ！", offset: 40});
+                remakeContent = remakeContent + content[i];
                 }
-                this.KnowledgePair_Name_List.push(Temp_Pair_Max_Name)
-                this.KnowledgePair_List.push(Temp_Pair_Max_Count)
+                else {
+                remakeContent = remakeContent + content[i];
+                }
+            }else{
+                remakeContent = remakeContent + content[i];
             }
-
-            setTimeout(()=>{
-                this.Init_Paper_Total_Bar();
-                this.Init_Paper_Total_Difficult_Analyse();
-                this.Get_Max_Difficult_Gap();
-                this.Init_Paper_Knowledge_Difficult_Analyse();
-                this.Init_Paper_Knowledge_Score_Analyse();
-                this.Init_Paper_Knowledge_Pair();
-            }, 100)
-        },
+        }
+        return [remakeContent, latexFlag]
+        }
     }
 }
 </script>
+
 <style lang="scss" scoped>
-.el-divider--horizontal{
-    display:block;
-    height:4px;
-    width:100%;
-    margin:24px 0
-}
-// 调整区块显示条
-.Part_Row_Style_Collapse{
-    border-left: 15px solid #409EFD; 
-    background: 	Gainsboro; 
-    width: 70%; 
-    margin: 5px 15% 20px 15%;
-    padding-left: 30px;
-    font-size: 16px;
-    font-weight: bold;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    cursor: pointer;
-}
-.Part_Row_Style_Expand{
-    border-left: 15px solid #409EFD; 
-    background: 	whitesmoke; 
-    width: 70%; 
-    margin: 5px 15% 20px 15%;
-    padding-left: 30px;
-    font-size: 16px;
-    font-weight: bold;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    cursor: pointer;
-}
-// 调整试卷总体条形图外框
-.Paper_Total_Bar{
-    border-radius: 10px; 
-    width: 67vw; 
-    height:300px; 
-    padding-top: 20px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
-    margin-bottom: 40px;
-}
-// 调整大题总体条形图外框
-.QB_Total_Bar{
-    border-radius: 10px; 
-    width: calc(100vw * 0.67 * 0.8);
-    height:300px; 
-    padding-top: 20px; 
-    margin-left: calc(100vw * 0.14 * 0.8); 
-    border: 3px solid #EEF5FE; 
-    margin-bottom: 40px;
-}
-// 整体难度分析
-.Paper_Total_Difficult_Analyse{
-    margin-top: 30px;
-    border-radius: 10px; 
-    width: 67vw; 
-    height:350px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
-    background: #EEF5FE;
-    margin-bottom: 40px;
-}
-// 知识点难度分析
-.Paper_Knowledge_Difficult_Analyse{
-    margin-top: 30px;
-    border-radius: 10px; 
-    width: 67vw; 
-    height:350px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
-    background: #EEF5FE;
-    margin-bottom: 40px;
-}
-// 知识点覆盖率，暂时是个占位符
-.Paper_Knowledge_Cover{
-    margin-top: 30px;
-    border-radius: 10px; 
-    width: 67vw; 
-    height:350px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
-    background: #EEF5FE;
-    margin-bottom: 40px;
-}
-// 知识点对的出现情况
-.Paper_Knowledge_Pair{
-    margin-top: 30px;
-    border-radius: 10px; 
-    width: 67vw; 
-    height:550px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
-    background: #EEF5FE;
-    margin-bottom: 40px;
-}
-// 知识点分数分析
-.Paper_Knowledge_Score_Analyse{
-    margin-top: 30px;
-    border-radius: 10px; 
-    width: 67vw; 
-    height:400px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
-    background: #EEF5FE;
-    margin-bottom: 40px;
-}
-// 题包知识点难度分析
-.QB_Knowledge_Difficult_Analyse{
-    margin-top: 30px;
-    border-radius: 10px; 
-    width: calc(100vw * 0.67 * 0.8);
-    height:350px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.14 * 0.8);  
-    border: 3px solid #EEF5FE; 
-    background: #EEF5FE;
-    margin-bottom: 40px;
-}
-// 题包知识点对的出现情况
-.QB_Knowledge_Pair{
-    margin-top: 30px;
-    border-radius: 10px; 
-    width: calc(100vw * 0.67 * 0.8);
-    height:550px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.14 * 0.8); 
-    border: 3px solid #EEF5FE; 
-    background: #EEF5FE;
-    margin-bottom: 40px;
-}
-// 题包知识点分数分析
-.QB_Knowledge_Score_Analyse{
-    margin-top: 30px;
-    border-radius: 10px; 
-    width: calc(100vw * 0.67 * 0.8);
-    height:400px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.14 * 0.8); 
-    border: 3px solid #EEF5FE; 
-    background: #EEF5FE;
-    margin-bottom: 40px;
-}
-// 隐藏用
-.Hidden{
-    display: none;
-}
-// 知识点，难度分析的组合
-.Paper_Total_Analyse_Focus{
-    margin-top: -1px;
-    height: 30px;
-    padding-top: 5px;
-    background: #409EFD;
-    color: white;
-}
-.Paper_Total_Analyse_Unfocus{
-    margin-top: -1px;
-    height: 30px;
-    padding-top: 5px;
-}
-// 表格单行，双行
-.Total_Table_Single{
-    background: transparent;
-    margin: 0 16.5vw;
-}
-.Total_Table_Double{
-    background: #F8FBFF;
-    margin: 0 16.5vw;
-}
+
 </style>

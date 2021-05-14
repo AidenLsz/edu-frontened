@@ -434,6 +434,11 @@ export default {
                     "name": "姚方舟",
                     "mail": "bfsudcs_fanzy@163.com",
                     "intro": "never goona look back"
+                    },
+                    {
+                    "name": "林鑫",
+                    "mail": "linx@mail.ustc.edu.cn",
+                    "intro": "中国科学技术大学2019级研究生在读"
                     }
                 ],
                 // 特邀工程师
@@ -488,7 +493,7 @@ export default {
                     "宁雨亭": "/members/宁雨亭.jpg",
                     "张鑫": "/members/张鑫.jpg",
                     "房松涛": "/members/房松涛.jpg",
-                    "曹智": "/members/曹智.png",
+                    "曹智": "/members/曹智.jpg",
                     "杨哲": "/members/杨哲.jpg",
                     "毛清扬": "/members/毛清扬.jpg",
                     "洪玉婷": "/members/洪玉婷.jpg",
@@ -511,6 +516,7 @@ export default {
                     "马爽": "/members/马爽.jpeg",
                     "高海涵": "/members/高海涵.jpeg",
                     "姚方舟": "/members/姚方舟.jpeg",
+                    "林鑫": "/members/林鑫.jpeg",
                     // 特邀工程师
                     "梁先锋": "/members/梁先锋.jpeg",
                     "韩浩宇": "/members/韩浩宇.jpeg",
@@ -520,7 +526,7 @@ export default {
                     "高维博": "/members/高维博.jpeg",
                     "张征": "/members/张征.jpeg",
                     // 历任成员
-                    "杨青": "/members/杨青.jpeg"
+                    "杨青": "/members/杨青.jpg"
                 }
             }
         }

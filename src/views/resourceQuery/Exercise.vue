@@ -61,26 +61,57 @@
     <!-- 搜索框行 -->
     <el-row type="flex" justify="start" class="SearchArea">
       <!-- enter.native才能监听到组件化的事件，要注意一下 -->
-        <el-col :span="20">
-          <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit">
+        <el-col :span="19" v-if="Cache_Pic[0] == ''">
+          <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit(0, '')">
             
           </el-input>
         </el-col>
-        <el-col :span="1">
+        <el-col :span="1" v-if="Cache_Pic[0] == ''">
           <el-button type="text" style="font-size: 20px; color: black;" size="small" v-if="content != ''" @click="content = ''">
             <i class="el-icon-close"></i>
           </el-button>
         </el-col>
-        <el-col :span="1">
+        <el-col :span="4" v-if="Cache_Pic[0] != ''">
+          <el-row type="flex" justify="start" style="border: 1px solid red; border-radius: 15px; height: 36px; margin: 3px">
+            <el-image :src="Cache_Pic[0]" style="height: 30px; width: 60px; margin-top: 3px; margin-left: 30px;" :preview-src-list="Cache_Pic"></el-image>
+            <el-button type="text" 
+              style="font-size: 20px; color: rgba( 0, 0, 0, 0.4); margin-left: 10px; width: 40px; display: block" 
+              size="small" 
+              @click="Clear_Pic">
+              <i class="el-icon-close"></i>
+            </el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="1" v-if="Cache_Pic[0] == ''">
+          <el-divider direction="vertical"></el-divider>
+        </el-col>
+        <el-col :span="1" :offset="16" v-if="Cache_Pic[0] != ''">
           <el-divider direction="vertical"></el-divider>
         </el-col>
         <el-col :span="1">
-          <el-button type="text" style="font-size: 18px; color: black; display: block; margin-left: -5px"  size="small" @click="simpleInput = true">
-            ∑
+          <el-button type="text" style="font-size: 22px; color: #409EFF; display: block; margin-left: -6px;"  size="small" @click="simpleInput = true">
+            &Sigma;
           </el-button>
         </el-col>
         <el-col :span="1">
-          <el-button type="text" style="font-size: 20px; display: block; margin-left: -8px;" size="small" @click="submit()">
+          <el-row type="flex" justify="start" style="line-height: 40px">
+            <div class="picSearchArea">
+              <p style="display: inline-block;">
+                <i class="el-icon-camera-solid" style="font-size: 22px;"></i>
+              </p>
+              <input
+                class="picSearch"
+                type="file"
+                @change="pictureSearch($event)"
+                accept=".jpeg, .png, .jpg"
+                ref="picSearchInput"
+                multiple="false"
+              />
+            </div>
+          </el-row>
+        </el-col>
+        <el-col :span="1">
+          <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit(0, '')">
             <i class="el-icon-search"></i>
           </el-button>
         </el-col>
@@ -254,6 +285,8 @@ export default {
       analyseReport: false,
       // 是否正在返回分析报告
       Question_Analysing: false,
+      // 暂存的图片内容
+      Cache_Pic: [""],
       // 用于分析显示的题目数据
       analyseData: {
                 "analysis": "\u5982\u56fe\uff0c\u505a\u51fa\u7ea6\u675f\u6761\u4ef6$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$\u6240\u8868\u793a\u7684\u53ef\u884c\u57df\u3002\u6613\u5f97A\u7684\u5750\u6807\u4e3a$A(1,0)$\u3002\u5f53\u76ee\u6807\u51fd\u6570\u7ecf\u8fc7A\u70b9\u65f6\uff0cz\u53d6\u5f97\u6700\u5927\u503c\uff0c\u53ef\u5f97$z=x+7 y$\u7684\u6700\u5927\u503c\u4e3a$1+7 \\times 0=1$", 
@@ -316,16 +349,56 @@ export default {
   watch:{
     sour(val) {
       this.submit();
-    }
+    },
   },
   mounted(){
     this.ToTop()
   },
   methods: {
-    // 添加监听器
-    addEnterListener(){
-      var Input = document.getElementById("ExerciseInput");
-      Input.addEventListener()
+    // 清除图片
+    Clear_Pic(){
+      this.Cache_Pic.splice(0, 1, "");
+    },
+    // 照片上传
+    pictureSearch(event){
+      if(event.target.files){
+        // 获取图片
+        let Pic = event.target.files[0];
+        // 保存读取内容用的临时变量
+        var Picresult = "";
+        // 获取this对象
+        const _this = this;
+        // 重置input组件
+        this.$refs.picSearchInput.value = "";
+        // Promise方法避免异步操作
+        var promise = new Promise(function(resolve, reject){
+          // 用文件读取来读取图片的base64格式代码
+          var reader = new FileReader();
+          reader.readAsDataURL(Pic);
+          reader.onloadend = function (e) { 
+            Picresult = e.target.result;
+            // 这里是为了先处理一下现在没有暂存图片内容的情况，防止后面忘记写，有备无患
+            _this.content = "";
+            console.log(_this.Cache_Pic);
+            if(_this.Cache_Pic[0] == ""){
+              _this.Cache_Pic.splice(0, 1, Picresult);
+              _this.Page_Index = 1;
+            }
+            // 提供resolve信息让then方法去捕捉
+            resolve('1');
+          };
+        });
+        promise.then(function(){
+          // 用捕捉到的this对象来进行搜索
+          _this.submit(1, Picresult);
+        }).catch(function(error){
+          // 报错了就打印错误
+          console.log(error)
+        })
+        
+      }else{
+        return 
+      }
     },
     // 查看单题分析报告
     Check_Analyse(ID, DatabaseName){
@@ -352,7 +425,6 @@ export default {
         emulateJSON: true
       })
       .then(function(data) {
-        console.log("Get Question Analyse Report.")
         this.analyseData = data.data.que_dic;
         this.analyseReport = true;
         this.Question_Analysing = false;
@@ -362,7 +434,11 @@ export default {
       window.scrollTo(0,0);
     },
     BackToTop(){
-      this.submit();
+      if(this.Cache_Pic[0].length > 0){
+        this.submit(1, this.Cache_Pic[0]);
+      }else{
+        this.submit(0, "");
+      }
       window.scrollTo(0,0);
     },
     // 修改翻页内容
@@ -438,9 +514,28 @@ export default {
       }
       return true
     },
-    submit() {
+    submit(type, Pic = "") {
 
       this.loading = true;
+
+      // type为1，代表图片搜索，只有当传入的图片和原来的不一样，才需要替换页数为1
+      // 而且使用图片搜索时，为了防止和普通的文字搜索混淆，把content改写为空字符串
+      // 如果与缓存的图片不一致，则说明是新图片，需要替换图片内容
+      if(type != 0){
+        this.content = "";
+        if(Pic != this.Cache_Pic[0]){
+          this.Cache_Pic.splice(0, 1, Pic);
+          this.Page_Index = 1;
+        }
+      }
+      // 默认传入一个空字符串，这代表了使用文字搜索或者同一张图片的换页操作
+      // 文字栏为空，Pic也为空字符串而触发了submit函数，说明应该是换页，继续流程即可
+      // 文字栏不为空，Pic为空字符串，说明应该是文字搜索，此时应当清理图片缓存
+      else{
+        this.Cache_Pic = [""];
+      }
+
+      // 后续逻辑和原先一致
 
       if(this.content != this.old_content){
         this.Page_Index = 1;
@@ -473,6 +568,10 @@ export default {
         if(this.database_aim[i]){
           database_list.push(this.database_name[i])
         }
+      }
+
+      if(this.Cache_Pic[0].length > 0){
+        param.append('pic', this.Cache_Pic[0]);
       }
 
       var data = JSON.stringify({
@@ -701,5 +800,25 @@ export default {
   border-radius: 18px;
   box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
   -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
+}
+// 照相机按钮使用的区域
+.picSearchArea{
+  position: relative;
+  background-color: transparent;
+  height: 36px;
+  padding-top: 4px;
+  color: #409EFF;
+  cursor: pointer;
+  margin-left: -7px;
+}
+// 照相机按钮使用的样式
+.picSearch{
+  position: absolute;
+  top: 0;
+  right: 0;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
+  width: 34px;
 }
 </style>
