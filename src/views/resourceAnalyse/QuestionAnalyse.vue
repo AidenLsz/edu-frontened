@@ -2,10 +2,7 @@
 <template>
     <div 
         style="margin: 0px 10vw 10px 10vw" 
-        ref="QuestionInfo"
-        v-loading="loading"
-        element-loading-text="转换中，请等待"
-        element-loading-spinner="el-icon-loading">
+        ref="QuestionInfo">
         <el-row style="padding-top: 15px">
             <label style="font-size: 2rem">试题分析报告</label>
         </el-row>
@@ -536,7 +533,7 @@ export default {
                 this.Similar_Question_List.push(quess[i])
                 this.Expand_List.push(false);
             }
-            this.loading = false;
+            // this.loading = false;
             this.Init();
         });  
     },

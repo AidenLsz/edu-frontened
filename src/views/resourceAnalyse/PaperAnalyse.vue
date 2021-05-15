@@ -1,11 +1,7 @@
 // 这一页面主要用于测试各类新功能的显示是否符合具体要求，等待完成后再放到正式页面上去
 
 <template>
-    <div style="min-height: 600px" ref="PaperAnalyseInfo"
-    
-          v-loading="transing"
-          element-loading-text="转换中，请等待"
-          element-loading-spinner="el-icon-loading">
+    <div style="min-height: 600px" ref="PaperAnalyseInfo">
           <!-- 试卷分析路径跳转 -->
     <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
       <el-row>
