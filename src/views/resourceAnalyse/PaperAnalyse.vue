@@ -63,9 +63,9 @@
             <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
                 <el-col :span="4">难度</el-col>
                 <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.mean)}}</el-col>
-                <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.min)}}</el-col>
-                <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.max)}}</el-col>
                 <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.std)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.max)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.min)}}</el-col>
             </el-row>
             <!-- 第二项 -->
             <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver; display: none">
