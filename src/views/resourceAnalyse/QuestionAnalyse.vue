@@ -598,7 +598,7 @@ export default {
     PDF_Switch(){
         window.scrollTo(0, 0);
         this.Part_Expand = [true, true];
-        this.loading = true;
+        // this.loading = true;
         // this.PDF_Download("Paper_Title");
         // this.PDF_Download("Paper_Total");
         // this.PDF_Download("Paper_Analyse");
@@ -647,7 +647,7 @@ export default {
                     if(part == "QuestionInfo"){
                         PDF.save("Question_Analyse_Report_" + this.Question.id + ".pdf")
                         PDF = new jsPDF('', 'pt', 'a4');
-                        this.loading = false;
+                        // this.loading = false;
                     }else{
                         PDF.addPage();
                     }

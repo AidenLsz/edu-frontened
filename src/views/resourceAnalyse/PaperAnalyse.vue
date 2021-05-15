@@ -1172,7 +1172,7 @@ export default {
         PDF_Switch(){
             window.scrollTo(0, 0);
             this.Part_Expand = [true, true, true, true];
-            this.transing = true;
+            // this.transing = true;
             // this.PDF_Download("Paper_Title");
             // this.PDF_Download("Paper_Total");
             // this.PDF_Download("Paper_Analyse");
@@ -1221,7 +1221,7 @@ export default {
                         if(part == "Paper_Detail" || part == "PaperAnalyseInfo"){
                             PDF.save("part_content.pdf")
                             PDF = new jsPDF('', 'pt', 'a4');
-                            this.transing = false;
+                            // this.transing = false;
                         }else{
                             PDF.addPage();
                         }
