@@ -533,7 +533,7 @@ export default {
                 this.Similar_Question_List.push(quess[i])
                 this.Expand_List.push(false);
             }
-            // this.loading = false;
+            this.loading = false;
             this.Init();
         });  
     },
