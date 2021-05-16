@@ -144,9 +144,8 @@
                       {{ $store.state.user.name }}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item @click.native="logout"
-                        >退出登录</el-dropdown-item
-                      >
+                      <el-dropdown-item v-if="$store.state.user.name" @click.native="goToUserPage">用户首页</el-dropdown-item>
+                      <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
                 </el-row>
@@ -308,6 +307,9 @@ export default {
       this.$router.push("/");
       location.reload();
     },
+    goToUserPage(){
+      this.$router.push("/dashboard");
+    }
     // logout() {
     //   var _this = this;
     //   this.$confirm("确认退出吗？", "提示", {
