@@ -42,21 +42,13 @@
         请选择要查询的数据库：
       </el-col>
       <!-- 0 - public, 1 - neea, 2 - iflytek -->
-      <el-col :span="2">
-        <div :class="Check_Focus_Database(0)" @click="Database_Aim(0)">
-          公共题库
-        </div>
-      </el-col>
-      <el-col :span="2" v-if="User_Check()">
-        <div :class="Check_Focus_Database(1)" @click="Database_Aim(1)">
-          NEEA
-        </div>
-      </el-col>
-      <el-col :span="2" v-if="User_Check()">
-        <div :class="Check_Focus_Database(2)" @click="Database_Aim(2)">
-          IFLYTEK
-        </div>
-      </el-col>
+      <template v-for="(item,i) in database_list">
+        <el-col :key="i" :span="2">
+          <div :class="Check_Focus_Database(i)" @click="Database_Aim(i)">
+            {{item.nick||item.name}}
+          </div>
+        </el-col>
+      </template>
     </el-row>
     <!-- 搜索框行 -->
     <el-row type="flex" justify="start" class="SearchArea">
@@ -175,22 +167,22 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 15px">
-            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
+            <el-col :span="5" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
               所属题库：{{Question.database}}
             </el-col>
-            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
+            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学科：{{Question.subject}}
             </el-col>
-            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
+            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
               题型：{{Question.type}}
             </el-col>
-            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
+            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学段：{{Question.period}}
             </el-col>
             <el-col :span="4" :offset="7" style="line-height: 40px">
               <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">查看答案与解析</el-button>
             </el-col>
-            <el-col :span="3" style="line-height: 40px">
+            <el-col :span="3" :offset="1" style="line-height: 40px">
               <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id, Question.database)">查看分析报告</el-button>
             </el-col>
         </el-row>
@@ -231,7 +223,8 @@
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
-import request from '@/common/utils/request'
+// import request from '@/common/utils/request'
+import {commonAjax} from '@/common/utils/ajax'
 
 export default {
   components: { Mathdown, ComplexInput, QuestionAnalyse },
@@ -264,14 +257,8 @@ export default {
       question_type: [],
       // 存放将要查询的数据库名称
       // public, neea, iflytek
-      database_aim: [true, false, false],
-      database_name: ['public', 'neea', 'iflytek'],
+      database_aim: [],
       database_list:[],
-      database_dict:{
-        public:'公共题库',
-        neea:'neea',
-        iflytek:'iflytek'
-      },
       // 检测是否要展开答案和解析内容
       Expand_List: [],
       // 页码
@@ -410,21 +397,19 @@ export default {
       }
     },
     initDatabaseList(){
-      let params = new FormData();
-      params.append("type", 'question');
-      params.append("action", 'R');
-      //
-      request({
-        url: this.backendIP+'/api/get_user_ig_name',
-        method: 'post',
-        data:params
-        // data:{
-        //   type:'question',
-        //   action:'R',
-        //   // access_token:this.$store.getters.token,
-        // }
-      }).then((data)=>{
-        console.log(data)
+      commonAjax(this.backendIP+'/api/get_user_ig_name',
+        {
+          type:'Question',
+          action:'R',
+        }
+      ).then((res)=>{
+        let data=res.ig_name;
+        this.database_list=[{name:'public',nick:'公共题库'}]
+        this.database_aim=[true]
+        for (var i = 0; i < data.length; i++) {
+          this.database_list.push({name:data[i]})
+          this.database_aim.push(false)
+        }
       })
     },
     // 添加监听器
@@ -437,30 +422,36 @@ export default {
 
       this.Question_Analysing = true;
 
-      let config = {
-          headers: { "Content-Type": "multipart/form-data" }
-      };
-
-      let param = new FormData();
-
-      if(DatabaseName == '公开题库'){
-        param.append("databasename", 'public');
-      }else if(DatabaseName == 'neea'){
-        param.append("databasename", 'neea');
-      }else if(DatabaseName == 'iflytek'){
-        param.append("databasename", 'iflytek');
-      }
-      param.append("ID", ID);
-
-      this.$http
-      .post(this.backendIP + "/api/questionAnalyse", param, config, {
-        emulateJSON: true
+      // let config = {
+      //     headers: { "Content-Type": "multipart/form-data" }
+      // };
+      // let param = new FormData();
+      //
+      // if(DatabaseName == '公开题库'){
+      //   param.append("databasename", 'public');
+      // }else{
+      //   param.append("databasename", DatabaseName);
+      // }
+      // param.append("ID", ID);
+      //
+      // this.$http
+      // .post(this.backendIP + "/api/questionAnalyse", param, config, {
+      //   emulateJSON: true
+      // })
+      // .then(function(data) {
+      //   this.Question_Analysing = false
+      //   this.analyseData = data.data.que_dic
+      // });
+      commonAjax(this.backendIP+'/api/questionAnalyse',
+        {
+          databasename:DatabaseName=='公开题库'?'public':DatabaseName,
+          ID:ID
+        }
+      ).then((data)=>{
+        console.log(data);
+        this.Question_Analysing = false
+        this.analyseData = data.que_dic
       })
-      .then(function(data) {
-        this.analyseData = data.data.que_dic;
-        this.analyseReport = true;
-        this.Question_Analysing = false;
-      });
     },
     ToTop(){
       window.scrollTo(0,0);
@@ -598,7 +589,7 @@ export default {
       var database_list = [];
       for(var i = 0; i < this.database_aim.length; i++){
         if(this.database_aim[i]){
-          database_list.push(this.database_name[i])
+          database_list.push(this.database_list[i].name)
         }
       }
 
@@ -616,23 +607,21 @@ export default {
       })
 
       param.append("data", data);
-
-      this.$http
-      .post(this.backendIP + "/api/search", param, config, {
-        emulateJSON: true
-      })
-      .then(function(data) {
+      commonAjax(this.backendIP+'/api/search',
+        {
+          data:data
+        }
+      ).then((data)=>{
         this.loading = false;
         this.Expand_List = [];
         this.question_list = [];
-        var quess = data.data.results;
+        var quess = data.results;
         for(var i = 0; i < quess.length; i++){
           this.question_list.push(quess[i])
           this.Expand_List.push(false);
         }
-        this.Total_Count = data.data.totalLength
-
-      });
+        this.Total_Count = data.totalLength
+      })
     },
     Check_Focus_Database(Index){
       if(this.database_aim[Index]){
@@ -711,20 +700,19 @@ export default {
 .focusDatabase{
   background: #409EFF;
   color: white;
-  border-radius: 15px;
-  margin: 0px 8px;
-  height: 30px;
-  line-height: 30px;
-
 }
 .unFocusDatabase{
   background: #F8FBFF;
   color: #409EFF;
-  border-radius: 15px;
   border: 1px solid #409EFF;
-  margin: 0px 8px;
+}
+.focusDatabase,.unFocusDatabase{
+  border-radius: 15px;
+  padding: 0px 15px;
   height: 30px;
   line-height: 30px;
+  float: left;
+  text-align: center;/*让文字水平居中*/
 }
 </style>
 
@@ -852,5 +840,7 @@ export default {
   cursor: pointer;
   opacity: 0;
   width: 34px;
+.el-pagination {
+    text-align: center;
 }
 </style>

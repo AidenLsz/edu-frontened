@@ -62,7 +62,11 @@
 
 <script>
 import vueImgVerify from "@/common/components/vue-img-verify.vue";
+<<<<<<< HEAD
 // import md5 from 'js-md5'
+=======
+import md5 from 'js-md5'
+>>>>>>> ig
 import {commonAjax} from "@/common/utils/ajax";
 import {Message } from 'element-ui'
 export default {
@@ -111,8 +115,13 @@ export default {
       // console.log(md5(this.password))
       commonAjax(this.backendIP + "/api/login",{
         username: this.account,
+<<<<<<< HEAD
         // password: md5(this.password)
         password: this.password
+=======
+        password: md5(this.password)
+        // password: this.password
+>>>>>>> ig
       }).then((data)=>{
         let userInfo={
           token:data.access_token,
