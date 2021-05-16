@@ -19,8 +19,9 @@
       </el-row>
     </el-header>
     <el-container>
-      <sideBar/>
+      <sideBar style="height:100%;background:#fff;"/>
       <el-main style="background:#fff;margin:15px;border-radius:5px;">
+        <!-- <button type="button" name="button" v-on:click="toggleSideBar()">sideBar</button> -->
         <router-view :key="$route.fullPath"></router-view>
       </el-main>
     </el-container>
@@ -42,6 +43,9 @@ export default {
     }
   },
   methods: {
+    // toggleSideBar(){
+    //   this.$store.dispatch('app/toggleSideBar')
+    // },
     // 测试退出函数
     async logout() {
       await this.$store.dispatch('user/logout')

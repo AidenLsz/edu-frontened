@@ -43,7 +43,7 @@
 
 <script>
 import $ from "jquery";
-
+import {commonAjax} from '@/common/utils/ajax'
 import * as echarts from 'echarts';
 
 export default {
@@ -86,24 +86,15 @@ export default {
       window.scrollTo(0,0);
     },
     Init_Bar(){
-      let config = {
-          headers: { "Content-Type": "multipart/form-data" }
-      };
-      let param = new FormData();
-
-      this.$http
-      .post(this.backendIP + "/api/count", param, config, {
-        emulateJSON: true
-      })
-      .then(function(data) {
-
+      commonAjax(this.backendIP + "/api/count",{}).then((data)=>{
+        console.log(data);
         var Chart_Data = {};
 
         var Paper_Data = [];
         var Question_Data = [];
         var KU_Data = [];
 
-        Chart_Data = data.data;
+        Chart_Data = data;
 
         this.Num_Paper = Chart_Data.num_paper;
         this.Num_Question = Chart_Data.num_question;
@@ -216,11 +207,11 @@ export default {
           },
           ]
       };
-      myChart.setOption(option);
+        myChart.setOption(option);
 
-      //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-      window.addEventListener('resize',function() {myChart.resize()});
-      });
+        //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+        window.addEventListener('resize',function() {myChart.resize()});
+      })
     }
   }
 };

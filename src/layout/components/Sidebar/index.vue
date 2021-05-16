@@ -18,8 +18,10 @@
       </div>
       <div style="margin:0 10px;border-bottom:solid 1px #eee">
       </div>
+      <!-- style="width:200px;background:none;border-right:none;min-height:95vh" -->
+
       <el-menu
-        style="width:200px;background:none;border-right:none;min-height:95vh"
+        style="border-right:none"
         :default-active="activeMenu"
         :collapse="isCollapse"
         :background-color="variables.menuBg"
