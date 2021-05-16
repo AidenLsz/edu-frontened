@@ -12,6 +12,7 @@
             <i class="el-icon-setting user-setting-icon" style="margin-left: 15px"></i>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人设置</el-dropdown-item>
+              <el-dropdown-item @click.native="goToMainPage">游客首页</el-dropdown-item>
               <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -47,6 +48,9 @@ export default {
     //   this.$store.dispatch('app/toggleSideBar')
     // },
     // 测试退出函数
+    goToMainPage(){
+      this.$router.push("/");
+    },
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push("/");

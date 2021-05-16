@@ -21,7 +21,7 @@
       <!-- style="width:200px;background:none;border-right:none;min-height:95vh" -->
 
       <el-menu
-        style="border-right:none"
+        style="width:200px;border-right:none"
         :default-active="activeMenu"
         :collapse="isCollapse"
         :background-color="variables.menuBg"
