@@ -159,7 +159,7 @@
       >
       <el-col :span="17" class="quesCard">
         <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
-          <el-col style="padding-bottom: 15px">
+          <el-col style="padding-bottom: 15px" >
             <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
           </el-col>
           <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
@@ -678,6 +678,11 @@ export default {
   background: #F8FBFF;
   border: 1px dashed black;
   margin-left: 5vw;
+}
+/deep/.dev-md-content{
+  img{
+    width:80%
+  }
 }
 .el-row {
   margin-bottom: 20px;
