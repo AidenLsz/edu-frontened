@@ -93,8 +93,11 @@
 <script>
 import vueImgVerify from "@/common/components/vue-img-verify.vue";
 import axios from 'axios'
+<<<<<<< HEAD
 import {commonAjax} from "@/common/utils/ajax";
 import {Message } from 'element-ui'
+=======
+>>>>>>> not encrypt
 // import md5 from 'js-md5'
 // import qs from 'qs'
 export default {
