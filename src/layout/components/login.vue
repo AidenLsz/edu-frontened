@@ -62,6 +62,7 @@
 
 <script>
 import vueImgVerify from "@/common/components/vue-img-verify.vue";
+import md5 from 'js-md5'
 
 export default {
   components: { vueImgVerify },
@@ -106,11 +107,13 @@ export default {
         alert("验证码错误");
         return;
       }
+      console.log(md5(this.password))
       this.$http
         .post(
           this.backendIP + "/api/login",
           {
             username: this.account,
+            // password: md5(this.password)
             password: this.password
           },
           {
@@ -122,12 +125,17 @@ export default {
             alert("登录失败");
             return;
           }
-          sessionStorage.accessToken = data.body.access_token;
-          sessionStorage.user = this.account;
-          sessionStorage.isAdmin = true;
-          this.visible = false;
-          this.$router.push("/user");
-          location.reload();
+          let userInfo={
+            token:data.body.access_token,
+            name:this.account,
+            // isAdmin:data.body.isAdmin,
+          }
+          this.$store.dispatch('user/setUserData', userInfo).then(() => {
+            this.$router.push("/dashboard");
+            this.visible = false;
+          }).catch((err) => {
+            alert(err)
+          })
         });
     },
     getImgCode(code) {

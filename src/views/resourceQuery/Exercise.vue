@@ -1,8 +1,8 @@
 <template>
   <div class="exercise" style="margin-bottom: 40px; margin-top: 5vh">
     <el-dialog
-        :visible.sync="simpleInput" 
-        title="LUNA输入助手" 
+        :visible.sync="simpleInput"
+        title="LUNA输入助手"
         width="65%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
@@ -61,7 +61,7 @@
       <!-- enter.native才能监听到组件化的事件，要注意一下 -->
         <el-col :span="20">
           <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit">
-            
+
           </el-input>
         </el-col>
         <el-col :span="1">
@@ -93,7 +93,7 @@
           placement="bottom-start"
           width="850"
           trigger="hover">
-          <el-checkbox-group v-model="Subject_Type">     
+          <el-checkbox-group v-model="Subject_Type">
             <el-checkbox label="语文">语文</el-checkbox>
             <el-checkbox label="数学">数学</el-checkbox>
             <el-checkbox label="英语">英语</el-checkbox>
@@ -114,7 +114,7 @@
           placement="bottom-start"
           width="510"
           trigger="hover">
-          <el-checkbox-group v-model="Period_Type">     
+          <el-checkbox-group v-model="Period_Type">
             <el-checkbox label="小学">小学</el-checkbox>
             <el-checkbox label="初中">初中</el-checkbox>
             <el-checkbox label="高中">高中</el-checkbox>
@@ -127,9 +127,9 @@
         </el-popover>
       </el-col>
     </el-row>
-    <el-row 
-      v-for="(Question, Question_Index) in question_list" 
-      :key="Question_Index" 
+    <el-row
+      v-for="(Question, Question_Index) in question_list"
+      :key="Question_Index"
       style="margin-bottom: 50px"
       >
       <el-col :span="17" class="quesCard">
@@ -173,13 +173,13 @@
         </el-row>
       </el-col>
     </el-row>
-    <el-row 
-      v-if="question_list.length == 0" 
+    <el-row
+      v-if="question_list.length == 0"
       style="margin: 50px 60px; height: 44vh; font-size: 30px"
       v-loading="loading"
       element-loading-text="加载中，请等待"
       element-loading-spinner="el-icon-loading">
-      
+
     </el-row>
     <el-row v-if="question_list.length != 0">
       <el-pagination
@@ -198,6 +198,8 @@
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
+import request from '@/common/utils/request'
+
 export default {
   components: { Mathdown, ComplexInput, QuestionAnalyse },
   name: "exercise",
@@ -231,6 +233,12 @@ export default {
       // public, neea, iflytek
       database_aim: [true, false, false],
       database_name: ['public', 'neea', 'iflytek'],
+      database_list:[],
+      database_dict:{
+        public:'公共题库',
+        neea:'neea',
+        iflytek:'iflytek'
+      },
       // 检测是否要展开答案和解析内容
       Expand_List: [],
       // 页码
@@ -312,8 +320,27 @@ export default {
   },
   mounted(){
     this.ToTop()
+    this.initDatabaseList();
   },
   methods: {
+    initDatabaseList(){
+      let params = new FormData();
+      params.append("type", 'question');
+      params.append("action", 'R');
+      //
+      request({
+        url: this.backendIP+'/api/get_user_ig_name',
+        method: 'post',
+        data:params
+        // data:{
+        //   type:'question',
+        //   action:'R',
+        //   // access_token:this.$store.getters.token,
+        // }
+      }).then((data)=>{
+        console.log(data)
+      })
+    },
     // 添加监听器
     addEnterListener(){
       var Input = document.getElementById("ExerciseInput");
@@ -347,7 +374,7 @@ export default {
       .then(function(data) {
         this.Question_Analysing = false
         this.analyseData = data.data.que_dic
-      });    
+      });
     },
     ToTop(){
       window.scrollTo(0,0);
@@ -491,8 +518,8 @@ export default {
           this.Expand_List.push(false);
         }
         this.Total_Count = data.data.totalLength
-        
-      });    
+
+      });
     },
     Check_Focus_Database(Index){
       if(this.database_aim[Index]){
@@ -545,8 +572,8 @@ export default {
   margin-left: 20px;
 }
 .quesCard{
-  // border: 3px dashed black; 
-  background: #F8FBFF; 
+  // border: 3px dashed black;
+  background: #F8FBFF;
   border: 1px dashed black;
   margin-left: 5vw;
 }
@@ -686,9 +713,9 @@ export default {
   padding-top: 12px;
 }
 .SearchArea{
-  margin-left: 5vw; 
+  margin-left: 5vw;
   border: 1px solid Silver;
-  width: 60%; 
+  width: 60%;
   border-radius: 18px;
   box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
   -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);

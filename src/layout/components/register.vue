@@ -289,7 +289,7 @@ export default {
             sessionStorage.user = this.account_reg;
             sessionStorage.isAdmin = true;
             this.visible = false;
-            this.$router.push("/user");
+            this.$router.push("/dashboard");
           })
           .catch(()=>{
             alert('用户名或手机号已注册！');
