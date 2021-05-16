@@ -93,7 +93,7 @@
 <script>
 import vueImgVerify from "@/common/components/vue-img-verify.vue";
 import axios from 'axios'
-import md5 from 'js-md5'
+// import md5 from 'js-md5'
 // import qs from 'qs'
 export default {
   components: { vueImgVerify },
@@ -270,7 +270,8 @@ export default {
         }
         let fd={
           username:this.ruleForm.username,
-          password:md5(this.ruleForm.password),
+          password:this.ruleForm.password,
+          // password:md5(this.ruleForm.password),
           phone:this.ruleForm.phone,
           email:this.ruleForm.email,
         }
