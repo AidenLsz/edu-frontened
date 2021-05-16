@@ -93,7 +93,9 @@
 <script>
 import vueImgVerify from "@/common/components/vue-img-verify.vue";
 import axios from 'axios'
-import md5 from 'js-md5'
+import {commonAjax} from "@/common/utils/ajax";
+import {Message } from 'element-ui'
+// import md5 from 'js-md5'
 // import qs from 'qs'
 export default {
   components: { vueImgVerify },
@@ -270,30 +272,48 @@ export default {
         }
         let fd={
           username:this.ruleForm.username,
-          password:md5(this.ruleForm.password),
+          password:this.ruleForm.password,
+          // password:md5(this.ruleForm.password),
           phone:this.ruleForm.phone,
           email:this.ruleForm.email,
         }
-        this.$http
-          .post(
-            this.backendIP + "/api/register",
-            fd,
-            { emulateJSON: true }
-          )
-          .then(function(data) {
-            if (data.status != 200) { //eslint-disable-line
-              alert("注册失败");
-              return;
-            }
-            sessionStorage.accessToken = data.body.access_token;
-            sessionStorage.user = this.account_reg;
-            sessionStorage.isAdmin = true;
+        commonAjax(this.backendIP + "/api/register",fd).then((data)=>{
+          let userInfo={
+            token:data.access_token,
+            name:this.ruleForm.username,
+            // isAdmin:data.body.isAdmin,
+          }
+          this.$store.dispatch('user/setUserData', userInfo).then(() => {
+            this.$router.push("/dashboard");
             this.visible = false;
-            this.$router.push("/user");
           })
-          .catch(()=>{
-            alert('用户名或手机号已注册！');
+        }).catch(()=>{
+          Message({
+            message: '注册失败！',
+            type: 'error',
+            duration: 5 * 1000
           })
+        })
+        // this.$http
+        //   .post(
+        //     this.backendIP + "/api/register",
+        //     fd,
+        //     { emulateJSON: true }
+        //   )
+        //   .then(function(data) {
+        //     if (data.status != 200) { //eslint-disable-line
+        //       alert("注册失败");
+        //       return;
+        //     }
+        //     sessionStorage.accessToken = data.body.access_token;
+        //     sessionStorage.user = this.account_reg;
+        //     sessionStorage.isAdmin = true;
+        //     this.visible = false;
+        //     this.$router.push("/dashboard");
+        //   })
+        //   .catch(()=>{
+        //     alert('用户名或手机号已注册！');
+        //   })
       });
     },
     getimgCodeOrigin(code){

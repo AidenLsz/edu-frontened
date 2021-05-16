@@ -74,26 +74,9 @@ export default {
     this.ToTop();
   },
   methods: {
-    QAS(index){
-      if(index == 0){
-        this.$router.push({ path: "/QuestionAnalyseInput" });
-        this.QuestionAnalyseSwitchFlag = false;
-      }else{
-        this.$router.push({ path: "/exercise" });
-        this.QuestionAnalyseSwitchFlag = false;
-      }
-    },
     // 跳转至试题分析的不同位置的对话框
     QuestionAnalyseSwitch(){
       this.QuestionAnalyseSwitchFlag = true;
-    },
-    PAS(index){
-      if(index == 0){
-        this.$router.push({ path: "/paperAnalyseInput" });
-        this.PaperAnalyseSwitchFlag = false;
-      }else{
-        alert("尚未完成");
-      }
     },
     // 跳转至试卷分析的不同位置的对话框
     PaperAnalyseSwitch(){
@@ -102,45 +85,7 @@ export default {
     ToTop(){
       window.scrollTo(0,0);
     },
-    submit() {
-      this.$router.push({
-        name: "Knowledge Unit",
-        params: { name: this.ku_name, knowledgeSystem: "neea" }
-      });
-    },
-    CloseFunctions(){
-      this.functionStatus = [false, false, false, false]
-      this.resourceStatus = [false, false, false, false]
-    },
-    Get_TL_Style(param){
-      if(param == 0 && this.ToolsLabelNow == '资源'){
-        return "resourceButton"
-      }else if(param == 1 && this.ToolsLabelNow == '功能'){
-        return "resourceButton"
-      }else if(param == 1 && this.ToolsLabelNow == '资源'){
-        return "sleepingButton"
-      }else if(param == 0 && this.ToolsLabelNow == '功能'){
-        return "sleepingButton"
-      }
-    },
-    changeToolsLabel(param){
-      if(param == 0){
-        this.ToolsLabelNow = '资源';
-      }else if(param == 1){
-        this.ToolsLabelNow = '功能';
-      }
-    },
-    Router_Trans(route){
-      this.$router.push({ path: route });
-    },
-    OpenFunctions(index){
-      this.functionStatus.splice(index, 1, true);
-    },
-    OpenResources(index){
-      this.resourceStatus.splice(index, 1, true);
-    },
     Init_Bar(){
-
       let config = {
           headers: { "Content-Type": "multipart/form-data" }
       };
@@ -281,16 +226,6 @@ export default {
 };
 </script>
 <style scoped>
-.link-bg {
-  padding-top: 50px;
-  background: #EEF5FE;
-  background-size: 100%;
-  position: relative;
-  min-height: 700px;
-  background-position: center;
-  background-size: cover;
-  z-index: 1;
-}
 
 /* 5. about */
 .about-area {

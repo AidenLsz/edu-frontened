@@ -62,7 +62,9 @@
 
 <script>
 import vueImgVerify from "@/common/components/vue-img-verify.vue";
-
+// import md5 from 'js-md5'
+import {commonAjax} from "@/common/utils/ajax";
+import {Message } from 'element-ui'
 export default {
   components: { vueImgVerify },
   data(){
@@ -106,29 +108,57 @@ export default {
         alert("验证码错误");
         return;
       }
-      this.$http
-        .post(
-          this.backendIP + "/api/login",
-          {
-            username: this.account,
-            password: this.password
-          },
-          {
-            emulateJSON: true,
-          }
-        )
-        .then(function(data) {
-          if (data.status != 200) { //eslint-disable-line
-            alert("登录失败");
-            return;
-          }
-          sessionStorage.accessToken = data.body.access_token;
-          sessionStorage.user = this.account;
-          sessionStorage.isAdmin = true;
+      // console.log(md5(this.password))
+      commonAjax(this.backendIP + "/api/login",{
+        username: this.account,
+        // password: md5(this.password)
+        password: this.password
+      }).then((data)=>{
+        let userInfo={
+          token:data.access_token,
+          name:this.account,
+          // isAdmin:data.body.isAdmin,
+        }
+        this.$store.dispatch('user/setUserData', userInfo).then(() => {
+          this.$router.push("/dashboard");
           this.visible = false;
-          this.$router.push("/user");
-          location.reload();
-        });
+        })
+      }).catch(()=>{
+        Message({
+          message: '用户名或密码不正确！',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      })
+      // this.$http
+      //   .post(
+      //     this.backendIP + "/api/login",
+      //     {
+      //       username: this.account,
+      //       // password: md5(this.password)
+      //       password: this.password
+      //     },
+      //     {
+      //       emulateJSON: true,
+      //     }
+      //   )
+      //   .then(function(data) {
+      //     if (data.status != 200) { //eslint-disable-line
+      //       alert("登录失败");
+      //       return;
+      //     }
+      //     let userInfo={
+      //       token:data.body.access_token,
+      //       name:this.account,
+      //       // isAdmin:data.body.isAdmin,
+      //     }
+      //     this.$store.dispatch('user/setUserData', userInfo).then(() => {
+      //       this.$router.push("/dashboard");
+      //       this.visible = false;
+      //     }).catch((err) => {
+      //       alert(err)
+      //     })
+      //   });
     },
     getImgCode(code) {
       this.imgCode = code;

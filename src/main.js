@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import App from './App.vue'
+// import User from './User.vue'
+import store from './store'
 import router from './router/index'
 import './plugins/element.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import '@/common/styles/index.scss' // global css
 import 'bootstrap/dist/js/bootstrap.min.js'
 
 import VueResource from "vue-resource";
@@ -32,5 +35,12 @@ if (process.env.NODE_ENV === "production") {
 
 new Vue({
   router,
-  render: h => h(App),
+  store,
+  render:h=> h(App),
+  // h => {
+  //   if(sessionStorage.getItem('accessToken')){
+  //     return h(User);
+  //   }
+  //   return h(App);
+  // },
 }).$mount('#app')

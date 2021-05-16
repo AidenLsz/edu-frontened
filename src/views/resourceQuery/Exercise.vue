@@ -1,14 +1,14 @@
 <template>
-  <div 
-    class="exercise" 
+  <div
+    class="exercise"
     style="margin-bottom: 40px; margin-top: 5vh"
     v-loading="Question_Analysing"
     element-loading-text="正在加载分析报告..."
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(211, 211, 211, 0.6)">
     <el-dialog
-        :visible.sync="simpleInput" 
-        title="LUNA输入助手" 
+        :visible.sync="simpleInput"
+        title="LUNA输入助手"
         width="65%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
@@ -63,7 +63,7 @@
       <!-- enter.native才能监听到组件化的事件，要注意一下 -->
         <el-col :span="19" v-if="Cache_Pic[0] == ''">
           <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit(0, '')">
-            
+
           </el-input>
         </el-col>
         <el-col :span="1" v-if="Cache_Pic[0] == ''">
@@ -74,9 +74,9 @@
         <el-col :span="4" v-if="Cache_Pic[0] != ''">
           <el-row type="flex" justify="start" style="border: 1px solid red; border-radius: 15px; height: 36px; margin: 3px">
             <el-image :src="Cache_Pic[0]" style="height: 30px; width: 60px; margin-top: 3px; margin-left: 30px;" :preview-src-list="Cache_Pic"></el-image>
-            <el-button type="text" 
-              style="font-size: 20px; color: rgba( 0, 0, 0, 0.4); margin-left: 10px; width: 40px; display: block" 
-              size="small" 
+            <el-button type="text"
+              style="font-size: 20px; color: rgba( 0, 0, 0, 0.4); margin-left: 10px; width: 40px; display: block"
+              size="small"
               @click="Clear_Pic">
               <i class="el-icon-close"></i>
             </el-button>
@@ -126,7 +126,7 @@
           placement="bottom-start"
           width="850"
           trigger="hover">
-          <el-checkbox-group v-model="Subject_Type">     
+          <el-checkbox-group v-model="Subject_Type">
             <el-checkbox label="语文">语文</el-checkbox>
             <el-checkbox label="数学">数学</el-checkbox>
             <el-checkbox label="英语">英语</el-checkbox>
@@ -147,7 +147,7 @@
           placement="bottom-start"
           width="510"
           trigger="hover">
-          <el-checkbox-group v-model="Period_Type">     
+          <el-checkbox-group v-model="Period_Type">
             <el-checkbox label="小学">小学</el-checkbox>
             <el-checkbox label="初中">初中</el-checkbox>
             <el-checkbox label="高中">高中</el-checkbox>
@@ -160,9 +160,9 @@
         </el-popover>
       </el-col>
     </el-row>
-    <el-row 
-      v-for="(Question, Question_Index) in question_list" 
-      :key="Question_Index" 
+    <el-row
+      v-for="(Question, Question_Index) in question_list"
+      :key="Question_Index"
       style="margin-bottom: 50px"
       >
       <el-col :span="17" class="quesCard">
@@ -206,13 +206,13 @@
         </el-row>
       </el-col>
     </el-row>
-    <el-row 
-      v-if="question_list.length == 0" 
+    <el-row
+      v-if="question_list.length == 0"
       style="margin: 50px 60px; height: 44vh; font-size: 30px"
       v-loading="loading"
       element-loading-text="加载中，请等待"
       element-loading-spinner="el-icon-loading">
-      
+
     </el-row>
     <el-row v-if="question_list.length != 0">
       <el-pagination
@@ -231,6 +231,8 @@
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
+import request from '@/common/utils/request'
+
 export default {
   components: { Mathdown, ComplexInput, QuestionAnalyse },
   name: "exercise",
@@ -264,6 +266,12 @@ export default {
       // public, neea, iflytek
       database_aim: [true, false, false],
       database_name: ['public', 'neea', 'iflytek'],
+      database_list:[],
+      database_dict:{
+        public:'公共题库',
+        neea:'neea',
+        iflytek:'iflytek'
+      },
       // 检测是否要展开答案和解析内容
       Expand_List: [],
       // 页码
@@ -289,27 +297,27 @@ export default {
       Cache_Pic: [""],
       // 用于分析显示的题目数据
       analyseData: {
-                "analysis": "\u5982\u56fe\uff0c\u505a\u51fa\u7ea6\u675f\u6761\u4ef6$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$\u6240\u8868\u793a\u7684\u53ef\u884c\u57df\u3002\u6613\u5f97A\u7684\u5750\u6807\u4e3a$A(1,0)$\u3002\u5f53\u76ee\u6807\u51fd\u6570\u7ecf\u8fc7A\u70b9\u65f6\uff0cz\u53d6\u5f97\u6700\u5927\u503c\uff0c\u53ef\u5f97$z=x+7 y$\u7684\u6700\u5927\u503c\u4e3a$1+7 \\times 0=1$", 
-                "answer": "1", 
-                "database": "公开题库", 
-                "id": "96ac6512-8aed-11eb-8fbd-b46bfc50aa29", 
-                "options": [], 
-                "period": "高中", 
-                "stem": "若$x,y$满足约束条件$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$，则$z=x+7 y$的最大值为$\\underline{}$", 
-                "subject": "数学", 
+                "analysis": "\u5982\u56fe\uff0c\u505a\u51fa\u7ea6\u675f\u6761\u4ef6$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$\u6240\u8868\u793a\u7684\u53ef\u884c\u57df\u3002\u6613\u5f97A\u7684\u5750\u6807\u4e3a$A(1,0)$\u3002\u5f53\u76ee\u6807\u51fd\u6570\u7ecf\u8fc7A\u70b9\u65f6\uff0cz\u53d6\u5f97\u6700\u5927\u503c\uff0c\u53ef\u5f97$z=x+7 y$\u7684\u6700\u5927\u503c\u4e3a$1+7 \\times 0=1$",
+                "answer": "1",
+                "database": "公开题库",
+                "id": "96ac6512-8aed-11eb-8fbd-b46bfc50aa29",
+                "options": [],
+                "period": "高中",
+                "stem": "若$x,y$满足约束条件$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$，则$z=x+7 y$的最大值为$\\underline{}$",
+                "subject": "数学",
                 "type": "Question",
                 "que_type": "其他",
-                "difficulty": 0.2, 
-                "discrimination": 0.3, 
+                "difficulty": 0.2,
+                "discrimination": 0.3,
 
                 "quality": 0.6,
                 "knowledge_points_frontend": {
                     "kp": [
-                        "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212", 
-                        "\u4ee3\u6570", 
-                        "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898", 
+                        "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212",
+                        "\u4ee3\u6570",
+                        "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898",
                         "\u4e0d\u7b49\u5f0f"
-                    ], 
+                    ],
                     "kp_layer": [
                         {
                         "children": [
@@ -318,28 +326,28 @@ export default {
                                 {
                                 "children": [
                                     {
-                                    "children": [], 
+                                    "children": [],
                                     "label": "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898"
-                                    }, 
+                                    },
                                     {
-                                    "children": [], 
+                                    "children": [],
                                     "label": "\u4e8c\u5143\u4e00\u6b21\u4e0d\u7b49\u5f0f\uff08\u7ec4\uff09\u8868\u793a\u7684\u5e73\u9762\u533a\u57df"
                                     }
-                                ], 
+                                ],
                                 "label": "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212"
                                 }
-                            ], 
+                            ],
                             "label": "\u4e0d\u7b49\u5f0f"
                             }
-                        ], 
+                        ],
                         "label": "\u4ee3\u6570"
                         }
-                    ], 
+                    ],
                     "kp_priority": [
-                            "\u4ee3\u6570", 
-                            "\u4e0d\u7b49\u5f0f", 
-                            "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212", 
-                            "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898", 
+                            "\u4ee3\u6570",
+                            "\u4e0d\u7b49\u5f0f",
+                            "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212",
+                            "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898",
                             "\u4e8c\u5143\u4e00\u6b21\u4e0d\u7b49\u5f0f\uff08\u7ec4\uff09\u8868\u793a\u7684\u5e73\u9762\u533a\u57df"
                     ]
                     },
@@ -353,6 +361,7 @@ export default {
   },
   mounted(){
     this.ToTop()
+    this.initDatabaseList();
   },
   methods: {
     // 清除图片
@@ -375,7 +384,7 @@ export default {
           // 用文件读取来读取图片的base64格式代码
           var reader = new FileReader();
           reader.readAsDataURL(Pic);
-          reader.onloadend = function (e) { 
+          reader.onloadend = function (e) {
             Picresult = e.target.result;
             // 这里是为了先处理一下现在没有暂存图片内容的情况，防止后面忘记写，有备无患
             _this.content = "";
@@ -395,10 +404,33 @@ export default {
           // 报错了就打印错误
           console.log(error)
         })
-        
+
       }else{
-        return 
+        return
       }
+    },
+    initDatabaseList(){
+      let params = new FormData();
+      params.append("type", 'question');
+      params.append("action", 'R');
+      //
+      request({
+        url: this.backendIP+'/api/get_user_ig_name',
+        method: 'post',
+        data:params
+        // data:{
+        //   type:'question',
+        //   action:'R',
+        //   // access_token:this.$store.getters.token,
+        // }
+      }).then((data)=>{
+        console.log(data)
+      })
+    },
+    // 添加监听器
+    addEnterListener(){
+      var Input = document.getElementById("ExerciseInput");
+      Input.addEventListener()
     },
     // 查看单题分析报告
     Check_Analyse(ID, DatabaseName){
@@ -428,7 +460,7 @@ export default {
         this.analyseData = data.data.que_dic;
         this.analyseReport = true;
         this.Question_Analysing = false;
-      });    
+      });
     },
     ToTop(){
       window.scrollTo(0,0);
@@ -599,8 +631,8 @@ export default {
           this.Expand_List.push(false);
         }
         this.Total_Count = data.data.totalLength
-        
-      });    
+
+      });
     },
     Check_Focus_Database(Index){
       if(this.database_aim[Index]){
@@ -653,8 +685,8 @@ export default {
   margin-left: 20px;
 }
 .quesCard{
-  // border: 3px dashed black; 
-  background: #F8FBFF; 
+  // border: 3px dashed black;
+  background: #F8FBFF;
   border: 1px dashed black;
   margin-left: 5vw;
 }
@@ -794,9 +826,9 @@ export default {
   padding-top: 12px;
 }
 .SearchArea{
-  margin-left: 5vw; 
+  margin-left: 5vw;
   border: 1px solid Silver;
-  width: 60%; 
+  width: 60%;
   border-radius: 18px;
   box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
   -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
