@@ -49,6 +49,21 @@
           </div>
         </el-col>
       </template>
+      <!-- <el-col :span="2">
+        <div :class="Check_Focus_Database(0)" @click="Database_Aim(0)">
+          公共题库
+        </div>
+      </el-col>
+      <el-col :span="2" v-if="User_Check()">
+        <div :class="Check_Focus_Database(1)" @click="Database_Aim(1)">
+          NEEA
+        </div>
+      </el-col>
+      <el-col :span="2" v-if="User_Check()">
+        <div :class="Check_Focus_Database(2)" @click="Database_Aim(2)">
+          IFLYTEK
+        </div>
+      </el-col>-->
     </el-row>
     <!-- 搜索框行 -->
     <el-row type="flex" justify="start" class="SearchArea">
@@ -159,7 +174,7 @@
       >
       <el-col :span="17" class="quesCard">
         <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
-          <el-col style="padding-bottom: 15px" >
+          <el-col style="padding-bottom: 15px">
             <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
           </el-col>
           <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
@@ -167,22 +182,22 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 15px">
-            <el-col :span="5" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
+            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
               所属题库：{{Question.database}}
             </el-col>
-            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
+            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学科：{{Question.subject}}
             </el-col>
             <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
               题型：{{Question.type}}
             </el-col>
-            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
+            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学段：{{Question.period}}
             </el-col>
-            <el-col :span="4" :offset="2" style="line-height: 40px">
+            <el-col :span="4" :offset="7" style="line-height: 40px">
               <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">查看答案与解析</el-button>
             </el-col>
-            <el-col :span="3" :offset="1" style="line-height: 40px">
+            <el-col :span="3" style="line-height: 40px">
               <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id, Question.database)">查看分析报告</el-button>
             </el-col>
         </el-row>
@@ -223,7 +238,6 @@
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
-// import request from '@/common/utils/request'
 import {commonAjax} from '@/common/utils/ajax'
 
 export default {
@@ -257,6 +271,8 @@ export default {
       question_type: [],
       // 存放将要查询的数据库名称
       // public, neea, iflytek
+      // database_aim: [true, false, false],
+      // database_name: ['public', 'neea', 'iflytek'],
       database_aim: [],
       database_list:[],
       // 检测是否要展开答案和解析内容
@@ -351,6 +367,22 @@ export default {
     this.initDatabaseList();
   },
   methods: {
+    initDatabaseList(){
+      this.database_list=[{name:'public',nick:'公共题库'}]
+      this.database_aim=[true]
+      commonAjax(this.backendIP+'/api/get_user_ig_name',
+        {
+          type:'Question',
+          action:'R',
+        }
+      ).then((res)=>{
+        let data=res.ig_name;
+        for (var i = 0; i < data.length; i++) {
+          this.database_list.push({name:data[i]})
+          this.database_aim.push(false)
+        }
+      })
+    },
     // 清除图片
     Clear_Pic(){
       this.Cache_Pic.splice(0, 1, "");
@@ -396,27 +428,6 @@ export default {
         return
       }
     },
-    initDatabaseList(){
-      this.database_list=[{name:'public',nick:'公共题库'}]
-      this.database_aim=[true]
-      commonAjax(this.backendIP+'/api/get_user_ig_name',
-        {
-          type:'Question',
-          action:'R',
-        }
-      ).then((res)=>{
-        let data=res.ig_name;
-        for (var i = 0; i < data.length; i++) {
-          this.database_list.push({name:data[i]})
-          this.database_aim.push(false)
-        }
-      })
-    },
-    // 添加监听器
-    addEnterListener(){
-      var Input = document.getElementById("ExerciseInput");
-      Input.addEventListener()
-    },
     // 查看单题分析报告
     Check_Analyse(ID, DatabaseName){
 
@@ -425,12 +436,15 @@ export default {
       // let config = {
       //     headers: { "Content-Type": "multipart/form-data" }
       // };
-      // let param = new FormData();
       //
+      // let param = new FormData();
+
       // if(DatabaseName == '公开题库'){
       //   param.append("databasename", 'public');
-      // }else{
-      //   param.append("databasename", DatabaseName);
+      // }else if(DatabaseName == 'neea'){
+      //   param.append("databasename", 'neea');
+      // }else if(DatabaseName == 'iflytek'){
+      //   param.append("databasename", 'iflytek');
       // }
       // param.append("ID", ID);
       //
@@ -439,8 +453,9 @@ export default {
       //   emulateJSON: true
       // })
       // .then(function(data) {
-      //   this.Question_Analysing = false
-      //   this.analyseData = data.data.que_dic
+      //   this.analyseData = data.data.que_dic;
+      //   this.analyseReport = true;
+      //   this.Question_Analysing = false;
       // });
       commonAjax(this.backendIP+'/api/questionAnalyse',
         {
@@ -448,6 +463,7 @@ export default {
           ID:ID
         }
       ).then((data)=>{
+        // console.log(data);
         this.analyseReport = true;
         this.Question_Analysing = false
         this.analyseData = data.que_dic
@@ -584,8 +600,8 @@ export default {
           headers: { "Content-Type": "multipart/form-data" }
       };
 
-      let param = new FormData();
-
+      // let param = new FormData();
+      let param={}
       var database_list = [];
       for(var i = 0; i < this.database_aim.length; i++){
         if(this.database_aim[i]){
@@ -594,7 +610,8 @@ export default {
       }
 
       if(this.Cache_Pic[0].length > 0){
-        param.append('pic', this.Cache_Pic[0]);
+        // param.append('pic', this.Cache_Pic[0]);
+        param.pic=this.Cache_Pic[0]
       }
 
       var data = JSON.stringify({
@@ -606,12 +623,27 @@ export default {
         "period": this.Period_Type
       })
 
-      param.append("data", data);
-      commonAjax(this.backendIP+'/api/search',
-        {
-          data:data
-        }
-      ).then((data)=>{
+      // param.append("data", data);
+      param.data=data
+
+      // this.$http
+      // .post(this.backendIP + "/api/search", param, config, {
+      //   emulateJSON: true
+      // })
+      // .then(function(data) {
+      //   this.loading = false;
+      //   this.Expand_List = [];
+      //   this.question_list = [];
+      //   var quess = data.data.results;
+      //   for(var i = 0; i < quess.length; i++){
+      //     this.question_list.push(quess[i])
+      //     this.Expand_List.push(false);
+      //   }
+      //   this.Total_Count = data.data.totalLength
+      //
+      // });
+      commonAjax(this.backendIP+'/api/search',param)
+      .then((data)=>{
         this.loading = false;
         this.Expand_List = [];
         this.question_list = [];
@@ -702,6 +734,24 @@ export default {
 .el-col {
   border-radius: 4px;
 }
+// .focusDatabase{
+//   background: #409EFF;
+//   color: white;
+//   border-radius: 15px;
+//   margin: 0px 8px;
+//   height: 30px;
+//   line-height: 30px;
+//
+// }
+// .unFocusDatabase{
+//   background: #F8FBFF;
+//   color: #409EFF;
+//   border-radius: 15px;
+//   border: 1px solid #409EFF;
+//   margin: 0px 8px;
+//   height: 30px;
+//   line-height: 30px;
+// }
 .focusDatabase{
   background: #409EFF;
   color: white;
@@ -845,8 +895,5 @@ export default {
   cursor: pointer;
   opacity: 0;
   width: 34px;
-}
-.el-pagination {
-    text-align: center;
 }
 </style>
