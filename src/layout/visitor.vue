@@ -164,8 +164,8 @@
     <!-- <basic-header/> -->
     <el-main>
       <router-view :key="$route.fullPath"></router-view>
+      <basic-footer/>
     </el-main>
-    <basic-footer/>
   </el-container>
 </template>
 
