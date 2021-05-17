@@ -845,6 +845,7 @@ export default {
   cursor: pointer;
   opacity: 0;
   width: 34px;
+}
 .el-pagination {
     text-align: center;
 }
