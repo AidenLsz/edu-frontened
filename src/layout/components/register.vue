@@ -95,7 +95,6 @@ import vueImgVerify from "@/common/components/vue-img-verify.vue";
 import axios from 'axios'
 import {commonAjax} from "@/common/utils/ajax";
 import {Message } from 'element-ui'
-// import qs from 'qs'
 export default {
   components: { vueImgVerify },
   data(){

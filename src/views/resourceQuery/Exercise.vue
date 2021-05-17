@@ -174,7 +174,7 @@
       >
       <el-col :span="17" class="quesCard">
         <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
-          <el-col style="padding-bottom: 15px">
+          <el-col style="padding-bottom: 15px" >
             <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
           </el-col>
           <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
@@ -182,22 +182,22 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 15px">
-            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
+            <el-col :span="5" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
               所属题库：{{Question.database}}
             </el-col>
-            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
+            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学科：{{Question.subject}}
             </el-col>
-            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
+            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
               题型：{{Question.type}}
             </el-col>
-            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
+            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学段：{{Question.period}}
             </el-col>
             <el-col :span="4" :offset="7" style="line-height: 40px">
               <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">查看答案与解析</el-button>
             </el-col>
-            <el-col :span="3" style="line-height: 40px">
+            <el-col :span="3" :offset="1" style="line-height: 40px">
               <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id, Question.database)">查看分析报告</el-button>
             </el-col>
         </el-row>
@@ -428,6 +428,11 @@ export default {
         return
       }
     },
+    // 添加监听器
+    addEnterListener(){
+      var Input = document.getElementById("ExerciseInput");
+      Input.addEventListener()
+    },
     // 查看单题分析报告
     Check_Analyse(ID, DatabaseName){
 
@@ -613,7 +618,6 @@ export default {
         // param.append('pic', this.Cache_Pic[0]);
         param.pic=this.Cache_Pic[0]
       }
-
       var data = JSON.stringify({
         "content": this.content,
         "size": 5,
@@ -895,5 +899,8 @@ export default {
   cursor: pointer;
   opacity: 0;
   width: 34px;
+}
+.el-pagination {
+    text-align: center;
 }
 </style>
