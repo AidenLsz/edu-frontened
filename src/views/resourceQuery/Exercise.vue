@@ -397,6 +397,8 @@ export default {
       }
     },
     initDatabaseList(){
+      this.database_list=[{name:'public',nick:'公共题库'}]
+      this.database_aim=[true]
       commonAjax(this.backendIP+'/api/get_user_ig_name',
         {
           type:'Question',
@@ -404,8 +406,6 @@ export default {
         }
       ).then((res)=>{
         let data=res.ig_name;
-        this.database_list=[{name:'public',nick:'公共题库'}]
-        this.database_aim=[true]
         for (var i = 0; i < data.length; i++) {
           this.database_list.push({name:data[i]})
           this.database_aim.push(false)
