@@ -173,13 +173,13 @@
             <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学科：{{Question.subject}}
             </el-col>
-            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
+            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
               题型：{{Question.type}}
             </el-col>
             <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
               学段：{{Question.period}}
             </el-col>
-            <el-col :span="4" :offset="7" style="line-height: 40px">
+            <el-col :span="4" :offset="2" style="line-height: 40px">
               <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">查看答案与解析</el-button>
             </el-col>
             <el-col :span="3" :offset="1" style="line-height: 40px">
@@ -448,7 +448,7 @@ export default {
           ID:ID
         }
       ).then((data)=>{
-        console.log(data);
+        this.analyseReport = true;
         this.Question_Analysing = false
         this.analyseData = data.que_dic
       })
