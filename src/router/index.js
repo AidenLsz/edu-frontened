@@ -2,6 +2,8 @@ import Vue from "vue";
 import Router from "vue-router";
 import VisitorRouter from '@/router/modules/visitor.js'
 import UserRouter from '@/router/modules/user.js'
+import store from '@/store'
+import {Message } from 'element-ui'
 
 // import  AppMain from '@/layout/components/AppMain'
 
@@ -23,20 +25,37 @@ const router = new Router({
 
 // 路由控制
 router.beforeEach((to, from, next) => {
+  // const route = [
+  //   "Admin",
+  //   "concept",
+  //   "knowledgePoint",
+  //   "relation",
+  //   "importNode",
+  //   "importEdge",
+  //   "bulkImport",
+  //   "importExercise",
+  //   "checkExercise",
+  // ];
   const route = [
-    "Admin",
-    "concept",
-    "knowledgePoint",
-    "relation",
-    "importNode",
-    "importEdge",
-    "bulkImport",
-    "importExercise",
-    "checkExercise",
+    "/dashboard",
+    "/user",
+    "/input/",
+    "/search/",
+    "/analysis/",
+    "/manage/",
   ];
-  if (route.indexOf(to.name) >= 0) {
-    if (!sessionStorage.user) {
-      next({ path: "/login" });
+  let isUserRoute = ()=>{
+      let arr=route.filter((r)=>to.path.includes(r))
+      return arr.length>0
+  }
+  if (isUserRoute()) {
+    if (!store.state.user.token) {
+      Message({
+        message: '您的登录信息已过期，请重新登录！',
+        type: 'error',
+        duration: 5 * 1000
+      })
+      next({ path: "/" });
     }
   }
   next();
