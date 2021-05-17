@@ -568,7 +568,7 @@ export default {
 }
 /deep/.dev-md-content{
   img{
-    width:80%
+    max-width:80%
   }
 }
 .el-row {
