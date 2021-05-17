@@ -1,11 +1,7 @@
 // 这一页面主要用于测试各类新功能的显示是否符合具体要求，等待完成后再放到正式页面上去
 
 <template>
-    <div style="min-height: 600px" ref="PaperAnalyseInfo"
-    
-          v-loading="transing"
-          element-loading-text="转换中，请等待"
-          element-loading-spinner="el-icon-loading">
+    <div style="min-height: 600px" ref="PaperAnalyseInfo">
           <!-- 试卷分析路径跳转 -->
     <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
       <el-row>
@@ -67,9 +63,9 @@
             <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver">
                 <el-col :span="4">难度</el-col>
                 <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.mean)}}</el-col>
-                <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.min)}}</el-col>
-                <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.max)}}</el-col>
                 <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.std)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.max)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json_Question_Bundle_Info.difficulty_statistics.min)}}</el-col>
             </el-row>
             <!-- 第二项 -->
             <el-row style="width: 67%; margin-left: 16.5%; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver; display: none">
@@ -1172,7 +1168,7 @@ export default {
         PDF_Switch(){
             window.scrollTo(0, 0);
             this.Part_Expand = [true, true, true, true];
-            this.transing = true;
+            // this.transing = true;
             // this.PDF_Download("Paper_Title");
             // this.PDF_Download("Paper_Total");
             // this.PDF_Download("Paper_Analyse");
@@ -1221,7 +1217,7 @@ export default {
                         if(part == "Paper_Detail" || part == "PaperAnalyseInfo"){
                             PDF.save("part_content.pdf")
                             PDF = new jsPDF('', 'pt', 'a4');
-                            this.transing = false;
+                            // this.transing = false;
                         }else{
                             PDF.addPage();
                         }

@@ -44,7 +44,7 @@
                     <!-- 右列 -->
                     <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
                       <el-row type="flex" justify="start">
-                        <span>{{Question.difficulty_statistics.mean}}</span>
+                        <span>{{Question.difficulty}}</span>
                       </el-row>
                     </el-col>
                   </el-row>
