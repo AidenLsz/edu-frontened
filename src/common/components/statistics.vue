@@ -56,7 +56,7 @@
 
 <script>
 import $ from "jquery";
-import {commonAjax} from '@/common/utils/ajax'
+// import {commonAjax} from '@/common/utils/ajax'
 import * as echarts from 'echarts';
 var BarChart;
 
