@@ -512,7 +512,7 @@ export default {
 
         var data = JSON.stringify({
             "content": content,
-            "size": 5,
+            "size": 6,
             "database": database_list,
             "page_count": 1,
             "subject": subject_list,
@@ -529,7 +529,7 @@ export default {
             this.Expand_List = [];
             this.Similar_Question_List = [];
             var quess = data.data.results;
-            for(var i = 0; i < quess.length; i++){
+            for(var i = 1; i < quess.length; i++){
                 this.Similar_Question_List.push(quess[i])
                 this.Expand_List.push(false);
             }

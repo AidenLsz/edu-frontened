@@ -24,7 +24,7 @@
         <template slot="title"></template>
         <el-row
           style="margin: 0px">
-          <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
+          <QuestionAnalyse :Ques="analyseData" :key="analyseData"></QuestionAnalyse>
         </el-row>
     </el-dialog>
     <!-- 地址框 -->
