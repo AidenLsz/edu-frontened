@@ -27,6 +27,33 @@
           <QuestionAnalyse :Ques="analyseData" :key="analyseData"></QuestionAnalyse>
         </el-row>
     </el-dialog>
+    <!-- 图片搜索的输入 -->
+    <!-- <el-dialog
+      :visible.sync="picSearchDialogShow"
+      title="使用图片搜索"
+      width="65%"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false"
+    >
+      <div id="demo"> 
+        <div class="container" v-show="panel"> 
+          <div> 
+            <img id="image" :src="url" alt="Picture"> 
+          </div>
+          <button type="button" id="button" @click="crop">确定</button>
+        </div> 
+        <div style="padding:20px;"> 
+          <div class="show"> 
+            <div class="picture" :style="'backgroundImage:url('+headerImage+')'"> 
+          </div> 
+        </div>
+        <div style="margin-top:20px;"> 
+          <input type="file" id="change" accept="image" @change="change"> 
+            <label for="change"></label> 
+          </div> 
+        </div> 
+      </div>
+    </el-dialog> -->
     <!-- 地址框 -->
     <el-row justify="start" type="flex">
       <el-col :span="7" style="margin-left: 5vw;">
@@ -238,6 +265,7 @@
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
+
 import {commonAjax} from '@/common/utils/ajax'
 
 export default {
@@ -245,6 +273,15 @@ export default {
   name: "exercise",
   data() {
     return {
+      // 图片剪切用的一系列变量
+      // 对话框显示
+      // picSearchDialogShow: true,
+      // headerImage:'', 
+      // picValue:'', 
+      // cropper:'', 
+      // croppable:false, 
+      // panel:false, 
+      // url:'',
       // 输入的简单文本
       exercise_text: "",
       // 试题文本
