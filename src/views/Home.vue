@@ -53,9 +53,9 @@
     </el-dialog>
     <!-- 功能 - 资源录入的统一接口 -->
     <el-dialog
-      :visible.sync="functionStatus[0]" 
-      title="资源录入" 
-      width="65%" 
+      :visible.sync="functionStatus[0]"
+      title="资源录入"
+      width="65%"
       :close="CloseFunctions"
       :modal-append-to-body="false"
       :close-on-click-modal="false">
@@ -120,9 +120,9 @@
     </el-dialog>
     <!-- 功能 - 查询的统一接口 -->
     <el-dialog
-      :visible.sync="functionStatus[1]" 
-      title="查询" 
-      width="65%" 
+      :visible.sync="functionStatus[1]"
+      title="查询"
+      width="65%"
       :close="CloseFunctions"
       :modal-append-to-body="false"
       :close-on-click-modal="false">
@@ -174,9 +174,9 @@
     </el-dialog>
     <!-- 功能 - 分析的统一接口 -->
     <el-dialog
-      :visible.sync="functionStatus[2]" 
-      title="分析" 
-      width="65%" 
+      :visible.sync="functionStatus[2]"
+      title="分析"
+      width="65%"
       :close="CloseFunctions"
       :modal-append-to-body="false"
       :close-on-click-modal="false">
@@ -211,9 +211,9 @@
     </el-dialog>
     <!-- 功能 - 管理的统一接口 -->
     <el-dialog
-      :visible.sync="functionStatus[3]" 
-      title="管理" 
-      width="65%" 
+      :visible.sync="functionStatus[3]"
+      title="管理"
+      width="65%"
       :close="CloseFunctions"
       :modal-append-to-body="false"
       :close-on-click-modal="false">
@@ -275,9 +275,9 @@
 
     <!-- 资源 - 学习资源的统一接口 -->
     <el-dialog
-      :visible.sync="resourceStatus[0]" 
-      title="学习资源" 
-      width="65%" 
+      :visible.sync="resourceStatus[0]"
+      title="学习资源"
+      width="65%"
       :close="CloseFunctions"
       :modal-append-to-body="false"
       :close-on-click-modal="false">
@@ -325,9 +325,9 @@
     </el-dialog>
     <!-- 资源 - 试题资源的统一接口 -->
     <el-dialog
-      :visible.sync="resourceStatus[1]" 
-      title="试题资源" 
-      width="65%" 
+      :visible.sync="resourceStatus[1]"
+      title="试题资源"
+      width="65%"
       :close="CloseFunctions"
       :modal-append-to-body="false"
       :close-on-click-modal="false">
@@ -392,9 +392,9 @@
     </el-dialog>
     <!-- 资源 - 试卷资源的统一接口 -->
     <el-dialog
-      :visible.sync="resourceStatus[2]" 
-      title="试卷资源" 
-      width="65%" 
+      :visible.sync="resourceStatus[2]"
+      title="试卷资源"
+      width="65%"
       :close="CloseFunctions"
       :modal-append-to-body="false"
       :close-on-click-modal="false">
@@ -444,9 +444,9 @@
     </el-dialog>
     <!-- 资源 - 知识体系的统一接口 -->
     <el-dialog
-      :visible.sync="resourceStatus[3]" 
-      title="知识体系" 
-      width="65%" 
+      :visible.sync="resourceStatus[3]"
+      title="知识体系"
+      width="65%"
       :close="CloseFunctions"
       :modal-append-to-body="false"
       :close-on-click-modal="false">
@@ -676,7 +676,7 @@
         </el-col>
       </el-row>
     </section>
-    
+
     <!-- 图标区域-area -->
     <section>
       <el-row style="margin-top: 50px;">
@@ -690,7 +690,8 @@
           <el-divider></el-divider>
         </el-col>
       </el-row>
-      <el-row style="margin-top: 40px; padding-bottom: 40px">
+      <statistics/>
+      <!-- <el-row style="margin-top: 40px; padding-bottom: 40px">
         <el-col :span="4" :offset="4" class="partData">
           <el-row>
             <el-col :span="12">
@@ -740,7 +741,7 @@
       </el-row>
       <el-row>
         <div id="data_chart" class="data_chart"></div>
-      </el-row>
+      </el-row> -->
     </section>
     <!-- cta-area-end -->
   </div>
@@ -748,13 +749,13 @@
 <script>
 
 import $ from "jquery";
+import statistics from '@/common/components/statistics'
+// import * as echarts from 'echarts';
 
-import * as echarts from 'echarts';
-
-var BarChart;
+// var BarChart;
 
 export default {
-  components: { },
+  components: { statistics},
   name: "Home",
   data() {
     return {
@@ -776,7 +777,7 @@ export default {
     };
   },
   mounted() {
-    this.Init_Bar();
+    // this.Init_Bar();
     // data - background
     $("[data-background]").each(function() {
       $(this).css(
@@ -792,13 +793,13 @@ export default {
       this.Count_Type = type;
       this.Redraw_Bar();
     },
-    Get_Count_Style(type){
-      if(type == this.Count_Type){
-        return "resourceButton"
-      }else{
-        return "sleepingButton"
-      }
-    },
+    // Get_Count_Style(type){
+    //   if(type == this.Count_Type){
+    //     return "resourceButton"
+    //   }else{
+    //     return "sleepingButton"
+    //   }
+    // },
     // 获取首页统计表格的按钮的样式
     QAS(index){
       if(index == 0){
@@ -866,158 +867,158 @@ export default {
       this.resourceStatus.splice(index, 1, true);
     },
     // 重绘统计表图
-    Redraw_Bar(){
-      if (BarChart != null && BarChart != "" && BarChart != undefined) {
-        BarChart.dispose();//销毁
-      }
-      BarChart = echarts.init(document.getElementById('data_chart'));
-        let option = {
-          grid: {
-            x: 70,
-            y: 90,
-            x2: 30,
-            y2: 35
-          },
-          title: {
-              text: "各学科数据统计",
-              x: "center",
-              y: "top",
-              textStyle: { 
-                  fontSize: 16,
-                  fontStyle: 'normal',
-                  fontWeight: 'bold',
-              },
-              padding: [5,5,40,25]
-          },
-          color: ['#409EFD'],
-          tooltip : {
-              trigger: 'axis',
-              axisPointer : {
-                  type : 'shadow',
-                  label : {
-                      show: true
-                  }
-              },
-              textStyle: { 
-                  fontSize: 14,
-                  fontStyle: 'normal',
-                  align: 'left'
-              },
-          },
-          calculable: true,
-          legend: {
-              data: [],
-              itemGap: 20,
-              x: "right",
-              y: "top",
-              padding: [5,30,40,5],
-              textStyle: { 
-                  fontSize: 14,
-                  fontStyle: 'normal',
-              },
-          },
-          xAxis : [
-          {
-              type : 'category',
-              data : this.Chart_Data.list_sub,
-              axisTick: {
-                  alignWithLabel: true
-              },
-              axisLabel:{
-                  show:true,  //这里的show用于设置是否显示x轴下的字体 默认为true
-                  interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
-                  textStyle:{   //textStyle里面写x轴下的字体的样式
-                      color:'black',
-                      fontSize:14
-                  }
-              },
-          }
-          ],
-          yAxis : [
-          {
-              type : 'value',
-              name : '数量',
-              axisLabel:{
-                  show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
-                  textStyle:{   //textStyle里面写y轴下的字体的样式
-                      color:'black',
-                      fontSize:14
-                  }
-              },
-              nameTextStyle:{
-                  color:"black", 
-                  fontSize:14,  
-                  padding:[30, 35, 15, 10]
-              }
-          }
-          ],
-          series: []
-      };
-
-      if(this.Count_Type == 'Question'){
-        option.legend.data = ['试题']
-        option.series = [{
-              name:'试题',
-              type:'bar',
-              barWidth: '30%',
-              data: this.Question_Data
-          }]
-      }else if(this.Count_Type == 'Paper'){
-        option.legend.data = ['试卷']
-        option.series = [{
-              name:'试卷',
-              type:'bar',
-              barWidth: '30%',
-              data: this.Paper_Data
-          }]
-      }else if(this.Count_Type == 'KU'){
-        option.legend.data = ['知识单元']
-        option.series = [{
-              name:'知识单元',
-              type:'bar',
-              barWidth: '30%',
-              data: this.KU_Data
-          }]
-      }
-      console.log(option.series)
-      BarChart.setOption(option);
-  
-      //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-      window.addEventListener('resize',function() {BarChart.resize()});
-    },
+    // Redraw_Bar(){
+    //   if (BarChart != null && BarChart != "" && BarChart != undefined) {
+    //     BarChart.dispose();//销毁
+    //   }
+    //   BarChart = echarts.init(document.getElementById('data_chart'));
+    //     let option = {
+    //       grid: {
+    //         x: 70,
+    //         y: 90,
+    //         x2: 30,
+    //         y2: 35
+    //       },
+    //       title: {
+    //           text: "各学科数据统计",
+    //           x: "center",
+    //           y: "top",
+    //           textStyle: {
+    //               fontSize: 16,
+    //               fontStyle: 'normal',
+    //               fontWeight: 'bold',
+    //           },
+    //           padding: [5,5,40,25]
+    //       },
+    //       color: ['#409EFD'],
+    //       tooltip : {
+    //           trigger: 'axis',
+    //           axisPointer : {
+    //               type : 'shadow',
+    //               label : {
+    //                   show: true
+    //               }
+    //           },
+    //           textStyle: {
+    //               fontSize: 14,
+    //               fontStyle: 'normal',
+    //               align: 'left'
+    //           },
+    //       },
+    //       calculable: true,
+    //       legend: {
+    //           data: [],
+    //           itemGap: 20,
+    //           x: "right",
+    //           y: "top",
+    //           padding: [5,30,40,5],
+    //           textStyle: {
+    //               fontSize: 14,
+    //               fontStyle: 'normal',
+    //           },
+    //       },
+    //       xAxis : [
+    //       {
+    //           type : 'category',
+    //           data : this.Chart_Data.list_sub,
+    //           axisTick: {
+    //               alignWithLabel: true
+    //           },
+    //           axisLabel:{
+    //               show:true,  //这里的show用于设置是否显示x轴下的字体 默认为true
+    //               interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
+    //               textStyle:{   //textStyle里面写x轴下的字体的样式
+    //                   color:'black',
+    //                   fontSize:14
+    //               }
+    //           },
+    //       }
+    //       ],
+    //       yAxis : [
+    //       {
+    //           type : 'value',
+    //           name : '数量',
+    //           axisLabel:{
+    //               show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
+    //               textStyle:{   //textStyle里面写y轴下的字体的样式
+    //                   color:'black',
+    //                   fontSize:14
+    //               }
+    //           },
+    //           nameTextStyle:{
+    //               color:"black",
+    //               fontSize:14,
+    //               padding:[30, 35, 15, 10]
+    //           }
+    //       }
+    //       ],
+    //       series: []
+    //   };
+    //
+    //   if(this.Count_Type == 'Question'){
+    //     option.legend.data = ['试题']
+    //     option.series = [{
+    //           name:'试题',
+    //           type:'bar',
+    //           barWidth: '30%',
+    //           data: this.Question_Data
+    //       }]
+    //   }else if(this.Count_Type == 'Paper'){
+    //     option.legend.data = ['试卷']
+    //     option.series = [{
+    //           name:'试卷',
+    //           type:'bar',
+    //           barWidth: '30%',
+    //           data: this.Paper_Data
+    //       }]
+    //   }else if(this.Count_Type == 'KU'){
+    //     option.legend.data = ['知识单元']
+    //     option.series = [{
+    //           name:'知识单元',
+    //           type:'bar',
+    //           barWidth: '30%',
+    //           data: this.KU_Data
+    //       }]
+    //   }
+    //   console.log(option.series)
+    //   BarChart.setOption(option);
+    //
+    //   //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+    //   window.addEventListener('resize',function() {BarChart.resize()});
+    // },
     // 初始化统计表图
-    Init_Bar(){
-      
-      let config = {
-          headers: { "Content-Type": "multipart/form-data" }
-      };
-      let param = new FormData();
-
-      this.$http
-      .post(this.backendIP + "/api/count", param, config, {
-        emulateJSON: true
-      })
-      .then(function(data) {
-
-        this.Chart_Data = {};
-
-        this.Paper_Data = [];
-        this.Question_Data = [];
-        this.KU_Data = [];
-
-        this.Chart_Data = data.data;
-
-        this.Num_Paper = this.Chart_Data.num_paper;
-        this.Num_Question = this.Chart_Data.num_question;
-        this.Num_KU = this.Chart_Data.num_knowledge;
-        for(var index = 0; index < this.Chart_Data.num_sub.length; index ++){
-          this.Paper_Data.push(this.Chart_Data.num_sub[index].paper);
-          this.Question_Data.push(this.Chart_Data.num_sub[index].question);
-          this.KU_Data.push(this.Chart_Data.num_sub[index].knowledge);
-        }
-        this.Redraw_Bar();
-      });
-    }
+    // Init_Bar(){
+    //
+    //   let config = {
+    //       headers: { "Content-Type": "multipart/form-data" }
+    //   };
+    //   let param = new FormData();
+    //
+    //   this.$http
+    //   .post(this.backendIP + "/api/count", param, config, {
+    //     emulateJSON: true
+    //   })
+    //   .then(function(data) {
+    //
+    //     this.Chart_Data = {};
+    //
+    //     this.Paper_Data = [];
+    //     this.Question_Data = [];
+    //     this.KU_Data = [];
+    //
+    //     this.Chart_Data = data.data;
+    //
+    //     this.Num_Paper = this.Chart_Data.num_paper;
+    //     this.Num_Question = this.Chart_Data.num_question;
+    //     this.Num_KU = this.Chart_Data.num_knowledge;
+    //     for(var index = 0; index < this.Chart_Data.num_sub.length; index ++){
+    //       this.Paper_Data.push(this.Chart_Data.num_sub[index].paper);
+    //       this.Question_Data.push(this.Chart_Data.num_sub[index].question);
+    //       this.KU_Data.push(this.Chart_Data.num_sub[index].knowledge);
+    //     }
+    //     this.Redraw_Bar();
+    //   });
+    // }
   }
 };
 </script>
@@ -1146,15 +1147,15 @@ a {
 .resourceButton{
   background: #48a6f3;
   color: white;
-} 
+}
 .el-button:focus{
   background: #48a6f3;
   color: white;
-} 
+}
 .el-button:active{
   background: #48a6f3;
   color: white;
-} 
+}
 .el-button:hover{
   background: #98caf3;
   color: white;
@@ -1163,7 +1164,7 @@ a {
   background: #F8FBFF;
   color: rgb(122, 122, 122);
 }
-.partData{
+/* .partData{
   height: 120px;
   background: #EEF5FE;
   box-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.07);
@@ -1171,12 +1172,12 @@ a {
   border-radius: 10px;
 }
 .data_chart{
-   border-radius: 10px; 
-   width: 67%; 
-   height:300px; 
-   padding-top: 20px; 
-   margin-left: 16.5%; 
-   border: 3px solid #EEF5FE; 
+   border-radius: 10px;
+   width: 67%;
+   height:300px;
+   padding-top: 20px;
+   margin-left: 16.5%;
+   border: 3px solid #EEF5FE;
    margin-bottom: 40px;
-}
+} */
 </style>
