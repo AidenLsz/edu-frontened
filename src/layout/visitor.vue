@@ -103,7 +103,12 @@
                           <span style="color: black;">知识单元检索</span>
                         </el-menu-item>
                       </router-link>
-                      <el-menu-item index="2-3"><span style="color: Gainsboro;">学习资源</span></el-menu-item>
+
+                      <router-link to="/resources" :underline="false" @click.native="ToTop">
+                        <el-menu-item index="2-3">
+                          <span style="color: black;">学习资源检索</span>
+                        </el-menu-item>
+                      </router-link>
 
                     </el-submenu>
                     <el-submenu index="3">

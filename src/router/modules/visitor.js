@@ -10,6 +10,7 @@ import Similarity from "@/views/Similarity";
 // 资源查询类页面
 import KU from "@/views/resourceQuery/KU.vue";
 import Exercise from "@/views/resourceQuery/Exercise";
+import Resources from "@/views/resourceQuery/Resources";
 
 // 资源录入类页面
 import InputMarked from "@/views/resourceInput/InputMarked";
@@ -44,6 +45,11 @@ const visitorRouter=[
         path: "/exercise",
         name: "Exercise",
         component: Exercise,
+      },
+      {
+        path: "/resources",
+        name: "Resources",
+        component: Resources,
       },
       {
         path: "/estimate",
