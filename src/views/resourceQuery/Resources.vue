@@ -45,10 +45,9 @@
           style="width: 100%"
       >
         <el-table-column
-            fixed
             type="index"
             label="序号"
-            min-width="60"
+            width="80"
         >
         </el-table-column>
         <el-table-column
@@ -69,7 +68,7 @@
             min-width="80">
         </el-table-column>
         <el-table-column
-            :v-if="showPublisher"
+            v-if="this.showPublisher"
             prop="publisher"
             label="出版社"
             min-width="80">
@@ -83,7 +82,8 @@
         <el-table-column
             prop="date"
             label="存入日期"
-            min-width="160">
+            min-width="120"
+        >
         </el-table-column>
         <!--        <el-table-column-->
         <!--            fixed="right"-->
@@ -112,25 +112,25 @@ export default {
       loading: false,
       //搜索
       content: "",
-      searchResult: [],
-      // searchResult: [
-      //   {
-      //     subject: '英语',
-      //     period: '小学一年级',
-      //     type: '教材',
-      //     name: '（部编版)一年级英语上册教材（我帮找网）.pdf',
-      //     date: '2021-03-29',
-      //     publisher:'人教版'
-      //   },
-      //   {
-      //     subject: '英语',
-      //     period: '小学一年级',
-      //     type: '教材',
-      //     name: '（部编版)一年级英语上册教材（我帮找网）.pdf',
-      //     date: '2021-03-29',
-      //     publisher:'人教版'
-      //   }
-      // ],
+      // searchResult: [],
+      searchResult: [
+        {
+          subject: '英语',
+          period: '小学一年级',
+          type: '教材',
+          name: '（部编版)一年级英语上册教材（我帮找网）.pdf',
+          date: '2021-03-29',
+          // publisher:'人教版'
+        },
+        {
+          subject: '英语',
+          period: '小学一年级',
+          type: '教材',
+          name: '（部编版)一年级英语上册教材（我帮找网）.pdf',
+          date: '2021-03-29',
+          // publisher:'人教版'
+        }
+      ],
       showPublisher: false,
     }
   },
