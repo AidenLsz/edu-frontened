@@ -10,7 +10,7 @@
       </el-col>
     </el-row>
     <br>
-<!--    <el-row v-show="searchResult.length === 0" style="height: 40px" class="transition-box"></el-row>-->
+    <!--    <el-row v-show="searchResult.length === 0" style="height: 40px" class="transition-box"></el-row>-->
     <el-row justify="start" type="flex">
       <el-col :span="4" :offset="5">
         <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
@@ -85,14 +85,14 @@
             label="存入日期"
             min-width="160">
         </el-table-column>
-<!--        <el-table-column-->
-<!--            fixed="right"-->
-<!--            label="下载"-->
-<!--            width="80">-->
-<!--          <template slot-scope="scope">-->
-<!--            <el-button @click="handleDownloadClick(scope.row)" type="text" size="small">下载</el-button>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
+        <!--        <el-table-column-->
+        <!--            fixed="right"-->
+        <!--            label="下载"-->
+        <!--            width="80">-->
+        <!--          <template slot-scope="scope">-->
+        <!--            <el-button @click="handleDownloadClick(scope.row)" type="text" size="small">下载</el-button>-->
+        <!--          </template>-->
+        <!--        </el-table-column>-->
       </el-table>
     </el-col>
     <el-col v-if="!searchResult.length" style="height: 300px">
