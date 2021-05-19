@@ -112,25 +112,25 @@ export default {
       loading: false,
       //搜索
       content: "",
-      // searchResult: [],
-      searchResult: [
-        {
-          subject: '英语',
-          period: '小学一年级',
-          type: '教材',
-          name: '（部编版)一年级英语上册教材（我帮找网）.pdf',
-          date: '2021-03-29',
-          // publisher:'人教版'
-        },
-        {
-          subject: '英语',
-          period: '小学一年级',
-          type: '教材',
-          name: '（部编版)一年级英语上册教材（我帮找网）.pdf',
-          date: '2021-03-29',
-          // publisher:'人教版'
-        }
-      ],
+      searchResult: [],
+      // searchResult: [
+      //   {
+      //     subject: '英语',
+      //     period: '小学一年级',
+      //     type: '教材',
+      //     name: '（部编版)一年级英语上册教材（我帮找网）.pdf',
+      //     date: '2021-03-29',
+      //     // publisher:'人教版'
+      //   },
+      //   {
+      //     subject: '英语',
+      //     period: '小学一年级',
+      //     type: '教材',
+      //     name: '（部编版)一年级英语上册教材（我帮找网）.pdf',
+      //     date: '2021-03-29',
+      //     // publisher:'人教版'
+      //   }
+      // ],
       showPublisher: false,
     }
   },
