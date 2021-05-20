@@ -7,6 +7,101 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(211, 211, 211, 0.6)">
     <el-dialog
+      :visible.sync="picSearchDialogShow"
+      title="图片检索"
+      width="80%"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false">
+        <el-row style="margin: 0px; padding: 0px">
+          <el-col :span="24">
+            <el-row v-if="option.img != ''" type="flex" justify="center">
+              <VueCropper
+                style="width: 100%; height: 400px; margin-left: 2.4vw; margin-right: 2.4vw"
+                ref="cropper"
+                :img="option.img"
+                :autoCrop="option.autoCrop"
+                :canMove="option.canMove"
+                :centerBox="option.centerBox"
+                :canScale="option.canScale"
+                autoCropWidth="4096"
+                autoCropHeight="2048"
+              ></VueCropper>
+            </el-row>
+            <el-row v-else id="DragItem" type="flex" justify="center">
+              <div class="btn_file" style="min-height: 400px">
+                <div style="display: inline-block">
+                  <i class="el-icon-plus" style="margin: 125px auto 20px auto; font-size: 60px"></i>
+                  <p style="font-size: 20px">点击区域或拖拽图片入内以上传</p>
+                </div>
+                <input
+                  class="inputSp"
+                  type="file"
+                  @change="pictureSearch($event)"
+                  accept=".jpeg, .png, .jpg"
+                  ref="picSearchInput"
+                  />  
+              </div>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-top: 30px;">
+              <el-col :span="4" :offset="4">
+                <el-row type="flex" justify="center">
+                  <el-button
+                    type="primary"
+                    icon="el-icon-refresh-left"
+                    @click="rotateLeft()"
+                    plain>
+                    向左旋转
+                  </el-button>
+                </el-row>
+              </el-col>
+              <el-col :span="4">
+                <el-row type="flex" justify="center">
+                  <el-button
+                    type="primary"
+                    icon="el-icon-refresh-right"
+                    @click="rotateRight()"
+                    plain>
+                    向右旋转
+                  </el-button>
+                </el-row>
+              </el-col>
+              <el-col :span="4">
+                <el-row type="flex" justify="center">
+                  <el-button 
+                    type="warning" 
+                    icon="el-icon-delete"
+                    @click="clearData()"
+                    plain>
+                    清空内容
+                  </el-button>
+                </el-row>
+              </el-col>
+              <el-col :span="4">
+                <el-row type="flex" justify="center">
+                  <el-button 
+                    v-if="option.img != ''"
+                    type="success" 
+                    icon="el-icon-search"
+                    @click="getCropData()"
+                    plain>
+                    提交搜索
+                  </el-button>
+                  <el-button 
+                    v-else
+                    type="danger" 
+                    icon="el-icon-close"
+                    @click="picSearchDialogShow = false"
+                    plain>
+                    关闭页面
+                  </el-button>
+                </el-row>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+
+    </el-dialog>
+    <el-dialog
         :visible.sync="simpleInput"
         title="LUNA输入助手"
         width="65%"
@@ -101,21 +196,9 @@
           </el-button>
         </el-col>
         <el-col :span="1">
-          <el-row type="flex" justify="start" style="line-height: 40px">
-            <div class="picSearchArea">
-              <p style="display: inline-block;">
-                <i class="el-icon-camera-solid" style="font-size: 22px;"></i>
-              </p>
-              <input
-                class="picSearch"
-                type="file"
-                @change="pictureSearch($event)"
-                accept=".jpeg, .png, .jpg"
-                ref="picSearchInput"
-                multiple="false"
-              />
-            </div>
-          </el-row>
+          <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="picSearchDialogShow = true">
+            <i class="el-icon-camera-solid"></i>
+          </el-button>
         </el-col>
         <el-col :span="1">
           <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit(0, '')">
@@ -238,6 +321,7 @@
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
+
 import {commonAjax} from '@/common/utils/ajax'
 
 export default {
@@ -245,6 +329,17 @@ export default {
   name: "exercise",
   data() {
     return {
+      // 图片剪切用的一系列变量
+      // 对话框显示
+      picSearchDialogShow: false,
+      option: {
+        img: "", // 裁剪图片的地址
+        autoCrop: true, //是否默认生成截图框
+        fixedBox: true, //固定截图框大小 不允许改变
+        canMove: false,
+        centerBox: true,
+        canScale: false
+      },
       // 输入的简单文本
       exercise_text: "",
       // 试题文本
@@ -365,8 +460,88 @@ export default {
   mounted(){
     this.ToTop()
     this.initDatabaseList();
+    let upload = document.querySelector('#DragItem');
+    upload.addEventListener('dragenter', this.onDragIn, true);
+    upload.addEventListener('dragleave', this.onDragOut, true);
+    upload.addEventListener('drop', this.onDrop, false);
   },
   methods: {
+        clearData(){
+          this.option.img = "";
+        },
+        onDragIn (e) {
+          e.stopPropagation();
+          e.preventDefault();
+        },
+        onDragOut (e) {
+          e.stopPropagation();
+          e.preventDefault();
+        },
+        onDrop (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          this.imgPreview(e.dataTransfer.files);
+          this.$refs.picSearchInput.value = "";
+          this.$refs.cropper.refresh();
+        },
+        //图片预览
+        imgPreview (files) {
+          const _this = this;
+          let read = new FileReader();
+          read.readAsDataURL(files[0]);
+          read.onloadend = function () {  
+            _this.show = true
+            _this.option.img = read.result;
+          }
+        },
+        // 左旋转
+        rotateLeft() {
+          this.$refs.cropper.rotateLeft();
+        },
+        // 右旋转
+        rotateRight() {
+          this.$refs.cropper.rotateRight();
+        },
+        // 生成blob图片
+        getCropData() {
+          this.$refs.cropper.getCropData((data) => {
+              this.submit(1, data);
+              this.picSearchDialogShow = false;
+          })
+        },
+        // 照片上传
+    pictureSearch(event){
+      if(event.target.files){
+        // 获取图片
+        let Pic = event.target.files[0];
+        // 保存读取内容用的临时变量
+        var Picresult = "";
+        // 获取this对象
+        const _this = this;
+        // 重置input组件
+        this.$refs.picSearchInput.value = "";
+        // Promise方法避免异步操作
+        var promise = new Promise(function(resolve){
+          // 用文件读取来读取图片的base64格式代码
+          var reader = new FileReader();
+          reader.readAsDataURL(Pic);
+          reader.onloadend = function (e) { 
+            Picresult = e.target.result;
+            resolve('1');
+          };
+        });
+        promise.then(function(){
+          // 用捕捉到的this对象来进行搜索
+          _this.option.img = Picresult;
+        }).catch(function(error){
+          // 报错了就打印错误
+          console.log(error)
+        })
+        
+      }else{
+        return 
+      }
+    },
     initDatabaseList(){
       this.database_list=[{name:'public',nick:'公共题库'}]
       this.database_aim=[true]
@@ -386,47 +561,6 @@ export default {
     // 清除图片
     Clear_Pic(){
       this.Cache_Pic.splice(0, 1, "");
-    },
-    // 照片上传
-    pictureSearch(event){
-      if(event.target.files){
-        // 获取图片
-        let Pic = event.target.files[0];
-        // 保存读取内容用的临时变量
-        var Picresult = "";
-        // 获取this对象
-        const _this = this;
-        // 重置input组件
-        this.$refs.picSearchInput.value = "";
-        // Promise方法避免异步操作
-        var promise = new Promise(function(resolve, reject){
-          // 用文件读取来读取图片的base64格式代码
-          var reader = new FileReader();
-          reader.readAsDataURL(Pic);
-          reader.onloadend = function (e) {
-            Picresult = e.target.result;
-            // 这里是为了先处理一下现在没有暂存图片内容的情况，防止后面忘记写，有备无患
-            _this.content = "";
-            console.log(_this.Cache_Pic);
-            if(_this.Cache_Pic[0] == ""){
-              _this.Cache_Pic.splice(0, 1, Picresult);
-              _this.Page_Index = 1;
-            }
-            // 提供resolve信息让then方法去捕捉
-            resolve('1');
-          };
-        });
-        promise.then(function(){
-          // 用捕捉到的this对象来进行搜索
-          _this.submit(1, Picresult);
-        }).catch(function(error){
-          // 报错了就打印错误
-          console.log(error)
-        })
-
-      }else{
-        return
-      }
     },
     // 添加监听器
     addEnterListener(){
@@ -902,5 +1036,37 @@ export default {
 }
 .el-pagination {
     text-align: center;
+}
+</style>
+<style scoped>
+.pic {
+  width: 600px;
+  height: 400px;
+  object-fit: cover;
+}
+.btn {
+  display: flex;
+  flex-direction: column;
+}
+.btn button {
+  margin: 10px 0;
+}
+.btn_file {
+  position: relative;
+  min-height: 400px;
+  width: 94%;
+  background-color: #F8FBFF;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.inputSp {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 400px;
+  width: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
 }
 </style>

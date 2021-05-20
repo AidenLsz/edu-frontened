@@ -1,131 +1,276 @@
 <template>
-    <div>
-        <el-row type="flex" justify="center" style="margin-top: 30px">
-            <el-button @click="Check_Analyse('794c6214-ab16-11eb-9570-3c9c0fb58abe', '题库中国')">测试题目1</el-button>
-            <el-button @click="Check_Analyse('0d13f658-ab0c-11eb-9ed4-3c9c0fb58abe', '题库中国')">测试题目2</el-button>
-        </el-row>
-        <el-row>
-          <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
+  <div style="margin: 30px">
+        <el-row style="margin: 0px; padding: 0px">
+          <el-col :span="15">
+            <el-row type="flex" justify="center" style="margin-bottom: 10px; font-size: 16px; line-height: 30px">
+              <label>待裁剪图片</label>
+            </el-row>
+            <el-row v-if="option.img != ''">
+              <VueCropper
+                style="width: 100%; height: 400px"
+                ref="cropper"
+                :img="option.img"
+                :autoCrop="option.autoCrop"
+                :canMove="option.canMove"
+                :centerBox="option.centerBox"
+                :canScale="option.canScale"
+                :autoCropWidth="1"
+                :autoCropHeight="1"
+              ></VueCropper>
+            </el-row>
+            <el-row v-else id="DragItem">
+              <div class="btn_file" style="min-height: 400px">
+                <div style="display: inline-block">
+                  <i class="el-icon-plus" style="margin: 125px auto 20px auto; font-size: 60px"></i>
+                  <p style="font-size: 20px">点击区域或拖拽图片入内以上传</p>
+                </div>
+                <input
+                class="inputSp"
+                  type="file"
+                  @change="pictureSearch($event)"
+                  accept=".jpeg, .png, .jpg"
+                  ref="picSearchInput"
+                  />  
+              </div>
+            </el-row>
+          </el-col>
+          <el-col :span="8" :offset="1">
+            <el-row type="flex" justify="center" style="margin-bottom: 10px; font-size: 16px; line-height: 30px">
+              <label>裁剪结果预览</label>
+            </el-row>
+            <el-row>
+              <el-image class="pic" :src="imgUrl" alt="" style="width: 100%; height: 200px; border: 2px dashed black; background: #F8FBFF" :fit="'contain'">
+                <div slot="error">
+                  <i class="el-icon-loading" style="margin: 60px auto 10px auto; font-size: 30px"></i>
+                  <p style="font-size: 20px">等待图片内容</p>
+                </div>
+              </el-image>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 20px">
+              <el-col :span="12">
+                <el-row type="flex" justify="center">
+                  <el-button
+                    type="primary"
+                    icon="el-icon-refresh-left"
+                    @click="rotateLeft()"
+                    plain>
+                    向左旋转
+                  </el-button>
+                </el-row>
+              </el-col>
+              <el-col :span="12">
+                <el-row type="flex" justify="center">
+                  <el-button
+                    type="primary"
+                    icon="el-icon-refresh-right"
+                    @click="rotateRight()"
+                    plain>
+                    向右旋转
+                  </el-button>
+                </el-row>
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 20px"> 
+              <el-col :span="12">
+                <el-row type="flex" justify="center">
+                  <el-button 
+                    type="primary" 
+                    icon="el-icon-scissors"
+                    @click="getCropData()"
+                    plain>
+                    裁剪图片
+                  </el-button>
+                </el-row>
+              </el-col>
+              <el-col :span="12">
+                <el-row type="flex" justify="center">
+                  <el-button 
+                    type="primary" 
+                    icon="el-icon-refresh"
+                    @click="refresh()"
+                    plain>
+                    重置裁剪
+                  </el-button>
+                </el-row>
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 20px"> 
+              <el-col :span="12">
+                <el-row type="flex" justify="center">
+                  <el-button 
+                    type="warning" 
+                    icon="el-icon-delete"
+                    @click="clearData()"
+                    plain>
+                    清空内容
+                  </el-button>
+                </el-row>
+              </el-col>
+              <el-col :span="12">
+                <el-row type="flex" justify="center">
+                  <el-button 
+                    type="success" 
+                    icon="el-icon-search"
+                    @click="getCropData()"
+                    plain>
+                    确认提交
+                  </el-button>
+                </el-row>
+              </el-col>
+            </el-row>
+          </el-col>
         </el-row>
     </div>
+
 </template>
 <script>
 
-import QuestionAnalyse from '../resourceAnalyse/QuestionAnalyse.vue'
-
 export default {
 
-    components: { QuestionAnalyse },
+    components: {},
     name: "TestPageList",
-    mounted(){
-    },
-    props: {
-        aD: {
-            type: Object,
-            default: function(){
-                return {
-                "analysis": "\u5982\u56fe\uff0c\u505a\u51fa\u7ea6\u675f\u6761\u4ef6$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$\u6240\u8868\u793a\u7684\u53ef\u884c\u57df\u3002\u6613\u5f97A\u7684\u5750\u6807\u4e3a$A(1,0)$\u3002\u5f53\u76ee\u6807\u51fd\u6570\u7ecf\u8fc7A\u70b9\u65f6\uff0cz\u53d6\u5f97\u6700\u5927\u503c\uff0c\u53ef\u5f97$z=x+7 y$\u7684\u6700\u5927\u503c\u4e3a$1+7 \\times 0=1$", 
-                "answer": "1", 
-                "database": "公开题库", 
-                "id": "96ac6512-8aed-11eb-8fbd-b46bfc50aa29", 
-                "options": ['［-1，+∞)',
-                            '(1, <img width="25" height="23" border="0" src="/tikuimg/q_500004/d/11/10/11/4e459037d429.gif">+<img width="16" height="41" border="0" src="/tikuimg/q_500004/d/11/10/11/29ec228f9344.gif">］',
-                            '［-1, <img width="25" height="23" border="0" src="/tikuimg/q_500004/d/11/10/11/4e459037d429.gif">］',
-                            '(0, <img width="25" height="23" border="0" src="/tikuimg/q_500004/d/11/10/11/4e459037d429.gif">］'
-                            ], 
-                "period": "高中", 
-                "stem": "若$x,y$满足约束条件$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$，则$z=x+7 y$的最大值为$\\underline{}$", 
-                "subject": "数学", 
-                "type": "Question",
-                "que_type": "其他",
-                "difficulty": 0.2, 
-                "discrimination": 0.3, 
-
-                "quality": 0.6,
-                "knowledge_points_frontend": {
-                    "kp": [
-                        "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212", 
-                        "\u4ee3\u6570", 
-                        "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898", 
-                        "\u4e0d\u7b49\u5f0f"
-                    ], 
-                    "kp_layer": [
-                        {
-                        "children": [
-                            {
-                            "children": [
-                                {
-                                "children": [
-                                    {
-                                    "children": [], 
-                                    "label": "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898"
-                                    }, 
-                                    {
-                                    "children": [], 
-                                    "label": "\u4e8c\u5143\u4e00\u6b21\u4e0d\u7b49\u5f0f\uff08\u7ec4\uff09\u8868\u793a\u7684\u5e73\u9762\u533a\u57df"
-                                    }
-                                ], 
-                                "label": "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212"
-                                }
-                            ], 
-                            "label": "\u4e0d\u7b49\u5f0f"
-                            }
-                        ], 
-                        "label": "\u4ee3\u6570"
-                        }
-                    ], 
-                    "kp_priority": [
-                            "\u4ee3\u6570", 
-                            "\u4e0d\u7b49\u5f0f", 
-                            "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212", 
-                            "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898", 
-                            "\u4e8c\u5143\u4e00\u6b21\u4e0d\u7b49\u5f0f\uff08\u7ec4\uff09\u8868\u793a\u7684\u5e73\u9762\u533a\u57df"
-                    ]
-                    },
-                }
-            }
-        }
-    },
     data(){
         return {
-           // 用于分析显示的题目数据
-            analyseData: this.aD
-        }
+            option: {
+                img: "", // 裁剪图片的地址
+                autoCrop: true, //是否默认生成截图框
+                fixedBox: true, //固定截图框大小 不允许改变
+                canMove: false,
+                centerBox: true,
+                canScale: false
+            },
+            imgUrl: "",
+            imgCut: false
+        };
+    },
+    mounted() {
+      let upload = document.querySelector('#DragItem');
+      upload.addEventListener('dragenter', this.onDragIn, true);
+      upload.addEventListener('dragleave', this.onDragOut, true);
+      upload.addEventListener('drop', this.onDrop, false);
     },
     methods: {
-        // 查看单题分析报告
-        Check_Analyse(ID, DatabaseName){
-
-            let config = {
-                headers: { "Content-Type": "multipart/form-data" }
-            };
-
-            let param = new FormData();
-
-            if(DatabaseName == '公开题库'){
-                param.append("databasename", 'public');
-            }else if(DatabaseName == 'neea'){
-                param.append("databasename", 'neea');
-            }else if(DatabaseName == 'iflytek'){
-                param.append("databasename", 'iflytek');
-            }else if(DatabaseName == '题库中国'){
-                param.append("databasename", 'tiku');
-            }
-            param.append("ID", ID);
-
-            this.$http
-            .post(this.backendIP + "/api/questionAnalyse", param, config, {
-                emulateJSON: true
-            })
-            .then(function(data) {
-                this.analyseData = data.data.que_dic;
-                console.log(this.analyseData);
-            });    
+        clearData(){
+          this.imgUrl = "";
+          this.option.img = "";
         },
+        onDragIn (e) {
+          e.stopPropagation();
+          e.preventDefault();
+        },
+        onDragOut (e) {
+          e.stopPropagation();
+          e.preventDefault();
+        },
+        onDrop (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          this.imgPreview(e.dataTransfer.files);
+          this.$refs.picSearchInput.value = "";
+          this.$refs.cropper.refresh();
+        },
+        //图片预览
+        imgPreview (files) {
+          const _this = this;
+          let read = new FileReader();
+          read.readAsDataURL(files[0]);
+          read.onloadend = function () {  
+            _this.show = true
+            _this.option.img = read.result;
+            _this.imgUrl = read.result;
+          }
+        },
+        // 左旋转
+        rotateLeft() {
+          this.$refs.cropper.rotateLeft();
+        },
+        // 右旋转
+        rotateRight() {
+          this.$refs.cropper.rotateRight();
+        },
+        // 重置
+        refresh() {
+          this.$refs.cropper.refresh();
+          this.imgUrl = this.option.img;
+        },
+        // 生成blob图片
+        getCropData() {
+          this.$refs.cropper.getCropData((data) => {
+              this.imgUrl = data;
+          })
+        },
+        // 照片上传
+    pictureSearch(event){
+      if(event.target.files){
+        // 获取图片
+        let Pic = event.target.files[0];
+        // 保存读取内容用的临时变量
+        var Picresult = "";
+        // 获取this对象
+        const _this = this;
+        // 重置input组件
+        this.$refs.picSearchInput.value = "";
+        // Promise方法避免异步操作
+        var promise = new Promise(function(resolve){
+          // 用文件读取来读取图片的base64格式代码
+          var reader = new FileReader();
+          reader.readAsDataURL(Pic);
+          reader.onloadend = function (e) { 
+            Picresult = e.target.result;
+            resolve('1');
+          };
+        });
+        promise.then(function(){
+          // 用捕捉到的this对象来进行搜索
+          console.log(Picresult);
+          _this.option.img = Picresult;
+          _this.imgUrl = Picresult;
+        }).catch(function(error){
+          // 报错了就打印错误
+          console.log(error)
+        })
+        
+      }else{
+        return 
+      }
+    }
+    
+
     }
 }
 </script>
-<style lang="scss" scoped>
-
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.crop,
+.pic {
+  width: 600px;
+  height: 400px;
+  object-fit: cover;
+}
+.btn {
+  display: flex;
+  flex-direction: column;
+}
+.btn button {
+  margin: 10px 0;
+}
+.btn_file {
+  position: relative;
+  min-height: 400px;
+  width: 100%;
+  background-color: #F8FBFF;
+  border-radius: 2px;
+  border: 2px dashed black;
+  cursor: pointer;
+}
+.inputSp {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 400px;
+  width: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
+}
 </style>
-
