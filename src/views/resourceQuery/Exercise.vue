@@ -1057,7 +1057,6 @@ export default {
   width: 94%;
   background-color: #F8FBFF;
   border-radius: 2px;
-  border: 2px dashed black;
   cursor: pointer;
 }
 .inputSp {
