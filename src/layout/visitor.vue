@@ -103,7 +103,12 @@
                           <span style="color: black;">知识单元检索</span>
                         </el-menu-item>
                       </router-link>
-                      <el-menu-item index="2-3"><span style="color: Gainsboro;">学习资源</span></el-menu-item>
+
+                      <router-link to="/resources" :underline="false" @click.native="ToTop">
+                        <el-menu-item index="2-3">
+                          <span style="color: black;">学习资源检索</span>
+                        </el-menu-item>
+                      </router-link>
 
                     </el-submenu>
                     <el-submenu index="3">
@@ -118,7 +123,7 @@
                     </el-submenu>
                     <router-link to="/estimate" :underline="false" @click.native="ToTop">
                       <el-menu-item index="4">
-                          <span style="color: black;">试题属性预估</span>
+                        <span style="color: black;">试题属性预估</span>
                       </el-menu-item>
                     </router-link>
                     <router-link to="/similarity" :underline="false" @click.native="ToTop">
@@ -151,7 +156,7 @@
                 </el-row>
               </el-col>
               <el-col :span="4" style="padding-top: 15px;" v-else>
-                  <el-button type="text" @click="login_show" class="navbar">登录</el-button>
+                <el-button type="text" @click="login_show" class="navbar">登录</el-button>
               </el-col>
               <el-col :span="2" style="padding-top: 15px;">
                 <el-button type="text" @click="register_show" class="navbar">注册</el-button>
@@ -180,11 +185,11 @@ export default {
   name: "App",
   components: {
     // vueImgVerify,
-  BasicFooter,
-  login,
-  register
-  // BasicHeader,
-},
+    BasicFooter,
+    login,
+    register
+    // BasicHeader,
+  },
   data() {
     return {
       root: false, // root用户
@@ -338,15 +343,15 @@ html,body,#app{
 }
 
 .el-header .el-menu--horizontal /deep/ .el-submenu .el-submenu__title {
-    height: 42px;
-    line-height: 18px;
-    padding-top: 15px;
-    border-bottom: 2px solid transparent;
-    width: 50%;
-    z-index: 999;
+  height: 42px;
+  line-height: 18px;
+  padding-top: 15px;
+  border-bottom: 2px solid transparent;
+  width: 50%;
+  z-index: 999;
 }
 .el-header .el-menu .el-menu--horizontal {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 </style>
@@ -357,15 +362,15 @@ html,body,#app{
 }
 
 .el-header .el-menu--horizontal /deep/ .el-submenu .el-submenu__title {
-    height: 42px;
-    line-height: 18px;
-    padding-top: 15px;
-    border-bottom: 2px solid transparent;
-    width: 50%;
-    z-index: 999;
+  height: 42px;
+  line-height: 18px;
+  padding-top: 15px;
+  border-bottom: 2px solid transparent;
+  width: 50%;
+  z-index: 999;
 }
 .el-header .el-menu .el-menu--horizontal {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 </style>
@@ -516,7 +521,7 @@ html,body,#app{
 .el-container{
   /*设置内部填充为0，几个布局元素之间没有间距*/
   padding: 0px;
-    /*外部间距也是如此设置*/
+  /*外部间距也是如此设置*/
   margin: 0px;
   /*统一设置高度为100%*/
   height: 100%;
@@ -525,7 +530,7 @@ html,body,#app{
 .el-main{
   /*设置内部填充为0，几个布局元素之间没有间距*/
   padding: 0px 0px 0px 0px;
-    /*外部间距也是如此设置*/
+  /*外部间距也是如此设置*/
   margin: 0px 0px 0px 0px;
   /*统一设置高度为100%*/
   height: 100%;
@@ -535,7 +540,7 @@ html,body,#app{
 .el-header{
   /*设置内部填充为0，几个布局元素之间没有间距*/
   padding: 0px 0px 0px 0px;
-    /*外部间距也是如此设置*/
+  /*外部间距也是如此设置*/
   margin: 0px;
   /*统一设置高度为100%*/
   height: 100%;
