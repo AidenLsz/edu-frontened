@@ -14,6 +14,8 @@
                 :canMove="option.canMove"
                 :centerBox="option.centerBox"
                 :canScale="option.canScale"
+                :autoCropWidth="1"
+                :autoCropHeight="1"
               ></VueCropper>
             </el-row>
             <el-row v-else id="DragItem">
@@ -135,7 +137,7 @@ export default {
                 fixedBox: true, //固定截图框大小 不允许改变
                 canMove: false,
                 centerBox: true,
-                canScale: false,
+                canScale: false
             },
             imgUrl: "",
             imgCut: false
@@ -223,7 +225,6 @@ export default {
           console.log(Picresult);
           _this.option.img = Picresult;
           _this.imgUrl = Picresult;
-          _this.imgCut = true;
         }).catch(function(error){
           // 报错了就打印错误
           console.log(error)

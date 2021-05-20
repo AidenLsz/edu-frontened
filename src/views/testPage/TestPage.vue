@@ -75,14 +75,10 @@ export default {
       }
     },
     onDragIn (e) {
-      this.dragArea = true;
-      console.log("In");
       e.stopPropagation();
       e.preventDefault();
     },
     onDragOut (e) {
-      this.dragArea = false;
-      console.log("Out");
       e.stopPropagation();
       e.preventDefault();
     },
