@@ -3,7 +3,8 @@
     <!-- <logo v-if="showLogo" :collapse="isCollapse" /> -->
 
     <el-scrollbar wrap-class="scrollbar-wrapper" style="background:#fff;">
-      <div class="user-info">
+      <div class="user-info" v-show="$store.state.app.sidebar.opened">
+        <i class="el-icon-s-fold" v-show="$store.state.app.sidebar.opened" v-on:click="toggleSideBar()"></i>
         <div>
           <img class="user-icon" src="https://gravatar.loli.net/avatar/d41d8cd98f00b204e9800998ecf8427e?d=mp" alt="">
           <div class="info">
@@ -19,9 +20,8 @@
       <div style="margin:0 10px;border-bottom:solid 1px #eee">
       </div>
       <!-- style="width:200px;background:none;border-right:none;min-height:95vh" -->
-
       <el-menu
-        style="width:200px;border-right:none"
+        style="border-right:none"
         :default-active="activeMenu"
         :collapse="isCollapse"
         :background-color="variables.menuBg"
@@ -31,6 +31,9 @@
         :collapse-transition="false"
         mode="vertical"
       >
+        <el-menu-item  class="submenu-title-noDropdown" v-show="!$store.state.app.sidebar.opened" >
+            <i class="el-icon-s-fold open" v-on:click="toggleSideBar()"></i>
+        </el-menu-item>
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
@@ -75,6 +78,11 @@ export default {
     isCollapse() {
       return !this.sidebar.opened
     }
+  },
+  methods:{
+    toggleSideBar(){
+      this.$store.dispatch('app/toggleSideBar')
+    },
   }
 }
 </script>
@@ -92,7 +100,9 @@ export default {
   color:#ccc;
 }
 .user-info{
+  position: relative;
   width: 100%;
+  min-width: 210px;
   height:100px;
   display: flex;
   flex-direction: column;
@@ -115,6 +125,18 @@ export default {
       }
     }
   }
-
+  .el-icon-s-fold{
+    position: absolute;
+    top:3px;
+    right:10px;
+  }
+}
+.el-icon-s-fold{
+  font-size: 20px;
+}
+.el-icon-s-fold ,.open{
+  padding-left:22px;
+  text-align: center;
+  vertical-align: middle;
 }
 </style>
