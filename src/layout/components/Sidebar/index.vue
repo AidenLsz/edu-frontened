@@ -31,8 +31,8 @@
         :collapse-transition="false"
         mode="vertical"
       >
-        <el-menu-item  class="submenu-title-noDropdown" v-show="!$store.state.app.sidebar.opened" >
-            <i class="el-icon-s-fold open" v-on:click="toggleSideBar()"></i>
+        <el-menu-item  class="submenu-title-noDropdown" v-show="!$store.state.app.sidebar.opened" v-on:click="toggleSideBar()">
+            <i class="el-icon-s-unfold" ></i>
         </el-menu-item>
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
@@ -131,10 +131,10 @@ export default {
     right:10px;
   }
 }
-.el-icon-s-fold{
+.el-icon-s-fold,.el-icon-s-unfold{
   font-size: 20px;
 }
-.el-icon-s-fold ,.open{
+.el-icon-s-unfold {
   padding-left:22px;
   text-align: center;
   vertical-align: middle;
