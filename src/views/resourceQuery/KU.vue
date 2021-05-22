@@ -110,7 +110,7 @@
                     />
                 </el-tab-pane>
                 <el-tab-pane :key="Math.random()" label="层级关系" name="tree" id="tree_container" class="svg-container">
-                  <tree
+                  <Hierarchy
                     :node="node"
                     :neighbors_hierarchy="neighbors_hierarchy"
                     :superior_layer="superior_layer"
@@ -156,7 +156,7 @@ import $ from 'jquery'
 import * as d3 from "d3";
 import PreSuc from "./components/PreSuc.vue";
 import CoStudy from "./components/CoStudy.vue";
-import Tree from "./components/Tree.vue";
+import Hierarchy from "./components/Hierarchy.vue";
 import Graph from "./components/Graph.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import screenfull from 'screenfull'
@@ -164,11 +164,12 @@ import screenfull from 'screenfull'
 export default {
   components: {
     Graph,
-    ComplexInput,PreSuc,CoStudy,Tree },
+    ComplexInput,PreSuc,CoStudy,Hierarchy },
   name: "KU",
   data() {
     return {
       activeName:"presuc",
+      content:"",
       ku_name: "",
       ku_type: "kp2.0",
       fullEl: document.getElementById(this.activeName+'_container'),
