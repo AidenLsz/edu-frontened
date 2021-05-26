@@ -10,6 +10,8 @@ import Similarity from "@/views/Similarity";
 // 资源查询类页面
 import KU from "@/views/resourceQuery/KU.vue";
 import Exercise from "@/views/resourceQuery/Exercise";
+import SearchPaper from "@/views/resourceQuery/SearchPaper"
+import PaperDetailShow from "@/views/resourceQuery/components/PaperDetailShow"
 import Resources from "@/views/resourceQuery/Resources";
 
 // 资源录入类页面
@@ -45,6 +47,16 @@ const visitorRouter=[
         path: "/exercise",
         name: "Exercise",
         component: Exercise,
+      },
+      {
+        path: "/searchPaper",
+        name: "SearchPaper",
+        component: SearchPaper,
+      },
+      {
+        path: "/paperDetailShow",
+        name: "PaperDetailShow",
+        component: PaperDetailShow,
       },
       {
         path: "/resources",

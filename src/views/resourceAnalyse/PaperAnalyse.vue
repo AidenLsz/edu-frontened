@@ -486,7 +486,7 @@ export default {
         }
     },
     destroyed(){
-    //    sessionStorage.removeItem('PaperJson')
+        sessionStorage.removeItem('PaperJson')
     },
     props: {
         Paper_J:{
@@ -2412,6 +2412,8 @@ export default {
             if(sessionStorage.getItem('PaperJson')){
                 this.Paper_Json = JSON.parse(sessionStorage.getItem('PaperJson'))
             }
+
+            console.log(this.Paper_Json)
 
             var Temp_Score_Dict = this.Paper_Json.knowledge2score;
             while(Object.keys(Temp_Score_Dict).length > this.KnowledgeScore_List.length){
