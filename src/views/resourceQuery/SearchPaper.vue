@@ -3,9 +3,9 @@
     class="exercise"
     style="margin-bottom: 40px; margin-top: 5vh"
     v-loading="Question_Analysing"
-    element-loading-text="正在加载分析报告..."
+    element-loading-text="正在加载，请稍后..."
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(211, 211, 211, 0.6)">
+    element-loading-background="rgba(211, 211, 211, 0.4)">
     <el-dialog
       :visible.sync="picSearchDialogShow"
       title="图片检索"
@@ -500,9 +500,6 @@ export default {
     // 查看试卷分析报告
     Check_Analyse(ID, DatabaseName){
 
-      console.log(ID, DatabaseName)
-      console.log(this.Paper_Cache_ID, ID)
-
       if(this.Paper_Cache_ID == ID && sessionStorage.getItem("PaperDetailShow")){
         let Temp = JSON.parse(sessionStorage.PaperDetailShow);
         sessionStorage.PaperJson = JSON.stringify(Temp);
@@ -513,7 +510,6 @@ export default {
       }
 
       this.Question_Analysing = true;
-      this.Paper_Cache_ID = ID;
 
       commonAjax(this.backendIP+'/api/paperJsonGet',
         {
@@ -526,6 +522,7 @@ export default {
           this.$message.error("服务器繁忙，请稍后再试。")
           return
         }
+        this.Paper_Cache_ID = ID;
         sessionStorage.PaperDetailShow = JSON.stringify(data.Paper_Json);
         sessionStorage.PaperJson = JSON.stringify(data.Paper_Json);
         let routeData = this.$router.resolve({ path: '/paperAnalyse' });
@@ -565,8 +562,6 @@ export default {
         return
       }
 
-      this.Paper_Cache_ID = this.Paper_ID_List[Index];
-
       commonAjax(this.backendIP+'/api/paperJsonGet',
         {
           Database_Name: "LUNA",
@@ -578,6 +573,7 @@ export default {
           this.$message.error("服务器繁忙，请稍后再试。")
           return
         }
+        this.Paper_Cache_ID = this.Paper_ID_List[Index];
         if(sessionStorage.getItem("PaperDetailShow")){
           sessionStorage.removeItem("PaperDetailShow");
         }
