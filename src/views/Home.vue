@@ -531,11 +531,12 @@
           <el-input
             v-model="ku_name"
             placeholder="三角函数"
+            class="SearchInput"
           ></el-input>
         </el-col>
         <el-col :span="2">
           <el-row type="flex" justify="start">
-            <el-button type="primary" @click="submit" plain
+            <el-button type="primary" @click="submit" plain class="SearchButton"
               ><i class="el-icon-search" style="margin-right: 15px"></i>检索</el-button
             >
           </el-row>
@@ -1194,6 +1195,21 @@ a {
 .sleepingButton{
   background: #F8FBFF;
   color: rgb(122, 122, 122);
+}
+.SearchInput /deep/ .el-input__inner{
+  border: none;
+  border-radius: 0px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  height: 40px;
+}
+.SearchButton{
+  border: none;
+  border-radius: 0px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-left: 1px solid #F8FBFF;
+  height: 40px;
 }
 /* .partData{
   height: 120px;

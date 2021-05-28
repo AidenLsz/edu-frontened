@@ -535,7 +535,7 @@ export default {
           _this.option.img = Picresult;
         }).catch(function(error){
           // 报错了就打印错误
-          console.log(error)
+          // console.log(error)
         })
         
       }else{
