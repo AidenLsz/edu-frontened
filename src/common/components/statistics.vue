@@ -230,7 +230,7 @@ export default {
               data: this.KU_Data
           }]
       }
-      console.log(option.series)
+      // console.log(option.series)
       BarChart.setOption(option);
 
       //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）

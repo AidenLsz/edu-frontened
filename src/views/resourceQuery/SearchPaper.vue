@@ -470,7 +470,7 @@ export default {
           _this.option.img = Picresult;
         }).catch(function(error){
           // 报错了就打印错误
-          console.log(error)
+          // console.log(error)
         })
         
       }else{
@@ -651,8 +651,6 @@ export default {
     },
     submit(type, Pic = "") {
 
-      console.log("Searching...")
-
       this.loading = true;
 
       // type为1，代表图片搜索，只有当传入的图片和原来的不一样，才需要替换页数为1
@@ -753,8 +751,7 @@ export default {
         }
         this.Total_Count = data.totalLength
       }).catch((err)=>{
-        console.log("Error.")
-        console.log(err)
+        this.$message.error("服务器繁忙，请稍后再试。")
       })
     },
     Check_Focus_Database(Index){

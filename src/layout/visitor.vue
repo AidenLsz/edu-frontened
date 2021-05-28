@@ -283,7 +283,7 @@ export default {
     Calculate_Title_Margin(){
       var Width = window.screen.width;
       var CWidth = document.body.clientWidth;
-      console.log(Width, CWidth)
+      // console.log(Width, CWidth)
       if(Width - CWidth < 300){
         return "0px"
       }else{
