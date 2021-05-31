@@ -970,7 +970,11 @@
             <label>预览全卷</label>
           </el-button>
         </el-row>
-        <el-row type="flex" justify="center" style="padding-top: 30px">
+        <el-row
+          v-loading="Uploading"
+          element-loading-text="正在上传此试卷..."
+          element-loading-spinner="el-icon-loading"
+          type="flex" justify="center" style="padding-top: 30px">
           <el-button type="success" plain style="width: 200px; font-size: 16px" @click="PaperUpload('upload')" :disabled="Blank_Paper()">
             <label>题目入库</label>
           </el-button>
@@ -1403,6 +1407,8 @@ export default {
       downloading: false,
       // 分析报告的等待
       analysing: false,
+      // 上传过程的等待
+      Uploading: false,
       // 等待信息
       Waiting_Text: "切分试卷中，请等待......",
       // 用户手动切分数学试卷
@@ -3805,6 +3811,8 @@ export default {
 
       if(Control == 'upload'){
 
+        this.Uploading = true;
+
         if(this.PaperTitle == ""){
           this.$message.error("试卷标题不能为空！")
           return
@@ -3832,9 +3840,11 @@ export default {
         })
         .then(function() {
           this.$message.success("整卷上传已完成。");
+          this.Uploading = false;
+          return
         }).catch(() => {
-          alert("过程出现错误，请稍后重新尝试...");
-          this.analysing = false;
+          this.$message.error("过程出现错误，请稍后重新尝试...");
+          this.Uploading = false;
           return 
         });
 
@@ -4310,7 +4320,7 @@ export default {
         }
 
         if(!latexFlag){
-            if (Regx.test(content[i])) {
+            if (Regx.test(content[i]) || this.math_pun_list.indexOf(content[i]) != -1) {
                 if(remakeContent[remakeContent.length - 1] == '$'){
                     remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
                 }else{
@@ -4319,7 +4329,7 @@ export default {
             }
             // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
             else if(!(content.charCodeAt(i) > 255 || 
-                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 || this.math_pun_list.indexOf(content[i]) != -1 ||
+                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
                       content[i] == ' ' || content[i] == '$' || 
                       content.charCodeAt(i) == 10) 
                     && !symbolError){

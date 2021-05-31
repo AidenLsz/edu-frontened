@@ -1052,7 +1052,7 @@ export default {
         }
 
         if(!latexFlag){
-            if (Regx.test(content[i])) {
+            if (Regx.test(content[i]) || this.math_pun_list.indexOf(content[i]) != -1) {
                 if(remakeContent[remakeContent.length - 1] == '$'){
                     remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
                 }else{
@@ -1061,7 +1061,7 @@ export default {
             }
             // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
             else if(!(content.charCodeAt(i) > 255 || 
-                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 || this.math_pun_list.indexOf(content[i]) != -1 ||
+                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
                       content[i] == ' ' || content[i] == '$' || 
                       content.charCodeAt(i) == 10) 
                     && !symbolError){
