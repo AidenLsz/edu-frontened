@@ -56,8 +56,15 @@
         <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in ch_pun_list" :key="'CH' + SymIndex.toString()" v-html="Sym">
         </el-col>
       </el-row>
+      <el-row style="margin: 50px 0px">
+        <el-col :span="4" style="text-align: left">
+          合法的简单数学符号有：
+        </el-col>
+        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in math_pun_list" :key="'MATH' + SymIndex.toString()" v-html="Sym">
+        </el-col>
+      </el-row>
       <el-row type="flex" justify="center" style="font-size: 20px; color: red; font-weight: bold">
-        请勿输入其他符号（含字母和数字），如需输入，请将字母，罗马符号及数字包裹在$$之间进行表示
+        请勿输入其他符号，如需输入，请使用题目录入上方的复杂输入框进行辅助
       </el-row>
     </el-dialog>
     <!-- 提供给选择题的编辑器 -->
@@ -456,6 +463,7 @@
           </el-col>
           <el-col :span="8">
             <el-button type="warning" v-if="Authority_Check()" plain @click="PaperUpload('export')">题目导出</el-button> 
+            <p v-else>&nbsp;</p>
           </el-col>  
           <el-col :span="8">
             <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button> 
@@ -554,6 +562,7 @@ export default {
       // 用于输入符号提示的部分
       en_pun_list: [',','.','?','!',':',';','\'','"','(',')','&nbsp','_','/','|','\\','<','>'],
       ch_pun_list: ['，','。','！','？','：','；','‘','’','“','”','（','）','&nbsp','、','《','》'],
+      math_pun_list: ['+', '-', "*", "/", "%", "="],
       // 用于给显示和展示Json格式数据的内容
       TestData: {
         "title": "2009年课标甲乙",
@@ -581,6 +590,8 @@ export default {
       // ------------------- 以下是原来的单题内容，以上是新加的编辑 -------------------
       // 当前题目类型
       Type_Now: "-1",
+      // 缓存题目类型
+      Type_Cache: "-1",
       // 选择题编辑器,填空题编辑器和解答题编辑器的显示控制
       showDialog: false,
       showDialog_Fill: false,
@@ -775,7 +786,7 @@ export default {
 
     Change_Type(Type){
       
-      this.Type_Now = Type;
+      this.Type_Cache = Type;
 
       if(Type == 'option'){
           this.showDialog = true;
@@ -802,6 +813,8 @@ export default {
       this.$router.push({ path: route });
     },
     New_Questions(val){
+
+      this.Type_Now = this.Type_Cache;
 
         this.Temp_OptionQuestionInfo = {
 
@@ -1154,7 +1167,7 @@ export default {
             }
             // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
             else if(!(content.charCodeAt(i) > 255 || 
-                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 || 
+                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||  this.math_pun_list.indexOf(content[i]) != -1 ||
                       content[i] == ' ' || content[i] == '$' || 
                       content.charCodeAt(i) == 10) 
                     && !symbolError){

@@ -107,8 +107,15 @@
         <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in ch_pun_list" :key="'CH' + SymIndex.toString()" v-html="Sym">
         </el-col>
       </el-row>
+      <el-row style="margin: 50px 0px">
+        <el-col :span="4" style="text-align: left">
+          合法的简单数学符号有：
+        </el-col>
+        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in math_pun_list" :key="'MATH' + SymIndex.toString()" v-html="Sym">
+        </el-col>
+      </el-row>
       <el-row type="flex" justify="center" style="font-size: 20px; color: red; font-weight: bold">
-        请勿输入其他符号（含字母和数字），如需输入，请将字母，罗马符号及数字包裹在$$之间进行表示
+        请勿输入其他符号，如需输入，请使用题目录入上方的复杂输入框进行辅助
       </el-row>
     </el-dialog>
     <!-- 全卷预览 -->
@@ -1227,7 +1234,7 @@ export default {
       // 用于输入符号提示的部分
       en_pun_list: [',','.','?','!',':',';','\'','"','(',')','&nbsp','_','/','|','\\','<','>'],
       ch_pun_list: ['，','。','！','？','：','；','‘','’','“','”','（','）','&nbsp','、','《','》'],
-      
+      math_pun_list: ['+', '-', "*", "/", "%", "="],
       TestData:{
         // "title": "2009年课标甲乙",
         //       "subject_type": "数学",
@@ -4312,7 +4319,7 @@ export default {
             }
             // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
             else if(!(content.charCodeAt(i) > 255 || 
-                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 || 
+                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 || this.math_pun_list.indexOf(content[i]) != -1 ||
                       content[i] == ' ' || content[i] == '$' || 
                       content.charCodeAt(i) == 10) 
                     && !symbolError){
