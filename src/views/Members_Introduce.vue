@@ -380,11 +380,6 @@ export default {
                     "intro": "游戏天赋点满型选手"
                     },
                     {
-                    "name": "毛清扬",
-                    "mail": "maoqy0503@mail.ustc.edu.cn",
-                    "intro": "一个安静的冷面大副。"
-                    },
-                    {
                     "name": "洪玉婷",
                     "mail": "1044653353@qq.com",
                     "intro": "大闸蟹爱好者"
@@ -495,7 +490,6 @@ export default {
                     "房松涛": "/members/房松涛.jpg",
                     "曹智": "/members/曹智.jpg",
                     "杨哲": "/members/杨哲.jpg",
-                    "毛清扬": "/members/毛清扬.jpg",
                     "洪玉婷": "/members/洪玉婷.jpg",
                     "童世炜": "/members/童世炜.jpg",
                     "翟佳伦": "/members/翟佳伦.jpg",

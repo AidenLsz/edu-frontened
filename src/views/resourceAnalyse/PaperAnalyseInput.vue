@@ -2619,9 +2619,9 @@ export default {
     },
     // ------------------------这下面是本体的方法，上面是导入试卷的方法-------------------------------
     // 处理上传试卷时的方法
-    uploadPaper(event){
-      console.log(event.target.files)
-    },
+    //uploadPaper(event){
+      // console.log(event.target.files)
+    //},
     // 关闭导入试卷这一栏对话框的方法
     Import_Paper_Dialog_Close(){
       this.importPaperDialog = false;
@@ -3253,7 +3253,7 @@ export default {
             }
           } catch (err) {
             this.upload = false;
-            console.log(`${err.message}`);
+            // console.log(`${err.message}`);
           }
         };
         reader.readAsText(file.raw);

@@ -2413,8 +2413,6 @@ export default {
                 this.Paper_Json = JSON.parse(sessionStorage.getItem('PaperJson'))
             }
 
-            console.log(this.Paper_Json)
-
             var Temp_Score_Dict = this.Paper_Json.knowledge2score;
             while(Object.keys(Temp_Score_Dict).length > this.KnowledgeScore_List.length){
                 var Temp_Ku_Max_Score = -1;
