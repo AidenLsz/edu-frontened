@@ -1503,8 +1503,6 @@ export default {
 
             Question_ID = data.data.Question_ID
 
-            console.log(data.data.Question_ID)
-
             config = {
                 headers: { "Content-Type": "multipart/form-data" }
             };
@@ -1518,7 +1516,6 @@ export default {
               emulateJSON: true
             })
             .then(function(data) {
-              console.log(data.data)
               this.Question_Analysing = false;
               this.analyseData = data.data.que_dic
               this.analyseReport = true;

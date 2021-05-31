@@ -1622,7 +1622,7 @@ export default {
       return this.content;
     },
     Get_Out(){
-      console.log(this.Get_Out_Content);
+    //  console.log(this.Get_Out_Content);
     }
   }
 };

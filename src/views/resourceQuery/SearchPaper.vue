@@ -3,9 +3,9 @@
     class="exercise"
     style="margin-bottom: 40px; margin-top: 5vh"
     v-loading="Question_Analysing"
-    element-loading-text="正在加载分析报告..."
+    element-loading-text="正在加载，请稍后..."
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(211, 211, 211, 0.6)">
+    element-loading-background="rgba(211, 211, 211, 0.4)">
     <el-dialog
       :visible.sync="picSearchDialogShow"
       title="图片检索"
@@ -110,24 +110,12 @@
       <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="content"></ComplexInput>
       <el-button type="success" plain @click="simpleInput = false">完成输入</el-button>
     </el-dialog>
-    <!-- 查看分析报告 -->
-    <el-dialog
-        :visible.sync="analyseReport"
-        width="90%"
-        :modal-append-to-body="false"
-        :close-on-click-modal="true">
-        <template slot="title"></template>
-        <el-row
-          style="margin: 0px">
-          <QuestionAnalyse :Ques="analyseData" :key="analyseData"></QuestionAnalyse>
-        </el-row>
-    </el-dialog>
     <!-- 地址框 -->
     <el-row justify="start" type="flex">
       <el-col :span="7" style="margin-left: 5vw;">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>试题检索</el-breadcrumb-item>
+          <el-breadcrumb-item>试卷检索</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
@@ -251,60 +239,58 @@
       </el-col>
     </el-row>
     <el-row
-      v-for="(Question, Question_Index) in question_list"
-      :key="Question_Index"
-      style="margin-bottom: 50px"
+      v-for="(Paper, Paper_Index) in Paper_Ques_List"
+      :key="Paper_Index"
+      style="margin-bottom: 70px;"
       >
-      <el-col :span="17" class="quesCard">
-        <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
-          <el-col style="padding-bottom: 15px" >
-            <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
-          </el-col>
-          <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
-            <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown></el-row>
-          </el-col>
-        </el-row>
-        <el-row style="margin-bottom: 15px">
-            <el-col :span="5" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
-              所属题库：{{Question.database}}
+      <el-row type="flex" justify="start" style="margin-left: 5vw;; padding-left: 16px; font-size: 16px">
+        <label>{{Paper_Title_List[Paper_Index]}}</label>
+      </el-row>
+      <el-row type="flex" justify="start" style="margin-left: 5vw;; padding-left: 16px; font-size: 16px">
+        <span>所包含的相似试题为：</span>
+      </el-row>
+      <el-row>
+        <el-col :span="17" class="quesCard">
+          <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
+            <el-col style="padding-bottom: 15px" >
+              <Mathdown :content="Paper_Ques_List[Paper_Index].stem" :name="'P_' + Paper_Index + '_Stem'"></Mathdown>
             </el-col>
-            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
-              学科：{{Question.subject}}
+            <el-col v-for="(Option, Option_Index) in Paper_Ques_List[Paper_Index].options" :key="'Option_'+ Option_Index + '_Of_' + Paper_Index">
+              <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Paper_Index + '_Option_' + Option_Index"></Mathdown></el-row>
             </el-col>
-            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
-              题型：{{Question.type}}
-            </el-col>
-            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
-              学段：{{Question.period}}
-            </el-col>
-            <el-col :span="4" :offset="2" style="line-height: 40px">
-              <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">查看答案与解析</el-button>
-            </el-col>
-            <el-col :span="3" :offset="1" style="line-height: 40px">
-              <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id, Question.database)">查看分析报告</el-button>
-            </el-col>
-        </el-row>
-        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: 20px; border-top: 1px dashed black">
-          <el-col>
-            <span style="margin-bottom: 10px; display: block">答案：</span><Mathdown :content="Question.answer" :name="'Q_' + Question_Index + '_Answer'"></Mathdown>
-          </el-col>
-        </el-row>
-        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; padding-bottom: 20px">
-          <el-col>
-            <span style="margin-bottom: 20px; display: block">解析：</span><Mathdown :content="Question.analysis" :name="'Q_' + Question_Index + '_Analysis'"></Mathdown>
-          </el-col>
-        </el-row>
-      </el-col>
+          </el-row>
+          <el-row style="margin-bottom: 15px">
+              <el-col :span="5" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
+                所属题库：{{Paper_Ques_List[Paper_Index].database}}
+              </el-col>
+              <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
+                学科：{{Paper_Ques_List[Paper_Index].subject}}
+              </el-col>
+              <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
+                题型：{{Paper_Ques_List[Paper_Index].type}}
+              </el-col>
+              <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
+                学段：{{Paper_Ques_List[Paper_Index].period}}
+              </el-col>
+              <el-col :span="4" :offset="2" style="line-height: 40px">
+                <el-button size="medium" plain round type="primary" @click="Paper_Detail_Show(Paper_Index)">试卷详情</el-button>
+              </el-col>
+              <el-col :span="3" :offset="1" style="line-height: 40px">
+                <el-button size="medium" plain round type="primary" @click="Check_Analyse(Paper_ID_List[Paper_Index], Paper_Ques_List[Paper_Index].database)">查看分析报告</el-button>
+              </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
     </el-row>
     <el-row
-      v-if="question_list.length == 0"
+      v-if="Paper_Ques_List.length == 0"
       style="margin: 50px 60px; height: 44vh; font-size: 30px"
       v-loading="loading"
       element-loading-text="加载中，请等待"
       element-loading-spinner="el-icon-loading">
 
     </el-row>
-    <el-row v-if="question_list.length != 0">
+    <el-row v-if="Paper_Ques_List.length != 0">
       <el-pagination
         @current-change="BackToTop"
         :current-page.sync="Page_Index"
@@ -326,7 +312,7 @@ import {commonAjax} from '@/common/utils/ajax'
 
 export default {
   components: { Mathdown, ComplexInput, QuestionAnalyse },
-  name: "exercise",
+  name: "SearchPaper",
   data() {
     return {
       // 图片剪切用的一系列变量
@@ -359,7 +345,7 @@ export default {
       // info: base64转换后的数据段
       image_infos: [],
       // 存放返回的题目内容
-      question_list: [],
+      Paper_Ques_List: [],
       // 存放学科信息
       subject_name: [],
       // 存放题型信息
@@ -370,8 +356,9 @@ export default {
       // database_name: ['public', 'neea', 'iflytek'],
       database_aim: [],
       database_list:[],
-      // 检测是否要展开答案和解析内容
-      Expand_List: [],
+      // 试卷的ID和标题组
+      Paper_ID_List: [],
+      Paper_Title_List: [],
       // 页码
       Page_Index: 1,
       // 单页长度，总页数
@@ -393,69 +380,17 @@ export default {
       Question_Analysing: false,
       // 暂存的图片内容
       Cache_Pic: [""],
-      // 用于分析显示的题目数据
-      analyseData: {
-                "analysis": "\u5982\u56fe\uff0c\u505a\u51fa\u7ea6\u675f\u6761\u4ef6$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$\u6240\u8868\u793a\u7684\u53ef\u884c\u57df\u3002\u6613\u5f97A\u7684\u5750\u6807\u4e3a$A(1,0)$\u3002\u5f53\u76ee\u6807\u51fd\u6570\u7ecf\u8fc7A\u70b9\u65f6\uff0cz\u53d6\u5f97\u6700\u5927\u503c\uff0c\u53ef\u5f97$z=x+7 y$\u7684\u6700\u5927\u503c\u4e3a$1+7 \\times 0=1$",
-                "answer": "1",
-                "database": "公开题库",
-                "id": "96ac6512-8aed-11eb-8fbd-b46bfc50aa29",
-                "options": [],
-                "period": "高中",
-                "stem": "若$x,y$满足约束条件$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$，则$z=x+7 y$的最大值为$\\underline{}$",
-                "subject": "数学",
-                "type": "Question",
-                "que_type": "其他",
-                "difficulty": 0.2,
-                "discrimination": 0.3,
-
-                "quality": 0.6,
-                "knowledge_points_frontend": {
-                    "kp": [
-                        "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212",
-                        "\u4ee3\u6570",
-                        "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898",
-                        "\u4e0d\u7b49\u5f0f"
-                    ],
-                    "kp_layer": [
-                        {
-                        "children": [
-                            {
-                            "children": [
-                                {
-                                "children": [
-                                    {
-                                    "children": [],
-                                    "label": "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898"
-                                    },
-                                    {
-                                    "children": [],
-                                    "label": "\u4e8c\u5143\u4e00\u6b21\u4e0d\u7b49\u5f0f\uff08\u7ec4\uff09\u8868\u793a\u7684\u5e73\u9762\u533a\u57df"
-                                    }
-                                ],
-                                "label": "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212"
-                                }
-                            ],
-                            "label": "\u4e0d\u7b49\u5f0f"
-                            }
-                        ],
-                        "label": "\u4ee3\u6570"
-                        }
-                    ],
-                    "kp_priority": [
-                            "\u4ee3\u6570",
-                            "\u4e0d\u7b49\u5f0f",
-                            "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212",
-                            "\u7b80\u5355\u7684\u7ebf\u6027\u89c4\u5212\u95ee\u9898",
-                            "\u4e8c\u5143\u4e00\u6b21\u4e0d\u7b49\u5f0f\uff08\u7ec4\uff09\u8868\u793a\u7684\u5e73\u9762\u533a\u57df"
-                    ]
-                    },
-                }
+      // 暂时获得了分析报告的试卷ID
+      Paper_Cache_ID: ""
     };
   },
   watch:{
     sour(val) {
       this.submit();
     },
+  },
+  destroyed(){
+    sessionStorage.removeItem(PaperDetailShow);
   },
   mounted(){
     this.ToTop()
@@ -562,50 +497,37 @@ export default {
     Clear_Pic(){
       this.Cache_Pic.splice(0, 1, "");
     },
-    // 添加监听器
-    addEnterListener(){
-      var Input = document.getElementById("ExerciseInput");
-      Input.addEventListener()
-    },
-    // 查看单题分析报告
+    // 查看试卷分析报告
     Check_Analyse(ID, DatabaseName){
+
+      if(this.Paper_Cache_ID == ID && sessionStorage.getItem("PaperDetailShow")){
+        let Temp = JSON.parse(sessionStorage.PaperDetailShow);
+        sessionStorage.PaperJson = JSON.stringify(Temp);
+        let routeData = this.$router.resolve({ path: '/paperAnalyse' });
+        window.open(routeData.href, '_blank');
+        this.$message.success("试题详情内容已在新页面展开。");
+        return
+      }
 
       this.Question_Analysing = true;
 
-      // let config = {
-      //     headers: { "Content-Type": "multipart/form-data" }
-      // };
-      //
-      // let param = new FormData();
-
-      // if(DatabaseName == '公开题库'){
-      //   param.append("databasename", 'public');
-      // }else if(DatabaseName == 'neea'){
-      //   param.append("databasename", 'neea');
-      // }else if(DatabaseName == 'iflytek'){
-      //   param.append("databasename", 'iflytek');
-      // }
-      // param.append("ID", ID);
-      //
-      // this.$http
-      // .post(this.backendIP + "/api/questionAnalyse", param, config, {
-      //   emulateJSON: true
-      // })
-      // .then(function(data) {
-      //   this.analyseData = data.data.que_dic;
-      //   this.analyseReport = true;
-      //   this.Question_Analysing = false;
-      // });
-      commonAjax(this.backendIP+'/api/questionAnalyse',
+      commonAjax(this.backendIP+'/api/paperJsonGet',
         {
-          databasename:DatabaseName=='公开题库'?'public':DatabaseName,
-          ID:ID
+          Database_Name: "LUNA",
+          Paper_ID:ID
         }
       ).then((data)=>{
-        // console.log(data);
-        this.analyseReport = true;
-        this.Question_Analysing = false
-        this.analyseData = data.que_dic
+        this.Question_Analysing = false;
+        if(data.Paper_Json.status == "FAIL"){
+          this.$message.error("服务器繁忙，请稍后再试。")
+          return
+        }
+        this.Paper_Cache_ID = ID;
+        sessionStorage.PaperDetailShow = JSON.stringify(data.Paper_Json);
+        sessionStorage.PaperJson = JSON.stringify(data.Paper_Json);
+        let routeData = this.$router.resolve({ path: '/paperAnalyse' });
+        window.open(routeData.href, '_blank');
+        this.$message.success("试题详情内容已在新页面展开。");
       })
     },
     ToTop(){
@@ -621,15 +543,50 @@ export default {
     },
     // 修改翻页内容
     Get_Question_Bundle(Page_Index){
-      if(Page_Index * 5 > this.question_list.length){
-        return this.question_list.slice((Page_Index - 1)*5)
+      if(Page_Index * 5 > this.Paper_Ques_List.length){
+        return this.Paper_Ques_List.slice((Page_Index - 1)*5)
       }else {
-        return this.question_list.slice((Page_Index - 1)*5, Page_Index * 5)
+        return this.Paper_Ques_List.slice((Page_Index - 1)*5, Page_Index * 5)
       }
     },
-    // 修改是否展开
-    Expand(Index){
-      this.Expand_List.splice(Index, 1, !this.Expand_List[Index]);
+    // 修改当前展示的试题的内容
+    Paper_Detail_Show(Index){
+
+      this.Question_Analysing = true;
+
+      if(this.Paper_Cache_ID == this.Paper_ID_List[Index]){
+        let routeData = this.$router.resolve({ path: '/paperDetailShow' });
+        window.open(routeData.href, '_blank');
+        this.$message.success("试题详情内容已在新页面展开。");
+        this.Question_Analysing = false;
+        return
+      }
+
+      commonAjax(this.backendIP+'/api/paperJsonGet',
+        {
+          Database_Name: "LUNA",
+          Paper_ID:this.Paper_ID_List[Index]
+        }
+      ).then((data)=>{
+        this.Question_Analysing = false;
+        if(data.Paper_Json.status == "FAIL"){
+          this.$message.error("服务器繁忙，请稍后再试。")
+          return
+        }
+        this.Paper_Cache_ID = this.Paper_ID_List[Index];
+        if(sessionStorage.getItem("PaperDetailShow")){
+          sessionStorage.removeItem("PaperDetailShow");
+        }
+        sessionStorage.PaperDetailShow = JSON.stringify(data.Paper_Json)
+        let routeData = this.$router.resolve({ path: '/paperDetailShow' });
+        window.open(routeData.href, '_blank');
+        this.$message.success("试题详情内容已在新页面展开。");
+        // this.analyseReport = true;
+        // this.Question_Analysing = false
+        // this.analyseData = data.que_dic
+      })
+      
+      
     },
     // 返回选项标签
     Get_Option_Label(Index){
@@ -733,7 +690,7 @@ export default {
 
       this.history_Period_Type = this.Period_Type;
 
-      this.question_list = [];
+      this.Paper_Ques_List = [];
 
       let config = {
           headers: { "Content-Type": "multipart/form-data" }
@@ -770,27 +727,31 @@ export default {
       // })
       // .then(function(data) {
       //   this.loading = false;
-      //   this.Expand_List = [];
-      //   this.question_list = [];
+      //   this.Paper_ID_List = [];
+      //   this.Paper_Ques_List = [];
       //   var quess = data.data.results;
       //   for(var i = 0; i < quess.length; i++){
-      //     this.question_list.push(quess[i])
-      //     this.Expand_List.push(false);
+      //     this.Paper_Ques_List.push(quess[i])
+      //     this.Paper_ID_List.push(false);
       //   }
       //   this.Total_Count = data.data.totalLength
       //
       // });
-      commonAjax(this.backendIP+'/api/search',param)
+      commonAjax(this.backendIP+'/api/search_paper',param)
       .then((data)=>{
         this.loading = false;
-        this.Expand_List = [];
-        this.question_list = [];
-        var quess = data.results;
-        for(var i = 0; i < quess.length; i++){
-          this.question_list.push(quess[i])
-          this.Expand_List.push(false);
+        this.Paper_ID_List = [];
+        this.Paper_Ques_List = [];
+        this.Paper_Title_List = [];
+        var ID_List = data.paper_id_list;
+        for(var i = 0; i < ID_List.length; i++){
+          this.Paper_ID_List.push(ID_List[i]);
+          this.Paper_Ques_List.push(data.question_list[i]);
+          this.Paper_Title_List.push(data.paper_title_list[i]);
         }
         this.Total_Count = data.totalLength
+      }).catch((err)=>{
+        this.$message.error("服务器繁忙，请稍后再试。")
       })
     },
     Check_Focus_Database(Index){

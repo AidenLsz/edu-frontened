@@ -157,6 +157,21 @@
         </el-col>
         <el-col :span="6">
           <el-row>
+            <el-button @click="Router_Trans('/searchPaper')"  circle style="height: 200px; width: 200px"><img src="../assets/icon8.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <router-link to="/exercise" :underline="false" @click.native="ToTop">
+              <label style="margin-top: 30px; font-size: 20px; color: black">
+                试卷资源
+              </label>
+            </router-link>
+          </el-row>
+          <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
+            <span>介绍文字</span>
+          </el-row> -->
+        </el-col>
+        <el-col :span="6">
+          <el-row>
             <el-button @click="Router_Trans('/ku')" circle style="height: 200px; width: 200px"><img src="../assets/icon5.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
@@ -416,6 +431,21 @@
         </el-col>
         <el-col :span="6">
           <el-row>
+            <el-button @click="Router_Trans('/searchPaper')" circle style="height: 200px; width: 200px"><img src="../assets/icon3.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+          </el-row>
+          <el-row>
+            <router-link to="/searchPaper" :underline="false" @click.native="ToTop">
+              <label style="margin-top: 30px; font-size: 20px; color: black">
+                查询
+              </label>
+            </router-link>
+          </el-row>
+          <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
+            <span>介绍文字</span>
+          </el-row> -->
+        </el-col>
+        <el-col :span="6">
+          <el-row>
             <el-button circle style="height: 200px; width: 200px"><img src="../assets/icon2.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
@@ -501,11 +531,12 @@
           <el-input
             v-model="ku_name"
             placeholder="三角函数"
+            class="SearchInput"
           ></el-input>
         </el-col>
         <el-col :span="2">
           <el-row type="flex" justify="start">
-            <el-button type="primary" @click="submit" plain
+            <el-button type="primary" @click="submit" plain class="SearchButton"
               ><i class="el-icon-search" style="margin-right: 15px"></i>检索</el-button
             >
           </el-row>
@@ -819,7 +850,8 @@ export default {
         this.$router.push({ path: "/paperAnalyseInput" });
         this.PaperAnalyseSwitchFlag = false;
       }else{
-        alert("尚未完成");
+        this.$router.push({ path: "/searchPaper" });
+        this.PaperAnalyseSwitchFlag = false;
       }
     },
     // 跳转至试卷分析的不同位置的对话框
@@ -1163,6 +1195,21 @@ a {
 .sleepingButton{
   background: #F8FBFF;
   color: rgb(122, 122, 122);
+}
+.SearchInput /deep/ .el-input__inner{
+  border: none;
+  border-radius: 0px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  height: 40px;
+}
+.SearchButton{
+  border: none;
+  border-radius: 0px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-left: 1px solid #F8FBFF;
+  height: 40px;
 }
 /* .partData{
   height: 120px;

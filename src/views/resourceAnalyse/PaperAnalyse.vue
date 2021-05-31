@@ -486,7 +486,7 @@ export default {
         }
     },
     destroyed(){
-    //    sessionStorage.removeItem('PaperJson')
+        sessionStorage.removeItem('PaperJson')
     },
     props: {
         Paper_J:{

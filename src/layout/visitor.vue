@@ -98,14 +98,20 @@
                         </el-menu-item>
                       </router-link>
 
-                      <router-link to="/ku" :underline="false" @click.native="ToTop">
+                      <router-link to="/searchPaper" :underline="false" @click.native="ToTop">
                         <el-menu-item index="2-2">
+                          <span style="color: black;">试卷检索</span>
+                        </el-menu-item>
+                      </router-link>
+
+                      <router-link to="/ku" :underline="false" @click.native="ToTop">
+                        <el-menu-item index="2-3">
                           <span style="color: black;">知识单元检索</span>
                         </el-menu-item>
                       </router-link>
 
                       <router-link to="/resources" :underline="false" @click.native="ToTop">
-                        <el-menu-item index="2-3">
+                        <el-menu-item index="2-4">
                           <span style="color: black;">学习资源检索</span>
                         </el-menu-item>
                       </router-link>
@@ -252,7 +258,8 @@ export default {
         this.$router.push({ path: "/paperAnalyseInput" });
         this.PaperAnalyseSwitchFlag = false;
       }else{
-        alert("尚未完成");
+        this.$router.push({ path: "/searchPaper" });
+        this.PaperAnalyseSwitchFlag = false;
       }
     },
     // 跳转至试卷分析的不同位置的对话框
@@ -276,7 +283,7 @@ export default {
     Calculate_Title_Margin(){
       var Width = window.screen.width;
       var CWidth = document.body.clientWidth;
-      console.log(Width, CWidth)
+      // console.log(Width, CWidth)
       if(Width - CWidth < 300){
         return "0px"
       }else{

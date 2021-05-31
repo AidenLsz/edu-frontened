@@ -163,6 +163,9 @@
           >
             <el-option value="0" label="英语"></el-option>
             <el-option value="1" label="数学"></el-option>
+            <el-option value="4" label="语文"></el-option>
+            <el-option value="2" label="文综"></el-option>
+            <el-option value="3" label="理综"></el-option>
           </el-select>
           <label style="font-weight: bold; line-height: 40px; padding-left: 30px" v-if="paper_type == '1'">请选择学段信息：</label>
           <el-select v-model="PeriodType" placeholder="请选择学段" v-if="paper_type == '1'">
@@ -219,11 +222,11 @@
         </el-row>
         <!-- 试卷输入的入口 -->
         <el-row type="flex" justify="start" v-if="paper_type != ''">
-          <el-col :span="12" v-if="paper_type == '0'">
+          <el-col :span="12" v-if="paper_type != '1' ">
             <el-row type="flex" justify="start" style="line-height: 40px">
               <div class="btn_file">
                 <p style="display: inline-block">
-                  <i class="el-icon-files"></i>选取英语试卷文件(doc/docx)
+                  <i class="el-icon-files"></i>选取试卷文件(doc/docx)
                 </p>
                 <input
                   type="file"
@@ -285,7 +288,7 @@
         </el-row>
         <!-- 英语试卷内容导出 -->
         <el-row 
-          v-if="Type_Visible() && paper_type == '0'"
+          v-if="Type_Visible() && paper_type != '1'"
           style="padding-top: 15px"
         >
           <el-col :span="2" style="padding-top: 8px; padding-left: 15px">
@@ -354,15 +357,17 @@
             :key="index_out"
             class="area_border"
           >
-            <el-col :span="21">
+          <el-col :span="24">
+            <el-row type="flex" justify="center" style="margin-bottom: 20px">
               <el-button
-                size="small"
-                @click="Transfer(index_out)"
-                class="btn_trans"
-                plain
-                >类型转换</el-button
+                type="text"
+                size="medium"
+                @click="Del(index_out, 'front')"
+                :disabled="index_out == 0"
+                >向前合并</el-button
               >
-            </el-col>
+            </el-row>
+          </el-col>
             <el-col
               v-for="(i, index_in) in item"
               :key="index_in"
@@ -386,58 +391,168 @@
               >
                 <label>{{ Get_Title_Label(index_out) }}</label>
               </el-col>
-              <el-col :span="2" v-if="i.length > 0">
-                <el-button
-                  size="small"
-                  class="btn_front_cut"
-                  @click="Out_Frontward(index_out, index_in)"
-                  plain
-                  >前切</el-button
+              <el-col :span="3" v-if="index_in != 0 && index_in != item.length - 1">
+                <el-row
+                  type="flex"
+                  justify="center"
+                  style="padding-top: 12px; padding-left: 30px"
                 >
-              </el-col>
-              <el-col :span="1" v-if="i.length > 0">
-                <el-button
-                  size="small"
-                  class="btn_back_cut"
-                  @click="Out_Backward(index_out, index_in)"
-                  plain
-                  >后切</el-button
-                >
-              </el-col>
-              <el-col :span="3" v-if="i.length == 0">
-                <div>
                   <el-button
+                    type="text"
                     size="small"
-                    class="btn_merge"
-                    @click="Del(index_out, index_in)"
-                    v-if="index_in == 0 && index_out != 0"
-                    plain
-                    >向前合并</el-button
+                    @click="Out_Frontward(index_out, index_in)"
+                    style="margin-right: 30px"
+                    :disabled="index_in == 1"
+                    >前切</el-button
                   >
                   <el-button
+                    type="text"
                     size="small"
-                    class="btn_merge"
-                    @click="Del(index_out, index_in)"
-                    v-if="
-                      index_in == item.length - 1 &&
-                        index_out != file_item.length - 1
-                    "
-                    plain
-                    >向后合并</el-button
+                    @click="Out_Backward(index_out, index_in)"
+                    :disabled="index_in == item.length - 2"
+                    >后切</el-button
                   >
-                </div>
+                </el-row>
+              </el-col>
+              <el-col :span="3" v-else style="line-height: 30px">
+                <el-row type="flex" justify="center" style="padding-left: 30px">
+                  <el-button type="text" @click="Transfer(index_out)"
+                    >修改类型为{{
+                      file_item_label[index_out] == -1 ? "题目" : "题干"
+                    }}</el-button
+                  >
+                </el-row>
               </el-col>
             </el-col>
-            <el-col :span="21">
-              <el-button
-                size="small"
-                @click="Transfer(index_out)"
-                class="btn_trans"
-                plain
-                >类型转换</el-button
-              >
+            <el-col :span="24">
+              <el-row type="flex" justify="center" style="margin-top: 20px">
+                <el-button
+                  type="text"
+                  size="medium"
+                  @click="Del(index_out, 'back')"
+                  :disabled="index_out == file_item.length - 1"
+                  >向后合并</el-button
+                >
+              </el-row>
             </el-col>
           </el-col>
+        </el-row>
+        <!-- 文综，理综，语文的手动切分过程 -->
+        <!-- LS原本指的是Liberal & Science，但是还要有新内容加进来的话缩写改起来没完了，就先不动了 -->
+        <el-row v-if="paper_type != '0' && paper_type != '1'">
+          <el-row 
+            v-for="(Para, Para_Index) in json_content" 
+            :key="'LS_Para_' + Para_Index" 
+            style="width: 85vw; margin-left: 1vw; margin-top: 30px; border: 2px dashed black; margin-bottom: 30px; background: rgba(0, 255, 255, 0.04);">
+            <el-col :span="24">
+              <el-row type="flex" justify="center">
+                <el-button type="text" size="medium" :disabled="Para_Index == 0" @click="Merge_LS_To_Front(Para_Index)">
+                  向前合并
+                </el-button>
+              </el-row>
+              <el-row style="padding-left: 4vw; padding-right: 4vw">
+                <el-col :span="21">
+                  <p v-if="Para.is_question == 1" style="line-height: 30px">
+                    --------------------题目分界线--------------------
+                  </p>
+                  <p v-if="Para.is_question == 0" style="line-height: 30px">
+                    --------------------题干分界线--------------------
+                  </p>
+                </el-col>
+                <el-col :span="3" style="line-height: 30px;">
+                  <el-row
+                    type="flex"
+                    justify="center"
+                  >
+                    <el-button
+                      type="text"
+                      size="medium"
+                      @click="LS_Para_Type_Change(Para_Index)"
+                    >
+                      修改类型为{{ Para.is_question == 1 ? "题干" : "题目" }}
+                    </el-button>
+                  </el-row>
+                </el-col>
+              </el-row>
+              <el-row v-for="(Item, Item_Index) in Para.sub_para[0]" :key="'LS_P_SP_' + Item_Index" style="padding-left: 4vw; padding-right: 4vw">
+                <el-col :span="21">
+                  <el-row v-if="Item.para_type == '0'" :style="Item.para_style">
+                    <span
+                      v-for="(message, index_i) in Item.runs"
+                      :key="index_i + 'run'"
+                      :style="message.run_style"
+                    >
+                      <span
+                        v-if="message.run_type == '0'"
+                        v-html="message.run_text"
+                      ></span>
+                      <img
+                        v-else-if="message.run_type == '1'"
+                        :src="json_image_dict[message.image.src]"
+                        :width="message.image.width"
+                        :height="message.image.height"
+                        :style="message.image.style"
+                        :alt="message.image.alt"
+                      />
+                    </span>
+                  </el-row>
+                  <el-row v-if="Item.para_type == '1'">
+                    <div :style="Item.para_style">
+                      <span v-html="Table_Img_Get(Item.table_raw_html)"></span>
+                    </div>
+                  </el-row>
+                </el-col>
+                <el-col :span="3">
+                  <el-row type="flex" justify="center">
+                    <el-button
+                      type="text"
+                      size="small"
+                      @click="LS_Cut_Front(Para_Index, Item_Index)"
+                      :disabled="Item_Index == 0"
+                      style="margin-right: 30px"
+                      >前切</el-button
+                    >
+                    <el-button
+                      type="text"
+                      size="small"
+                      @click="LS_Cut_Back(Para_Index, Item_Index)"
+                      :disabled="Item_Index == Para.sub_para[0].length - 1"
+                      >后切</el-button
+                    >
+                  </el-row>
+                </el-col>
+              </el-row>
+              <el-row style="padding-left: 4vw; padding-right: 4vw">
+                <el-col :span="21">
+                  <p v-if="Para.is_question == 1" style="line-height: 30px">
+                    --------------------题目分界线--------------------
+                  </p>
+                  <p v-if="Para.is_question == 0" style="line-height: 30px">
+                    --------------------题干分界线--------------------
+                  </p>
+                </el-col>
+                <el-col :span="3" style="line-height: 30px">
+                  <el-row
+                    type="flex"
+                    justify="center"
+                  >
+                    <el-button
+                      type="text"
+                      size="medium"
+                      @click="LS_Para_Type_Change(Para_Index)"
+                    >
+                      修改类型为{{ Para.is_question == 1 ? "题干" : "题目" }}
+                    </el-button>
+                  </el-row>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-button type="text" size="medium" :disabled="Para_Index == json_content.length - 1" @click="Merge_LS_To_Back(Para_Index)">
+                  向后合并
+                </el-button>
+              </el-row>
+            </el-col>
+          </el-row>
         </el-row>
         <!-- 转换过程的加载区域 -->
         <el-row 
@@ -625,7 +740,7 @@
             </el-row>
         </el-row>
         <!-- 英语，文件导出区域 -->
-        <el-row v-if="paper_type == '0'">
+        <el-row v-if="paper_type != '1'">
           <el-button type="primary" @click="saveFile(format)" :disabled="Download_Show(format)">导出文件</el-button>
         </el-row>
         <!-- 数学，文件导出区域 -->
@@ -1236,6 +1351,8 @@ export default {
       changecss: 1,
       // 读取返回json用的字段
       json_content: "",
+      // 文综理综以及后续课目用的，图片保存字段
+      json_image_dict: "",
       // 数学专用，答案JSON
       answer_content: "",
       // 保存英语的txt格式的字段
@@ -1396,16 +1513,74 @@ export default {
     this.ToTop();
   },
   methods: {
+    // 文综，理综，前切后切
+    LS_Cut_Front(Para_Index, Item_Index){
+      var Temp_Item = JSON.parse(JSON.stringify(this.json_content[Para_Index]));
+      Temp_Item.sub_para[0].splice(Item_Index, Temp_Item.sub_para[0].length);
+      this.json_content[Para_Index].sub_para[0].splice(0, Item_Index);
+      this.json_content.splice(Para_Index, 0, Temp_Item);
+    },
+    LS_Cut_Back(Para_Index, Item_Index){
+      var Temp_Item = JSON.parse(JSON.stringify(this.json_content[Para_Index]));
+      Temp_Item.sub_para[0].splice(Item_Index + 1, Temp_Item.sub_para[0].length);
+      this.json_content[Para_Index].sub_para[0].splice(0, Item_Index + 1);
+      this.json_content.splice(Para_Index, 0, Temp_Item);
+    },
+    // 修改文综，理综的段落类型
+    LS_Para_Type_Change(Para_Index){
+      if(this.json_content[Para_Index].is_question == 0){
+        this.json_content[Para_Index].is_question = 1
+        return
+      }else{
+        this.json_content[Para_Index].is_question = 0
+        return
+      }
+    },
+    // 更新表格中的图片文件
+    Table_Img_Get(Table_Html){
+      for(var key in this.json_content.img){
+        var Img_Name_Catcher = new RegExp('<img src="' + key + '"')
+        if(Img_Name_Catcher.exec(Table_Html) != null){
+          Table_Html = Table_Html.replace(Img_Name_Catcher,'<img src="' + this.json_content.img[key] + '"')
+        }
+      }
+      return Table_Html
+    },
+    // 向前合并文理综试题
+    Merge_LS_To_Front(Para_Index){
+
+      if(this.json_content[Para_Index].is_question != this.json_content[Para_Index - 1].is_question){
+        this.$message.error("题目与题干之间不能合并。")
+        return
+      }
+      
+      for(let i = 0; i < this.json_content[Para_Index].sub_para[0].length; i++){
+        this.json_content[Para_Index - 1].sub_para[0].push(this.json_content[Para_Index].sub_para[0][i])
+      }
+      this.json_content.splice(Para_Index, 1)
+    },  
+    Merge_LS_To_Back(Para_Index){
+
+      if(this.json_content[Para_Index].is_question != this.json_content[Para_Index + 1].is_question){
+        this.$message.error("题目与题干之间不能合并。")
+        return
+      }
+
+      for(let i = 0; i < this.json_content[Para_Index + 1].sub_para[0].length; i++){
+        this.json_content[Para_Index].sub_para[0].push(this.json_content[Para_Index + 1].sub_para[0][i])
+      }
+      this.json_content.splice(Para_Index + 1, 1)
+    },
     //请求重新切分
     Re_Cut_TestData(){
       for(let i = 0; i < this.testDataScore.length; i++){
         this.userCutTestData[i].Score = this.testDataScore[i];
-        console.log(this.userCutTestData[i])
       }
       this.userCutMath = false;
     },
     Show_Score(score){
-      console.log(score)
+      score
+      // console.log(score)
     },
     // 将所有题目状况更改为已确认
     Check_All(){
@@ -1686,23 +1861,31 @@ export default {
               this.loading = false;
             }
 
-          }
-          
+          } 
+          // 文综，理综，语文
+          else if( this.paper_type == '2' || this.paper_type == '3' || this.paper_type == '4'){
+            this.json_content = data.data.paper
+            this.json_image_dict = data.data.image_dict
+          } 
+          this.loading = false;
         }); 
 
       
       this.fileName = e.target.files[0].name;
 
     },
-    // 导入英语试卷时的方法
+    // 导入大多数试卷时的方法
     selectFile(e){
 
       if(e.target.files.length > 0){
+
+        this.fileName = e.target.files[0].name;
 
         let formData = new FormData();
 
         formData.append("files", e.target.files[0]);
         formData.append("paper_type", this.paper_type);
+        formData.append("data_format", '0')
 
         let config = {
           headers: {
@@ -1909,28 +2092,53 @@ export default {
     // 存储为txt文件并下载
     saveTxtFile() {
       var output_string = "";
-      for (var i = 0; i < this.file_item.length; i++) {
-        for (var j = 0; j < this.file_item[i].length; j++) {
-          if (
-            this.file_item[i][j].length == 0 &&
-            (j == this.file_item[i].length - 1 || j == 0) &&
-            this.file_item_label[i] == -1
-          ) {
-            output_string += this.Get_Stem_Label(i);
-            output_string += "\n";
-          } 
+      if(this.paper_type == '0'){
+        for (var i = 0; i < this.file_item.length; i++) {
+          for (var j = 0; j < this.file_item[i].length; j++) {
+            if (
+              this.file_item[i][j].length == 0 &&
+              (j == this.file_item[i].length - 1 || j == 0) &&
+              this.file_item_label[i] == -1
+            ) {
+              output_string += this.Get_Stem_Label(i);
+              output_string += "\n";
+            } 
 
-          else if(
-            this.file_item[i][j].length == 0 &&
-            (j == this.file_item[i].length - 1 || j == 0) &&
-            this.file_item_label[i] != -1
-          ) {
-            output_string += this.Get_Title_Label(i);
+            else if(
+              this.file_item[i][j].length == 0 &&
+              (j == this.file_item[i].length - 1 || j == 0) &&
+              this.file_item_label[i] != -1
+            ) {
+              output_string += this.Get_Title_Label(i);
+              output_string += "\n"
+            } 
+            
+            else {
+              output_string += this.file_item[i][j] + "\n";
+            }
+          }
+        }
+      }else if(this.paper_type == '2' || this.paper_type == '3'){
+        for(let i = 0 ; i < this.json_content.length; i++){
+          if(this.json_content[i].is_question == 0){
+            output_string += "-------------------- 题干分界线 --------------------\n"
+          }else{
+            output_string += "-------------------- 题目分界线 --------------------\n"
+          }
+          for(let j = 0; j < this.json_content[i].sub_para[0].length; j++){
+            for(let k = 0; k < this.json_content[i].sub_para[0][j].runs.length; k++){
+              if(this.json_content[i].sub_para[0][j].runs[k].run_type == '0'){
+                output_string += this.json_content[i].sub_para[0][j].runs[k].run_text;
+              }else if(this.json_content[i].sub_para[0][j].runs[k].run_type == '1'){
+                output_string += "<Pic_Name_" + this.json_content[i].sub_para[0][j].runs[k].image.src + ">";
+              }
+            }
             output_string += "\n"
-          } 
-          
-          else {
-            output_string += this.file_item[i][j] + "\n";
+          }
+          if(this.json_content[i].is_question == 0){
+            output_string += "-------------------- 题干分界线 --------------------\n"
+          }else{
+            output_string += "-------------------- 题目分界线 --------------------\n"
           }
         }
       }
@@ -1978,33 +2186,43 @@ export default {
     // 存储为json文件并下载
     saveJsonFile() {
 
-      this.json_return.segment_num = this.file_item.length;
-      this.json_return.paper = [];
+      if(this.paper_type == "0"){
 
-      for(var i = 0; i < this.file_item.length; i++){
+        this.json_return.segment_num = this.file_item.length;
+        this.json_return.paper = [];
 
-        var Item = {"is_question": -1, "text": "", "additional": ""}
+        for(var i = 0; i < this.file_item.length; i++){
 
-        if(this.file_item_label[i] != -1){
-          Item.is_question = 1;
-        }else{
-          Item.is_question = 0;
+          var Item = {"is_question": -1, "text": "", "additional": ""}
+
+          if(this.file_item_label[i] != -1){
+            Item.is_question = 1;
+          }else{
+            Item.is_question = 0;
+          }
+
+          for(var j = 1; j < this.file_item[i].length - 1; j++){
+            Item.text = Item.text + this.file_item[i][j] + "\n";
+          }
+
+          this.json_return.paper.push(Item);
+
         }
-
-        for(var j = 1; j < this.file_item[i].length - 1; j++){
-          Item.text = Item.text + this.file_item[i][j] + "\n";
-        }
-
-        this.json_return.paper.push(Item);
-
+        let file = new File(
+          [JSON.stringify(this.json_return, null, 2)],
+          this.fileName.split(".")[0] + ".json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
+        return
+      }else{
+        let file = new File(
+          [JSON.stringify(this.json_content, null, 2)],
+          this.fileName.split(".")[0] + ".json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
       }
-
-      var file = new File(
-        [JSON.stringify(this.json_return, null, 2)],
-        this.fileName.split(".")[0] + ".json",
-        { type: "text/plain;charset=utf-8" }
-      );
-      FileSaver.saveAs(file);
     },
     
     // 切分位置在这一点的前面
@@ -2192,28 +2410,26 @@ export default {
     },
     
     // 合并相邻的两个位置
-    Del(index_out, index_in) {
+    Del(index_out, label) {
 
-      if (this.file_item[index_out][index_in].length != 0) {
-        alert("这里不是分界线！");
-      } 
+        let index_index = this.title_index.indexOf(
+          this.file_item_label[index_out]
+        );
 
-      else {
         // 去掉前切分线
-        if (index_in == 0) {
-
-          var index_index = this.title_index.indexOf(this.file_item_label[index_out]);
-
+        if (label == 'front') {
+          
           // 最开始的位置没有前切功能
 
           if (index_out != 0) {
-
             // 首先确认这两道题是属于题目
             // 然后确认两道题的label不一致
             // 确定属于合并不同题目项
 
-            if(this.file_item_label[index_out] != -1 && this.file_item_label[index_out-1] != -1){
-              
+            if (
+              this.file_item_label[index_out] != -1 &&
+              this.file_item_label[index_out - 1] != -1
+            ) {
               // 去掉用于作为边界线的符号
               this.file_item[index_out - 1].splice(
                 this.file_item[index_out - 1].length - 1,
@@ -2225,7 +2441,9 @@ export default {
 
               // 内容合并
               for (var i = 0; i < this.file_item[index_out].length; i++) {
-                this.file_item[index_out - 1].push(this.file_item[index_out][i]);
+                this.file_item[index_out - 1].push(
+                  this.file_item[index_out][i]
+                );
               }
 
               // 删除原先“后面”的那一项
@@ -2237,26 +2455,27 @@ export default {
               // 修改原先后面那一项的状态为false，表示这道题目的位置空出来了
               // 修改方案：如果这个位置的后面仍然有同值，则放弃修改
 
-              for(i = index_out + 1; i < this.file_item_label.length; i++){
-                if(this.file_item_label[i] != -1){
+              for (i = index_out + 1; i < this.file_item_label.length; i++) {
+                if (this.file_item_label[i] != -1) {
                   this.file_item_label[i] = this.file_item_label[i] - 1;
                 }
               }
               this.file_item_label.splice(index_out, 1);
 
-              for(var j = index_index + 1; j < this.title_index.length; j++){
-                this.title_index[j] = this.title_index[j] - 1
+              for (var j = index_index + 1; j < this.title_index.length; j++) {
+                this.title_index[j] = this.title_index[j] - 1;
               }
-              this.title_index.splice(index_index, 1)
-
+              this.title_index.splice(index_index, 1);
             }
             // 此时status_index只可能为-1，因为这里只可能是题干项了，略去
             // 题干项没有status记录，省去
             // 题干之间本身没有区分，标签都是-1，需要返回分割线内容的话用函数去做
             // 具体做法为读出label栏内这个题干标签和下一个题干标签之间的头尾
             // 然后读出头尾的index，用true做计数值，最终返回题目栏范围
-            else if(this.file_item_label[index_out] == -1 && this.file_item_label[index_out-1] == -1){
-
+            else if (
+              this.file_item_label[index_out] == -1 &&
+              this.file_item_label[index_out - 1] == -1
+            ) {
               // 去掉用于作为边界线的符号
               this.file_item[index_out - 1].splice(
                 this.file_item[index_out - 1].length - 1,
@@ -2268,7 +2487,9 @@ export default {
 
               // 内容合并
               for (i = 0; i < this.file_item[index_out].length; i++) {
-                this.file_item[index_out - 1].push(this.file_item[index_out][i]);
+                this.file_item[index_out - 1].push(
+                  this.file_item[index_out][i]
+                );
               }
 
               // 删除原先“后面”的那一项
@@ -2280,55 +2501,60 @@ export default {
               // 查找此位置之前的一道题目的label
               var front_title_label = -2;
 
-              for(i = index_out; i > 0; i--){
-                if(this.file_item_label[i] != -1){
+              for (i = index_out; i > 0; i--) {
+                if (this.file_item_label[i] != -1) {
                   front_title_label = this.file_item_label[i];
                   break;
                 }
               }
 
-              if(front_title_label == -2){
-                for(i = 0; i < this.file_item_label.length; i++){
-                  if(this.file_item_label[i] != -1){
-                    this.title_index[this.title_index.indexOf(this.file_item_label[i])] -= 1;
+              if (front_title_label == -2) {
+                for (i = 0; i < this.file_item_label.length; i++) {
+                  if (this.file_item_label[i] != -1) {
+                    this.title_index[
+                      this.title_index.indexOf(this.file_item_label[i])
+                    ] -= 1;
                     this.file_item_label[i] -= 1;
                   }
                 }
-              }else{
-                for(i = this.file_item_label.indexOf(front_title_label); i < this.file_item_label.length; i++){
-                  if(this.file_item_label[i] != -1){
-                    var index_temp = this.title_index.indexOf(this.file_item_label[i])
+              } else {
+                for (
+                  i = this.file_item_label.indexOf(front_title_label);
+                  i < this.file_item_label.length;
+                  i++
+                ) {
+                  if (this.file_item_label[i] != -1) {
+                    var index_temp = this.title_index.indexOf(
+                      this.file_item_label[i]
+                    );
                     this.title_index[index_temp] = i;
                     this.file_item_label[i] = i;
                   }
                 }
               }
-
             }
             // 两项所处位置不一样
-            else{
+            else {
               this.Show_CANT();
             }
           }
-        
         }
         // 去掉后切分线
         else {
 
-          index_index = this.title_index.indexOf(this.file_item_label[index_out]);
-
           // 最后面的位置没有后切功能
 
           if (index_out != this.file_item.length - 1) {
-
             // 首先确认这两道题是属于题目
             // 然后确认待合并的两项都在题目项，用的是label项是因为要确定两道题的标签不一定不一样
             // 接着确认两道题目的状态都是true，说明两道题目的范围都还是原先的范围
             // 最后确认两道题的label不一致
             // 确定属于合并不同题目项
 
-            if(this.file_item_label[index_out] != -1 && this.file_item_label[index_out+1] != -1){
-              
+            if (
+              this.file_item_label[index_out] != -1 &&
+              this.file_item_label[index_out + 1] != -1
+            ) {
               // 去掉用于作为边界线的符号
               this.file_item[index_out].splice(
                 this.file_item[index_out].length - 1,
@@ -2340,33 +2566,36 @@ export default {
 
               // 内容合并
               for (i = 0; i < this.file_item[index_out + 1].length; i++) {
-                this.file_item[index_out].push(this.file_item[index_out + 1][i]);
+                this.file_item[index_out].push(
+                  this.file_item[index_out + 1][i]
+                );
               }
 
               // 删除原先“后面”的那一项
-              this.file_item.splice(index_out+1, 1);
+              this.file_item.splice(index_out + 1, 1);
 
-              for(i = index_out + 1; i < this.file_item_label.length; i++){
-                if(this.file_item_label[i] != -1){
+              for (i = index_out + 1; i < this.file_item_label.length; i++) {
+                if (this.file_item_label[i] != -1) {
                   this.file_item_label[i] = this.file_item_label[i] - 1;
                 }
               }
               this.file_item_label.splice(index_out, 1);
 
-              for(j = index_index + 1; j < this.title_index.length; j++){
-                this.title_index[j] = this.title_index[j] - 1
+              for (j = index_index + 1; j < this.title_index.length; j++) {
+                this.title_index[j] = this.title_index[j] - 1;
               }
-              this.title_index.splice(index_index, 1)
+              this.title_index.splice(index_index, 1);
             }
-            
+
             // 此时status_index只可能为-1，因为这里只可能是题干项了，略去
             // 题干项没有status记录，省去
             // 题干之间本身没有区分，标签都是-1，需要返回分割线内容的话用函数去做
             // 具体做法为读出label栏内这个题干标签和下一个题干标签之间的头尾
             // 然后读出头尾的index，用true做计数值，最终返回题目栏范围
-
-            else if(this.file_item_label[index_out] == -1 && this.file_item_label[index_out+1] == -1){
-
+            else if (
+              this.file_item_label[index_out] == -1 &&
+              this.file_item_label[index_out + 1] == -1
+            ) {
               // 去掉用于作为边界线的符号
               this.file_item[index_out].splice(
                 this.file_item[index_out].length - 1,
@@ -2378,7 +2607,9 @@ export default {
 
               // 内容合并
               for (i = 0; i < this.file_item[index_out + 1].length; i++) {
-                this.file_item[index_out].push(this.file_item[index_out + 1][i]);
+                this.file_item[index_out].push(
+                  this.file_item[index_out + 1][i]
+                );
               }
 
               // 删除原先“后面”的那一项
@@ -2390,40 +2621,44 @@ export default {
               // 查找此位置之前的一道题目的label
               front_title_label = -2;
 
-              for(i = index_out; i > 0; i--){
-                if(this.file_item_label[i] != -1){
+              for (i = index_out; i > 0; i--) {
+                if (this.file_item_label[i] != -1) {
                   front_title_label = this.file_item_label[i];
                   break;
                 }
               }
 
-              if(front_title_label == -2){
-                for(i = 0; i < this.file_item_label.length; i++){
-                  if(this.file_item_label[i] != -1){
-                    this.title_index[this.title_index.indexOf(this.file_item_label[i])] -= 1;
+              if (front_title_label == -2) {
+                for (i = 0; i < this.file_item_label.length; i++) {
+                  if (this.file_item_label[i] != -1) {
+                    this.title_index[
+                      this.title_index.indexOf(this.file_item_label[i])
+                    ] -= 1;
                     this.file_item_label[i] -= 1;
                   }
                 }
-              }else{
-                for(i = this.file_item_label.indexOf(front_title_label); i < this.file_item_label.length; i++){
-                  if(this.file_item_label[i] != -1){
-                    index_temp = this.title_index.indexOf(this.file_item_label[i])
+              } else {
+                for (
+                  i = this.file_item_label.indexOf(front_title_label);
+                  i < this.file_item_label.length;
+                  i++
+                ) {
+                  if (this.file_item_label[i] != -1) {
+                    index_temp = this.title_index.indexOf(
+                      this.file_item_label[i]
+                    );
                     this.title_index[index_temp] = i;
                     this.file_item_label[i] = i;
                   }
                 }
               }
-
             }
             // 两项所处类型不一样
-            else{
+            else {
               this.Show_CANT();
             }
           }
-          
         }
-      }
-
     },
 
     // 获取题干或其他内容应当显示的分界线内容
@@ -2468,11 +2703,13 @@ export default {
 
         if(First_Label != Last_Label){
 
-          return  "--------------------第【 " + First_Label + " - " + Last_Label + " 】题题干分界线--------------------";
+          // return  "--------------------第【 " + First_Label + " - " + Last_Label + " 】题题干分界线--------------------";
+          return "--------------------题干分界线--------------------"
 
         }else{
 
-          return  "--------------------第【 " + First_Label + " 】题题干分界线--------------------";
+          // return  "--------------------第【 " + First_Label + " 】题题干分界线--------------------";
+          return "--------------------题干分界线--------------------"
 
         }
       }
@@ -2507,7 +2744,8 @@ export default {
 
       if(sub_count == 1){
 
-        return "--------------------第 " + index_count + " 题题目分界线--------------------";
+        // return "--------------------第 " + index_count + " 题题目分界线--------------------";
+        return "--------------------题目分界线--------------------"
 
       }
 
@@ -2566,6 +2804,7 @@ export default {
     Clear(){
 
       this.json_content = ""
+      this.json_image_dict = ""
       // 数学专用，答案JSON
       this.answer_content = ""
       this.txt_content = ""
@@ -2595,9 +2834,9 @@ export default {
     },
     // ------------------------这下面是本体的方法，上面是导入试卷的方法-------------------------------
     // 处理上传试卷时的方法
-    uploadPaper(event){
-      console.log(event.target.files)
-    },
+    // uploadPaper(event){
+    //   console.log(event.target.files)
+    // },
     // 关闭导入试卷这一栏对话框的方法
     Import_Paper_Dialog_Close(){
       this.importPaperDialog = false;
@@ -3229,7 +3468,7 @@ export default {
             }
           } catch (err) {
             this.upload = false;
-            console.log(`${err.message}`);
+            // console.log(`${err.message}`);
           }
         };
         reader.readAsText(file.raw);
@@ -4021,8 +4260,6 @@ export default {
     },
     // 负责实际检查的部分
     ChecK_Do(content){
-
-      console.log(content);
 
       let remakeContent = "";
 
