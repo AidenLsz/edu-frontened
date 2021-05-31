@@ -29,15 +29,15 @@ export function zoom(svg, g) {
 }
 // const colorDict=["#c5e1a5","#ffc0cb","#fdfd96","#1f77b4","#ffa500","#006400"];
 // const colorDict=["#c5e1a5","#87CEFA","#fdfd96","#409EFD","#6495ED","#006400"];
-const colorDict = ["#fcfe5f", "#eeb8c3", "#9ECCAB", "#8fb2c9", "#F1939C", "#fee159"];
+// const colorDict = ["#fcfe5f", "#eeb8c3", "#9ECCAB", "#8fb2c9", "#F1939C", "#fee159"];
 // #409EFD
 // #EDB664
 // #9ECCAB
 // #F1939C
 
-export function color(d) {
-  return colorDict[d];
-}
+// export function color(d) {
+//   return colorDict[d];
+// }
 export function addTooltip(svgContainer, circle) {
 
   let Tooltip = svgContainer
@@ -84,41 +84,42 @@ const dataDict = {
   current: {
     name:'current',
     desc: "当前知识点",
-    value: "3",
+    value: 3,
     color: "#8fb2c9",
   },
   pre: {
     name: 'pre',
     desc:"前驱节点",
-    value: "0",
+    value: 0,
     color: "#fcfe5f",
   },
   suc: {
     name:'suc',
     desc: "后继节点",
-    value: "5",
+    value: 5,
     color: "#fee159",
   },
   costudy: {
     name: 'costudy',
     desc:"共同学习节点",
-    value: "2",
+    value: 2,
     color: "#9ECCAB",
   },
   sup: {
     name: 'sup',
     desc: "上级节点",
-    value: "1",
+    value: 1,
     color: "#eeb8c3",
   },
   inf: {
     name: 'suc',
     desc: "下级节点",
-    value: "4",
+    value: 4,
     color: "#F1939C",
   }
 }
 
+export {dataDict}
 export function addLegend(svg, radius, legendArray) {
   let data=[]
   for (var d of legendArray) {

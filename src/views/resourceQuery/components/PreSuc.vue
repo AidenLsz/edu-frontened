@@ -6,10 +6,12 @@
 
 <script>
 import * as d3 from "d3";
-import d3Tip from "d3-tip";
+// import d3Tip from "d3-tip";
 import $ from "jquery";
-import {zoom,addTooltip,color,addLegend} from './common.js'
-d3.tip = d3Tip;
+import {zoom,addTooltip,
+  // color,
+  addLegend} from './utils.js'
+// d3.tip = d3Tip;
 
 export default {
   name: "",
@@ -18,29 +20,37 @@ export default {
     };
   },
   props: {
-    node: {
+    data: {
       type: Object,
-      default: function() {
-        return { message: "" };
-      }
-    },
-    neighbors_groups: {
-      type: Object,
-      default: function() {
-        return { message: "" };
-      }
-    },
-    inward_arrow: {
-      type: Number,
-      default: 0
-    },
-    outward_arrow: {
-      type: Number,
-      default: 0
     },
   },
+  // props: {
+  //   data:{
+  //     type:Object
+  //   },
+  //   // node: {
+  //   //   type: Object,
+  //   //   default: function() {
+  //   //     return { message: "" };
+  //   //   }
+  //   // },
+  //   // neighbors_groups: {
+  //   //   type: Object,
+  //   //   default: function() {
+  //   //     return { message: "" };
+  //   //   }
+  //   // },
+  //   // inward_arrow: {
+  //   //   type: Number,
+  //   //   default: 0
+  //   // },
+  //   // outward_arrow: {
+  //   //   type: Number,
+  //   //   default: 0
+  //   // },
+  // },
   watch: {
-    node: {
+    data: {
       handler() {
         this.draw_graph();
       },
@@ -48,51 +58,58 @@ export default {
     },
   },
   mounted () {
-    this.draw_graph()
+    // this.draw_graph()
+    // console.log(this.data);
   },
   methods:{
-    draw_graph(){
-      let data={}
-      let nodes = [
-          {
-            id:this.node.name,
-            community:3,
-            desc: this.node.description,
-          }
-      ];
-
-      let edges=[]
-      let kg_group=this.neighbors_groups["kp2.0"]
+    draw_graph(data){
+      // let data={}
+      // let nodes = [
+      //     {
+      //       id:this.node.name,
+      //       community:3,
+      //       desc: this.node.description,
+      //     }
+      // ];
       //
-      for (let i = 0; i < kg_group.length; i++) {
-        if (i < this.inward_arrow) {
-            nodes[i + 1] = {
-              id:kg_group[i].name,
-              community:0,
-              desc: kg_group[i].annotation.split("description-")[1],
-            };
-            edges[i] = {
-            source: kg_group[i].name,
-            target: this.node.name,
-            relation: '',
-            value: Math.random() * (1.6 - 1) + 1
-          };
-        } else if(i<this.inward_arrow +this.outward_arrow){
-          nodes[i + 1] = {
-            id:kg_group[i].name,
-            community:5,
-            desc: kg_group[i].annotation.split("description-")[1],
-          };
-          edges[i] = {
-            source: this.node.name,
-            target: kg_group[i].name,
-            relation: '',
-            value: Math.random() * (1.6 - 1) + 1
-          };
-        }
-      }
-      data.nodes=nodes
-      data.links=edges
+      // let edges=[]
+      // let kg_group=this.neighbors_groups["kp2.0"]
+      // //
+      // for (let i = 0; i < kg_group.length; i++) {
+      //   if (i < this.inward_arrow) {
+      //       nodes[i + 1] = {
+      //         id:kg_group[i].name,
+      //         community:0,
+      //         desc: kg_group[i].annotation.split("description-")[1],
+      //       };
+      //       edges[i] = {
+      //       source: kg_group[i].name,
+      //       target: this.node.name,
+      //       relation: '',
+      //       value: Math.random() * (1.6 - 1) + 1
+      //     };
+      //   } else if(i<this.inward_arrow +this.outward_arrow){
+      //     nodes[i + 1] = {
+      //       id:kg_group[i].name,
+      //       community:5,
+      //       desc: kg_group[i].annotation.split("description-")[1],
+      //     };
+      //     edges[i] = {
+      //       source: this.node.name,
+      //       target: kg_group[i].name,
+      //       relation: '',
+      //       value: Math.random() * (1.6 - 1) + 1
+      //     };
+      //   }
+      // }
+      // data.nodes=nodes
+      // data.links=edges
+      console.log('presuc compo',data);
+
+      // if(!this.data.nodes){
+      //   // console.log(this.data);
+      //   return ;
+      // }
       var width =  $('svg#presuc').width()
       var height = $('svg#presuc').height();
       var drag = d3
@@ -179,7 +196,7 @@ export default {
       .attr('r', 5)
       // .attr("stroke", "black")
       .attr('fill', function (d) {
-        return color(d.community)
+        return d.color
       })
       .on('click',function(d){
         if(d.id!=_this.node.name){
@@ -198,6 +215,7 @@ export default {
       .style("font-family", "sans-serif")
       .style("font-size", "0.8em")
       .text(function (d) {
+        // console.log('d:',d.id);
         return d.id
       })
     zoom(svgDOM,svg)

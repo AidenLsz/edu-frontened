@@ -94,29 +94,33 @@
                 </el-button>
                 <el-tab-pane :key="Math.random()" label="前驱后继" name="presuc" id="presuc_container" class="svg-container">
                   <pre-suc
-                  :node="node"
+                    ref="presuc"
+                    :data="presucData"
+                    @search="search"
+                  />
+                  <!-- :node="node"
                   :neighbors_groups="neighbors_groups"
                   :inward_arrow="inward_arrow"
-                  :outward_arrow="outward_arrow"
-                  @search="search"
-                  />
+                  :outward_arrow="outward_arrow" -->
                 </el-tab-pane>
                 <el-tab-pane :key="Math.random()" label="共同学习" name="costudy" id="costudy_container" class="svg-container">
                   <co-study
-                    :node="node"
-                    :neighbors_groups="neighbors_groups"
-                    :undirected_len="undirected_len"
+                    ref="costudy"
+                    :data="costudyData"
                     @search="search"
                     />
+                    <!-- :node="node"
+                    :neighbors_groups="neighbors_groups"
+                    :undirected_len="undirected_len" -->
                 </el-tab-pane>
-                <el-tab-pane :key="Math.random()" label="层级关系" name="tree" id="tree_container" class="svg-container">
+                <!-- <el-tab-pane :key="Math.random()" label="层级关系" name="tree" id="tree_container" class="svg-container">
                   <Hierarchy
                     :node="node"
                     :neighbors_hierarchy="neighbors_hierarchy"
                     :superior_layer="superior_layer"
                     :inferior_layer="inferior_layer"
                     />
-                </el-tab-pane>
+                </el-tab-pane> -->
               </el-tabs>
             </el-col>
           </el-row>
@@ -133,18 +137,18 @@
             <el-col :span="6"><p style="color: #F1939C; font-size: 30px; line-height: 15px; padding-top: 5px">●</p><p>层级关系</p></el-col>
           </el-row> -->
 
-          <Graph
+          <!-- <Graph
             :node="node"
-            :neighbors_groups="neighbors_groups"
+            @search="search"
+            /> -->
+            <!-- :neighbors_groups="neighbors_groups"
             :neighbors_hierarchy="neighbors_hierarchy"
             :inward_arrow="inward_arrow"
             :outward_arrow="outward_arrow"
             :undirected_len="undirected_len"
             :superior_layer="superior_layer"
             :inferior_layer="inferior_layer"
-            :selected_type="checkList"
-            @search="search"
-            />
+            :selected_type="checkList" -->
         </div>
       </el-col>
     </el-row>
@@ -156,25 +160,39 @@ import $ from 'jquery'
 import * as d3 from "d3";
 import PreSuc from "./components/PreSuc.vue";
 import CoStudy from "./components/CoStudy.vue";
-import Hierarchy from "./components/Hierarchy.vue";
-import Graph from "./components/Graph.vue";
+// import Hierarchy from "./components/Hierarchy.vue";
+// import Graph from "./components/Graph.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import screenfull from 'screenfull'
+import {dataDict} from './components/utils.js'
+
 
 export default {
   components: {
-    Graph,
-    ComplexInput,PreSuc,CoStudy,Hierarchy },
+    // Graph,
+    ComplexInput,
+    PreSuc,
+    CoStudy,
+    // Hierarchy
+  },
   name: "KU",
   data() {
     return {
       activeName:"presuc",
       content:"",
-      ku_name: "",
+      ku_name: "函数",
       ku_type: "kp2.0",
       fullEl: document.getElementById(this.activeName+'_container'),
       isFullscreen: false,
       // 节点。邻居节点，层级结构
+      presucData:{
+        // node:[],
+        // links:[]
+      },
+      costudyData:{
+        // node:[],
+        // links:[]
+      },
       node: {},
       neighbors_groups: {},
       neighbors_hierarchy : [],
@@ -182,7 +200,7 @@ export default {
       sourceLabel: ["百科", "人教版"],
       checkList: ["前驱后继", "共同学习", "层级结构"],
       // 前驱后继，共同学习，向内箭头，向外箭头
-      directed_len: "",
+      // directed_len: "",
       // undirected_len: "",
       undirected_len: 0,
       inward_arrow: 0,
@@ -190,7 +208,7 @@ export default {
       // 上级层，下级层
       superior_layer: 0,
       inferior_layer: 0,
-      layerLength: "",
+      // layerLength: "",
       root_view: false,
       loading: false,
       url: "",
@@ -229,7 +247,7 @@ export default {
   mounted() {
     $('.panel-btn').hide()
     this.root_view = sessionStorage.user === "root";
-    console.log(this.root_view);
+    // console.log(this.root_view);
     if (this.$route.params.name) {
       this.ku_name = this.$route.params.name;
       this.submit(this.ku_name);
@@ -342,10 +360,9 @@ export default {
         "https://baike.baidu.com/search/word?word=" + encodeURI(this.ku_name);
       this.loading = true;
       d3.selectAll("svg>*").remove();
-
       this.$http
         .post(
-          this.backendIP + "/api/ku",
+          this.backendIP + "/api/ku_v2",
           {
             ku_name: this.ku_name,
             ku_type: this.ku_type,
@@ -361,39 +378,126 @@ export default {
           } else {
             this.openPanel();
             this.initFullScreen();
+            this.handlePresucData(data.data)
+            this.handleCostudyData(data.data)
             this.activeName="presuc"
-            this.node = data.data.node;
-            this.neighbors_groups = data.data.neighbors_groups;
-            this.neighbors_hierarchy = data.data.neighbors_hierarchy;
-            for(let i = 0; i < this.neighbors_hierarchy.length; i++){
-              if(this.neighbors_hierarchy[i] == this.node.name){
-                this.neighbors_hierarchy[i] = this.neighbors_hierarchy[i] + " "
-              }
-            }
-            this.inward_arrow = data.data.pre_len;
-            this.outward_arrow = data.data.suc_len;
-            this.superior_layer = data.data.sup_len;
-            this.inferior_layer = data.data.inf_len;
+            // this.node = data.data.node;
+            // this.neighbors_groups = data.data.neighbors_groups;
+            // this.neighbors_hierarchy = data.data.neighbors_hierarchy;
+            // for(let i = 0; i < this.neighbors_hierarchy.length; i++){
+            //   if(this.neighbors_hierarchy[i] == this.node.name){
+            //     this.neighbors_hierarchy[i] = this.neighbors_hierarchy[i] + " "
+            //   }
+            // }
+            // this.inward_arrow = data.data.pre_len;
+            // this.outward_arrow = data.data.suc_len;
+            // this.superior_layer = data.data.sup_len;
+            // this.inferior_layer = data.data.inf_len;
             this.loading = false;
+            //
+            // // this.directed_len = "(" + (data.data.pre_len + data.data.suc_len) + ")";
+            // // this.undirected_len = "(" + data.data.undirected_len + ")";
+            // this.undirected_len =  data.data.undirected_len;
+            // // this.layerLength = "(" + (data.data.sup_len + data.data.inf_len) + ")";
           }
         });
-      this.$http
-        .post(
-          this.backendIP + "/api/ku",
+
+      // this.$http
+      //   .post(
+      //     this.backendIP + "/api/ku",
+      //     {
+      //       ku_name: this.ku_name,
+      //       ku_type: this.ku_type,
+      //       ku_edge_type: ["前驱后继", "共同学习", "层级结构"],
+      //       system: this.knowledgeSystem
+      //     },
+      //     { emulateJSON: true }
+      //   )
+      //   .then(function(data) {
+      //     this.directed_len = "(" + (data.data.pre_len + data.data.suc_len) + ")";
+      //     // this.undirected_len = "(" + data.data.undirected_len + ")";
+      //     this.undirected_len =  data.data.undirected_len;
+      //     this.layerLength = "(" + (data.data.sup_len + data.data.inf_len) + ")";
+      //   });
+    },
+    handlePresucData(data){
+      let presucData={}
+      presucData.nodes = [
           {
-            ku_name: this.ku_name,
-            ku_type: this.ku_type,
-            ku_edge_type: ["前驱后继", "共同学习", "层级结构"],
-            system: this.knowledgeSystem
-          },
-          { emulateJSON: true }
-        )
-        .then(function(data) {
-          this.directed_len = "(" + (data.data.pre_len + data.data.suc_len) + ")";
-          // this.undirected_len = "(" + data.data.undirected_len + ")";
-          this.undirected_len =  data.data.undirected_len;
-          this.layerLength = "(" + (data.data.sup_len + data.data.inf_len) + ")";
-        });
+            id:data.nodes.node.name,
+            community:dataDict.current.value,
+            color:dataDict.current.color,
+            desc: data.nodes.node.description,
+          }
+      ];
+      presucData.links=[];
+      let pre = data.nodes.pre
+      let suc = data.nodes.suc
+      //
+      for (let i = 0; i < pre.length; i++) {
+          presucData.nodes.push({
+            id:pre[i].node.name,
+            // id:pre[i].node.name,
+            color:dataDict.pre.color,
+            community:dataDict.pre.value,
+            desc:pre[i].node.description
+            // desc: pre[i].node.annotation.split("description-")[1],
+          })
+          presucData.links.push({
+            source: pre[i].node.name,
+            target: data.nodes.node.name,
+            relation: '',
+            value: Math.random() * (1.6 - 1) + 1
+          })
+      }
+      // let len=pre.length+1;
+      for (let i = 0; i < suc.length; i++) {
+        presucData.nodes.push({
+          id:suc[i].node.name,
+          // id:suc[i].node.name,
+          color:dataDict.suc.color,
+          community:dataDict.suc.value,
+          desc: suc[i].node.description
+        })
+        presucData.links.push({
+          source: data.nodes.node.name,
+          target: suc[i].node.name,
+          relation: '',
+          value: Math.random() * (1.6 - 1) + 1
+        })
+      }
+      this.presucData=presucData;
+      console.log('drawing');
+      console.log('presucData:',this.presucData);
+      this.$refs.presuc.draw_graph(this.presucData)
+    },
+    handleCostudyData(data){
+      let costudyData={}
+      costudyData.nodes=[
+        {
+          name:data.nodes.node.name,
+          color:dataDict.current.color,
+          desc: data.nodes.node.description,
+        }
+      ]
+      costudyData.links=[]
+      let neighbors_undirected=data.neighbors_undirected["kp2.0"]
+      for (let i = 0; i < neighbors_undirected.length||0; i++) {
+        costudyData.nodes.push({
+          name:neighbors_undirected[i].name,
+          color:dataDict.costudy.color,
+          desc: neighbors_undirected[i].annotation.split("description-")[1],
+        })
+        costudyData.links.push({
+          source: 0,
+          target: i+1,
+          relation: '',
+          value: Math.random() * (1.6 - 1) + 1
+        })
+      }
+      this.costudyData=costudyData
+      // this.undirected_len =  json.undirected_len;
+
     },
     // Update Complex Input，将组合输入的内容复制到当前搜索框应该具有的内容里
     UCI(val){
