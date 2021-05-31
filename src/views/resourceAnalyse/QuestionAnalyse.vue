@@ -111,7 +111,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 第三行 -->
-                            <el-row style="width: 66.7%; display: none" class="Table_Unit_0">
+                            <el-row style="width: 66.7%" class="Table_Unit_0">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
@@ -126,7 +126,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 第四行 -->
-                            <el-row style="width: 66.7%" class="Table_Unit_0">
+                            <el-row style="width: 66.7%" class="Table_Unit_1">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
@@ -136,12 +136,12 @@
                                 <!-- 右列 -->
                                 <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
                                     <el-row type="flex" justify="start">
-                                        <span style="text-align: left">{{Question.database}}</span>
+                                        <span style="text-align: left">{{Question.pastpaper}}</span>
                                     </el-row>
                                 </el-col>
                             </el-row>
                             <!-- 第五行 -->
-                            <el-row style="width: 66.7%" class="Table_Unit_1">
+                            <el-row style="width: 66.7%" class="Table_Unit_0">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
@@ -156,7 +156,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 第六行 -->
-                            <el-row style="width: 66.7%" class="Table_Unit_0">
+                            <el-row style="width: 66.7%" class="Table_Unit_1">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
@@ -171,7 +171,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 第七行 -->
-                            <el-row style="width: 66.7%" class="Table_Unit_1">
+                            <el-row style="width: 66.7%" class="Table_Unit_0">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
