@@ -1,5 +1,5 @@
 <template lang="html">
-    <svg id="tree" style="width:100%;height:100%;overflow-y: scroll;"
+    <svg id="hierarchy" style="width:100%;height:100%;overflow-y: scroll;"
     class="d3-tree-vi width-100-percent container-border" />
 </template>
 
@@ -29,7 +29,7 @@ export default {
     draw_graph(data){
       let margin = ({ left: 60 ,top: 30, right: 30, bottom:30 })
 
-      let width = $('#tree').width()
+      let width = $('#hierarchy').width()
 
       let dy = width / 5
       let dx = 30
@@ -51,7 +51,7 @@ export default {
         .select('svg.d3-tree-vi')
 
       let svg=svgDOM.append('g')
-        .attr("viewBox", "0 0 " + $('#tree').width() + " " + $('#tree').height() )
+        .attr("viewBox", "0 0 " + $('#hierarchy').width() + " " + $('#hierarchy').height() )
         .attr("preserveAspectRatio", "xMidYMid meet");
         // .attr('viewBox', [margin.left, margin.top, width, dx])
       const gLink = svg.append('g')
@@ -91,8 +91,8 @@ export default {
         legend
         .transition(transition)
         .attr("transform", (d, i) => {
-          // return `translate(${width-150},${i * 23+left.x-($('#tree').height()-height)/2})`
-          // ($('#tree').height()-height)
+          // return `translate(${width-150},${i * 23+left.x-($('#hierarchy').height()-height)/2})`
+          // ($('#hierarchy').height()-height)
           return `translate(${width-150},${i * 23-height})`
         })
         // Update the nodes…

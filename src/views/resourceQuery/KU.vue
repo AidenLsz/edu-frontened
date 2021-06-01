@@ -257,7 +257,9 @@ export default {
       // setTimeout(function(){ $('.box-card.left').css('display','none') }, 1000);
     },
     handleSwitchTabs(){
-      d3.selectAll("svg>*").remove();
+      d3.selectAll("#presuc>*").remove();
+      d3.selectAll("#costudy>*").remove();
+      d3.selectAll("#hierarchy>*").remove();
       switch (this.activeName) {
         case 'presuc':
           this.drawPresuc();
