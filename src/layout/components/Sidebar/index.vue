@@ -127,6 +127,7 @@ export default {
   }
   .el-icon-s-fold{
     position: absolute;
+    color:#909399;
     top:3px;
     right:10px;
   }
