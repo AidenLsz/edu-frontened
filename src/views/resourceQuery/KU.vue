@@ -158,7 +158,7 @@ export default {
     return {
       activeName:"presuc",
       content:"",
-      ku_name: "函数",
+      ku_name: "",
       ku_type: "kp2.0",
       fullEl: document.getElementById(this.activeName+'_container'),
       isFullscreen: false,
