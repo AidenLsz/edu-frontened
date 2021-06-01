@@ -6,7 +6,8 @@
 <script>
 import * as d3 from "d3";
 import $ from "jquery";
-import {zoom,color,addLegend} from './common.js'
+import {zoom,
+  addLegend} from './utils.js'
 export default {
   data () {
     return {
@@ -24,69 +25,8 @@ export default {
       rootNodeId: null
     }
   },
-  props: {
-    node: {
-      type: Object,
-      default: function() {
-        return { message: "" };
-      }
-    },
-    neighbors_hierarchy: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    },
-    superior_layer: {
-      type: Number,
-      default: 0
-    },
-    inferior_layer: {
-      type: Number,
-      default: 0
-    },
-  },
-  mounted () {
-    this.draw_graph()
-  },
   methods:{
-    handleData(){
-      let data=null
-      let mid_data
-      if(this.superior_layer>0){
-        for (let i = 0; i < this.superior_layer; i++) {
-          data={
-            'name': this.neighbors_hierarchy[i].name,
-            'value': 1,
-            community:1,
-            'children': []
-          }
-        }
-        mid_data=data.children[0]
-      }
-      mid_data={
-        'name': this.node.name,
-        'value': 1,
-        'children': [],
-        community:3
-      }
-      for (let i = 0; i < this.inferior_layer; i++) {
-          mid_data.children.push({
-            'name': this.neighbors_hierarchy[i+this.superior_layer],
-            'value': 1,
-            'children': [],
-            community:4
-          })
-      }
-      if(!data){
-        data=mid_data
-      }else{
-        data.children.push(mid_data)
-      }
-    },
-    draw_graph(){
-      let data = this.handleData()
-      // let margin = ({ left: 60 ,top: 50, right: 120, bottom:120 })
+    draw_graph(data){
       let margin = ({ left: 60 ,top: 30, right: 30, bottom:30 })
 
       let width = $('#tree').width()
@@ -171,9 +111,8 @@ export default {
 
         nodeEnter.append('circle')
           .attr('r', 4)
-          // .attr("stroke", "black")
           .attr('fill', function (d) {
-            return color(d.data.community)
+            return d.data.color
           })
 
         nodeEnter.append('text')

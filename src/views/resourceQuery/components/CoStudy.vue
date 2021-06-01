@@ -9,28 +9,8 @@ import $ from "jquery";
 import {zoom,addTooltip,addLegend} from './utils.js'
 
 export default {
-  props: {
-    data: {
-      type: Object,
-    },
-  },
-  watch: {
-    data: {
-      handler() {
-        this.draw_graph();
-      },
-      deep: true
-    },
-  },
-  mounted() {
-    this.draw_graph()
-  },
   methods:{
-    draw_graph(){
-      if(!this.data.nodes){
-        return ;
-      }
-      // console.log('drawing graph',this.data);
+    draw_graph(data){
       let width = $('svg#costudy').width()
       let height = $('svg#costudy').height()
       let svg = d3.select('svg#costudy')
@@ -46,11 +26,11 @@ export default {
         .force('center', d3.forceCenter())
         .force('collision', d3.forceCollide().radius(15))
       // 生成节点数据
-      forceSimulation.nodes(this.data.nodes)
+      forceSimulation.nodes(data.nodes)
         .on('tick', ticked)
 
       forceSimulation.force('link')
-        .links(this.data.links)
+        .links(data.links)
         .distance(function (d) { // 每一边的长度
           return d.value * 100
         })
@@ -62,7 +42,7 @@ export default {
       // 绘制边
       let links = g.append('g')
         .selectAll('line')
-        .data(this.data.links)
+        .data(data.links)
         .enter()
         .append('line')
         .attr("stroke", "#999")
@@ -72,7 +52,7 @@ export default {
       // 边上的文字
       let linksText = g.append('g')
         .selectAll('text')
-        .data(this.data.links)
+        .data(data.links)
         .enter()
         .append('text')
         .text(function (d) {
@@ -80,7 +60,7 @@ export default {
         })
       // 创建分组
       let gs = g.selectAll('.circleText')
-        .data(this.data.nodes)
+        .data(data.nodes)
         .enter()
         .append('g')
         .call(d3.drag()
@@ -97,8 +77,7 @@ export default {
           return d.color
         })
         .on('click',function(d){
-          if(d.name!=_this.node.name)
-            _this.$emit("search", d.name)
+          _this.$emit("search", d.name)
         })
       addTooltip(d3.select('#costudy_container'),circle)
       let [legend,] = addLegend(svg,5,['current','costudy'])

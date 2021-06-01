@@ -27,17 +27,7 @@ export function zoom(svg, g) {
   // svg.call(zoom);
   zoom(svg);
 }
-// const colorDict=["#c5e1a5","#ffc0cb","#fdfd96","#1f77b4","#ffa500","#006400"];
-// const colorDict=["#c5e1a5","#87CEFA","#fdfd96","#409EFD","#6495ED","#006400"];
-// const colorDict = ["#fcfe5f", "#eeb8c3", "#9ECCAB", "#8fb2c9", "#F1939C", "#fee159"];
-// #409EFD
-// #EDB664
-// #9ECCAB
-// #F1939C
 
-// export function color(d) {
-//   return colorDict[d];
-// }
 export function addTooltip(svgContainer, circle) {
 
   let Tooltip = svgContainer
@@ -112,7 +102,7 @@ const dataDict = {
     color: "#eeb8c3",
   },
   inf: {
-    name: 'suc',
+    name: 'inf',
     desc: "下级节点",
     value: 4,
     color: "#F1939C",
