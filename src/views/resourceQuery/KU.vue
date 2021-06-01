@@ -343,7 +343,7 @@ export default {
       this.url =
         "https://baike.baidu.com/search/word?word=" + encodeURI(this.ku_name);
       this.loading = true;
-      // d3.selectAll("svg>*").remove();
+      d3.selectAll("svg>*").remove();
       this.$http
         .post(
           this.backendIP + "/api/ku_v2",

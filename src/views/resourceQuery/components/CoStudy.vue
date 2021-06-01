@@ -77,6 +77,7 @@ export default {
           return d.color
         })
         .on('click',function(d){
+          $(".tool-tip").hide()
           _this.$emit("search", d.name)
         })
       addTooltip(d3.select('#costudy_container'),circle)

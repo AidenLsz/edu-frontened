@@ -104,6 +104,7 @@ export default {
         return d.color
       })
       .on('click',function(d){
+        $(".tool-tip").hide()
         _this.$emit("search", d.id)
       })
       addTooltip(d3.select("#presuc_container"),circle)
