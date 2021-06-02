@@ -78,6 +78,12 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 + historyBackpack - 历史备份模块 - 用于存放曾经存在于项目中，现在被淘汰掉的文件，如果有回滚需求则便于处理
 
 + layout - 页面布局管理
+    -components    页面组件
+        -Sidebar      导航栏组件
+        -AppMain.vue  路由嵌套时使用的布局组件    
+        -footer.vue   页面底部组件
+        -login        登录组件
+        -register     注册组件
     -user.vue      用户登录后页面布局
     -visitor.vue   未登录时的页面布局
 
