@@ -54,7 +54,7 @@
       </div>
       <el-card class="box-card left">
         <div class="panel-btn" id="closeBtn" @click="closePanel()">
-          <i class="el-icon-close"></i>
+          <i class="el-icon-d-arrow-left"></i>
         </div>
         <div class="container">
           <div class="intro">
@@ -143,7 +143,7 @@ import Graph from "./components/Graph.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import screenfull from 'screenfull'
 import {dataDict} from './components/utils.js'
-
+import {Message } from 'element-ui'
 
 export default {
   components: {
@@ -358,7 +358,11 @@ export default {
         .then(function(data) {
           if (data.data.node === null) {
             this.loading = false;
-            alert("输入知识点不存在！");
+            Message({
+              message: '查询不到该知识点',
+              type: 'error',
+              duration: 5 * 1000
+            })
           } else {
             this.openPanel();
             this.initFullScreen();
@@ -367,6 +371,14 @@ export default {
             this.drawGraph()
             this.loading = false;
           }
+        })
+        .catch(()=>{
+          this.loading = false;
+          Message({
+            message: '查询不到该知识点',
+            type: 'error',
+            duration: 5 * 1000
+          })
         });
     },
     drawPresuc(){
