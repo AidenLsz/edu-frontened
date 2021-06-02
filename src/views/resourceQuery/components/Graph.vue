@@ -6,169 +6,13 @@
 import * as d3 from "d3";
 import $ from "jquery";
 import {
-  zoom,color,addTooltip
-} from './common.js'
+  zoom,
+  addTooltip,addLegend
+} from './utils.js'
 
 export default {
-  props: {
-    node: {
-      type: Object,
-      default: function() {
-        return {
-          message: ""
-        };
-      }
-    },
-    neighbors_groups: {
-      type: Object,
-      default: function() {
-        return {
-          message: ""
-        };
-      }
-    },
-    inward_arrow: {
-      type: Number,
-      default: 0
-    },
-    outward_arrow: {
-      type: Number,
-      default: 0
-    },
-    undirected_len: {
-      type: Number,
-      default: 0
-    },
-    neighbors_hierarchy: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    },
-    superior_layer: {
-      type: Number,
-      default: 0
-    },
-    inferior_layer: {
-      type: Number,
-      default: 0
-    },
-  },
-  watch: {
-    node: {
-      handler() {
-        this.draw_graph();
-      },
-      deep: true
-    },
-  },
-  mounted() {
-    this.draw_graph()
-  },
   methods: {
-    handleData() {
-      let data = {}
-      let nodes = [];
-      let nodeCount = 0;
-      let edgeCount = 0;
-      let edges = []
-      let lenMin = 1.5,
-        lenMax = 2;
-      nodes.push({
-        id: nodeCount++,
-        name: this.node.name,
-        community: 3,
-        group: "3",
-        desc: this.node.description,
-      })
-      //前驱后继
-      let ng = this.neighbors_groups["kp2.0"]
-      for (let i = 0; i < this.inward_arrow; i++, nodeCount++, edgeCount++) {
-        nodes.push({
-          id: nodeCount,
-          name: ng[i].name,
-          community: 0,
-          group: "0",
-          desc: ng[i].annotation.split("description-")[1],
-        })
-        edges.push({
-          id: edgeCount,
-          source: nodeCount,
-          target: 0,
-          relation: '',
-          value: Math.random() * (lenMax - lenMin) + lenMin,
-        })
-      }
-      for (let i = this.inward_arrow; i < this.inward_arrow + this.outward_arrow; i++, nodeCount++, edgeCount++) {
-        nodes.push({
-          id: nodeCount,
-          name: ng[i].name,
-          community: 5,
-          group: "5",
-          desc: ng[i].annotation.split("description-")[1],
-        })
-        edges.push({
-          id: edgeCount,
-          source: 0,
-          target: nodeCount,
-          relation: '',
-          value: Math.random() * (lenMax - lenMin) + lenMin,
-        })
-      }
-      //共同学习
-      for (let i = this.inward_arrow + this.outward_arrow; i < ng.length; i++, nodeCount++, edgeCount++) {
-        nodes.push({
-          id: nodeCount,
-          name: ng[i].name,
-          community: 2,
-          group: "2",
-          desc: ng[i].annotation.split("description-")[1],
-        })
-        edges.push({
-          id: edgeCount,
-          source: 0,
-          target: nodeCount,
-          relation: '',
-          value: Math.random() * (lenMax - lenMin) + lenMin,
-        })
-      }
-      //层级关系
-      let nh = this.neighbors_hierarchy
-      for (let i = 0; i < this.superior_layer; i++, nodeCount++, edgeCount++) {
-        nodes.push({
-          id: nodeCount,
-          name: nh[i],
-          group: "1",
-          community: 1,
-        })
-        edges.push({
-          id: edgeCount,
-          source: nodeCount,
-          target: 0,
-          relation: '',
-          value: Math.random() * (lenMax - lenMin) + lenMin,
-        })
-      }
-      for (let i = this.superior_layer; i < this.inferior_layer + this.superior_layer; i++, nodeCount++, edgeCount++) {
-        nodes.push({
-          id: nodeCount,
-          name: nh[i],
-          community: 4,
-          group: "4",
-        })
-        edges.push({
-          id: edgeCount,
-          source: 0,
-          target: nodeCount,
-          relation: '',
-          value: Math.random() * (lenMax - lenMin) + lenMin,
-        })
-      }
-      data.nodes = nodes
-      data.links = edges
-      return data;
-    },
-    draw_graph() {
+    draw_graph(data) {
       //	data stores
       var graph, store;
 
@@ -183,10 +27,10 @@ export default {
       var radius = 5;
       var svg = svgDOM.append('g');
       var groupingForce = forceInABox()
-        .strength(0.1)
+        .strength(0.05)
+        // .strength(1)
         .groupBy('community')
         .size([width, height]);
-      //	d3 color scales
 
       var link = svg.append("g")
         .selectAll('line'),
@@ -198,14 +42,11 @@ export default {
       var simulation = d3.forceSimulation().force("link", d3.forceLink().id(function(d) {
           return d.id;
         })).force("charge", d3.forceManyBody().strength(function() {
-          return -500;
-        })).force("center", d3.forceCenter(width / 2, height / 2))
+          return -400;
+        }).distanceMax(200).distanceMin(20))
+        .force('collision', d3.forceCollide().radius(20))
+        .force("center", d3.forceCenter(width / 2, height / 2))
         .force('group', groupingForce)
-        .force('center', d3.forceCenter(width / 2, height / 2))
-        .force('x', d3.forceX(width / 2).strength(0.02))
-        .force('y', d3.forceY(height / 2).strength(0.04));
-
-      var data = this.handleData()
       var nodeByID = {};
 
       //	data read and store
@@ -214,8 +55,8 @@ export default {
       });
 
       data.links.forEach(function(l) {
-        l.sourceGroup = nodeByID[l.source].group.toString();
-        l.targetGroup = nodeByID[l.target].group.toString();
+        l.sourceGroup = nodeByID[l.source].group;
+        l.targetGroup = nodeByID[l.target].group;
       });
 
       graph = data;
@@ -223,76 +64,24 @@ export default {
       //	filtered types
       var typeFilterList = [];
 
-
-
-
       let _this = this
-      const dataDict = [{
-        name: "前驱节点",
-        value: "0",
-        color: 0,
-        grey:false
-      },
-      {
-        name: "后继节点",
-        value: "5",
-        color: 5,
-        grey:false
-      },
-      {
-        name: "共同学习节点",
-        value: "2",
-        color: 2,
-        grey:false
-      },{
-        name: "知识点",
-        value: "3",
-        color: 3,
-        grey:false
-      },{
-        name: "上级节点",
-        value: "1",
-        color: 1,
-        grey:false
-      },{
-        name: "下级节点",
-        value: "4",
-        color: 4,
-        grey:false
-      }]
-      var legend = svg.selectAll("legend")
-        .data(dataDict)
-        .enter().append("g")
-        .attr("transform", (d, i) => `translate(${width - 120},${i * 30+80})`)
-        .on("click",function(d){
-            d.grey=!d.grey
-            var id = d.value;
-            if (typeFilterList.includes(id)) {
-              typeFilterList.splice(typeFilterList.indexOf(id), 1)
-            } else {
-              typeFilterList.push(id);
-            }
-            filter();
-            update();
-        });
-      let legendCircle;
-      legendCircle = legend.append("circle")
-        .attr("cx", 0)
-        .attr("cy", 0)
-        .attr("r", radius)
-        .attr("stroke", "black")
-        .attr("fill", (d)=>{
-          if(d.grey){
-            return "grey"
-          }
-          return color(d.color)
-        })
+      var [legend,legendCircle] =addLegend(svg,radius,['current','pre','suc','costudy','sup','inf'])
+      legend.attr("transform", (d, i) => `translate(${width-120},${i * 30+80})`)
 
-      legend.append("text")
-        .attr("x", 15)
-        .attr("y", 5)
-        .style("font-family", "Trebuchet MS")
-        .text(d => d.name);
+      legend.on("click",function(d){
+          if (d.value=="3") {
+            return;
+          }
+          d.grey=!d.grey
+          var id = d.value;
+          if (typeFilterList.includes(id)) {
+            typeFilterList.splice(typeFilterList.indexOf(id), 1)
+          } else {
+            typeFilterList.push(id);
+          }
+          filter();
+          update();
+      });
       update(true);
 
       //	general update pattern for updating the graph
@@ -303,7 +92,7 @@ export default {
             if(d.grey){
               return "grey"
             }
-            return color(d.color)
+            return d.color
           })
         }
 
@@ -321,12 +110,10 @@ export default {
           //	ENTER
           circle = node.append('circle')
             .attr('r', 5)
-            .attr("stroke", "black")
             .attr('fill', function(d) {
-              return color(d.community)
+              return d.color
             })
           // 文字
-          // let newNode =
           node.append('text')
             .attr('x', -6)
             .attr('y', 6)
@@ -355,12 +142,10 @@ export default {
           //	ENTER
           circle = newNode.append('circle')
             .attr('r', 5)
-            .attr("stroke", "black")
             .attr('fill', function(d) {
-              return color(d.community)
+              return d.color
             })
           // 文字
-          // let newNode =
           newNode.append('text')
             .attr('x', -6)
             .attr('y', 6)
@@ -393,7 +178,7 @@ export default {
           .attr("stroke-opacity", 0.4)
           .attr('stroke-width', 1)
           .attr("marker-end", (d) => {
-            return (d.sourceGroup == "0" || d.targetGroup == "5") ? "url(#arrow)":"none"
+            return (d.targetGroup != "2") ? "url(#arrow)":"none"
           })
         svg.append("defs").append("marker")
           .attr("id", "arrow")
@@ -420,9 +205,6 @@ export default {
 
         simulation.force("link")
           .links(graph.links)
-          .distance(function(d) { // 每一边的长度
-            return d.value * 100
-          })
         simulation.alpha(1).alphaTarget(0).restart();
       }
 
@@ -524,9 +306,10 @@ export default {
           // forceCharge = 100,
           foci = {},
           // oldStart = force.start,
-          linkStrengthIntraCluster = 0.1,
+          templateNodesSel,
+          // linkStrengthIntraCluster = 0.1,
+          // linkStrengthIntraCluster = 10,
           // linkStrengthInterCluster = 0.01,
-          linkStrengthInterCluster = 0.01,
           // oldGravity = force.gravity(),
           templateNodes = [],
           offset = [0, 0],
@@ -619,19 +402,31 @@ export default {
         function initializeWithTreemap() {
           var treemap = d3.treemap()
             .tile(d3.treemapDice)
-            .size(force.size());
+            .size(force.size())
           tree = d3.hierarchy(getGroupsTree())
-            .sum(function(d) {
-              return d.size;
+            .sum(function() {
+              return 1;
             })
             .sort(function(a, b) {
-              return b.height - a.height || a.data.id - b.data.id;
+              // return b.height - a.height ||
+              return a.data.id - b.data.id;
             });
 
           templateNodes = treemap(tree).leaves();
           getFocisFromTemplate();
         }
+        function drawGraph(container) {
+          container.selectAll(".cell").remove();
+          templateNodesSel = container.selectAll("cell")
+            .data(templateNodes);
+          templateNodesSel
+            .enter().append("svg:circle")
+            .attr("class", "cell")
+            .attr("cx", function (d) { return d.x; })
+            .attr("cy", function (d) { return d.y; })
+            .attr("r", function (d) { return d.size*nodeSize; });
 
+        }
         function drawTreemap(container) {
           container.selectAll(".cell").remove();
           container.selectAll("cell")
@@ -656,6 +451,7 @@ export default {
 
         force.drawTemplate = function(container) {
           drawTreemap(container);
+          drawGraph(container);
           return force;
         };
 
@@ -702,46 +498,12 @@ export default {
           return force;
         };
 
-        force.getLinkStrength = function(e) {
-          if (enableGrouping) {
-            if (groupBy(e.source) === groupBy(e.target)) {
-              if (typeof(linkStrengthIntraCluster) === "function") {
-                return linkStrengthIntraCluster(e);
-              } else {
-                return linkStrengthIntraCluster;
-              }
-            } else {
-              if (typeof(linkStrengthInterCluster) === "function") {
-                return linkStrengthInterCluster(e);
-              } else {
-                return linkStrengthInterCluster;
-              }
-            }
-          } else {
-            // Not grouping return the intracluster
-            if (typeof(linkStrengthIntraCluster) === "function") {
-              return linkStrengthIntraCluster(e);
-            } else {
-              return linkStrengthIntraCluster;
-            }
-
-          }
-        };
-
         force.id = function(_) {
           return arguments.length ? (id = _, force) : id;
         };
 
         force.size = function(_) {
           return arguments.length ? (size = _, force) : size;
-        };
-
-        force.linkStrengthInterCluster = function(_) {
-          return arguments.length ? (linkStrengthInterCluster = _, force) : linkStrengthInterCluster;
-        };
-
-        force.linkStrengthIntraCluster = function(_) {
-          return arguments.length ? (linkStrengthIntraCluster = _, force) : linkStrengthIntraCluster;
         };
 
         force.nodes = function(_) {
@@ -775,3 +537,10 @@ export default {
   }
 }
 </script>
+<style type="scss" scoped>
+svg.groupbox rect.cell {
+  fill: none;
+  stroke: #ddd;
+  stroke-width: 2px;
+}
+</style>

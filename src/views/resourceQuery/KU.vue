@@ -11,8 +11,6 @@
       <el-button type="success" plain @click="simpleInput = false">完成输入</el-button>
     </el-dialog>
 
-    <!-- header -->
-
     <el-row justify="start" type="flex">
       <el-col style="padding-left: 5vw;">
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -50,24 +48,25 @@
     </el-row>
 
     <el-row class="panel-body" v-loading="loading" style="" v-if="FullChange">
-      <div class="panel-btn" id="openBtn" @click="openPanel()">
-        <i class="el-icon-arrow-right"></i>
+      <div class="tab panel-btn" id="openBtn" @click="openPanel()">
+            <div>知识卡片</div>
+          <div class="arrow"></div>
       </div>
       <el-card class="box-card left">
         <div class="panel-btn" id="closeBtn" @click="closePanel()">
-          <i class="el-icon-arrow-left"></i>
+          <i class="el-icon-d-arrow-left"></i>
         </div>
         <div class="container">
           <div class="intro">
-            <el-row type="flex" justify="start">
+            <!-- <el-row type="flex" justify="start">
               <h4 style="color: #0a1612; font-weight: bold">知识单元简介</h4>
-            </el-row>
+            </el-row> -->
             <el-row type="flex" justify="start" class="title">
-              {{ node.name }}
+              {{ data.nodes?data.nodes.node.name:"" }}
             </el-row>
             <el-row type="flex" justify="start" class="content">
               <el-col>
-                {{ (node.description || "").split("...")[0] }}
+                {{ (data.nodes?data.nodes.node.description:"").split("...")[0] }}
                 <a
                   v-if="ku_name.length > 0"
                   v-bind:href="url"
@@ -84,33 +83,26 @@
               <el-row>
                 <h4 style="color: #0a1612; float: left; font-weight: bold">知识关系</h4>
               </el-row>
-              <el-tabs v-model="activeName" :stretch="true" :lazy="true" @click="handleSwitchTabs()" >
+              <el-tabs v-model="activeName" :stretch="true" :lazy="true" @click.native="handleSwitchTabs()" >
                 <el-button type="text" class="zoom-in-btn" size="small" @click="handleFullScreen()">
                   <i class="el-icon-full-screen"></i>
                 </el-button>
-                <el-tab-pane :key="Math.random()" label="前驱后继" name="presuc" id="presuc_container" class="svg-container">
+                <el-tab-pane
+                 label="前驱后继" name="presuc" id="presuc_container" class="svg-container">
                   <pre-suc
-                  :node="node"
-                  :neighbors_groups="neighbors_groups"
-                  :inward_arrow="inward_arrow"
-                  :outward_arrow="outward_arrow"
-                  @search="search"
+                    ref="presuc"
+                    @search="search"
                   />
                 </el-tab-pane>
-                <el-tab-pane :key="Math.random()" label="共同学习" name="costudy" id="costudy_container" class="svg-container">
+                <el-tab-pane label="共同学习" name="costudy" id="costudy_container" class="svg-container">
                   <co-study
-                    :node="node"
-                    :neighbors_groups="neighbors_groups"
-                    :undirected_len="undirected_len"
+                    ref="costudy"
                     @search="search"
                     />
                 </el-tab-pane>
-                <el-tab-pane :key="Math.random()" label="层级关系" name="tree" id="tree_container" class="svg-container">
-                  <tree
-                    :node="node"
-                    :neighbors_hierarchy="neighbors_hierarchy"
-                    :superior_layer="superior_layer"
-                    :inferior_layer="inferior_layer"
+                <el-tab-pane label="层级关系" name="hierarchy" id="tree_container" class="svg-container">
+                  <Hierarchy
+                    ref="hierarchy"
                     />
                 </el-tab-pane>
               </el-tabs>
@@ -123,17 +115,18 @@
       <el-col>
         <div class="graph" id="graph_container">
           <Graph
-            :node="node"
-            :neighbors_groups="neighbors_groups"
+            ref="graph"
+            @search="search"
+            />
+            <!-- :node="node" -->
+            <!-- :neighbors_groups="neighbors_groups"
             :neighbors_hierarchy="neighbors_hierarchy"
             :inward_arrow="inward_arrow"
             :outward_arrow="outward_arrow"
             :undirected_len="undirected_len"
             :superior_layer="superior_layer"
             :inferior_layer="inferior_layer"
-            :selected_type="checkList"
-            @search="search"
-            />
+            :selected_type="checkList" -->
         </div>
       </el-col>
     </el-row>
@@ -145,24 +138,32 @@ import $ from 'jquery'
 import * as d3 from "d3";
 import PreSuc from "./components/PreSuc.vue";
 import CoStudy from "./components/CoStudy.vue";
-import Tree from "./components/Tree.vue";
+import Hierarchy from "./components/Hierarchy.vue";
 import Graph from "./components/Graph.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import screenfull from 'screenfull'
+import {dataDict} from './components/utils.js'
+import {Message } from 'element-ui'
 
 export default {
   components: {
     Graph,
-    ComplexInput,PreSuc,CoStudy,Tree },
+    ComplexInput,
+    PreSuc,
+    CoStudy,
+    Hierarchy
+  },
   name: "KU",
   data() {
     return {
       activeName:"presuc",
+      content:"",
       ku_name: "",
       ku_type: "kp2.0",
       fullEl: document.getElementById(this.activeName+'_container'),
       isFullscreen: false,
       // 节点。邻居节点，层级结构
+      data:{},
       node: {},
       neighbors_groups: {},
       neighbors_hierarchy : [],
@@ -170,7 +171,7 @@ export default {
       sourceLabel: ["百科", "人教版"],
       checkList: ["前驱后继", "共同学习", "层级结构"],
       // 前驱后继，共同学习，向内箭头，向外箭头
-      directed_len: "",
+      // directed_len: "",
       // undirected_len: "",
       undirected_len: 0,
       inward_arrow: 0,
@@ -178,7 +179,7 @@ export default {
       // 上级层，下级层
       superior_layer: 0,
       inferior_layer: 0,
-      layerLength: "",
+      // layerLength: "",
       root_view: false,
       loading: false,
       url: "",
@@ -217,7 +218,7 @@ export default {
   mounted() {
     $('.panel-btn').hide()
     this.root_view = sessionStorage.user === "root";
-    console.log(this.root_view);
+    // console.log(this.root_view);
     if (this.$route.params.name) {
       this.ku_name = this.$route.params.name;
       this.submit(this.ku_name);
@@ -256,7 +257,20 @@ export default {
       // setTimeout(function(){ $('.box-card.left').css('display','none') }, 1000);
     },
     handleSwitchTabs(){
-      this.key1+=3
+      d3.selectAll("#presuc>*").remove();
+      d3.selectAll("#costudy>*").remove();
+      d3.selectAll("#hierarchy>*").remove();
+      switch (this.activeName) {
+        case 'presuc':
+          this.drawPresuc();
+          break;
+        case 'costudy':
+          this.drawCostudy();
+          break;
+        case 'hierarchy':
+          this.drawHierarchy();
+          break;
+      }
     },
     handleFullScreen() {
       this.fullEl = document.getElementById(this.activeName+'_container');
@@ -330,10 +344,9 @@ export default {
         "https://baike.baidu.com/search/word?word=" + encodeURI(this.ku_name);
       this.loading = true;
       d3.selectAll("svg>*").remove();
-
       this.$http
         .post(
-          this.backendIP + "/api/ku",
+          this.backendIP + "/api/ku_v2",
           {
             ku_name: this.ku_name,
             ku_type: this.ku_type,
@@ -345,43 +358,271 @@ export default {
         .then(function(data) {
           if (data.data.node === null) {
             this.loading = false;
-            alert("输入知识点不存在！");
+            Message({
+              message: '查询不到该知识点',
+              type: 'error',
+              duration: 5 * 1000
+            })
           } else {
             this.openPanel();
             this.initFullScreen();
-            this.activeName="presuc"
-            this.node = data.data.node;
-            this.neighbors_groups = data.data.neighbors_groups;
-            this.neighbors_hierarchy = data.data.neighbors_hierarchy;
-            for(let i = 0; i < this.neighbors_hierarchy.length; i++){
-              if(this.neighbors_hierarchy[i] == this.node.name){
-                this.neighbors_hierarchy[i] = this.neighbors_hierarchy[i] + " "
-              }
-            }
-            this.inward_arrow = data.data.pre_len;
-            this.outward_arrow = data.data.suc_len;
-            this.superior_layer = data.data.sup_len;
-            this.inferior_layer = data.data.inf_len;
+            this.data=data.data
+            this.handleSwitchTabs()
+            this.drawGraph()
             this.loading = false;
           }
+        })
+        .catch(()=>{
+          this.loading = false;
+          Message({
+            message: '查询不到该知识点',
+            type: 'error',
+            duration: 5 * 1000
+          })
         });
-      this.$http
-        .post(
-          this.backendIP + "/api/ku",
-          {
-            ku_name: this.ku_name,
-            ku_type: this.ku_type,
-            ku_edge_type: ["前驱后继", "共同学习", "层级结构"],
-            system: this.knowledgeSystem
-          },
-          { emulateJSON: true }
-        )
-        .then(function(data) {
-          this.directed_len = "(" + (data.data.pre_len + data.data.suc_len) + ")";
-          // this.undirected_len = "(" + data.data.undirected_len + ")";
-          this.undirected_len =  data.data.undirected_len;
-          this.layerLength = "(" + (data.data.sup_len + data.data.inf_len) + ")";
-        });
+    },
+    drawPresuc(){
+      let nodes =this.data.nodes
+      let data={}
+      data.nodes = [
+        {
+          id:nodes.node.name,
+          community:dataDict.current.value,
+          color:dataDict.current.color,
+          desc: nodes.node.description,
+        }
+      ];
+      data.links=[];
+      let pre = nodes.pre
+      let suc = nodes.suc
+      //
+      for (let i = 0; i < pre.length; i++) {
+          data.nodes.push({
+            id:pre[i].node.name,
+            color:dataDict.pre.color,
+            community:dataDict.pre.value,
+            desc:pre[i].node.description
+          })
+          data.links.push({
+            source: pre[i].node.name,
+            target: nodes.node.name,
+            relation: '',
+            value: Math.random() * (1.6 - 1) + 1
+          })
+      }
+      for (let i = 0; i < suc.length; i++) {
+        data.nodes.push({
+          id:suc[i].node.name,
+          color:dataDict.suc.color,
+          community:dataDict.suc.value,
+          desc: suc[i].node.description
+        })
+        data.links.push({
+          source: nodes.node.name,
+          target: suc[i].node.name,
+          relation: '',
+          value: Math.random() * (1.6 - 1) + 1
+        })
+      }
+      this.$refs.presuc.draw_graph(data)
+    },
+    drawCostudy(){
+      let nodes=this.data.nodes
+      let data={}
+      data.nodes=[
+        {
+          name:nodes.node.name,
+          color:dataDict.current.color,
+          desc: nodes.node.description,
+        }
+      ]
+      data.links=[]
+      let neighbors_undirected=this.data.neighbors_undirected["kp2.0"]||[]
+      for (let i = 0; i < neighbors_undirected.length||0; i++) {
+        data.nodes.push({
+          name:neighbors_undirected[i].name,
+          color:dataDict.costudy.color,
+          desc: neighbors_undirected[i].annotation.split("description-")[1],
+        })
+        data.links.push({
+          source: 0,
+          target: i+1,
+          relation: '',
+          value: Math.random() * (1.6 - 1) + 1
+        })
+      }
+      this.$refs.costudy.draw_graph(data)
+    },
+    drawHierarchy(){
+      let data=this.data
+      let hierarchyData=null
+
+      let mid_data
+      let sup_len=data.neighbors_hierarchy.length-data.inf_len
+      let i=0
+      if(sup_len>0){
+        for (; i < sup_len; i++) {
+          hierarchyData={
+            name: this.neighbors_hierarchy[i],
+            value: dataDict.sup.value,
+            color:dataDict.sup.color,
+            community:dataDict.sup.value,
+            children: []
+          }
+        }
+        mid_data=data.children[0]
+      }
+      mid_data={
+        name: data.nodes.node.name,
+        value: dataDict.current.value,
+        children: [],
+        color:dataDict.current.color,
+      }
+      for (; i < data.neighbors_hierarchy.length; i++) {
+          mid_data.children.push({
+            name: data.neighbors_hierarchy[i],
+            value: dataDict.inf.value,
+            color:dataDict.inf.color,
+            children: [],
+          })
+      }
+      if(!hierarchyData){
+        hierarchyData=mid_data
+      }else{
+        hierarchyData.children.push(mid_data)
+      }
+      this.$refs.hierarchy.draw_graph(hierarchyData)
+    },
+    drawGraph(){
+      let data = {}
+      let nodes = [];
+      let nodeCount = 0;
+      let edgeCount = 0;
+      let edges = []
+      let lenMin = 1.5,
+      lenMax = 2;
+      nodes.push({
+        id: nodeCount++,
+        name: this.data.nodes.node.name,
+        community: dataDict.current.value,
+        color:dataDict.current.color,
+        group: dataDict.current.value,
+        desc: this.data.nodes.node.description,
+      })
+
+      //共同学习
+      let nu=this.data.neighbors_undirected['kp2.0']||[]
+      for (let i =0; i < nu.length; i++, nodeCount++, edgeCount++) {
+        nodes.push({
+          id: nodeCount,
+          name: nu[i].name,
+          color:dataDict.costudy.color,
+          community: dataDict.costudy.value,
+          group: dataDict.costudy.value,
+          desc: nu[i].annotation.split("description-")[1],
+        })
+        edges.push({
+          id: edgeCount,
+          source: 0,
+          target: nodeCount,
+          relation: '',
+          value: Math.random() * (lenMax - lenMin) + lenMin,
+        })
+      }
+      //层级关系
+      let nh = this.data.neighbors_hierarchy
+      let sup_len = nh.length-this.data.inf_len
+      for (let i = 0; i < sup_len; i++, nodeCount++, edgeCount++) {
+        nodes.push({
+          id: nodeCount,
+          name: nh[i],
+          color:dataDict.sup.color,
+          group: dataDict.sup.value,
+          community: dataDict.sup.value,
+        })
+        edges.push({
+          id: edgeCount,
+          source: nodeCount,
+          target: 0,
+          relation: '',
+          value: Math.random() * (lenMax - lenMin) + lenMin,
+        })
+      }
+      for (let i = sup_len; i < nh.length; i++, nodeCount++, edgeCount++) {
+        nodes.push({
+          id: nodeCount,
+          name: nh[i],
+          color:dataDict.inf.color,
+          community: dataDict.inf.value,
+          group: dataDict.inf.value,
+        })
+        edges.push({
+          id: edgeCount,
+          source: 0,
+          target: nodeCount,
+          relation: '',
+          value: Math.random() * (lenMax - lenMin) + lenMin,
+        })
+      }
+      //前驱后继
+      let pre = this.data.nodes.pre;
+      let suc = this.data.nodes.suc;
+      this.recursivePresuc(0,dataDict.pre.value,pre,suc,nodes,edges,nodeCount,edgeCount);
+      data.nodes = nodes
+      data.links = edges
+      this.$refs.graph.draw_graph(data);
+    },
+    recursivePresuc(root,community,pre,suc,nodes,edges,nodeCount,edgeCount){
+      for (let i = 0; i < pre.length; i++,nodeCount++,edgeCount++) {
+        if(nodes.find(d=>d.name==pre[i].node.name)){
+          continue;
+        }
+        nodes.push({
+          id: nodeCount,
+          name: pre[i].node.name,
+          color:dataDict.pre.color,
+          community: community,
+          group: community,
+          desc: pre[i].node.description
+        })
+        edges.push({
+          id: edgeCount,
+          source: nodeCount,
+          target: root,
+          relation: '',
+        })
+        if(pre[i].pre!=[]||pre[i].suc!=[]){
+          [nodeCount,edgeCount]=this.recursivePresuc(nodeCount,community,pre[i].pre,pre[i].suc,nodes,edges,nodeCount+1,edgeCount+1);
+        }
+
+      }
+      if (root==0) {
+        community=dataDict.suc.value
+      }
+      for (let i = 0; i < suc.length; i++,nodeCount++,edgeCount++) {
+
+        if(nodes.find(d=>d.name==suc[i].node.name)){
+          continue;
+        }
+        nodes.push({
+          id: nodeCount,
+          name: suc[i].node.name,
+          color:dataDict.suc.color,
+          community: community,
+          group: community,
+          desc: suc[i].node.description
+        })
+        edges.push({
+          id: edgeCount,
+          source: root,
+          target: nodeCount,
+          relation: '',
+        })
+        if(suc[i].pre!=[]||suc[i].suc!=[]){
+          [nodeCount,edgeCount]=this.recursivePresuc(nodeCount,community,suc[i].pre,suc[i].suc,nodes,edges,nodeCount+1,edgeCount+1);
+        }
+      }
+      return [nodeCount,edgeCount]
     },
     // Update Complex Input，将组合输入的内容复制到当前搜索框应该具有的内容里
     UCI(val){
@@ -454,11 +695,38 @@ export default {
 }
 #openBtn{
   top:5vh;
-  left:15px;
+  // left:15px;
 }
 #closeBtn{
   right:0;
 }
+.tab
+{
+    position: absolute;
+    width: 30px;
+    height: 95px;
+    border-radius: 0px 10px 10px 0px;
+    background-color: #eef1f7;
+    cursor:default;
+    div{
+      width: 16px;
+      margin: 8px auto;
+      line-height: 21px;
+      font-size: 16px;
+      color: #909194;
+    }
+    .arrow
+    {
+      border-color: #eef1f7 transparent transparent #eef1f7;
+      border-style: solid;
+      border-width: 15px 15px 15px 15px;
+      height:0;
+      width:0;
+      position:absolute;
+      bottom:-23px;
+    }
+}
+
 .container {
   display: flex;
   width:100%;

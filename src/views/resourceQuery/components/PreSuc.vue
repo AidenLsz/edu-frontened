@@ -6,10 +6,9 @@
 
 <script>
 import * as d3 from "d3";
-import d3Tip from "d3-tip";
 import $ from "jquery";
-import {zoom,addTooltip,color} from './common.js'
-d3.tip = d3Tip;
+import {zoom,addTooltip,
+  addLegend} from './utils.js'
 
 export default {
   name: "",
@@ -17,82 +16,8 @@ export default {
     return {
     };
   },
-  props: {
-    node: {
-      type: Object,
-      default: function() {
-        return { message: "" };
-      }
-    },
-    neighbors_groups: {
-      type: Object,
-      default: function() {
-        return { message: "" };
-      }
-    },
-    inward_arrow: {
-      type: Number,
-      default: 0
-    },
-    outward_arrow: {
-      type: Number,
-      default: 0
-    },
-  },
-  watch: {
-    node: {
-      handler() {
-        this.draw_graph();
-      },
-      deep: true
-    },
-  },
-  mounted () {
-    this.draw_graph()
-  },
   methods:{
-    draw_graph(){
-      let data={}
-      let nodes = [
-          {
-            id:this.node.name,
-            community:3,
-            desc: this.node.description,
-          }
-      ];
-
-      let edges=[]
-      let kg_group=this.neighbors_groups["kp2.0"]
-      //
-      for (let i = 0; i < kg_group.length; i++) {
-        if (i < this.inward_arrow) {
-            nodes[i + 1] = {
-              id:kg_group[i].name,
-              community:0,
-              desc: kg_group[i].annotation.split("description-")[1],
-            };
-            edges[i] = {
-            source: kg_group[i].name,
-            target: this.node.name,
-            relation: '',
-            value: Math.random() * (1.6 - 1) + 1
-          };
-        } else if(i<this.inward_arrow +this.outward_arrow){
-          nodes[i + 1] = {
-            id:kg_group[i].name,
-            community:5,
-            desc: kg_group[i].annotation.split("description-")[1],
-          };
-          edges[i] = {
-            source: this.node.name,
-            target: kg_group[i].name,
-            relation: '',
-            value: Math.random() * (1.6 - 1) + 1
-          };
-        }
-      }
-      data.nodes=nodes
-      data.links=edges
+    draw_graph(data){
       var width =  $('svg#presuc').width()
       var height = $('svg#presuc').height();
       var drag = d3
@@ -106,9 +31,6 @@ export default {
         .attr('class', 'groupbox')
         .attr("viewBox", "0 0 " + width + " " + height )
         .attr("preserveAspectRatio", "xMidYMid meet");
-      // let colorScale = d3.scaleOrdinal()
-      //   .domain(d3.range(data.nodes.length))
-      //   .range(d3.schemeCategory10)
       var svg = svgDOM.append('g');
       var groupingForce = forceInABox()
         .strength(0.025)
@@ -177,14 +99,13 @@ export default {
     let _this = this;
     let circle = gs.append('circle')
       .attr('r', 5)
-      .attr("stroke", "black")
+      // .attr("stroke", "black")
       .attr('fill', function (d) {
-        return color(d.community)
+        return d.color
       })
       .on('click',function(d){
-        if(d.id!=_this.node.name){
-          _this.$emit("search", d.id)
-        }
+        $(".tool-tip").hide()
+        _this.$emit("search", d.id)
       })
       addTooltip(d3.select("#presuc_container"),circle)
 
@@ -198,9 +119,15 @@ export default {
       .style("font-family", "sans-serif")
       .style("font-size", "0.8em")
       .text(function (d) {
+        // console.log('d:',d.id);
         return d.id
       })
     zoom(svgDOM,svg)
+    // var [legend,legendCircle] =
+    let [legend,] = addLegend(svg,5,['current','pre','suc'])
+    legend.attr("transform", (d, i) => `translate(${width-100},${i * 23+20})`)
+
+
     function tick() {
       link
         .attr('x1', function(d) {

@@ -14,7 +14,7 @@ Vue.use(VueResource);
 import echarts from "echarts";
 Vue.prototype.$echarts = echarts;
 
-import VueCropper from 'vue-cropper' 
+import VueCropper from 'vue-cropper'
 Vue.use(VueCropper)
 
 Vue.config.productionTip = false

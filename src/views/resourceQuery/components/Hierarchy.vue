@@ -1,12 +1,13 @@
 <template lang="html">
-    <svg id="tree" style="width:100%;height:100%;overflow-y: scroll;"
+    <svg id="hierarchy" style="width:100%;height:100%;overflow-y: scroll;"
     class="d3-tree-vi width-100-percent container-border" />
 </template>
 
 <script>
 import * as d3 from "d3";
 import $ from "jquery";
-import {zoom,color} from './common.js'
+import {zoom,
+  addLegend} from './utils.js'
 export default {
   data () {
     return {
@@ -24,68 +25,11 @@ export default {
       rootNodeId: null
     }
   },
-  props: {
-    node: {
-      type: Object,
-      default: function() {
-        return { message: "" };
-      }
-    },
-    neighbors_hierarchy: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    },
-    superior_layer: {
-      type: Number,
-      default: 0
-    },
-    inferior_layer: {
-      type: Number,
-      default: 0
-    },
-  },
-  mounted () {
-    let data=null
-    let mid_data
-    if(this.superior_layer>0){
-      for (let i = 0; i < this.superior_layer; i++) {
-        data={
-          'name': this.neighbors_hierarchy[i].name,
-          'value': 1,
-          community:1,
-          'children': []
-        }
-      }
-      mid_data=data.children[0]
-    }
-    mid_data={
-      'name': this.node.name,
-      'value': 1,
-      'children': [],
-      community:3
-    }
-    for (let i = 0; i < this.inferior_layer; i++) {
-        mid_data.children.push({
-          'name': this.neighbors_hierarchy[i+this.superior_layer],
-          'value': 1,
-          'children': [],
-          community:4
-        })
-    }
-    if(!data){
-      data=mid_data
-    }else{
-      data.children.push(mid_data)
-    }
-    this.draw_graph(data)
-  },
   methods:{
     draw_graph(data){
-      let margin = ({ left: 60 ,top: 50, right: 120, bottom:120 })
+      let margin = ({ left: 60 ,top: 30, right: 30, bottom:30 })
 
-      let width = $('#tree').width()*0.6
+      let width = $('#hierarchy').width()
 
       let dy = width / 5
       let dx = 30
@@ -107,7 +51,7 @@ export default {
         .select('svg.d3-tree-vi')
 
       let svg=svgDOM.append('g')
-        .attr("viewBox", "0 0 " + $('#tree').width() + " " + $('#tree').height() )
+        .attr("viewBox", "0 0 " + $('#hierarchy').width() + " " + $('#hierarchy').height() )
         .attr("preserveAspectRatio", "xMidYMid meet");
         // .attr('viewBox', [margin.left, margin.top, width, dx])
       const gLink = svg.append('g')
@@ -120,7 +64,7 @@ export default {
         .attr('cursor', 'pointer')
         .attr('pointer-events', 'all')
       zoom(svgDOM,svg)
-      // zoom(svg,gNode,gLink)
+      let [legend,] = addLegend(svg,5,['current','sup','inf'])
       function update (source) {
         const duration = d3.event && d3.event.altKey ? 2500 : 250
         const nodes = root.descendants().reverse()
@@ -144,7 +88,13 @@ export default {
           .attr('viewBox', [-margin.left, left.x - margin.top, width, height])
           // .attr('viewBox', ['25%', '25%', '100%', 380])
           .tween('resize', window.ResizeObserver ? null : () => () => svg.dispatch('toggle'))
-
+        legend
+        .transition(transition)
+        .attr("transform", (d, i) => {
+          // return `translate(${width-150},${i * 23+left.x-($('#hierarchy').height()-height)/2})`
+          // ($('#hierarchy').height()-height)
+          return `translate(${width-150},${i * 23-height})`
+        })
         // Update the nodes…
         const node = gNode.selectAll('g')
           .data(nodes, d => d.id)
@@ -161,9 +111,8 @@ export default {
 
         nodeEnter.append('circle')
           .attr('r', 4)
-          .attr("stroke", "black")
           .attr('fill', function (d) {
-            return color(d.data.community)
+            return d.data.color
           })
 
         nodeEnter.append('text')

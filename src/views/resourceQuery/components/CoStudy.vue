@@ -6,69 +6,11 @@
 <script>
 import * as d3 from "d3";
 import $ from "jquery";
-import {zoom,addTooltip,color} from './common.js'
+import {zoom,addTooltip,addLegend} from './utils.js'
 
 export default {
-  props: {
-    node: {
-      type: Object,
-      default: function() {
-        return { message: "" };
-      }
-    },
-    neighbors_groups: {
-      type: Object,
-      default: function() {
-        return { message: "" };
-      }
-    },
-    undirected_len: {
-      type: Number,
-      default: 0
-    },
-  },
-  watch: {
-    node: {
-      handler() {
-        this.draw_graph();
-      },
-      deep: true
-    },
-  },
-  mounted () {
-    this.draw_graph()
-  },
   methods:{
-    draw_graph(){
-      let nodes = [
-          {
-            name: this.node.name,
-            community:3,
-            desc: this.node.description,
-          }
-      ];
-
-      let edges=[]
-      let kg_group=this.neighbors_groups["kp2.0"]
-      //
-      let r_idx= kg_group.length-1
-
-      for (let i = 0; i < this.undirected_len; i++) {
-        // console.log(i+1,r_idx-i,kg_group[r_idx-i].name);
-        nodes[i + 1] = {
-          name: kg_group[r_idx-i].name,
-          desc: kg_group[r_idx-i].annotation.split("description-")[1],
-          community:2,
-        };
-        edges[i] = {
-          source: 0,
-          target: i+1,
-          relation: '',
-          value: Math.random() * (1.6 - 1) + 1
-        }
-      }
-      // console.log(nodes);
-
+    draw_graph(data){
       let width = $('svg#costudy').width()
       let height = $('svg#costudy').height()
       let svg = d3.select('svg#costudy')
@@ -84,11 +26,11 @@ export default {
         .force('center', d3.forceCenter())
         .force('collision', d3.forceCollide().radius(15))
       // 生成节点数据
-      forceSimulation.nodes(nodes)
+      forceSimulation.nodes(data.nodes)
         .on('tick', ticked)
 
       forceSimulation.force('link')
-        .links(edges)
+        .links(data.links)
         .distance(function (d) { // 每一边的长度
           return d.value * 100
         })
@@ -100,7 +42,7 @@ export default {
       // 绘制边
       let links = g.append('g')
         .selectAll('line')
-        .data(edges)
+        .data(data.links)
         .enter()
         .append('line')
         .attr("stroke", "#999")
@@ -110,7 +52,7 @@ export default {
       // 边上的文字
       let linksText = g.append('g')
         .selectAll('text')
-        .data(edges)
+        .data(data.links)
         .enter()
         .append('text')
         .text(function (d) {
@@ -118,7 +60,7 @@ export default {
         })
       // 创建分组
       let gs = g.selectAll('.circleText')
-        .data(nodes)
+        .data(data.nodes)
         .enter()
         .append('g')
         .call(d3.drag()
@@ -130,15 +72,17 @@ export default {
       let _this=this
       let circle = gs.append('circle')
         .attr('r', 5)
-        .attr("stroke", "black")
+        // .attr("stroke", "black")
         .attr('fill', function (d) {
-          return color(d.community)
+          return d.color
         })
         .on('click',function(d){
-          if(d.name!=_this.node.name)
-            _this.$emit("search", d.name)
+          $(".tool-tip").hide()
+          _this.$emit("search", d.name)
         })
       addTooltip(d3.select('#costudy_container'),circle)
+      let [legend,] = addLegend(svg,5,['current','costudy'])
+      legend.attr("transform", (d, i) => `translate(${width-100},${i * 23+20})`)
       // 文字
       gs.append('text')
         .attr('x', -6)
