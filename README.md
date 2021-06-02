@@ -82,8 +82,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
         -Sidebar      导航栏组件
         -AppMain.vue  路由嵌套时使用的布局组件    
         -footer.vue   页面底部组件
-        -login        登录组件
-        -register     注册组件
+        -login.vue    登录组件
+        -register.vue 注册组件
     -user.vue      用户登录后页面布局
     -visitor.vue   未登录时的页面布局
 
