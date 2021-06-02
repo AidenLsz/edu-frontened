@@ -77,11 +77,17 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 + historyBackpack - 历史备份模块 - 用于存放曾经存在于项目中，现在被淘汰掉的文件，如果有回滚需求则便于处理
 
-+ layout - 布局管理
++ layout - 页面布局管理
+    -user.vue      用户登录后页面布局
+    -visitor.vue   未登录时的页面布局
 
 + router - 路由控制
+    -index.js   路由总入口
+    -modules    路由模块
+        -user.js    用户登录后的路由
+        -visitor.js 未登录时的路由
 
-+ store - 状态管理
++ store - 状态管理  目前含用户状态的存储
 
 + plugins - 插件导入管理
 ```
