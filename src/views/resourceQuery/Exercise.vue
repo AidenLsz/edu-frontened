@@ -546,7 +546,7 @@ export default {
       this.database_list=[{name:'public',nick:'公共题库'}]
       this.database_aim=[true]
       //未登录时，不调用获取题库的端口
-      if($store.state.user.token){
+      if(!this.$store.state.user.token){
         return ;
       }
       commonAjax(this.backendIP+'/api/get_user_ig_name',
