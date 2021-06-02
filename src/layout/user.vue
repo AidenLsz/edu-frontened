@@ -19,10 +19,9 @@
         </el-col>
       </el-row>
     </el-header>
-    <el-container>
+    <el-container :class="classObj">
       <sideBar style="height:100%;background:#fff;"/>
       <el-main style="background:#fff;margin:15px;border-radius:5px;">
-        <!-- <button type="button" name="button" v-on:click="toggleSideBar()">sideBar</button> -->
         <router-view :key="$route.fullPath"></router-view>
       </el-main>
     </el-container>
@@ -43,6 +42,24 @@ export default {
       activeIndex: "",
     }
   },
+  computed:{
+    sidebar() {
+      return this.$store.state.app.sidebar
+    },
+    // device() {
+    //   return this.$store.state.app.device
+    // },
+    // fixedHeader() {
+    //   return this.$store.state.settings.fixedHeader
+    // },
+    classObj() {
+      return {
+        hideSidebar: !this.sidebar.opened,
+        openSidebar: this.sidebar.opened,
+        withoutAnimation: this.sidebar.withoutAnimation,
+      }
+    }
+  },
   methods: {
     // toggleSideBar(){
     //   this.$store.dispatch('app/toggleSideBar')
@@ -61,7 +78,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+@import "@/common/styles/variables.scss";
+@import "@/common/styles/mixin.scss";
 .el-header {
   background-color: #409EFF;
   background-color: rgb(238, 241, 246);
@@ -85,5 +103,42 @@ export default {
   vertical-align: middle;
   font-size: 24px;
   color:#ccc;
+}
+
+.app-wrapper {
+  // @include clearfix;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  &.mobile.openSidebar{
+    position: fixed;
+    top: 0;
+  }
+}
+.drawer-bg {
+  background: #000;
+  opacity: 0.3;
+  width: 100%;
+  top: 0;
+  height: 100%;
+  position: absolute;
+  z-index: 999;
+}
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9;
+  width: calc(100% - #{$sideBarWidth});
+  transition: width 0.28s;
+}
+
+.hideSidebar .fixed-header {
+  width: calc(100% - 54px)
+}
+
+.mobile .fixed-header {
+  width: 100%;
 }
 </style>

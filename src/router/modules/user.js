@@ -41,7 +41,7 @@ const UserRouter=[
     ]
   },
   {
-    path: '/search',
+    path: '/query',
     component: UserLayout,
     meta: { title: '资源检索', icon: 'el-icon-search' },
     children: [

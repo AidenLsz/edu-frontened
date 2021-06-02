@@ -48,20 +48,20 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
     自定义模块如何使用？（以自定义了MavonEditor的光标位置插入功能经验为例）
 
     1:  在本地找到node_modules下，需要自定义功能的模块文件夹。
-    
+
     2:  找到这个模块的文件夹下的package.js，从中找到 'main' 这一字段对应内容表示的文件
         这一文件代表着这个模块实际调用时所使用的文件及其路径，一般是在 dist 目录下，但是还是自己看一下的好
-    
+
     3:  模仿其中的语法，修改这个文件，并在本地测试直到自定义功能通过
         3-1:    如果觉得折叠程度过于夸张难以阅读，建议以以下步骤进行修改工作。
-        3-2:    按照常规项目组织路径，在模块的 src 目录下找到前端文件对应的文件（MavonEditor对应的是MavonEditor.js，下面看到的 JS 
+        3-2:    按照常规项目组织路径，在模块的 src 目录下找到前端文件对应的文件（MavonEditor对应的是MavonEditor.js，下面看到的 JS
                 基本是代称这个文件）这个文件是项目 build 前的源文件，虽然直接修改没办法完成自定义功能，但是可以帮助你找到插入内容前
                 后位置的代码
         3-3:    在源文件下配合 Ctrl + F 锁定要修改的位置的前后内容，在 JS 内找到对应的内容位置，模仿 build 后的语法进行修改
         3-4:    保存这个 JS 文件，然后在本地测试是否通过，重复修改步骤直至通过。
-    
+
     4:  复制这个自定义过的 JS 到 src/components 目录下进行保存
-    
+
     5:  【关键】
         打开 gitlab-ci.yml 文件，在 build 过程中的
         [ npm run install 后，npm run build 前 ] ← 关键
@@ -72,12 +72,28 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
         注意：
             cp 前需要加反斜杠以避免复制过程中出现Y/N的确认过程造成中断
             选项使用 -f 来强制替换
-    
+
     6:  等待项目自己build完成，自定义模块就生效了。
 
 + historyBackpack - 历史备份模块 - 用于存放曾经存在于项目中，现在被淘汰掉的文件，如果有回滚需求则便于处理
 
++ layout - 页面布局管理
+    -components    页面组件
+        -Sidebar      导航栏组件
+        -AppMain.vue  路由嵌套时使用的布局组件    
+        -footer.vue   页面底部组件
+        -login.vue    登录组件
+        -register.vue 注册组件
+    -user.vue      用户登录后页面布局
+    -visitor.vue   未登录时的页面布局
+
 + router - 路由控制
+    -index.js   路由总入口
+    -modules    路由模块
+        -user.js    用户登录后的路由
+        -visitor.js 未登录时的路由
+
++ store - 状态管理  目前含用户状态的存储
 
 + plugins - 插件导入管理
 ```

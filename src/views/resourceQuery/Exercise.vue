@@ -39,7 +39,7 @@
                   @change="pictureSearch($event)"
                   accept=".jpeg, .png, .jpg"
                   ref="picSearchInput"
-                  />  
+                  />
               </div>
             </el-row>
             <el-row type="flex" justify="start" style="margin-top: 30px;">
@@ -67,8 +67,8 @@
               </el-col>
               <el-col :span="4">
                 <el-row type="flex" justify="center">
-                  <el-button 
-                    type="warning" 
+                  <el-button
+                    type="warning"
                     icon="el-icon-delete"
                     @click="clearData()"
                     plain>
@@ -78,17 +78,17 @@
               </el-col>
               <el-col :span="4">
                 <el-row type="flex" justify="center">
-                  <el-button 
+                  <el-button
                     v-if="option.img != ''"
-                    type="success" 
+                    type="success"
                     icon="el-icon-search"
                     @click="getCropData()"
                     plain>
                     提交搜索
                   </el-button>
-                  <el-button 
+                  <el-button
                     v-else
-                    type="danger" 
+                    type="danger"
                     icon="el-icon-close"
                     @click="picSearchDialogShow = false"
                     plain>
@@ -489,7 +489,7 @@ export default {
           const _this = this;
           let read = new FileReader();
           read.readAsDataURL(files[0]);
-          read.onloadend = function () {  
+          read.onloadend = function () {
             _this.show = true
             _this.option.img = read.result;
           }
@@ -525,7 +525,7 @@ export default {
           // 用文件读取来读取图片的base64格式代码
           var reader = new FileReader();
           reader.readAsDataURL(Pic);
-          reader.onloadend = function (e) { 
+          reader.onloadend = function (e) {
             Picresult = e.target.result;
             resolve('1');
           };
@@ -537,14 +537,18 @@ export default {
           // 报错了就打印错误
           // console.log(error)
         })
-        
+
       }else{
-        return 
+        return
       }
     },
     initDatabaseList(){
       this.database_list=[{name:'public',nick:'公共题库'}]
       this.database_aim=[true]
+      //未登录时，不调用获取题库的端口
+      if(!this.$store.state.user.token){
+        return ;
+      }
       commonAjax(this.backendIP+'/api/get_user_ig_name',
         {
           type:'Question',
