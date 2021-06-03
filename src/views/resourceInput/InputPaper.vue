@@ -1015,7 +1015,7 @@
           </el-row>
         </el-row>
         <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="primary" plain style="width: 200px; font-size: 16px" @click="importPaperDialog = true">
+          <el-button type="primary" plain style="width: 200px; font-size: 16px" @click="Import_Paper_Dialog_Open()">
             <label>文件导入</label>
           </el-button>
         </el-row>
@@ -2538,6 +2538,9 @@ export default {
     //   console.log(event.target.files)
     // },
     // 关闭导入试卷这一栏对话框的方法
+    Import_Paper_Dialog_Open(){
+      this.importPaperDialog = true;
+    },
     Import_Paper_Dialog_Close(){
       this.importPaperDialog = false;
     },
