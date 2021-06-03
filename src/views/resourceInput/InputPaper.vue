@@ -1904,7 +1904,6 @@ export default {
           this.Clear();
 
           this.Hand_Cut_Mode = true;
-          this.$refs.eng_input.value = "";
 
           // 这里是处理英语试卷的逻辑部分，数学试卷的逻辑部分另写
           if(this.paper_type == '0'){
@@ -2015,7 +2014,6 @@ export default {
           this.fileName = e.target.files[0].name;
         }).catch(() => {
           this.loading = false;
-          this.$refs.eng_input.value = "";
           this.$alert("切分过程出现错误，这可能是由于您拖拽的文件格式不正确，或服务器超载导致目前暂时无法提供服务，请重新提交文件或稍后再试。", "提示")
         });
     },
