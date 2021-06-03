@@ -28,7 +28,7 @@
                     <div class="Hidden_Ques" ref="OverFlow_DIV" >
                         <PaperAnalysePackedQuestion :PackedQuestion="Question.sub_question" :Sub_Index="Index" :Name_P="'P_' + Index"  :Analyse="false" style="width: 100%"></PaperAnalysePackedQuestion>
                     </div>
-                    <div :class="Get_Display()" @click="Change_AQS()" v-if="Overflow_Flag">
+                    <div :class="Get_Display()" @click="Change_AQS()">
                         <el-row type="flex" justify="center" style="font-size: 50px; color: #409EFF;"><i class="el-icon-arrow-down"></i></el-row>
                     </div>
                 </el-row>
@@ -40,14 +40,14 @@
                 <el-row type="flex" justify="start" style="margin-bottom: 10px; min-height: 200px" v-if="All_Question_Show">
                     <PaperAnalyseQuestion :Question="Question" style="width: 100%"></PaperAnalyseQuestion>
                 </el-row>
-                <el-row v-if="All_Question_Show" type="flex" justify="center" class="Up_Arrow"  @click.native="Change_AQS()">
+                <el-row v-if="All_Question_Show && !Init_AQS" type="flex" justify="center" class="Up_Arrow"  @click.native="Change_AQS()">
                     <i class="el-icon-arrow-up"></i>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-bottom: 10px; position: relative; height: 250px; overflow: hidden;" v-if="!All_Question_Show">
                     <div class="Hidden_Ques" ref="OverFlow_DIV">
                         <PaperAnalyseQuestion :Question="Question" style="width: 100%"></PaperAnalyseQuestion>
                     </div>
-                    <div :class="Get_Display()" @click="Change_AQS()" v-if="Overflow_Flag">
+                    <div :class="Get_Display()" @click="Change_AQS()" v-if="!Init_AQS">
                         <el-row type="flex" justify="center" style="font-size: 50px; color: #409EFF;"><i class="el-icon-arrow-down"></i></el-row>
                     </div>
                 </el-row>
@@ -406,17 +406,29 @@ export default {
   mounted(){
 
         this.$nextTick(function(){	
-            let height = this.$refs.OverFlow_DIV.clientHeight;
-            if(height > 250){
-                this.Overflow_Flag = true;
-            }	else{
-                this.Overflow_Flag = false;
-            }
+
+            const _this = this;
+
+            var pro = new Promise(function(resolve, reject){
+                _this.All_Question_Show = true;
+                let height = _this.$refs.OverFlow_DIV.offsetHeight;
+                if(height > 250){
+                    resolve("1")
+                }else{
+                    reject("1")
+                }
+            });
+            pro.then(function(){
+                _this.All_Question_Show = false;
+            }).catch(function(){
+                _this.All_Question_Show = true;
+                _this.Init_AQS = true;
+            })
         })
 
         setTimeout(()=>{
             this.Search_Similar_Questions();
-        }, 10)
+        }, 100)
   },
   data(){
     return {
@@ -443,11 +455,12 @@ export default {
                 'label': '关键字'
             },],
         Sort_By: 'default',
-        Overflow_Flag: true, 
         // 是否展开这道题的详细内容
         Expand_List: [],
         Question: this.Ques,
-        Part_Expand: [true, false]
+        Part_Expand: [true, false],
+        // 这道题是不是由于默认高度过低而直接展示全部
+        Init_AQS: false
     }         
   },
   methods: {
@@ -539,7 +552,7 @@ export default {
     },
     // 判断是否显示
     Get_Display(){
-        if(this.Overflow_Flag){
+        if(!this.All_Question_Show){
             return 'Hidden_Shadow'
         }else{
             return 'Hidden'
@@ -579,13 +592,24 @@ export default {
         this.loading = false;
       });    
 
-      this.$nextTick(function(){	
-            let height = this.$refs.OverFlow_DIV.clientHeight;
-            if(height > 250){
-                this.Overflow_Flag = true;
-            }	else{
-                this.Overflow_Flag = false;
-            }
+      this.$nextTick(function(){
+            const _this = this;
+
+            var pro = new Promise(function(resolve, reject){
+                _this.All_Question_Show = true;
+                let height = _this.$refs.OverFlow_DIV.offsetHeight;
+                if(height > 250){
+                    resolve("1")
+                }else{
+                    reject("1")
+                }
+            });
+            pro.then(function(){
+                _this.All_Question_Show = false;
+            }).catch(function(){
+                _this.All_Question_Show = true;
+                _this.Init_AQS = true;
+            })
         })
     },
     // 返回选项标签
