@@ -40,14 +40,14 @@
                 <el-row type="flex" justify="start" style="margin-bottom: 10px; min-height: 200px" v-if="All_Question_Show">
                     <PaperAnalyseQuestion :Question="Question" style="width: 100%"></PaperAnalyseQuestion>
                 </el-row>
-                <el-row v-if="All_Question_Show" type="flex" justify="center" class="Up_Arrow"  @click.native="Change_AQS()">
+                <el-row v-if="All_Question_Show && !Init_AQS" type="flex" justify="center" class="Up_Arrow"  @click.native="Change_AQS()">
                     <i class="el-icon-arrow-up"></i>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-bottom: 10px; position: relative; height: 250px; overflow: hidden;" v-if="!All_Question_Show">
                     <div class="Hidden_Ques" ref="OverFlow_DIV">
                         <PaperAnalyseQuestion :Question="Question" style="width: 100%"></PaperAnalyseQuestion>
                     </div>
-                    <div :class="Get_Display()" @click="Change_AQS()">
+                    <div :class="Get_Display()" @click="Change_AQS()" v-if="!Init_AQS">
                         <el-row type="flex" justify="center" style="font-size: 50px; color: #409EFF;"><i class="el-icon-arrow-down"></i></el-row>
                     </div>
                 </el-row>
@@ -412,7 +412,6 @@ export default {
             var pro = new Promise(function(resolve, reject){
                 _this.All_Question_Show = true;
                 let height = _this.$refs.OverFlow_DIV.offsetHeight;
-                console.log(height)
                 if(height > 250){
                     resolve("1")
                 }else{
@@ -423,6 +422,7 @@ export default {
                 _this.All_Question_Show = false;
             }).catch(function(){
                 _this.All_Question_Show = true;
+                _this.Init_AQS = true;
             })
         })
 
@@ -458,7 +458,9 @@ export default {
         // 是否展开这道题的详细内容
         Expand_List: [],
         Question: this.Ques,
-        Part_Expand: [true, false]
+        Part_Expand: [true, false],
+        // 这道题是不是由于默认高度过低而直接展示全部
+        Init_AQS: false
     }         
   },
   methods: {
@@ -596,7 +598,6 @@ export default {
             var pro = new Promise(function(resolve, reject){
                 _this.All_Question_Show = true;
                 let height = _this.$refs.OverFlow_DIV.offsetHeight;
-                console.log(height)
                 if(height > 250){
                     resolve("1")
                 }else{
@@ -607,6 +608,7 @@ export default {
                 _this.All_Question_Show = false;
             }).catch(function(){
                 _this.All_Question_Show = true;
+                _this.Init_AQS = true;
             })
         })
     },

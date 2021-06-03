@@ -127,12 +127,12 @@
                         <span style="color: black;">试卷资源</span>
                       </el-menu-item>
                     </el-submenu>
-                    <router-link to="/estimate" :underline="false" @click.native="ToTop">
+                    <router-link to="/estimate" :underline="false" @click.native="ToTop" style="display: none">
                       <el-menu-item index="4">
                         <span style="color: black;">试题属性预估</span>
                       </el-menu-item>
                     </router-link>
-                    <router-link to="/similarity" :underline="false" @click.native="ToTop">
+                    <router-link to="/similarity" :underline="false" @click.native="ToTop" style="display: none">
                       <el-menu-item index="5">
                         <span style="color: black;">相似题预估</span>
                       </el-menu-item>
