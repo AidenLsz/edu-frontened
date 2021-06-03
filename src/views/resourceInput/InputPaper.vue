@@ -2015,7 +2015,7 @@ export default {
               this.$refs.math_answer_input.value = ""
             }
 
-          } 
+          }
           // 文综，理综，语文
           else if( this.paper_type == '2' || this.paper_type == '3' || this.paper_type == '4'){
             this.$refs.eng_input.value = "";
