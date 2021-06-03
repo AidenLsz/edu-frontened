@@ -2049,8 +2049,12 @@ export default {
               this.$refs.math_answer_input.value = ""
             }
 
+<<<<<<< HEAD
           } 
 >>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
+=======
+          }
+>>>>>>> 9b4555c... add user instruction
           // 文综，理综，语文
           else if( this.paper_type == '2' || this.paper_type == '3' || this.paper_type == '4'){
             this.$refs.eng_input.value = "";
