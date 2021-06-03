@@ -1887,7 +1887,7 @@ export default {
     },
     // 处理导入试卷功能时所使用的提交方法
     // 选择上传
-    uploadFile(formData, config, e) {
+    uploadFile(formData, config) {
 
       this.loading = true;
 
@@ -2016,7 +2016,6 @@ export default {
             this.json_image_dict = data.data.image_dict
           }
           this.loading = false;
-          this.fileName = e.target.files[0].name;
         }).catch(() => {
           this.loading = false;
           if(this.$refs.eng_input){
