@@ -30,7 +30,7 @@
         </el-col>
       </el-row>
       <el-row type="flex" justify="center" style="font-size: 20px; color: red; font-weight: bold">
-        请勿输入其他符号，如需输入，请使用题目录入上方的复杂输入框进行辅助
+        请勿输入其他符号，如需输入，请使用题目录入上方的LUNA输入助手进行辅助
       </el-row>
     </el-dialog>
     <!-- 提供给选择题的编辑器 -->
@@ -45,16 +45,16 @@
         <el-row>
             <el-col v-if="complex_Input">
                 <el-row>
-                    <label>复杂输入框，请在需要时自行复制至目标输入框</label>
+                    <label>LUNA输入助手，请在需要时自行复制至目标输入框</label>
                 </el-row>
-                <ComplexInput></ComplexInput>
+                <ComplexInput :Mathdown_Special="'inputMarked_Option'"></ComplexInput>
                 <el-row>
-                    <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
+                    <el-button @click="complex_Input = false"><label>隐藏并清空</label></el-button>
                 </el-row>
             </el-col>
             <el-col v-if="!complex_Input">
                 <el-row>
-                    <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
+                    <el-button @click="complex_Input = true"><label>显示LUNA输入助手</label></el-button>
                 </el-row>
             </el-col>
         </el-row>
@@ -79,16 +79,16 @@
         <el-row>
             <el-col v-if="complex_Input">
                 <el-row>
-                    <label>复杂输入框，请在需要时自行复制至目标输入框</label>
+                    <label>LUNA输入助手，请在需要时自行复制至目标输入框</label>
                 </el-row>
-                <ComplexInput></ComplexInput>
+                <ComplexInput :Mathdown_Special="'inputMarked_Fill'"></ComplexInput>
                 <el-row>
-                    <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
+                    <el-button @click="complex_Input = false"><label>隐藏并清空</label></el-button>
                 </el-row>
             </el-col>
             <el-col v-if="!complex_Input">
                 <el-row>
-                    <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
+                    <el-button @click="complex_Input = true"><label>显示LUNA输入助手</label></el-button>
                 </el-row>
             </el-col>
         </el-row>
@@ -112,16 +112,16 @@
         <el-row>
             <el-col v-if="complex_Input">
                 <el-row>
-                    <label>复杂输入框，请在需要时自行复制至目标输入框</label>
+                    <label>LUNA输入助手，请在需要时自行复制至目标输入框</label>
                 </el-row>
-                <ComplexInput></ComplexInput>
+                <ComplexInput :Mathdown_Special="'inputMarked_Answer'"></ComplexInput>
                 <el-row>
-                    <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
+                    <el-button @click="complex_Input = false"><label>隐藏并清空</label></el-button>
                 </el-row>
             </el-col>
             <el-col v-if="!complex_Input">
                 <el-row>
-                    <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
+                    <el-button @click="complex_Input = true"><label>显示LUNA输入助手</label></el-button>
                 </el-row>
             </el-col>
         </el-row>
@@ -140,6 +140,23 @@
         width="80%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
+        <el-row>
+            <el-col v-if="complex_Input">
+                <el-row>
+                    <label>LUNA输入助手，请在需要时自行复制至目标输入框</label>
+                </el-row>
+                <ComplexInput :Mathdown_Special="'inputMarked_Mix'"></ComplexInput>
+                <el-row>
+                    <el-button @click="complex_Input = false"><label>隐藏并清空</label></el-button>
+                </el-row>
+            </el-col>
+            <el-col v-if="!complex_Input">
+                <el-row>
+                    <el-button @click="complex_Input = true"><label>显示LUNA输入助手</label></el-button>
+                </el-row>
+            </el-col>
+        </el-row>
+        <el-divider></el-divider>
         <MixQuestions
             @EditFinish_Mix="New_Questions"
             @ReEditFinish_Mix="ReEdit_Questions"
@@ -569,7 +586,7 @@ export default {
       showDialog_Result: false,
       // 非法输入格式提示
       showHint: false,
-      // 打开复杂输入框的控制
+      // 打开LUNA输入助手的控制
       complex_Input: false,
       // 重写编辑标记
       ReEditSwitch: false,
@@ -1107,6 +1124,7 @@ export default {
 
       this.ReEditSwitch = false;
       this.Type_Now = "-1";
+      this.complex_Input = false;
 
       this.Temp_OptionQuestionInfo = {
 

@@ -16,16 +16,16 @@
             <el-row>
                 <el-col v-if="complex_Input">
                     <el-row type="flex" justify="center">
-                        <label>复杂输入框，请在需要时自行复制至目标输入框</label>
+                        <label>LUNA输入助手，请在需要时自行复制至目标输入框</label>
                     </el-row>
-                    <ComplexInput></ComplexInput>
+                    <ComplexInput :Mathdown_Special="'minQuestion_Option'"></ComplexInput>
                     <el-row type="flex" justify="center">
-                        <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
+                        <el-button @click="complex_Input = false"><label>隐藏并清空</label></el-button>
                     </el-row>
                 </el-col>
                 <el-col v-if="!complex_Input">
                     <el-row type="flex" justify="center">
-                        <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
+                        <el-button @click="complex_Input = true"><label>显示LUNA输入助手</label></el-button>
                     </el-row>
                 </el-col>
             </el-row>
@@ -52,16 +52,16 @@
             <el-row>
                 <el-col v-if="complex_Input">
                     <el-row type="flex" justify="center">
-                        <label>复杂输入框，请在需要时自行复制至目标输入框</label>
+                        <label>LUNA输入助手，请在需要时自行复制至目标输入框</label>
                     </el-row>
-                    <ComplexInput></ComplexInput>
+                    <ComplexInput :Mathdown_Special="'minQuestion_Fill'"></ComplexInput>
                     <el-row type="flex" justify="center">
-                        <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
+                        <el-button @click="complex_Input = false"><label>隐藏并清空</label></el-button>
                     </el-row>
                 </el-col>
                 <el-col v-if="!complex_Input">
                     <el-row type="flex" justify="center">
-                        <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
+                        <el-button @click="complex_Input = true"><label>显示LUNA输入助手</label></el-button>
                     </el-row>
                 </el-col>
             </el-row>
@@ -87,16 +87,16 @@
             <el-row>
                 <el-col v-if="complex_Input">
                     <el-row type="flex" justify="center">
-                        <label>复杂输入框，请在需要时自行复制至目标输入框</label>
+                        <label>LUNA输入助手，请在需要时自行复制至目标输入框</label>
                     </el-row>
-                    <ComplexInput></ComplexInput>
+                    <ComplexInput :Mathdown_Special="'minQuestion_Answer'"></ComplexInput>
                     <el-row type="flex" justify="center">
-                        <el-button @click="complex_Input = false"><label>隐藏并清空复杂输入框</label></el-button>
+                        <el-button @click="complex_Input = false"><label>隐藏并清空</label></el-button>
                     </el-row>
                 </el-col>
                 <el-col v-if="!complex_Input">
                     <el-row type="flex" justify="center">
-                        <el-button @click="complex_Input = true"><label>显示复杂输入框</label></el-button>
+                        <el-button @click="complex_Input = true"><label>显示LUNA输入助手</label></el-button>
                     </el-row>
                 </el-col>
             </el-row>
@@ -579,7 +579,7 @@ export default {
             showDialog: false,
             showDialog_Fill: false,
             showDialog_Answer: false,
-            // 打开复杂输入框的控制
+            // 打开LUNA输入助手的控制
             complex_Input: false,
             // 重写编辑标记
             ReEditSwitch: this.RE,
@@ -776,6 +776,7 @@ export default {
 
             this.Index_Edit_Record = -1;
             this.ReEditSwitch = false;
+            this.complex_Input = false;
 
             this.Temp_OptionQuestionInfos = {
 
