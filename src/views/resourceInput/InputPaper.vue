@@ -1913,6 +1913,8 @@ export default {
             this.txt_content = data.data.text;
             this.loading = false;
 
+            this.$refs.eng_input.value = "";
+
             this.file_data = this.txt_content.split("\n");
             this.json_return.type = this.json_content.type;
             this.json_return.paper_title = this.json_content.paper_title;
@@ -1991,6 +1993,8 @@ export default {
 
             this.TestData = {};
 
+            this.$refs.math_paper_input.value = ""
+
             if(this.math_input == 'paper'){
               this.downloadPaper = data.body.Download_Paper;
               this.TestData = data.body.TestData;
@@ -2007,6 +2011,7 @@ export default {
           }
           // 文综，理综，语文
           else if( this.paper_type == '2' || this.paper_type == '3' || this.paper_type == '4'){
+            this.$refs.eng_input.value = "";
             this.json_content = data.data.paper
             this.json_image_dict = data.data.image_dict
           }
@@ -2014,6 +2019,16 @@ export default {
           this.fileName = e.target.files[0].name;
         }).catch(() => {
           this.loading = false;
+          if(this.$refs.eng_input){
+            this.$refs.eng_input.value = "";
+          }
+          if(this.$refs.math_paper_input){
+            this.$refs.math_paper_input.value = ""
+          }
+          if(this.$refs.math_answer_input){
+            this.$refs.math_answer_input.value = ""
+          }
+          this.Clear();
           this.$alert("切分过程出现错误，这可能是由于您拖拽的文件格式不正确，或服务器超载导致目前暂时无法提供服务，请重新提交文件或稍后再试。", "提示")
         });
     },
