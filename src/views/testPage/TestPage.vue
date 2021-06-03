@@ -1,23 +1,49 @@
 <template>
-  <div class="ScreenShot">
-    <div v-show="!show" class="pasteInputDiv" @paste="handlePaste">
-      <input type="text" class="pasteInput" autosize 
-      placeholder="请粘贴图片到此处" maxlength="0">
-    </div>
-    <div v-if="show" class="pasteImgDiv">
-      <el-image
-        class="pasteImg"
-        :src="imgUrl"
-        fit="fill"
-        :preview-src-list="srcList"
-        :z-index="3"
-      >
-      </el-image>
-    </div>
-    <el-row>
-      <div id="upload" :class="DragAreaClass()">
-        拖拽上传
-      </div>
+  <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px">
+    <el-row type="flex" justify="center" style="margin-top: 40px">
+      鼠标移入移除测试
+    </el-row>
+    <el-row type="flex" justify="center" style="margin: 20px 0px">
+      <el-button v-if="!Self_Cut" @click="Self_Cut = true" type="text" style="color: blue">开启自定义切分</el-button>
+      <el-button v-if="Self_Cut" @click="Self_Cut = false" type="text" style="color: pink">关闭自定义切分</el-button>
+    </el-row>
+    <el-row v-for="(I, Index) in [0, 1, 2]" :key="Index">
+      <el-row type="flex" justify="start" style="font-size: 14px">
+        待切分的第{{Index + 1}}部分
+      </el-row>
+      <el-row 
+        v-if="Index != 2 && Self_Cut && !expand[Index]"
+        style="height: 8px; padding: 0px; margin: 0px; border: 2px solid #ccc"
+        @mouseenter.native="Expand_Change(Index)" 
+        @mouseleave.native="Expand_Change(Index)">
+        <span>&nbsp;</span>
+      </el-row>
+      <el-row
+        v-if="Index != 2 && Self_Cut && expand[Index]" 
+        type="flex" justify="center" 
+        style="cursor: pointer" 
+        @mouseleave.native="Expand_Change(Index)" 
+        @mouseenter.native="Expand_Change(Index)"
+        @click.native="Cut_Show(Index)">
+          <span style="line-height: 30px; height: 30px;">-------------------------------</span>
+          <i class="el-icon-scissors" style="font-size: 20px; padding-top: 5px"></i>
+          <span style="line-height: 30px; height: 30px;">-------------------------------</span>
+      </el-row>
+    </el-row>
+    <el-divider></el-divider>
+    <el-row style="margin-bottom: 30px; margin-top: 30px">
+      题目题干合并测试
+    </el-row>
+    <el-row v-for="(Item, Item_Index) in TestList" :key="'TL' + Item_Index">
+      <el-row>
+        <el-button type="text" v-if="Item_Index != 0" @click="Merge(Item_Index)">合并</el-button>
+      </el-row>
+      <el-row v-if="Item.is_Q == 0">
+        题干
+      </el-row>
+      <el-row v-if="Item.is_Q == 1">
+        题目
+      </el-row>
     </el-row>
   </div>
 </template>
@@ -25,212 +51,73 @@
 export default {
   name: 'ScreenShot',
   props: {
-    url: {
-      type: String,
-      default: ''
-    },
-    httpRequest: {
-      type: Function,
-      default: function() {
-        return 'null'
-      }
-    }
+
   },
   data() {
     return {
-      show: false,
-      srcList: [],
-      file: null,
-      imgUrl: this.url,
-      dragArea: false
+      Self_Cut: false,
+      expand: [false, false],
+      TestList: [
+        {
+          "is_Q": 0
+        },
+        {
+          "is_Q": 0
+        },
+        {
+          "is_Q": 1
+        },
+        {
+          "is_Q": 1
+        }
+      ]
     }
   },
   watch:{
-    imgUrl() {
-      if (this.imgUrl === '') {
-        this.show = false
-        this.srcList = []
-      } else {
-        this.show = true
-        if(this.srcList.length > 0){
-            this.srcList.splice(0, 1, this.imgUrl)}
-        else{
-            this.srcList.push(this.imgUrl);
-        }
-      }
-    }
+
   },
   mounted() {
-    let upload = document.querySelector('#upload');
-    upload.addEventListener('dragenter', this.onDragIn, true);
-    upload.addEventListener('dragleave', this.onDragOut, true);
-    upload.addEventListener('drop', this.onDrop, false);
+
   },
   methods: {
-    DragAreaClass(){
-      if(this.dragArea){
-        return "uploadIn"
-      }else{
-        return "uploadOut"
-      }
+    Expand_Change(Index){
+      this.expand.splice(Index, 1, !this.expand[Index]);
     },
-    onDragIn (e) {
-      e.stopPropagation();
-      e.preventDefault();
+    Cut_Show(Index){
+      alert("从第" + (Index+1) + "处切分")
     },
-    onDragOut (e) {
-      e.stopPropagation();
-      e.preventDefault();
-    },
-    onDrop (e) {
-      e.stopPropagation();
-      e.preventDefault();
-      this.imgPreview(e.dataTransfer.files);
-    },
-    //图片预览
-    imgPreview (files) {
-      const _this = this;
-      let read = new FileReader();
-      read.readAsDataURL(files[0]);
-      read.onloadend = function () {  
-        _this.show = true
-        _this.imgUrl = read.result;
-      }
-    },
-    Action(resp, file, fileList){
-      fileList
-      const _this = this;
-      var promise = new Promise(function(resolve, reject){
-
-        // 此时file就是我们的剪切板中的图片对象
-        const reader = new FileReader();
-        reader.readAsDataURL(file)
-        reader.onloadend = (event) => {
-            _this.show = true
-            _this.imgUrl = event.target.result;
-            if(_this.imgUrl != ""){
-                resolve('1')
-            }else{
-                reject('0')
-            }
-        }}
-        )
-        promise.then(function(){
-            console.log(_this.imgUrl);
-          }).catch(function(){
-              console.log("Load Error")
-          })
-          
-    },
-    handlePaste(event) {
-      const _this = this;
-      const items = (event.clipboardData || window.clipboardData).items
-      let file = null
-      if (!items || items.length === 0) {
-        this.$message.error('当前浏览器不支持本地')
-        return
-      }
-      // 搜索剪切板items
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf('image') !== -1) {
-          file = items[i].getAsFile()
-          break
+    Merge(Item_Index){
+      if(this.TestList[Item_Index-1].is_Q != this.TestList[Item_Index].is_Q){
+        this.$confirm("类型不一致，请选择合并后的类型", "提示", {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '题干',
+          cancelButtonText: '题目',
+          type: "info",
+          confirmButtonClass: "confirmButton",
+          cancelButtonClass: "confirmButton"
+        }).then(() => {
+          this.TestList.splice(Item_Index, 1)
+          this.TestList[Item_Index - 1].is_Q = 0;
+        })
+        .catch((action) => {
+          if(action == "cancel"){
+            this.TestList.splice(Item_Index, 1)
+            this.TestList[Item_Index - 1].is_Q = 1;
+          }
+        })
         }
-      }
-      if (!file) {
-        this.$message.error('粘贴内容非图片')
-        return
-      }
-      var promise = new Promise(function(resolve, reject){
-
-        // 此时file就是我们的剪切板中的图片对象
-        const reader = new FileReader();
-        reader.readAsDataURL(file)
-        reader.onloadend = (event) => {
-            _this.show = true
-            _this.imgUrl = event.target.result;
-            if(_this.imgUrl != ""){
-                resolve('1')
-            }else{
-                reject('0')
-            }
-        }}
-        )
-        promise.then(function(){
-            console.log(_this.imgUrl);
-          }).catch(function(){
-              console.log("Load Error")
-          })
-          
-
-      },
-      
-        deleteImg() {
-
+        else{
+          this.TestList.splice(Item_Index, 1)
         }
-    },
+    }
+  },
 }
 </script>
-<style scoped>
-    .ScreenShot{
-        margin-top: 10px;
-    }
-    .pasteInputDiv{
-        box-sizing: border-box;
-        width: 158px;
-        height: 158px;
-
-    }
-    .pasteInput{
-        background-color: #fbfdff;
-        border: 1px dashed #c0ccda;
-        border-radius: 6px;
-        height: 158px;
-        line-height: 156px;
-        vertical-align: top;
-        width: 158px;
-        font-size: 19px;
-    }
-    .pasteInput:hover{
-        cursor: pointer;
-        border: 1px dashed #409EFF;
-    }
-    .pasteImgDiv{
-        position: relative;
-        width: 158px;
-        height: 158px;
-    }
-    .pasteImg{
-        position: relative;
-        width: 158px;
-        height: 158px;
-        border: 1px solid #c0ccda ;
-        border-radius: 5px;
-    }
-    .close-position{
-        position: absolute;
-        right: -10px;
-        top: -10px;
-        font-size: 22px;
-        background: #fff;
-        border-radius: 50%;
-        color: red;
-        font-weight: bold;
-        z-index: 9999;
-    }
-    .close-position:hover{
-        cursor: pointer;
-    }
-    .uploadIn {
-      margin: 100px auto;
-      width: 400px;
-      height: 400px;
-      border: 2px dashed #f00;
-    }
-    .uploadOut {
-      margin: 100px auto;
-      width: 400px;
-      height: 400px;
-      border: 2px dashed blue;
-    }
+<style >
+.confirmButton{
+  font-size: 14px !important;
+  color: #409EFD !important;
+  background: transparent !important;
+  border: 1px solid #409EFD !important;
+}
 </style>
