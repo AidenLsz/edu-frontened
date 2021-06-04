@@ -217,7 +217,7 @@ export default {
         ],
         inviteCode: [
           { required: true, message: "请输入邀请码", trigger: "blur" },
-          { validator: validateInviteCode, trigger: ['blur', 'change'] }
+          { validator: validateInviteCode, trigger: ['blur'] }
         ],
         imgCode: [
           { required: true, message: '请输入图形验证码', trigger: 'blur' },
@@ -290,37 +290,26 @@ export default {
       this.visible=false
     },
     getPhoneCode(){
-       this.$refs[this.formName].validateField('phone', (err) =>{
-          if(err){
-              return;
-          }
-          this.$refs[this.formName].validateField('imgCode', (err) =>{
-             if(err){
-                 return;
-             }
-             this.tackBtn();   //验证码倒数60秒
-             this.phoneCodeOrigin=this.getRandomCode(4)
-             let fd ={
-               'phoneNumber':['+86'+this.ruleForm.phone],
-               'code':[this.phoneCodeOrigin]
-             }
-             // let postCfg = {
-             //    headers: {'Content-Type': 'application/json;charset=UTF-8'}
-             // };
-             axios.post(this.getPhoneCodeUrl,
-               JSON.stringify(fd),
-               // qs.stringify(fd),
-               // { emulateJSON: true }
-             )
-             .then( res => {
-                 // console.log(res);
-                 if (res.status==200) {
-                   // let data =JSON.parse(res.data[0])
-                   console.log('发送成功');
-                 }
-             })
-          })
+      let validateList = [];
+      this.$refs[this.formName].validateField(['phone','imgCode','inviteCode'], (err) =>{
+          validateList.push(err)
       })
+      if (validateList.every((err) => err === '')) {
+        this.tackBtn();   //验证码倒数60秒
+        this.phoneCodeOrigin=this.getRandomCode(4)
+        let fd ={
+          'phoneNumber':['+86'+this.ruleForm.phone],
+          'code':[this.phoneCodeOrigin]
+        }
+        axios.post(this.getPhoneCodeUrl,
+          JSON.stringify(fd),
+        )
+        .then( res => {
+            if (res.status==200) {
+              console.log('发送成功');
+            }
+        })
+      }
     },
     getRandomCode(count=6){
       const arr=['0','1','2','3','4','5','6','7','8','9']
