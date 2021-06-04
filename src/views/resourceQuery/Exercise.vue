@@ -572,6 +572,7 @@ export default {
           this.database_list.push({name:data[i]})
           this.database_aim.push(false)
         }
+        // this.database_list[1].name='个人题库'
       })
     },
     // 清除图片
