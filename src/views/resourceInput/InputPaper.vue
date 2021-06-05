@@ -1050,7 +1050,7 @@
             <label>题目入库</label>
           </el-button>
         </el-row>
-        <el-row type="flex" justify="center" style="padding-top: 30px" v-if="Authority_Check()" >
+        <el-row type="flex" justify="center" style="padding-top: 30px" >
           <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('export')" :disabled="Blank_Paper()">
             <label>导出题目</label>
           </el-button>
@@ -1874,6 +1874,10 @@ export default {
     },
     ToTop(){
       window.scrollTo(0,0);
+      if(sessionStorage.getItem("InputPaperCache")){
+        this.Questions = JSON.parse(sessionStorage.getItem("InputPaperCache"));
+        this.Questions_Collapse = JSON.parse(sessionStorage.getItem("InputPaperCollapseCache"));
+      }
     },
     // 切换题包是否展开
     Expand_Type_Change(){
@@ -3539,6 +3543,9 @@ export default {
       // }
 
       if(Control == 'upload'){
+
+        sessionStorage.setItem("InputPaperCache", JSON.stringify(this.Questions));
+        sessionStorage.setItem("InputPaperCollapseCache", JSON.stringify(this.Questions_Collapse));
 
         this.Uploading = true;
 
