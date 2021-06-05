@@ -59,7 +59,7 @@
                         <el-row type="flex" justify="start">
                             <i class="el-icon-arrow-up" v-if="Part_Expand[0]" style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
                             <i class="el-icon-arrow-down" v-else style="font-size: 24px; line-height: 30px; margin-right: 20px"></i>
-                            相似试题
+                            基础信息
                         </el-row>
                     </el-col>
                 </el-row>
