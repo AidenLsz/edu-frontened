@@ -329,6 +329,11 @@ export default {
         }
 
     },
+    mounted() {
+        if(sessionStorage.getItem("InputPaperEditQuestion")){
+            this.questionInfo = JSON.parse(sessionStorage.getItem("InputPaperEditQuestion"));
+        }
+    },
     methods: {
         Calc_Option_Offset(index){
             
@@ -379,11 +384,31 @@ export default {
             e.target.type = "file";
 
         },
+        Reset_Params(){
+            this.questionInfo = {
+                type: "fill",
+                // 分值
+                score: 1,
+                // 题目内容，题目内容图片
+                content: "",
+                content_images: [],
+                // 答案的部分
+                answer: "",
+                answer_images: [],
+                // 解析的部分
+                analyse: "",
+                analyse_images: []
+            }
+        },
         Edit_Finish(){
 
             if(this.Necessary_Check()){
-            
+
+                sessionStorage.removeItem("InputPaperEditQuestion");
+                
                 setTimeout(()=>{
+
+                    this.questionInfo.score = parseFloat(this.questionInfo.score);
 
                     if(this.ReEdit == false){
 
@@ -395,6 +420,8 @@ export default {
                         this.ReEdit = false;
 
                     }
+
+                    this.Reset_Params();
 
                 }, 10);
 
