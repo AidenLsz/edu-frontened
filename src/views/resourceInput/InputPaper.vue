@@ -985,6 +985,7 @@
         </el-row>
         <el-divider></el-divider>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <MixQuestions
             @EditFinish_Mix="New_Questions"
             @ReEditFinish_Mix="ReEdit_Questions"
@@ -992,6 +993,8 @@
             :QInfos.sync="Temp_MixQuestionInfo"
         ></MixQuestions>
 =======
+=======
+>>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
         <div :key="Refresh">
           <MixQuestions
               @EditFinish_Mix="New_Questions" 
@@ -1001,7 +1004,10 @@
               :key="Refresh"
           ></MixQuestions>
         </div>
+<<<<<<< HEAD
 >>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
+=======
+>>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
     </el-dialog>
     <el-row justify="start" type="flex">
       <el-col style="padding-left: 25px">
@@ -1095,15 +1101,21 @@
           </el-button>
         </el-row>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <el-row
 =======
+=======
+>>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
         <el-row type="flex" justify="center" style="padding-top: 30px">
           <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="SessionCache()" :disabled="Blank_Paper()">
             <label>暂存内容</label>
           </el-button>
         </el-row>
         <el-row 
+<<<<<<< HEAD
 >>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
+=======
+>>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
           v-loading="downloading"
           element-loading-text="加载中，请等待"
           element-loading-spinner="el-icon-loading"
@@ -1310,8 +1322,11 @@ export default {
                 },
   data() {
     return {
+<<<<<<< HEAD
       Import_User: false,
       Import_User_Trace: "",
+=======
+>>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
       Refresh: false,
       // 是否展开题包
       Expand: true,
@@ -1635,6 +1650,11 @@ export default {
       this.Type_Cache = this.Questions[Bundle_Index].Bundle_Questions[Question_Index].type;
       this.Edit_Question_Do(Bundle_Index, Question_Index);
 >>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
+    },
+    Edit_Question(Bundle_Index, Question_Index){
+      sessionStorage.setItem("InputPaperEditQuestion", JSON.stringify(this.Questions[Bundle_Index].Bundle_Questions[Question_Index]));
+      this.Type_Cache = this.Questions[Bundle_Index].Bundle_Questions[Question_Index].type;
+      this.Edit_Question_Do(Bundle_Index, Question_Index);
     },
     // 替换文理综的前后切的新方法：手动切分
     // 1：替换当前显示为剪刀的标记位置
@@ -2732,6 +2752,7 @@ export default {
         this.complex_Input = false;
 <<<<<<< HEAD
 
+<<<<<<< HEAD
         this.Temp_OptionQuestionInfo = {
 
             type: "option",
@@ -2805,6 +2826,8 @@ export default {
 =======
 >>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
 
+=======
+>>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
     },
     // 移动题目位置
     // 注意要一次移动信息和折叠属性两个，不然会有问题
@@ -2949,6 +2972,7 @@ export default {
       this.$router.push({ path: route });
     },
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
     SessionCache(){
@@ -2958,6 +2982,12 @@ export default {
         sessionStorage.setItem("InputPaperPeriodCache", this.PeriodType);
     },
 >>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
+=======
+    SessionCache(){
+        sessionStorage.setItem("InputPaperCache", JSON.stringify(this.Questions));
+        sessionStorage.setItem("InputPaperCollapseCache", JSON.stringify(this.Questions_Collapse));
+    },
+>>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
     // 读取Json格式的数据
     loadJsonFromFile(file, fileList) {
       this.uploadFileName = file;
