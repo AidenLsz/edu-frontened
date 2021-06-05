@@ -499,6 +499,9 @@ export default {
         value: "政治",
         label: "政治"
       },{
+        value: "地理",
+        label: "地理"
+      },{
         value: "物理",
         label: "物理"
       },{
