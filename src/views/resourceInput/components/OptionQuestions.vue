@@ -403,6 +403,11 @@ export default {
         }
 
     },
+    mounted() {
+        if(sessionStorage.InputPaperEditQuestion){
+            this.questionInfo = JSON.parse(sessionStorage.InputPaperEditQuestion);
+        }
+    },
     methods: {
         Calc_Option_Offset(index){
             
@@ -515,9 +520,30 @@ export default {
             }
 
         },
+        Reset_Params(){
+            this.questionInfo = {
+                type: "option",
+                // 分值
+                score: 1,
+                // 题目内容，题目内容图片，是否显示图片
+                content: "",
+                content_images: [],
+                // 选项的部分
+                options: ["", "", "", ""],
+                options_images: ["", "", "", ""],
+                // 答案的部分
+                answer: "",
+                answer_images: [],
+                // 解析的部分
+                analyse: "",
+                analyse_images: []
+            }
+        },
         Edit_Finish(){
 
             if(this.Necessary_Check()){
+
+                sessionStorage.removeItem("InputPaperEditQuestion");
             
                 setTimeout(()=>{
 
@@ -531,6 +557,8 @@ export default {
                         this.ReEdit = false;
 
                     }
+
+                    this.Reset_Params();
 
                 }, 10);
 
