@@ -553,7 +553,6 @@ export default {
             }
 
             if(!change_Switch && this.questionInfos.sub_questions.length > 0){
-<<<<<<< HEAD
 
                 this.questionInfos.score = parseFloat(this.questionInfos.sub_questions[0].score);
 
@@ -561,15 +560,6 @@ export default {
                     this.questionInfos.score = this.questionInfos.score + parseFloat(this.questionInfos.sub_questions[j].score);
                 }
 
-=======
-
-                this.questionInfos.score = parseFloat(this.questionInfos.sub_questions[0].score);
-
-                for(var j = 1; j < this.questionInfos.sub_questions.length; j++){
-                    this.questionInfos.score = this.questionInfos.score + parseFloat(this.questionInfos.sub_questions[j].score);
-                }
-
->>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
             }
 
             if(newVal.sub_questions.length == 0){
@@ -582,7 +572,6 @@ export default {
             this.ReEdit = newVal;
 
         },
-<<<<<<< HEAD
         Unit_Score(newVal, oldVal) {
             newVal = parseInt(newVal)
             oldVal = parseInt(oldVal)
@@ -597,9 +586,6 @@ export default {
                 this.$message.error("请勿直接删除分数值");
             }
         }
-=======
->>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
-
     },
     data(){
         return {
@@ -765,12 +751,7 @@ export default {
         // 需要管理两个条目，一个是题目内容，一个是是否折叠
         // 由于折叠属性放在题目内会对显示造成复杂化的结果，就放在外面
         New_Questions(val){
-
-<<<<<<< HEAD
             this.ReEditSwitch = this.Re_Cache;
-
-=======
->>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
             let temp_val = "";
 
             temp_val = this.Normal_Char_Check(val);

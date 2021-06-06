@@ -1323,10 +1323,15 @@ export default {
   data() {
     return {
 <<<<<<< HEAD
+<<<<<<< HEAD
       Import_User: false,
       Import_User_Trace: "",
 =======
 >>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
+=======
+      Import_User: false,
+      Import_User_Trace: "",
+>>>>>>> 994db97... issue28-SR - Update-inputPaper
       Refresh: false,
       // 是否展开题包
       Expand: true,
@@ -1644,12 +1649,16 @@ export default {
           _this.PaperTitle = A.title;
         };
       }
+<<<<<<< HEAD
     },
     Edit_Question(Bundle_Index, Question_Index){
       sessionStorage.setItem("InputPaperEditQuestion", JSON.stringify(this.Questions[Bundle_Index].Bundle_Questions[Question_Index]));
       this.Type_Cache = this.Questions[Bundle_Index].Bundle_Questions[Question_Index].type;
       this.Edit_Question_Do(Bundle_Index, Question_Index);
 >>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
+=======
+>>>>>>> b4d1f77... issue28-SR - Update-inputPaper
+>>>>>>> 994db97... issue28-SR - Update-inputPaper
     },
     Edit_Question(Bundle_Index, Question_Index){
       sessionStorage.setItem("InputPaperEditQuestion", JSON.stringify(this.Questions[Bundle_Index].Bundle_Questions[Question_Index]));
@@ -2986,6 +2995,8 @@ export default {
     SessionCache(){
         sessionStorage.setItem("InputPaperCache", JSON.stringify(this.Questions));
         sessionStorage.setItem("InputPaperCollapseCache", JSON.stringify(this.Questions_Collapse));
+        sessionStorage.setItem("InputPaperSubjectCache", this.SubjectType);
+        sessionStorage.setItem("InputPaperPeriodCache", this.PeriodType);
     },
 >>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
     // 读取Json格式的数据
