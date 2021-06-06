@@ -122,21 +122,21 @@
         <el-col :span="4" style="text-align: left">
           合法的英文符号有：
         </el-col>
-        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in en_pun_list" :key="'EN' + SymIndex.toString()" v-html="Sym">
+        <el-col @click.native="Add_To_Import_User_Trach(Sym)" :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in en_pun_list" :key="'EN' + SymIndex.toString()" v-html="Sym">
         </el-col>
       </el-row>
       <el-row style="margin: 50px 0px">
         <el-col :span="4" style="text-align: left">
           合法的中文符号有：
         </el-col>
-        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in ch_pun_list" :key="'CH' + SymIndex.toString()" v-html="Sym">
+        <el-col @click.native="Add_To_Import_User_Trach(Sym)" :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in ch_pun_list" :key="'CH' + SymIndex.toString()" v-html="Sym">
         </el-col>
       </el-row>
       <el-row style="margin: 50px 0px">
         <el-col :span="4" style="text-align: left">
           合法的简单数学符号有：
         </el-col>
-        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in math_pun_list" :key="'MATH' + SymIndex.toString()" v-html="Sym">
+        <el-col @click.native="Add_To_Import_User_Trach(Sym)" :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in math_pun_list" :key="'MATH' + SymIndex.toString()" v-html="Sym">
         </el-col>
       </el-row>
       <el-row type="flex" justify="center" style="font-size: 20px; color: red; font-weight: bold">
@@ -1091,6 +1091,18 @@
         </el-row>
       </el-col>
       <el-col :span="19" style="background: #F8FBFF; padding-top: 40px; min-height: 70.8vh; margin-top: 30px">
+        <el-row v-if="Import_User" type="flex" justify="start" style="padding-left: 10px; margin-bottom: 30px">
+          <el-col :span="3">
+            <el-row type="flex" justify="start" style="padding-left:40px">
+              <label>输入JSON文件：</label>
+            </el-row>
+          </el-col>
+          <el-col :span="6">
+            <el-row type="flex" justify="start">
+              <input type="file" accept=".json" @change="QuestionJsonImport($event)" class="JSONInput"/>
+            </el-row>
+          </el-col>
+        </el-row>
         <!-- 确认学科和学段的选择项 -->
         <el-row style="margin: 0px 50px" type="flex" justify="start">
             <el-col :span="4">
@@ -1257,6 +1269,8 @@ export default {
   name: "PaperAnalyseInput",
   data() {
     return {
+      Import_User: false,
+      Import_User_Trace: "",
       Refresh: false,
       // 是否展开题包
       Expand: true,
@@ -1546,8 +1560,35 @@ export default {
   },
   mounted(){
     this.ToTop();
+    this.Import_User_Trace = "";
+    if(sessionStorage.getItem("Import_User")){
+      this.Import_User = true;
+    }
   },
   methods: {
+    Add_To_Import_User_Trach(Sym){
+      this.Import_User_Trace += Sym;
+      if(this.Import_User_Trace == "()》《+"){
+        alert("录入用户模式开启，已打开JSON导入框")
+        sessionStorage.setItem("Import_User", 1)
+        this.Import_User = true;
+      }
+    },
+    // 暂时放着的，用于进行导入的方法，晚上回来了再考虑完成
+    QuestionJsonImport(e){
+      if(e.target.files.length > 0){
+        const _this = this;
+        var reader = new FileReader();
+        reader.readAsText(e.target.files[0], "UTF-8")
+        reader.onloadend = function (e) {
+          let A = JSON.parse(e.target.result)
+          _this.SubjectType = A.subject_type;
+          _this.PeriodType = A.period_type;
+          _this.Questions = A.questions;
+          _this.PaperTitle = A.title;
+        };
+      }
+    },
     Edit_Question(Bundle_Index, Question_Index){
       sessionStorage.setItem("InputPaperEditQuestion", JSON.stringify(this.Questions[Bundle_Index].Bundle_Questions[Question_Index]));
       this.Type_Cache = this.Questions[Bundle_Index].Bundle_Questions[Question_Index].type;
@@ -1834,11 +1875,15 @@ export default {
       if(sessionStorage.getItem("PaperAnalyseCache")){
         this.Questions = JSON.parse(sessionStorage.getItem("PaperAnalyseCache"));
         this.Questions_Collapse = JSON.parse(sessionStorage.getItem("PaperAnalyseCollapseCache"));
+        this.SubjectType = sessionStorage.getItem("PaperAnalyseSubjectCache");
+        this.PeriodType = sessionStorage.getItem("PaperAnalysePeriodCache");
       }
     },
     SessionCache(){
         sessionStorage.setItem("PaperAnalyseCache", JSON.stringify(this.Questions));
         sessionStorage.setItem("PaperAnalyseCollapseCache", JSON.stringify(this.Questions_Collapse));
+        sessionStorage.setItem("PaperAnalyseSubjectCache", this.SubjectType);
+        sessionStorage.setItem("PaperAnalysePeriodCache", this.PeriodType);
     },
     // 切换题包是否展开
     Expand_Type_Change(){
@@ -4370,5 +4415,12 @@ input {
 .btn_trans {
   border: 1px dashed black;
   margin: 15px;
+}
+.JSONInput{
+  height: 50px;
+  width: 240px;
+  margin-top: -5px;
+  margin-left: -40px;
+  opacity: 1;
 }
 </style>

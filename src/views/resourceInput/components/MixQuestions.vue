@@ -132,6 +132,24 @@
             </el-col>
         </el-row> -->
         <!-- 分值，题干 -->
+        <el-row type="flex" justify="start" style="margin: 0px 5px; padding: 0px">
+            <el-col :span="4">
+                <el-row type="flex" justify="start" style="margin: 0px; padding: 0px">
+                    <el-button @click="Unit_Score_Switch = !Unit_Score_Switch" type="text">小题分数统一开关</el-button>
+                </el-row>
+            </el-col>
+            <el-col :span="3">
+                <el-row type="flex" justify="start" style="margin: 0px; padding: 0px">
+                    <el-input v-model="Unit_Score" :disabled="!Unit_Score_Switch"></el-input>
+                </el-row>
+            </el-col>
+            <el-col :span="3" :offset="1">
+                <el-row type="flex" justify="start" style="margin: 0px; padding: 0px">
+                    <el-button @click="Unit_Score_Do()" :disabled="!Unit_Score_Switch" >分数统一</el-button>
+                </el-row>
+            </el-col>
+        </el-row>
+        <el-divider></el-divider>
         <el-row style="margin-top: 15px">
             <!-- 左边组，第一行是分值和显示分值的地方 -->
             <!-- 第二行是添加选项，预览题目效果 -->
@@ -146,17 +164,17 @@
                         <i class="el-icon-search"></i>
                         预览本题
                     </el-button>
-                    <el-button size="small" @click="showDialog = true" style="font-size: 12px; margin-left: 20px">
+                    <el-button size="small" @click.native="New_Ques('Option')" style="font-size: 12px; margin-left: 20px">
                         <i class="el-icon-edit"></i>
                         新选择题
                     </el-button>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 10px">
-                    <el-button size="small" @click="showDialog_Fill = true" style="font-size: 12px; margin-left: 5px">
+                    <el-button size="small" @click.native="New_Ques('Fill')" style="font-size: 12px; margin-left: 5px">
                         <i class="el-icon-edit"></i>
                         新填空题
                     </el-button>
-                    <el-button size="small" @click="showDialog_Answer = true" style="font-size: 12px; margin-left: 20px">
+                    <el-button size="small" @click.native="New_Ques('Answer')" style="font-size: 12px; margin-left: 20px">
                         <i class="el-icon-edit"></i>
                         新解答题
                     </el-button>
@@ -554,10 +572,28 @@ export default {
             this.ReEdit = newVal;
 
         },
+        Unit_Score(newVal, oldVal) {
+            newVal = parseInt(newVal)
+            oldVal = parseInt(oldVal)
+            if(newVal <= 0){
+                newVal = 0.1;
+                this.$message.error("一道题目应当至少有0.1分");
+            }else if(newVal > 100){
+                newVal = 100;
+                this.$message.error("一道题目应当至多有100分");
+            }else if(!parseFloat(newVal)){
+                newVal = oldVal
+                this.$message.error("请勿直接删除分数值");
+            }
+        }
 
     },
     data(){
         return {
+            // ReSave
+            Re_Cache: false,
+            Unit_Score_Switch: false,
+            Unit_Score: 1,
             // 一道非选择题应当包含的信息
             // 小题中的图片，分数，内容由其自己保管，反正有对应的Display工具作显示
             // 这边只需要编辑他的内容就好了
@@ -639,6 +675,25 @@ export default {
         }
     },
     methods: {
+        New_Ques(part){
+            this.Re_Cache = this.ReEditSwitch;
+            this.ReEditSwitch = false;
+            if(part == "Option"){
+                this.showDialog = true;
+            }else if(part == 'Fill'){
+                this.showDialog_Fill = true;
+            }else if(part == 'Answer'){
+                this.showDialog_Answer = true;
+            }
+        },
+        Unit_Score_Do(){
+            for(let i = 0; i < this.questionInfos.sub_questions.length; i++){
+                let Temp_Item = JSON.parse(JSON.stringify(this.questionInfos.sub_questions[i]))
+                Temp_Item.score = parseFloat(this.Unit_Score);
+                this.questionInfos.sub_questions.splice(i, 1, Temp_Item);
+            }
+            this.Calc_Score();
+        },
         Open_Preview(){
             this.preview = true;
         },
@@ -697,6 +752,8 @@ export default {
         // 需要管理两个条目，一个是题目内容，一个是是否折叠
         // 由于折叠属性放在题目内会对显示造成复杂化的结果，就放在外面
         New_Questions(val){
+
+            this.ReEditSwitch = this.Re_Cache;
 
             let temp_val = "";
 
@@ -1022,6 +1079,8 @@ export default {
 
             this.questionInfos.sub_questions.splice(index, 1);
             this.questionInfos.sub_questions_collapse.splice(index, 1);
+
+            this.Calc_Score();
 
         },
         // 压缩题目长度，使过长的题目能正常显示

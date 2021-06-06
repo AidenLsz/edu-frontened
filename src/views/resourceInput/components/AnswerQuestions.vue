@@ -559,6 +559,7 @@ export default {
                 this.questionInfos.sub_questions.splice(index, 1);
                 this.questionInfos.sub_questions_images.splice(index, 1);
                 this.questionInfos.sub_questions_scores.splice(index, 1);
+                this.Calc_Score();
             }else{
                 this.$message("至少要保留一道小题！");
             }
@@ -570,10 +571,18 @@ export default {
                 this.questionInfos.sub_questions.push("");
                 this.questionInfos.sub_questions_images.push([]);
                 this.questionInfos.sub_questions_scores.push(1);
+                this.Calc_Score();
             }else{
                 this.$message("小题过多！");
             }
 
+        },
+        Calc_Score(){
+            this.questionInfos.score = 0
+            for(let i = 0; i < this.questionInfos.sub_questions_scores.length; i++){
+                this.questionInfos.sub_questions_scores.splice(i, 1, parseFloat(this.questionInfos.sub_questions_scores[i]))
+                this.questionInfos.score += parseFloat(this.questionInfos.sub_questions_scores[i])
+            }
         },
         Reset_Params(){
             this.questionInfos = {
@@ -602,6 +611,11 @@ export default {
                 setTimeout(()=>{
 
                     sessionStorage.removeItem("InputPaperEditQuestion");
+
+                    this.questionInfos.score = parseFloat(this.questionInfos.score);
+                    for(let i = 0; i < this.questionInfos.sub_questions_scores.length; i++){
+                        this.questionInfos.sub_questions_scores.splice(i, 1, parseFloat(this.questionInfos.sub_questions_scores[i]))
+                    }
 
                     if(this.ReEdit == false){
 

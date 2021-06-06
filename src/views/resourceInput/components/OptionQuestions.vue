@@ -547,6 +547,8 @@ export default {
             
                 setTimeout(()=>{
 
+                    this.questionInfo.score = parseFloat(this.questionInfo.score);
+
                     if(this.ReEdit == false){
 
                         this.$emit("EditFinish", this.questionInfo);
