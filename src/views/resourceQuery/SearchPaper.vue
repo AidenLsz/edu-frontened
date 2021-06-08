@@ -115,7 +115,8 @@
       <el-col :span="7" style="margin-left: 5vw;">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>试卷检索<span @click="openInstructionDialog" style="cursor:pointer;">
+          <el-breadcrumb-item>试卷检索
+            <span @click="openInstructionDialog" style="cursor:pointer;">
             <i class="el-icon-question"></i>
           </span></el-breadcrumb-item>
         </el-breadcrumb>

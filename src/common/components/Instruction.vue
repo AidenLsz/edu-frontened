@@ -7,11 +7,7 @@
       :close-on-click-modal="true"
       >
       <el-carousel :autoplay="false" arrow="always" height="60vh">
-<<<<<<< HEAD
         <el-carousel-item v-for="(item,i) in data" :key="i">
-=======
-        <el-carousel-item v-for="item,i in data" :key="i">
->>>>>>> add user instruction
           <div class="desc">{{i+1}}、{{item.desc}} </div>
           <div class="img-container">
             <img :src="item.imgSrc" alt="">
