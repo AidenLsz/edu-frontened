@@ -2,9 +2,9 @@
   <div style="margin-top: 5vh">
     <!-- 提供给非法输入格式的提示对话框 -->
     <el-dialog
-        :visible.sync="showHint" 
-        title="非法输入格式提示" 
-        width="65%" 
+        :visible.sync="showHint"
+        title="非法输入格式提示"
+        width="65%"
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
@@ -34,10 +34,10 @@
       </el-row>
     </el-dialog>
     <!-- 提供给选择题的编辑器 -->
-    <el-dialog 
-        :visible.sync="showDialog" 
-        title="请编辑想要插入/修改的选择题内容" 
-        width="65%" 
+    <el-dialog
+        :visible.sync="showDialog"
+        title="请编辑想要插入/修改的选择题内容"
+        width="65%"
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
@@ -59,19 +59,19 @@
             </el-col>
         </el-row>
         <el-divider></el-divider>
-        <OptionQuestions 
-            @EditFinish="New_Questions" 
-            @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch" 
-            :QInfos.sync="Temp_OptionQuestionInfo" 
+        <OptionQuestions
+            @EditFinish="New_Questions"
+            @ReEditFinish="ReEdit_Questions"
+            :RE.sync="ReEditSwitch"
+            :QInfos.sync="Temp_OptionQuestionInfo"
             ref="OptionQuestionsEditor">
         </OptionQuestions>
     </el-dialog>
     <!-- 提供给填空题的编辑器 -->
-    <el-dialog 
-        :visible.sync="showDialog_Fill" 
-        title="请编辑想要插入/修改的填空题内容" 
-        width="80%" 
+    <el-dialog
+        :visible.sync="showDialog_Fill"
+        title="请编辑想要插入/修改的填空题内容"
+        width="80%"
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
@@ -94,17 +94,17 @@
         </el-row>
         <el-divider></el-divider>
         <FillQuestions
-            @EditFinish="New_Questions" 
-            @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch" 
-            :QInfos.sync="Temp_FillQuestionInfo" 
+            @EditFinish="New_Questions"
+            @ReEditFinish="ReEdit_Questions"
+            :RE.sync="ReEditSwitch"
+            :QInfos.sync="Temp_FillQuestionInfo"
         ></FillQuestions>
     </el-dialog>
     <!-- 提供给解答题的编辑器 -->
-    <el-dialog 
-        :visible.sync="showDialog_Answer" 
-        title="请编辑想要插入/修改的解答题内容" 
-        width="80%" 
+    <el-dialog
+        :visible.sync="showDialog_Answer"
+        title="请编辑想要插入/修改的解答题内容"
+        width="80%"
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
@@ -127,16 +127,16 @@
         </el-row>
         <el-divider></el-divider>
         <AnswerQuestions
-            @EditFinish="New_Questions" 
-            @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch" 
-            :QInfos.sync="Temp_AnswerQuestionInfo" 
+            @EditFinish="New_Questions"
+            @ReEditFinish="ReEdit_Questions"
+            :RE.sync="ReEditSwitch"
+            :QInfos.sync="Temp_AnswerQuestionInfo"
         ></AnswerQuestions>
     </el-dialog>
     <!-- 提供给非选择题的编辑器 -->
-    <el-dialog 
-        :visible.sync="showDialog_Mix" 
-        title="请编辑想要插入/修改的非选择题内容" 
+    <el-dialog
+        :visible.sync="showDialog_Mix"
+        title="请编辑想要插入/修改的非选择题内容"
         width="80%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
@@ -158,7 +158,7 @@
         </el-row>
         <el-divider></el-divider>
         <MixQuestions
-            @EditFinish_Mix="New_Questions" 
+            @EditFinish_Mix="New_Questions"
             @ReEditFinish_Mix="ReEdit_Questions"
             :RE.sync="ReEditSwitch"
             :QInfos.sync="Temp_MixQuestionInfo"
@@ -167,7 +167,7 @@
     <!-- 完成单题显示的编辑器 -->
     <el-dialog
         :visible.sync="showDialog_Result"
-        title="确认导入的题目内容" 
+        title="确认导入的题目内容"
         width="90%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
@@ -187,9 +187,9 @@
                     trigger="hover"
                     v-if="Question_Check[Question_Index] == false"
                     content="点击完成该题目确认">
-                    <el-button 
-                      slot="reference" 
-                      circle size="medium" 
+                    <el-button
+                      slot="reference"
+                      circle size="medium"
                       @click="Question_Check.splice(Question_Index, 1, true)"
                       type="success"
                       ><i class="el-icon-check"></i></el-button>
@@ -201,8 +201,8 @@
                     v-if="Question_Check[Question_Index] == true"
                     content="点击取消确认该题目">
                     <el-button
-                      slot="reference" 
-                      circle size="medium" 
+                      slot="reference"
+                      circle size="medium"
                       @click="Question_Check.splice(Question_Index, 1, false)"
                       type="danger"><i class="el-icon-edit"></i></el-button>
                   </el-popover>
@@ -230,15 +230,15 @@
                   <Mathdown :content="Get_Question_Show(Question_Info.question_stem, 'stem', Question_Index)" style="width: 84vw;" :name="Get_Name(Question_Index, 'stem')"/>
                 </el-row>
                 <el-row type="flex" justify="start">
-                  <ComplexInput 
+                  <ComplexInput
                     v-if="Show_ComplexInput(Question_Index, 'stem')"
-                    @Update_CI="Update_ComplexInput" 
+                    @Update_CI="Update_ComplexInput"
                     :Get_Out_Content="Get_Question_Show(Question_Info.question_stem, 'stem', Question_Index).substring(5)"></ComplexInput>
                 </el-row>
               </el-col>
             </el-row>
             <!-- 题干部分 - 有小题 -->
-            <el-row type="flex" justify="start" style="margin: 30px 50px;" 
+            <el-row type="flex" justify="start" style="margin: 30px 50px;"
               v-for="(Sub_Question, Sub_Question_Index) in Question_Info.sub_questions" :key="Sub_Question_Index">
                 <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.question_stem, 'stem')"></p> -->
               <el-col :span="1" v-if="Question_Check[Question_Index] == false">
@@ -251,16 +251,16 @@
                   <Mathdown :content="Get_Sub_Question(Sub_Question, Question_Index, Sub_Question_Index)" style="width: 84vw;" :name="Get_Name(Question_Index, 'sub_question', Sub_Question_Index)"/>
                 </el-row>
                 <el-row type="flex" justify="start">
-                  <ComplexInput 
+                  <ComplexInput
                     v-if="Show_ComplexInput(Question_Index, 'sub_question', Sub_Question_Index)"
-                    @Update_CI="Update_ComplexInput" 
+                    @Update_CI="Update_ComplexInput"
                     :Get_Out_Content="Get_Sub_Question(Sub_Question, Question_Index, Sub_Question_Index)"></ComplexInput>
                 </el-row>
               </el-col>
             </el-row>
             <!-- 选项部分 -->
-            <el-row type="flex" justify="start" style="margin: 20px 50px" 
-                    v-for="(Question_Option, Option_Index) in Question_Info.question_options" 
+            <el-row type="flex" justify="start" style="margin: 20px 50px"
+                    v-for="(Question_Option, Option_Index) in Question_Info.question_options"
                     :key="Option_Index" >
               <!-- <p style="text-align: left" v-html="Get_Question_Options(Question_Option, Option_Index)"></p>
                 -->
@@ -274,15 +274,15 @@
                   <Mathdown :content="Get_Question_Options(Question_Option, Option_Index, Question_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'option', Option_Index)"/>
                 </el-row>
                 <el-row type="flex" justify="start">
-                  <ComplexInput 
+                  <ComplexInput
                     v-if="Show_ComplexInput(Question_Index, 'option', Option_Index)"
-                    @Update_CI="Update_ComplexInput" 
+                    @Update_CI="Update_ComplexInput"
                     :Get_Out_Content="Get_Question_Options(Question_Option, Option_Index, Question_Index).substring(4)"></ComplexInput>
                 </el-row>
               </el-col>
               <!-- <el-row type="flex" justify="start" style="margin: 30px 50px; background: red" v-if="Show_ComplexInput(Question_Index, 'option', Option_Index)">
-                <ComplexInput 
-                    @Update_CI="Update_ComplexInput" 
+                <ComplexInput
+                    @Update_CI="Update_ComplexInput"
                     :Get_Out_Content="Get_Question_Options(Question_Option, Option_Index)"></ComplexInput>
               </el-row> -->
             </el-row>
@@ -299,9 +299,9 @@
                   <Mathdown :content="Get_Question_Show(Answer, 'answer', Question_Index, Answer_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'answer', Answer_Index)"/>
                  </el-row>
                  <el-row type="flex" justify="start">
-                  <ComplexInput 
+                  <ComplexInput
                     v-if="Show_ComplexInput(Question_Index, 'answer', Answer_Index)"
-                    @Update_CI="Update_ComplexInput" 
+                    @Update_CI="Update_ComplexInput"
                     :Get_Out_Content="Get_Question_Show(Answer, 'answer', Question_Index, Answer_Index).substring(6)"></ComplexInput>
                  </el-row>
                </el-col>
@@ -319,9 +319,9 @@
                   <Mathdown :content="Get_Question_Show(Question_Info.analysis, 'analyse', Question_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'analyse')"/>
                 </el-row>
                 <el-row type="flex" justify="start">
-                  <ComplexInput 
+                  <ComplexInput
                     v-if="Show_ComplexInput(Question_Index, 'analyse')"
-                    @Update_CI="Update_ComplexInput" 
+                    @Update_CI="Update_ComplexInput"
                     :Get_Out_Content="Get_Question_Show(Question_Info.analysis, 'analyse', Question_Index).substring(5)"></ComplexInput>
                 </el-row>
               </el-col>
@@ -336,10 +336,15 @@
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>资源录入</el-breadcrumb-item>
-          <el-breadcrumb-item>试题资源</el-breadcrumb-item>
+          <el-breadcrumb-item>试题资源
+            <span @click="openInstructionDialog" style="cursor:pointer;">
+              <i class="el-icon-question"></i>
+            </span>
+          </el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
+    <instruction ref="instruction"/>
     <el-row style="margin-left: 5vw; margin-right: 5vw">
       <el-col :span="4" style="padding-bottom: 50px; padding-top: 30px">
         <!-- 切换页面 -->
@@ -435,20 +440,20 @@
           <OptionDisplay v-if="Type_Now == 'option'" :QI="Temp_OptionQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></OptionDisplay>
           <FillDisplay v-else-if="Type_Now == 'fill'" :QI="Temp_FillQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></FillDisplay>
           <AnswerDisplay v-else-if="Type_Now == 'answer'" :QI="Temp_AnswerQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></AnswerDisplay>
-          <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo" :BI="'Bundle_0'"></MixDisplay>  
+          <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo" :BI="'Bundle_0'"></MixDisplay>
         </el-row>
         <el-row v-if="Type_Now != '-1'">
           <el-col :span="8">
             <el-button type="primary" plain @click="Edit_Question()">重新编辑</el-button>
           </el-col>
           <el-col :span="8">
-            <el-button type="warning" v-if="Authority_Check()" plain @click="PaperUpload('export')">题目导出</el-button> 
+            <el-button type="warning" v-if="Authority_Check()" plain @click="PaperUpload('export')">题目导出</el-button>
             <p v-else>&nbsp;</p>
-          </el-col>  
+          </el-col>
           <el-col :span="8">
-            <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button> 
-          </el-col> 
-        </el-row>  
+            <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
   </div>
@@ -467,17 +472,18 @@ import AnswerQuestions from "./components/AnswerQuestions.vue";
 import AnswerDisplay from "./components/AnswerDisplay.vue";
 import MixQuestions from "./components/MixQuestions.vue";
 import MixDisplay from "./components/MixDisplay.vue";
+import Instruction from './components/InstructionExercise.vue'
 
 import Mathdown from "../../common/components/Mathdown.vue";
 
 // import Vue from "vue";
 export default {
-  components: { ComplexInput, 
-                OptionDisplay, OptionQuestions, 
-                FillQuestions, FillDisplay, 
+  components: { ComplexInput,
+                OptionDisplay, OptionQuestions,
+                FillQuestions, FillDisplay,
                 AnswerQuestions, AnswerDisplay,
                 MixQuestions, MixDisplay,
-                Mathdown},
+                Mathdown,Instruction},
   data() {
     return {
       // 是否展开题型
@@ -655,7 +661,7 @@ export default {
           analyse_images: []
 
       }
-        
+
     };
   },
 
@@ -666,9 +672,9 @@ export default {
     },
 
     Question_Check(val){
-        
+
         var Flag = true
-        
+
         for(var c = 0; c < val.length; c++){
           if(!val[c]){
             Flag = false
@@ -688,7 +694,9 @@ export default {
     this.ToTop();
   },
   methods: {
-    
+    openInstructionDialog(){
+      this.$refs.instruction.openDialog();
+    },
     Authority_Check(){
       var username = sessionStorage.getItem("user");
       if(username === "advanced" || username === "admin"){
@@ -699,7 +707,7 @@ export default {
     },
 
     Change_Type(Type){
-      
+
       this.Type_Cache = Type;
 
       if(Type == 'option'){
@@ -896,7 +904,7 @@ export default {
 
         this.Close_Editor();
         this.ReEditSwitch = false;
-        
+
     },
     // 检测是否有非法字符 - 综合
     Mix_Char_Check(val){
@@ -1053,11 +1061,11 @@ export default {
           Img_SE.push([Start, Start + Temp_Catcher.length - 1])
           Result_List = Img_Catcher.exec(content);
       }
-      
+
       var Img_Index = 0;
 
       for(var i = 0; i < content.length; i++){
-        
+
         if(content[i] == '$' && !latexFlag){
             latexFlag = true;
         }else if(content[i] == '$' && latexFlag){
@@ -1080,10 +1088,10 @@ export default {
                 }
             }
             // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
-            else if(!(content.charCodeAt(i) > 255 || 
+            else if(!(content.charCodeAt(i) > 255 ||
                       this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
-                      content[i] == ' ' || content[i] == '$' || 
-                      content.charCodeAt(i) == 10) 
+                      content[i] == ' ' || content[i] == '$' ||
+                      content.charCodeAt(i) == 10)
                     && !symbolError){
               symbolError = true;
               this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符，或将其包裹于$$符号之内" + content[i] + " ！", offset: 40});
@@ -1108,7 +1116,7 @@ export default {
         this.showDialog_Result = false;
         this.showHint = false;
 
-    },  
+    },
     Editor_Dialog_Close(){
 
         this.Close_Editor();
@@ -1306,7 +1314,7 @@ export default {
 
         Ques = this.Temp_MixQuestionInfo
         // var O_Answer = Ques_Out.answer.split("::");
-        
+
 
         // for(var B_inner = 0; B_inner < Ques_Out.sub_questions.length; B_inner++){
 
@@ -1408,7 +1416,7 @@ export default {
         };
         let param = new FormData();
 
-        param.append('result_json', 
+        param.append('result_json',
                         JSON.stringify({
                           "post_type": 0,
                           "title": this.PaperTitle,
@@ -1473,7 +1481,7 @@ export default {
     //     for(var j = 0; j < answer.length; j++){
 
     //       var item = answer[j]
-            
+
     //       if(item != "" && !this.ChecK_Do(item)){
     //         this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
     //         return false
@@ -1486,7 +1494,7 @@ export default {
     //       this.$message.error("第"+ (i+1).toString() + "题解析内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
     //       return false;
     //     }
-      
+
     //     var options = Ques.question_options;
     //     for(j = 0; j < options.length; j++){
     //       if(!this.ChecK_Do(options[j])){
@@ -1529,7 +1537,7 @@ export default {
               this.TestData.doc[Question_Index].question_stem = Stem;
             return "题干$：$" + Stem
         }else if(Type == 'answer'){
-            
+
             if(this.TestData.doc[Question_Index].answer[Answer_Index] != Stem)
               this.TestData.doc[Question_Index].answer.splice(Answer_Index, 1, Stem)
             return "答案$" + (Answer_Index + 1).toString() + "$：" + Stem
@@ -1608,7 +1616,7 @@ export default {
         this.Question_Edit_Now = -1;
         this.Question_Edit_Part = "";
       }else{
-        this.Question_Edit_Now = Question_Index; 
+        this.Question_Edit_Now = Question_Index;
         this.Question_Edit_Part = Part;
       }
 
@@ -1616,8 +1624,8 @@ export default {
         this.Question_Edit_Option_Index = Index;
       }else{
         this.Question_Edit_Option_Index = -1;
-      }  
-      
+      }
+
       if(this.Question_Edit_Part == 'sub_question' && Index != null && Index != this.Question_Edit_Sub_Ques_Index){
         this.Question_Edit_Sub_Ques_Index = Index;
       }else{

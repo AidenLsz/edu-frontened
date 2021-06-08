@@ -39,7 +39,7 @@
                   @change="pictureSearch($event)"
                   accept=".jpeg, .png, .jpg"
                   ref="picSearchInput"
-                  />  
+                  />
               </div>
             </el-row>
             <el-row type="flex" justify="start" style="margin-top: 30px;">
@@ -67,8 +67,8 @@
               </el-col>
               <el-col :span="4">
                 <el-row type="flex" justify="center">
-                  <el-button 
-                    type="warning" 
+                  <el-button
+                    type="warning"
                     icon="el-icon-delete"
                     @click="clearData()"
                     plain>
@@ -78,17 +78,17 @@
               </el-col>
               <el-col :span="4">
                 <el-row type="flex" justify="center">
-                  <el-button 
+                  <el-button
                     v-if="option.img != ''"
-                    type="success" 
+                    type="success"
                     icon="el-icon-search"
                     @click="getCropData()"
                     plain>
                     提交搜索
                   </el-button>
-                  <el-button 
+                  <el-button
                     v-else
-                    type="danger" 
+                    type="danger"
                     icon="el-icon-close"
                     @click="picSearchDialogShow = false"
                     plain>
@@ -115,10 +115,16 @@
       <el-col :span="7" style="margin-left: 5vw;">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>试卷检索</el-breadcrumb-item>
+          <el-breadcrumb-item>试卷检索
+            <span @click="openInstructionDialog" style="cursor:pointer;">
+            <i class="el-icon-question"></i>
+          </span></el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
+    <instruction
+      ref="instruction"
+    />
     <!-- 题库选择 -->
     <el-row style="padding-top: 8px; height: 40px;">
       <el-col :span="4" style="text-align: left; line-height: 30px; margin-left: 5vw;">
@@ -307,11 +313,12 @@
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
+import Instruction from './components/InstructionExercise.vue'
 
 import {commonAjax} from '@/common/utils/ajax'
 
 export default {
-  components: { Mathdown, ComplexInput, QuestionAnalyse },
+  components: { Mathdown, ComplexInput, QuestionAnalyse,Instruction },
   name: "SearchPaper",
   data() {
     return {
@@ -401,6 +408,9 @@ export default {
     upload.addEventListener('drop', this.onDrop, false);
   },
   methods: {
+        openInstructionDialog(){
+          this.$refs.instruction.openDialog();
+        },
         clearData(){
           this.option.img = "";
         },
@@ -424,7 +434,7 @@ export default {
           const _this = this;
           let read = new FileReader();
           read.readAsDataURL(files[0]);
-          read.onloadend = function () {  
+          read.onloadend = function () {
             _this.show = true
             _this.option.img = read.result;
           }
@@ -460,7 +470,7 @@ export default {
           // 用文件读取来读取图片的base64格式代码
           var reader = new FileReader();
           reader.readAsDataURL(Pic);
-          reader.onloadend = function (e) { 
+          reader.onloadend = function (e) {
             Picresult = e.target.result;
             resolve('1');
           };
@@ -472,9 +482,9 @@ export default {
           // 报错了就打印错误
           // console.log(error)
         })
-        
+
       }else{
-        return 
+        return
       }
     },
     initDatabaseList(){
@@ -585,8 +595,8 @@ export default {
         // this.Question_Analysing = false
         // this.analyseData = data.que_dic
       })
-      
-      
+
+
     },
     // 返回选项标签
     Get_Option_Label(Index){

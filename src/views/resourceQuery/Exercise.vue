@@ -127,10 +127,18 @@
       <el-col :span="7" style="margin-left: 5vw;">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>试题检索</el-breadcrumb-item>
+          <el-breadcrumb-item>
+            试题检索
+            <span @click="openInstructionDialog" style="cursor:pointer;">
+              <i class="el-icon-question"></i>
+            </span>
+          </el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
+    <instruction
+      ref="instruction"
+    />
     <!-- 题库选择 -->
     <el-row style="padding-top: 8px; height: 40px;">
       <el-col :span="4" style="text-align: left; line-height: 30px; margin-left: 5vw;">
@@ -321,11 +329,12 @@
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
+import Instruction from './components/InstructionExercise.vue'
 
 import {commonAjax} from '@/common/utils/ajax'
 
 export default {
-  components: { Mathdown, ComplexInput, QuestionAnalyse },
+  components: { Mathdown, ComplexInput, QuestionAnalyse ,Instruction},
   name: "exercise",
   data() {
     return {
@@ -466,6 +475,9 @@ export default {
     upload.addEventListener('drop', this.onDrop, false);
   },
   methods: {
+        openInstructionDialog(){
+          this.$refs.instruction.openDialog();
+        },
         clearData(){
           this.option.img = "";
         },
@@ -560,6 +572,7 @@ export default {
           this.database_list.push({name:data[i]})
           this.database_aim.push(false)
         }
+        // this.database_list[1].name='个人题库'
       })
     },
     // 清除图片

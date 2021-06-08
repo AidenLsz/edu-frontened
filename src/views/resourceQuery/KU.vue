@@ -15,11 +15,17 @@
       <el-col style="padding-left: 5vw;">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>知识单元检索</el-breadcrumb-item>
+          <el-breadcrumb-item>
+            知识单元检索
+            <span @click="openInstructionDialog" style="cursor:pointer;">
+              <i class="el-icon-question"></i>
+            </span>
+          </el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
 
+    <instruction ref="instruction"/>
     <!-- 搜索框行 -->
     <el-row type="flex" justify="start" class="SearchArea">
         <el-col :span="20">
@@ -81,7 +87,25 @@
           <el-row class="detail">
             <el-col>
               <el-row>
-                <h4 style="color: #0a1612; float: left; font-weight: bold">知识关系</h4>
+                <h4 style="color: #0a1612; float: left; font-weight: bold">知识关系
+                  <el-tooltip  class="item" effect="dark" placement="right">
+                    <div class="instruction" slot="content">
+                      <h5>前驱后继</h5>
+                      <p>
+                        前驱节点是学习当前节点的必要条件，掌握了前驱节点才能理解当前知识节点。掌握当前知识节点是掌握后继节点的必要条件。
+                      </p>
+                      <h5>共同学习</h5>
+                      <p>
+                        共同学习知识节点和当前知识节点有相互促进关系，掌握了共同学习知识节点可以更好地理解当前知识节点。
+                      </p>
+                      <h5>层级关系</h5>
+                      <p>
+                        树状节点图中，上级节点包括当前知识节点，当前知识节点包括下级节点。
+                      </p>
+                    </div>
+                    <i class="el-icon-question"></i>
+                  </el-tooltip>
+                </h4>
               </el-row>
               <el-tabs v-model="activeName" :stretch="true" :lazy="true" @click.native="handleSwitchTabs()" >
                 <el-button type="text" class="zoom-in-btn" size="small" @click="handleFullScreen()">
@@ -144,6 +168,7 @@ import ComplexInput from "../../common/components/ComplexInput.vue";
 import screenfull from 'screenfull'
 import {dataDict} from './components/utils.js'
 import {Message } from 'element-ui'
+import Instruction from './components/InstructionKU.vue'
 
 export default {
   components: {
@@ -151,13 +176,15 @@ export default {
     ComplexInput,
     PreSuc,
     CoStudy,
-    Hierarchy
+    Hierarchy,
+    Instruction
   },
   name: "KU",
   data() {
     return {
       activeName:"presuc",
       content:"",
+      // ku_name: "函数",
       ku_name: "",
       ku_type: "kp2.0",
       fullEl: document.getElementById(this.activeName+'_container'),
@@ -237,6 +264,9 @@ export default {
     }
   },
   methods: {
+    openInstructionDialog(){
+      this.$refs.instruction.openDialog();
+    },
     openPanel() {
       $('.box-card.left').animate({
         left: '0%',
@@ -646,6 +676,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.instruction{
+   max-width:300px;
+   p{
+     text-indent:2em;
+   }
+}
 .zoom-in-btn{
   position:absolute;
   top:-10px;
