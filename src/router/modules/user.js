@@ -58,7 +58,7 @@ const UserRouter=[
       {
         path: 'paper',
         meta: { title: '试卷资源', icon: '' },
-        component: () => import('@/views/manage/question/index'),
+        component: () => import('@/views/resourceQuery/SearchPaper'),
       },
       {
         path: 'system',

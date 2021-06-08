@@ -5,10 +5,15 @@
       <el-col style="padding-left: 1vw">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>学习资源检索</el-breadcrumb-item>
+          <el-breadcrumb-item>学习资源检索
+            <span @click="openInstructionDialog" style="cursor:pointer;">
+              <i class="el-icon-question"></i>
+            </span>
+          </el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
+    <instruction ref="instruction"/>
     <br>
     <!--    <el-row v-show="searchResult.length === 0" style="height: 40px" class="transition-box"></el-row>-->
     <el-row justify="start" type="flex">
@@ -101,8 +106,12 @@
 </template>
 
 <script>
+import Instruction from './components/InstructionResources.vue'
 export default {
   name: "resources.vue",
+  components:{
+    Instruction
+  },
   data() {
     return {
       checkAll: false,
@@ -135,6 +144,9 @@ export default {
     }
   },
   methods: {
+    openInstructionDialog(){
+      this.$refs.instruction.openDialog();
+    },
     handleCheckAllChange(val) {
       this.checkedTypes = val ? this.types : ['教材'];
       this.isIndeterminate = false;

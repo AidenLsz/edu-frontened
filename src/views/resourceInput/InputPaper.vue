@@ -2,9 +2,9 @@
   <div style="margin-top: 5vh">
     <!-- 数学试题手动切分用的对话框 -->
     <el-dialog
-      :visible.sync="userCutMath" 
-      title="数学试题手动调整切分" 
-      width="90%" 
+      :visible.sync="userCutMath"
+      title="数学试题手动调整切分"
+      width="90%"
       @close="User_Cut_Math_Close()"
       :modal-append-to-body="false"
       :close-on-click-modal="false">
@@ -87,9 +87,9 @@
     </el-dialog>
     <!-- 提供给非法输入格式的提示对话框 -->
     <el-dialog
-        :visible.sync="showHint" 
-        title="非法输入格式提示" 
-        width="65%" 
+        :visible.sync="showHint"
+        title="非法输入格式提示"
+        width="65%"
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
@@ -120,8 +120,8 @@
     </el-dialog>
     <!-- 全卷预览 -->
     <el-dialog
-        :visible.sync="paperShow" 
-        title="全卷预览" 
+        :visible.sync="paperShow"
+        title="全卷预览"
         width="65%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
@@ -154,10 +154,10 @@
     </el-dialog>
     <!-- 试卷导入，中间的区域预留了位置，但是功能还得等黄杰那边实现 -->
     <!-- 暂时是个展示功能，之后有需求的时候往进接一下那个算法就行了 -->
-    <el-dialog 
-        :visible.sync="importPaperDialog" 
-        title="试卷文件导入（尚未开发完成，数学部分仍在测试过程当中）" 
-        width="90%" 
+    <el-dialog
+        :visible.sync="importPaperDialog"
+        title="试卷文件导入（尚未开发完成，数学部分仍在测试过程当中）"
+        width="90%"
         @close="Import_Paper_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
@@ -294,7 +294,7 @@
           </el-col>
         </el-row>
         <!-- 英语试卷内容导出 -->
-        <el-row 
+        <el-row
           v-if="Type_Visible() && paper_type != '1'"
           style="padding-top: 15px"
         >
@@ -417,24 +417,24 @@
               </el-row>
               <!-- 1：不在末尾，2，是在手动切分状态下，3，段标签和行标签与当前相等 -->
               <el-row v-if="index_in < item.length - 1
-                            && Hand_Cut_Mode 
-                            && index_out == Hand_Cut_Now[0] 
-                            && index_in == Hand_Cut_Now[1]" 
-                            type="flex" justify="center" 
-                            style="cursor: pointer" 
-                            @mouseleave.native="Hand_Cut_Clear()" 
+                            && Hand_Cut_Mode
+                            && index_out == Hand_Cut_Now[0]
+                            && index_in == Hand_Cut_Now[1]"
+                            type="flex" justify="center"
+                            style="cursor: pointer"
+                            @mouseleave.native="Hand_Cut_Clear()"
                             @mouseenter.native="Hand_Cut_Change(index_out, index_in)"
                             @click.native="English_Hand_Cut(index_out, index_in)">
                 <span style="line-height: 30px; height: 30px;">-------------------------------</span>
                 <i class="el-icon-scissors" style="font-size: 20px; padding-top: 5px"></i>
                 <span style="line-height: 30px; height: 30px;">-------------------------------</span>
               </el-row>
-              <el-row 
+              <el-row
                 v-if="index_in < item.length - 1
-                      && Hand_Cut_Mode 
+                      && Hand_Cut_Mode
                       && (index_out != Hand_Cut_Now[0] || index_in != Hand_Cut_Now[1])"
                 style="height: 10px; padding: 0px; margin: 4px 0px; border: 2px dashed #ccc"
-                @mouseenter.native="Hand_Cut_Change(index_out, index_in)" 
+                @mouseenter.native="Hand_Cut_Change(index_out, index_in)"
                 @mouseleave.native="Hand_Cut_Clear()">
                 <span>&nbsp;</span>
               </el-row>
@@ -478,9 +478,9 @@
         <!-- 文综，理综，语文的手动切分过程 -->
         <!-- LS原本指的是Liberal & Science，但是还要有新内容加进来的话缩写改起来没完了，就先不动了 -->
         <el-row v-if="paper_type != '0' && paper_type != '1'">
-          <el-row 
-            v-for="(Para, Para_Index) in json_content" 
-            :key="'LS_Para_' + Para_Index" 
+          <el-row
+            v-for="(Para, Para_Index) in json_content"
+            :key="'LS_Para_' + Para_Index"
             style="width: 85vw; margin-left: 1vw; margin-top: 30px; border: 2px dashed black; margin-bottom: 30px; background: rgba(0, 255, 255, 0.04);">
             <el-col :span="24">
               <el-row type="flex" justify="center" v-if="Hand_Cut_Mode">
@@ -540,25 +540,25 @@
                     </div>
                   </el-row>
                   <!-- 1：不在末尾，2，是在手动切分状态下，3，段标签和行标签与当前相等 -->
-                  <el-row v-if="Item_Index != Para.sub_para[0].length - 1 
-                                && Hand_Cut_Mode 
-                                && Para_Index == Hand_Cut_Now[0] 
-                                && Item_Index == Hand_Cut_Now[1]" 
-                                type="flex" justify="center" 
-                                style="cursor: pointer" 
-                                @mouseleave.native="Hand_Cut_Clear()" 
+                  <el-row v-if="Item_Index != Para.sub_para[0].length - 1
+                                && Hand_Cut_Mode
+                                && Para_Index == Hand_Cut_Now[0]
+                                && Item_Index == Hand_Cut_Now[1]"
+                                type="flex" justify="center"
+                                style="cursor: pointer"
+                                @mouseleave.native="Hand_Cut_Clear()"
                                 @mouseenter.native="Hand_Cut_Change(Para_Index, Item_Index)"
                                 @click.native="Hand_Cut(Para_Index, Item_Index)">
                     <span style="line-height: 30px; height: 30px;">-------------------------------</span>
                     <i class="el-icon-scissors" style="font-size: 20px; padding-top: 5px"></i>
                     <span style="line-height: 30px; height: 30px;">-------------------------------</span>
                   </el-row>
-                  <el-row 
-                    v-if="Item_Index != Para.sub_para[0].length - 1 
-                          && Hand_Cut_Mode 
+                  <el-row
+                    v-if="Item_Index != Para.sub_para[0].length - 1
+                          && Hand_Cut_Mode
                           && (Para_Index != Hand_Cut_Now[0] || Item_Index != Hand_Cut_Now[1])"
                     style="height: 10px; padding: 0px; margin: 4px 0px; border: 2px dashed #ccc"
-                    @mouseenter.native="Hand_Cut_Change(Para_Index, Item_Index)" 
+                    @mouseenter.native="Hand_Cut_Change(Para_Index, Item_Index)"
                     @mouseleave.native="Hand_Cut_Clear()">
                     <span>&nbsp;</span>
                   </el-row>
@@ -616,7 +616,7 @@
           </el-row>
         </el-row>
         <!-- 转换过程的加载区域 -->
-        <el-row 
+        <el-row
           v-if="file_item.length == 0 && !(TestData.doc)"
           v-loading="loading"
           :element-loading-text="Waiting_Text"
@@ -650,9 +650,9 @@
                     trigger="hover"
                     v-if="Question_Check[Question_Index] == false"
                     content="点击完成该题目确认">
-                    <el-button 
-                      slot="reference" 
-                      circle size="medium" 
+                    <el-button
+                      slot="reference"
+                      circle size="medium"
                       @click="Question_Check.splice(Question_Index, 1, true)"
                       type="success"
                       ><i class="el-icon-check"></i></el-button>
@@ -664,8 +664,8 @@
                     v-if="Question_Check[Question_Index] == true"
                     content="点击取消确认该题目">
                     <el-button
-                      slot="reference" 
-                      circle size="medium" 
+                      slot="reference"
+                      circle size="medium"
                       @click="Question_Check.splice(Question_Index, 1, false)"
                       type="danger"><i class="el-icon-edit"></i></el-button>
                   </el-popover>
@@ -698,16 +698,16 @@
                   <Mathdown :content="Get_Question_Show(Question_Info.question_stem, 'stem', Question_Index)" style="width: 84vw;" :name="Get_Name(Question_Index, 'stem')"/>
                 </el-row>
                 <el-row type="flex" justify="start">
-                  <ComplexInput 
+                  <ComplexInput
                     v-if="Show_ComplexInput(Question_Index, 'stem')"
-                    @Update_CI="Update_ComplexInput" 
+                    @Update_CI="Update_ComplexInput"
                     :Get_Out_Content="Get_Question_Show(Question_Info.question_stem, 'stem', Question_Index).substring(5)"
                     :Mathdown_Special="'Q_' + Question_Index + '_Stem'"></ComplexInput>
                 </el-row>
               </el-col>
             </el-row>
             <!-- 题干部分 - 有小题 -->
-            <el-row type="flex" justify="start" style="margin: 30px 50px;" 
+            <el-row type="flex" justify="start" style="margin: 30px 50px;"
               v-for="(Sub_Question, Sub_Question_Index) in Question_Info.sub_questions" :key="Sub_Question_Index">
                 <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.question_stem, 'stem')"></p> -->
               <el-col :span="1" v-if="Question_Check[Question_Index] == false">
@@ -720,17 +720,17 @@
                   <Mathdown :content="Get_Sub_Question(Sub_Question, Question_Index, Sub_Question_Index)" style="width: 84vw;" :name="Get_Name(Question_Index, 'sub_question', Sub_Question_Index)"/>
                 </el-row>
                 <el-row type="flex" justify="start">
-                  <ComplexInput 
+                  <ComplexInput
                     v-if="Show_ComplexInput(Question_Index, 'sub_question', Sub_Question_Index)"
-                    @Update_CI="Update_ComplexInput" 
+                    @Update_CI="Update_ComplexInput"
                     :Get_Out_Content="Get_Sub_Question(Sub_Question, Question_Index, Sub_Question_Index)"
                     :Mathdown_Special="'Q_' + Question_Index + '_SQI_' + Sub_Question_Index"></ComplexInput>
                 </el-row>
               </el-col>
             </el-row>
             <!-- 选项部分 -->
-            <el-row type="flex" justify="start" style="margin: 20px 50px" 
-                    v-for="(Question_Option, Option_Index) in Question_Info.question_options" 
+            <el-row type="flex" justify="start" style="margin: 20px 50px"
+                    v-for="(Question_Option, Option_Index) in Question_Info.question_options"
                     :key="Option_Index" >
               <!-- <p style="text-align: left" v-html="Get_Question_Options(Question_Option, Option_Index)"></p>
                 -->
@@ -744,16 +744,16 @@
                   <Mathdown :content="Get_Question_Options(Question_Option, Option_Index, Question_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'option', Option_Index)"/>
                 </el-row>
                 <el-row type="flex" justify="start">
-                  <ComplexInput 
+                  <ComplexInput
                     v-if="Show_ComplexInput(Question_Index, 'option', Option_Index)"
-                    @Update_CI="Update_ComplexInput" 
+                    @Update_CI="Update_ComplexInput"
                     :Get_Out_Content="Get_Question_Options(Question_Option, Option_Index, Question_Index).substring(4)"
                     :Mathdown_Special="'Q_' + Question_Index + '_Option_' + Option_Index"></ComplexInput>
                 </el-row>
               </el-col>
               <!-- <el-row type="flex" justify="start" style="margin: 30px 50px; background: red" v-if="Show_ComplexInput(Question_Index, 'option', Option_Index)">
-                <ComplexInput 
-                    @Update_CI="Update_ComplexInput" 
+                <ComplexInput
+                    @Update_CI="Update_ComplexInput"
                     :Get_Out_Content="Get_Question_Options(Question_Option, Option_Index)"></ComplexInput>
               </el-row> -->
             </el-row>
@@ -770,9 +770,9 @@
                   <Mathdown :content="Get_Question_Show(Answer, 'answer', Question_Index, Answer_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'answer', Answer_Index)"/>
                  </el-row>
                  <el-row type="flex" justify="start">
-                  <ComplexInput 
+                  <ComplexInput
                     v-if="Show_ComplexInput(Question_Index, 'answer', Answer_Index)"
-                    @Update_CI="Update_ComplexInput" 
+                    @Update_CI="Update_ComplexInput"
                     :Get_Out_Content="Get_Question_Show(Answer, 'answer', Question_Index, Answer_Index).substring(6)"
                     :Mathdown_Special="'Q_' + Question_Index + '_Answer'"></ComplexInput>
                  </el-row>
@@ -791,9 +791,9 @@
                   <Mathdown :content="Get_Question_Show(Question_Info.analysis, 'analyse', Question_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'analyse')"/>
                 </el-row>
                 <el-row type="flex" justify="start">
-                  <ComplexInput 
+                  <ComplexInput
                     v-if="Show_ComplexInput(Question_Index, 'analyse')"
-                    @Update_CI="Update_ComplexInput" 
+                    @Update_CI="Update_ComplexInput"
                     :Get_Out_Content="Get_Question_Show(Question_Info.analysis, 'analyse', Question_Index).substring(5)"
                     :Mathdown_Special="'Q_' + Question_Index + '_Analyse'"></ComplexInput>
                 </el-row>
@@ -823,15 +823,15 @@
             </el-button>
           </el-col>
           <el-col :span="4">
-            <el-button :disabled="downloadAnswer == ''" 
-              @click="saveMathFile(1)"  
+            <el-button :disabled="downloadAnswer == ''"
+              @click="saveMathFile(1)"
               type="primary" plain>
               下载答案原Json文件
             </el-button>
           </el-col>
           <el-col :span="4">
-            <el-button :disabled="downloadAnswer == ''" 
-              @click="saveMathFile(2)"  
+            <el-button :disabled="downloadAnswer == ''"
+              @click="saveMathFile(2)"
               type="primary" plain>
               下载合并Json文件
             </el-button>
@@ -839,10 +839,10 @@
         </el-row>
     </el-dialog>
     <!-- 提供给选择题的编辑器 -->
-    <el-dialog 
-        :visible.sync="showDialog" 
-        title="请编辑想要插入/修改的选择题内容" 
-        width="65%" 
+    <el-dialog
+        :visible.sync="showDialog"
+        title="请编辑想要插入/修改的选择题内容"
+        width="65%"
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
@@ -864,19 +864,19 @@
             </el-col>
         </el-row>
         <el-divider></el-divider>
-        <OptionQuestions 
-            @EditFinish="New_Questions" 
-            @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch" 
-            :QInfos.sync="Temp_OptionQuestionInfo" 
+        <OptionQuestions
+            @EditFinish="New_Questions"
+            @ReEditFinish="ReEdit_Questions"
+            :RE.sync="ReEditSwitch"
+            :QInfos.sync="Temp_OptionQuestionInfo"
             ref="OptionQuestionsEditor">
         </OptionQuestions>
     </el-dialog>
     <!-- 提供给填空题的编辑器 -->
-    <el-dialog 
-        :visible.sync="showDialog_Fill" 
-        title="请编辑想要插入/修改的填空题内容" 
-        width="65%" 
+    <el-dialog
+        :visible.sync="showDialog_Fill"
+        title="请编辑想要插入/修改的填空题内容"
+        width="65%"
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
@@ -899,17 +899,17 @@
         </el-row>
         <el-divider></el-divider>
         <FillQuestions
-            @EditFinish="New_Questions" 
-            @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch" 
-            :QInfos.sync="Temp_FillQuestionInfo" 
+            @EditFinish="New_Questions"
+            @ReEditFinish="ReEdit_Questions"
+            :RE.sync="ReEditSwitch"
+            :QInfos.sync="Temp_FillQuestionInfo"
         ></FillQuestions>
     </el-dialog>
     <!-- 提供给解答题的编辑器 -->
-    <el-dialog 
-        :visible.sync="showDialog_Answer" 
-        title="请编辑想要插入/修改的解答题内容" 
-        width="65%" 
+    <el-dialog
+        :visible.sync="showDialog_Answer"
+        title="请编辑想要插入/修改的解答题内容"
+        width="65%"
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
@@ -932,16 +932,16 @@
         </el-row>
         <el-divider></el-divider>
         <AnswerQuestions
-            @EditFinish="New_Questions" 
-            @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch" 
-            :QInfos.sync="Temp_AnswerQuestionInfo" 
+            @EditFinish="New_Questions"
+            @ReEditFinish="ReEdit_Questions"
+            :RE.sync="ReEditSwitch"
+            :QInfos.sync="Temp_AnswerQuestionInfo"
         ></AnswerQuestions>
     </el-dialog>
     <!-- 提供给非选择题的编辑器 -->
-    <el-dialog 
-        :visible.sync="showDialog_Mix" 
-        title="请编辑想要插入/修改的非选择题内容" 
+    <el-dialog
+        :visible.sync="showDialog_Mix"
+        title="请编辑想要插入/修改的非选择题内容"
         width="65%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
@@ -963,7 +963,7 @@
         </el-row>
         <el-divider></el-divider>
         <MixQuestions
-            @EditFinish_Mix="New_Questions" 
+            @EditFinish_Mix="New_Questions"
             @ReEditFinish_Mix="ReEdit_Questions"
             :RE.sync="ReEditSwitch"
             :QInfos.sync="Temp_MixQuestionInfo"
@@ -974,10 +974,15 @@
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>资源录入</el-breadcrumb-item>
-          <el-breadcrumb-item>试卷资源</el-breadcrumb-item>
+          <el-breadcrumb-item>试卷资源
+            <span @click="openInstructionDialog" style="cursor:pointer;">
+            <i class="el-icon-question"></i>
+            </span>
+          </el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
+    <instruction ref="instruction"/>
     <el-row>
       <el-col :span="4" style="padding-bottom: 50px; margin-top: 30px">
         <!-- 切换页面 -->
@@ -1055,12 +1060,12 @@
             <label>导出题目</label>
           </el-button>
         </el-row>
-        <el-row 
+        <el-row
           v-loading="downloading"
           element-loading-text="加载中，请等待"
           element-loading-spinner="el-icon-loading"
-          type="flex" 
-          justify="center" 
+          type="flex"
+          justify="center"
           style="margin-top: 30px">
             <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('download')" :disabled="Blank_Paper()">
               <label>下载试卷</label>
@@ -1155,31 +1160,31 @@
                           <label>第 {{Question_Index + 1}} 题</label>
                       </el-col>
                       <el-col :span="1">
-                          <el-button 
-                              circle 
+                          <el-button
+                              circle
                               size="small"
                               @click="Edit_Question(Bundle_Index, Question_Index)"
                           ><i class="el-icon-edit"></i></el-button>
                       </el-col>
                       <el-col :span="2">
                           <el-button-group>
-                              <el-button 
-                                  :disabled="Question_Index == 0" 
-                                  circle 
+                              <el-button
+                                  :disabled="Question_Index == 0"
+                                  circle
                                   size="small"
                                   @click="Question_Up(Bundle_Index, Question_Index)"
                               ><i class="el-icon-arrow-up"></i></el-button>
-                              <el-button 
-                                  :disabled="Question_Index == Question_Bundle.Bundle_Questions.length - 1" 
-                                  circle 
+                              <el-button
+                                  :disabled="Question_Index == Question_Bundle.Bundle_Questions.length - 1"
+                                  circle
                                   size="small"
                                   @click="Question_Down(Bundle_Index, Question_Index)"
                               ><i class="el-icon-arrow-down"></i></el-button>
                           </el-button-group>
                       </el-col>
                       <el-col :span="1">
-                          <el-button 
-                              circle 
+                          <el-button
+                              circle
                               plain
                               size="small"
                               type="danger"
@@ -1188,8 +1193,8 @@
                       </el-col>
                       <el-col :span="1" :offset="1">
                           <div v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index] == false">
-                              <el-button 
-                                  round 
+                              <el-button
+                                  round
                                   plain
                                   size="small"
                                   type="info"
@@ -1197,8 +1202,8 @@
                               >折叠</el-button>
                           </div>
                           <div v-if="Question_Bundle.Bundle_Questions_Collapse[Question_Index] == true">
-                              <el-button 
-                                  round 
+                              <el-button
+                                  round
                                   plain
                                   size="small"
                                   type="info"
@@ -1236,16 +1241,17 @@ import AnswerQuestions from "./components/AnswerQuestions.vue";
 import AnswerDisplay from "./components/AnswerDisplay.vue";
 import MixQuestions from "./components/MixQuestions.vue";
 import MixDisplay from "./components/MixDisplay.vue";
+import Instruction from './components/InstructionPaper.vue'
 
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from '../../common/components/ComplexInput.vue'
 
 export default {
-  components: { ComplexInput, 
-                OptionDisplay, OptionQuestions, 
-                FillQuestions, FillDisplay, 
+  components: { ComplexInput,
+                OptionDisplay, OptionQuestions,
+                FillQuestions, FillDisplay,
                 AnswerQuestions, AnswerDisplay,
-                MixQuestions, MixDisplay, Mathdown
+                MixQuestions, MixDisplay, Mathdown,Instruction
                 },
   data() {
     return {
@@ -1559,9 +1565,9 @@ export default {
       this.deleteAllCard();
     },
     Question_Check(val){
-        
+
       var Flag = true
-      
+
       for(var c = 0; c < val.length; c++){
         if(!val[c]){
           Flag = false
@@ -1602,6 +1608,9 @@ export default {
     this.ToTop();
   },
   methods: {
+    openInstructionDialog(){
+      this.$refs.instruction.openDialog();
+    },
     // 替换文理综的前后切的新方法：手动切分
     // 1：替换当前显示为剪刀的标记位置
     Hand_Cut_Change(Para_Index, Item_Index){
@@ -1675,12 +1684,12 @@ export default {
           }
         })
       }
-      
+
       for(let i = 0; i < this.json_content[Para_Index].sub_para[0].length; i++){
         this.json_content[Para_Index - 1].sub_para[0].push(this.json_content[Para_Index].sub_para[0][i])
       }
       this.json_content.splice(Para_Index, 1)
-    },  
+    },
     Merge_LS_To_Back(Para_Index){
 
       if(this.json_content[Para_Index].is_question != this.json_content[Para_Index + 1].is_question){
@@ -1795,7 +1804,7 @@ export default {
 
       this.userCutTestData.splice(index, 1);
       this.testDataScore[index - 1] = this.testDataScore[index] + this.testDataScore[index - 1];
-      this.testDataScore.splice(index, 1); 
+      this.testDataScore.splice(index, 1);
     },
     // 向后合并数学试题
     Math_Merge_To_Back(index){
@@ -1815,7 +1824,7 @@ export default {
 
       this.userCutTestData.splice(index, 1);
       this.testDataScore[index + 1] = this.testDataScore[index] + this.testDataScore[index + 1];
-      this.testDataScore.splice(index, 1); 
+      this.testDataScore.splice(index, 1);
     },
     User_Cut_Math_Close(){
       this.userCutMath = false;
@@ -1955,15 +1964,15 @@ export default {
                   this.file_item_label.push(-1);
                   break;
                 }
-                
+
                 else if(reps2.test(this.file_data[t])){
                   this.file_item_label.push(-1);
                   break;
                 }
-                
+
                 else if(t == div_tester_border_back - 1){
                   this.file_item_label.push(1);
-                }  
+                }
 
               }
 
@@ -2006,13 +2015,13 @@ export default {
               this.$refs.math_answer_input.value = ""
             }
 
-          } 
+          }
           // 文综，理综，语文
           else if( this.paper_type == '2' || this.paper_type == '3' || this.paper_type == '4'){
             this.$refs.eng_input.value = "";
             this.json_content = data.data.paper
             this.json_image_dict = data.data.image_dict
-          } 
+          }
           this.loading = false;
         }).catch(() => {
           this.loading = false;
@@ -2071,7 +2080,7 @@ export default {
       if(e.target.files.length > 0){
 
         let formData = new FormData();
-        
+
         this.mathPaperName = e.target.files[0].name;
         this.downloadPaperName = e.target.files[0].name.split(".")[0];
         this.downloadAnswerName = e.target.files[0].name.split(".")[0];
@@ -2087,7 +2096,7 @@ export default {
             this.downloadAnswerName = this.downloadAnswerName + "_Answer";
             formData.append("math_input", "2");
           }
-          
+
           formData.append("From", "File_Import");
 
           let config = {
@@ -2147,7 +2156,7 @@ export default {
       if(e.target.files.length > 0){
 
         let formData = new FormData();
-        
+
         this.mathAnswerName = e.target.files[0].name;
 
         if(this.math_standby == "0"){
@@ -2326,7 +2335,7 @@ export default {
         );
         FileSaver.saveAs(file);
       }
-          
+
     },
     // 存储为json文件并下载
     saveJsonFile() {
@@ -2375,36 +2384,36 @@ export default {
       let Para_Type = this.file_item_label[index_out]
 
       if(Para_Type > 0){
-          
+
           let list_forward = [];
 
           for (var i = 0; i < index_in + 1; i++) {
             list_forward.push(this.file_item[index_out][i]);
           }
-          
+
           this.file_item[index_out].splice(0, index_in + 1);
           this.file_item.splice(index_out, 0, list_forward);
 
           this.file_item_label.splice(index_out, 0, this.file_item_label[index_out]);
-          
+
       }
       else {
 
         let list_forward = [];
-        
+
         for (i = 0; i < index_in + 1; i++) {
           list_forward.push(this.file_item[index_out][i]);
         }
-        
+
         this.file_item[index_out].splice(0, index_in + 1);
         this.file_item.splice(index_out, 0, list_forward);
-        
+
         this.file_item_label.splice(index_out + 1, 0, -1);
-      
+
       }
-    
+
     },
-    
+
     // 合并相邻的两个位置
     Del(index_out, label) {
 
@@ -2451,7 +2460,7 @@ export default {
               this.Show_CANT(index_out, label);
             }
         }
-        
+
     },
 
     // 获取题干或其他内容应当显示的分界线内容
@@ -2459,7 +2468,7 @@ export default {
       index_out
       return "--------------------题干分界线--------------------"
     },
-    
+
     // 获取题目部分应当显示的分界线内容
     Get_Title_Label(index_out){
       index_out
@@ -2518,14 +2527,14 @@ export default {
             }
           }
         })
-      
+
     },
     Download_Show(form_at){
       if((form_at == 0 || form_at == 1) && this.fileName != ""){
-        return false    
+        return false
       }
       else{
-        return true     
+        return true
       }
     },
     Type_Visible(){
@@ -2663,7 +2672,7 @@ export default {
 
         this.Close_Editor();
         this.Reset_Params();
-        
+
     },
     // 一起关掉
     Close_Editor(){
@@ -2848,7 +2857,7 @@ export default {
         // 本包是否折叠
         // 本包下的小题是否折叠
         var New_Question_Bundle = {
-            
+
             Bundle_Type: Type,
             Bundle_Introduce: "",
             Bundle_Questions: [],
@@ -2897,7 +2906,7 @@ export default {
     Router_Trans(route){
       this.$router.push({ path: route });
     },
-    
+
     // 读取Json格式的数据
     loadJsonFromFile(file, fileList) {
       this.uploadFileName = file;
@@ -2949,7 +2958,7 @@ export default {
             const document = JSON.parse(e.target.result);
             this.paper_title = document["paper_title"];
             this.chemistry_subtitle = document["chemistry_subtitle"];
-            
+
             // 遍历Json内容中的题目部分，以题型为基本区分单位
             for (let questions of document["questions"]) {
               switch (questions["type"]) {
@@ -3004,7 +3013,7 @@ export default {
 
                 // 如果是填空题的情况
 
-                case "fill":             
+                case "fill":
                   this.fill_show_image = [];
                   this.fill_show_analysis_image = [];
                   for (let question of questions["questions"]) {
@@ -3092,15 +3101,15 @@ export default {
                       this.answer_show_answer_image.push([]);
                     }
                     if (question.tableConfig === undefined) {
-                     
+
                       question.tableConfig = [];
                     }
                     if (question.tableData === undefined) {
-                     
+
                       question.tableData = [];
                     }
                     if (question.table_view === undefined) {
-                      
+
                       question.table_view = false;
                     }
                     if (typeof question.table_row === "undefined") {
@@ -3131,7 +3140,7 @@ export default {
                         question.mix_sub_fill_questions[i].sub_fill
                           .tableConfig === undefined
                       ) {
-                        
+
                         question.mix_sub_fill_questions[
                           i
                         ].sub_fill.tableConfig = [];
@@ -3140,7 +3149,7 @@ export default {
                         question.mix_sub_fill_questions[i].sub_fill
                           .tableData === undefined
                       ) {
-                      
+
                         question.mix_sub_fill_questions[
                           i
                         ].sub_fill.tableData = [];
@@ -3149,7 +3158,7 @@ export default {
                         question.mix_sub_fill_questions[i].sub_fill
                           .mix_sub_fill_table_view === undefined
                       ) {
-                        
+
                         question.mix_sub_fill_questions[
                           i
                         ].sub_fill.mix_sub_fill_table_view = false;
@@ -3554,7 +3563,7 @@ export default {
         };
         let param = new FormData();
 
-        param.append('result_json', 
+        param.append('result_json',
                         JSON.stringify({
                           "post_type": 1,
                           "title": this.PaperTitle,
@@ -3574,7 +3583,7 @@ export default {
         }).catch(() => {
           this.$message.error("过程出现错误，请稍后重新尝试...");
           this.Uploading = false;
-          return 
+          return
         });
 
       }else if(Control == 'export'){
@@ -3591,7 +3600,7 @@ export default {
         )
 
         FileSaver.saveAs(file_2);
-        
+
       }else if(Control == 'download') {
 
         this.downloading = true;
@@ -3633,7 +3642,7 @@ export default {
             }).catch(() => {
               alert("下载过程出现问题，请稍后重新尝试...");
               this.analysing = false;
-              return 
+              return
             });
       }else if(Control == 'analyse'){
 
@@ -3651,7 +3660,7 @@ export default {
         };
         let param = new FormData();
 
-        param.append('result_json', 
+        param.append('result_json',
                         JSON.stringify({
                           "post_type": 1,
                           "title": this.PaperTitle,
@@ -3672,7 +3681,7 @@ export default {
         }).catch(() => {
           alert("解析失败，请稍后重新尝试...");
           this.analysing = false;
-          return 
+          return
         });
       }
     },
@@ -3757,7 +3766,7 @@ export default {
         for(var key in this.TestData.img){
             var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
             if(Img_Name_Catcher.exec(Stem) != null){
-                Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">') 
+                Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
             }
         }
         if(this.TestData.doc[Question_Index].sub_questions[Sub_Question_Index] != Stem){
@@ -3812,7 +3821,7 @@ export default {
         this.Question_Edit_Now = -1;
         this.Question_Edit_Part = "";
       }else{
-        this.Question_Edit_Now = Question_Index; 
+        this.Question_Edit_Now = Question_Index;
         this.Question_Edit_Part = Part;
       }
 
@@ -3820,8 +3829,8 @@ export default {
         this.Question_Edit_Option_Index = Index;
       }else{
         this.Question_Edit_Option_Index = -1;
-      }  
-      
+      }
+
       if(this.Question_Edit_Part == 'sub_question' && Index != null && Index != this.Question_Edit_Sub_Ques_Index){
         this.Question_Edit_Sub_Ques_Index = Index;
       }else{
@@ -4030,11 +4039,11 @@ export default {
         Img_SE.push([Start, Start + Temp_Catcher.length - 1])
         Result_List = Img_Catcher.exec(content);
       }
-      
+
       var Img_Index = 0;
 
       for(var i = 0; i < content.length; i++){
-        
+
         if(content[i] == '$' && !latexFlag){
             latexFlag = true;
         }else if(content[i] == '$' && latexFlag){
@@ -4057,10 +4066,10 @@ export default {
                 }
             }
             // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
-            else if(!(content.charCodeAt(i) > 255 || 
+            else if(!(content.charCodeAt(i) > 255 ||
                       this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
-                      content[i] == ' ' || content[i] == '$' || 
-                      content.charCodeAt(i) == 10) 
+                      content[i] == ' ' || content[i] == '$' ||
+                      content.charCodeAt(i) == 10)
                     && !symbolError){
               symbolError = true;
               this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符，或将其包裹于$$符号之内" + content[i] + " ！", offset: 40});
@@ -4117,7 +4126,7 @@ export default {
         }else{
           Docs[i].analysis = result[0]
         }
-      
+
         var options = Ques.question_options;
         for(let j = 0; j < options.length; j++){
           result = this.ChecK_Do(options[j]);
@@ -4265,7 +4274,7 @@ export default {
       //     }
       //     Ques_List.push(Ans);
       //   }
-        
+
       // }
 
       // console.log(Ques_List);
@@ -4275,7 +4284,7 @@ export default {
         };
       let param = new FormData();
 
-      param.append('result_json', 
+      param.append('result_json',
                     JSON.stringify({
                       "post_type": 3,
                       "title": this.PaperTitle,
@@ -4295,7 +4304,7 @@ export default {
         }).catch(() => {
           alert("解析失败，请稍后重新尝试...");
           this.analysing = false;
-          return 
+          return
         });
 
     },
@@ -4384,9 +4393,9 @@ input {
   opacity: 0;
 }
 .area_border{
-  background-color: rgba(0,255,255,0.04); 
-  border: 2px dashed black; 
-  padding: 20px; 
+  background-color: rgba(0,255,255,0.04);
+  border: 2px dashed black;
+  padding: 20px;
   margin: 18px 0px 18px 0px;
 }
 .btn_merge{
