@@ -214,6 +214,9 @@
                         </el-row>
                     </el-col>
                 </el-row>
+                <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse(0)" style="margin-top: -10px; margin-bottom: 30px">
+                    <el-button v-on:click.native="Expand_Or_Collapse(0)" round size="small" plain>收起</el-button>
+                </el-row>
                 <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse(1)" :class="Get_Part_Row_Style(1)">
                     <el-col :span="12" style="text-align: left; line-height: 30px">
                         <el-row type="flex" justify="start">
@@ -244,61 +247,64 @@
                         </el-row>
                     </el-col>
                 </el-row>
-                    <el-row 
-                        v-for="(Question, Question_Index) in Similar_Question_List" 
-                        :key="Question_Index" 
-                        style="margin-bottom: 50px"
-                        :class="Get_Expand_Or_Collapse(1)"
-                        >
-                        <el-col :span="24" class="quesCard">
-                            <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
-                                <el-col style="padding-bottom: 15px">
-                                    <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
-                                </el-col>
-                                <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
-                                    <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown></el-row>
-                                </el-col>
-                            </el-row>
-                            <el-row style="margin-bottom: 15px; padding-top: 15px">
-                                <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
-                                    所属题库：{{Question.database}}
-                                </el-col>
-                                <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
-                                    学科：{{Question.subject}}
-                                </el-col>
-                                <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
-                                    题型：{{Question.type}}
-                                </el-col>
-                                <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
-                                    学段：{{Question.period}}
-                                </el-col>
-                                <el-col :span="4" :offset="8" style="line-height: 40px">
-                                    <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">查看答案与解析</el-button>
-                                </el-col>
-                                <el-col :span="3" style="line-height: 40px">
-                                    <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id, Question.database)">查看分析报告</el-button>
-                                </el-col>
-                            </el-row>
-                            <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: 20px; border-top: 1px dashed black">
-                                <el-col>
-                                    <span style="margin-bottom: 10px; display: block">答案：</span><Mathdown :content="Question.answer" :name="'Q_' + Question_Index + '_Answer'"></Mathdown>
-                                </el-col>
-                            </el-row>
-                            <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; padding-bottom: 20px">
-                                <el-col>
-                                    <span style="margin-bottom: 20px; display: block">解析：</span><Mathdown :content="Question.analysis" :name="'Q_' + Question_Index + '_Analysis'"></Mathdown>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                    </el-row>
-                    <el-row 
-                        v-if="Similar_Question_List.length == 0" 
-                        style="margin: 50px 60px; height: 44vh; font-size: 30px"
-                        v-loading="loading"
-                        element-loading-text="加载中，请等待"
-                        element-loading-spinner="el-icon-loading">
-                        
-                    </el-row>
+                <el-row 
+                    v-for="(Question, Question_Index) in Similar_Question_List" 
+                    :key="Question_Index" 
+                    style="margin-bottom: 50px"
+                    :class="Get_Expand_Or_Collapse(1)"
+                    >
+                    <el-col :span="24" class="quesCard">
+                        <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
+                            <el-col style="padding-bottom: 15px">
+                                <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
+                            </el-col>
+                            <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
+                                <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown></el-row>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-bottom: 15px; padding-top: 15px">
+                            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
+                                所属题库：{{Question.database}}
+                            </el-col>
+                            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
+                                学科：{{Question.subject}}
+                            </el-col>
+                            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
+                                题型：{{Question.type}}
+                            </el-col>
+                            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
+                                学段：{{Question.period}}
+                            </el-col>
+                            <el-col :span="4" :offset="8" style="line-height: 40px">
+                                <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">查看答案与解析</el-button>
+                            </el-col>
+                            <el-col :span="3" style="line-height: 40px">
+                                <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id, Question.database)">查看分析报告</el-button>
+                            </el-col>
+                        </el-row>
+                        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: 20px; border-top: 1px dashed black">
+                            <el-col>
+                                <span style="margin-bottom: 10px; display: block">答案：</span><Mathdown :content="Question.answer" :name="'Q_' + Question_Index + '_Answer'"></Mathdown>
+                            </el-col>
+                        </el-row>
+                        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; padding-bottom: 20px">
+                            <el-col>
+                                <span style="margin-bottom: 20px; display: block">解析：</span><Mathdown :content="Question.analysis" :name="'Q_' + Question_Index + '_Analysis'"></Mathdown>
+                            </el-col>
+                        </el-row>
+                    </el-col>
+                </el-row>
+                <el-row 
+                    v-if="Similar_Question_List.length == 0" 
+                    style="margin: 50px 60px; height: 44vh; font-size: 30px"
+                    v-loading="loading"
+                    element-loading-text="加载中，请等待"
+                    element-loading-spinner="el-icon-loading">
+                    
+                </el-row>
+                <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse(1)" style="margin-top: -10px; margin-bottom: 30px">
+                    <el-button v-on:click.native="Expand_Or_Collapse(1)" round size="small" plain>收起</el-button>
+                </el-row>
             </el-row>
             <el-row type="flex" justify="center" style="margin-bottom: 50px">
                 <el-button type="success" plain @click="PDF_Switch()">保存当前页面为PDF文档</el-button>

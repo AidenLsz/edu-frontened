@@ -404,8 +404,9 @@ export default {
 
     },
     mounted() {
-        if(sessionStorage.InputPaperEditQuestion){
-            this.questionInfo = JSON.parse(sessionStorage.InputPaperEditQuestion);
+        if(sessionStorage.getItem("InputPaperEditQuestion")){
+            this.questionInfo = JSON.parse(sessionStorage.getItem("InputPaperEditQuestion"));
+            this.ReEdit = true;
         }
     },
     methods: {

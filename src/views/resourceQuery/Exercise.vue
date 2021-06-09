@@ -115,11 +115,12 @@
         :visible.sync="analyseReport"
         width="90%"
         :modal-append-to-body="false"
-        :close-on-click-modal="true">
+        :close-on-click-modal="true"
+        :key="Refresh">
         <template slot="title"></template>
         <el-row
           style="margin: 0px">
-          <QuestionAnalyse :Ques="analyseData" :key="analyseData"></QuestionAnalyse>
+          <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
         </el-row>
     </el-dialog>
     <!-- 地址框 -->
@@ -338,6 +339,7 @@ export default {
   name: "exercise",
   data() {
     return {
+      Refresh: false,
       // 图片剪切用的一系列变量
       // 对话框显示
       picSearchDialogShow: false,
@@ -620,6 +622,7 @@ export default {
         }
       ).then((data)=>{
         // console.log(data);
+        this.Refresh = !this.Refresh;
         this.analyseReport = true;
         this.Question_Analysing = false
         this.analyseData = data.que_dic

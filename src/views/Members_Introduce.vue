@@ -107,9 +107,8 @@
                     </el-row>
                 </el-col>
             </el-row>
-            <el-divider></el-divider>
-            <!-- 特任工程师 -->
-            <el-row style="margin: 30px 0px 30px 0px">
+            <!-- 特任工程师，暂无内容，所以分割线暂时先去掉了 -->
+            <el-row style="margin: 30px 0px 30px 0px; display: none">
                 <label style="font-size: 20px">特任工程师</label>
             </el-row>
             <el-row v-for="Row_Index in Math.ceil(member_data.invitedEngineer.length/3)" :key="'IE_R_' + Row_Index" style="margin-left: 10vw; margin-right: 10vw; padding-left: 3vw">
@@ -405,11 +404,6 @@ export default {
                     "intro": "不想画画的程序猿不是金牌厨师"
                     },
                     {
-                    "name": "唐华楹",
-                    "mail": "iamthy@mail.ustc.edu.cn",
-                    "intro": "中国科学技术大学2021级研究生\n基于ddl的摸鱼科学与技术专业"
-                    },
-                    {
                     "name": "赵辰阳",
                     "mail": "zcy888@mail.ustc.edu.cn",
                     "intro": "小小少年 不会烦恼 快乐多多 BUG少少"
@@ -434,23 +428,21 @@ export default {
                     "name": "林鑫",
                     "mail": "linx@mail.ustc.edu.cn",
                     "intro": "中国科学技术大学2019级研究生在读"
+                    },
+                    {
+                    "name": "韩东轩",
+                    "mail": "handongxuan@outlook.com",
+                    "intro": "中科大21级博士，间歇性踌躇满志，持续性混吃等死。"
+                    },
+                    {
+                    "name": "余阳",
+                    "mail": "yflyl613@mail.ustc.edu.cn",
+                    "intro": "中国科学技术大学2021级研究生\nShit happens everyday and life goes on."
                     }
                 ],
                 // 特邀工程师
                 "invitedEngineer": [
-                    {
-                    "name": "梁先锋",
-                    "mail": "liangxianfeng96@gmail.com",
-                    "intro": "做一条安静的咸鱼"
-                    },{
-                    "name": "韩浩宇",
-                    "mail": "hhy1212@mail.ustc.edu.cn",
-                    "intro": "一个只想安安静静coding的工具人"
-                    },{
-                    "name": "王新",
-                    "mail": "shenai@mail.ustc.edu.cn",
-                    "intro": "中国科学技术大学2018级硕士"
-                    }
+                    
                 ],
                 // 技术顾问
                 "techConsultant": [
@@ -474,6 +466,19 @@ export default {
                     "name": "杨青",
                     "mail": "yq_hf@mail.ustc.edu.cn",
                     "intro": "中国科学技术大学2018级硕士研究生"
+                    },
+                    {
+                    "name": "梁先锋",
+                    "mail": "liangxianfeng96@gmail.com",
+                    "intro": "（特任工程师）\n做一条安静的咸鱼"
+                    },{
+                    "name": "韩浩宇",
+                    "mail": "hhy1212@mail.ustc.edu.cn",
+                    "intro": "（特任工程师）\n一个只想安安静静coding的工具人"
+                    },{
+                    "name": "唐华楹",
+                    "mail": "iamthy@mail.ustc.edu.cn",
+                    "intro": "中国科学技术大学2021级研究生\n基于ddl的摸鱼科学与技术专业"
                     }
                 ],
                 "img_path": {
@@ -511,16 +516,18 @@ export default {
                     "高海涵": "/members/高海涵.jpeg",
                     "姚方舟": "/members/姚方舟.jpeg",
                     "林鑫": "/members/林鑫.jpeg",
+                    "韩东轩": "/members/韩东轩.jpeg",
+                    "余阳": "/members/余阳.png",
                     // 特邀工程师
-                    "梁先锋": "/members/梁先锋.jpeg",
-                    "韩浩宇": "/members/韩浩宇.jpeg",
-                    "王新": "/members/王新.jpeg",
+                    
                     // 技术顾问
                     "阴钰": "/members/阴钰.jpg",
                     "高维博": "/members/高维博.jpeg",
                     "张征": "/members/张征.jpeg",
                     // 历任成员
-                    "杨青": "/members/杨青.jpg"
+                    "杨青": "/members/杨青.jpg",
+                    "梁先锋": "/members/梁先锋.jpeg",
+                    "韩浩宇": "/members/韩浩宇.jpeg"
                 }
             }
         }

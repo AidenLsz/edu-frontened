@@ -88,6 +88,9 @@
                 <div id="QB_Total_Bar" class="QB_Total_Bar"></div>
             </el-row>
         </el-row>
+        <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse_QB(0)" style="margin-top: -10px; margin-bottom: 30px">
+            <el-button v-on:click.native="Expand_Or_Collapse_QB(0)" round size="small" plain>收起</el-button>
+        </el-row>
         <!-- 分析详情 -->
         <el-row type="flex" justify="start" v-on:click.native="Expand_Or_Collapse_QB(1)" :class="Get_Part_Row_Style_QB(1)">
             <el-col :span="14" style="text-align: left; line-height: 30px">
@@ -163,9 +166,11 @@
                         <el-col :span="7"><label>出现次数</label></el-col>
                     </el-row>
                     <el-row v-for="(QB_Knowledge_Pair, Pair_Index) in QB_KnowledgePair_Name_List" :key="'QB_Ku_Pair_' + Pair_Index" :class="Total_Table_Style(Pair_Index)">
-                        <el-col :offset="2" :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(QB_Knowledge_Pair, 0)}}</label></el-col>
-                        <el-col :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(QB_Knowledge_Pair, 1)}}</label></el-col>
-                        <el-col :span="7"><label>{{QB_KnowledgePair_List[Pair_Index]}}</label></el-col>
+                        <el-row v-if="Pair_Index < 5">
+                            <el-col :offset="2" :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(QB_Knowledge_Pair, 0)}}</label></el-col>
+                            <el-col :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(QB_Knowledge_Pair, 1)}}</label></el-col>
+                            <el-col :span="7"><label>{{QB_KnowledgePair_List[Pair_Index]}}</label></el-col>
+                        </el-row>
                     </el-row>
                 </el-row>
                 <!-- 知识点点对分布共现关系的图的部分 -->
@@ -173,6 +178,9 @@
                     <div id="QB_Knowledge_Pair" class="QB_Knowledge_Pair"></div>
                 </el-row>
             </el-row>
+        </el-row>
+        <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse_QB(1)" style="margin-top: -10px; margin-bottom: 30px">
+            <el-button v-on:click.native="Expand_Or_Collapse_QB(1)" round size="small" plain>收起</el-button>
         </el-row>
     </el-dialog>
     <el-row justify="start" type="flex">
@@ -247,6 +255,9 @@
             <el-row>
                 <div id="Paper_Total_Bar" class="Paper_Total_Bar"></div>
             </el-row>
+        </el-row>
+        <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse(0)" style="margin-top: -10px; margin-bottom: 30px">
+            <el-button v-on:click.native="Expand_Or_Collapse(0)" round size="small" plain>收起</el-button>
         </el-row>
     </div>
     <div ref="Paper_Analyse">
@@ -325,9 +336,11 @@
                         <el-col :span="7"><label>出现次数</label></el-col>
                     </el-row>
                     <el-row v-for="(Knowledge_Pair, Pair_Index) in KnowledgePair_Name_List" :key="'T_P_Ku_Pair_' + Pair_Index" :class="Total_Table_Style(Pair_Index)">
-                        <el-col :offset="2" :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, 0)}}</label></el-col>
-                        <el-col :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, 1)}}</label></el-col>
-                        <el-col :span="7"><label>{{KnowledgePair_List[Pair_Index]}}</label></el-col>
+                        <el-row v-if="Pair_Index < 5">
+                            <el-col :offset="2" :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, 0)}}</label></el-col>
+                            <el-col :span="7"><label>{{Paper_Total_Get_Ku_Pair_Part(Knowledge_Pair, 1)}}</label></el-col>
+                            <el-col :span="7"><label>{{KnowledgePair_List[Pair_Index]}}</label></el-col>
+                        </el-row>
                     </el-row>
                 </el-row>
                 <!-- 知识点点对分布共现关系的图的部分 -->
@@ -357,6 +370,9 @@
                     <div id="Paper_Total_Difficult_Analyse" class="Paper_Total_Difficult_Analyse"></div>
                 </el-row>
             </el-row>
+        </el-row>
+        <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse(1)" style="margin-top: -10px; margin-bottom: 30px">
+            <el-button v-on:click.native="Expand_Or_Collapse(1)" round size="small" plain>收起</el-button>
         </el-row>
     </div>
     <div ref="Paper_Similarity"  style="display: none">
@@ -403,6 +419,9 @@
                     <PaperAnalysePQRoot :PackedQues="Sub_Ques" :Index="Sub_Index" style="width: 100%"></PaperAnalysePQRoot>
                 </el-row>
             </el-row>
+        </el-row>
+        <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse(3)" style="margin-top: -40px; margin-bottom: 30px">
+            <el-button v-on:click.native="Expand_Or_Collapse(3)" round size="small" plain>收起</el-button>
         </el-row>
     </div>
     <el-row type="flex" justify="center" style="margin-bottom: 50px">
@@ -1889,7 +1908,7 @@ export default {
                         type : 'value',
                         name : '平均难度',
                         min: 0.0,
-                        max: 0.7,
+                        max: 1.0,
                         axisLabel:{
                             show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
                             textStyle:{   //textStyle里面写y轴下的字体的样式
@@ -1978,8 +1997,8 @@ export default {
                             lineStyle: {
                                 color: 'red'
                             },
-                            length: 20,
-                            length2: 0
+                            length: 10,
+                            length2: 10
                         },
                         data: [],
                     }
@@ -2179,7 +2198,7 @@ export default {
                         type : 'value',
                         name : '平均难度',
                         min: 0.0,
-                        max: 0.7,
+                        max: 1.0,
                         axisLabel:{
                             show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
                             textStyle:{   //textStyle里面写y轴下的字体的样式
@@ -2229,7 +2248,7 @@ export default {
                 // roseType: 'radius',
                 legend: {
                     top: '18%',
-                    right: '15%',
+                    right: '7%',
                     orient: 'vertical'
                 },
                 title: {
@@ -2268,8 +2287,8 @@ export default {
                             lineStyle: {
                                 color: 'red'
                             },
-                            length: 20,
-                            length2: 0
+                            length: 10,
+                            length2: 10
                         },
                         data: [],
                     }

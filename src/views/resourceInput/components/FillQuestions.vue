@@ -332,6 +332,7 @@ export default {
     mounted() {
         if(sessionStorage.getItem("InputPaperEditQuestion")){
             this.questionInfo = JSON.parse(sessionStorage.getItem("InputPaperEditQuestion"));
+            this.ReEdit = true;
         }
     },
     methods: {
