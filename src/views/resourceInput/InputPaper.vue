@@ -97,21 +97,21 @@
         <el-col :span="4" style="text-align: left">
           合法的英文符号有：
         </el-col>
-        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in en_pun_list" :key="'EN' + SymIndex.toString()" v-html="Sym">
+        <el-col @click.native="Add_To_Import_User_Trach(Sym)" :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in en_pun_list" :key="'EN' + SymIndex.toString()" v-html="Sym">
         </el-col>
       </el-row>
       <el-row style="margin: 50px 0px">
         <el-col :span="4" style="text-align: left">
           合法的中文符号有：
         </el-col>
-        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in ch_pun_list" :key="'CH' + SymIndex.toString()" v-html="Sym">
+        <el-col @click.native="Add_To_Import_User_Trach(Sym)" :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in ch_pun_list" :key="'CH' + SymIndex.toString()" v-html="Sym">
         </el-col>
       </el-row>
       <el-row style="margin: 50px 0px">
         <el-col :span="4" style="text-align: left">
           合法的简单数学符号有：
         </el-col>
-        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in math_pun_list" :key="'MATH' + SymIndex.toString()" v-html="Sym">
+        <el-col @click.native="Add_To_Import_User_Trach(Sym)" :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in math_pun_list" :key="'MATH' + SymIndex.toString()" v-html="Sym">
         </el-col>
       </el-row>
       <el-row type="flex" justify="center" style="font-size: 20px; color: red; font-weight: bold">
@@ -865,10 +865,10 @@
         </el-row>
         <el-divider></el-divider>
         <OptionQuestions
-            @EditFinish="New_Questions"
-            @ReEditFinish="ReEdit_Questions"
-            :RE.sync="ReEditSwitch"
-            :QInfos.sync="Temp_OptionQuestionInfo"
+            @EditFinish="New_Questions" 
+            @ReEditFinish="ReEdit_Questions" 
+            :RE.sync="ReEditSwitch" 
+            :key="Refresh"
             ref="OptionQuestionsEditor">
         </OptionQuestions>
     </el-dialog>
@@ -899,10 +899,10 @@
         </el-row>
         <el-divider></el-divider>
         <FillQuestions
-            @EditFinish="New_Questions"
-            @ReEditFinish="ReEdit_Questions"
-            :RE.sync="ReEditSwitch"
-            :QInfos.sync="Temp_FillQuestionInfo"
+            @EditFinish="New_Questions" 
+            @ReEditFinish="ReEdit_Questions" 
+            :RE.sync="ReEditSwitch" 
+            :key="Refresh"
         ></FillQuestions>
     </el-dialog>
     <!-- 提供给解答题的编辑器 -->
@@ -932,10 +932,10 @@
         </el-row>
         <el-divider></el-divider>
         <AnswerQuestions
-            @EditFinish="New_Questions"
-            @ReEditFinish="ReEdit_Questions"
-            :RE.sync="ReEditSwitch"
-            :QInfos.sync="Temp_AnswerQuestionInfo"
+            @EditFinish="New_Questions" 
+            @ReEditFinish="ReEdit_Questions" 
+            :RE.sync="ReEditSwitch" 
+            :key="Refresh"
         ></AnswerQuestions>
     </el-dialog>
     <!-- 提供给非选择题的编辑器 -->
@@ -962,12 +962,15 @@
             </el-col>
         </el-row>
         <el-divider></el-divider>
-        <MixQuestions
-            @EditFinish_Mix="New_Questions"
-            @ReEditFinish_Mix="ReEdit_Questions"
-            :RE.sync="ReEditSwitch"
-            :QInfos.sync="Temp_MixQuestionInfo"
-        ></MixQuestions>
+        <div :key="Refresh">
+          <MixQuestions
+              @EditFinish_Mix="New_Questions" 
+              @ReEditFinish_Mix="ReEdit_Questions"
+              :RE.sync="ReEditSwitch"
+              :ST.sync="SubjectType"
+              :key="Refresh"
+          ></MixQuestions>
+        </div>
     </el-dialog>
     <el-row justify="start" type="flex">
       <el-col style="padding-left: 25px">
@@ -1055,12 +1058,17 @@
             <label>题目入库</label>
           </el-button>
         </el-row>
-        <el-row type="flex" justify="center" style="padding-top: 30px" v-if="Authority_Check()" >
+        <el-row type="flex" justify="center" style="padding-top: 30px">
           <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('export')" :disabled="Blank_Paper()">
             <label>导出题目</label>
           </el-button>
         </el-row>
-        <el-row
+        <el-row type="flex" justify="center" style="padding-top: 30px">
+          <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="SessionCache()" :disabled="Blank_Paper()">
+            <label>暂存内容</label>
+          </el-button>
+        </el-row>
+        <el-row 
           v-loading="downloading"
           element-loading-text="加载中，请等待"
           element-loading-spinner="el-icon-loading"
@@ -1089,11 +1097,23 @@
         </el-row> -->
       </el-col>
       <el-col :span="19" style="background: #F8FBFF; padding-top: 40px; min-height: 70.8vh; margin-top: 30px">
+        <el-row v-if="Import_User" type="flex" justify="start" style="padding-left: 10px; margin-bottom: 30px">
+          <el-col :span="3">
+            <el-row type="flex" justify="start" style="padding-left:40px">
+              <label>输入JSON文件：</label>
+            </el-row>
+          </el-col>
+          <el-col :span="6">
+            <el-row type="flex" justify="start">
+              <input type="file" accept=".json" @change="QuestionJsonImport($event)" class="JSONInput"/>
+            </el-row>
+          </el-col>
+        </el-row>
         <!-- 确认学科和学段的选择项 -->
         <el-row style="margin: 0px 50px" type="flex" justify="start">
             <el-col :span="4">
               <p style="text-align: left">选择科目：</p>
-              <el-select v-model="SubjectType" placeholder="请选择科目">
+              <el-select v-model="SubjectType" placeholder="请选择科目" :disabled="Questions.length > 0">
                 <el-option
                   v-for="item in Subject_List"
                   :key="item.value"
@@ -1104,7 +1124,7 @@
             </el-col>
             <el-col :span="4" :offset="2">
               <p style="text-align: left">选择学段：</p>
-              <el-select v-model="PeriodType" placeholder="请选择学段">
+              <el-select v-model="PeriodType" placeholder="请选择学段" :disabled="Questions.length > 0">
                 <el-option
                   v-for="item in Period_List"
                   :key="item.value"
@@ -1255,6 +1275,9 @@ export default {
                 },
   data() {
     return {
+      Import_User: false,
+      Import_User_Trace: "",
+      Refresh: false,
       // 是否展开题包
       Expand: true,
       // 待选科目
@@ -1362,74 +1385,6 @@ export default {
       Questions_Collapse: [],
       // 重写编辑标记
       ReEditSwitch: false,
-      // 两个临时存放用的Json变量
-      Temp_OptionQuestionInfo: {
-
-          type: "option",
-          // 分值
-          score: 1,
-          // 题目内容，题目内容图片，是否显示图片
-          content: "",
-          content_images: [],
-          // 选项的部分
-          options: ["", "", "", ""],
-          options_images: ["", "", "", ""],
-          // 答案的部分
-          answer: "",
-          answer_images: [],
-          // 解析的部分
-          analyse: "",
-          analyse_images: []
-
-      },
-      Temp_MixQuestionInfo: {
-          type: "mix",
-          score: 0,
-          content: "",
-          content_images: [],
-          answer: "",
-          answer_images: [],
-          sub_questions: [],
-          sub_questions_collapse: [],
-          analyse: "",
-          analyse_images: [],
-      },
-      Temp_FillQuestionInfo: {
-
-          type: "fill",
-          // 分值
-          score: 1,
-          // 题目内容，题目内容图片，是否显示图片
-          content: "",
-          content_images: [],
-          // 答案的部分
-          answer: "",
-          answer_images: [],
-          // 解析的部分
-          analyse: "",
-          analyse_images: []
-
-      },
-      Temp_AnswerQuestionInfo: {
-
-          type: "answer",
-          // 分值
-          score: 1,
-          // 题目内容，题目内容图片，是否显示图片
-          content: "",
-          content_images: [],
-          // 小题的部分
-          sub_questions: [""],
-          sub_questions_images: [[]],
-          sub_questions_scores: [1],
-          // 答案的部分
-          answer: "",
-          answer_images: [],
-          // 解析的部分
-          analyse: "",
-          analyse_images: []
-
-      },
       // 临时保存重写编辑的位置用的记号
       Index_Edit_Record: -1,
       // 测试大题类型用的保存数组
@@ -1498,7 +1453,8 @@ export default {
       // 用于标记手动切分当前点是否替换为剪刀标记的标记项
       Hand_Cut_Now: [-1, -1],
       // 用于标记当前是否是手动切分模式的变量
-      Hand_Cut_Mode: false
+      Hand_Cut_Mode: false,
+      Type_Cache: "-1"
     };
   },
   computed: {
@@ -1606,10 +1562,42 @@ export default {
   },
   mounted(){
     this.ToTop();
+    this.Import_User_Trace = "";
+    if(sessionStorage.getItem("Import_User")){
+      this.Import_User = true;
+    }
   },
   methods: {
     openInstructionDialog(){
       this.$refs.instruction.openDialog();
+    },
+    Add_To_Import_User_Trach(Sym){
+      this.Import_User_Trace += Sym;
+      if(this.Import_User_Trace == "()》《+"){
+        alert("录入用户模式开启，已打开JSON导入框")
+        sessionStorage.setItem("Import_User", 1)
+        this.Import_User = true;
+      }
+    },
+    // 暂时放着的，用于进行导入的方法，晚上回来了再考虑完成
+    QuestionJsonImport(e){
+      if(e.target.files.length > 0){
+        const _this = this;
+        var reader = new FileReader();
+        reader.readAsText(e.target.files[0], "UTF-8")
+        reader.onloadend = function (e) {
+          let A = JSON.parse(e.target.result)
+          _this.SubjectType = A.subject_type;
+          _this.PeriodType = A.period_type;
+          _this.Questions = A.questions;
+          _this.PaperTitle = A.title;
+        };
+      }
+    },
+    Edit_Question(Bundle_Index, Question_Index){
+      sessionStorage.setItem("InputPaperEditQuestion", JSON.stringify(this.Questions[Bundle_Index].Bundle_Questions[Question_Index]));
+      this.Type_Cache = this.Questions[Bundle_Index].Bundle_Questions[Question_Index].type;
+      this.Edit_Question_Do(Bundle_Index, Question_Index);
     },
     // 替换文理综的前后切的新方法：手动切分
     // 1：替换当前显示为剪刀的标记位置
@@ -1883,6 +1871,12 @@ export default {
     },
     ToTop(){
       window.scrollTo(0,0);
+      if(sessionStorage.getItem("InputPaperCache")){
+        this.Questions = JSON.parse(sessionStorage.getItem("InputPaperCache"));
+        this.Questions_Collapse = JSON.parse(sessionStorage.getItem("InputPaperCollapseCache"));
+        this.SubjectType = sessionStorage.getItem("InputPaperSubjectCache");
+        this.PeriodType = sessionStorage.getItem("InputPaperPeriodCache");
+      }
     },
     // 切换题包是否展开
     Expand_Type_Change(){
@@ -2598,6 +2592,7 @@ export default {
     New_Questions(val){
 
         let temp_val = "";
+        this.Refresh = !this.Refresh;
 
         if(val.type != 'mix'){
           temp_val = this.Normal_Char_Check(val);
@@ -2627,20 +2622,18 @@ export default {
     // Index_Edit_Record用于记录题包下的题目序号
     // Temp名称用于临时交换让编辑器处理的数据内容
     // showDialog代表显示的是哪个编辑器
-    Edit_Question(Bundle_Index, Question_Index){
+    Edit_Question_Do(Bundle_Index, Question_Index){
 
-        if(this.Questions[Bundle_Index].Bundle_Questions[Question_Index].type == 'option'){
+        this.Refresh = !this.Refresh;
+
+        if(this.Type_Cache == 'option'){
             this.showDialog = true;
-            this.Temp_OptionQuestionInfo = this.Questions[Bundle_Index].Bundle_Questions[Question_Index];
-        }else if(this.Questions[Bundle_Index].Bundle_Questions[Question_Index].type == 'fill'){
+        }else if(this.Type_Cache == 'fill'){
             this.showDialog_Fill = true;
-            this.Temp_FillQuestionInfo = this.Questions[Bundle_Index].Bundle_Questions[Question_Index];
-        }else if(this.Questions[Bundle_Index].Bundle_Questions[Question_Index].type == 'answer'){
+        }else if(this.Type_Cache == 'answer'){
             this.showDialog_Answer = true;
-            this.Temp_AnswerQuestionInfo = this.Questions[Bundle_Index].Bundle_Questions[Question_Index];
-        }else if(this.Questions[Bundle_Index].Bundle_Questions[Question_Index].type == 'mix'){
+        }else if(this.Type_Cache == 'mix'){
             this.showDialog_Mix = true;
-            this.Temp_MixQuestionInfo = this.Questions[Bundle_Index].Bundle_Questions[Question_Index];
         }
 
         this.ReEditSwitch = true;
@@ -2658,6 +2651,7 @@ export default {
     ReEdit_Questions(val){
 
         let temp_val = ""
+        this.Refresh = !this.Refresh;
 
         if(val.type != 'mix'){
           temp_val = this.Normal_Char_Check(val);
@@ -2683,6 +2677,8 @@ export default {
         this.showDialog_Mix = false;
         this.showHint = false;
 
+        sessionStorage.removeItem("InputPaperEditQuestion");
+
     },
     // 处理完题目的录入之后要重置这些临时使用的变量
     Reset_Params(){
@@ -2691,77 +2687,6 @@ export default {
         this.Question_Bundle_Add_Index = -1;
         this.ReEditSwitch = false;
         this.complex_Input = false;
-
-        this.Temp_OptionQuestionInfo = {
-
-            type: "option",
-            // 分值
-            score: 1,
-            // 题目内容，题目内容图片，是否显示图片
-            content: "",
-            content_images: [],
-            // 选项的部分
-            options: ["", "", "", ""],
-            options_images: ["", "", "", ""],
-            // 答案的部分
-            answer: "",
-            answer_images: [],
-            // 解析的部分
-            analyse: "",
-            analyse_images: []
-
-        }
-
-        this.Temp_FillQuestionInfo = {
-
-            type: "fill",
-            // 分值
-            score: 1,
-            // 题目内容，题目内容图片，是否显示图片
-            content: "",
-            content_images: [],
-            // 答案的部分
-            answer: "",
-            answer_images: [],
-            // 解析的部分
-            analyse: "",
-            analyse_images: []
-
-        }
-
-        this.Temp_AnswerQuestionInfo = {
-
-            type: "answer",
-            // 分值
-            score: 1,
-            // 题目内容，题目内容图片，是否显示图片
-            content: "",
-            content_images: [],
-            // 小题的部分
-            sub_questions: [""],
-            sub_questions_images: [[]],
-            sub_questions_scores: [1],
-            // 答案的部分
-            answer: "",
-            answer_images: [],
-            // 解析的部分
-            analyse: "",
-            analyse_images: []
-
-        }
-
-        this.Temp_MixQuestionInfo = {
-            type: "mix",
-            score: 0,
-            content: "",
-            content_images: [],
-            answer: "",
-            answer_images: [],
-            sub_questions: [],
-            sub_questions_collapse: [],
-            analyse: "",
-            analyse_images: [],
-        }
 
     },
     // 移动题目位置
@@ -2906,7 +2831,12 @@ export default {
     Router_Trans(route){
       this.$router.push({ path: route });
     },
-
+    SessionCache(){
+        sessionStorage.setItem("InputPaperCache", JSON.stringify(this.Questions));
+        sessionStorage.setItem("InputPaperCollapseCache", JSON.stringify(this.Questions_Collapse));
+        sessionStorage.setItem("InputPaperSubjectCache", this.SubjectType);
+        sessionStorage.setItem("InputPaperPeriodCache", this.PeriodType);
+    },
     // 读取Json格式的数据
     loadJsonFromFile(file, fileList) {
       this.uploadFileName = file;
@@ -3571,6 +3501,7 @@ export default {
                           "period_type": this.PeriodType,
                           "questions": this.Questions,
                         }, null, 4));
+        param.append('questionInput', true)
 
         this.$http
         .post(this.backendIP + "/api/mathUpload", param, config, {
@@ -3915,6 +3846,7 @@ export default {
       val.answer = Check_Now_List.join("\n");
 
       Check_Now = val.analyse;
+      result = this.ChecK_Do(Check_Now);
       if(Check_Now!= "" && result[1]){
         this.$alert("请将解析内容中自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
           confirmButtonText: '确定'
@@ -3928,7 +3860,8 @@ export default {
       for(var len = 0; len < Check_Now_List.length; len++){
         item = Check_Now_List[len]
         result = this.Normal_Char_Check(item)
-        val.sub_questions.splice(len, 1, result)
+        if(result[1])
+          val.sub_questions.splice(len, 1, result[0])
       }
 
       this.Symbol_Error = false;
@@ -4058,21 +3991,25 @@ export default {
         }
 
         if(!latexFlag){
-            if (Regx.test(content[i]) || this.math_pun_list.indexOf(content[i]) != -1) {
+            if ((Regx.test(content[i]) || this.math_pun_list.indexOf(content[i]) != -1) && this.SubjectType != "英语") {
                 if(remakeContent[remakeContent.length - 1] == '$'){
                     remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
                 }else{
                     remakeContent = remakeContent + "$" + content[i] + "$";
                 }
             }
+            else if((this.math_pun_list.indexOf(content[i]) != -1 || Regx.test(content[i])) && this.SubjectType == "英语"){
+              remakeContent = remakeContent + content[i]
+            }
             // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
-            else if(!(content.charCodeAt(i) > 255 ||
-                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
-                      content[i] == ' ' || content[i] == '$' ||
-                      content.charCodeAt(i) == 10)
-                    && !symbolError){
+            else if(
+                (!(content.charCodeAt(i) > 255 || 
+                  this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
+                  content[i] == ' ' || content[i] == '$' || 
+                  content.charCodeAt(i) == 10) 
+                && !symbolError)){
               symbolError = true;
-              this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符，或将其包裹于$$符号之内" + content[i] + " ！", offset: 40});
+              this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符，或将其包裹于$$符号之内。错误符号：" + content[i], offset: 40, duration: 5000});
               remakeContent = remakeContent + content[i];
             }
             else {
@@ -4292,6 +4229,7 @@ export default {
                       "period_type": this.PeriodType,
                       "questions": this.TestData,
                     }, null, 4));
+      param.append('questionInput', true)
 
       this.$http
         .post(this.backendIP + "/api/mathUpload", param, config, {
@@ -4412,6 +4350,13 @@ input {
 .btn_trans {
   border: 1px dashed black;
   margin: 15px;
+}
+.JSONInput{
+  height: 50px;
+  width: 240px;
+  margin-top: -5px;
+  margin-left: -40px;
+  opacity: 1;
 }
 </style>
 <style >

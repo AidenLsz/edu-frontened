@@ -9,7 +9,7 @@
             title="题目预览（图片有偏移）"
         >   
             <div>
-                <AnswerDisplay :QI="questionInfo"></AnswerDisplay>
+                <AnswerDisplay :QI="questionInfos"></AnswerDisplay>
             </div>
         </el-dialog>
         <!-- 分值，题干 -->
@@ -19,7 +19,7 @@
             <el-col :span="6">
                 <el-row type="flex" justify="start">
                     <label style="padding-left: 5px; font-size: 15px; display: inline-block; width: 60px; padding-top:4px">分值：</label>
-                    <el-input type="number" min="1" max="100" step="0.1" v-model="questionInfo.score" size="mini" style="font-size: 15px; width: 100px; margin-left: 20px"></el-input>
+                    <el-input type="number" min="1" max="100" step="0.1" :readonly="true" v-model="questionInfos.score" size="mini" style="font-size: 15px; width: 100px; margin-left: 20px"></el-input>
                     <label style="font-size: 15px; display: inline-block; width: 20px; padding-top:4px; margin-left: 20px">分</label>
                 </el-row>
                 <br/>
@@ -45,7 +45,7 @@
                     <el-col :span="18">
                         <el-input 
                             type="textarea" 
-                            v-model="questionInfo.content" 
+                            v-model="questionInfos.content" 
                             :autosize="{minRows: 2, maxRows: 4}" 
                             resize="none" 
                             style="font-size: 15px"
@@ -77,7 +77,7 @@
         <!-- 题干图片的部分 -->
         <el-row style="margin-top: 15px">
             <el-col :span="23" :offset="1" style="padding-top: 10px;">
-                <el-row v-for="row_count in Math.ceil(questionInfo.content_images.length/4)" :key="row_count">
+                <el-row v-for="row_count in Math.ceil(questionInfos.content_images.length/4)" :key="row_count">
                     <el-col 
                         :span="6" 
                         v-for="index in [0 + (row_count - 1)*4, 
@@ -86,13 +86,13 @@
                                          3 + (row_count - 1)*4]" 
                         :key="index"
                         >
-                        <el-row v-if="index < questionInfo.content_images.length && questionInfo.content_images[index] != ''">
+                        <el-row v-if="index < questionInfos.content_images.length && questionInfos.content_images[index] != ''">
                             <el-col :span="16" >
                                 <el-image 
-                                    :src="questionInfo.content_images[index]" 
+                                    :src="questionInfos.content_images[index]" 
                                     style="height: 100px; width: 100px" 
                                     fit="contain"
-                                    :preview-src-list="questionInfo.content_images">
+                                    :preview-src-list="questionInfos.content_images">
                                 </el-image>
                             </el-col>
                             <el-col :span="8" style="padding-top: 36px">
@@ -106,7 +106,7 @@
         <!-- 选项与选项图片的部分 -->
         <el-row>
             <el-col :span="24" style="padding-top: 10px">
-                <el-row v-for="index in questionInfo.sub_questions.length" :key="index">
+                <el-row v-for="index in questionInfos.sub_questions.length" :key="index">
                     <el-row>
                         <el-col :span="1" style="padding-top: 5px">
                             <el-button size="mini" circle plain @click="Sub_Questions_Up(index - 1)" :disabled="index == 1">
@@ -114,7 +114,7 @@
                             </el-button>
                         </el-col>
                         <el-col :span="1" style="padding-top: 5px">
-                            <el-button size="mini" circle plain @click="Sub_Questions_Down(index - 1)" :disabled="index == questionInfo.sub_questions.length">
+                            <el-button size="mini" circle plain @click="Sub_Questions_Down(index - 1)" :disabled="index == questionInfos.sub_questions.length">
                                 <i class="el-icon-arrow-down"></i>
                             </el-button>
                         </el-col>
@@ -129,7 +129,7 @@
                             </el-row>
                         </el-col>
                         <el-col :span="2" style="padding-top: 6px">
-                            <el-input type="number" min="1" max="100" step="0.1" v-model="questionInfo.sub_questions_scores[index - 1]" size="mini" style="font-size: 15px"></el-input>
+                            <el-input type="number" min="1" max="100" step="0.1" v-model="questionInfos.sub_questions_scores[index - 1]" size="mini" style="font-size: 15px"></el-input>
                         </el-col>
                         <el-col :span="2" style="padding-top: 10px; font-size: 15px; font-weight: bold">
                             <el-row type="flex" justify="start" style="padding-left: 20px">
@@ -138,7 +138,7 @@
                         </el-col>
                         <el-col :span="10" style="margin-left: 10px">
                             <el-input 
-                                v-model="questionInfo.sub_questions[index - 1]" 
+                                v-model="questionInfos.sub_questions[index - 1]" 
                                 :placeholder="'小题' + String.fromCharCode(64 + index) + '（必填）'"
                                 type="textarea" 
                                 :autosize="{minRows: 2, maxRows: 4}" 
@@ -165,7 +165,7 @@
                     </el-row>
                     <el-row style="margin-top: 15px">
                         <el-col :span="23" :offset="1" style="padding-top: 10px;">
-                            <el-row v-for="row_count in Math.ceil(questionInfo.sub_questions_images[index - 1].length/4)" :key="row_count">
+                            <el-row v-for="row_count in Math.ceil(questionInfos.sub_questions_images[index - 1].length/4)" :key="row_count">
                                 <el-col 
                                     :span="6" 
                                     v-for="index_subImg in [0 + (row_count - 1)*4, 
@@ -174,13 +174,13 @@
                                                     3 + (row_count - 1)*4]" 
                                     :key="index_subImg"
                                     >
-                                    <el-row v-if="index_subImg < questionInfo.sub_questions_images[index - 1].length">
+                                    <el-row v-if="index_subImg < questionInfos.sub_questions_images[index - 1].length">
                                         <el-col :span="16" >
                                             <el-image 
-                                                :src="questionInfo.sub_questions_images[index - 1][index_subImg]" 
+                                                :src="questionInfos.sub_questions_images[index - 1][index_subImg]" 
                                                 style="height: 100px; width: 100px" 
                                                 fit="contain"
-                                                :preview-src-list="questionInfo.sub_questions_images[index - 1]">
+                                                :preview-src-list="questionInfos.sub_questions_images[index - 1]">
                                             </el-image>
                                         </el-col>
                                         <el-col :span="8" style="padding-top: 36px">
@@ -206,7 +206,7 @@
                     <el-col :span="19">
                         <el-input 
                             type="textarea" 
-                            v-model="questionInfo.answer" 
+                            v-model="questionInfos.answer" 
                             :autosize="{minRows: 2, maxRows: 4}" 
                             resize="none" 
                             style="font-size: 15px"
@@ -237,7 +237,7 @@
         </el-row>
         <el-row style="margin-top: 15px">
             <el-col :span="23" :offset="1" style="padding-top: 10px;">
-                <el-row v-for="row_count in Math.ceil(questionInfo.answer_images.length/4)" :key="row_count">
+                <el-row v-for="row_count in Math.ceil(questionInfos.answer_images.length/4)" :key="row_count">
                     <el-col 
                         :span="6" 
                         v-for="index in [0 + (row_count - 1)*4, 
@@ -246,13 +246,13 @@
                                          3 + (row_count - 1)*4]" 
                         :key="index"
                         >
-                        <el-row v-if="index < questionInfo.answer_images.length && questionInfo.answer_images[index] != ''">
+                        <el-row v-if="index < questionInfos.answer_images.length && questionInfos.answer_images[index] != ''">
                             <el-col :span="16" >
                                 <el-image 
-                                    :src="questionInfo.answer_images[index]" 
+                                    :src="questionInfos.answer_images[index]" 
                                     style="height: 100px; width: 100px" 
                                     fit="contain"
-                                    :preview-src-list="questionInfo.answer_images">
+                                    :preview-src-list="questionInfos.answer_images">
                                 </el-image>
                             </el-col>
                             <el-col :span="8" style="padding-top: 36px">
@@ -275,7 +275,7 @@
                     <el-col :span="19">
                         <el-input 
                             type="textarea" 
-                            v-model="questionInfo.analyse" 
+                            v-model="questionInfos.analyse" 
                             :autosize="{minRows: 2, maxRows: 4}" 
                             resize="none" 
                             style="font-size: 15px"
@@ -306,7 +306,7 @@
         </el-row>
         <el-row style="margin-top: 15px">
             <el-col :span="23" :offset="1" style="padding-top: 10px;">
-                <el-row v-for="row_count in Math.ceil(questionInfo.analyse_images.length/4)" :key="row_count">
+                <el-row v-for="row_count in Math.ceil(questionInfos.analyse_images.length/4)" :key="row_count">
                     <el-col 
                         :span="6" 
                         v-for="index in [0 + (row_count - 1)*4, 
@@ -315,13 +315,13 @@
                                          3 + (row_count - 1)*4]" 
                         :key="index"
                         >
-                        <el-row v-if="index < questionInfo.analyse_images.length && questionInfo.analyse_images[index] != ''">
+                        <el-row v-if="index < questionInfos.analyse_images.length && questionInfos.analyse_images[index] != ''">
                             <el-col :span="16" >
                                 <el-image 
-                                    :src="questionInfo.analyse_images[index]" 
+                                    :src="questionInfos.analyse_images[index]" 
                                     style="height: 100px; width: 100px" 
                                     fit="contain"
-                                    :preview-src-list="questionInfo.analyse_images">
+                                    :preview-src-list="questionInfos.analyse_images">
                                 </el-image>
                             </el-col>
                             <el-col :span="8" style="padding-top: 36px">
@@ -386,7 +386,7 @@ export default {
 
         return{
 
-            questionInfo: this.QInfos,
+            questionInfos: this.QInfos,
             preview: false,
             ReEdit: this.RE,
             changecss:1
@@ -396,7 +396,7 @@ export default {
     },
     watch: {
 
-        'questionInfo.sub_questions_scores': {
+        'questionInfos.sub_questions_scores': {
 
             handler: function(newVal, oldVal) {
 
@@ -421,11 +421,11 @@ export default {
                 }
 
 
-                this.questionInfo.sub_questions_scores = newVal;
-                this.questionInfo.score = parseFloat(this.questionInfo.sub_questions_scores[0]);
+                this.questionInfos.sub_questions_scores = newVal;
+                this.questionInfos.score = parseFloat(this.questionInfos.sub_questions_scores[0]);
 
-                for(var j = 1; j < this.questionInfo.sub_questions_scores.length; j++){
-                    this.questionInfo.score = this.questionInfo.score + parseFloat(this.questionInfo.sub_questions_scores[j]);
+                for(var j = 1; j < this.questionInfos.sub_questions_scores.length; j++){
+                    this.questionInfos.score = this.questionInfos.score + parseFloat(this.questionInfos.sub_questions_scores[j]);
                 }
 
             },
@@ -436,7 +436,7 @@ export default {
         },
         QInfos(newVal){
 
-            this.questionInfo = newVal;
+            this.questionInfos = newVal;
 
         },
         RE(newVal){
@@ -445,6 +445,12 @@ export default {
 
         }
 
+    },
+    mounted() {
+        if(sessionStorage.getItem("InputPaperEditQuestion")){
+            this.questionInfos = JSON.parse(sessionStorage.getItem("InputPaperEditQuestion"));
+            this.ReEdit = true;
+        }
     },
     methods: {
         Calc_Option_Offset(index){
@@ -459,17 +465,17 @@ export default {
         Delete_Image(index, type){
 
             if(type == 'content'){
-                this.questionInfo.content_images.splice(index, 1);
+                this.questionInfos.content_images.splice(index, 1);
             }else if(type == 'answer'){
-                this.questionInfo.answer_images.splice(index, 1);
+                this.questionInfos.answer_images.splice(index, 1);
             }else if(type == 'analyse'){
-                this.questionInfo.analyse_images.splice(index, 1);
+                this.questionInfos.analyse_images.splice(index, 1);
             }
 
         },
         Delete_Sub_Questions_Image(index, img_index){
 
-            this.questionInfo.sub_questions_images[index].splice(img_index, 1);
+            this.questionInfos.sub_questions_images[index].splice(img_index, 1);
 
         },
         uploadImg(e, type) {
@@ -482,11 +488,11 @@ export default {
                 reader.readAsDataURL(e.target.files[i]);
                 reader.onloadend = function() {
                     if(type == 'content'){
-                        _this.questionInfo.content_images.push(this.result);
+                        _this.questionInfos.content_images.push(this.result);
                     }else if(type == 'answer'){
-                        _this.questionInfo.answer_images.push(this.result);
+                        _this.questionInfos.answer_images.push(this.result);
                     }else if(type == 'analyse'){
-                        _this.questionInfo.analyse_images.push(this.result);
+                        _this.questionInfos.analyse_images.push(this.result);
                     }
                 };
             }
@@ -503,7 +509,7 @@ export default {
                 let reader = new FileReader();
                 reader.readAsDataURL(e.target.files[i]);
                 reader.onloadend = function() {
-                    _this.questionInfo.sub_questions_images[index].push(this.result);
+                    _this.questionInfos.sub_questions_images[index].push(this.result);
                     
                 };
             }
@@ -520,40 +526,41 @@ export default {
         },
         Sub_Questions_Up(index){
 
-            var Sub_Questions_Now = this.questionInfo.sub_questions[index];
-            this.questionInfo.sub_questions.splice(index, 1);
-            this.questionInfo.sub_questions.splice(index - 1, 0, Sub_Questions_Now);
+            var Sub_Questions_Now = this.questionInfos.sub_questions[index];
+            this.questionInfos.sub_questions.splice(index, 1);
+            this.questionInfos.sub_questions.splice(index - 1, 0, Sub_Questions_Now);
 
-            var Sub_Questions_Images_Now = this.questionInfo.sub_questions_images[index];
-            this.questionInfo.sub_questions_images.splice(index, 1);
-            this.questionInfo.sub_questions_images.splice(index - 1, 0, Sub_Questions_Images_Now);
+            var Sub_Questions_Images_Now = this.questionInfos.sub_questions_images[index];
+            this.questionInfos.sub_questions_images.splice(index, 1);
+            this.questionInfos.sub_questions_images.splice(index - 1, 0, Sub_Questions_Images_Now);
 
-            var Sub_Questions_Scores_Now = this.questionInfo.sub_questions_scores[index];
-            this.questionInfo.sub_questions_scores.splice(index, 1);
-            this.questionInfo.sub_questions_scores.splice(index - 1, 0, Sub_Questions_Scores_Now);
+            var Sub_Questions_Scores_Now = this.questionInfos.sub_questions_scores[index];
+            this.questionInfos.sub_questions_scores.splice(index, 1);
+            this.questionInfos.sub_questions_scores.splice(index - 1, 0, Sub_Questions_Scores_Now);
 
         },
         Sub_Questions_Down(index){
 
-            var Sub_Questions_Now = this.questionInfo.sub_questions[index];
-            this.questionInfo.sub_questions.splice(index, 1);
-            this.questionInfo.sub_questions.splice(index + 1, 0, Sub_Questions_Now);
+            var Sub_Questions_Now = this.questionInfos.sub_questions[index];
+            this.questionInfos.sub_questions.splice(index, 1);
+            this.questionInfos.sub_questions.splice(index + 1, 0, Sub_Questions_Now);
 
-            var Sub_Questions_Images_Now = this.questionInfo.sub_questions_images[index];
-            this.questionInfo.sub_questions_images.splice(index, 1);
-            this.questionInfo.sub_questions_images.splice(index + 1, 0, Sub_Questions_Images_Now);
+            var Sub_Questions_Images_Now = this.questionInfos.sub_questions_images[index];
+            this.questionInfos.sub_questions_images.splice(index, 1);
+            this.questionInfos.sub_questions_images.splice(index + 1, 0, Sub_Questions_Images_Now);
 
-            var Sub_Questions_Scores_Now = this.questionInfo.sub_questions_scores[index];
-            this.questionInfo.sub_questions_scores.splice(index, 1);
-            this.questionInfo.sub_questions_scores.splice(index + 1, 0, Sub_Questions_Scores_Now);
+            var Sub_Questions_Scores_Now = this.questionInfos.sub_questions_scores[index];
+            this.questionInfos.sub_questions_scores.splice(index, 1);
+            this.questionInfos.sub_questions_scores.splice(index + 1, 0, Sub_Questions_Scores_Now);
 
         },
         Sub_Questions_Delete(index){
 
-            if(this.questionInfo.sub_questions.length > 1){
-                this.questionInfo.sub_questions.splice(index, 1);
-                this.questionInfo.sub_questions_images.splice(index, 1);
-                this.questionInfo.sub_questions_scores.splice(index, 1);
+            if(this.questionInfos.sub_questions.length > 1){
+                this.questionInfos.sub_questions.splice(index, 1);
+                this.questionInfos.sub_questions_images.splice(index, 1);
+                this.questionInfos.sub_questions_scores.splice(index, 1);
+                this.Calc_Score();
             }else{
                 this.$message("至少要保留一道小题！");
             }
@@ -561,14 +568,42 @@ export default {
         },
         Sub_Questions_Add(){
 
-            if(this.questionInfo.sub_questions.length < 26){
-                this.questionInfo.sub_questions.push("");
-                this.questionInfo.sub_questions_images.push([]);
-                this.questionInfo.sub_questions_scores.push(1);
+            if(this.questionInfos.sub_questions.length < 26){
+                this.questionInfos.sub_questions.push("");
+                this.questionInfos.sub_questions_images.push([]);
+                this.questionInfos.sub_questions_scores.push(1);
+                this.Calc_Score();
             }else{
                 this.$message("小题过多！");
             }
 
+        },
+        Calc_Score(){
+            this.questionInfos.score = 0
+            for(let i = 0; i < this.questionInfos.sub_questions_scores.length; i++){
+                this.questionInfos.sub_questions_scores.splice(i, 1, parseFloat(this.questionInfos.sub_questions_scores[i]))
+                this.questionInfos.score += parseFloat(this.questionInfos.sub_questions_scores[i])
+            }
+        },
+        Reset_Params(){
+            this.questionInfos = {
+                    type: "answer",
+                    // 分值
+                    score: 1,
+                    // 题目内容，题目内容图片，是否显示图片
+                    content: "",
+                    content_images: [],
+                    // 小题的部分
+                    sub_questions: [""],
+                    sub_questions_images: [[]],
+                    sub_questions_scores: [1],
+                    // 答案的部分
+                    answer: "",
+                    answer_images: [],
+                    // 解析的部分
+                    analyse: "",
+                    analyse_images: []
+                }
         },
         Edit_Finish(){
 
@@ -576,16 +611,25 @@ export default {
             
                 setTimeout(()=>{
 
+                    sessionStorage.removeItem("InputPaperEditQuestion");
+
+                    this.questionInfos.score = parseFloat(this.questionInfos.score);
+                    for(let i = 0; i < this.questionInfos.sub_questions_scores.length; i++){
+                        this.questionInfos.sub_questions_scores.splice(i, 1, parseFloat(this.questionInfos.sub_questions_scores[i]))
+                    }
+
                     if(this.ReEdit == false){
 
-                        this.$emit("EditFinish", this.questionInfo);
+                        this.$emit("EditFinish", this.questionInfos);
 
                     }else{
 
-                        this.$emit("ReEditFinish", this.questionInfo);
+                        this.$emit("ReEditFinish", this.questionInfos);
                         this.ReEdit = false;
 
                     }
+
+                    this.Reset_Params();
 
                 }, 10);
 
@@ -598,12 +642,12 @@ export default {
 
             var Result = true;
             
-            if(this.questionInfo.content == "" && this.questionInfo.content_images.length == 0){
+            if(this.questionInfos.content == "" && this.questionInfos.content_images.length == 0){
                 Result = false
             }
 
-            for(var i = 0; i < this.questionInfo.sub_questions.length; i++){
-                if(this.questionInfo.sub_questions[i] == "" && this.questionInfo.sub_questions_images[i].length == 0){
+            for(var i = 0; i < this.questionInfos.sub_questions.length; i++){
+                if(this.questionInfos.sub_questions[i] == "" && this.questionInfos.sub_questions_images[i].length == 0){
                     Result = false
                 }
             }

@@ -6,7 +6,7 @@
                 <span><label> ( {{ QI.score }}分 ) </label></span>
             </el-col>
             <el-col :span="20">
-                <Mathdown :name="BI + '_' + 'MixQuestions_Content'" :content="QI.content"></Mathdown>
+                <Mathdown :name="BI + '_' + 'MixQuestions_Content_Show'" :content="QI.content"></Mathdown>
             </el-col>
         </el-row>
         <!-- 题干图片的部分 -->
@@ -59,7 +59,7 @@
                     <span><label>答案：</label></span>
                 </el-col>
                 <el-col :span="20" v-if="QI.answer != ''">
-                    <Mathdown :name="BI + '_' + 'MixQuestions_Answer'" :content="QI.answer"></Mathdown>
+                    <Mathdown :name="BI + '_' + 'MixQuestions_Answer_Show'" :content="QI.answer"></Mathdown>
                 </el-col>
                 <el-col :span="20" v-if="QI.answer == ''"  style="text-align: left">
                     <label>暂无文字答案，请参考附图</label>
@@ -92,7 +92,7 @@
                     <span><label>解析：</label></span>
                 </el-col>
                 <el-col :span="20" v-if="QI.analyse != ''">
-                    <Mathdown :name="BI + '_' + 'MixQuestions_Analyse'" :content="QI.analyse"></Mathdown>
+                    <Mathdown :name="BI + '_' + 'MixQuestions_Analyse_Show'" :content="QI.analyse"></Mathdown>
                 </el-col>
                 <el-col :span="20" v-if="QI.analyse == ''" style="text-align: left">
                     <label>暂无文字解析，请参考附图</label>

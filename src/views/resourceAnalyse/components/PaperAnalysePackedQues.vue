@@ -1,6 +1,23 @@
 <!-- 作为递归自身的节点 -->
 <template>
-  <div>
+  <div
+    v-loading="Question_Analysing"
+    element-loading-text="正在加载分析报告..."
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(211, 211, 211, 0.6)">
+    <!-- 查看分析报告 -->
+    <el-dialog
+        :visible.sync="analyseReport"
+        width="90%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="true"
+        :key="Refresh">
+        <template slot="title"></template>
+        <el-row
+          style="margin: 0px">
+          <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
+        </el-row>
+    </el-dialog>
       <!-- 这里是访问每个大题包最开始的地方，如果Analyse为true，说明是第一次访问，也就应当有展开分析的页面 -->
       <el-row v-for="(Question, Index) in PackedQuestion" :key="Question.id + '_' + Index" :class="Get_Class(Analyse)">
         <el-col :span="24" v-if="Question.type == 'PackedQues'" type="flex" justify="start">
@@ -212,7 +229,10 @@
 <script>
 
 import PaperAnalyseQuestion from "./PaperAnalyseQuestion.vue";
-import Mathdown from "../../../common/components/Mathdown.vue"
+import Mathdown from "../../../common/components/Mathdown.vue";
+import {commonAjax} from '@/common/utils/ajax'
+
+import QuestionAnalyse from "../QuestionAnalyse.vue";
 
 export default {
   name: "PaperAnalysePackedQuestion",
@@ -230,7 +250,8 @@ export default {
   },
   components: {
       PaperAnalyseQuestion,
-      Mathdown
+      Mathdown,
+      QuestionAnalyse
   },
   created(){
     this.Name_Packed_Next = [];
@@ -247,6 +268,10 @@ export default {
         label: "label",
         children: "children"
       },
+      analyseReport: false,
+      analyseData: {},
+      Refresh: false,
+      Question_Analysing: false
       // Test_Layer_Data: {
       //   kp: [
       //       "圆内接四边形的性质定理与判定定理",
@@ -309,7 +334,21 @@ export default {
       }
     },
     Change_Expand(Index){
-      this.Expand_Ana.splice(Index, 1, !this.Expand_Ana[Index])
+      this.Refresh = !this.Refresh;
+      this.Question_Analysing = true;
+      commonAjax(this.backendIP+'/api/questionAnalyse',
+        {
+          databasename: 'public',
+          ID: this.PackedQuestion[Index].id
+        }
+      ).then((data)=>{
+        this.analyseData = data.que_dic
+        this.analyseReport = true;
+        this.Question_Analysing = false
+      }).catch(()=>{
+        this.$message.error("服务器正忙，请稍后重试。")
+        this.Question_Analysing = false
+      })
     },
     Get_Class(Analyse){
       if(Analyse){
