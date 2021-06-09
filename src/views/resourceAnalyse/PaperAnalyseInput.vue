@@ -2038,9 +2038,6 @@ export default {
           this.$alert("切分过程出现错误，这可能是由于您拖拽的文件格式不正确，或服务器超载导致目前暂时无法提供服务，请重新提交文件或稍后再试。", "提示")
         }); 
 
-      
-
-
     },
     // 导入英语试卷时的方法
     selectFile(e){
@@ -2689,6 +2686,8 @@ export default {
         this.showDialog_Mix = false;
         this.showHint = false;
 
+        sessionStorage.removeItem("InputPaperEditQuestion");
+
     },
     // 处理完题目的录入之后要重置这些临时使用的变量
     Reset_Params(){
@@ -2697,77 +2696,6 @@ export default {
         this.Question_Bundle_Add_Index = -1;
         this.ReEditSwitch = false;
         this.complex_Input = false;
-
-        this.Temp_OptionQuestionInfo = {
-
-            type: "option",
-            // 分值
-            score: 1,
-            // 题目内容，题目内容图片，是否显示图片
-            content: "",
-            content_images: [],
-            // 选项的部分
-            options: ["", "", "", ""],
-            options_images: ["", "", "", ""],
-            // 答案的部分
-            answer: "",
-            answer_images: [],
-            // 解析的部分
-            analyse: "",
-            analyse_images: []
-
-        }
-
-        this.Temp_FillQuestionInfo = {
-
-            type: "fill",
-            // 分值
-            score: 1,
-            // 题目内容，题目内容图片，是否显示图片
-            content: "",
-            content_images: [],
-            // 答案的部分
-            answer: "",
-            answer_images: [],
-            // 解析的部分
-            analyse: "",
-            analyse_images: []
-
-        }
-
-        this.Temp_AnswerQuestionInfo = {
-
-            type: "answer",
-            // 分值
-            score: 1,
-            // 题目内容，题目内容图片，是否显示图片
-            content: "",
-            content_images: [],
-            // 小题的部分
-            sub_questions: [""],
-            sub_questions_images: [[]],
-            sub_questions_scores: [1],
-            // 答案的部分
-            answer: "",
-            answer_images: [],
-            // 解析的部分
-            analyse: "",
-            analyse_images: []
-
-        }
-
-        this.Temp_MixQuestionInfo = {
-            type: "mix",
-            score: 0,
-            content: "",
-            content_images: [],
-            answer: "",
-            answer_images: [],
-            sub_questions: [],
-            sub_questions_collapse: [],
-            analyse: "",
-            analyse_images: [],
-        }
 
     },
     // 移动题目位置
@@ -3914,6 +3842,7 @@ export default {
       val.answer = Check_Now_List.join("\n");
 
       Check_Now = val.analyse;
+      result = this.ChecK_Do(Check_Now);
       if(Check_Now!= "" && result[1]){
         this.$alert("请将解析内容中自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
           confirmButtonText: '确定'

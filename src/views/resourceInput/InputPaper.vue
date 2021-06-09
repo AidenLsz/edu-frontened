@@ -864,19 +864,11 @@
             </el-col>
         </el-row>
         <el-divider></el-divider>
-<<<<<<< HEAD
         <OptionQuestions
-            @EditFinish="New_Questions"
-            @ReEditFinish="ReEdit_Questions"
-            :RE.sync="ReEditSwitch"
-            :QInfos.sync="Temp_OptionQuestionInfo"
-=======
-        <OptionQuestions 
             @EditFinish="New_Questions" 
             @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch"
+            :RE.sync="ReEditSwitch" 
             :key="Refresh"
->>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
             ref="OptionQuestionsEditor">
         </OptionQuestions>
     </el-dialog>
@@ -907,17 +899,10 @@
         </el-row>
         <el-divider></el-divider>
         <FillQuestions
-<<<<<<< HEAD
-            @EditFinish="New_Questions"
-            @ReEditFinish="ReEdit_Questions"
-            :RE.sync="ReEditSwitch"
-            :QInfos.sync="Temp_FillQuestionInfo"
-=======
             @EditFinish="New_Questions" 
             @ReEditFinish="ReEdit_Questions" 
             :RE.sync="ReEditSwitch" 
             :key="Refresh"
->>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
         ></FillQuestions>
     </el-dialog>
     <!-- 提供给解答题的编辑器 -->
@@ -947,17 +932,10 @@
         </el-row>
         <el-divider></el-divider>
         <AnswerQuestions
-<<<<<<< HEAD
-            @EditFinish="New_Questions"
-            @ReEditFinish="ReEdit_Questions"
-            :RE.sync="ReEditSwitch"
-            :QInfos.sync="Temp_AnswerQuestionInfo"
-=======
             @EditFinish="New_Questions" 
             @ReEditFinish="ReEdit_Questions" 
             :RE.sync="ReEditSwitch" 
             :key="Refresh"
->>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
         ></AnswerQuestions>
     </el-dialog>
     <!-- 提供给非选择题的编辑器 -->
@@ -984,17 +962,6 @@
             </el-col>
         </el-row>
         <el-divider></el-divider>
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <MixQuestions
-            @EditFinish_Mix="New_Questions"
-            @ReEditFinish_Mix="ReEdit_Questions"
-            :RE.sync="ReEditSwitch"
-            :QInfos.sync="Temp_MixQuestionInfo"
-        ></MixQuestions>
-=======
-=======
->>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
         <div :key="Refresh">
           <MixQuestions
               @EditFinish_Mix="New_Questions" 
@@ -1004,10 +971,6 @@
               :key="Refresh"
           ></MixQuestions>
         </div>
-<<<<<<< HEAD
->>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
-=======
->>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
     </el-dialog>
     <el-row justify="start" type="flex">
       <el-col style="padding-left: 25px">
@@ -1100,22 +1063,12 @@
             <label>导出题目</label>
           </el-button>
         </el-row>
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <el-row
-=======
-=======
->>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
         <el-row type="flex" justify="center" style="padding-top: 30px">
           <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="SessionCache()" :disabled="Blank_Paper()">
             <label>暂存内容</label>
           </el-button>
         </el-row>
         <el-row 
-<<<<<<< HEAD
->>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
-=======
->>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
           v-loading="downloading"
           element-loading-text="加载中，请等待"
           element-loading-spinner="el-icon-loading"
@@ -1322,16 +1275,8 @@ export default {
                 },
   data() {
     return {
-<<<<<<< HEAD
-<<<<<<< HEAD
       Import_User: false,
       Import_User_Trace: "",
-=======
->>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
-=======
-      Import_User: false,
-      Import_User_Trace: "",
->>>>>>> 994db97... issue28-SR - Update-inputPaper
       Refresh: false,
       // 是否展开题包
       Expand: true,
@@ -1400,20 +1345,20 @@ export default {
       math_pun_list: ['+', '-', "*", "/", "%", "="],
       TestData:{
         // "title": "2009年课标甲乙",
-        // "subject_type": "数学",
-        // "period_type": "高中",
-        // "doc": [
-        //   {
-        //     "question_stem": "已知集合$A = \\{ 0,2 \\}$，$B = \\{ - 2 , - 1,0,1,2 \\}$,则$A \\cap B =$",
-        //     "question_options": [ "$\\{ 0,2 \\}$", "$\\{ 1,2 \\}$", "$\\{ 0 \\}$", "$\\{ - 2 , - 1,0,1,2 \\}$" ],
-        //     "question_type": "选择题",
-        //     "sub_questions": [],
-        //     "answer": "A",
-        //     "analysis": "",
-        //     "source": "user_input",
-        //     "subject": "user_input"
-        //   }
-        // ]
+        //       "subject_type": "数学",
+        //       "period_type": "高中",
+        //       "doc": [
+        //         {
+        //           "question_stem": "已知集合$A = \\{ 0,2 \\}$，$B = \\{ - 2 , - 1,0,1,2 \\}$,则$A \\cap B =$",
+        //           "question_options": [ "$\\{ 0,2 \\}$", "$\\{ 1,2 \\}$", "$\\{ 0 \\}$", "$\\{ - 2 , - 1,0,1,2 \\}$" ],
+        //           "question_type": "选择题",
+        //           "sub_questions": [],
+        //           "answer": "A",
+        //           "analysis": "",
+        //           "source": "user_input",
+        //           "subject": "user_input"
+        //         }
+        //         ]
       },
 
       Question_Edit_Now: -1,
@@ -1623,10 +1568,9 @@ export default {
     }
   },
   methods: {
-<<<<<<< HEAD
     openInstructionDialog(){
       this.$refs.instruction.openDialog();
-=======
+    },
     Add_To_Import_User_Trach(Sym){
       this.Import_User_Trace += Sym;
       if(this.Import_User_Trace == "()》《+"){
@@ -1649,16 +1593,6 @@ export default {
           _this.PaperTitle = A.title;
         };
       }
-<<<<<<< HEAD
-    },
-    Edit_Question(Bundle_Index, Question_Index){
-      sessionStorage.setItem("InputPaperEditQuestion", JSON.stringify(this.Questions[Bundle_Index].Bundle_Questions[Question_Index]));
-      this.Type_Cache = this.Questions[Bundle_Index].Bundle_Questions[Question_Index].type;
-      this.Edit_Question_Do(Bundle_Index, Question_Index);
->>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
-=======
->>>>>>> b4d1f77... issue28-SR - Update-inputPaper
->>>>>>> 994db97... issue28-SR - Update-inputPaper
     },
     Edit_Question(Bundle_Index, Question_Index){
       sessionStorage.setItem("InputPaperEditQuestion", JSON.stringify(this.Questions[Bundle_Index].Bundle_Questions[Question_Index]));
@@ -2071,19 +2005,11 @@ export default {
               this.loading = false;
             }
 
-<<<<<<< HEAD
-          }
-=======
             if(this.math_input == 'combine'){
               this.$refs.math_answer_input.value = ""
             }
 
-<<<<<<< HEAD
-          } 
->>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
-=======
           }
->>>>>>> 9b4555c... add user instruction
           // 文综，理综，语文
           else if( this.paper_type == '2' || this.paper_type == '3' || this.paper_type == '4'){
             this.$refs.eng_input.value = "";
@@ -2751,6 +2677,8 @@ export default {
         this.showDialog_Mix = false;
         this.showHint = false;
 
+        sessionStorage.removeItem("InputPaperEditQuestion");
+
     },
     // 处理完题目的录入之后要重置这些临时使用的变量
     Reset_Params(){
@@ -2759,84 +2687,7 @@ export default {
         this.Question_Bundle_Add_Index = -1;
         this.ReEditSwitch = false;
         this.complex_Input = false;
-<<<<<<< HEAD
 
-<<<<<<< HEAD
-        this.Temp_OptionQuestionInfo = {
-
-            type: "option",
-            // 分值
-            score: 1,
-            // 题目内容，题目内容图片，是否显示图片
-            content: "",
-            content_images: [],
-            // 选项的部分
-            options: ["", "", "", ""],
-            options_images: ["", "", "", ""],
-            // 答案的部分
-            answer: "",
-            answer_images: [],
-            // 解析的部分
-            analyse: "",
-            analyse_images: []
-
-        }
-
-        this.Temp_FillQuestionInfo = {
-
-            type: "fill",
-            // 分值
-            score: 1,
-            // 题目内容，题目内容图片，是否显示图片
-            content: "",
-            content_images: [],
-            // 答案的部分
-            answer: "",
-            answer_images: [],
-            // 解析的部分
-            analyse: "",
-            analyse_images: []
-
-        }
-
-        this.Temp_AnswerQuestionInfo = {
-
-            type: "answer",
-            // 分值
-            score: 1,
-            // 题目内容，题目内容图片，是否显示图片
-            content: "",
-            content_images: [],
-            // 小题的部分
-            sub_questions: [""],
-            sub_questions_images: [[]],
-            sub_questions_scores: [1],
-            // 答案的部分
-            answer: "",
-            answer_images: [],
-            // 解析的部分
-            analyse: "",
-            analyse_images: []
-
-        }
-
-        this.Temp_MixQuestionInfo = {
-            type: "mix",
-            score: 0,
-            content: "",
-            content_images: [],
-            answer: "",
-            answer_images: [],
-            sub_questions: [],
-            sub_questions_collapse: [],
-            analyse: "",
-            analyse_images: [],
-        }
-=======
->>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
-
-=======
->>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
     },
     // 移动题目位置
     // 注意要一次移动信息和折叠属性两个，不然会有问题
@@ -2980,25 +2831,12 @@ export default {
     Router_Trans(route){
       this.$router.push({ path: route });
     },
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
     SessionCache(){
         sessionStorage.setItem("InputPaperCache", JSON.stringify(this.Questions));
         sessionStorage.setItem("InputPaperCollapseCache", JSON.stringify(this.Questions_Collapse));
         sessionStorage.setItem("InputPaperSubjectCache", this.SubjectType);
         sessionStorage.setItem("InputPaperPeriodCache", this.PeriodType);
     },
->>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
-=======
-    SessionCache(){
-        sessionStorage.setItem("InputPaperCache", JSON.stringify(this.Questions));
-        sessionStorage.setItem("InputPaperCollapseCache", JSON.stringify(this.Questions_Collapse));
-        sessionStorage.setItem("InputPaperSubjectCache", this.SubjectType);
-        sessionStorage.setItem("InputPaperPeriodCache", this.PeriodType);
-    },
->>>>>>> b4249cb... issue28-SR - Fix-Tons-Of-Bug-Of-InputPaper
     // 读取Json格式的数据
     loadJsonFromFile(file, fileList) {
       this.uploadFileName = file;
@@ -3663,6 +3501,7 @@ export default {
                           "period_type": this.PeriodType,
                           "questions": this.Questions,
                         }, null, 4));
+        param.append('questionInput', true)
 
         this.$http
         .post(this.backendIP + "/api/mathUpload", param, config, {
@@ -4163,29 +4002,12 @@ export default {
               remakeContent = remakeContent + content[i]
             }
             // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
-<<<<<<< HEAD
-            else if(!(content.charCodeAt(i) > 255 ||
-                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
-<<<<<<< HEAD
-                      content[i] == ' ' || content[i] == '$' ||
-                      content.charCodeAt(i) == 10)
-                    && !symbolError){
-=======
-<<<<<<< HEAD
-                      content[i] == ' ' || content[i] == '$' || 
-                      content.charCodeAt(i) == 10) 
-                    && !symbolError
-                    && this.SubjectType != "英语"){
->>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
-=======
             else if(
                 (!(content.charCodeAt(i) > 255 || 
                   this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
                   content[i] == ' ' || content[i] == '$' || 
                   content.charCodeAt(i) == 10) 
                 && !symbolError)){
->>>>>>> 568501c... issue28-SR - Update-English-Symbol-Check
->>>>>>> 2838134... issue28-SR - Update-English-Symbol-Check
               symbolError = true;
               this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符，或将其包裹于$$符号之内。错误符号：" + content[i], offset: 40, duration: 5000});
               remakeContent = remakeContent + content[i];
@@ -4197,11 +4019,6 @@ export default {
             remakeContent = remakeContent + content[i];
         }
       }
-
-      if(this.SubjectType == "英语"){
-        remakeContent = remakeContent.replace("$", "")
-      }
-
       return [remakeContent, latexFlag]
     },
     Submit(){
@@ -4412,7 +4229,7 @@ export default {
                       "period_type": this.PeriodType,
                       "questions": this.TestData,
                     }, null, 4));
-      param.append('questionInput', true)              
+      param.append('questionInput', true)
 
       this.$http
         .post(this.backendIP + "/api/mathUpload", param, config, {
