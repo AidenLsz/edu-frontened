@@ -379,12 +379,13 @@ export default {
                 "textStyle": {
                     "color": "black" // #ccc
                 },
-                padding: [5,5,40,25]
+                "y": "6%",
+                "padding": [5,5,40,50]
             },
             "legend": {
                 "icon": "circle",
                 "x": "center",
-                "y": "8%",
+                "y": "12%",
                 "data": [
                 ],
                 "textStyle": {
@@ -399,17 +400,38 @@ export default {
                     130
                 ],
                 "avoidLabelOverlap": true,
-                "startAngle": 0,
+                "startAngle": 90,
                 "center": [
                     "50%",
-                    "50%"
+                    "53%"
                 ],
                 "roseType": "area",
                 "selectedMode": "single",
                 "label": {
                     "normal": {
                         "show": true,
-                        "formatter": "{b}: {c}分"
+                        "formatter": function(params){
+                            let Score = (parseFloat(params.value) - 10) + "";
+                            if(Score.indexOf(".") == 2){
+                                let Decimal = parseInt(Score[4]);
+                                Score = Score.substring(0, 4);
+                                if(Decimal >= 5){
+                                    Score = parseFloat(Score) + 0.1 + ""
+                                    Score = Score.substring(0, 4);
+                                }
+                            }else if(Score.indexOf(".") == 1){
+                                let Decimal = parseInt(Score[3]);
+                                Score = Score.substring(0, 3);
+                                if(Decimal >= 5){
+                                    if(parseInt(Score[2]) < 9){
+                                        Score = Score.substring(0, 2) + (parseInt(Score[2]) + 1) + "";
+                                    }else{
+                                        Score = (parseInt(Score[0]) + 1) + ".0"
+                                    }
+                                }
+                            }
+                            return params.name + ": " + Score + "分"
+                        }
                     },
                     "emphasis": {
                         "show": true
@@ -427,33 +449,62 @@ export default {
                     }
                 },
                 "data":
-                [
-                {'value': 4.2, 'name': '解三角形', 'itemStyle': {'normal': {'color': '#ad46f3'}}}, 
-                {'value': 5.8, 'name': '集合', 'itemStyle': {'normal': {'color': '#5045f6'}}}, 
-                {'value': 5.8, 'name': '算法初步', 'itemStyle': {'normal': {'color': '#4777f5'}}}, 
-                {'value': 7.3, 'name': '推理与证明', 'itemStyle': {'normal': {'color': '#44aff0'}}}, 
-                {'value': 7.5, 'name': '不等式', 'itemStyle': {'normal': {'color': '#45dbf7'}}}, 
-                {'value': 9.2, 'name': '不等式选讲', 'itemStyle': {'normal': {'color': '#f6d54a'}}}, 
-                {'value': 11.5, 'name': '导数及其应用', 'itemStyle': {'normal': {'color': '#f69846'}}}, 
-                {'value': 11.8, 'name': '数列', 'itemStyle': {'normal': {'color': '#ff4343'}}}, 
-                {'value': 16.8, 'name': '统计', 'itemStyle': {'normal': {'color': '#f845f1'}}}, 
-                {'value': 18.8, 'name': '概率', 'itemStyle': {'normal': {'color': '#ad46f3'}}}, 
-                {'value': 27.3, 'name': '坐标系与参数方程', 'itemStyle': {'normal': {'color': '#5045f6'}}}, 
-                {'value': 30.5, 'name': '基本初等函数Ⅱ', 'itemStyle': {'normal': {'color': '#4777f5'}}}, 
-                {'value': 33.2, 'name': '平面向量', 'itemStyle': {'normal': {'color': '#44aff0'}}}, 
-                {'value': 33.5, 'name': '圆锥曲线与方程', 'itemStyle': {'normal': {'color': '#45dbf7'}}}, 
-                {'value': 35.5, 'name': '平面解析几何初步', 'itemStyle': {'normal': {'color': '#f6d54a'}}}, 
-                {'value': 55.2, 'name': '函数概念与基本初等函数Ⅰ', 'itemStyle': {'normal': {'color': '#f69846'}}}, 
-                {'value': 55.2, 'name': '立体几何初步', 'itemStyle': {'normal': {'color': '#ff4343'}}}, 
-                {'value': 1.7, 'name': '三角恒等变换', 'itemStyle': {'normal': {'color': '#45dbf7'}}}, 
-                {'value': 1.7, 'name': '统计案例', 'itemStyle': {'normal': {'color': '#f6d54a'}}}, 
-                {'value': 1.7, 'name': '数系的扩充与复数的引入', 'itemStyle': {'normal': {'color': '#f69846'}}}, 
-                {'value': 3.3, 'name': '框图', 'itemStyle': {'normal': {'color': '#ff4343'}}}, 
-                {'value': 3.3, 'name': '常用逻辑用语', 'itemStyle': {'normal': {'color': '#f845f1'}}}, 
-                ]
+                []
                 }
                 ]
                 
+        }
+
+        let Label_Color = [
+            '#ff4343', '#f69846', '#f6d54a', '#45dbf7', '#44aff0', '#4777f5', '#5045f6', '#ad46f3'
+        ]
+
+        let Data_New = [['函数概念与基本初等函数I', 143],
+                    ['立体几何初步', 142],
+                    ['基本初等函数II', 128],
+                    ['圆锥曲线与方程', 117],
+                    ['数列', 84],
+                    ['统计', 73],
+                    ['概率', 73],
+                    ['导数及其应用', 69],
+                    ['不等式选讲（选考内容）', 67],
+                    ['坐标系与参数方程（选考内容）', 60],
+                    ['平面向量', 31],
+                    ['不等式', 31],
+                    ['集合', 30],
+                    ['数系的扩充与复数的引入', 30],
+                    ['平面解析几何初步', 30],
+                    ['计数原理', 25],
+                    ['算法初步', 10],
+                    ['空间向量与立体几何', 10],
+                    ['常用逻辑用语', 10],
+                    ['框图', 5]]
+
+        for(let i = 0; i < Data_New.length; i++){
+            let Score = Data_New[i][1]/6 + "";
+            console.log(Score)
+            if(Score.indexOf(".") == 2){
+                let Decimal = parseInt(Score[4]);
+                Score = Score.substring(0, 4);
+                if(Decimal >= 5){
+                    Score = parseFloat(Score) + 0.1 + ""
+                    Score = Score.substring(0, 4);
+                }
+            }else if(Score.indexOf(".") == 1){
+                let Decimal = parseInt(Score[3]);
+                Score = Score.substring(0, 3);
+                if(Decimal >= 5){
+                    if(parseInt(Score[2]) < 9){
+                        Score = Score.substring(0, 2) + (parseInt(Score[2]) + 1) + "";
+                    }else{
+                        Score = (parseInt(Score[0]) + 1) + ".0"
+                    }
+                }
+            }
+            Score = 10 + parseFloat(Score) + ""
+            
+            let Item = {'value': Score, 'name': Data_New[i][0], 'itemStyle': {'normal': {'color': Label_Color[i%Label_Color.length]}}}
+            Liberal_Option_3.series[0].data.push(Item);
         }
 
         Line_Chart_3.setOption(Liberal_Option_3);

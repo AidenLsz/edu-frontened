@@ -1400,20 +1400,20 @@ export default {
       math_pun_list: ['+', '-', "*", "/", "%", "="],
       TestData:{
         // "title": "2009年课标甲乙",
-        //       "subject_type": "数学",
-        //       "period_type": "高中",
-        //       "doc": [
-        //         {
-        //           "question_stem": "已知集合$A = \\{ 0,2 \\}$，$B = \\{ - 2 , - 1,0,1,2 \\}$,则$A \\cap B =$",
-        //           "question_options": [ "$\\{ 0,2 \\}$", "$\\{ 1,2 \\}$", "$\\{ 0 \\}$", "$\\{ - 2 , - 1,0,1,2 \\}$" ],
-        //           "question_type": "选择题",
-        //           "sub_questions": [],
-        //           "answer": "A",
-        //           "analysis": "",
-        //           "source": "user_input",
-        //           "subject": "user_input"
-        //         }
-        //         ]
+        // "subject_type": "数学",
+        // "period_type": "高中",
+        // "doc": [
+        //   {
+        //     "question_stem": "已知集合$A = \\{ 0,2 \\}$，$B = \\{ - 2 , - 1,0,1,2 \\}$,则$A \\cap B =$",
+        //     "question_options": [ "$\\{ 0,2 \\}$", "$\\{ 1,2 \\}$", "$\\{ 0 \\}$", "$\\{ - 2 , - 1,0,1,2 \\}$" ],
+        //     "question_type": "选择题",
+        //     "sub_questions": [],
+        //     "answer": "A",
+        //     "analysis": "",
+        //     "source": "user_input",
+        //     "subject": "user_input"
+        //   }
+        // ]
       },
 
       Question_Edit_Now: -1,
@@ -4152,14 +4152,18 @@ export default {
         }
 
         if(!latexFlag){
-            if ((Regx.test(content[i]) && this.SubjectType != "英语") || this.math_pun_list.indexOf(content[i]) != -1) {
+            if ((Regx.test(content[i]) || this.math_pun_list.indexOf(content[i]) != -1) && this.SubjectType != "英语") {
                 if(remakeContent[remakeContent.length - 1] == '$'){
                     remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
                 }else{
                     remakeContent = remakeContent + "$" + content[i] + "$";
                 }
             }
+            else if((this.math_pun_list.indexOf(content[i]) != -1 || Regx.test(content[i])) && this.SubjectType == "英语"){
+              remakeContent = remakeContent + content[i]
+            }
             // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
+<<<<<<< HEAD
             else if(!(content.charCodeAt(i) > 255 ||
                       this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
 <<<<<<< HEAD
@@ -4167,11 +4171,21 @@ export default {
                       content.charCodeAt(i) == 10)
                     && !symbolError){
 =======
+<<<<<<< HEAD
                       content[i] == ' ' || content[i] == '$' || 
                       content.charCodeAt(i) == 10) 
                     && !symbolError
                     && this.SubjectType != "英语"){
 >>>>>>> 090015e86dbada3455d6e8d1ed0f1a2c6113ea38
+=======
+            else if(
+                (!(content.charCodeAt(i) > 255 || 
+                  this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
+                  content[i] == ' ' || content[i] == '$' || 
+                  content.charCodeAt(i) == 10) 
+                && !symbolError)){
+>>>>>>> 568501c... issue28-SR - Update-English-Symbol-Check
+>>>>>>> 2838134... issue28-SR - Update-English-Symbol-Check
               symbolError = true;
               this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符，或将其包裹于$$符号之内。错误符号：" + content[i], offset: 40, duration: 5000});
               remakeContent = remakeContent + content[i];
@@ -4183,6 +4197,11 @@ export default {
             remakeContent = remakeContent + content[i];
         }
       }
+
+      if(this.SubjectType == "英语"){
+        remakeContent = remakeContent.replace("$", "")
+      }
+
       return [remakeContent, latexFlag]
     },
     Submit(){
@@ -4393,6 +4412,7 @@ export default {
                       "period_type": this.PeriodType,
                       "questions": this.TestData,
                     }, null, 4));
+      param.append('questionInput', true)              
 
       this.$http
         .post(this.backendIP + "/api/mathUpload", param, config, {

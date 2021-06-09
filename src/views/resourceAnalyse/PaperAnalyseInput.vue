@@ -4057,20 +4057,23 @@ export default {
         }
 
         if(!latexFlag){
-            if ((Regx.test(content[i]) && this.SubjectType != "英语") || this.math_pun_list.indexOf(content[i]) != -1) {
+            if ((Regx.test(content[i]) || this.math_pun_list.indexOf(content[i]) != -1) && this.SubjectType != "英语") {
                 if(remakeContent[remakeContent.length - 1] == '$'){
                     remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
                 }else{
                     remakeContent = remakeContent + "$" + content[i] + "$";
                 }
             }
+            else if((this.math_pun_list.indexOf(content[i]) != -1 || Regx.test(content[i])) && this.SubjectType == "英语"){
+              remakeContent = remakeContent + content[i]
+            }
             // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
-            else if(!(content.charCodeAt(i) > 255 || 
-                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
-                      content[i] == ' ' || content[i] == '$' || 
-                      content.charCodeAt(i) == 10) 
-                    && !symbolError
-                    && this.SubjectType != "英语"){
+            else if(
+                (!(content.charCodeAt(i) > 255 || 
+                  this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
+                  content[i] == ' ' || content[i] == '$' || 
+                  content.charCodeAt(i) == 10) 
+                && !symbolError)){
               symbolError = true;
               this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符，或将其包裹于$$符号之内。错误符号：" + content[i], offset: 40, duration: 5000});
               remakeContent = remakeContent + content[i];
@@ -4082,6 +4085,11 @@ export default {
             remakeContent = remakeContent + content[i];
         }
       }
+
+      if(this.SubjectType == "英语"){
+        remakeContent = remakeContent.replace("$", "")
+      }
+
       return [remakeContent, latexFlag]
     },
     Submit(){
