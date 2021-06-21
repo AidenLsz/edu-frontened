@@ -45,10 +45,6 @@ router.beforeEach((to, from, next) => {
   //   "checkExercise",
   // ];
   const route = [
-    "/dashboard",
-    "/user",
-    "/input/",
-    "/search/",
     "/analysis/",
     "/manage/",
   ];
