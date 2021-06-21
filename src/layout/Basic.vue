@@ -127,18 +127,25 @@
                         <span style="color: black;">试卷资源</span>
                       </el-menu-item>
                     </el-submenu>
+                    <el-menu-item index="4">
+                      <router-link to="/manage/dashboard"  :underline="false" @click.native="ToTop">
+                        <span style="color: black;">
+                          资源管理
+                        </span>
+                      </router-link>
+                    </el-menu-item>
                     <router-link to="/estimate" :underline="false" @click.native="ToTop" style="display: none">
-                      <el-menu-item index="4">
+                      <el-menu-item index="5">
                         <span style="color: black;">试题属性预估</span>
                       </el-menu-item>
                     </router-link>
                     <router-link to="/similarity" :underline="false" @click.native="ToTop" style="display: none">
-                      <el-menu-item index="5">
+                      <el-menu-item index="6">
                         <span style="color: black;">相似题预估</span>
                       </el-menu-item>
                     </router-link>
                     <router-link to="/admin" v-if="Get_Priority()" :underline="false" @click.native="ToTop">
-                      <el-menu-item index="5">
+                      <el-menu-item index="7">
                         <span style="color: red;">管理员页面</span>
                       </el-menu-item>
                     </router-link>
