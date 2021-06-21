@@ -29,14 +29,20 @@ import QuestionAnalyse from "@/views/resourceAnalyse/QuestionAnalyse";
 import QuestionAnalyseInput from "@/views/resourceAnalyse/QuestionAnalyseInput";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 79f5e78... issue32 - Add-Privacy-And-Agreement
 // 用户政策与隐私协议
 import UserAgreement from "@/layout/components/UserAgreement";
 import PrivacyPolicy from "@/layout/components/PrivacyPolicy";
 
 const visitorRouter=[
+<<<<<<< HEAD
 =======
 const visitorRouter = [
 >>>>>>> 42780ad... add User Instruction
+=======
+>>>>>>> 79f5e78... issue32 - Add-Privacy-And-Agreement
   {
     path: '/',
     component: Home,
@@ -219,6 +225,36 @@ const visitorRouter = [
       // },
 =======
 >>>>>>> 42780ad... add User Instruction
+      {
+        path: "/Agreement",
+        name: "UserAgreement",
+        component: UserAgreement
+      },
+      {
+        path: "/privacyPolicy",
+        name: "PrivacyPolicy",
+        component: PrivacyPolicy,
+      },
+      // {
+      //   path: "/inputMarkedPreview",
+      //   name: "inputMarkedPreview",
+      //   component: InputMarkedPreview,
+      // },
+      // {
+      //   path: "/login",
+      //   name: "Login",
+      //   component: Login,
+      // },
+      // {
+      //   path: "/register",
+      //   name: "Register",
+      //   component: Register,
+      // },
+      // {
+      //   path: "/fileUpload",
+      //   name: "FileUpload",
+      //   component: FileUpload,
+      // },
       {
         path: "/bulkImport",
         name: "bulkImport",
