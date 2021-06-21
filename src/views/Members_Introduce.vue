@@ -438,6 +438,11 @@ export default {
                     "name": "余阳",
                     "mail": "yflyl613@mail.ustc.edu.cn",
                     "intro": "中国科学技术大学2021级研究生\nShit happens everyday and life goes on."
+                    },
+                    {
+                    "name": "张裕人",
+                    "mail": "yr160698@mail.ustc.edu.cn",
+                    "intro": "A420窗户管理员，nice型选手"
                     }
                 ],
                 // 特邀工程师
@@ -518,6 +523,7 @@ export default {
                     "林鑫": "/members/林鑫.jpeg",
                     "韩东轩": "/members/韩东轩.jpeg",
                     "余阳": "/members/余阳.png",
+                    "张裕人": "/members/张裕人.jpeg",
                     // 特邀工程师
                     
                     // 技术顾问

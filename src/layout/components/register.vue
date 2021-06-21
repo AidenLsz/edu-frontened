@@ -22,8 +22,8 @@
           </el-col>
         </el-row> -->
         <el-form :model="ruleForm" status-icon :rules="rules" :ref="formName" label-position="left" label-width="80px" class="demo-ruleForm"
-        style="margin-top:50px">
-          <el-form-item label="账号"  prop="username">
+          style="margin-top:30px">
+          <el-form-item label="账号"  prop="username" style="margin-bottom: 15px">
             <el-input
               type="text"
               v-model="ruleForm.username"
@@ -31,13 +31,13 @@
               placeholder="请输入账号名称"
             />
           </el-form-item>
-          <el-form-item label="密码"  prop="password">
+          <el-form-item label="密码"  prop="password" style="margin-bottom: 15px">
             <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码" prop="checkPass">
+          <el-form-item label="确认密码" prop="checkPass" style="margin-bottom: 15px">
             <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="邮箱" prop="email">
+          <el-form-item label="邮箱" prop="email" style="margin-bottom: 15px">
             <el-input
               type="text"
               v-model="ruleForm.email"
@@ -45,7 +45,7 @@
               placeholder="请输入您的邮箱"
             ></el-input>
           </el-form-item>
-          <el-form-item label="手机号码" prop="phone">
+          <el-form-item label="手机号码" prop="phone" style="margin-bottom: 15px">
             <el-input
               type="text"
               v-model="ruleForm.phone"
@@ -53,7 +53,7 @@
               placeholder="请输入您的手机号码"
             ></el-input>
           </el-form-item>
-          <el-form-item label="" label-width="0px" prop="imgCode">
+          <el-form-item label="" label-width="0px" prop="imgCode" style="margin-bottom: 5px">
             <el-col :span="15">
               <el-input
                 type="text"
@@ -68,7 +68,7 @@
               </el-row>
             </el-col>
           </el-form-item>
-          <el-form-item label="" label-width="0px" prop="phoneCode">
+          <el-form-item label="" label-width="0px" prop="phoneCode" style="margin-bottom: 15px">
             <el-col :span="15">
               <el-input type="text" maxlength="6" suffix-icon="el-icon-lock" placeholder="请输入手机验证码" v-model="ruleForm.phoneCode"/>
             </el-col>
@@ -79,8 +79,29 @@
             </el-col>
           </el-form-item>
         </el-form>
+        <el-row style="margin-top: 10px; line-height: 39px; height: 39px">
+          <el-col :span="10">
+            <el-row type="flex" justify="start">
+              <span>完整阅读后方可注册</span>
+            </el-row>
+          </el-col>
+          <el-col :span="7">
+            <el-row type="flex" justify="start">
+              <i v-if="!UserAgreement" class="el-icon-search" @click="OpenUserAgreement()" style="line-height: 39px; color: #409EFD; cursor: pointer"></i>
+              <i v-if="UserAgreement" class="el-icon-check" style="line-height: 39px; color: #409EFD"></i>
+              <el-button type="text" @click="OpenUserAgreement()" style="margin-left: 10px">用户协议</el-button>
+            </el-row>
+          </el-col>
+          <el-col :span="7">
+            <el-row type="flex" justify="start">
+              <i v-if="!PrivacyPolicy" class="el-icon-search" @click="OpenPrivacyPolicy()" style="line-height: 39px; color: #409EFD; cursor: pointer"></i>
+              <i v-if="PrivacyPolicy" class="el-icon-check" style="line-height: 39px; color: #409EFD"></i>
+              <el-button type="text" @click="OpenPrivacyPolicy()" style="margin-left: 10px">隐私政策</el-button>
+            </el-row>
+          </el-col>
+        </el-row>
         <el-row style="margin: 20px 0px">
-          <el-button type="primary" @click="register()" >注册新用户</el-button>
+          <el-button type="primary" @click="register()" :disabled="!UserAgreement || !PrivacyPolicy">注册新用户</el-button>
         </el-row>
       </el-col>
       <el-col :span="12" style="padding-top: 12vh">
@@ -132,6 +153,12 @@ export default {
       }
     }
     return {
+      // 用户政策和隐私协议
+      UserAgreement: false,
+      PrivacyPolicy: false,
+      // 对应的检测
+      UserAgreementTracer: "",
+      PrivacyPolicyTracer: "",
       visible:false,
       imgCodeOrigin:"",
       phoneCodeOrigin:'',
@@ -190,12 +217,53 @@ export default {
         this.$refs[this.formName].resetFields();
       }
       this.visible = newVal;
+    },
+    PrivacyPolicy(newVal){
+      if(newVal){
+        clearInterval(this.CheckPrivacyPolicy())
+      }
     }
   },
   computed:{
 
   },
+  beforeDestroy(){
+    window.localStorage.removeItem("UserAgreement");
+    window.localStorage.removeItem("PrivacyPolicy");
+  },
+  mounted(){
+    window.localStorage.removeItem("UserAgreement");
+    window.localStorage.removeItem("PrivacyPolicy");
+  },
   methods:{
+    // 用户协议
+    OpenUserAgreement(){
+      let routeData = this.$router.resolve({ path: '/Agreement' });
+      window.open(routeData.href, '_blank');
+      this.UserAgreementTracer = setInterval(this.CheckUserAgreement, 1000)
+    },
+    CheckUserAgreement(){
+      if(window.localStorage.getItem("UserAgreement")){
+        this.UserAgreement = true;
+        clearInterval(this.UserAgreementTracer)
+      }else{
+        console.log("UserAgreement Tracing...")
+      }
+    },
+    // 隐私政策
+    OpenPrivacyPolicy(){
+      let routeData = this.$router.resolve({ path: '/privacyPolicy' });
+      window.open(routeData.href, '_blank');
+      this.PrivacyPolicyTracer = setInterval(this.CheckPrivacyPolicy, 1000)
+    },
+    CheckPrivacyPolicy(){
+      if(window.localStorage.getItem("PrivacyPolicy")){
+        this.PrivacyPolicy = true;
+        clearInterval(this.PrivacyPolicyTracer)
+      }else{
+        console.log("PrivacyPolicy Tracing...")
+      }
+    },
     show(){
       this.visible=true
       setTimeout(()=>{
@@ -264,6 +332,8 @@ export default {
       }, 1000);
     },
     register() {
+      window.localStorage.removeItem("UserAgreement")
+      window.localStorage.removeItem("PrivacyPolicy")
       this.$refs[this.formName].validate((valid) => {
         if (!valid) {
           return false;
@@ -321,5 +391,5 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
 </style>

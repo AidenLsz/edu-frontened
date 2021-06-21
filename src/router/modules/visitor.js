@@ -28,6 +28,10 @@ import PaperAnalyseInput from "@/views/resourceAnalyse/PaperAnalyseInput";
 import QuestionAnalyse from "@/views/resourceAnalyse/QuestionAnalyse";
 import QuestionAnalyseInput from "@/views/resourceAnalyse/QuestionAnalyseInput";
 
+// 用户政策与隐私协议
+import UserAgreement from "@/layout/components/UserAgreement";
+import PrivacyPolicy from "@/layout/components/PrivacyPolicy";
+
 const visitorRouter=[
   {
     path: "/",
@@ -117,6 +121,16 @@ const visitorRouter=[
         path: "/inputPaper",
         name: "inputPaper",
         component: InputPaper,
+      },
+      {
+        path: "/Agreement",
+        name: "UserAgreement",
+        component: UserAgreement
+      },
+      {
+        path: "/privacyPolicy",
+        name: "PrivacyPolicy",
+        component: PrivacyPolicy,
       },
       // {
       //   path: "/inputMarkedPreview",
