@@ -80,12 +80,12 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 + layout - 页面布局管理
     -components    页面组件
         -Sidebar      导航栏组件
-        -AppMain.vue  路由嵌套时使用的布局组件    
         -footer.vue   页面底部组件
         -login.vue    登录组件
         -register.vue 注册组件
-    -user.vue      用户登录后页面布局
-    -visitor.vue   未登录时的页面布局
+    -Basic.vue     路由嵌套-基本布局包括固定的头部，尾部   
+    -Container.vue 路由嵌套-仅为一个容器，不对布局产生影响     
+    -SideBar.vue   路由嵌套-左侧菜单栏  
 
 + router - 路由控制
     -index.js   路由总入口
