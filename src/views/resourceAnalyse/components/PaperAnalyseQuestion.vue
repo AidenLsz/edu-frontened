@@ -43,7 +43,7 @@ export default {
   name: "PaperAnalyseQuestion",
   props: {
     Question: Object,
-    Sub_Index: {
+    Sub_Index_Q: {
       type: Number,
       default: -1
     },
@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     Get_Name(After_Str){
-      return this.Name_Q + "_Q_" + this.Sub_Index + "_" + After_Str;
+      return this.Name_Q + "_Q_" + this.Sub_Index_Q + "_" + After_Str;
     },
     Get_Options(optString){
       if(typeof optString == 'object' && typeof optString.length == 'number'){

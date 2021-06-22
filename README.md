@@ -97,3 +97,13 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 + plugins - 插件导入管理
 ```
+
+### Hints Of Mathdown.vue
+```
+此组件需要两个参数进行渲染，一个是content，另一个是name
+content 用于渲染内容，其中支持英文，数字，汉字，<img src='...'>格式的图片，以及最重要的Latex公式，其他内容暂时还没涉及，以后再说。
+name    用于定位内容渲染的组件，命名必须唯一，否则Latex公式和图片会在同一个Mathdown组件内渲染name重复次数的次数
+        例如：有两个name值为 math_1 的 Mathdown 组件，content分别是$0$和$1$，则渲染出来会是$0$$0$，$1$$1$，但对内容无影响
+        且只要此页面不关闭，组件不销毁，则此名称将一直存在，如果为了保证组件渲染正确而写了默认值，千万要注意在循环渲染的时候的name属性赋予
+        为了独立其名称，最好在页面created时就先生成好准备给它的name值，否则可能会导致渲染时，一些前缀还没计算完，Mathdown组件就已经渲染完毕，导致name值出现重复的情况。
+```
