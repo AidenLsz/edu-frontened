@@ -2060,6 +2060,7 @@ export default {
     background: transparent;
     margin-bottom: 40px;
 }
+
 // 知识点难度分析
 .Paper_Knowledge_Difficult_Analyse{
     margin-top: 30px;
