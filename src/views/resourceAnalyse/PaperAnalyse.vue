@@ -183,6 +183,15 @@
             <el-button v-on:click.native="Expand_Or_Collapse_QB(1)" round size="small" plain>收起</el-button>
         </el-row>
     </el-dialog>
+    <el-dialog
+        :visible.sync="analyseDataShow"
+        width="90%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="true"
+        :key="Refresh">
+        <template slot="title"></template>
+        <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
+    </el-dialog>
     <el-row justify="start" type="flex">
         <el-col style="padding-left: 25px; margin-top: 5vh">
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -369,6 +378,18 @@
                 <el-row>
                     <div id="Paper_Total_Difficult_Analyse" class="Paper_Total_Difficult_Analyse"></div>
                 </el-row>
+                <!-- 总分析行 -->
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; text-align: left">
+                    <label>本卷中难度最大的题目是第 {{Max_Difficult}} 题，难度最低的题目是第 {{Min_Difficult}} 题。</label>
+                </el-row>
+                <!-- 提示行 -->
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem">
+                    <label>全卷卷内难度变化如下：</label>
+                </el-row>
+                <!-- 折线图 -->
+                <el-row>
+                    <div id="Paper_Total_Difficult_Analyse_Line" class="Paper_Total_Difficult_Analyse_Line"></div>
+                </el-row>
             </el-row>
         </el-row>
         <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse(1)" style="margin-top: -10px; margin-bottom: 30px">
@@ -416,7 +437,7 @@
                     </el-col>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin: 0px 16.5vw 10px 16.5vw">
-                    <PaperAnalysePQRoot :PackedQues="Sub_Ques" :Index="Sub_Index" style="width: 100%"></PaperAnalysePQRoot>
+                    <PaperAnalysePQRoot @Report="Question_Report_Show" :PackedQues="Sub_Ques" :Index="Sub_Index" style="width: 100%"></PaperAnalysePQRoot>
                 </el-row>
             </el-row>
         </el-row>
@@ -437,15 +458,23 @@ import * as echarts from 'echarts';
 import PaperAnalysePQRoot from './components/PaperAnalysePQRoot.vue';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import QuestionAnalyse from "./QuestionAnalyse.vue"
 
 var PDF = new jsPDF('', 'pt', 'a4');
 
 export default {
 
-    components: { PaperAnalysePQRoot },
+    components: { PaperAnalysePQRoot, QuestionAnalyse },
     name: "PaperAnalyse",
     data(){
         return {
+            // 单题分析报告
+            analyseData: "",
+            analyseDataShow: false,
+            Refresh: false,
+            // 最难，最简单的序号
+            Max_Difficult: -1,
+            Min_Difficult: -1,
             // 保存标志
             transing: false,
             // 跳转至试卷分析的不同地点用的
@@ -463,6 +492,7 @@ export default {
             // 知识点分值和知识点分值对应的名称
             KnowledgeScore_List: [],
             KnowledgeScore_Name_List: [],
+            Question_Difficult_List: [],
             // 知识点对的次数和知识点对对应的名称
             KnowledgePair_List: [],
             KnowledgePair_Name_List: [],
@@ -555,614 +585,7 @@ export default {
                         "三角函数": 0.5146675765514374,
                         "统计与概率": 0.3793210983276367
                     },
-                    "sub_question": [
-                        {
-                            "id": "43482c08-8c71-4166-8490-2d991ba5be0a",
-                            "type": "PackedQues",
-                            "desc": "填空题",
-                            "level": 1,
-                            "score": 4,
-                            "difficulty_statistics": {
-                                "mean": 0.4028695672750473,
-                                "min": 0.29554620385169983,
-                                "max": 0.5101929306983948,
-                                "std": 0.10732336342334747
-                            },
-                            "knowledge_knowledge2num": {
-                                "解析几何::代数": 1
-                            },
-                            "knowledge2difficulty": {
-                                "解析几何": 0.4028695672750473,
-                                "代数": 0.5101929306983948
-                            },
-                            "knowledge2score": {
-                                "解析几何": 4,
-                                "代数": 2
-                            },
-                            "sub_question": [
-                                {
-                                    "id": "812f1b6f-cd74-41a0-9504-dc4fb9d3871b",
-                                    "type": "Question",
-                                    "level": 2,
-                                    "stem": "在平面直角坐标系$\\LUNALaTexPictureID{57511d56-9861-4de6-a896-e2d3e5ffcf0c}$中，椭圆$C$的中心为原点，焦点$F_{1}$、$F_{2}$在$x$轴上，离心率为$\\frac{\\sqrt{2}}{2}$.过点$F_{1}$的直线$l$交椭圆$C$于$A$、$B$两点，且$\\Delta A B F_{2}$的周长为$16$，那么椭圆$C$的方程为________.",
-                                    "options": "",
-                                    "answer": "$\\frac{x^{2}}{16}+\\frac{y^{2}}{8}=1$",
-                                    "analysis": "",
-                                    "difficulty": 0.29554620385169983,
-                                    "score": 2,
-                                    "knowledge_points_frontend": {
-                                        "kp": [
-                                            "圆锥曲线与方程",
-                                            "解析几何",
-                                            "椭圆的定义、标准方程及简单几何性质",
-                                            "直线与圆锥曲线的关系",
-                                            "直线与椭圆的位置关系及其简单应用",
-                                            "圆锥曲线"
-                                        ],
-                                        "kp_layer": [
-                                            {
-                                                "label": "解析几何",
-                                                "children": [
-                                                    {
-                                                        "label": "圆锥曲线与方程",
-                                                        "children": [
-                                                            {
-                                                                "label": "圆锥曲线",
-                                                                "children": []
-                                                            },
-                                                            {
-                                                                "label": "直线与圆锥曲线的关系",
-                                                                "children": [
-                                                                    {
-                                                                        "label": "直线与椭圆的位置关系及其简单应用",
-                                                                        "children": []
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        ],
-                                        "kp_priority": [
-                                            "解析几何",
-                                            "圆锥曲线与方程",
-                                            "圆锥曲线",
-                                            "直线与圆锥曲线的关系",
-                                            "直线与椭圆的位置关系及其简单应用"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "id": "3bd039b1-f8e1-425d-aea9-9b33990fe172",
-                                    "type": "Question",
-                                    "level": 2,
-                                    "stem": "过点$\\LUNALaTexPictureID{3907684b-1bfa-4189-bd04-fa59578c7239}$与曲线$f(x)=x^{3}-x^{2}-2 x+1$相切的直线有___________条（以数字作答）.",
-                                    "options": "",
-                                    "answer": "$2$",
-                                    "analysis": "",
-                                    "difficulty": 0.5101929306983948,
-                                    "score": 2,
-                                    "knowledge_points_frontend": {
-                                        "kp": [
-                                            "函数概念与基本初等函数I",
-                                            "代数",
-                                            "函数及其基本性质",
-                                            "解析几何"
-                                        ],
-                                        "kp_layer": [
-                                            {
-                                                "label": "代数",
-                                                "children": [
-                                                    {
-                                                        "label": "函数概念与基本初等函数I",
-                                                        "children": [
-                                                            {
-                                                                "label": "函数及其基本性质",
-                                                                "children": [
-                                                                    {
-                                                                        "label": "函数的概念",
-                                                                        "children": []
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "label": "解析几何",
-                                                "children": []
-                                            }
-                                        ],
-                                        "kp_priority": [
-                                            "代数",
-                                            "解析几何",
-                                            "函数概念与基本初等函数I",
-                                            "函数及其基本性质",
-                                            "函数的概念"
-                                        ]
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "id": "9d7f1411-677a-4e69-b34e-e87f28e95a78",
-                            "type": "PackedQues",
-                            "desc": "综合题",
-                            "level": 1,
-                            "score": 13,
-                            "difficulty_statistics": {
-                                "mean": 0.6014587627007411,
-                                "min": 0.4640635550022125,
-                                "max": 0.6161502003669739,
-                                "std": 0.03978468727873507
-                            },
-                            "knowledge_knowledge2num": {
-                                "代数::三角函数": 1
-                            },
-                            "knowledge2difficulty": {
-                                "立体几何与平面几何": 0.4640635550022125,
-                                "三角函数": 0.6129083633422852,
-                                "代数": 0.6129083633422852
-                            },
-                            "knowledge2score": {
-                                "立体几何与平面几何": 1,
-                                "三角函数": 12,
-                                "代数": 12
-                            },
-                            "sub_question": [
-                                {
-                                    "id": "67856dca-708c-4aa2-9fd7-8850e3edafaf",
-                                    "type": "PackedQues",
-                                    "desc": "请解答以下问题。",
-                                    "level": 2,
-                                    "score": 13,
-                                    "difficulty_statistics": {
-                                        "mean": 0.6014587627007411,
-                                        "min": 0.4640635550022125,
-                                        "max": 0.6161502003669739,
-                                        "std": 0.03978468727873507
-                                    },
-                                    "knowledge_knowledge2num": {
-                                        "三角函数::代数": 1
-                                    },
-                                    "knowledge2difficulty": {
-                                        "立体几何与平面几何": 0.4640635550022125,
-                                        "三角函数": 0.6129083633422852,
-                                        "代数": 0.6129083633422852
-                                    },
-                                    "knowledge2score": {
-                                        "立体几何与平面几何": 1,
-                                        "三角函数": 12,
-                                        "代数": 12
-                                    },
-                                    "sub_question": [
-                                        {
-                                            "id": "7c2bcff3-0f75-4062-ab0d-8a9441a74d03",
-                                            "type": "Question",
-                                            "level": 3,
-                                            "stem": "要在边长为$\\LUNALaTexPictureID{8b8cc022-63ff-4645-b27f-628f97765f77}$米的正方形草坪上安装喷水龙头，使整个草坪都能喷洒到水．假设每个喷水龙头的喷洒范围都是关径为$6$米的圆面，则需安装这种喷水龙头的个数最少是（　　）",
-                                            "options": "['$3$', '$4$', '$5$', '$6$']",
-                                            "answer": "$B$",
-                                            "analysis": "",
-                                            "difficulty": 0.4640635550022125,
-                                            "score": 1
-                                        },
-                                        {
-                                            "id": "ef94592e-3828-430c-a629-e23b68f392f3",
-                                            "type": "PackedQues",
-                                            "desc": "设$\\LUNALaTexPictureID{099cfbf5-d63a-4aa7-94d7-49c24cbc7a53}$，曲线$x^{2} \\sin \\theta+y^{2} \\cos \\theta=1$和$x^{2} \\cos \\theta-y^{2} \\sin \\theta=1$有$4$个不同的交点。",
-                                            "level": 3,
-                                            "score": 12,
-                                            "difficulty_statistics": {
-                                                "mean": 0.6129083633422852,
-                                                "min": 0.6096665263175964,
-                                                "max": 0.6161502003669739,
-                                                "std": 0.0032418370246887207
-                                            },
-                                            "knowledge_knowledge2num": {
-                                                "代数::三角函数": 2
-                                            },
-                                            "knowledge2difficulty": {
-                                                "三角函数": 0.6129083633422852,
-                                                "代数": 0.6129083633422852
-                                            },
-                                            "knowledge2score": {
-                                                "三角函数": 12,
-                                                "代数": 12
-                                            },
-                                            "sub_question": [
-                                                {
-                                                    "id": "86ed5c6a-53b0-4dd5-8a70-9860b90897bc",
-                                                    "type": "Question",
-                                                    "level": 4,
-                                                    "stem": "求$\\LUNALaTexPictureID{a9fc567d-485a-4ced-aac9-5bbb70ad7b57}$的取值范围；",
-                                                    "options": "",
-                                                    "answer": "",
-                                                    "analysis": "",
-                                                    "difficulty": 0.6096665263175964,
-                                                    "score": 6
-                                                },
-                                                {
-                                                    "id": "bf446a82-96d6-45fc-ad44-2733d1db8128",
-                                                    "type": "Question",
-                                                    "level": 4,
-                                                    "stem": "证明这$\\LUNALaTexPictureID{79c8ee0e-c76c-4aaa-aa47-2cf575b770e8}$个交点共圆，并求圆半径的取值范围。",
-                                                    "options": "",
-                                                    "answer": "",
-                                                    "analysis": "",
-                                                    "difficulty": 0.6161502003669739,
-                                                    "score": 6
-                                                }
-                                            ]
-                                        }
-                                    ],
-                                    "knowledge_points_frontend": {
-                                        "kp": [
-                                            "圆内接四边形的性质定理与判定定理",
-                                            "立体几何与平面几何",
-                                            "直线与圆的位置关系（选）",
-                                            "几何证明选讲（选考内容）"
-                                        ],
-                                        "kp_layer": [
-                                            {
-                                                "label": "立体几何与平面几何",
-                                                "children": [
-                                                    {
-                                                        "label": "几何证明选讲（选考内容）",
-                                                        "children": [
-                                                            {
-                                                                "label": "直线与圆的位置关系（选）",
-                                                                "children": [
-                                                                    {
-                                                                        "label": "圆内接四边形的性质定理与判定定理",
-                                                                        "children": []
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
-                                                    },
-                                                    {
-                                                        "label": "立体几何初步",
-                                                        "children": [
-                                                            {
-                                                                "label": "空间几何体",
-                                                                "children": []
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        ],
-                                        "kp_priority": [
-                                            "立体几何与平面几何",
-                                            "几何证明选讲（选考内容）",
-                                            "空间几何体",
-                                            "直线与圆的位置关系（选）",
-                                            "圆内接四边形的性质定理与判定定理"
-                                        ]
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "id": "ac789714-5394-45f8-9641-966a74a31c67",
-                            "type": "PackedQues",
-                            "desc": "解答题",
-                            "level": 1,
-                            "score": 12,
-                            "difficulty_statistics": {
-                                "mean": 0.37724650899569195,
-                                "min": 0.36151546239852905,
-                                "max": 0.3971267342567444,
-                                "std": 0.014831327958718265
-                            },
-                            "knowledge_knowledge2num": {
-                                "三角函数::代数": 1,
-                                "三角函数::统计与概率": 1,
-                                "代数::统计与概率": 1
-                            },
-                            "knowledge2difficulty": {
-                                "三角函数": 0.3673063963651657,
-                                "代数": 0.36151546239852905,
-                                "统计与概率": 0.3793210983276367
-                            },
-                            "knowledge2score": {
-                                "三角函数": 8,
-                                "代数": 4,
-                                "统计与概率": 8
-                            },
-                            "sub_question": [
-                                {
-                                    "id": "e45b0d29-1444-445f-b71f-f733100f7e91",
-                                    "type": "PackedQues",
-                                    "desc": "某陶瓷厂准备烧制甲、乙、丙三件不同的工艺品，制作过程必须先后经过两次烧制，当第一次烧制合格后方可进入第二次烧制，两次烧制过程相互独立．根据该厂现有的技术水平，经过第一次烧制后，甲、乙、丙三件产品合格的概率依次为$\\LUNALaTexPictureID{a2f1b992-f1f6-4302-be31-1b3ce261c724}$、$0.6$、$0.4$，第二次烧制后，甲、乙、丙三件产品合格的概率依次为$0.6$、$\\LUNALaTexPictureID{a2f1b992-f1f6-4302-be31-1b3ce261c724}$、$0.75$。",
-                                    "level": 2,
-                                    "score": 8,
-                                    "difficulty_statistics": {
-                                        "mean": 0.3793210983276367,
-                                        "min": 0.36151546239852905,
-                                        "max": 0.3971267342567444,
-                                        "std": 0.017805635929107666
-                                    },
-                                    "knowledge_knowledge2num": {
-                                        "代数::三角函数": 1,
-                                        "统计与概率::三角函数": 1,
-                                        "统计与概率::代数": 1
-                                    },
-                                    "knowledge2difficulty": {
-                                        "三角函数": 0.36151546239852905,
-                                        "代数": 0.36151546239852905,
-                                        "统计与概率": 0.3793210983276367
-                                    },
-                                    "knowledge2score": {
-                                        "三角函数": 4,
-                                        "代数": 4,
-                                        "统计与概率": 8
-                                    },
-                                    "sub_question": [
-                                        {
-                                            "id": "ded078a1-20bd-4354-b847-e7b71a02dd40",
-                                            "type": "Question",
-                                            "level": 3,
-                                            "stem": "求第一次烧制后恰有一件产品合格的概率；",
-                                            "options": "",
-                                            "answer": "分别记甲、乙、丙经第一次烧制后合格为事件$\\LUNALaTexPictureID{189b6d98-384d-46b1-9385-7aa84cc67e16}$， $A_{2}$，$A_{3}$设$E$表示第一次烧制后恰好有一件合格，则$P=0.38$::因为每件工艺品经过两次烧制后合格的概率均为$p=0.3$，所以$\\xi \\sim B(30, 0.3)$，故$E \\xi=x p=3 \\times 0.3=0.9$．",
-                                            "analysis": "",
-                                            "difficulty": 0.36151546239852905,
-                                            "score": 4
-                                        },
-                                        {
-                                            "id": "f5c073b3-e0c7-45e4-b8b4-53c97792a3fa",
-                                            "type": "Question",
-                                            "level": 3,
-                                            "stem": "经过前后两次烧制后，合格工艺品的个数为$\\LUNALaTexPictureID{8701cc30-2975-4215-aac0-7418edc597c9}$，求随机变量$\\LUNALaTexPictureID{8701cc30-2975-4215-aac0-7418edc597c9}$的期望．",
-                                            "options": "",
-                                            "answer": "分别记甲、乙、丙经第一次烧制后合格为事件$A_{1}$， $A_{2}$，$A_{3}$设$E$表示第一次烧制后恰好有一件合格，则$P=0.38$::因为每件工艺品经过两次烧制后合格的概率均为$p=0.3$，所以$\\xi \\sim B(30, 0.3)$，故$E \\xi=x p=3 \\times 0.3=0.9$．",
-                                            "analysis": "",
-                                            "difficulty": 0.3971267342567444,
-                                            "score": 4
-                                        }
-                                    ],
-                                    "knowledge_points_frontend": {
-                                        "kp": [
-                                            "随机变量及其分布",
-                                            "统计与概率",
-                                            "概率",
-                                            "离散型随机变量及其分布列",
-                                            "离散型随机变量的均值、方差"
-                                        ],
-                                        "kp_layer": [
-                                            {
-                                                "label": "代数",
-                                                "children": []
-                                            },
-                                            {
-                                                "label": "三角函数",
-                                                "children": []
-                                            },
-                                            {
-                                                "label": "统计与概率",
-                                                "children": [
-                                                    {
-                                                        "label": "概率",
-                                                        "children": [
-                                                            {
-                                                                "label": "概率初步",
-                                                                "children": []
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        ],
-                                        "kp_priority": [
-                                            "代数",
-                                            "三角函数",
-                                            "统计与概率",
-                                            "概率",
-                                            "概率初步"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "id": "b51bc253-90eb-4968-ba5f-79be3cc808b8",
-                                    "type": "PackedQues",
-                                    "desc": "请计算以下问题。",
-                                    "level": 2,
-                                    "score": 4,
-                                    "difficulty_statistics": {
-                                        "mean": 0.37309733033180237,
-                                        "min": 0.37309733033180237,
-                                        "max": 0.37309733033180237,
-                                        "std": 0.0
-                                    },
-                                    "knowledge_knowledge2num": {},
-                                    "knowledge2difficulty": {
-                                        "三角函数": 0.37309733033180237
-                                    },
-                                    "knowledge2score": {
-                                        "三角函数": 4
-                                    },
-                                    "sub_question": [
-                                        {
-                                            "id": "7db9674f-17be-4b48-bff8-0989d31cb93c",
-                                            "type": "Question",
-                                            "level": 3,
-                                            "stem": "方程$\\LUNALaTexPictureID{828f4cea-bda1-4f8a-8b6c-0f1b85980750}$在区间$(0,2\\pi)$内的解的个数。",
-                                            "options": "",
-                                            "answer": "本小题考查三角方程的解。原方程等价于$\\sin x=0$或$\\cos x=\\frac{1}{2}$，又$x \\in(0,2\\pi)$，∴$x=\\frac{\\pi}{3}$或$x=\\pi$或$x=\\frac{5 \\pi}{3}$。本题难度：中等",
-                                            "analysis": "",
-                                            "difficulty": 0.37309733033180237,
-                                            "score": 4
-                                        }
-                                    ],
-                                    "knowledge_points_frontend": {
-                                        "kp": [
-                                            "三角函数",
-                                            "三角函数的图象与性质",
-                                            "基本初等函数II"
-                                        ],
-                                        "kp_layer": [
-                                            {
-                                                "label": "三角函数",
-                                                "children": [
-                                                    {
-                                                        "label": "基本初等函数II",
-                                                        "children": [
-                                                            {
-                                                                "label": "任意角的三角函数",
-                                                                "children": [
-                                                                    {
-                                                                        "label": "任意角的三角函数（正弦、余弦、正切）的定义",
-                                                                        "children": []
-                                                                    }
-                                                                ]
-                                                            },
-                                                            {
-                                                                "label": "三角函数的图象与性质",
-                                                                "children": []
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        ],
-                                        "kp_priority": [
-                                            "三角函数",
-                                            "基本初等函数II",
-                                            "任意角的三角函数",
-                                            "三角函数的图象与性质",
-                                            "任意角的三角函数（正弦、余弦、正切）的定义"
-                                        ]
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "id": "da5146bf-6f05-47d5-bd2b-d77b77a6e576",
-                            "type": "PackedQues",
-                            "desc": "选择题: 请从以下四个选项中，选出一个正确的答案。",
-                            "level": 1,
-                            "score": 2,
-                            "difficulty_statistics": {
-                                "mean": 0.4369961768388748,
-                                "min": 0.4020228981971741,
-                                "max": 0.47196945548057556,
-                                "std": 0.034973278641700745
-                            },
-                            "knowledge_knowledge2num": {},
-                            "knowledge2difficulty": {
-                                "代数": 0.4369961768388748
-                            },
-                            "knowledge2score": {
-                                "代数": 2
-                            },
-                            "sub_question": [
-                                {
-                                    "id": "0b1b75ac-3053-45b5-9244-65b0dbb9d9f1",
-                                    "type": "Question",
-                                    "level": 2,
-                                    "stem": "从$\\LUNALaTexPictureID{59dae23f-c8cd-4771-8711-d6a20d1c0118}$名男生和$3$名女生中选出$3$人，分别从事三项不同的工作，若这$3$人中至少有$1$名女生，则选派方案共有(  )种",
-                                    "options": "['$108$种', '$186$种', '$216$种', '$270$种']",
-                                    "answer": "$B$",
-                                    "analysis": "",
-                                    "difficulty": 0.4020228981971741,
-                                    "score": 1,
-                                    "knowledge_points_frontend": {
-                                        "kp": [
-                                            "排列、组合与二项式定理",
-                                            "代数",
-                                            "计数原理"
-                                        ],
-                                        "kp_layer": [
-                                            {
-                                                "label": "代数",
-                                                "children": [
-                                                    {
-                                                        "label": "不等式",
-                                                        "children": []
-                                                    },
-                                                    {
-                                                        "label": "计数原理",
-                                                        "children": [
-                                                            {
-                                                                "label": "排列、组合与二项式定理",
-                                                                "children": [
-                                                                    {
-                                                                        "label": "排列与组合的简单应用",
-                                                                        "children": []
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        ],
-                                        "kp_priority": [
-                                            "代数",
-                                            "不等式",
-                                            "计数原理",
-                                            "排列、组合与二项式定理",
-                                            "排列与组合的简单应用"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "id": "4bc1ada9-0364-45be-8f80-4960c9327c20",
-                                    "type": "Question",
-                                    "level": 2,
-                                    "stem": "设函数$\\LUNALaTexPictureID{d6f31644-c14a-4097-9048-9ba0b0f01d01}$,集合$M=\\{x | f(x)<0\\}$,$P=\\left\\{x | f^{\\prime}(x)>0\\right\\}$,若$M\\subset P$,则实数$a$的取值范围是 (     )",
-                                    "options": "['$(-\\infty,1)$', '$(0,1)$', '$(1,+\\infty)$', '$[1,+\\infty)$']",
-                                    "answer": "",
-                                    "analysis": "",
-                                    "difficulty": 0.47196945548057556,
-                                    "score": 1,
-                                    "knowledge_points_frontend": {
-                                        "kp": [
-                                            "代数",
-                                            "集合间的关系与运算",
-                                            "集合"
-                                        ],
-                                        "kp_layer": [
-                                            {
-                                                "label": "代数",
-                                                "children": [
-                                                    {
-                                                        "label": "集合",
-                                                        "children": [
-                                                            {
-                                                                "label": "集合间的关系与运算",
-                                                                "children": [
-                                                                    {
-                                                                        "label": "集合之间的基本关系",
-                                                                        "children": []
-                                                                    },
-                                                                    {
-                                                                        "label": "集合的基本运算",
-                                                                        "children": []
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        ],
-                                        "kp_priority": [
-                                            "代数",
-                                            "集合",
-                                            "集合间的关系与运算",
-                                            "集合之间的基本关系",
-                                            "集合的基本运算"
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    ]
+                    "sub_question": []
               }
             }
         }
@@ -1172,6 +595,11 @@ export default {
         window.scrollTo(0, 0);
     },
     methods: {
+        Question_Report_Show(val){
+            this.analyseData = JSON.parse(val)
+            this.analyseDataShow = true
+            this.Refresh = !this.Refresh;
+        },
         PAS(index){
             if(index == 0){
                 this.$router.push({ path: "/paperAnalyseInput" });
@@ -1836,6 +1264,63 @@ export default {
             window.addEventListener('resize',function() {myChart.resize()});
 
         },
+        Init_Paper_Total_Difficult_Analyse_Line(){
+
+            var chartDom = document.getElementById('Paper_Total_Difficult_Analyse_Line');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+                title: {
+                    text: "卷内难度波动",
+                    x: "center",
+                    y: "top",
+                    textStyle: { 
+                        fontSize: 16,
+                        fontStyle: 'normal',
+                        fontWeight: 'bold',
+                    },
+                    padding: [5,5,40,25]
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    textStyle: { 
+                        fontSize: 14,
+                        fontStyle: 'normal',
+                        align: 'left'
+                    }
+                },
+                color: ["#409EFD"],
+                xAxis: {
+                    type: 'category',
+                    data: []
+                },
+                yAxis: {
+                    type: 'value',
+                    min: 0.0,
+                    max: 1.0
+                },
+                series: [{
+                    name: "试题难度",
+                    data: [],
+                    type: 'line',
+                    smooth: true,
+                    label: {
+                        show: true
+                    }
+                }]
+            }
+
+            for(let i = 0; i < this.Question_Difficult_List.length; i++){
+                option.xAxis.data.push("第" + (i+1) + "题");
+                option.series[0].data.push(this.Question_Difficult_List[i])
+            }
+
+
+            myChart.setOption(option);
+            window.addEventListener('resize',function() {myChart.resize()});
+
+        },
         // 初始化总体的知识点难度分布的那张柱状图的方法
         Init_Paper_Knowledge_Difficult_Analyse(){
 
@@ -2460,9 +1945,37 @@ export default {
                 this.KnowledgePair_List.push(Temp_Pair_Max_Count)
             }
 
+            let Temp_Max = -1;
+            let Temp_Min = 2;
+
+            let count = 1;
+
+            for(let i = 0; i < this.Paper_Json.sub_question.length; i++){
+                for(let j = 0; j < this.Paper_Json.sub_question[i].sub_question.length; j++){
+                    let D = 0;
+                    if(this.Paper_Json.sub_question[i].sub_question[j].difficulty){
+                        D = this.Paper_Json.sub_question[i].sub_question[j].difficulty
+                    }else{
+                        D = this.Paper_Json.sub_question[i].sub_question[j].difficulty_statistics.mean;
+                    }
+                    D = parseFloat(D.toFixed(3));
+                    this.Question_Difficult_List.push(D);
+                    if(D <= Temp_Min){
+                        Temp_Min = D;
+                        this.Min_Difficult = count;
+                    }
+                    if(D >= Temp_Max){
+                        Temp_Max = D;
+                        this.Max_Difficult = count;
+                    }
+                    count = count + 1;
+                }
+            }
+
             setTimeout(()=>{
                 this.Init_Paper_Total_Bar();
                 this.Init_Paper_Total_Difficult_Analyse();
+                this.Init_Paper_Total_Difficult_Analyse_Line();
                 this.Get_Max_Difficult_Gap();
                 this.Init_Paper_Knowledge_Difficult_Analyse();
                 this.Init_Paper_Knowledge_Score_Analyse();
@@ -2534,6 +2047,17 @@ export default {
     margin-left: calc(100vw * 0.165);  
     border: 3px solid #EEF5FE; 
     background: #EEF5FE;
+    margin-bottom: 40px;
+}
+.Paper_Total_Difficult_Analyse_Line{
+    margin-top: 30px;
+    border-radius: 10px; 
+    width: 67vw; 
+    height:350px; 
+    padding-top: 10px; 
+    margin-left: calc(100vw * 0.165);  
+    border: 3px solid #EEF5FE; 
+    background: transparent;
     margin-bottom: 40px;
 }
 // 知识点难度分析
