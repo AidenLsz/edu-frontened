@@ -1,4 +1,4 @@
-import VisitorLayout from '@/layout/visitor'
+// import VisitorLayout from '@/layout/visitor'
 
 // Views主目录
 import Admin from "@/views/Admin";
@@ -28,100 +28,165 @@ import PaperAnalyseInput from "@/views/resourceAnalyse/PaperAnalyseInput";
 import QuestionAnalyse from "@/views/resourceAnalyse/QuestionAnalyse";
 import QuestionAnalyseInput from "@/views/resourceAnalyse/QuestionAnalyseInput";
 
+<<<<<<< HEAD
 // 用户政策与隐私协议
 import UserAgreement from "@/layout/components/UserAgreement";
 import PrivacyPolicy from "@/layout/components/PrivacyPolicy";
 
 const visitorRouter=[
+=======
+const visitorRouter = [
+>>>>>>> 42780ad... add User Instruction
   {
-    path: "/",
-    name: "Home",
-    component: VisitorLayout,
+    path: '/',
+    component: Home,
+  },
+  {
+    path: "/ku",
+    name: "Knowledge Unit",
+    component: KU,
+  },
+  {
+    path: "/exercise",
+    name: "Exercise",
+    component: Exercise,
+  },
+  {
+    path: "/searchPaper",
+    name: "SearchPaper",
+    component: SearchPaper,
+  },
+  {
+    path: "/paperDetailShow",
+    name: "PaperDetailShow",
+    component: PaperDetailShow,
+  },
+  {
+    path: "/resources",
+    name: "Resources",
+    component: Resources,
+  },
+  {
+    path: "/estimate",
+    name: "Estimate",
+    component: Estimate,
+  },
+  {
+    path: "/similarity",
+    name: "Similarity",
+    component: Similarity,
+  },
+  {
+    path: "/inputMarked",
+    name: "inputMarked",
+    component: InputMarked,
+  },
+  {
+    path: "/testPage",
+    name: "TestPage",
+    component: TestPage
+  },
+  {
+    path: "/testPageList",
+    name: "TestPageList",
+    component: TestPageList
+  },
+  {
+    path: "/members",
+    name: "Members",
+    component: Members
+  },
+  {
+    path: "/paperAnalyse",
+    name: "PaperAnalyse",
+    component: PaperAnalyse
+  },
+  {
+    path: "/paperAnalyseInput",
+    name: "PaperAnalyseInput",
+    component: PaperAnalyseInput,
+  },
+  {
+    path: "/questionAnalyse",
+    name: "QuestionAnalyse",
+    component: QuestionAnalyse
+  },
+  {
+    path: "/questionAnalyseInput",
+    name: "QuestionAnalyseInput",
+    component: QuestionAnalyseInput
+  },
+  {
+    path: "/inputPaper",
+    name: "inputPaper",
+    component: InputPaper,
+  },
+  // {
+  //   path: "/inputMarkedPreview",
+  //   name: "inputMarkedPreview",
+  //   component: InputMarkedPreview,
+  // },
+  // {
+  //   path: "/login",
+  //   name: "Login",
+  //   component: Login,
+  // },
+  // {
+  //   path: "/register",
+  //   name: "Register",
+  //   component: Register,
+  // },
+  // {
+  //   path: "/fileUpload",
+  //   name: "FileUpload",
+  //   component: FileUpload,
+  // },
+  {
+    path: "/admin",
+    name: "Admin",
+    component: Admin,
     children: [
       {
-        path: '/',
-        component: Home,
+        path: "/eduData",
+        name: "eduData",
+        component: () => import("@/views/admin/EduData.vue"),
       },
       {
-        path: "/ku",
-        name: "Knowledge Unit",
-        component: KU,
+        path: "/concept",
+        name: "concept",
+        component: () => import("@/views/admin/concept.vue"),
       },
       {
-        path: "/exercise",
-        name: "Exercise",
-        component: Exercise,
+        path: "/knowledgePoint",
+        name: "knowledgePoint",
+        component: () => import("@/views/admin/knowledgePoint.vue"),
       },
       {
-        path: "/searchPaper",
-        name: "SearchPaper",
-        component: SearchPaper,
+        path: "/KPNew",
+        name: "KPNew",
+        component: () => import("@/views/admin/KPNew.vue"),
       },
       {
-        path: "/paperDetailShow",
-        name: "PaperDetailShow",
-        component: PaperDetailShow,
+        path: "/relation",
+        name: "relation",
+        component: () => import("@/views/admin/relation.vue"),
       },
       {
-        path: "/resources",
-        name: "Resources",
-        component: Resources,
+        path: "/neeaNode",
+        name: "neeaNode",
+        component: () => import("@/views/admin/neeaNode.vue"),
       },
       {
-        path: "/estimate",
-        name: "Estimate",
-        component: Estimate,
+        path: "/importNode",
+        name: "importNode",
+        component: () => import("@/views/admin/importNode.vue"),
       },
       {
-        path: "/similarity",
-        name: "Similarity",
-        component: Similarity,
+        path: "/importEdge",
+        name: "importEdge",
+        component: () => import("@/views/admin/importEdge.vue"),
       },
-      {
-        path: "/inputMarked",
-        name: "inputMarked",
-        component: InputMarked,
-      },
-      {
-        path: "/testPage",
-        name: "TestPage",
-        component: TestPage
-      },
-      {
-        path: "/testPageList",
-        name: "TestPageList",
-        component: TestPageList
-      },
-      {
-        path: "/members",
-        name: "Members",
-        component: Members
-      },
-      {
-        path: "/paperAnalyse",
-        name: "PaperAnalyse",
-        component: PaperAnalyse
-      },
-      {
-        path: "/paperAnalyseInput",
-        name: "PaperAnalyseInput",
-        component: PaperAnalyseInput,
-      },
-      {
-        path: "/questionAnalyse",
-        name: "QuestionAnalyse",
-        component: QuestionAnalyse
-      },
-      {
-        path: "/questionAnalyseInput",
-        name: "QuestionAnalyseInput",
-        component: QuestionAnalyseInput
-      },
-      {
-        path: "/inputPaper",
-        name: "inputPaper",
-        component: InputPaper,
-      },
+<<<<<<< HEAD
       {
         path: "/Agreement",
         name: "UserAgreement",
@@ -152,74 +217,30 @@ const visitorRouter=[
       //   name: "FileUpload",
       //   component: FileUpload,
       // },
+=======
+>>>>>>> 42780ad... add User Instruction
       {
-        path: "/admin",
-        name: "Admin",
-        component: Admin,
-        children: [
-          {
-            path: "/eduData",
-            name: "eduData",
-            component: () => import("@/views/admin/EduData.vue"),
-          },
-          {
-            path: "/concept",
-            name: "concept",
-            component: () => import("@/views/admin/concept.vue"),
-          },
-          {
-            path: "/knowledgePoint",
-            name: "knowledgePoint",
-            component: () => import("@/views/admin/knowledgePoint.vue"),
-          },
-          {
-            path: "/KPNew",
-            name: "KPNew",
-            component: () => import("@/views/admin/KPNew.vue"),
-          },
-          {
-            path: "/relation",
-            name: "relation",
-            component: () => import("@/views/admin/relation.vue"),
-          },
-          {
-            path: "/neeaNode",
-            name: "neeaNode",
-            component: () => import("@/views/admin/neeaNode.vue"),
-          },
-          {
-            path: "/importNode",
-            name: "importNode",
-            component: () => import("@/views/admin/importNode.vue"),
-          },
-          {
-            path: "/importEdge",
-            name: "importEdge",
-            component: () => import("@/views/admin/importEdge.vue"),
-          },
-          {
-            path: "/bulkImport",
-            name: "bulkImport",
-            component: () => import("@/views/admin/bulkImport.vue"),
-          },
-          {
-            path: "/checkExercise",
-            name: "checkExercise",
-            component: () => import("@/views/admin/checkExercise.vue"),
-          },
-        ],
+        path: "/bulkImport",
+        name: "bulkImport",
+        component: () => import("@/views/admin/bulkImport.vue"),
       },
       {
-        name: "404",
-        path: "/404",
-        component: () => import("@/views/404.vue"),
+        path: "/checkExercise",
+        name: "checkExercise",
+        component: () => import("@/views/admin/checkExercise.vue"),
       },
-      {
-        path: "*",
-        redirect: "/404",
-      },
-    ]
-  }
+    ],
+  },
+  {
+    name: "404",
+    path: "/404",
+    component: () => import("@/views/404.vue"),
+  },
+  {
+    path: "*",
+    redirect: "/404",
+  },
 ]
+
 
 export default  visitorRouter

@@ -1,10 +1,9 @@
 <template lang="html">
   <el-container style="height:100%">
-    <el-header style="height:70px">
+    <!-- <el-header style="height:70px">
       <el-row>
         <el-col :span="6">
           <img src="@/assets/luna_icon.png" alt="Logo" width="150px" style="cursor: pointer" />
-          <!-- <img src="@/assets/luna_icon.png" alt="Logo" width="150px" style="cursor: pointer" @click="goToMainPage"/> -->
         </el-col>
         <el-col :span="3" :offset="15">
           <img class="user-icon" src="https://gravatar.loli.net/avatar/d41d8cd98f00b204e9800998ecf8427e?d=mp" alt="">
@@ -18,24 +17,24 @@
           </el-dropdown>
         </el-col>
       </el-row>
-    </el-header>
+    </el-header> -->
     <el-container :class="classObj">
-      <sideBar style="height:100%;background:#fff;"/>
+      <sideBar style=";background:#fff;"/>
       <el-main style="background:#fff;margin:15px;border-radius:5px;">
         <router-view :key="$route.fullPath"></router-view>
       </el-main>
     </el-container>
-    <basic-footer/>
+    <!-- <basic-footer/> -->
   </el-container>
 </template>
 
 <script>
-import BasicFooter from '@/layout/components/footer.vue'
+// import BasicFooter from '@/layout/components/footer.vue'
 import sideBar from './components/Sidebar/index.vue'
 export default {
   components:{
     sideBar,
-    BasicFooter
+    // BasicFooter
   },
   data() {
     return {
