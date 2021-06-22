@@ -246,8 +246,6 @@ export default {
       if(window.localStorage.getItem("UserAgreement")){
         this.UserAgreement = true;
         clearInterval(this.UserAgreementTracer)
-      }else{
-        console.log("UserAgreement Tracing...")
       }
     },
     // 隐私政策
@@ -260,8 +258,6 @@ export default {
       if(window.localStorage.getItem("PrivacyPolicy")){
         this.PrivacyPolicy = true;
         clearInterval(this.PrivacyPolicyTracer)
-      }else{
-        console.log("PrivacyPolicy Tracing...")
       }
     },
     show(){
