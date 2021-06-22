@@ -117,6 +117,16 @@ const visitorRouter=[
     name: "inputPaper",
     component: InputPaper,
   },
+  {
+    path: "/Agreement",
+    name: "UserAgreement",
+    component: UserAgreement
+  },
+  {
+    path: "/privacyPolicy",
+    name: "PrivacyPolicy",
+    component: PrivacyPolicy,
+  },
   // {
   //   path: "/inputMarkedPreview",
   //   name: "inputMarkedPreview",
@@ -182,16 +192,26 @@ const visitorRouter=[
         name: "importEdge",
         component: () => import("@/views/admin/importEdge.vue"),
       },
-      {
-        path: "/Agreement",
-        name: "UserAgreement",
-        component: UserAgreement
-      },
-      {
-        path: "/privacyPolicy",
-        name: "PrivacyPolicy",
-        component: PrivacyPolicy,
-      },
+      // {
+      //   path: "/inputMarkedPreview",
+      //   name: "inputMarkedPreview",
+      //   component: InputMarkedPreview,
+      // },
+      // {
+      //   path: "/login",
+      //   name: "Login",
+      //   component: Login,
+      // },
+      // {
+      //   path: "/register",
+      //   name: "Register",
+      //   component: Register,
+      // },
+      // {
+      //   path: "/fileUpload",
+      //   name: "FileUpload",
+      //   component: FileUpload,
+      // },
       {
         path: "/bulkImport",
         name: "bulkImport",
