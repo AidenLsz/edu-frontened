@@ -2,7 +2,7 @@
   <div >
     <!-- <logo v-if="showLogo" :collapse="isCollapse" /> -->
 
-    <el-scrollbar wrap-class="scrollbar-wrapper" style="background:#fff;">
+    <el-scrollbar wrap-class="scrollbar-wrapper" style="background:#fff;overflow:scroll;height:100%;">
       <div class="user-info" v-show="$store.state.app.sidebar.opened">
         <i class="el-icon-s-fold" v-show="$store.state.app.sidebar.opened" v-on:click="toggleSideBar()"></i>
         <div>
@@ -19,7 +19,6 @@
       </div>
       <div style="margin:0 10px;border-bottom:solid 1px #eee">
       </div>
-      <!-- style="width:200px;background:none;border-right:none;min-height:95vh" -->
       <el-menu
         style="border-right:none"
         :default-active="activeMenu"
@@ -56,8 +55,9 @@ export default {
       'sidebar'
     ]),
     routes() {
-      // console.log(this.$router.options.routes.filter(data=>data.path!='/'))
-      return this.$router.options.routes.filter(data=>data.path!='/')
+      // console.log(this.$router.options.routes[0].children)
+      // console.log(this.$router.options.routes[0].children.filter(data=>data.path=='/manage'));
+      return this.$router.options.routes[0].children.filter(data=>data.showSideBar)[0].children
       // return this.$router.options.routes
     },
     activeMenu() {
@@ -108,6 +108,7 @@ export default {
   flex-direction: column;
   align-items:center;
   justify-content: center;
+  margin-top:5px;
   >div{
     display: flex;
     .user-icon{
@@ -128,7 +129,7 @@ export default {
   .el-icon-s-fold{
     position: absolute;
     color:#909399;
-    top:3px;
+    top:15px;
     right:10px;
   }
 }
@@ -136,7 +137,7 @@ export default {
   font-size: 20px;
 }
 .el-icon-s-unfold {
-  padding-left:22px;
+  padding-left:12px;
   text-align: center;
   vertical-align: middle;
 }

@@ -4,6 +4,7 @@ import VisitorRouter from '@/router/modules/visitor.js'
 import UserRouter from '@/router/modules/user.js'
 import store from '@/store'
 import {Message } from 'element-ui'
+import Layout from '@/layout/Basic'
 
 // import  AppMain from '@/layout/components/AppMain'
 
@@ -20,7 +21,14 @@ Vue.use(Router);
 Vue.use(mavonEditor);
 const router = new Router({
   mode: "history",
-  routes: UserRouter.concat(VisitorRouter)
+  routes: [
+    {
+      path: "/",
+      name: "Home",
+      component: Layout,
+      children:UserRouter.concat(VisitorRouter)
+    }
+  ]
 });
 
 // 路由控制
@@ -37,10 +45,6 @@ router.beforeEach((to, from, next) => {
   //   "checkExercise",
   // ];
   const route = [
-    "/dashboard",
-    "/user",
-    "/input/",
-    "/search/",
     "/analysis/",
     "/manage/",
   ];
