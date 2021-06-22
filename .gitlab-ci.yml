@@ -38,6 +38,7 @@ review:
   stage: review
   image: registry.git.bdaa.pro:4567/yxonic/bdaa-deploy-image:v3.0.2
   before_script:
+  # - helm repo add stable http://mirror.azure.cn/kubernetes/charts
   - helm repo add stable https://burdenbear.github.io/kube-charts-mirror/
   script:
   - export API_VERSION=$(cat chart/Chart.yaml | grep apiVersion | cut -d\  -f2)
@@ -79,6 +80,7 @@ production:
   stage: production
   image: registry.git.bdaa.pro:4567/yxonic/bdaa-deploy-image:v3.0.2
   before_script:
+  # - helm repo add stable http://mirror.azure.cn/kubernetes/charts
   - helm repo add stable https://burdenbear.github.io/kube-charts-mirror/
   script:
   - export API_VERSION=$(cat chart/Chart.yaml | grep apiVersion | cut -d\  -f2)
@@ -108,4 +110,3 @@ production:
     - master
     kubernetes: active
   when: manual
-

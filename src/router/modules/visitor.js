@@ -192,26 +192,6 @@ const visitorRouter=[
         name: "PrivacyPolicy",
         component: PrivacyPolicy,
       },
-      // {
-      //   path: "/inputMarkedPreview",
-      //   name: "inputMarkedPreview",
-      //   component: InputMarkedPreview,
-      // },
-      // {
-      //   path: "/login",
-      //   name: "Login",
-      //   component: Login,
-      // },
-      // {
-      //   path: "/register",
-      //   name: "Register",
-      //   component: Register,
-      // },
-      // {
-      //   path: "/fileUpload",
-      //   name: "FileUpload",
-      //   component: FileUpload,
-      // },
       {
         path: "/bulkImport",
         name: "bulkImport",
