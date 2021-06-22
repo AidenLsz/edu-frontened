@@ -85,10 +85,6 @@
               <span>完整阅读后方可注册</span>
             </el-row>
           </el-col>
-<<<<<<< HEAD
-          
-=======
->>>>>>> 79f5e78... issue32 - Add-Privacy-And-Agreement
           <el-col :span="7">
             <el-row type="flex" justify="start">
               <i v-if="!UserAgreement" class="el-icon-search" @click="OpenUserAgreement()" style="line-height: 39px; color: #409EFD; cursor: pointer"></i>
@@ -96,10 +92,6 @@
               <el-button type="text" @click="OpenUserAgreement()" style="margin-left: 10px">用户协议</el-button>
             </el-row>
           </el-col>
-<<<<<<< HEAD
-
-=======
->>>>>>> 79f5e78... issue32 - Add-Privacy-And-Agreement
           <el-col :span="7">
             <el-row type="flex" justify="start">
               <i v-if="!PrivacyPolicy" class="el-icon-search" @click="OpenPrivacyPolicy()" style="line-height: 39px; color: #409EFD; cursor: pointer"></i>
