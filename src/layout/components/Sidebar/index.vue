@@ -2,7 +2,7 @@
   <div >
     <!-- <logo v-if="showLogo" :collapse="isCollapse" /> -->
 
-    <el-scrollbar wrap-class="scrollbar-wrapper" style="background:#fff;overflow:scroll;height:100%;">
+    <el-scrollbar wrap-class="scrollbar-wrapper" style="background:#fff; height:100%;">
       <div class="user-info" v-show="$store.state.app.sidebar.opened">
         <i class="el-icon-s-fold" v-show="$store.state.app.sidebar.opened" v-on:click="toggleSideBar()"></i>
         <div>
@@ -19,22 +19,24 @@
       </div>
       <div style="margin:0 10px;border-bottom:solid 1px #eee">
       </div>
-      <el-menu
-        style="border-right:none"
-        :default-active="activeMenu"
-        :collapse="isCollapse"
-        :background-color="variables.menuBg"
-        :text-color="variables.menuText"
-        :unique-opened="false"
-        :active-text-color="variables.menuActiveText"
-        :collapse-transition="false"
-        mode="vertical"
-      >
-        <el-menu-item  class="submenu-title-noDropdown" v-show="!$store.state.app.sidebar.opened" v-on:click="toggleSideBar()">
-            <i class="el-icon-s-unfold" ></i>
-        </el-menu-item>
-        <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
-      </el-menu>
+      <el-row style="width: 96%; margin-left: 2%">
+        <el-menu
+          style="display: block; margin-left: -20px; border-right: none;"
+          :default-active="activeMenu"
+          :collapse="isCollapse"
+          :background-color="variables.menuBg"
+          :text-color="variables.menuText"
+          :unique-opened="true"
+          :active-text-color="variables.menuActiveText"
+          :collapse-transition="false"
+          mode="vertical"
+        >
+          <el-menu-item  class="submenu-title-noDropdown" v-show="!$store.state.app.sidebar.opened" v-on:click="toggleSideBar()">
+              <i class="el-icon-s-unfold" ></i>
+          </el-menu-item>
+          <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path"/>
+        </el-menu>
+      </el-row>
     </el-scrollbar>
   </div>
 </template>
