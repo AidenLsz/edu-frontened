@@ -91,6 +91,7 @@ export default {
   },
   data() {
     return {
+        // 这个是用于检索的关键字，如果要显示用户信息的话之后手写一个方法放上去就好
         userGroup: "中国科学技术大学",
         userName: "",
         mailAddress: "",

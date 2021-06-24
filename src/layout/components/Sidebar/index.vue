@@ -17,8 +17,7 @@
           </div>
         </div>
       </div>
-      <div style="margin:0 10px;border-bottom:solid 1px #eee">
-      </div>
+      <el-divider></el-divider>
       <el-row style="width: 96%; margin-left: 2%">
         <el-menu
           style="display: block; margin-left: -20px; border-right: none;"
