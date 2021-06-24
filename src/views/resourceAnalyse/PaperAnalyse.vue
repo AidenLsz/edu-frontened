@@ -357,10 +357,14 @@
                     <div id="Paper_Knowledge_Pair" class="Paper_Knowledge_Pair"></div>
                 </el-row>
                 <!-- 知识点覆盖程度部分 -->
-                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left; display: none">
-                    <label>本卷覆盖的知识点比例尚待进一步分析。（下方区域是圆环图今后大致的占位区域）</label>
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left;">
+                    <label>与大纲相对比，本卷覆盖了大纲中 {{Get_Cover_Ratio()}} 的一级知识点。一级知识点覆盖情况如下：</label>
                 </el-row>
-                <el-row style="display: none">
+                <!-- 提示行 -->
+                <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem">
+                    <label>各知识点所占分值为：</label>
+                </el-row>
+                <el-row>
                     <div id="Paper_Knowledge_Cover" class="Paper_Knowledge_Cover"></div>
                 </el-row>
             </el-row>
@@ -1909,6 +1913,113 @@ export default {
                 return '#CCC'
             }
         },
+        // 偷偷摸摸塞进来，这里是添加一级知识点覆盖情况的旭日图
+        Init_Paper_Knowledge_Cover_Sunburst(){
+            let Line_Chart_1 = echarts.init(document.getElementById("Paper_Knowledge_Cover"));
+            let Level_Data = []
+
+            let Temp_List = this.Paper_Json.all_level_one_knowledge_point;
+            let Check_List = [];
+
+            for(let i = 0 ; i < Temp_List.length; i++){
+                if(Check_List.indexOf(Temp_List[i]) == -1){
+                    Check_List.push(Temp_List[i])
+                }
+            }
+
+            let Have_List = this.Paper_Json.level_one_knowledge_point;
+
+            for(let i = 0; i < Check_List.length; i++){
+                if(Have_List.indexOf(Check_List[i]) != -1){
+                    Level_Data.push({
+                        name: Check_List[i],
+                        value: 1,
+                        itemStyle: {
+                            color: "#409EFD",
+                        },
+                        label: {
+                            color: "#409EFD"
+                        },
+                        children: []
+                    })
+                }else{
+                    Level_Data.push({
+                        name: Check_List[i],
+                        value: 1,
+                        itemStyle: {
+                            color: "Gainsboro",
+                        },
+                        label: {
+                            color: "Gainsboro"
+                        },
+                        children: []
+                    })
+                }
+            }
+
+            console.log(Level_Data)
+
+            let Liberal_Option_1 = {
+            
+                title: {
+                    text: "一级知识点覆盖状态图",
+                    x: "left",
+                    y: "top",
+                    textStyle: { 
+                        fontSize: 16,
+                        fontStyle: 'normal',
+                        fontWeight: 'bold',
+                    },
+                    padding: [5,5,40,25]
+                },
+                series: {
+                    type: 'sunburst',
+
+                    data: Level_Data,
+                    radius: [0, '95%'],
+                    sort: null,
+
+                    emphasis: {
+                        focus: 'ancestor'
+                    },
+
+                    levels: [{}, {
+                        r0: '20%',
+                        r: '60%',
+                        itemStyle: {
+                            borderWidth: 2
+                        },
+                        label: {
+                            rotate: 'radial',
+                            position: 'outside',
+                            padding: 3,
+                            silent: false
+                        }
+                    }]
+                }
+            }
+
+            Line_Chart_1.setOption(Liberal_Option_1);
+            window.addEventListener('resize',function() {Line_Chart_1.resize()});
+        },
+        // 覆盖率的计算
+        Get_Cover_Ratio(){
+
+            let Temp_List = this.Paper_Json.all_level_one_knowledge_point;
+            let Check_List = [];
+
+            for(let i = 0 ; i < Temp_List.length; i++){
+                if(Check_List.indexOf(Temp_List[i]) == -1){
+                    Check_List.push(Temp_List[i])
+                }
+            }
+
+            let Have_List = this.Paper_Json.level_one_knowledge_point;
+
+            let R = parseFloat(Have_List.length / Check_List.length).toFixed(4) * 100 + "%"
+
+            return R
+        },
         // 初始化数据的方法，不要动，放到最下面就得了
         // 千把来行着实太长了，展开了翻起来都费劲
         Init(){
@@ -1980,6 +2091,7 @@ export default {
                 this.Init_Paper_Knowledge_Difficult_Analyse();
                 this.Init_Paper_Knowledge_Score_Analyse();
                 this.Init_Paper_Knowledge_Pair();
+                this.Init_Paper_Knowledge_Cover_Sunburst();
             }, 100)
         },
     }
@@ -2078,7 +2190,7 @@ export default {
     margin-top: 30px;
     border-radius: 10px; 
     width: 67vw; 
-    height:350px; 
+    height:600px; 
     padding-top: 10px; 
     margin-left: calc(100vw * 0.165);  
     border: 3px solid #EEF5FE; 

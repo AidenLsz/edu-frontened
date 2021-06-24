@@ -1,6 +1,9 @@
 <template>
   <div style="margin: 30px">
     <el-row style="margin: 50px 0px">
+      <div id="Line_Chart_0" class="Line_Chart_1" ></div>
+    </el-row>
+    <el-row style="margin: 50px 0px">
       <div id="Line_Chart_1" class="Line_Chart_1" ></div>
     </el-row>
     <el-row style="margin: 50px 0px">
@@ -52,11 +55,92 @@ export default {
     },
     methods: {
       Init_Line_Chart(){
+          this.Init_LC_0();
         this.Init_Line_Chart_Liberal_Char();
         this.Init_Line_Chart_Liberal_Img();
         this.Init_Line_Chart_Liberal_Answer();
         this.Init_Line_Chart_Liberal_Poem();
         this.Init_Line_Chart_Liberal_Diff_Char();
+      },
+      Init_LC_0(){
+
+        // 尝试做一张旭日图
+
+        let Line_Chart_1 = echarts.init(document.getElementById("Line_Chart_0"));
+        let Level_Data = []
+
+        let Check_List = [1,2,3,4,5,6,7,8];
+        let Have_List = [1,2,3,5,7];
+
+        for(let i = 0; i < Check_List.length; i++){
+            if(Have_List.indexOf(Check_List[i]) != -1){
+                Level_Data.push({
+                    name: i + "",
+                    value: 1,
+                    itemStyle: {
+                        color: "#409EFD",
+                    },
+                    label: {
+                        color: "white"
+                    },
+                    children: []
+                })
+            }else{
+                Level_Data.push({
+                    name: i + "",
+                    value: 1,
+                    itemStyle: {
+                        color: "grey",
+                    },
+                    label: {
+                        color: "white"
+                    },
+                    children: []
+                })
+            }
+        }
+
+        console.log(Level_Data)
+
+        let Liberal_Option_1 = {
+          
+            title: {
+                text: "尝试做的旭日图",
+                x: "center",
+                y: "top",
+                textStyle: { 
+                    fontSize: 16,
+                    fontStyle: 'normal',
+                    fontWeight: 'bold',
+                },
+                padding: [5,5,40,25]
+            },
+            series: {
+                type: 'sunburst',
+
+                data: Level_Data,
+                radius: [0, '95%'],
+                sort: null,
+
+                emphasis: {
+                    focus: 'ancestor'
+                },
+
+                levels: [{}, {
+                    r0: '15%',
+                    r: '70%',
+                    itemStyle: {
+                        borderWidth: 2
+                    },
+                    label: {
+                        rotate: 'tangential'
+                    }
+                }]
+            }
+        }
+
+        Line_Chart_1.setOption(Liberal_Option_1);
+        window.addEventListener('resize',function() {Line_Chart_1.resize()});
       },
       Init_Line_Chart_Liberal_Char(){
         // 语文总字数波动
