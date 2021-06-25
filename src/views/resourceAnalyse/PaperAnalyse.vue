@@ -281,16 +281,19 @@
             </el-col>
         </el-row>
         <el-row :class="Get_Expand_Or_Collapse(1)">
-            <el-row style="width: 18vw; margin-left: 41vw; margin-top: 10px; border: 1px solid #409EFD; border-radius: 10px; height: 30px">
-                <el-col :span="12" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;" :class="Check_Total_Switch(true)" v-on:click.native="Paper_Total_Analyse_Focus = true">
+            <el-row style="width: 24vw; margin-left: 38vw; margin-top: 10px; border: 1px solid #409EFD; border-radius: 10px; height: 30px">
+                <el-col :span="8" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;" :class="Check_Total_Switch(0)" v-on:click.native="Paper_Total_Analyse_Focus = 0">
                     知识点分析
                 </el-col>
-                <el-col :span="12" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;" :class="Check_Total_Switch(false)" v-on:click.native="Paper_Total_Analyse_Focus = false">
+                <el-col :span="8" :class="Check_Total_Switch(1)" v-on:click.native="Paper_Total_Analyse_Focus = 1">
                     难度分析
+                </el-col>
+                <el-col :span="8" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;" :class="Check_Total_Switch(2)" v-on:click.native="Paper_Total_Analyse_Focus = 2">
+                    双向细目表分析
                 </el-col>
             </el-row>
             <!-- 知识点分析 -->
-            <el-row :class="Paper_Total_Analyse_Hidden(true)">
+            <el-row :class="Paper_Total_Analyse_Hidden(0)">
                 <!-- 知识点难度分析部分 -->
                 <!-- 总分析行 -->
                 <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; text-align: left">
@@ -369,7 +372,7 @@
                 </el-row>
             </el-row>
             <!-- 难度分析 -->
-            <el-row :class="Paper_Total_Analyse_Hidden(false)">
+            <el-row :class="Paper_Total_Analyse_Hidden(1)">
                 <!-- 总分析行 -->
                 <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; text-align: left">
                     <label>本卷难度平均值为&nbsp;&nbsp;{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}&nbsp;&nbsp;，占比最大的题目难度区间为&nbsp;&nbsp;{{Max_Gap}}</label>
@@ -393,6 +396,86 @@
                 <!-- 折线图 -->
                 <el-row>
                     <div id="Paper_Total_Difficult_Analyse_Line" class="Paper_Total_Difficult_Analyse_Line"></div>
+                </el-row>
+            </el-row>
+            <!-- 双向细目表分析 -->
+            <el-row :class="Paper_Total_Analyse_Hidden(2)" style="margin-bottom: 30px">
+                <!-- 表头 -->
+                <el-row style="margin: 30px 16.5vw 0px 16.5vw;">
+                  <el-col :span="3">
+                      <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8; border-left: 2px solid #D8D8D8;">
+                          <label>题型</label>
+                      </el-row>
+                  </el-col>
+                  <el-col :span="21">
+                      <el-row type="flex" justify="center">
+                        <el-col :span="2">
+                            <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8;">
+                                <label>题号</label>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="2">
+                            <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8;">
+                                <label>分值</label>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="16">
+                            <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8;">
+                                <label>知识点</label>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="4">
+                            <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8; border-right: 2px solid #D8D8D8;">
+                                <label>试题难度</label>
+                            </el-row>
+                        </el-col>
+                      </el-row>
+                  </el-col>
+                </el-row>
+                <el-row style="margin: 0px 16.5vw 0px 16.5vw" v-for="(Item, Index) in Double_Analyse" :key="'DA_' + Index">
+                  <el-col :span="3">
+                      <el-row :style="Double_Analyse_Pos(Index)">
+                          <label>{{Item.type}}</label>
+                      </el-row>
+                  </el-col>
+                  <el-col :span="21">
+                      <el-row v-for="(Info, ii) in Item.items" :key="'DA_' + Index + '_' + ii">
+                          <el-row type="flex" justify="center" :style="Get_Double_Table_Background(Info.index)">
+                            <el-col :span="2">
+                                <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border">
+                                    {{Info.index}}
+                                </el-row>
+                                <el-row v-else type="flex" justify="center" class="Double_Table_Border" style="border-bottom: 2px solid #D8D8D8;">
+                                    {{Info.index}}
+                                </el-row>
+                            </el-col>
+                            <el-col :span="2">
+                                <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border">
+                                    {{Info.score}}
+                                </el-row>
+                                <el-row v-else type="flex" justify="center" class="Double_Table_Border" style="border-bottom: 2px solid #D8D8D8;">
+                                    {{Info.score}}
+                                </el-row>
+                            </el-col>
+                            <el-col :span="16">
+                                <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border">
+                                    <el-button v-for="(KU, ki) in Info.kp" :key="'KU_' + ki" @click="submit(KU)" type="text" style="margin-top: -5px">{{ KU }}</el-button>
+                                </el-row>
+                                <el-row v-else type="flex" justify="center" class="Double_Table_Border" style="border-bottom: 2px solid #D8D8D8;">
+                                    <el-button v-for="(KU, ki) in Info.kp" :key="'KU_' + ki" @click="submit(KU)" type="text" style="margin-top: -5px">{{ KU }}</el-button>
+                                </el-row>
+                            </el-col>
+                            <el-col :span="4">
+                                <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border" style="border-right: 2px solid #D8D8D8;">
+                                    {{Info.difficulty.toFixed(5)}}
+                                </el-row>
+                                <el-row v-else type="flex" justify="center" class="Double_Table_Border" style="border-right: 2px solid #D8D8D8; border-bottom: 2px solid #D8D8D8;">
+                                    {{Info.difficulty.toFixed(5)}}
+                                </el-row>
+                            </el-col>
+                        </el-row>
+                      </el-row>
+                  </el-col>
                 </el-row>
             </el-row>
         </el-row>
@@ -472,6 +555,10 @@ export default {
     name: "PaperAnalyse",
     data(){
         return {
+            // 双相啥的分析报告
+            Double_Analyse: [],
+            // 还是写个最后一行的标签吧
+            Double_Count: -1,
             // 单题分析报告
             analyseData: "",
             analyseDataShow: false,
@@ -487,7 +574,8 @@ export default {
             // 总体分析界面是否展开/折叠
             Part_Expand: [true, false, false, false],
             // 总体分析页面展开的是知识点分析还是难度分析的区分变量
-            Paper_Total_Analyse_Focus: true,
+            // 6月25日，新加第三项了，改成0/1/2了
+            Paper_Total_Analyse_Focus: 0,
             // 占比最大的题目难度区间
             Max_Gap: "",
             // 大题分析页面是否展开/折叠
@@ -599,6 +687,46 @@ export default {
         window.scrollTo(0, 0);
     },
     methods: {
+        // 点击检索
+        submit(KU) {
+            let routeData = this.$router.resolve({
+                name: "Knowledge Unit",
+            });
+            sessionStorage.setItem("KUFromPaperAnalyse", KU)
+            window.open(routeData.href, '_blank');
+        },
+        // 双向分析，表格单行的颜色
+        Get_Double_Table_Background(Index){
+            let Style1 = {
+                "background": "transparent"
+            }
+            let Style2 = {
+                "background": "#F8FBFF"
+            }
+            if(Index % 2 != 1){
+                return Style1
+            }else{
+                return Style2
+            }
+        },
+        // 获取双相分析每一行题型的Pos
+        Double_Analyse_Pos(Index){
+            let Style = {
+                "height" : (this.Double_Analyse[Index].items.length * 30) + "px",
+                "line-height": (this.Double_Analyse[Index].items.length * 30) + "px",
+                "border": "1px solid #D8D8D8",
+                "border-left": "2px solid #D8D8D8",
+                "border-bottom": "1px solid #D8D8D8",
+                "background": "transparent",
+                "-webkit-box-sizing": "border-box",
+                "-moz-box-sizing": "border-box",
+                "box-sizing": "border-box"
+            }
+            if(Index == this.Double_Analyse.length - 1){
+                Style['border-bottom'] = "2px solid #D8D8D8"
+            }
+            return Style
+        },
         Question_Report_Show(val){
             this.analyseData = JSON.parse(val)
             this.analyseDataShow = true
@@ -2061,9 +2189,35 @@ export default {
 
             let count = 1;
 
+            let Temp_List = this.Paper_Json.all_level_one_knowledge_point;
+            let Check_List = [];
+
+            for(let i = 0 ; i < Temp_List.length; i++){
+                if(Check_List.indexOf(Temp_List[i]) == -1){
+                    Check_List.push(Temp_List[i])
+                }
+            }
+
+            this.Double_Analyse = [];
+
             for(let i = 0; i < this.Paper_Json.sub_question.length; i++){
+                let Double_Item = {
+                    type: this.Paper_Json.sub_question[i].desc,
+                    items: []
+                };
                 for(let j = 0; j < this.Paper_Json.sub_question[i].sub_question.length; j++){
                     let D = 0;
+                    let Double_Element = {
+                        score: this.Paper_Json.sub_question[i].sub_question[j].score,
+                        kp: [],
+                        difficulty: this.Paper_Json.sub_question[i].sub_question[j].difficulty,
+                        index: count
+                    };
+
+                    for(let eleI = 0; eleI < this.Paper_Json.sub_question[i].sub_question[j].knowledge_points_frontend.kp_layer.length; eleI++){
+                        Double_Element.kp.push(this.Paper_Json.sub_question[i].sub_question[j].knowledge_points_frontend.kp_layer[eleI].label)
+                    }
+
                     if(this.Paper_Json.sub_question[i].sub_question[j].difficulty){
                         D = this.Paper_Json.sub_question[i].sub_question[j].difficulty
                     }else{
@@ -2080,7 +2234,10 @@ export default {
                         this.Max_Difficult = count;
                     }
                     count = count + 1;
+                    Double_Item.items.push(Double_Element)
                 }
+                this.Double_Analyse.push(Double_Item);
+                this.Double_Count = count - 1;
             }
 
             setTimeout(()=>{
@@ -2268,11 +2425,13 @@ export default {
     padding-top: 5px;
     background: #409EFD;
     color: white;
+    cursor: pointer;
 }
 .Paper_Total_Analyse_Unfocus{
     margin-top: -1px;
     height: 30px;
     padding-top: 5px;
+    cursor: pointer;
 }
 // 表格单行，双行
 .Total_Table_Single{
@@ -2282,5 +2441,14 @@ export default {
 .Total_Table_Double{
     background: #F8FBFF;
     margin: 0 16.5vw;
+}
+// 双相分析单表格行
+.Double_Table_Border{
+    border: 1px solid #D8D8D8;
+    height: 30px;
+    line-height: 30px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 </style>
