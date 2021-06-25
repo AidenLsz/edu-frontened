@@ -591,9 +591,6 @@ export default {
         let routeData = this.$router.resolve({ path: '/paperDetailShow' });
         window.open(routeData.href, '_blank');
         this.$message.success("试题详情内容已在新页面展开。");
-        // this.analyseReport = true;
-        // this.Question_Analysing = false
-        // this.analyseData = data.que_dic
       })
 
 

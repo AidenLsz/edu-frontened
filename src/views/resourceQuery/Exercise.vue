@@ -385,9 +385,8 @@ export default {
       Expand_List: [],
       // 页码
       Page_Index: 1,
-      // 单页长度，总页数
+      // 单页长度
       Page_Length: 5,
-      Total_Page: -1,
       // 能搜索到的题目数量
       Total_Count: -1,
       // loading

@@ -167,7 +167,8 @@
                       {{ $store.state.user.name }}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                      <!-- <el-dropdown-item v-if="$store.state.user.name" @click.native="goToUserPage">用户首页</el-dropdown-item> -->
+                      <el-dropdown-item @click.native="checkUserInfo">个人设置</el-dropdown-item>
+                      <el-dropdown-item @click.native="checkUserGroup">组织架构</el-dropdown-item>
                       <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -252,6 +253,13 @@ export default {
     }
   },
   methods: {
+    // 查看用户个人信息及组织架构
+    checkUserInfo(){
+      this.$router.push({ path: "/user/userInfo" });
+    },
+    checkUserGroup(){
+      this.$router.push({ path: "/user/userGroup" });
+    },
     QAS(index){
       if(index == 0){
         this.$router.push({ path: "/QuestionAnalyseInput" });
