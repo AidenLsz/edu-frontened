@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 90vw; margin-left: 5vw; padding-top: 60px;">
     <!-- 地址框 -->
     <el-row justify="start" type="flex">
       <el-col :span="7">
@@ -121,7 +121,7 @@ export default {
       mailAddress: "mailAddress@mail.ustc.edu.cn",
       phoneNumber: "13222337890",
       securitySetting: false,
-      oldPassword: "12345678",
+      oldPassword: "",
       newPassword: "",
       repPassword: ""
     }

@@ -3,6 +3,25 @@ import ContainerLayout from '@/layout/Container'
 
 const UserRouter=[
   {
+    path: 'user',
+    meta: { title: '用户管理', icon: 'el-icon-user-solid' },
+    component: ContainerLayout,
+    children: [
+      {
+        path:'userInfo',
+        component: () => import('@/views/manage/userMessage/userInfo'),
+        name: '',
+        meta: { title: '个人信息', icon: '' }
+      },
+      {
+        path:'userGroup',
+        component: () => import('@/views/manage/userMessage/userGroup'),
+        name: '',
+        meta: { title: '组织架构', icon: '' }
+      },
+    ]
+  },
+  {
     path: '/manage',
     component: SidebarLayout,
     showSideBar:true,
@@ -111,25 +130,7 @@ const UserRouter=[
           },
         ]
       },
-      {
-        path: 'user',
-        meta: { title: '用户管理', icon: 'el-icon-user-solid' },
-        component: ContainerLayout,
-        children: [
-          {
-            path:'userInfo',
-            component: () => import('@/views/manage/userMessage/userInfo'),
-            name: '',
-            meta: { title: '个人信息', icon: '' }
-          },
-          {
-            path:'userGroup',
-            component: () => import('@/views/manage/userMessage/userGroup'),
-            name: '',
-            meta: { title: '组织架构', icon: '' }
-          },
-        ]
-      },
+      
     ]
   },
 

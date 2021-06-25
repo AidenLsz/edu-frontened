@@ -358,11 +358,11 @@
                 </el-row>
                 <!-- 知识点覆盖程度部分 -->
                 <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem; margin-top: 30px; margin-right: 16.5vw; text-align: left;">
-                    <label>与大纲相对比，本卷覆盖了大纲中 {{Get_Cover_Ratio()}} 的一级知识点。一级知识点覆盖情况如下：</label>
+                    <label>与大纲相对比，本卷覆盖了大纲中 {{Get_Cover_Ratio()}} 的一级知识点。</label>
                 </el-row>
                 <!-- 提示行 -->
                 <el-row type="flex" justify="start" style="margin-left: 16.5vw; width: 67vw; font-size: 1.5rem">
-                    <label>各知识点所占分值为：</label>
+                    <label>一级知识点覆盖情况如下：</label>
                 </el-row>
                 <el-row>
                     <div id="Paper_Knowledge_Cover" class="Paper_Knowledge_Cover"></div>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 90vw; margin-left: 5vw; padding-top: 60px;">
     <!-- 地址框 -->
     <el-row justify="start" type="flex">
       <el-col :span="7">
