@@ -250,6 +250,10 @@ export default {
       this.ku_name = this.$route.params.name;
       this.submit(this.ku_name);
     }
+    if (sessionStorage.getItem('KUFromPaperAnalyse')){
+      this.ku_name = sessionStorage.getItem('KUFromPaperAnalyse');
+      this.submit(this.ku_name);
+    }
     this.ToTop();
   },
   beforeDestroy() {
@@ -400,6 +404,9 @@ export default {
             this.handleSwitchTabs()
             this.drawGraph()
             this.loading = false;
+          }
+          if(sessionStorage.getItem("KUFromPaperAnalyse")){
+            sessionStorage.removeItem("KUFromPaperAnalyse")
           }
         })
         .catch(()=>{
