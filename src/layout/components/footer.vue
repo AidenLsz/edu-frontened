@@ -3,9 +3,9 @@
   <el-footer>
     <el-col class="footer-wrap" style="color: #9B9EA4; padding: 30px; font-size: 16px; background: #E4E7ED">
       <el-row type="flex" justify="center">
-          <el-link :underline="false" style="color: #9B9EA4; font-size: 16px">服务条款</el-link>
+          <el-link :underline="false" style="color: #9B9EA4; font-size: 16px" @click="Router_Trans(0)">服务条款</el-link>
           <el-divider direction="vertical"></el-divider>
-          <el-link :underline="false" style="color: #9B9EA4; font-size: 16px">隐私政策</el-link>
+          <el-link :underline="false" style="color: #9B9EA4; font-size: 16px" @click="Router_Trans(1)">隐私政策</el-link>
           <el-divider direction="vertical"></el-divider>
           <el-link :underline="false" style="color: #9B9EA4; font-size: 16px">联系我们</el-link>
       </el-row>
@@ -27,6 +27,13 @@ export default {
       location.reload();
       window.scrollTo(0,0);
     },
+    Router_Trans(index){
+      let Routes = ['/Agreement', '/privacyPolicy'];
+      let Aim = Routes[index];
+      sessionStorage.setItem("OnlyCheck", "1");
+      let routeData = this.$router.resolve({ path: Aim });
+      window.open(routeData.href, '_blank');
+    }
   }
 }
 </script>

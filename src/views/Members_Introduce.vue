@@ -359,11 +359,6 @@ export default {
                     "intro": "睡觉大王\n拥有一只同样爱睡觉的小猫"
                     },
                     {
-                    "name": "翟佳伦",
-                    "mail": "jlzhai@ustc.edu",
-                    "intro": "头铁"
-                    },
-                    {
                     "name": "张鑫",
                     "mail": "438518244@qq.com",
                     "intro": "略懂音乐，审美过关，经常面向ddl编程"
@@ -489,6 +484,10 @@ export default {
                     "name": "唐华楹",
                     "mail": "iamthy@mail.ustc.edu.cn",
                     "intro": "中国科学技术大学2021级研究生\n基于ddl的摸鱼科学与技术专业"
+                    },{
+                    "name": "翟佳伦",
+                    "mail": "jlzhai@ustc.edu",
+                    "intro": "头铁"
                     }
                 ],
                 "img_path": {
@@ -507,7 +506,6 @@ export default {
                     "杨哲": "/members/杨哲.jpg",
                     "洪玉婷": "/members/洪玉婷.jpg",
                     "童世炜": "/members/童世炜.jpg",
-                    "翟佳伦": "/members/翟佳伦.jpg",
                     "覃龙虎": "/members/覃龙虎.jpg",
                     "金鑫": "/members/金鑫.jpg",
                     "雷思琦": "/members/雷思琦.jpg",
@@ -520,7 +518,6 @@ export default {
                     "龚政": "/members/龚政.jpg",
                     "黄小青": "/members/黄小青.jpg",
                     "单明晖": "/members/单明晖.jpeg",
-                    "唐华楹": "/members/唐华楹.jpeg",
                     "赵辰阳": "/members/赵辰阳.jpeg",
                     "马爽": "/members/马爽.jpeg",
                     "高海涵": "/members/高海涵.jpeg",
@@ -539,7 +536,9 @@ export default {
                     // 历任成员
                     "杨青": "/members/杨青.jpg",
                     "梁先锋": "/members/梁先锋.jpeg",
-                    "韩浩宇": "/members/韩浩宇.jpeg"
+                    "韩浩宇": "/members/韩浩宇.jpeg",
+                    "唐华楹": "/members/唐华楹.jpeg",
+                    "翟佳伦": "/members/翟佳伦.jpg",
                 }
             }
         }
