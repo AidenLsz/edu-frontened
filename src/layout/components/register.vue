@@ -176,7 +176,7 @@ export default {
     }
     var validateInviteCode =(rule,value,callback) =>{
       if (value !== 'luna') {
-        callback(new Error('邀请码无效!'));
+        callback(new Error('邀请码错误!'));
       }else{
         callback()
       }
