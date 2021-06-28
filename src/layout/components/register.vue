@@ -21,7 +21,7 @@
             ></el-input>
           </el-col>
         </el-row> -->
-        <el-form :model="ruleForm" status-icon :rules="rules" :ref="formName" label-position="left" label-width="80px" class="demo-ruleForm"
+        <el-form :model="ruleForm" status-icon :rules="rules" :ref="formName" label-position="left" label-width="90px" class="demo-ruleForm"
           style="margin-top:30px">
           <el-form-item label="账号"  prop="username" style="margin-bottom: 15px">
             <el-input
@@ -53,7 +53,29 @@
               placeholder="请输入您的手机号码"
             ></el-input>
           </el-form-item>
-          <el-form-item label="" label-width="0px" prop="imgCode" style="margin-bottom: 5px">
+          <el-form-item prop="inviteCode">
+            <template slot="label">
+              邀请码
+              <el-tooltip  class="item" effect="dark" placement="right">
+                <div class="instruction" slot="content">
+                  <p>
+                    1、请发送邮件至tongsw@mail.ustc.edu.cn获取邀请码。
+                  </p>
+                  <p>
+                    2、邮件中须说明申请人姓名，手机，邮箱，工作单位和用途等信息。
+                  </p>
+                </div>
+                <i class="el-icon-question"></i>
+              </el-tooltip>
+            </template>
+            <el-input
+              type="text"
+              v-model="ruleForm.inviteCode"
+              auto-complete="off"
+              placeholder="请输入邀请码"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="" label-width="0px" prop="imgCode">
             <el-col :span="15">
               <el-input
                 type="text"
@@ -152,6 +174,13 @@ export default {
         callback()
       }
     }
+    var validateInviteCode =(rule,value,callback) =>{
+      if (value !== 'luna') {
+        callback(new Error('邀请码错误!'));
+      }else{
+        callback()
+      }
+    }
     return {
       // 用户政策和隐私协议
       UserAgreement: false,
@@ -173,6 +202,7 @@ export default {
         password: '',
         email: '',
         phone: '',
+        inviteCode:''
         // phone: '19916935265'
       },
       rules: {
@@ -198,6 +228,10 @@ export default {
             pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,
             message: "请输入正确的手机号码"
           }
+        ],
+        inviteCode: [
+          { required: true, message: "请输入邀请码", trigger: "blur" },
+          { validator: validateInviteCode, trigger: ['blur'] }
         ],
         imgCode: [
           { required: true, message: '请输入图形验证码', trigger: 'blur' },
@@ -270,37 +304,26 @@ export default {
       this.visible=false
     },
     getPhoneCode(){
-       this.$refs[this.formName].validateField('phone', (err) =>{
-          if(err){
-              return;
-          }
-          this.$refs[this.formName].validateField('imgCode', (err) =>{
-             if(err){
-                 return;
-             }
-             this.tackBtn();   //验证码倒数60秒
-             this.phoneCodeOrigin=this.getRandomCode(4)
-             let fd ={
-               'phoneNumber':['+86'+this.ruleForm.phone],
-               'code':[this.phoneCodeOrigin]
-             }
-             // let postCfg = {
-             //    headers: {'Content-Type': 'application/json;charset=UTF-8'}
-             // };
-             axios.post(this.getPhoneCodeUrl,
-               JSON.stringify(fd),
-               // qs.stringify(fd),
-               // { emulateJSON: true }
-             )
-             .then( res => {
-                 // console.log(res);
-                 if (res.status==200) {
-                   // let data =JSON.parse(res.data[0])
-                   console.log('发送成功');
-                 }
-             })
-          })
+      let validateList = [];
+      this.$refs[this.formName].validateField(['phone','imgCode','inviteCode'], (err) =>{
+          validateList.push(err)
       })
+      if (validateList.every((err) => err === '')) {
+        this.tackBtn();   //验证码倒数60秒
+        this.phoneCodeOrigin=this.getRandomCode(4)
+        let fd ={
+          'phoneNumber':['+86'+this.ruleForm.phone],
+          'code':[this.phoneCodeOrigin]
+        }
+        axios.post(this.getPhoneCodeUrl,
+          JSON.stringify(fd),
+        )
+        .then( res => {
+            if (res.status==200) {
+              console.log('发送成功');
+            }
+        })
+      }
     },
     getRandomCode(count=6){
       const arr=['0','1','2','3','4','5','6','7','8','9']
