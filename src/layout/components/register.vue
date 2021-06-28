@@ -21,7 +21,7 @@
             ></el-input>
           </el-col>
         </el-row> -->
-        <el-form :model="ruleForm" status-icon :rules="rules" :ref="formName" label-position="left" label-width="80px" class="demo-ruleForm"
+        <el-form :model="ruleForm" status-icon :rules="rules" :ref="formName" label-position="left" label-width="90px" class="demo-ruleForm"
           style="margin-top:30px">
           <el-form-item label="账号"  prop="username" style="margin-bottom: 15px">
             <el-input
@@ -53,7 +53,21 @@
               placeholder="请输入您的手机号码"
             ></el-input>
           </el-form-item>
-          <el-form-item label="邀请码" prop="inviteCode">
+          <el-form-item prop="inviteCode">
+            <template slot="label">
+              邀请码
+              <el-tooltip  class="item" effect="dark" placement="right">
+                <div class="instruction" slot="content">
+                  <p>
+                    1、请发送邮件至tongsw@mail.ustc.edu.cn获取邀请码。
+                  </p>
+                  <p>
+                    2、邮件中须说明申请人姓名，手机，邮箱，工作单位和用途等信息。
+                  </p>
+                </div>
+                <i class="el-icon-question"></i>
+              </el-tooltip>
+            </template>
             <el-input
               type="text"
               v-model="ruleForm.inviteCode"
@@ -162,7 +176,7 @@ export default {
     }
     var validateInviteCode =(rule,value,callback) =>{
       if (value !== 'luna') {
-        callback(new Error('邀请码无效！请发送邮件至tongsw@mail.ustc.edu.cn获取。'));
+        callback(new Error('邀请码无效!'));
       }else{
         callback()
       }
