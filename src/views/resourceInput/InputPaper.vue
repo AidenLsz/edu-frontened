@@ -1004,9 +1004,9 @@
               <i v-if="!Expand" @click="Expand_Type_Change()" class="el-icon-arrow-right"></i>
             </el-col>
             <el-col :span="8" style="text-align: left; font-size: 20px">
-              添加题包
+              添加大题
             </el-col>
-            <el-col :span="9">
+            <el-col :span="9" style="display: none">
               <el-button @click="showHint = true" size="mini" type="danger" plain>非法格式提示</el-button>
             </el-col>
           </el-row>

@@ -1023,9 +1023,9 @@
               <i v-if="!Expand" @click="Expand_Type_Change()" class="el-icon-arrow-right"></i>
             </el-col>
             <el-col :span="8" style="text-align: left; font-size: 20px">
-              添加题包
+              添加大题
             </el-col>
-            <el-col :span="9">
+            <el-col :span="9" style="display: none">
               <el-button @click="showHint = true" size="mini" type="danger" plain>非法格式提示</el-button>
             </el-col>
           </el-row>
@@ -1063,17 +1063,17 @@
             <label>文件导入</label>
           </el-button>
         </el-row>
-        <el-row type="flex" justify="center" style="padding-top: 30px">
+        <el-row type="flex" justify="center" style="padding-top: 30px; display: none">
           <el-button type="primary" @click="paperShow = true" plain style="width: 200px; font-size: 16px"  :disabled="Blank_Paper()">
             <label>预览全卷</label>
           </el-button>
         </el-row>
-        <el-row type="flex" justify="center" style="padding-top: 30px">
+        <el-row type="flex" justify="center" style="padding-top: 30px" v-if="Login_Check()">
           <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="SessionCache()" :disabled="Blank_Paper()">
             <label>暂存内容</label>
           </el-button>
         </el-row>
-        <el-row type="flex" justify="center" style="padding-top: 30px" v-if="Authority_Check()" >
+        <el-row type="flex" justify="center" style="padding-top: 30px" v-if="Login_Check()" >
           <el-button type="warning" plain style="width: 200px; font-size: 16px" @click="PaperUpload('export')" :disabled="Blank_Paper()">
             <label>导出题目</label>
           </el-button>
@@ -1862,9 +1862,8 @@ export default {
       }
     },
     // 权限检查
-    Authority_Check(){
-      var username = sessionStorage.getItem("user");
-      if(username === "advanced" || username === "admin"){
+    Login_Check(){
+      if(this.$store.state.user.name){
         return true
       }else{
         return false
