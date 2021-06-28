@@ -467,10 +467,10 @@
                             </el-col>
                             <el-col :span="4">
                                 <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border" style="border-right: 2px solid #D8D8D8;">
-                                    {{Info.difficulty.toFixed(5)}}
+                                    {{Info.difficulty.toFixed(2)}}
                                 </el-row>
                                 <el-row v-else type="flex" justify="center" class="Double_Table_Border" style="border-right: 2px solid #D8D8D8; border-bottom: 2px solid #D8D8D8;">
-                                    {{Info.difficulty.toFixed(5)}}
+                                    {{Info.difficulty.toFixed(2)}}
                                 </el-row>
                             </el-col>
                         </el-row>
@@ -2144,7 +2144,10 @@ export default {
 
             let Have_List = this.Paper_Json.level_one_knowledge_point;
 
-            let R = parseFloat(Have_List.length / Check_List.length).toFixed(4) * 100 + "%"
+            let R = parseFloat(Have_List.length / Check_List.length) * 100 + ""
+
+            let Pos = R.indexOf(".");
+            R = R.substring(0, Pos + 3) + "%";
 
             return R
         },

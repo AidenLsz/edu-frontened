@@ -412,7 +412,7 @@
             <el-col :span="5" style="text-align: left; font-size: 20px">
               题型
             </el-col>
-            <el-col :span="12">
+            <el-col :span="12" style="display: none">
               <el-button @click="showHint = true" size="small" type="danger" plain>非法格式提示</el-button>
             </el-col>
           </el-row>
