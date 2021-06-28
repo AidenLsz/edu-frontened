@@ -53,7 +53,15 @@
               placeholder="请输入您的手机号码"
             ></el-input>
           </el-form-item>
-          <el-form-item label="" label-width="0px" prop="imgCode" style="margin-bottom: 5px">
+          <el-form-item label="邀请码" prop="inviteCode">
+            <el-input
+              type="text"
+              v-model="ruleForm.inviteCode"
+              auto-complete="off"
+              placeholder="请输入邀请码"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="" label-width="0px" prop="imgCode">
             <el-col :span="15">
               <el-input
                 type="text"
@@ -152,6 +160,13 @@ export default {
         callback()
       }
     }
+    var validateInviteCode =(rule,value,callback) =>{
+      if (value !== 'luna') {
+        callback(new Error('邀请码无效！请发送邮件至tongsw@mail.ustc.edu.cn获取。'));
+      }else{
+        callback()
+      }
+    }
     return {
       // 用户政策和隐私协议
       UserAgreement: false,
@@ -173,6 +188,7 @@ export default {
         password: '',
         email: '',
         phone: '',
+        inviteCode:''
         // phone: '19916935265'
       },
       rules: {
@@ -198,6 +214,10 @@ export default {
             pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,
             message: "请输入正确的手机号码"
           }
+        ],
+        inviteCode: [
+          { required: true, message: "请输入邀请码", trigger: "blur" },
+          { validator: validateInviteCode, trigger: ['blur', 'change'] }
         ],
         imgCode: [
           { required: true, message: '请输入图形验证码', trigger: 'blur' },
