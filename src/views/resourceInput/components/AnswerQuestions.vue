@@ -133,13 +133,13 @@
                         </el-col>
                         <el-col :span="2" style="padding-top: 10px; font-size: 15px; font-weight: bold">
                             <el-row type="flex" justify="start" style="padding-left: 20px">
-                                小题 {{String.fromCharCode(64 + index)}}
+                                小题 {{index}}
                             </el-row>
                         </el-col>
                         <el-col :span="10" style="margin-left: 10px">
                             <el-input 
                                 v-model="questionInfos.sub_questions[index - 1]" 
-                                :placeholder="'小题' + String.fromCharCode(64 + index) + '（必填）'"
+                                :placeholder="'小题' + index + '（必填）'"
                                 type="textarea" 
                                 :autosize="{minRows: 2, maxRows: 4}" 
                                 resize="none"

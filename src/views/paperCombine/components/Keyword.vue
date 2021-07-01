@@ -258,7 +258,32 @@ export default {
   methods: {
       // 加入试题篮
       Add_To_Question_Cart(Question_Index){
-          this.$emit("Add_To_Cart", JSON.stringify(this.questionList[Question_Index]));
+        let Aim = this.questionList[Question_Index]
+        let Question_Show_Infos = {
+          type: "",
+          score: 0,
+          stem: "",
+          options: [],
+          answer: "",
+          analyse: ""
+        }
+        if(['单选题', '多选题', '判断题'].indexOf(Aim.type) != -1){
+          Question_Show_Infos.type = "选择题";
+          Question_Show_Infos.score = 5;
+        }else if(['简答题', '计算题'].indexOf(Aim.type) != -1){
+          Question_Show_Infos.type = "解答题"
+          Question_Show_Infos.score = 12;
+        }else if(Aim.type == '填空题'){
+          Question_Show_Infos.type = '填空题'
+          Question_Show_Infos.score = 5;
+        }
+
+        Question_Show_Infos.options = Aim.options;
+        Question_Show_Infos.stem = Aim.stem;
+        Question_Show_Infos.answer = Aim.answer;
+        Question_Show_Infos.analyse = Aim.analyse;
+        
+        this.$emit("Add_To_Cart", JSON.stringify(Question_Show_Infos));
       },
       // 页码变化搜索
     BackToTop(){
