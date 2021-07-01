@@ -1,7 +1,75 @@
 <template>
-  <div 
-    style=" padding-top: 5vh; padding-bottom: 5vh; min-height: 40vh; padding-left: 5vw; padding-right: 5vw; background: #EEF5FE"
-    :key="'Fix_' + refresh">
+  <div style=" padding-top: 5vh; padding-bottom: 5vh; min-height: 40vh; padding-left: 5vw; padding-right: 5vw; background: #EEF5FE">
+    <el-dialog 
+      :visible.sync="Question_Check_Switch"
+      title="题目内容检查"
+      width="50%"
+      :modal-append-to-body="false"
+      :close-on-click-modal="true">
+      <el-row type="flex" justify="center">
+        <el-col>
+          <!-- 分数，题型，题干 -->
+          <el-row type="flex" justify="center">
+            <el-col :span="4">
+              <el-row type="flex" justify="start">
+                <label style="margin-right: 10px;">{{Checked_Question_Info.type}}</label>
+                <label style="margin-right: 10px;">  -  </label>
+                <label>{{Checked_Question_Info.score}}分</label>
+              </el-row>
+            </el-col>
+            <el-col :span="20">
+              <el-row type="flex" justify="start">
+                <Mathdown :content="Checked_Question_Info.stem" :name="'Checked_Question_Stem'"></Mathdown>
+              </el-row>
+            </el-col>
+          </el-row>
+          <!-- 选项 -->
+          <el-row type="flex" justify="center" style="margin-top: 2vh">
+            <el-col :span="4">
+              <el-row type="flex" justify="start">
+                <label>选项：</label>
+              </el-row>
+            </el-col>
+            <el-col :span="20">
+              <el-row 
+                v-for="(Option, OptionIndex) in Checked_Question_Info.options" 
+                :key="'Checked_Options_' + OptionIndex"
+                style="margin-bottom: 2px;">
+                <Mathdown 
+                  :content="Get_Option_Index(OptionIndex) + ':  ' + Option"
+                  :name="'Checked_Options_' + OptionIndex"></Mathdown>
+              </el-row>
+            </el-col>
+          </el-row>
+          <!-- 答案 -->
+          <el-row type="flex" justify="center" style="margin-top: 2vh">
+            <el-col :span="4">
+              <el-row type="flex" justify="start">
+                <label>答案：</label>
+              </el-row>
+            </el-col>
+            <el-col :span="20">
+              <el-row type="flex" justify="start">
+                <Mathdown :content="Checked_Question_Info.answer" :name="'Checked_Question_Answer'"></Mathdown>
+              </el-row>
+            </el-col>
+          </el-row>
+          <!-- 解析 -->
+          <el-row type="flex" justify="center" style="margin-top: 2vh">
+            <el-col :span="4">
+              <el-row type="flex" justify="start">
+                <label>解析：</label>
+              </el-row>
+            </el-col>
+            <el-col :span="20">
+              <el-row type="flex" justify="start">
+                <Mathdown :content="Checked_Question_Info.analyse" :name="'Checked_Question_Analyse'"></Mathdown>
+              </el-row>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-dialog>
       <el-row>
         <el-col :span="5">
           <!-- 设置区块 -->
@@ -156,17 +224,17 @@
                         <el-row type="flex" justify="center" style="margin-bottom: 10px;">
                           <el-col :span="12">
                             <el-row type="flex" justify="start" style="margin-left: 10px;">
-                              <el-button type="primary" size="medium">查看</el-button>
+                              <el-button type="primary" size="medium" @click="Check_Question(Index, (Row_Index - 1) * 6 + Col_Index - 1)">查看</el-button>
                             </el-row>
                           </el-col>
                           <el-col :span="12">
                             <el-row type="flex" justify="end" style="margin-right: 10px;">
-                              <el-button type="danger" size="medium">删除</el-button>
+                              <el-button type="danger" size="medium" @click="Delete_Question(Index, (Row_Index - 1) * 6 + Col_Index - 1)">删除</el-button>
                             </el-row>
                           </el-col>
                         </el-row>
                         <el-row type="flex" justify="center">
-                          <el-button type="primary" size="medium"><i class="el-icon-refresh" style="margin-right: 15px;"></i>换一题</el-button>
+                          <el-button type="primary" size="medium" @click="Unfinish()"><i class="el-icon-refresh" style="margin-right: 15px;"></i>换一题</el-button>
                         </el-row>
                         <el-row 
                           slot="reference"
@@ -187,20 +255,54 @@
             </el-col>
           </el-row>
         </el-col>
+        <!-- 显示区 -->
         <el-col :span="18" :offset="1" class="Side_Card">
-          <el-row v-for="(Question_List_Item, Index) in Question_List" :key="'Result_Item_' + Index">
-            <el-col>
-              <el-row type="flex" justify="start">
-                <label>
-                  {{Get_Chinese_Index(Index)}}、
-                  {{Question_List_Item.type}}
-                </label>
+          <el-row type="flex" justify="start">
+            <el-col :span="1" v-if="Get_Paper_Setting('装订线')">
+                <div class="Paper_Seal">
+                  <label>学校：</label>____________ <label>班级：</label>____________ <label>姓名：</label>____________ <label>考号：</label>___________
+                </div>
+            </el-col>
+            <el-col :span="Get_Paper_Span()" style="padding-left: 10px;">
+              <!-- 密封标识 -->
+              <el-row type="flex" justify="start" v-if="Get_Paper_Setting('密封标识')" style="font-size: 16px;">
+                <label>密封 ★ 使用前</label>
               </el-row>
-              <el-row 
-                v-for="(Question, IndexIn) in Question_List_Item.list" 
-                :key="'Result_Item_' + Index + '_' + IndexIn"
-                type="flex" justify="center">
-                {{ Question_List_Item.list[IndexIn] }}
+              <!-- 遍历大题 -->
+              <el-row v-for="(Question_List_Item, Index) in Question_List" :key="'Result_Item_' + Index" style="margin-bottom: 10px;">
+                
+                <!-- 垂直排列 -->
+                <el-col>
+                  <!-- 题型显示的那一行 -->
+                  <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+                    <label>
+                      {{Get_Chinese_Index(Index)}}、
+                      {{Question_List_Item.type}}
+                    </label>
+                  </el-row>
+                  <!-- 每道题内容显示的部分 -->
+                  <el-row 
+                    v-for="(Question, IndexIn) in Question_List_Item.list" 
+                    :key="'Result_Item_' + Index + '_' + IndexIn"
+                    type="flex" justify="center"
+                    style="margin-bottom: 10px; min-height: 45px;">
+                    <!-- 把这些部分垂直排列 -->
+                    <el-col>
+                        <el-row type="flex" justify="start" style="margin-bottom: 5px;">
+                          <Mathdown :content="(IndexIn + 1) + '. $ $ '+ Question.stem" :name="'Question_Stem_' + Index + '_' + IndexIn"></Mathdown>
+                        </el-row>
+                        <el-row 
+                          v-for="(Option, OptionIndex) in Question.options" 
+                          :key="'Q_O_' + Index + '_' + IndexIn + '_' + OptionIndex"
+                          style="margin-bottom: 2px;">
+                          <Mathdown 
+                          style="width: 50%"
+                            :content="Get_Option_Index(OptionIndex) + ': $ $ ' + Option"
+                            :name="'Q_O_' + Index + '_' + IndexIn + '_' + OptionIndex"></Mathdown>
+                        </el-row>
+                    </el-col>
+                  </el-row>
+                </el-col>
               </el-row>
             </el-col>
           </el-row>
@@ -209,6 +311,7 @@
   </div>
 </template>
 <script>
+import Mathdown from '@/common/components/Mathdown'
 export default {
   name: 'StartCombine',
   props: {
@@ -218,6 +321,9 @@ export default {
         return []
       }
     }
+  },
+  components: {
+    Mathdown
   },
   data() {
     return {
@@ -231,17 +337,51 @@ export default {
       Setting_Expand: false,
       // 用于给用户临时自定义分数用的值
       Custom_Setting_Score: "",
-      // 尝试刷新页面
-      refresh: false
+      Checked_Question_Info: {},
+      Question_Check_Switch: false
     }
   },
   watch:{
-    
+    Setting_CheckBox_List(){
+      console.log(this.Setting_CheckBox_List, this.Setting_CheckBox_List.indexOf("装订线"))
+    }
   },
   mounted() {
     this.Init_Setting_CheckBox();
   },
   methods: {
+    // 判别是否显示“装订线”
+    Get_Paper_Setting(Setting){
+      if(this.Setting_CheckBox_List.indexOf(Setting) != -1){
+        return true
+      }else{
+        return false
+      }
+    },
+    // 判别是否显示“装订线”时，试卷显示区的宽度
+    Get_Paper_Span(){
+      if(this.Setting_CheckBox_List.indexOf("装订线") != -1){
+        return 23
+      }else{
+        return 24
+      }
+    },
+    // 查看某个位置的题目的信息
+    Check_Question(IndexOut, IndexIn){
+      this.Checked_Question_Info = this.Question_List[IndexOut].list[IndexIn];
+      this.Question_Check_Switch = true;
+      this.Popover_Close(IndexOut, IndexIn);
+    },
+    // 删除某道题目
+    Delete_Question(IndexOut, IndexIn){
+      this.Question_List[IndexOut].list.splice(IndexIn, 1);
+      this.Popover_Close(IndexOut, IndexIn);
+      this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
+    },
+    // 返回一个选项的序号
+    Get_Option_Index(OptionIndex){
+      return String.fromCharCode(65 + OptionIndex);
+    },
     // 返回一个用于给自定义分数栏占位的值
     Get_Custom_Setting_Score_Placeholder(IndexOut, IndexIn){
       return this.Question_List[IndexOut].list[IndexIn].score + ""
@@ -282,8 +422,7 @@ export default {
       let Item = this.Question_List[IndexOut].list[IndexIn];
       this.Question_List[IndexOut].list.splice(IndexIn, 1)
       this.Question_List[IndexOut].list.splice(IndexIn - 1, 0, Item)
-      let name = 'Pop_' + IndexOut + '_' + IndexIn
-      this.$refs[name][0].doClose()
+      this.Popover_Close(IndexOut, IndexIn);
       this.$message.success(this.Question_List[IndexOut].type + "第" + ( IndexIn + 1 ) + "题已前移至第" + IndexIn + "题的位置");
       this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
     },
@@ -291,8 +430,7 @@ export default {
       let Item = this.Question_List[IndexOut].list[IndexIn];
       this.Question_List[IndexOut].list.splice(IndexIn, 1)
       this.Question_List[IndexOut].list.splice(IndexIn + 1, 0, Item)
-      let name = 'Pop_' + IndexOut + '_' + IndexIn
-      this.$refs[name][0].doClose();
+      this.Popover_Close(IndexOut, IndexIn);
       this.$message.success(this.Question_List[IndexOut].type + "第" + ( IndexIn + 1 ) + "题已后移至第" + ( IndexIn + 2 ) + "题的位置")
       this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
     },
@@ -318,6 +456,10 @@ export default {
     },
     Unfinish(){
       this.$message.error("这部分还没做完或者说还不在当前计划范围内")
+    },
+    Popover_Close(IndexOut, IndexIn){
+      let name = 'Pop_' + IndexOut + '_' + IndexIn
+      this.$refs[name][0].doClose();
     }
   },
 }
@@ -358,5 +500,20 @@ export default {
 }
 .Custom_Score_Input.el-input {
   width: 45px;
+}
+.Paper_Seal{
+  margin-top: 42vh;
+  margin-left: -19vw;
+  padding-right: 30px;
+  padding-top: 8px;
+  border-bottom: 1px dashed black;
+  height: 40px;
+  width: 620px;
+  text-align: right;
+  transform:rotate(-90deg);
+  -ms-transform:rotate(-90deg); /* Internet Explorer */
+  -moz-transform:rotate(-90deg); /* Firefox */
+  -webkit-transform:rotate(-90deg); /* Safari 和 Chrome */
+  -o-transform:rotate(-90deg); /* Opera */
 }
 </style>

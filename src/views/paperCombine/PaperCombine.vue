@@ -11,7 +11,7 @@
         </el-breadcrumb>
       </el-col>
     </el-row>
-    <el-row style="min-height: 40px; background: #409EFF;">
+    <el-row style="min-height: 50px; background: #409EFF;">
         <el-col :span="3" :offset="1" class="Bar_Menu_Unfocus">
             <el-popover 
                 placement="bottom-start"
@@ -153,11 +153,41 @@ export default {
         // 题目列表信息
         Question_List: [{
             type: "选择题",
-            list: [{score: 1, stem: "选择题流程测试数据1"}, {score: 2, stem: "选择题流程测试数据2"}]
+            list: [
+            {   
+                type: "选择题",
+                score: 1, 
+                stem: "选择题流程测试数据1",
+                options: ['$A$', '$B$', '$C$', '$D$'],
+                answer: "",
+                analyse: ""
+            }, {
+                type: "选择题",
+                score: 2, 
+                stem: "选择题流程测试数据2",
+                options: ['$1$', '$2$', '$3$', '$4$'],
+                answer: "",
+                analyse: ""    
+            }]
         },
         {
             type: "填空题",
-            list: [{score: 3, stem: "填空题流程测试数据1"}, {score: 4, stem: "填空题流程测试数据2"}]
+            list: [
+            {
+                type: "填空题",
+                score: 3, 
+                stem: "填空题流程测试数据1",
+                options: [],
+                answer: "",
+                analyse: ""
+            }, {
+                type: "填空题",
+                score: 4, 
+                stem: "填空题流程测试数据2",
+                options: [],
+                answer: "",
+                analyse: ""
+            }]
         }
         ],
         // 用于设定学科 / 学段选择位置的数据字段
@@ -401,22 +431,22 @@ export default {
 </script>
 <style >
 .Bar_Menu_Unfocus{
-    height: 40px;
-    line-height: 40px;
+    height: 50px;
+    line-height: 50px;
     cursor: pointer;
     font-size: 16px;
     color: white;
 }
 .Bar_Menu_Focus{
-    height: 40px;
-    line-height: 40px;
+    height: 50px;
+    line-height: 50px;
     cursor: pointer;
     font-size: 16px;
     color: white;
     background: #71B0F2;
 }
 .Question_Shopping_Card{
-    margin-top: 2px;
+    margin-top: 7px;
     margin-bottom: 2px;
     height: 36px;
     line-height: 36px;
