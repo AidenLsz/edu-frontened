@@ -81,10 +81,10 @@
               </el-row>
 
               <el-row type="flex" justify="start" style="margin-top: 10px">
-                <label style="height: 30px; line-height: 30px; margin-left: 15px;">形式：</label>
-                <el-radio-group v-model="Export_Setting_Type" style="margin-top: 7px; margin-left: 30px">
-                  <el-radio label="simple">简易</el-radio>
-                  <el-radio label="standard">标准</el-radio>
+                <label style="height: 30px; line-height: 30px; margin-left: 7px; width: 60px;">形式：</label>
+                <el-radio-group v-model="Export_Setting_Type" style="margin-top: 7px;">
+                  <el-radio label="simple" style=" width: 60px;">简易</el-radio>
+                  <el-radio label="standard" style="margin-left: -15px; width: 60px;">标准</el-radio>
                 </el-radio-group>
               </el-row>
 
@@ -263,22 +263,242 @@
                   <label>学校：</label>____________ <label>班级：</label>____________ <label>姓名：</label>____________ <label>考号：</label>___________
                 </div>
             </el-col>
-            <el-col :span="Get_Paper_Span()" style="padding-left: 10px;">
+            <el-col :span="Get_Paper_Span()" style="padding-left: 10px; min-height: 630px;">
               <!-- 密封标识 -->
               <el-row type="flex" justify="start" v-if="Get_Paper_Setting('密封标识')" style="font-size: 16px;">
                 <label>绝密 ★ 启用前</label>
               </el-row>
+              <!-- 关于标题 -->
+              <el-row 
+                type="flex" 
+                justify="center" 
+                v-if="Get_Paper_Setting('标题')" 
+                @mouseleave.native="Expand_Change('title', 0)" 
+                @mouseenter.native="Expand_Change('title', 1)">
+                <el-row
+                  v-if="Expand_Model.title == 0" 
+                  style="padding: 3px; border: 3px solid transparent;"
+                  type="flex" justify="center">
+                  <label 
+                    style="font-size: 20px;">
+                    {{Setting_Info.title}}
+                  </label>
+                </el-row>
+                <el-row 
+                  v-if="Expand_Model.title == 1"
+                  class="Focusing_Part" 
+                  @click.native="Expand_Change('title', 2)"
+                  style="font-size: 20px; font-weight: bold;"
+                  type="flex" justify="center">
+                  {{Setting_Info.title}}
+                </el-row>
+                <el-row
+                  v-if="Expand_Model.title == 2" 
+                  style="font-size: 20px"
+                  class="Focusing_Part"
+                >
+                  <el-input v-model="Setting_Info.title"></el-input>
+                </el-row>
+                
+              </el-row>
+              <!-- 关于副标题 -->
+              <el-row 
+                type="flex" 
+                justify="center" 
+                v-if="Get_Paper_Setting('副标题')" 
+                @mouseleave.native="Expand_Change('subTitle', 0)" 
+                @mouseenter.native="Expand_Change('subTitle', 1)">
+                <el-row
+                  v-if="Expand_Model.subTitle == 0" 
+                  style="padding: 3px; border: 3px solid transparent; min-height: 20px;"
+                  type="flex" justify="center">
+                  <span 
+                    style="font-size: 14px; color: #888">
+                    {{Setting_Info.subTitle}}
+                  </span>
+                </el-row>
+                <el-row 
+                  v-if="Expand_Model.subTitle == 1"
+                  class="Focusing_Part" 
+                  @click.native="Expand_Change('subTitle', 2)"
+                  style="font-size: 14px; font-weight: bold; min-height: 20px;"
+                  type="flex" justify="center">
+                  {{Setting_Info.subTitle}}
+                </el-row>
+                <el-row
+                  v-if="Expand_Model.subTitle == 2" 
+                  style="font-size: 18px;"
+                  class="Focusing_Part"
+                >
+                  <el-input v-model="Setting_Info.subTitle"></el-input>
+                </el-row>
+                
+              </el-row>
+              <!-- 关于考试信息栏 -->
+              <el-row 
+                type="flex" 
+                justify="center" 
+                v-if="Get_Paper_Setting('考试信息栏')" 
+                @mouseleave.native="Expand_Change('examInfo', 0)" 
+                @mouseenter.native="Expand_Change('examInfo', 1)">
+                <el-row
+                  v-if="Expand_Model.examInfo == 0" 
+                  style="padding: 3px; border: 3px solid transparent; min-height: 20px;"
+                  type="flex" justify="center">
+                  <span 
+                    style="font-size: 14px;">
+                    {{Getting_ExamInfo()}}
+                  </span>
+                </el-row>
+                <el-row 
+                  v-if="Expand_Model.examInfo == 1"
+                  class="Focusing_Part" 
+                  @click.native="Expand_Change('examInfo', 2)"
+                  style="font-size: 14px; font-weight: bold; min-height: 20px;"
+                  type="flex" justify="center">
+                  {{Getting_ExamInfo()}}
+                </el-row>
+                <el-row
+                  v-if="Expand_Model.examInfo == 2" 
+                  style="font-size: 14px;"
+                  class="Focusing_Part"
+                >
+                  <span>考试总分：{{Setting_Info.examInfo.score}}分，考试时间：</span>
+                  <el-input class="Exam_Info_Input" v-model="Setting_Info.examInfo.time"></el-input>
+                  <span>分钟</span>
+                </el-row>
+                
+              </el-row>
+              <!-- 关于学生输入框 -->
+              <el-row 
+                type="flex" 
+                justify="center" 
+                v-if="Get_Paper_Setting('学生输入框')" 
+                @mouseleave.native="Expand_Change('studentWrite', 0)" 
+                @mouseenter.native="Expand_Change('studentWrite', 1)">
+                <el-row
+                  v-if="Expand_Model.studentWrite == 0" 
+                  style="padding: 3px; border: 3px solid transparent; min-height: 20px;"
+                  type="flex" justify="center">
+                  <span 
+                    style="font-size: 14px;">
+                    {{Setting_Info.studentWrite}}
+                  </span>
+                </el-row>
+                <el-row 
+                  v-if="Expand_Model.studentWrite == 1"
+                  class="Focusing_Part" 
+                  @click.native="Expand_Change('studentWrite', 2)"
+                  style="font-size: 14px; font-weight: bold; min-height: 20px;"
+                  type="flex" justify="center">
+                  {{Setting_Info.studentWrite}}
+                </el-row>
+                <el-row
+                  v-if="Expand_Model.studentWrite == 2" 
+                  style="font-size: 18px;"
+                  class="Focusing_Part"
+                >
+                  <el-input v-model="Setting_Info.studentWrite"></el-input>
+                </el-row>
+                
+              </el-row>
+              <!-- 关于注意事项 -->
+              <el-row 
+                type="flex" 
+                justify="center" 
+                v-if="Get_Paper_Setting('注意事项')" 
+                @mouseleave.native="Expand_Change('cautions', 0)" 
+                @mouseenter.native="Expand_Change('cautions', 1)">
+                <el-row
+                  v-if="Expand_Model.cautions == 0" 
+                  style="padding: 3px; border: 3px solid transparent; min-height: 20px; width: 100%"
+                  type="flex" justify="center">
+                  <span 
+                    style="font-size: 14px; white-space: pre-line; text-align: left; width: 100%; color: #909399">
+                    {{Setting_Info.cautions}}
+                  </span>
+                </el-row>
+                <el-row 
+                  v-if="Expand_Model.cautions == 1"
+                  class="Focusing_Part" 
+                  @click.native="Expand_Change('cautions', 2)"
+                  style="font-size: 14px; font-weight: bold; min-height: 20px; white-space: pre-line; text-align: left; width: 100%;"
+                  type="flex" justify="start">
+                  {{Setting_Info.cautions}}
+                </el-row>
+                <el-row
+                  v-if="Expand_Model.cautions == 2" 
+                  style="font-size: 18px; width: 100%"
+                  class="Focusing_Part"
+                >
+                  <el-input 
+                    v-model="Setting_Info.cautions"
+                    type="textarea"
+                    :autosize="{ minRows: 2, maxRows: 4}"
+                    resize="false"></el-input>
+                </el-row>
+                
+              </el-row>
               <!-- 遍历大题 -->
-              <el-row v-for="(Question_List_Item, Index) in Question_List" :key="'Result_Item_' + Index" style="margin-bottom: 10px;">
+              <el-row v-for="(Question_List_Item, Index) in Question_List" :key="'Result_Item_' + Index" style="margin-bottom: 10px; margin-top: 20px;">
                 
                 <!-- 垂直排列 -->
                 <el-col>
-                  <!-- 题型显示的那一行 -->
-                  <el-row type="flex" justify="start" style="margin-bottom: 10px;">
-                    <label>
-                      {{Get_Chinese_Index(Index)}}、
-                      {{Question_List_Item.type}}
-                    </label>
+                  <!-- 分卷注释的一行 -->
+                  <el-row 
+                    type="flex" 
+                    justify="center" 
+                    v-if="Get_Paper_Setting('分卷注释')" 
+                    @mouseleave.native="Expand_Change('partIntroduce', 0)" 
+                    @mouseenter.native="Expand_Change('partIntroduce', 1)">
+                    <el-row
+                      style="padding: 5px; width: 100%; background: #eee; margin-bottom: 10px;"
+                      type="flex" justify="center">
+                      <span 
+                        style="font-size: 20px; font-weight: bold">
+                        {{Getting_Part_Introduce(Index)}}
+                      </span>
+                    </el-row>
+                  </el-row>
+                  <!-- 题型显示的那一行，原来这个算是大题注释啊 -->
+                  <el-row 
+                    type="flex" 
+                    justify="center" 
+                    v-if="Get_Paper_Setting('大题注释')" 
+                    @mouseleave.native="Expand_Change_Intro(Index, 0)" 
+                    @mouseenter.native="Expand_Change_Intro(Index, 1)">
+                    <el-row
+                      v-if="Expand_Model.bundleIntroduce[Index] == 0" 
+                      style="padding: 3px; border: 3px solid transparent; min-height: 20px; width: 100%; "
+                      type="flex" justify="start">
+                      <span 
+                        style="font-size: 14px; font-weight: bold">
+                        {{Getting_Bundle_Introduce(Index)}}）
+                      </span>
+                    </el-row>
+                    <el-row 
+                      v-if="Expand_Model.bundleIntroduce[Index] == 1"
+                      class="Focusing_Part" 
+                      @click.native="Expand_Change_Intro(Index, 2)"
+                      style="font-size: 14px; font-weight: bold; min-height: 20px; width: 100%;"
+                      type="flex" justify="start">
+                      {{Getting_Bundle_Introduce(Index)}}）
+                    </el-row>
+                    <el-row
+                      v-if="Expand_Model.bundleIntroduce[Index] == 2" 
+                      style="font-size: 14px; width: 100%"
+                      class="Focusing_Part"
+                      type="flex"
+                      justify="start"
+                    >
+                      <span style="height: 30px; line-height: 30px">{{Getting_Bundle_Introduce(Index)}}，</span>
+                      <el-input 
+                        class="Bundle_Introduce_Input" 
+                        v-model="Setting_Info.bundleIntroduce[Index]"
+                        placeholder="其他说明，没有可以不填"></el-input>
+                      <span style="height: 30px; line-height: 30px">）</span>
+                    </el-row>
+                    
                   </el-row>
                   <!-- 每道题内容显示的部分 -->
                   <el-row 
@@ -289,7 +509,9 @@
                     <!-- 把这些部分垂直排列 -->
                     <el-col>
                         <el-row type="flex" justify="start" style="margin-bottom: 5px;">
-                          <Mathdown :content="(IndexIn + 1) + '. $ $ '+ Question.stem" :name="'Question_Stem_' + Index + '_' + IndexIn"></Mathdown>
+                          <Mathdown 
+                            :content="'(' + Question.score + '分) '+ (IndexIn + 1) + '. $ $ '+ Question.stem" 
+                            :name="'Question_Stem_' + Index + '_' + IndexIn"></Mathdown>
                         </el-row>
                         <el-row 
                           v-for="(Option, OptionIndex) in Question.options" 
@@ -320,6 +542,14 @@ export default {
       default: function(){
         return []
       }
+    },
+    Subject: {
+        type: String,
+        default: "数学"
+    },
+    Period: {
+        type: String,
+        default: "高中"
     }
   },
   components: {
@@ -338,18 +568,97 @@ export default {
       // 用于给用户临时自定义分数用的值
       Custom_Setting_Score: "",
       Checked_Question_Info: {},
-      Question_Check_Switch: false
+      Question_Check_Switch: false,
+      // 各个设置项的对应值
+      Setting_Info: {
+        title: "",
+        subTitle: "这里是副标题的位置",
+        examInfo: {
+          score: "0",
+          time: "60"
+        },
+        studentWrite: "学校：____________ 班级：____________ 姓名：____________ 考号：___________",
+        cautions: "注意事项\n1.答题前填写好自己的班级、姓名、考号等信息。\n2.请将答案正确填写在答题卡上。",
+        bundleIntroduce: [],
+      },
+      // 所有可自定义设置项是否允许点击打开用户自定义模式
+      Expand_Model: {
+        title: 0,
+        subTitle: 0,
+        examInfo: 0,
+        studentWrite: 0,
+        cautions: 0,
+        bundleIntroduce: []
+      }
     }
   },
   watch:{
-    Setting_CheckBox_List(){
-      console.log(this.Setting_CheckBox_List, this.Setting_CheckBox_List.indexOf("装订线"))
+    Subject(){
+      console.log(this.Subject)
+      this.Init_Setting_Info();
+    },
+    Period(){
+      console.log(this.Period)
+      this.Init_Setting_Info();
+    },
+    Export_Setting_Type(){
+      this.Init_Setting_CheckBox();
     }
   },
   mounted() {
     this.Init_Setting_CheckBox();
+    this.Init_Setting_Info();
   },
   methods: {
+    // 获取“分卷注释”里显示的内容
+    Getting_Part_Introduce(Index){
+      let List = ['Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ', 'Ⅵ', 'Ⅶ', 'Ⅷ', 'Ⅸ']
+      return "卷" + List[Index] + " （"+ this.Question_List[Index].type + "）"
+    },
+    // 获取“大题注释”里显示的内容
+    Getting_Bundle_Introduce(Index){
+      let Score = 0;
+      for(let i = 0; i < this.Question_List[Index].list.length; i++){
+        Score = Score + this.Question_List[Index].list[i].score;
+      }
+      let Info = "（  " + this.Question_List[Index].list.length + " 小题，共计 " + Score + " 分 "
+      if(this.Setting_Info.bundleIntroduce[Index] != "" && this.Expand_Model.bundleIntroduce[Index] != 2){
+        Info = Info + "，" + this.Setting_Info.bundleIntroduce[Index];
+      }
+      return this.Get_Chinese_Index(Index) + "、" + this.Question_List[Index].type + Info;
+    },
+    // 获取考试信息栏里显示的内容
+    Getting_ExamInfo(){
+      let Score = 0;
+      for(let i = 0; i < this.Question_List.length; i++){
+        for(let j = 0; j < this.Question_List[i].list.length; j++){
+          Score = Score + this.Question_List[i].list[j].score;
+        }
+      }
+      this.Setting_Info.examInfo.score = Score + ""
+      return "考试总分：" + this.Setting_Info.examInfo.score + "分，考试时间：" + this.Setting_Info.examInfo.time + "分钟"
+    },
+    // 调整标题栏内容
+    Expand_Change(part, value){
+      this.Expand_Model[part] = value;
+    },
+    // 比较例外的，调整大题注释的内容的时候
+    Expand_Change_Intro(index, value){
+      this.Expand_Model.bundleIntroduce.splice(index, 1, value)
+    },
+    // 初始化设置项里面的内容
+    Init_Setting_Info(){
+      var time1 = new Date();
+      this.Setting_Info.title = time1.getFullYear() + "年" + 
+                                (time1.getMonth() + 1) + "月" + 
+                                time1.getDate() + "日 - " + 
+                                this.Period + this.Subject + "卷";
+      this.Setting_Info.bundleIntroduce = [];
+      for(let i = 0; i < this.Question_List.length; i++){
+        this.Setting_Info.bundleIntroduce.push("")
+        this.Expand_Model.bundleIntroduce.push(0)
+      }
+    },
     // 判别是否显示“装订线”
     Get_Paper_Setting(Setting){
       if(this.Setting_CheckBox_List.indexOf(Setting) != -1){
@@ -415,6 +724,7 @@ export default {
     // 删除这群大题
     Delete_Item(Index){
       this.Question_List.splice(Index, 1);
+      this.Setting_Info.bundleIntroduce.splice(Index, 1);
       this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
     },
     // 题目前后移
@@ -441,6 +751,9 @@ export default {
     // 题包元素前后移动
     List_Item_Move_Up(Index){
       let Item = this.Question_List[Index];
+      let Intro = this.Setting_Info.bundleIntroduce[Index];
+      this.Setting_Info.bundleIntroduce.splice(Index, 1);
+      this.Setting_Info.bundleIntroduce.splice(Index - 1, 0, Intro);
       this.Question_List.splice(Index, 1);
       this.Question_List.splice(Index - 1, 0, Item);
       this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
@@ -449,6 +762,9 @@ export default {
     // 题包元素前后移动
     List_Item_Move_Down(Index){
       let Item = this.Question_List[Index];
+      let Intro = this.Setting_Info.bundleIntroduce[Index];
+      this.Setting_Info.bundleIntroduce.splice(Index, 1);
+      this.Setting_Info.bundleIntroduce.splice(Index + 1, 0, Intro);
       this.Question_List.splice(Index, 1);
       this.Question_List.splice(Index + 1, 0, Item);
       this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
@@ -512,5 +828,41 @@ export default {
     left: -280px;
     top: 300px;/* Opera */
     width: 600px;
+}
+.Focusing_Part{
+  width: 90%; 
+  text-align: center; 
+  cursor: pointer; 
+  padding: 3px; 
+  border: 3px solid #409EFF; 
+  border-radius: 10px;
+  background: #EEF5FE;
+  box-sizing: border-box;
+}
+.Exam_Info_Input{
+  font-size: 14px;
+}
+.Exam_Info_Input /deep/ .el-input__inner {
+  height: 30px;
+  line-height: 30px;
+  width: 45px;
+  padding: 0px;
+  border-radius: 0px;
+}
+.Exam_Info_Input.el-input {
+  width: 45px;
+}
+.Bundle_Introduce_Input{
+  font-size: 14px;
+}
+.Bundle_Introduce_Input /deep/ .el-input__inner {
+  height: 30px;
+  line-height: 30px;
+  width: 200px;
+  padding: 0px;
+  border-radius: 0px;
+}
+.Bundle_Introduce_Input.el-input {
+  width: 200px;
 }
 </style>

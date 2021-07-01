@@ -121,7 +121,9 @@
     <el-row v-if="Using_Menu_Index == 4">
         <StartCombine 
             @Update_Question_List="Update_Question_List"
-            :Question_List.sync="Question_List"></StartCombine>
+            :Question_List.sync="Question_List"
+            :Period.sync="Selected_Period" 
+            :Subject.sync="Selected_Subject"></StartCombine>
     </el-row>
   </div>
 </template>
