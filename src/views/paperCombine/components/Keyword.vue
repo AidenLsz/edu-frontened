@@ -281,7 +281,7 @@ export default {
         Question_Show_Infos.options = Aim.options;
         Question_Show_Infos.stem = Aim.stem;
         Question_Show_Infos.answer = Aim.answer;
-        Question_Show_Infos.analyse = Aim.analyse;
+        Question_Show_Infos.analyse = Aim.analysis;
         
         this.$emit("Add_To_Cart", JSON.stringify(Question_Show_Infos));
       },

@@ -73,7 +73,8 @@
                 trigger="click"
                 width="400"
                 placement="bottom-end"
-                style="padding: 0px">
+                style="padding: 0px"
+                :ref="'Question_Cart'">
                 <div v-show="Question_List.length > 0" id="Question_Type_Chart" class="Question_Type_Chart" style="margin-bottom: 14px"></div>
                 <el-row type="flex" justify="center" v-show="Question_List.length == 0" style="font-size: 16px">
                     <label>你的试题篮空空如也</label>
@@ -90,7 +91,7 @@
                         </el-row>
                   </el-col>
                 </el-row>
-                <el-row type="flex" justify="center" slot="reference">
+                <el-row type="flex" justify="center" slot="reference" @click.native="Init_Question_Type_Chart()">
                     <i class="el-icon-shopping-cart-2" style="height: 32px; line-height: 32px; font-size: 20px; margin-right: 10px"></i>
                     <div 
                         style=" border-radius: 50%; 
@@ -118,7 +119,9 @@
         <DetailTable></DetailTable>
     </el-row>
     <el-row v-if="Using_Menu_Index == 4">
-        <StartCombine @Update_Question_List="Update_Question_List" :Question_List.sync="Question_List"></StartCombine>
+        <StartCombine 
+            @Update_Question_List="Update_Question_List"
+            :Question_List.sync="Question_List"></StartCombine>
     </el-row>
   </div>
 </template>
@@ -149,9 +152,14 @@ export default {
         Using_Menu_Index: 0,
         // 题目列表信息
         Question_List: [{
+            type: "选择题",
+            list: [{score: 1, stem: "选择题流程测试数据1"}, {score: 2, stem: "选择题流程测试数据2"}]
+        },
+        {
             type: "填空题",
-            list: [{score: 1}, {score: 2}]
-        }],
+            list: [{score: 3, stem: "填空题流程测试数据1"}, {score: 4, stem: "填空题流程测试数据2"}]
+        }
+        ],
         // 用于设定学科 / 学段选择位置的数据字段
         Select_List: [{
             period: "高中",
@@ -169,9 +177,7 @@ export default {
     }
   },
   watch:{
-      Question_List(){
-          this.Init_Question_Type_Chart();
-      }
+      
   },
   mounted() {
       this.Init_Question_Type_Chart();
@@ -180,6 +186,7 @@ export default {
       // 从组卷那边更新题目列表
       Update_Question_List(val){
         this.Question_List = JSON.parse(val);
+        console.log(this.Question_List.length)
         if(this.Question_List.length == 0){
             this.$message.warning("您的试题篮内已清空，已返回至关键词挑题页面。");
             this.Using_Menu_Index = 0;
@@ -386,6 +393,7 @@ export default {
             return
         }else{
             this.Using_Menu_Index = 4;
+            this.$refs['Question_Cart'].doClose();
         }
     }
   },

@@ -1,5 +1,7 @@
 <template>
-  <div style=" padding-top: 5vh; padding-bottom: 5vh; min-height: 40vh; padding-left: 5vw; padding-right: 5vw; background: #EEF5FE">
+  <div 
+    style=" padding-top: 5vh; padding-bottom: 5vh; min-height: 40vh; padding-left: 5vw; padding-right: 5vw; background: #EEF5FE"
+    :key="'Fix_' + refresh">
       <el-row>
         <el-col :span="5">
           <!-- 设置区块 -->
@@ -43,7 +45,7 @@
             <el-col>
 
               <el-row type="flex" justify="center" style="margin-bottom: 5px;">
-                <el-button type="primary" plain round style="font-size: 14px">
+                <el-button type="primary" plain round style="font-size: 14px" @click.native="Unfinish()">
                   <i class="el-icon-download"></i>
                   <span>下载试卷</span>
                 </el-button>
@@ -52,7 +54,7 @@
               <el-row>
                 <el-col :span="12">
                   <el-row type="flex" justify="center">
-                    <el-button type="text" style="font-size: 14px; color: grey">
+                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Unfinish()">
                       <i class="el-icon-s-data"></i>
                       <span>分析试卷</span>
                     </el-button>
@@ -60,7 +62,7 @@
                 </el-col>
                 <el-col :span="12">
                   <el-row type="flex" justify="center">
-                    <el-button type="text" style="font-size: 14px; color: grey">
+                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Unfinish()">
                       <i class="el-icon-document-checked"></i>
                       <span>保存试卷</span>
                     </el-button>
@@ -77,20 +79,22 @@
                 <label>试卷数量及快速操作</label>
               </el-row>
 
-              <el-row v-for="(Question_List_Item, Index) in Question_List" :key="'Question_List_' + Index">
+              <el-row v-for="(Question_List_Item, Index) in Question_List" :key="'Question_List_' + Index" style="margin-bottom: 15px;">
                 <el-col>
                   <!-- 顶行：题型及删除操作 -->
                   <el-row style="margin-bottom: 10px;">
-                    <el-col :span="12">
-                      <el-row type="flex" justify="start" style="height: 30px; line-height: 30px">
+                    <el-col :span="10">
+                      <el-row type="flex" justify="start" style="height: 30px; line-height: 30px;">
                         <label>
-                          {{Get_Chinese_Index(Index)}}
+                          {{Get_Chinese_Index(Index)}}、
                           {{Question_List_Item.type}}
                         </label>
                       </el-row>
                     </el-col>
-                    <el-col :span="12">
+                    <el-col :span="14">
                       <el-row type="flex" justify="end" style="height: 30px; line-height: 30px">
+                        <el-button v-if="Index != 0" type="text" @click="List_Item_Move_Up(Index)" style="padding: 0px">前移</el-button>
+                        <el-button v-if="Index != Question_List.length - 1" type="text" @click="List_Item_Move_Down(Index)" style="padding: 0px">后移</el-button>
                         <el-button type="text" @click="Delete_Item(Index)" style="padding: 0px">删除</el-button>
                       </el-row>
                     </el-col>
@@ -184,8 +188,21 @@
           </el-row>
         </el-col>
         <el-col :span="18" :offset="1" class="Side_Card">
-          <el-row style="min-height: 150px">
-            展示区
+          <el-row v-for="(Question_List_Item, Index) in Question_List" :key="'Result_Item_' + Index">
+            <el-col>
+              <el-row type="flex" justify="start">
+                <label>
+                  {{Get_Chinese_Index(Index)}}、
+                  {{Question_List_Item.type}}
+                </label>
+              </el-row>
+              <el-row 
+                v-for="(Question, IndexIn) in Question_List_Item.list" 
+                :key="'Result_Item_' + Index + '_' + IndexIn"
+                type="flex" justify="center">
+                {{ Question_List_Item.list[IndexIn] }}
+              </el-row>
+            </el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -213,13 +230,13 @@ export default {
       // 设置列表是否展开
       Setting_Expand: false,
       // 用于给用户临时自定义分数用的值
-      Custom_Setting_Score: ""
+      Custom_Setting_Score: "",
+      // 尝试刷新页面
+      refresh: false
     }
   },
   watch:{
-    Question_List(newVal){
-      this.$emit('Update_Question_List', JSON.stringify(newVal));
-    }
+    
   },
   mounted() {
     this.Init_Setting_CheckBox();
@@ -252,20 +269,23 @@ export default {
     },
     // 简单返回一下大题编号
     Get_Chinese_Index(Index){
-      let Result = ['一、', '二、', '三、', '四、', '五、', '六、', '七、', '八、', '九、']
+      let Result = ['一', '二', '三', '四', '五', '六', '七', '八', '九']
       return Result[Index]
     },
     // 删除这群大题
     Delete_Item(Index){
       this.Question_List.splice(Index, 1);
+      this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
     },
+    // 题目前后移
     Question_Move_Up(IndexOut, IndexIn){
       let Item = this.Question_List[IndexOut].list[IndexIn];
       this.Question_List[IndexOut].list.splice(IndexIn, 1)
       this.Question_List[IndexOut].list.splice(IndexIn - 1, 0, Item)
       let name = 'Pop_' + IndexOut + '_' + IndexIn
       this.$refs[name][0].doClose()
-      this.$message.success(this.Question_List[IndexOut].type + "第" + ( IndexIn + 1 ) + "题已前移至第" + IndexIn + "题的位置")
+      this.$message.success(this.Question_List[IndexOut].type + "第" + ( IndexIn + 1 ) + "题已前移至第" + IndexIn + "题的位置");
+      this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
     },
     Question_Move_Down(IndexOut, IndexIn){
       let Item = this.Question_List[IndexOut].list[IndexIn];
@@ -274,9 +294,30 @@ export default {
       let name = 'Pop_' + IndexOut + '_' + IndexIn
       this.$refs[name][0].doClose();
       this.$message.success(this.Question_List[IndexOut].type + "第" + ( IndexIn + 1 ) + "题已后移至第" + ( IndexIn + 2 ) + "题的位置")
+      this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
     },
+    // 给这些内容附加Ref用来定位popover
     Get_Pop_Ref(IndexOut, IndexIn){
       return 'Pop_' + IndexOut + '_' + IndexIn 
+    },
+    // 题包元素前后移动
+    List_Item_Move_Up(Index){
+      let Item = this.Question_List[Index];
+      this.Question_List.splice(Index, 1);
+      this.Question_List.splice(Index - 1, 0, Item);
+      this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
+      this.$message.success("第" + this.Get_Chinese_Index(Index) + "大题已向前移动。")
+    },
+    // 题包元素前后移动
+    List_Item_Move_Down(Index){
+      let Item = this.Question_List[Index];
+      this.Question_List.splice(Index, 1);
+      this.Question_List.splice(Index + 1, 0, Item);
+      this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
+      this.$message.success("第" + this.Get_Chinese_Index(Index) + "大题已向后移动。")
+    },
+    Unfinish(){
+      this.$message.error("这部分还没做完或者说还不在当前计划范围内")
     }
   },
 }
