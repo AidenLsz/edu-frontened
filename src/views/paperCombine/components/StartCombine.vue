@@ -266,7 +266,7 @@
             <el-col :span="Get_Paper_Span()" style="padding-left: 10px;">
               <!-- 密封标识 -->
               <el-row type="flex" justify="start" v-if="Get_Paper_Setting('密封标识')" style="font-size: 16px;">
-                <label>密封 ★ 使用前</label>
+                <label>绝密 ★ 启用前</label>
               </el-row>
               <!-- 遍历大题 -->
               <el-row v-for="(Question_List_Item, Index) in Question_List" :key="'Result_Item_' + Index" style="margin-bottom: 10px;">
@@ -502,18 +502,15 @@ export default {
   width: 45px;
 }
 .Paper_Seal{
-  margin-top: 42vh;
-  margin-left: -19vw;
-  padding-right: 30px;
-  padding-top: 8px;
-  border-bottom: 1px dashed black;
-  height: 40px;
-  width: 620px;
-  text-align: right;
-  transform:rotate(-90deg);
-  -ms-transform:rotate(-90deg); /* Internet Explorer */
-  -moz-transform:rotate(-90deg); /* Firefox */
-  -webkit-transform:rotate(-90deg); /* Safari 和 Chrome */
-  -o-transform:rotate(-90deg); /* Opera */
+    position: relative;
+    font-size: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed black;
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+    font-weight: 700;
+    left: -280px;
+    top: 300px;/* Opera */
+    width: 600px;
 }
 </style>
