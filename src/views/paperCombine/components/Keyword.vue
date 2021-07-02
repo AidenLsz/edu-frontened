@@ -112,7 +112,7 @@
       </el-col>
       <el-col :span="2" >
           <el-row type="flex" justify="center" class="filterButtonFocus">
-              <span>综合排序</span>
+              <span>智能排序</span>
           </el-row>
       </el-col>
     </el-row>
@@ -260,6 +260,7 @@ export default {
       Add_To_Question_Cart(Question_Index){
         let Aim = this.questionList[Question_Index]
         let Question_Show_Infos = {
+          id: "",
           type: "",
           score: 0,
           stem: "",
@@ -278,6 +279,7 @@ export default {
           Question_Show_Infos.score = 5;
         }
 
+        Question_Show_Infos.id = Aim.id;
         Question_Show_Infos.options = Aim.options;
         Question_Show_Infos.stem = Aim.stem;
         Question_Show_Infos.answer = Aim.answer;

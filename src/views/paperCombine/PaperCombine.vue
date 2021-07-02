@@ -43,7 +43,7 @@
                     </el-col>
                 </el-row>
                 <el-row type="flex" justify="center" slot="reference">
-                    <i class="el-icon-menu" style="height: 40px; line-height: 40px; font-size: 20px; margin-right: 15px"></i>
+                    <i class="el-icon-menu" style="height: 50px; line-height: 50px; font-size: 20px; margin-right: 15px"></i>
                     {{Selected_Period + Selected_Subject}}
                 </el-row>
             </el-popover>
@@ -205,6 +205,14 @@ export default {
     // 添加到“题目篮”的方法
     Add_To_Question_Cart(val){
         let Question = JSON.parse(val);
+        for(let i = 0; i < this.Question_List.length; i++){
+            for(let j = 0; j < this.Question_List[i].list.length; j++){
+                if(this.Question_List[i].list[j].id != "" && this.Question_List[i].list[j].id == Question.id){
+                    this.$message.error("这道试题已经在试题篮里了。")
+                    return;
+                }
+            }
+        }
         let Switch = false;
         for(let i = 0; i < this.Question_List.length; i++){
             if(this.Question_List[i].type == Question.type){

@@ -115,7 +115,7 @@
                 难度：
               </el-col>
               <el-col :offset="9" :span="3" style="line-height: 40px;">
-                <el-button size="medium" plain round type="primary" @click="Replace_Question(Question_Index)">替换试题</el-button>
+                <el-button :disabled="Replacable(Question.id)" size="medium" plain round type="primary" @click="Replace_Question(Question_Index)">替换试题</el-button>
               </el-col>
           </el-row>
         </el-col>
@@ -734,10 +734,32 @@ export default {
     this.Init_User_Database_List();
   },
   methods: {
+    // 判断这道题是否应该可以被替换
+    Replacable(ID){
+      for(let i = 0; i < this.Question_List.length; i++){
+        for(let j = 0; j < this.Question_List[i].list.length; j++){
+          if(this.Question_List[i].list[j].id != "" && this.Question_List[i].list[j].id == ID){
+            return true;
+          }
+        }
+      }
+      return false;
+    },
     // 替换试题
     Replace_Question(Question_Index){
       let Item = this.Replace_Question_List[Question_Index];
+
+      for(let i = 0; i < this.Question_List.length; i++){
+        for(let j = 0; j < this.Question_List[i].list.length; j++){
+          if(this.Question_List[i].list[j].id != "" && this.Question_List[i].list[j].id == Item.id){
+            this.$message.error("已有重复试题在试题篮，请选择其他题目替换。");
+            return
+          }
+        }
+      }
+
       let Question_Show_Infos = {
+        id: "",
         type: "",
         score: 0,
         stem: "",
@@ -756,6 +778,7 @@ export default {
         Question_Show_Infos.score = 5;
       }
 
+      Question_Show_Infos.id = Item.id;
       Question_Show_Infos.options = Item.options;
       Question_Show_Infos.stem = Item.stem;
       Question_Show_Infos.answer = Item.answer;

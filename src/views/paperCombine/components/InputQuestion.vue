@@ -641,6 +641,7 @@ export default {
     // 添加至试题篮
     Add_To_Question_Cart(){
       let Question_Show_Infos = {
+        id: "",
         type: "",
         score: 0,
         stem: "",
