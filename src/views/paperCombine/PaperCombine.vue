@@ -153,45 +153,7 @@ export default {
         // 存放当前正在使用第几个菜单项
         Using_Menu_Index: 0,
         // 题目列表信息
-        Question_List: [{
-            type: "选择题",
-            list: [
-            {   
-                type: "选择题",
-                score: 1, 
-                stem: "三角形",
-                options: ['$A$', '$B$', '$C$', '$D$'],
-                answer: "",
-                analyse: ""
-            }, {
-                type: "选择题",
-                score: 2, 
-                stem: "选择题流程测试数据2",
-                options: ['$1$', '$2$', '$3$', '$4$'],
-                answer: "",
-                analyse: ""    
-            }]
-        },
-        {
-            type: "填空题",
-            list: [
-            {
-                type: "填空题",
-                score: 3, 
-                stem: "填空题流程测试数据1",
-                options: [],
-                answer: "",
-                analyse: ""
-            }, {
-                type: "填空题",
-                score: 4, 
-                stem: "填空题流程测试数据2",
-                options: [],
-                answer: "",
-                analyse: ""
-            }]
-        }
-        ],
+        Question_List: [],
         // 用于设定学科 / 学段选择位置的数据字段
         Select_List: [{
             period: "高中",
