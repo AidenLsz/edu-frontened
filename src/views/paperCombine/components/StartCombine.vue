@@ -76,7 +76,16 @@
       width="70%"
       @close="Replace_Dialog_Close()"
       :modal-append-to-body="false"
-      :close-on-click-modal="false">
+      :close-on-click-modal="false"
+      >
+      <el-row
+        v-if="Replace_Question_List.length == 0"
+        style="min-height: 60vh"
+        v-loading="loading"
+        element-loading-text="正在检索试题中..."
+        element-loading-spinner="el-icon-loading">
+
+      </el-row>
       <el-row
         v-for="(Question, Question_Index) in Replace_Question_List"
         :key="Question_Index"
@@ -276,7 +285,7 @@
                           </el-col>
                         </el-row>
                         <el-row type="flex" justify="center">
-                          <el-button type="primary" size="medium" @click="Unfinish()"><i class="el-icon-refresh" style="margin-right: 15px;"></i>换一题</el-button>
+                          <el-button type="primary" size="medium" @click="submit(Index, (Row_Index - 1) * 6 + Col_Index - 1)"><i class="el-icon-refresh" style="margin-right: 15px;"></i>换一题</el-button>
                         </el-row>
                         <el-row 
                           slot="reference"
@@ -757,6 +766,8 @@ export default {
       this.Replace_Question_Bundle_Index = -1;
       this.Replace_Question_Index = -1;
       this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
+
+      this.Replace_Question_List = [];
     },
     // 手动关闭替换对话框
     Replace_Dialog_Close(){
@@ -806,7 +817,7 @@ export default {
         
         var data = JSON.stringify({
           "content": this.Question_List[Index].list[IndexIn].stem,
-          "size": 5,
+          "size": 6,
           "database": this.databaseAim,
           "page_count": 1,
           "subject": [this.Subject],
@@ -821,7 +832,7 @@ export default {
         commonAjax(this.backendIP+'/api/search', param)
         .then((data)=>{
             this.Replace_Question_List = [];
-            for(var i = 0; i < data.results.length; i++){
+            for(var i = 1; i < data.results.length; i++){
                 this.Replace_Question_List.push(data.results[i])
             }
             this.Replace_Question_Bundle_Index = Index;
