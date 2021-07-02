@@ -28,6 +28,9 @@ import PaperAnalyseInput from "@/views/resourceAnalyse/PaperAnalyseInput";
 import QuestionAnalyse from "@/views/resourceAnalyse/QuestionAnalyse";
 import QuestionAnalyseInput from "@/views/resourceAnalyse/QuestionAnalyseInput";
 
+// 组卷
+import PaperCombine from "@/views/paperCombine/PaperCombine.vue"
+
 // 用户政策与隐私协议
 import UserAgreement from "@/layout/components/UserAgreement";
 import PrivacyPolicy from "@/layout/components/PrivacyPolicy";
@@ -41,6 +44,11 @@ const visitorRouter=[
     path: "/ku",
     name: "Knowledge Unit",
     component: KU,
+  },
+  {
+    path: "/paperCombine",
+    name: "PaperCombine",
+    component: PaperCombine
   },
   {
     path: "/exercise",

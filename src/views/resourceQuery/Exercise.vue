@@ -580,11 +580,6 @@ export default {
     Clear_Pic(){
       this.Cache_Pic.splice(0, 1, "");
     },
-    // 添加监听器
-    addEnterListener(){
-      var Input = document.getElementById("ExerciseInput");
-      Input.addEventListener()
-    },
     // 查看单题分析报告
     Check_Analyse(ID, DatabaseName){
 

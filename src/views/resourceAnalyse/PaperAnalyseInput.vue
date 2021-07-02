@@ -4030,7 +4030,7 @@ export default {
 
         var Ques = Docs[i]
 
-        Docs[i].question_score = this.testDataScore[i];
+        Docs[i].score = parseFloat(this.testDataScore[i] + "");
 
         var stem = Ques.question_stem;
         var result = this.ChecK_Do(stem);
@@ -4090,129 +4090,19 @@ export default {
         }
       }
 
+      this.TestData.doc = Docs;
 
-      // let config = {
-      //     headers: { "Content-Type": "multipart/form-data" }
-      // };
-      // let param = new FormData();
+      // let file = new File(
+      //     [JSON.stringify(this.TestData, null, 2)],
+      //     "A.json",
+      //     { type: "text/plain;charset=utf-8" }
+      //   );
+      //   FileSaver.saveAs(file);
 
-      // param.append('result_json', JSON.stringify(this.TestData));
-      // this.$http
-      // .post(this.backendIP + "/api/mathUpload", param, config, {
-      //   emulateJSON: true
-      // })
-      // .then(function(data) {
-      //   console.log(data.data)
-      // });
-
-      // var Ques_List = [];
-
-      // var Option_Ques = {
-      //     type: "option",
-      //     // 分值
-      //     score: 1,
-      //     // 题目内容，题目内容图片，是否显示图片
-      //     content: "",
-      //     content_images: [],
-      //     // 选项的部分
-      //     options: ["", "", "", ""],
-      //     options_images: ["", "", "", ""],
-      //     // 答案的部分
-      //     answer: "",
-      //     answer_images: [],
-      //     // 解析的部分
-      //     analyse: "",
-      //     analyse_images: []
+      // let Flag = true;
+      // if(Flag){
+      //   return
       // }
-
-      // var Fill_Ques = {
-
-      //     type: "fill",
-      //     // 分值
-      //     score: 1,
-      //     // 题目内容，题目内容图片，是否显示图片
-      //     content: "",
-      //     content_images: [],
-      //     // 答案的部分
-      //     answer: "",
-      //     answer_images: [],
-      //     // 解析的部分
-      //     analyse: "",
-      //     analyse_images: []
-
-      // }
-
-      // var Answer_Ques = {
-
-      //     type: "answer",
-      //     // 分值
-      //     score: 1,
-      //     // 题目内容，题目内容图片，是否显示图片
-      //     content: "",
-      //     content_images: [],
-      //     // 小题的部分
-      //     sub_questions: [],
-      //     sub_questions_images: [],
-      //     sub_questions_scores: [],
-      //     // 答案的部分
-      //     answer: "",
-      //     answer_images: [],
-      //     // 解析的部分
-      //     analyse: "",
-      //     analyse_images: []
-
-      // }
-
-      // for(i = 0; i < Docs.length; i++){
-      //   Ques = Docs[i]
-      //   if(Ques.question_type == "选择题"){
-      //     var Opt = Option_Ques;
-      //     Opt.type = "option"
-      //     Opt.score = "UNKNOWN";
-      //     Opt.content = Ques.question_stem;
-      //     Opt.content_images = [];
-      //     Opt.options = Ques.question_options;
-      //     Opt.options_images = [];
-      //     for(j = 0; j < Ques.question_options.length; j++){
-      //       Opt.options_images.push("")
-      //     }
-      //     Opt.answer = Ques.answer;
-      //     Opt.answer_images = [];
-      //     Opt.analyse = Ques.analysis;
-      //     Opt.analyse_images = [];
-      //     Ques_List.push(Opt);
-      //   }else if(Ques.question_type == "填空题"){
-      //     var Fill = Fill_Ques;
-      //     Fill.type = "fill"
-      //     Fill.score = "UNKNOWN";
-      //     Fill.content = Ques.question_stem;
-      //     Fill.content_images = [];
-      //     Fill.answer = Ques.answer;
-      //     Fill.answer_images = [];
-      //     Fill.analyse = Ques.analysis;
-      //     Fill.analyse_images = [];
-      //     Ques_List.push(Fill);
-      //   }else if(Ques.question_type == "解答题"){
-      //     var Ans = Answer_Ques;
-      //     Ans.type = "answer";
-      //     Ans.score = "UNKNOWN";
-      //     Ans.content = Ques.question_stem;
-      //     Ans.content_images = []
-      //     Ans.answer = Ques.answer;
-      //     Ans.answer_images = []
-      //     Ans.analyse = Ques.analysis;
-      //     Ans.analyse_images = [];
-      //     for(j = 0; j < Ques.sub_questions.length; j++){
-      //       Ans.sub_questions.push(Ques.sub_questions[j]);
-      //       Ans.sub_questions_images.push([]);
-      //       Ans.sub_questions_scores.push("UNKNOWN");
-      //     }
-      //     Ques_List.push(Ans);
-      //   }
-        
-      // }
-
-      // console.log(Ques_List);
 
       let config = {
             headers: { "Content-Type": "multipart/form-data" }
