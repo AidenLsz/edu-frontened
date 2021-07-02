@@ -159,7 +159,7 @@ export default {
             {   
                 type: "选择题",
                 score: 1, 
-                stem: "选择题流程测试数据1",
+                stem: "三角形",
                 options: ['$A$', '$B$', '$C$', '$D$'],
                 answer: "",
                 analyse: ""

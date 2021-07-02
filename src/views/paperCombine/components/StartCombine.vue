@@ -70,6 +70,48 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <el-dialog 
+      :visible.sync="Replace_Dialog_Show"
+      title="换一题"
+      width="70%"
+      @close="Replace_Dialog_Close()"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false">
+      <el-row
+        v-for="(Question, Question_Index) in Replace_Question_List"
+        :key="Question_Index"
+        style="margin-bottom: 50px"
+        type="flex" justify="start"
+        >
+        <el-col :span="20" class="quesCard">
+          <el-row style="text-align: left; padding-top: 15px; background: white; padding-bottom: 15px">
+            <el-col style="padding-bottom: 15px" >
+              <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
+            </el-col>
+            <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
+              <el-row style="line-height: 40px" type="flex" justify="start">
+                <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+                <Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
+              </el-row>
+            </el-col>
+          </el-row>
+          <el-row style="margin-bottom: 10px; padding-top: 10px;">
+              <el-col :span="5" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
+                所属题库：{{Question.database}}
+              </el-col>
+              <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem;">
+                题型：{{Question.type}}
+              </el-col>
+              <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
+                难度：
+              </el-col>
+              <el-col :offset="9" :span="3" style="line-height: 40px;">
+                <el-button size="medium" plain round type="primary" @click="Replace_Question(Question_Index)">替换试题</el-button>
+              </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-dialog>
       <el-row>
         <el-col :span="5">
           <!-- 设置区块 -->
@@ -505,10 +547,18 @@
                     v-for="(Question, IndexIn) in Question_List_Item.list" 
                     :key="'Result_Item_' + Index + '_' + IndexIn"
                     type="flex" justify="center"
-                    style="margin-bottom: 10px; min-height: 45px;">
+                    :class="Get_Hover_Question(Index, IndexIn)"
+                    style="padding-bottom: 5px; min-height: 45px; padding-top: 5px; margin-top: 5px; margin-bottom: 5px; padding-left: 10px; padding-right: 10px;"
+                    @mouseenter.native="Hover_Question(Index, IndexIn)" 
+                    @mouseleave.native="Hover_Question(-1, -1)"
+                    >
                     <!-- 把这些部分垂直排列 -->
                     <el-col>
-                        <el-row type="flex" justify="start" style="margin-bottom: 5px;">
+                        <el-row 
+                          type="flex" 
+                          justify="start" 
+                          style="margin-bottom: 5px;"
+                          @mouseenter.native="Hover_Question(Index, IndexIn)">
                           <Mathdown 
                             :content="'(' + Question.score + '分) '+ (IndexIn + 1) + '. $ $ '+ Question.stem" 
                             :name="'Question_Stem_' + Index + '_' + IndexIn"></Mathdown>
@@ -516,11 +566,61 @@
                         <el-row 
                           v-for="(Option, OptionIndex) in Question.options" 
                           :key="'Q_O_' + Index + '_' + IndexIn + '_' + OptionIndex"
-                          style="margin-bottom: 2px;">
+                          style="margin-bottom: 2px;"
+                          @mouseenter.native="Hover_Question(Index, IndexIn)">
                           <Mathdown 
                           style="width: 50%"
                             :content="Get_Option_Index(OptionIndex) + ': $ $ ' + Option"
                             :name="'Q_O_' + Index + '_' + IndexIn + '_' + OptionIndex"></Mathdown>
+                        </el-row>
+                        <el-row 
+                          v-if="Index == Hovered_Question_Bundle_Index && IndexIn == Hovered_Question_Index"
+                          type="flex"
+                          justify="start"
+                          @mouseenter.native="Hover_Question(Index, IndexIn)">
+                          <!-- 分数修改 -->
+                          <span style="height: 30px; line-height: 30px; margin-right: 20px">修改为</span>
+                          <el-input 
+                            class="Custom_Score_Input" 
+                            v-model="Custom_Setting_Score" 
+                            :placeholder="Get_Custom_Setting_Score_Placeholder(Index, IndexIn)"></el-input>
+                          <span style="height: 30px; line-height: 30px; margin-left: 20px">分</span>
+                          <el-button 
+                            type="text" 
+                            size="medium" 
+                            style="height: 30px; line-height: 30px; margin-right: 10px; padding: 0px; margin-left: 10px;"
+                            @click="Update_Question_Score(Index, IndexIn)">确认</el-button>
+                            <!-- 上下移动 -->
+                            <el-button 
+                              type="text" 
+                              size="medium" 
+                              :disabled="IndexIn == 0"
+                              @click="Question_Move_Up(Index, IndexIn)"
+                              style="height: 30px; line-height: 30px; margin-right: 10px; padding: 0px"
+                              >前移</el-button>
+                            <el-button 
+                              type="text" 
+                              size="medium" 
+                              :disabled="IndexIn == Question_List_Item.list.length - 1"
+                              @click="Question_Move_Down(Index, IndexIn)"
+                              style="height: 30px; line-height: 30px; margin-right: 10px; padding: 0px">后移</el-button>
+                            <!-- 检查和删除 -->
+                            <el-button 
+                              type="text" 
+                              size="medium" 
+                              @click="Check_Question(Index, IndexIn)"
+                              style="height: 30px; line-height: 30px; margin-right: 10px; padding: 0px">查看</el-button>
+                            <el-button 
+                              type="text" 
+                              size="medium" 
+                              @click="Delete_Question(Index, IndexIn)"
+                              style="height: 30px; line-height: 30px; margin-right: 10px; padding: 0px; color: red">删除</el-button>
+                            <!-- 换一题 -->
+                            <el-button 
+                              type="text" 
+                              size="medium" 
+                              @click="submit(Index, IndexIn)"
+                              style="height: 30px; line-height: 30px; margin-right: 10px; padding: 0px"><i class="el-icon-refresh" style="margin-right: 15px;"></i>换一题</el-button>
                         </el-row>
                     </el-col>
                   </el-row>
@@ -534,6 +634,7 @@
 </template>
 <script>
 import Mathdown from '@/common/components/Mathdown'
+import {commonAjax} from '@/common/utils/ajax'
 export default {
   name: 'StartCombine',
   props: {
@@ -589,7 +690,20 @@ export default {
         studentWrite: 0,
         cautions: 0,
         bundleIntroduce: []
-      }
+      },
+      Hovered_Question_Bundle_Index: -1,
+      Hovered_Question_Index: -1,
+      // 换一题 时所允许检索的数据库名
+      databaseAim: [],
+      // 是否正在搜索题目
+      loading: false,
+      // 是否打开用于显示题目替换的对话框
+      Replace_Dialog_Show: false,
+      // 替换目标的题包索引和题目索引
+      Replace_Question_Bundle_Index: -1,
+      Replace_Question_Index: -1,
+      // 用于替换的目标题目
+      Replace_Question_List: []
     }
   },
   watch:{
@@ -608,8 +722,132 @@ export default {
   mounted() {
     this.Init_Setting_CheckBox();
     this.Init_Setting_Info();
+    this.Init_User_Database_List();
   },
   methods: {
+    // 替换试题
+    Replace_Question(Question_Index){
+      let Item = this.Replace_Question_List[Question_Index];
+      let Question_Show_Infos = {
+        type: "",
+        score: 0,
+        stem: "",
+        options: [],
+        answer: "",
+        analyse: ""
+      }
+      if(['单选题', '多选题', '判断题'].indexOf(Item.type) != -1){
+        Question_Show_Infos.type = "选择题";
+        Question_Show_Infos.score = 5;
+      }else if(['简答题', '计算题'].indexOf(Item.type) != -1){
+        Question_Show_Infos.type = "解答题"
+        Question_Show_Infos.score = 12;
+      }else if(Item.type == '填空题'){
+        Question_Show_Infos.type = '填空题'
+        Question_Show_Infos.score = 5;
+      }
+
+      Question_Show_Infos.options = Item.options;
+      Question_Show_Infos.stem = Item.stem;
+      Question_Show_Infos.answer = Item.answer;
+      Question_Show_Infos.analyse = Item.analysis;
+
+      this.Question_List[this.Replace_Question_Bundle_Index].list.splice(this.Replace_Question_Index, 1, Question_Show_Infos);
+      this.Replace_Dialog_Show = false;
+      this.Replace_Question_Bundle_Index = -1;
+      this.Replace_Question_Index = -1;
+      this.$emit('Update_Question_List', JSON.stringify(this.Question_List));
+    },
+    // 手动关闭替换对话框
+    Replace_Dialog_Close(){
+      this.Replace_Question_Bundle_Index = -1;
+      this.Replace_Question_Index = -1;
+    },
+    // 返回选项标签
+    Get_Option_Label(Index){
+      return String.fromCharCode(Index + 65)
+    },
+    // 初始化用户所可以检索的数据库列表
+    Init_User_Database_List(){
+      this.databaseAim = ['public']
+      //未登录时，不调用获取题库的端口
+      if(!this.$store.state.user.token){
+          return ;
+      }
+      commonAjax(this.backendIP+'/api/get_user_ig_name',
+          {
+          type:'Question',
+          action:'R',
+          }
+      ).then((res)=>{
+          let data=res.ig_name;
+          for (var i = 0; i < data.length; i++) {
+              this.databaseAim.push(data[i])
+          }
+      })
+    },
+    // 准备开始做一下“换一题”
+    // 检索试题内容
+    submit(Index, IndexIn) {
+
+        this.Replace_Dialog_Show = true;
+        this.loading = true;
+
+        let param = {}
+
+        let type = [];
+        if(this.Question_List[Index].list[IndexIn].type == "选择题"){
+          type = ["单选题", "多选题", "判断题"]
+        }else if(this.Question_List[Index].list[IndexIn].type == "填空题"){
+          type = ["填空题"]
+        }else if(this.Question_List[Index].list[IndexIn].type == "解答题"){
+          type = ["简答题", "计算题"]
+        }
+        
+        var data = JSON.stringify({
+          "content": this.Question_List[Index].list[IndexIn].stem,
+          "size": 5,
+          "database": this.databaseAim,
+          "page_count": 1,
+          "subject": [this.Subject],
+          "period": [this.Period],
+          "difficulty": [0.0, 1.0],
+          "type": type
+        })
+
+        // param.append("data", data);
+        param.data=data
+
+        commonAjax(this.backendIP+'/api/search', param)
+        .then((data)=>{
+            this.Replace_Question_List = [];
+            for(var i = 0; i < data.results.length; i++){
+                this.Replace_Question_List.push(data.results[i])
+            }
+            this.Replace_Question_Bundle_Index = Index;
+            this.Replace_Question_Index = IndexIn;
+            this.loading = false
+        }).catch(() => {
+            this.$message.error("服务器过忙，请稍后再试。")
+            this.loading = false;
+        })
+    },
+    // 根据当前正在悬浮的题目返回不同的样式
+    Get_Hover_Question(Index, IndexIn){
+      if(Index == this.Hovered_Question_Bundle_Index && IndexIn == this.Hovered_Question_Index){
+        return "Hovered_Question"
+      }else{
+        return ""
+      }
+    },
+    // 调整鼠标目前正悬浮在哪道题目上面
+    Hover_Question(Index, IndexIn){
+      this.Hovered_Question_Bundle_Index = Index;
+      this.Hovered_Question_Index = IndexIn;
+      if(Index != -1){
+        this.Custom_Setting_Score = this.Question_List[Index].list[IndexIn].score;
+      }
+    },
     // 获取“分卷注释”里显示的内容
     Getting_Part_Introduce(Index){
       let List = ['Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ', 'Ⅵ', 'Ⅶ', 'Ⅷ', 'Ⅸ']
@@ -641,6 +879,13 @@ export default {
     // 调整标题栏内容
     Expand_Change(part, value){
       this.Expand_Model[part] = value;
+      if(value == 0){
+        this.Expand_Model.title = 0;
+        this.Expand_Model.subTitle = 0;
+        this.Expand_Model.examInfo = 0;
+        this.Expand_Model.studentWrite = 0;
+        this.Expand_Model.cautions = 0;
+      }
     },
     // 比较例外的，调整大题注释的内容的时候
     Expand_Change_Intro(index, value){
@@ -812,7 +1057,7 @@ export default {
   padding: 0px;
   text-align: center;
   border-radius: 0px;   
-  background: transparent;
+  background: white;
 }
 .Custom_Score_Input.el-input {
   width: 45px;
@@ -864,5 +1109,17 @@ export default {
 }
 .Bundle_Introduce_Input.el-input {
   width: 200px;
+}
+.Hovered_Question{
+  border: 3px solid #409EFF; 
+  border-radius: 10px;
+  background: #EEF5FE;
+  box-sizing: border-box;
+}
+.quesCard{
+  // border: 3px dashed black;
+  background: #F8FBFF;
+  border: 1px dashed black;
+  margin-left: 5vw;
 }
 </style>
