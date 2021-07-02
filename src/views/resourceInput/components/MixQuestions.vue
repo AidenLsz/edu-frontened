@@ -514,11 +514,11 @@ export default {
         }
     },
     created() {
-        if(sessionStorage.getItem("InputPaperEditQuestion")){
-            this.questionInfo = JSON.parse(sessionStorage.getItem("InputPaperEditQuestion"));
+        if(sessionStorage.getItem("InputPaperEditQuestionmix")){
+            this.questionInfo = JSON.parse(sessionStorage.getItem("InputPaperEditQuestionmix"));
             this.ReEdit = true;
         }
-        sessionStorage.removeItem("InputPaperEditQuestion")
+        sessionStorage.removeItem("InputPaperEditQuestionmix")
     },
     watch: {
 
@@ -697,7 +697,7 @@ export default {
 
             if(this.Necessary_Check()){
 
-                sessionStorage.removeItem("InputPaperEditQuestion");
+                sessionStorage.removeItem("InputPaperEditQuestionmix");
                 const _this = this;
             
                 setTimeout(()=>{

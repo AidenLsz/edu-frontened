@@ -482,10 +482,10 @@ export default {
 
     },
     mounted() {
-        if(sessionStorage.getItem("InputPaperEditQuestion")){
-            this.questionInfo = JSON.parse(sessionStorage.getItem("InputPaperEditQuestion"));
+        if(sessionStorage.getItem("InputPaperEditQuestionanswer")){
+            this.questionInfo = JSON.parse(sessionStorage.getItem("InputPaperEditQuestionanswer"));
             this.ReEdit = true;
-            sessionStorage.removeItem("InputPaperEditQuestion")
+            sessionStorage.removeItem("InputPaperEditQuestionanswer")
         }
         if(sessionStorage.getItem("InputMarkedEditQuestion")){
             this.questionInfo = JSON.parse(sessionStorage.getItem("InputMarkedEditQuestion"));
@@ -653,7 +653,7 @@ export default {
             
                 setTimeout(()=>{
 
-                    sessionStorage.removeItem("InputPaperEditQuestion");
+                    sessionStorage.removeItem("InputPaperEditQuestionanswer");
 
                     this.questionInfo.score = parseFloat(this.questionInfo.score);
                     for(let i = 0; i < this.questionInfo.sub_questions_scores.length; i++){

@@ -56,7 +56,7 @@
         </el-row>
         <!-- 答案内容及图片 -->
         <el-row v-if="QI.answer != '' || QI.answer_images.length > 0">
-            <el-row type="flex" justify="start" style="font-size: 14px;">
+            <el-row type="flex" style="font-size: 14px; text-align: center">
                 <el-col :span="2">                        
                     <span><label>答案：</label></span>
                 </el-col>
