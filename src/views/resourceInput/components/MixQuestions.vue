@@ -47,7 +47,7 @@
             :append-to-body="true"
         >
             <template slot="title">
-                <el-row type="flex" justify="center" style="font-size: 18px;">请编辑想要插入/修改的填空题内容</el-row>  
+                <el-row type="flex" justify="center" style="font-size: 18px;">请编辑想要插入/修改的小题内容</el-row>  
             </template>
             <el-row>
                 <el-col v-if="complex_Input">
@@ -117,7 +117,7 @@
             :modal-append-to-body="false"
             :append-to-body="true"
         >
-            <MixDisplay :QI="questionInfos" :BI="'Self_Preview_0'"></MixDisplay>
+            <MixDisplay :QI="questionInfo" :BI="'Self_Preview_0'"></MixDisplay>
         </el-dialog>
         <!-- 测试用按钮行 -->
         <!-- <el-row>
@@ -156,27 +156,23 @@
             <el-col :span="6">
                 <el-row type="flex" justify="start">
                     <label style="padding-left: 5px; font-size: 15px; display: inline-block; width: 60px; padding-top:4px">分值：</label>
-                    <el-input type="number" min="1" max="100" step="0.1" v-model="questionInfos.score" size="mini" style="font-size: 15px; width: 100px; margin-left: 20px" :readonly="true"></el-input>
+                    <el-input type="number" min="1" max="100" step="0.1" v-model="questionInfo.score" size="mini" style="font-size: 15px; width: 100px; margin-left: 20px" :readonly="true"></el-input>
                     <label style="font-size: 15px; display: inline-block; width: 20px; padding-top:4px; margin-left: 20px">分</label>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 10px">
-                    <el-button size="mini" style="font-size: 12px; margin-left: 5px" @click="Open_Preview()">
+                    <el-button size="mini" style="font-size: 12px; width: 34%;" @click="Open_Preview()">
                         <i class="el-icon-search"></i>
                         预览本题
                     </el-button>
-                    <el-button size="small" @click.native="New_Ques('Option')" style="font-size: 12px; margin-left: 20px">
+                    <el-button size="small" @click.native="New_Ques('Option')" style="margin-left: 8%; font-size: 12px; width: 34%">
                         <i class="el-icon-edit"></i>
                         新选择题
                     </el-button>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 10px">
-                    <el-button size="small" @click.native="New_Ques('Fill')" style="font-size: 12px; margin-left: 5px">
+                    <el-button size="small" @click.native="New_Ques('Fill')" style="font-size: 12px; width: 76%">
                         <i class="el-icon-edit"></i>
-                        新填空题
-                    </el-button>
-                    <el-button size="small" @click.native="New_Ques('Answer')" style="font-size: 12px; margin-left: 20px">
-                        <i class="el-icon-edit"></i>
-                        新解答题
+                        新小题
                     </el-button>
                 </el-row>
             </el-col>
@@ -189,7 +185,7 @@
                     <el-col :span="18">
                         <el-input 
                             type="textarea" 
-                            v-model="questionInfos.content" 
+                            v-model="questionInfo.content" 
                             :autosize="{minRows: 4, maxRows: 6}" 
                             resize="none" 
                             style="font-size: 15px"
@@ -203,9 +199,7 @@
                             </label>
                         </el-row>
                         <el-row type="flex" justify="center">
-                            <div 
-                                class="btn_file"
-                                :style="{ opacity: changecss }">
+                            <div class="btn_file">
                                 <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
@@ -221,7 +215,7 @@
         <!-- 题干图片的部分 -->
         <el-row style="margin-top: 15px">
             <el-col :span="23" :offset="1" style="padding-top: 10px;">
-                <el-row v-for="row_count in Math.ceil(questionInfos.content_images.length/4)" :key="row_count">
+                <el-row v-for="row_count in Math.ceil(questionInfo.content_images.length/4)" :key="row_count">
                     <el-col 
                         :span="6" 
                         v-for="index in [0 + (row_count - 1)*4, 
@@ -230,13 +224,13 @@
                                          3 + (row_count - 1)*4]" 
                         :key="index"
                         >
-                        <el-row v-if="index < questionInfos.content_images.length && questionInfos.content_images[index] != ''">
+                        <el-row v-if="index < questionInfo.content_images.length && questionInfo.content_images[index] != ''">
                             <el-col :span="16" >
                                 <el-image 
-                                    :src="questionInfos.content_images[index]" 
+                                    :src="questionInfo.content_images[index]" 
                                     style="height: 100px; width: 100px" 
                                     fit="contain"
-                                    :preview-src-list="questionInfos.content_images">
+                                    :preview-src-list="questionInfo.content_images">
                                 </el-image>
                             </el-col>
                             <el-col :span="8" style="padding-top: 36px">
@@ -248,7 +242,7 @@
             </el-col>
         </el-row>
         <!-- 小题渲染区，要求所见即所得 -->
-        <el-row v-for="(item, index) in questionInfos.sub_questions" :key="index"> 
+        <el-row v-for="(item, index) in questionInfo.sub_questions" :key="index"> 
             <el-col>
                 <!-- 编辑题目，上移，下移，删除，折叠/展开按钮 -->
                 <el-row style="margin-top: 5px; margin-bottom: 10px">
@@ -269,7 +263,7 @@
                     </el-col>
                     <el-col :span="1">
                         <el-button 
-                            :disabled="index == questionInfos.sub_questions.length - 1" 
+                            :disabled="index == questionInfo.sub_questions.length - 1" 
                             circle 
                             size="small"
                             @click="Question_Down(index)"
@@ -285,7 +279,7 @@
                         ><i class="el-icon-delete"></i></el-button>
                     </el-col>
                     <el-col :span="2" >
-                        <div v-if="questionInfos.sub_questions_collapse[index] == false">
+                        <div v-if="questionInfo.sub_questions_collapse[index] == false">
                             <el-button 
                                 round 
                                 plain
@@ -294,7 +288,7 @@
                                 @click="Change_Question_collapse(index)"
                             >折叠</el-button>
                         </div>
-                        <div v-if="questionInfos.sub_questions_collapse[index] == true">
+                        <div v-if="questionInfo.sub_questions_collapse[index] == true">
                             <el-button 
                                 round 
                                 plain
@@ -306,7 +300,7 @@
                     </el-col>
                 </el-row>
                 <!-- 展开模式交给Display来负责，折叠模式为了避免样式报错，直接转换成文字格式 -->
-                <div v-if="questionInfos.sub_questions_collapse[index] == false" style="margin-top: 20px">
+                <div v-if="questionInfo.sub_questions_collapse[index] == false" style="margin-top: 20px">
                     <el-row style="text-align: left; font-size: 15px; padding-left: 20px; margin-bottom: 10px">
                         <label>第 {{index + 1}} 题</label>
                     </el-row>
@@ -316,7 +310,7 @@
                         <AnswerDisplay v-else-if="item.type == 'answer'" :QI="item" :Bundle_Index="'Bundle_' + index"></AnswerDisplay>
                     </el-row>
                 </div>
-                <div v-if="questionInfos.sub_questions_collapse[index]" style="margin-top: 20px">
+                <div v-if="questionInfo.sub_questions_collapse[index]" style="margin-top: 20px">
                     <el-row style="text-align: left; font-size: 15px; padding-left: 20px; margin-bottom: 10px">
                         <label>第 {{index + 1}} 题</label>
                         <span style="margin-left: 20px">{{Get_collapse_Show(item)}}</span>
@@ -336,7 +330,7 @@
                     <el-col :span="19">
                         <el-input 
                             type="textarea" 
-                            v-model="questionInfos.answer" 
+                            v-model="questionInfo.answer" 
                             :autosize="{minRows: 2, maxRows: 4}" 
                             resize="none" 
                             style="font-size: 15px"
@@ -350,9 +344,7 @@
                             </label>
                         </el-row>
                         <el-row type="flex" justify="center">
-                            <div 
-                                class="btn_file"
-                                :style="{ opacity: changecss }">
+                            <div class="btn_file">
                                 <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
@@ -367,7 +359,7 @@
         </el-row>
         <el-row style="margin-top: 15px">
             <el-col :span="23" :offset="1" style="padding-top: 10px;">
-                <el-row v-for="row_count in Math.ceil(questionInfos.answer_images.length/4)" :key="row_count">
+                <el-row v-for="row_count in Math.ceil(questionInfo.answer_images.length/4)" :key="row_count">
                     <el-col 
                         :span="6" 
                         v-for="index in [0 + (row_count - 1)*4, 
@@ -376,13 +368,13 @@
                                          3 + (row_count - 1)*4]" 
                         :key="index"
                         >
-                        <el-row v-if="index < questionInfos.answer_images.length && questionInfos.answer_images[index] != ''">
+                        <el-row v-if="index < questionInfo.answer_images.length && questionInfo.answer_images[index] != ''">
                             <el-col :span="16" >
                                 <el-image 
-                                    :src="questionInfos.answer_images[index]" 
+                                    :src="questionInfo.answer_images[index]" 
                                     style="height: 100px; width: 100px" 
                                     fit="contain"
-                                    :preview-src-list="questionInfos.answer_images">
+                                    :preview-src-list="questionInfo.answer_images">
                                 </el-image>
                             </el-col>
                             <el-col :span="8" style="padding-top: 36px">
@@ -405,7 +397,7 @@
                     <el-col :span="19">
                         <el-input 
                             type="textarea" 
-                            v-model="questionInfos.analyse" 
+                            v-model="questionInfo.analyse" 
                             :autosize="{minRows: 2, maxRows: 4}" 
                             resize="none" 
                             style="font-size: 15px"
@@ -419,9 +411,7 @@
                             </label>
                         </el-row>
                         <el-row type="flex" justify="center">
-                            <div 
-                                class="btn_file"
-                                :style="{ opacity: changecss }">
+                            <div class="btn_file">
                                 <p><i class="el-icon-picture"></i></p>
                                 <input
                                     type="file"
@@ -436,7 +426,7 @@
         </el-row>
         <el-row style="margin-top: 15px">
             <el-col :span="23" :offset="1" style="padding-top: 10px;">
-                <el-row v-for="row_count in Math.ceil(questionInfos.analyse_images.length/4)" :key="row_count">
+                <el-row v-for="row_count in Math.ceil(questionInfo.analyse_images.length/4)" :key="row_count">
                     <el-col 
                         :span="6" 
                         v-for="index in [0 + (row_count - 1)*4, 
@@ -445,13 +435,13 @@
                                          3 + (row_count - 1)*4]" 
                         :key="index"
                         >
-                        <el-row v-if="index < questionInfos.analyse_images.length && questionInfos.analyse_images[index] != ''">
+                        <el-row v-if="index < questionInfo.analyse_images.length && questionInfo.analyse_images[index] != ''">
                             <el-col :span="16" >
                                 <el-image 
-                                    :src="questionInfos.analyse_images[index]" 
+                                    :src="questionInfo.analyse_images[index]" 
                                     style="height: 100px; width: 100px" 
                                     fit="contain"
-                                    :preview-src-list="questionInfos.analyse_images">
+                                    :preview-src-list="questionInfo.analyse_images">
                                 </el-image>
                             </el-col>
                             <el-col :span="8" style="padding-top: 36px">
@@ -525,20 +515,20 @@ export default {
     },
     created() {
         if(sessionStorage.getItem("InputPaperEditQuestion")){
-            this.questionInfos = JSON.parse(sessionStorage.getItem("InputPaperEditQuestion"));
+            this.questionInfo = JSON.parse(sessionStorage.getItem("InputPaperEditQuestion"));
             this.ReEdit = true;
         }
         sessionStorage.removeItem("InputPaperEditQuestion")
     },
     watch: {
 
-        questionInfos(newVal, oldVal) {
+        questionInfo(newVal, oldVal) {
             var change_Switch = false;
 
             if(newVal != oldVal){
                 for(var i = 0; i < newVal.sub_questions.length; i++){
-                    if(newVal.sub_questions[i].score <= 0){
-                        newVal.sub_questions[i].score = 0.1;
+                    if(newVal.sub_questions[i].score < 0.5){
+                        newVal.sub_questions[i].score = 0.5;
                         this.$message.error("一道题目应当至少有0.1分");
                         change_Switch = true;
                     }else if(newVal.sub_questions[i].score > 100){
@@ -552,18 +542,18 @@ export default {
                 }
             }
 
-            if(!change_Switch && this.questionInfos.sub_questions.length > 0){
+            if(!change_Switch && this.questionInfo.sub_questions.length > 0){
 
-                this.questionInfos.score = parseFloat(this.questionInfos.sub_questions[0].score);
+                this.questionInfo.score = parseFloat(this.questionInfo.sub_questions[0].score);
 
-                for(var j = 1; j < this.questionInfos.sub_questions.length; j++){
-                    this.questionInfos.score = this.questionInfos.score + parseFloat(this.questionInfos.sub_questions[j].score);
+                for(var j = 1; j < this.questionInfo.sub_questions.length; j++){
+                    this.questionInfo.score = this.questionInfo.score + parseFloat(this.questionInfo.sub_questions[j].score);
                 }
 
             }
 
             if(newVal.sub_questions.length == 0){
-                this.questionInfos.score = 0;
+                this.questionInfo.score = 0;
             }
 
         },
@@ -575,9 +565,9 @@ export default {
         Unit_Score(newVal, oldVal) {
             newVal = parseInt(newVal)
             oldVal = parseInt(oldVal)
-            if(newVal <= 0){
-                newVal = 0.1;
-                this.$message.error("一道题目应当至少有0.1分");
+            if(newVal < 0.5){
+                newVal = 0.5;
+                this.$message.error("一道题目应当至少有0.5分");
             }else if(newVal > 100){
                 newVal = 100;
                 this.$message.error("一道题目应当至多有100分");
@@ -596,7 +586,7 @@ export default {
             // 一道非选择题应当包含的信息
             // 小题中的图片，分数，内容由其自己保管，反正有对应的Display工具作显示
             // 这边只需要编辑他的内容就好了
-            questionInfos: this.QInfos,
+            questionInfo: this.QInfos,
             SubjectType: this.ST,
             // 选择题编辑器,填空题编辑器和解答题编辑器的显示控制
             showDialog: false,
@@ -615,7 +605,7 @@ export default {
 
                 type: "option",
                 // 分值
-                score: 1,
+                score: 5,
                 // 题目内容，题目内容图片，是否显示图片
                 content: "",
                 content_images: [],
@@ -627,14 +617,15 @@ export default {
                 answer_images: [],
                 // 解析的部分
                 analyse: "",
-                analyse_images: []
+                analyse_images: [],
+                detail_type: "单选题"
 
             },
             Temp_FillQuestionInfos: {
 
                 type: "fill",
                 // 分值
-                score: 1,
+                score: 5,
                 // 题目内容，题目内容图片，是否显示图片
                 content: "",
                 content_images: [],
@@ -643,34 +634,35 @@ export default {
                 answer_images: [],
                 // 解析的部分
                 analyse: "",
-                analyse_images: []
+                analyse_images: [],
+                detail_type: "填空题"
 
             },
             Temp_AnswerQuestionInfos: {
 
                 type: "answer",
                 // 分值
-                score: 1,
+                score: 5,
                 // 题目内容，题目内容图片，是否显示图片
                 content: "",
                 content_images: [],
                 // 小题的部分
                 sub_questions: [""],
                 sub_questions_images: [[]],
-                sub_questions_scores: [1],
+                sub_questions_scores: [5],
                 // 答案的部分
                 answer: "",
                 answer_images: [],
                 // 解析的部分
                 analyse: "",
-                analyse_images: []
+                analyse_images: [],
+                detail_type: "简答题"
 
             },
             // 临时保存重写编辑的位置用的记号
             Index_Edit_Record: -1,
             // 是否允许预览对话框打开
-            preview: false,
-            changecss: 1
+            preview: false
         }
     },
     methods: {
@@ -686,10 +678,10 @@ export default {
             }
         },
         Unit_Score_Do(){
-            for(let i = 0; i < this.questionInfos.sub_questions.length; i++){
-                let Temp_Item = JSON.parse(JSON.stringify(this.questionInfos.sub_questions[i]))
+            for(let i = 0; i < this.questionInfo.sub_questions.length; i++){
+                let Temp_Item = JSON.parse(JSON.stringify(this.questionInfo.sub_questions[i]))
                 Temp_Item.score = parseFloat(this.Unit_Score);
-                this.questionInfos.sub_questions.splice(i, 1, Temp_Item);
+                this.questionInfo.sub_questions.splice(i, 1, Temp_Item);
             }
             this.Calc_Score();
         },
@@ -714,11 +706,11 @@ export default {
 
                         if(_this.ReEdit == false){
 
-                            _this.$emit("EditFinish_Mix", _this.questionInfos);
+                            _this.$emit("EditFinish_Mix", _this.questionInfo);
                             
                         }else{
 
-                            _this.$emit("ReEditFinish_Mix", _this.questionInfos);
+                            _this.$emit("ReEditFinish_Mix", _this.questionInfo);
                             _this.ReEdit = false;
 
                         }
@@ -727,7 +719,7 @@ export default {
                     })
 
                     Pro.then(function(){
-                        _this.questionInfos = _this.QInfos;
+                        _this.questionInfo = _this.QInfos;
                     })
 
 
@@ -740,7 +732,7 @@ export default {
         },
         Necessary_Check(){
 
-            if(this.questionInfos.content == ""){
+            if(this.questionInfo.content == ""){
                 return false
             }else{
                 return true
@@ -757,11 +749,11 @@ export default {
             temp_val = this.Normal_Char_Check(val);
 
             if(temp_val != false){
-                this.questionInfos.sub_questions.push(temp_val);
+                this.questionInfo.sub_questions.push(temp_val);
             }else{
-                this.questionInfos.sub_questions.push(val);
+                this.questionInfo.sub_questions.push(val);
             }
-            this.questionInfos.sub_questions_collapse.push(false);
+            this.questionInfo.sub_questions_collapse.push(false);
             this.Close_Editor();
             this.Reset_Params();
 
@@ -926,15 +918,15 @@ export default {
         // showDialog代表显示的是哪个编辑器
         Edit_Question(index){
 
-            if(this.questionInfos.sub_questions[index].type == 'option'){
+            if(this.questionInfo.sub_questions[index].type == 'option'){
                 this.showDialog = true;
-                this.Temp_OptionQuestionInfos = this.questionInfos.sub_questions[index];
-            }else if(this.questionInfos.sub_questions[index].type == 'fill'){
+                this.Temp_OptionQuestionInfos = this.questionInfo.sub_questions[index];
+            }else if(this.questionInfo.sub_questions[index].type == 'fill'){
                 this.showDialog_Fill = true;
-                this.Temp_FillQuestionInfos = this.questionInfos.sub_questions[index];
-            }else if(this.questionInfos.sub_questions[index].type == 'answer'){
+                this.Temp_FillQuestionInfos = this.questionInfo.sub_questions[index];
+            }else if(this.questionInfo.sub_questions[index].type == 'answer'){
                 this.showDialog_Answer = true;
-                this.Temp_AnswerQuestionInfos = this.questionInfos.sub_questions[index];
+                this.Temp_AnswerQuestionInfos = this.questionInfo.sub_questions[index];
             }
             this.ReEditSwitch = true;
             this.Index_Edit_Record = index;
@@ -954,9 +946,9 @@ export default {
             temp_val = this.Normal_Char_Check(val);
 
             if(temp_val != false){
-                this.questionInfos.sub_questions.splice(this.Index_Edit_Record, 1, temp_val);
+                this.questionInfo.sub_questions.splice(this.Index_Edit_Record, 1, temp_val);
             }else{
-                this.questionInfos.sub_questions.splice(this.Index_Edit_Record, 1, val);
+                this.questionInfo.sub_questions.splice(this.Index_Edit_Record, 1, val);
             }
 
             this.Close_Editor();
@@ -966,9 +958,9 @@ export default {
             
         },
         Calc_Score(){
-            this.questionInfos.score = 0;
-            for(let i = 0; i < this.questionInfos.sub_questions.length; i++){
-                this.questionInfos.score += this.questionInfos.sub_questions[i].score;
+            this.questionInfo.score = 0;
+            for(let i = 0; i < this.questionInfo.sub_questions.length; i++){
+                this.questionInfo.score += this.questionInfo.sub_questions[i].score;
             }
         },
         // 一起关掉
@@ -985,24 +977,24 @@ export default {
         // 注意要一次移动信息和折叠属性两个，不然会有问题
         Question_Up(index){
 
-            var temp_Save = this.questionInfos.sub_questions[index];
-            this.questionInfos.sub_questions.splice(index, 1);
-            this.questionInfos.sub_questions.splice(index - 1, 0, temp_Save);
+            var temp_Save = this.questionInfo.sub_questions[index];
+            this.questionInfo.sub_questions.splice(index, 1);
+            this.questionInfo.sub_questions.splice(index - 1, 0, temp_Save);
 
-            var temp_coll = this.questionInfos.sub_questions_collapse[index];
-            this.questionInfos.sub_questions_collapse.splice(index, 1);
-            this.questionInfos.sub_questions_collapse.splice(index - 1, 0, temp_coll);
+            var temp_coll = this.questionInfo.sub_questions_collapse[index];
+            this.questionInfo.sub_questions_collapse.splice(index, 1);
+            this.questionInfo.sub_questions_collapse.splice(index - 1, 0, temp_coll);
 
         },
         Question_Down(index){
 
-            var temp_Save = this.questionInfos.sub_questions[index];
-            this.questionInfos.sub_questions.splice(index, 1);
-            this.questionInfos.sub_questions.splice(index + 1, 0, temp_Save);
+            var temp_Save = this.questionInfo.sub_questions[index];
+            this.questionInfo.sub_questions.splice(index, 1);
+            this.questionInfo.sub_questions.splice(index + 1, 0, temp_Save);
 
-            var temp_coll = this.questionInfos.sub_questions_collapse[index];
-            this.questionInfos.sub_questions_collapse.splice(index, 1);
-            this.questionInfos.sub_questions_collapse.splice(index + 1, 0, temp_coll);
+            var temp_coll = this.questionInfo.sub_questions_collapse[index];
+            this.questionInfo.sub_questions_collapse.splice(index, 1);
+            this.questionInfo.sub_questions_collapse.splice(index + 1, 0, temp_coll);
 
         },
         // 处理完题目的录入之后要重置这些临时使用的变量
@@ -1016,7 +1008,7 @@ export default {
 
                 type: "option",
                 // 分值
-                score: 1,
+                score: 5,
                 // 题目内容，题目内容图片，是否显示图片
                 content: "",
                 content_images: [],
@@ -1028,7 +1020,8 @@ export default {
                 answer_images: [],
                 // 解析的部分
                 analyse: "",
-                analyse_images: []
+                analyse_images: [],
+                detail_type: "单选题"
 
             }
 
@@ -1036,7 +1029,7 @@ export default {
 
                 type: "fill",
                 // 分值
-                score: 1,
+                score: 5,
                 // 题目内容，题目内容图片，是否显示图片
                 content: "",
                 content_images: [],
@@ -1045,7 +1038,8 @@ export default {
                 answer_images: [],
                 // 解析的部分
                 analyse: "",
-                analyse_images: []
+                analyse_images: [],
+                detail_type: "填空题"
 
             }
 
@@ -1053,20 +1047,21 @@ export default {
 
                 type: "answer",
                 // 分值
-                score: 1,
+                score: 5,
                 // 题目内容，题目内容图片，是否显示图片
                 content: "",
                 content_images: [],
                 // 小题的部分
                 sub_questions: [""],
                 sub_questions_images: [[]],
-                sub_questions_scores: [1],
+                sub_questions_scores: [5],
                 // 答案的部分
                 answer: "",
                 answer_images: [],
                 // 解析的部分
                 analyse: "",
-                analyse_images: []
+                analyse_images: [],
+                detail_type: "简答题"
 
             }
 
@@ -1074,8 +1069,8 @@ export default {
         // 删除题目也是一样，要一起删除折叠信息
         Delete_Question(index){
 
-            this.questionInfos.sub_questions.splice(index, 1);
-            this.questionInfos.sub_questions_collapse.splice(index, 1);
+            this.questionInfo.sub_questions.splice(index, 1);
+            this.questionInfo.sub_questions_collapse.splice(index, 1);
 
             this.Calc_Score();
 
@@ -1099,10 +1094,10 @@ export default {
         // 天知道vue这到底什么谜一样的前端内容……
         Change_Question_collapse(index){
 
-            if(this.questionInfos.sub_questions_collapse[index]){
-                this.questionInfos.sub_questions_collapse.splice(index, 1, false);
+            if(this.questionInfo.sub_questions_collapse[index]){
+                this.questionInfo.sub_questions_collapse.splice(index, 1, false);
             }else{
-                this.questionInfos.sub_questions_collapse.splice(index, 1, true);
+                this.questionInfo.sub_questions_collapse.splice(index, 1, true);
             }
 
         },
@@ -1116,11 +1111,11 @@ export default {
                 reader.readAsDataURL(e.target.files[i]);
                 reader.onloadend = function() {
                     if(type == 'content'){
-                        _this.questionInfos.content_images.push(this.result);
+                        _this.questionInfo.content_images.push(this.result);
                     }else if(type == 'answer'){
-                        _this.questionInfos.answer_images.push(this.result);
+                        _this.questionInfo.answer_images.push(this.result);
                     }else if(type == 'analyse'){
-                        _this.questionInfos.analyse_images.push(this.result);
+                        _this.questionInfo.analyse_images.push(this.result);
                     }
                 };
             }
