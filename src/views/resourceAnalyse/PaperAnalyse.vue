@@ -551,10 +551,6 @@
     </div>
 </template>
 <script>
-<<<<<<< HEAD
-=======
-// import FileSaver from "file-saver";
->>>>>>> 54c17f3... issue34 - Export-Paper-Analyse-Chart-Json
 // 引入基本模板
 import * as echarts from 'echarts';
 import PaperAnalysePQRoot from './components/PaperAnalysePQRoot.vue';
