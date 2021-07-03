@@ -1561,6 +1561,11 @@ export default {
     },
   },
   mounted(){
+    if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
+      this.$message.error("您尚未登录，请登录后使用录入功能。")
+      this.$router.push("/")
+      return 
+    }
     this.ToTop();
     this.Import_User_Trace = "";
     if(sessionStorage.getItem("Import_User")){
@@ -3054,7 +3059,7 @@ export default {
 
     for(let i = 0; i < this.Questions.length; i++){
       for(let j = 0; j < this.Questions[i].Bundle_Questions.length; j++){
-        let Item = this.Questions[i].Bundle_Questions[j];
+        let Item = JSON.parse(JSON.stringify(this.Questions[i].Bundle_Questions[j]));
         Upload_Json.Question_list.push(this.Transfrom_Structure(Item))
       }
     }
@@ -3072,8 +3077,6 @@ export default {
 
 
       if(Control == 'upload'){
-
-
 
         this.Uploading = true;
 
@@ -3244,7 +3247,7 @@ export default {
       for(var i = 0; i < this.TestData.doc.length; i++){
         this.Question_Check.push(false);
         this.TestData.doc[i].answer = this.TestData.doc[i].answer.split("::");
-        if(i < 16){
+        if(this.TestData.doc[i].question_type != "解答题"){
           this.testDataScore.push(5);
         }else{
           this.testDataScore.push(12);
@@ -3687,19 +3690,79 @@ export default {
 
       this.TestData.doc = Docs;
 
-      // let file = new File(
-      //     [JSON.stringify(this.TestData, null, 2)],
-      //     "A.json",
-      //     { type: "text/plain;charset=utf-8" }
-      //   );
-      //   FileSaver.saveAs(file);
+      let Upload_Json = {
+        title: "",
+        desc: "",
+        Question_list: [],
+        user_id: this.$store.state.user.token,
+        subject: this.SubjectType,
+        period: this.PeriodType,
+      }
 
-      // console.log(this.TestData);
+      for(let i = 0; i < this.TestData.doc.length; i++){
+        let Item = this.TestData.doc[i];
+        let Temp_Doc = {
+          type: "",
+          stem: "",
+          score: 0,
+          options: [],
+          answer: "",
+          analysis: ""
+        }
+        if(Item.question_type == "选择题"){
+          Temp_Doc.type = "单选题"
+          Temp_Doc.stem = Item.question_stem;
+          Temp_Doc.score = parseFloat(Item.score + "")
+          Temp_Doc.options = Item.question_options;
+          Temp_Doc.answer = Item.answer.join("\n");
+          Temp_Doc.analysis = Item.analysis;
+          Upload_Json.Question_list.push(Temp_Doc);
+        }else if(Item.question_type == "填空题"){
+          Temp_Doc.type = "填空题"
+          Temp_Doc.stem = Item.question_stem;
+          Temp_Doc.score = parseFloat(Item.score + "")
+          Temp_Doc.answer = Item.answer.join("\n");
+          Temp_Doc.analysis = Item.analysis;
+          Upload_Json.Question_list.push(Temp_Doc);
+        }else if(Item.question_type == "解答题"){
+          let Temp_Doc_2 = {
+            desc: Item.question_stem,
+            type: "大题",
+            score: parseFloat(Item.score + ""),
+            subquestions: [],
+            answer: "",
+            analysis: ""
+          }
+          for(let k = 0; k < Item.sub_questions.length; k++){
+            let Ques_Item = {
+              type: "计算题",
+              score: parseFloat(Item.score/Item.sub_questions.length + ""),
+              stem: "",
+              options: [],
+              answer: "",
+              analysis: ""
+            }
+            Ques_Item.stem = Item.sub_questions[k];
+            Temp_Doc_2.subquestions.push(Ques_Item);
+          }
+ 
+          Temp_Doc_2.answer = Item.answer.join("\n");
+          Temp_Doc_2.analysis = Item.analysis;
+          Upload_Json.Question_list.push(Temp_Doc_2);
+        }
+      }
 
-      // let Flag = true;
-      // if(Flag){
-      //   return
-      // }
+      let file = new File(
+          [JSON.stringify(Upload_Json, null, 2)],
+          "A.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
+
+      let Flag = true;
+      if(Flag){
+        return
+      }
 
       let config = {
             headers: { "Content-Type": "multipart/form-data" }

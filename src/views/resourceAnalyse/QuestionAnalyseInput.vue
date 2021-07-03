@@ -75,6 +75,7 @@
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
+        :key="'Option_Dia_' + refresh"
     >
         <el-row>
             <el-col v-if="complex_Input">
@@ -96,8 +97,7 @@
         <OptionQuestions 
             @EditFinish="New_Questions" 
             @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch" 
-            :QInfos.sync="Temp_OptionQuestionInfo" 
+            :RE.sync="ReEditSwitch"
             ref="OptionQuestionsEditor">
         </OptionQuestions>
     </el-dialog>
@@ -105,10 +105,11 @@
     <el-dialog 
         :visible.sync="showDialog_Fill" 
         title="请编辑想要插入/修改的填空题内容" 
-        width="80%" 
+        width="65%" 
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
+        :key="'Fill_Dia_' + refresh"
     >
         <el-row>
             <el-col v-if="complex_Input">
@@ -130,18 +131,18 @@
         <FillQuestions
             @EditFinish="New_Questions" 
             @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch" 
-            :QInfos.sync="Temp_FillQuestionInfo" 
+            :RE.sync="ReEditSwitch"
         ></FillQuestions>
     </el-dialog>
     <!-- 提供给解答题的编辑器 -->
     <el-dialog 
         :visible.sync="showDialog_Answer" 
         title="请编辑想要插入/修改的解答题内容" 
-        width="80%" 
+        width="65%" 
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
+        :key="'Answer_Dia_' + refresh"
     >
         <el-row>
             <el-col v-if="complex_Input">
@@ -163,8 +164,7 @@
         <AnswerQuestions
             @EditFinish="New_Questions" 
             @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch" 
-            :QInfos.sync="Temp_AnswerQuestionInfo" 
+            :RE.sync="ReEditSwitch"
         ></AnswerQuestions>
     </el-dialog>
     <!-- 提供给非选择题的编辑器 -->
@@ -173,7 +173,8 @@
         title="请编辑想要插入/修改的非选择题内容" 
         width="80%"
         :modal-append-to-body="false"
-        :close-on-click-modal="false">
+        :close-on-click-modal="false"
+        :key="'Mix_Dia_' + refresh">
         <el-row>
             <el-col v-if="complex_Input">
                 <el-row>
@@ -195,7 +196,6 @@
             @EditFinish_Mix="New_Questions" 
             @ReEditFinish_Mix="ReEdit_Questions"
             :RE.sync="ReEditSwitch"
-            :QInfos.sync="Temp_MixQuestionInfo"
         ></MixQuestions>
     </el-dialog>
     <!-- 完成单题显示的编辑器 -->
@@ -518,6 +518,7 @@ export default {
                 Mathdown, QuestionAnalyse},
   data() {
     return {
+      refresh: false,
       // 是否展开题型
       Expand: true,
       // 待选科目
@@ -630,7 +631,7 @@ export default {
 
           type: "option",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
@@ -642,12 +643,13 @@ export default {
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          detail_type: "单选题"
 
       },
       Temp_MixQuestionInfo: {
           type: "mix",
-          score: "None",
+          score: 0,
           content: "",
           content_images: [],
           answer: "",
@@ -661,7 +663,7 @@ export default {
 
           type: "fill",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
@@ -670,27 +672,29 @@ export default {
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          detail_type: "填空题"
 
       },
       Temp_AnswerQuestionInfo: {
 
           type: "answer",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
           // 小题的部分
           sub_questions: [""],
           sub_questions_images: [[]],
-          sub_questions_scores: [1],
+          sub_questions_scores: [5],
           // 答案的部分
           answer: "",
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          detail_type: "简答题"
 
       },
       QuestionAnalyseSwitchFlag: false,
@@ -776,6 +780,11 @@ export default {
       },
   },
   mounted(){
+    if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
+      this.$message.error("您尚未登录，请登录后使用录入功能。")
+      this.$router.push("/")
+      return 
+    }
     this.Init_Question_Check()
     this.ToTop();
   },
@@ -840,7 +849,7 @@ export default {
 
             type: "option",
             // 分值
-            score: 1,
+            score: 5,
             // 题目内容，题目内容图片，是否显示图片
             content: "",
             content_images: [],
@@ -852,7 +861,8 @@ export default {
             answer_images: [],
             // 解析的部分
             analyse: "",
-            analyse_images: []
+            analyse_images: [],
+            detail_type: "单选题"
 
         }
 
@@ -860,7 +870,7 @@ export default {
 
             type: "fill",
             // 分值
-            score: 1,
+            score: 5,
             // 题目内容，题目内容图片，是否显示图片
             content: "",
             content_images: [],
@@ -869,7 +879,8 @@ export default {
             answer_images: [],
             // 解析的部分
             analyse: "",
-            analyse_images: []
+            analyse_images: [],
+            detail_type: "填空题"
 
         }
 
@@ -877,20 +888,21 @@ export default {
 
             type: "answer",
             // 分值
-            score: 1,
+            score: 5,
             // 题目内容，题目内容图片，是否显示图片
             content: "",
             content_images: [],
             // 小题的部分
             sub_questions: [""],
             sub_questions_images: [[]],
-            sub_questions_scores: [1],
+            sub_questions_scores: [5],
             // 答案的部分
             answer: "",
             answer_images: [],
             // 解析的部分
             analyse: "",
-            analyse_images: []
+            analyse_images: [],
+            detail_type: "简答题"
 
         }
 
@@ -898,7 +910,7 @@ export default {
           // 题目类型，分值，题干内容，题干图片，答案内容，答案图片
           // 小题内容，小题是否折叠，解析内容，解析图片
             type: "mix",
-            score: "None",
+            score: 0,
             content: "",
             content_images: [],
             answer: "",
@@ -954,13 +966,21 @@ export default {
     Edit_Question(){
 
         if(this.Type_Now == 'option'){
-            this.showDialog = true;
+          sessionStorage.setItem("InputMarkedEditQuestion", JSON.stringify(this.Temp_OptionQuestionInfo));
+          this.refresh = !this.refresh;
+          this.showDialog = true;
         }else if(this.Type_Now == 'fill'){
-            this.showDialog_Fill = true;
+          sessionStorage.setItem("InputMarkedEditQuestion", JSON.stringify(this.Temp_FillQuestionInfo));
+          this.refresh = !this.refresh;
+          this.showDialog_Fill = true;
         }else if(this.Type_Now == 'answer'){
-            this.showDialog_Answer = true;
+          sessionStorage.setItem("InputMarkedEditQuestion", JSON.stringify(this.Temp_AnswerQuestionInfo));
+          this.refresh = !this.refresh;
+          this.showDialog_Answer = true;
         }else if(this.Type_Now == 'mix'){
-            this.showDialog_Mix = true;
+          sessionStorage.setItem("InputMarkedEditQuestion", JSON.stringify(this.Temp_MixQuestionInfo));
+          this.refresh = !this.refresh;
+          this.showDialog_Mix = true;
         }
         this.ReEditSwitch = true;
 
@@ -1070,21 +1090,16 @@ export default {
         val.content = result[0];
       }
 
-      var Check_Now_List = val.answer;
-      Check_Now_List = Check_Now_List.split("::");
-      for(let j = 0; j < Check_Now_List.length; j++){
-        var item = Check_Now_List[j]
-        result = this.ChecK_Do(item);
-        if(item != "" && result[1]){
-          this.$alert("请将答案内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
-            confirmButtonText: '确定'
-          });
-          return false
-        }else if(item != "" && !result[1]){
-          Check_Now_List.splice(j, 1, result[0])
-        }
+      Check_Now = val.answer;
+      result = this.ChecK_Do(Check_Now);
+      if(Check_Now!= "" && result[1]){
+        this.$alert("请将题干内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
+          confirmButtonText: '确定'
+        });
+        return false
+      }else if(Check_Now!= "" && !result[1]){
+        val.answer = result[0];
       }
-      val.answer = Check_Now_List.join("\n");
 
       Check_Now = val.analyse;
       result = this.ChecK_Do(Check_Now);
@@ -1098,32 +1113,28 @@ export default {
       }
 
       if(val.type == 'option'){
-        Check_Now_List = val.options;
+        let Check_Now_List = val.options;
         for(let opi = 0; opi < Check_Now_List.length; opi++){
-          item = Check_Now_List[opi]
+          let item = Check_Now_List[opi]
           result = this.ChecK_Do(item);
           if(item != "" && result[1]){
             this.$alert("请将选项内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
               confirmButtonText: '确定'
             });
             return false
-          }else if(item != "" && !result[1]){
-            Check_Now_List.splice(opi, 1, result[0])
           }
         }
         val.options = Check_Now_List;
       }else if(val.type == 'answer'){
-        Check_Now_List = val.sub_questions;
+        let Check_Now_List = val.sub_questions;
         for(let opi = 0; opi < Check_Now_List.length; opi++){
-          item = Check_Now_List[opi]
+          let item = Check_Now_List[opi]
           result = this.ChecK_Do(item);
           if(item != "" && result[1]){
             this.$alert("请将选项内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
               confirmButtonText: '确定'
             });
             return false
-          }else if(item != "" && !result[1]){
-            Check_Now_List.splice(opi, 1, result[0])
           }
         }
         val.sub_questions = Check_Now_List;
@@ -1226,12 +1237,13 @@ export default {
       this.ReEditSwitch = false;
       this.Type_Now = "-1";
       this.complex_Input = false;
+      this.refresh = false;
 
       this.Temp_OptionQuestionInfo = {
 
           type: "option",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
@@ -1243,7 +1255,8 @@ export default {
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          detail_type: "单选题"
 
       }
 
@@ -1251,7 +1264,7 @@ export default {
 
           type: "fill",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
@@ -1260,7 +1273,8 @@ export default {
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          detail_type: "填空题"
 
       }
 
@@ -1268,20 +1282,21 @@ export default {
 
           type: "answer",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
           // 小题的部分
           sub_questions: [""],
           sub_questions_images: [[]],
-          sub_questions_scores: [1],
+          sub_questions_scores: [5],
           // 答案的部分
           answer: "",
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          detail_type: "简答题"
 
       }
 
@@ -1289,7 +1304,7 @@ export default {
         // 题目类型，分值，题干内容，题干图片，答案内容，答案图片
         // 小题内容，小题是否折叠，解析内容，解析图片
           type: "mix",
-          score: "None",
+          score: 0,
           content: "",
           content_images: [],
           answer: "",
@@ -1304,209 +1319,244 @@ export default {
     // 尝试进行导出
     PaperUpload(Control){
 
-      this.Question_Analysing = true;
+      // this.Question_Analysing = true;
 
       if(this.Symbol_Error){
         this.$message.error("仍有非法字符存在，请修改后重新尝试。")
         return null;
       }
 
-      // var Upload_Json = {
-      //   "title": this.PaperTitle,
-      //   "subject_type": this.SubjectType,
-      //   "period_type": this.PeriodType,
-      //   "source": "USER_ID",
-      //   "img": {},
-      //   "doc": []
-      // }
-
-      // var Temp_Doc = {
-      //   "question_stem": "",
-      //   "question_options": [],
-      //   "question_type": "",
-      //   "sub_questions": [],
-      //   "answer": "",
-      //   "analysis": "",
-      // }
-
       var Ques = "";
 
       if(this.Type_Now == 'option'){
-        Ques = this.Temp_OptionQuestionInfo;
-        // // 题型
-        // Temp_Doc.question_type = "选择题"
-        // // 题干
-        // Temp_Doc.question_stem = Ques.content;
-        // for(var img_l = 0; img_l < Ques.content_images.length; img_l++){
-        //   Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-        // }
-        // // 答案
-        // Temp_Doc.answer = Ques.answer;
-        // for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-        //   Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-        // }
-        // // 解析
-        // Temp_Doc.analysis = Ques.analyse;
-        // for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-        //   Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-        // }
-        // // 选项
-        // for(img_l = 0; img_l < Ques.options.length; img_l++){
-        //   var optionInfo = Ques.options[img_l];
-        //   if(Ques.options_images[img_l] != ""){
-        //     optionInfo = optionInfo + "<img src='" + Ques.options_images[img_l] + "'>"
-        //   }
-        //   Temp_Doc.question_options.push(optionInfo)
-        // }
 
-        // Upload_Json.doc.push(Temp_Doc)
+        let Temp_Doc = {
+          type: "",
+          stem: "",
+          score: 0,
+          options: [],
+          answer: "",
+          analysis: "",
+          user_id: this.$store.state.user.token,
+          subject: this.SubjectType,
+          period: this.PeriodType
+        }
+
+        Ques = JSON.parse(JSON.stringify(this.Temp_OptionQuestionInfo));
+
+        Temp_Doc.type = Ques.detail_type;
+
+        Temp_Doc.stem = Ques.content;
+        for(let i = 0; i < Ques.content_images.length; i++){
+          Temp_Doc.stem = Temp_Doc.stem + "<img src='" + Ques.content_images[i] + "'>"
+        }
+
+        Temp_Doc.score = parseFloat(Ques.score + "");
+
+        Temp_Doc.options = Ques.options
+        for(let i = 0; i < Ques.options_images.length; i++){
+          let Item = Temp_Doc.options[i]
+          if(Ques.options_images[i].length > 0){
+             Item = Item + "<img src='" + Ques.options_images[i] + "'>";
+          }
+          Temp_Doc.options.splice(i, 1, Item);
+        }
+
+        Temp_Doc.answer = Ques.answer;
+        for(let i = 0; i < Ques.answer_images.length; i++){
+          Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[i] + "'>"
+        }
+
+        Temp_Doc.analysis = Ques.analyse;
+        for(let i = 0; i < Ques.analyse_images.length; i++){
+          Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[i] + "'>"
+        }
+
+        let file = new File(
+          [JSON.stringify(Temp_Doc, null, 4)],
+          "Option.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
+        return;
+
       }else if(this.Type_Now == 'fill'){
-        Ques = this.Temp_FillQuestionInfo
-        // // 题型
-        // Temp_Doc.question_type = "填空题"
-        // // 题干
-        // Temp_Doc.question_stem = Ques.content;
-        // for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-        //   Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-        // }
-        // // 答案
-        // Temp_Doc.answer = Ques.answer;
-        // for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-        //   Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-        // }
-        // // 解析
-        // Temp_Doc.analysis = Ques.analyse;
-        // for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-        //   Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-        // }
 
-        // Upload_Json.doc.push(Temp_Doc)
+        let Temp_Doc = {
+          type: "",
+          stem: "",
+          score: 0,
+          options: [],
+          answer: "",
+          analysis: "",
+          user_id: this.$store.state.user.token,
+          subject: this.SubjectType,
+          period: this.PeriodType
+        }
+        
+        Ques = JSON.parse(JSON.stringify(this.Temp_FillQuestionInfo))
+
+        Temp_Doc.type = Ques.detail_type;
+
+        Temp_Doc.stem = Ques.content;
+        for(let i = 0; i < Ques.content_images.length; i++){
+          Temp_Doc.stem = Temp_Doc.stem + "<img src='" + Ques.content_images[i] + "'>"
+        }
+
+        Temp_Doc.score = parseFloat(Ques.score + "");
+
+        Temp_Doc.answer = Ques.answer;
+        for(let i = 0; i < Ques.answer_images.length; i++){
+          Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[i] + "'>"
+        }
+
+        Temp_Doc.analysis = Ques.analyse;
+        for(let i = 0; i < Ques.analyse_images.length; i++){
+          Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[i] + "'>"
+        }
+
+        let file = new File(
+          [JSON.stringify(Temp_Doc, null, 4)],
+          "Fill.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
+        return;
+
       }else if(this.Type_Now == 'answer'){
-        Ques = this.Temp_AnswerQuestionInfo
-        // // 题型
-        // Temp_Doc.question_type = "解答题"
-        // // 题干
-        // Temp_Doc.question_stem = Ques.content;
-        // for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-        //   Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-        // }
-        // // 答案
-        // Temp_Doc.answer = Ques.answer;
-        // for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-        //   Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-        // }
-        // // 解析
-        // Temp_Doc.analysis = Ques.analyse;
-        // for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-        //   Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-        // }
-        // // 小题
-        // for(img_l = 0; img_l < Ques.sub_questions.length; img_l++){
-        //   var subTemp = Ques.sub_questions[img_l];
-        //   for(var inner = 0; inner < Ques.sub_questions_images[img_l].length; inner++){
-        //     subTemp = subTemp + "<img src='" + Ques.sub_questions_images[img_l][inner] + "'>"
-        //   }
-        //   Temp_Doc.sub_questions.push(subTemp)
-        // }
 
-        // Upload_Json.doc.push(Temp_Doc)
+        Ques = JSON.parse(JSON.stringify(this.Temp_AnswerQuestionInfo))
+
+        let Temp_Doc = {
+          desc: "",
+          type: "大题",
+          score: 0,
+          subquestions: [],
+          user_id: this.$store.state.user.token,
+          subject: this.SubjectType,
+          period: this.PeriodType,
+          answer: "",
+          analysis: ""
+        }
+
+        Temp_Doc.desc = Ques.content;
+        for(let i = 0; i < Ques.content_images.length; i++){
+          Temp_Doc.desc = Temp_Doc.desc + "<img src='" + Ques.content_images[i] + "'>"
+        }
+
+        Temp_Doc.score = parseFloat(Ques.score + "");
+
+        for(let i = 0; i < Ques.sub_questions.length; i++){
+          let Item = {
+            type: Ques.detail_type,
+            score: parseFloat(Ques.sub_questions_scores[i] + ""),
+            stem: Ques.sub_questions[i],
+            options: [],
+            answer: "",
+            analysis: ""
+          }
+
+          for(let j = 0; j < Ques.sub_questions_images[i].length; j++){
+            Item.stem = Item.stem + "<img src='" + Ques.sub_questions_images[i][j] + "'>"
+          }
+
+          Temp_Doc.subquestions.push(Item)
+        }
+
+        Temp_Doc.answer = Ques.answer;
+        for(let i = 0; i < Ques.answer_images.length; i++){
+          Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[i] + "'>"
+        }
+
+        Temp_Doc.analysis = Ques.analyse;
+        for(let i = 0; i < Ques.analyse_images.length; i++){
+          Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[i] + "'>"
+        }
+        
+        let file = new File(
+          [JSON.stringify(Temp_Doc, null, 4)],
+          "Fill.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
+        return;
+
       }else if(this.Type_Now == 'mix'){
 
-        Ques = this.Temp_MixQuestionInfo
-        // var O_Answer = Ques_Out.answer.split("::");
+        Ques = JSON.parse(JSON.stringify(this.Temp_MixQuestionInfo))
+
+        let Temp_Doc = {
+          desc: "",
+          type: "大题",
+          score: 0,
+          subquestions: [],
+          user_id: this.$store.state.user.token,
+          subject: this.SubjectType,
+          period: this.PeriodType,
+          answer: "",
+          analysis: ""
+        }
+
+        Temp_Doc.desc = Ques.content;
+        for(let i = 0; i < Ques.content_images.length; i++){
+          Temp_Doc.desc = Temp_Doc.desc + "<img src='" + Ques.content_images[i] + "'>"
+        }
+
+        Temp_Doc.score = parseFloat(Ques.score + "");
+
+        for(let i = 0; i < Ques.sub_questions.length; i++){
+          let Item = {
+            type: Ques.sub_questions[i].detail_type,
+            score: parseFloat(Ques.sub_questions[i].score + ""),
+            stem: Ques.sub_questions[i].content,
+            options: [],
+            answer: Ques.sub_questions[i].answer,
+            analysis: Ques.sub_questions[i].analyse
+          }
+
+          for(let j = 0; j < Ques.sub_questions[i].content_images.length; j++){
+            Item.stem = Item.stem + "<img src='" + Ques.sub_questions[i].content_images[j] + "'>"
+          }
+
+          for(let j = 0; j < Ques.sub_questions[i].answer_images.length; j++){
+            Item.answer = Item.answer + "<img src='" + Ques.sub_questions[i].answer_images[j] + "'>"
+          }
+
+          for(let j = 0; j < Ques.sub_questions[i].analyse_images.length; j++){
+            Item.analysis = Item.analysis + "<img src='" + Ques.sub_questions[i].analyse_images[j] + "'>"
+          }
+
+          if(Ques.sub_questions[i].type == 'option'){
+            for(let k = 0; k < Ques.sub_questions[i].options.length; k++){
+              let opt = Ques.sub_questions[i].options[k]
+              if(Ques.sub_questions[i].options_images[k].length > 0){
+                opt = opt + "<img src='" + Ques.sub_questions[i].options_images[k] + "'>"
+              }
+              Item.options.push(opt);
+            }
+          }
+
+          Temp_Doc.subquestions.push(Item)
+        }
+
+        Temp_Doc.answer = Ques.answer;
+        for(let i = 0; i < Ques.answer_images.length; i++){
+          Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[i] + "'>"
+        }
+
+        Temp_Doc.analysis = Ques.analyse;
+        for(let i = 0; i < Ques.analyse_images.length; i++){
+          Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[i] + "'>"
+        }
         
+        let file = new File(
+          [JSON.stringify(Temp_Doc, null, 4)],
+          "Fill.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
+        return;
 
-        // for(var B_inner = 0; B_inner < Ques_Out.sub_questions.length; B_inner++){
-
-        //   Temp_Doc = {
-        //     "question_stem": "",
-        //     "question_options": [],
-        //     "question_type": "",
-        //     "sub_questions": [],
-        //     "answer": "",
-        //     "analysis": "",
-        //   }
-
-        //   Ques = Ques_Out.sub_questions[B_inner]
-
-        //   if(Ques.type == 'option'){
-        //     // 题型
-        //     Temp_Doc.question_type = "选择题"
-        //     // 题干
-        //     Temp_Doc.question_stem = Ques_Out.content + " " + Ques.content;
-        //     for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-        //       Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-        //     }
-        //     // 答案
-        //     if(O_Answer[B_inner]){
-        //       Temp_Doc.answer = O_Answer[B_inner] + Ques.answer;
-        //     }else{
-        //       Temp_Doc.answer = Ques.answer;
-        //     }
-        //     for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-        //       Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-        //     }
-        //     // 解析
-        //     Temp_Doc.analysis = Ques.analyse;
-        //     for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-        //       Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-        //     }
-        //     // 选项
-        //     for(img_l = 0; img_l < Ques.options.length; img_l++){
-        //       optionInfo = Ques.options[img_l];
-        //       if(Ques.options_images[img_l] != ""){
-        //         optionInfo = optionInfo + "<img src='" + Ques.options_images[img_l] + "'>"
-        //       }
-        //       Temp_Doc.question_options.push(optionInfo)
-        //     }
-        //   }else if(Ques.type == 'fill'){
-        //     // 题型
-        //     Temp_Doc.question_type = "填空题"
-        //     // 题干
-        //     Temp_Doc.question_stem = Ques_Out.content + " " + Ques.content;
-        //     for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-        //       Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-        //     }
-        //     // 答案
-        //     Temp_Doc.answer = Ques.answer;
-        //     for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-        //       Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-        //     }
-        //     // 解析
-        //     Temp_Doc.analysis = Ques.analyse;
-        //     for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-        //       Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-        //     }
-        //   }else if(Ques.type == 'answer'){
-        //     // 题型
-        //     Temp_Doc.question_type = "解答题"
-        //     // 题干
-        //     Temp_Doc.question_stem = Ques_Out.content + " " + Ques.content;
-        //     for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-        //       Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-        //     }
-        //     // 答案
-        //     Temp_Doc.answer = Ques.answer;
-        //     for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-        //       Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-        //     }
-        //     // 解析
-        //     Temp_Doc.analysis = Ques.analyse;
-        //     for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-        //       Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-        //     }
-        //     // 小题
-        //     for(img_l = 0; img_l < Ques.sub_questions.length; img_l++){
-        //       subTemp = Ques.sub_questions[img_l];
-        //       for(inner = 0; inner < Ques.sub_questions_images[img_l].length; inner++){
-        //         subTemp = subTemp + "<img src='" + Ques.sub_questions_images[img_l][inner] + "'>"
-        //       }
-        //       Temp_Doc.sub_questions.push(subTemp)
-        //     }
-        //   }
-
-        //   Upload_Json.doc.push(Temp_Doc)
-        //}
       }
 
       if(Control == 'upload'){

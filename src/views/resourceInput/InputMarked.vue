@@ -620,7 +620,7 @@ export default {
       },
       Temp_MixQuestionInfo: {
           type: "mix",
-          score: "None",
+          score: 0,
           content: "",
           content_images: [],
           answer: "",
@@ -634,7 +634,7 @@ export default {
 
           type: "fill",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
@@ -697,6 +697,11 @@ export default {
       },
   },
   mounted(){
+    if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
+      this.$message.error("您尚未登录，请登录后使用录入功能。")
+      this.$router.push("/")
+      return 
+    }
     this.Init_Question_Check()
     this.ToTop();
   },
@@ -749,7 +754,7 @@ export default {
 
             type: "option",
             // 分值
-            score: 1,
+            score: 5,
             // 题目内容，题目内容图片，是否显示图片
             content: "",
             content_images: [],
@@ -771,7 +776,7 @@ export default {
 
             type: "fill",
             // 分值
-            score: 1,
+            score: 5,
             // 题目内容，题目内容图片，是否显示图片
             content: "",
             content_images: [],
@@ -1250,7 +1255,7 @@ export default {
           period: this.PeriodType
         }
 
-        Ques = this.Temp_OptionQuestionInfo;
+        Ques = JSON.parse(JSON.stringify(this.Temp_OptionQuestionInfo));
 
         Temp_Doc.type = Ques.detail_type;
 
@@ -1302,7 +1307,7 @@ export default {
           period: this.PeriodType
         }
         
-        Ques = this.Temp_FillQuestionInfo
+        Ques = JSON.parse(JSON.stringify(this.Temp_FillQuestionInfo))
 
         Temp_Doc.type = Ques.detail_type;
 
@@ -1333,7 +1338,7 @@ export default {
 
       }else if(this.Type_Now == 'answer'){
 
-        Ques = this.Temp_AnswerQuestionInfo
+        Ques = JSON.parse(JSON.stringify(this.Temp_AnswerQuestionInfo))
 
         let Temp_Doc = {
           desc: "",
@@ -1391,7 +1396,7 @@ export default {
 
       }else if(this.Type_Now == 'mix'){
 
-        Ques = this.Temp_MixQuestionInfo
+        Ques = JSON.parse(JSON.stringify(this.Temp_MixQuestionInfo))
 
         let Temp_Doc = {
           desc: "",
