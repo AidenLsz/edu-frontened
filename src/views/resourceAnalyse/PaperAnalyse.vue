@@ -551,7 +551,6 @@
     </div>
 </template>
 <script>
-
 // 引入基本模板
 import * as echarts from 'echarts';
 import PaperAnalysePQRoot from './components/PaperAnalysePQRoot.vue';
