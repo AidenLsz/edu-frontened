@@ -566,7 +566,6 @@ export default {
     name: "PaperAnalyse",
     data(){
         return {
-            loading: false,
             // 计时器，用Remaining做计时
             Timer: "",
             // 倒计时五秒前不允许下载，为了方便Echarts完全生成
