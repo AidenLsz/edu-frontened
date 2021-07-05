@@ -156,6 +156,55 @@
                 </el-col>
             </el-row>
             <el-divider></el-divider>
+            <!-- 实习生 -->
+            <el-row style="margin: 30px 0px 30px 0px;">
+                <label style="font-size: 20px">实习生</label>
+            </el-row>
+            <el-row v-for="Row_Index in Math.ceil(member_data.trainee.length/3)" :key="'IE_R_' + Row_Index" style="margin-left: 10vw; margin-right: 10vw; padding-left: 3vw">
+                <el-col :span="7" v-if="(Row_Index - 1) * 3 + 0 < member_data.trainee.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_Trainee_Img(Row_Index, 0)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.trainee[(Row_Index - 1) * 3 + 0].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.trainee[(Row_Index - 1) * 3 + 0].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.trainee[(Row_Index - 1) * 3 + 0].intro}}</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 1 < member_data.trainee.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_Trainee_Img(Row_Index, 1)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.trainee[(Row_Index - 1) * 3 + 1].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.trainee[(Row_Index - 1) * 3 + 1].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.trainee[(Row_Index - 1) * 3 + 1].intro}}</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="7" :offset="1" v-if="(Row_Index - 1) * 3 + 2 < member_data.trainee.length" class="Student_Card">
+                    <el-row>
+                        <img class="img_background_student" :src="Get_Trainee_Img(Row_Index, 2)" style="border-radius: 50%" alt="暂无图片">
+                    </el-row>
+                    <el-row style="padding-top: 20px">
+                        <label style="font-size: 18px">{{member_data.trainee[(Row_Index - 1) * 3 + 2].name}}</label>
+                    </el-row>
+                    <el-row style="padding-top: 10px">
+                        <span><i class="el-icon-message" style="color: #409EFD; font-size: 16px; margin-right: 15px"></i>{{member_data.trainee[(Row_Index - 1) * 3 + 2].mail}}</span>
+                    </el-row>
+                    <el-row style="padding-top: 10px" >
+                        <span style="white-space: pre-line; line-height: 30px; ">{{member_data.trainee[(Row_Index - 1) * 3 + 2].intro}}</span>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <el-divider></el-divider>
             <!-- 技术顾问 -->
             <el-row style="margin: 30px 0px 30px 0px">
                 <label style="font-size: 20px">技术顾问</label>
@@ -397,11 +446,6 @@ export default {
                     "name": "单明晖",
                     "mail": "767743659@qq.com",
                     "intro": "不想画画的程序猿不是金牌厨师"
-                    },
-                    {
-                    "name": "赵辰阳",
-                    "mail": "zcy888@mail.ustc.edu.cn",
-                    "intro": "小小少年 不会烦恼 快乐多多 BUG少少"
                     }
                     ,
                     {
@@ -448,6 +492,19 @@ export default {
                 // 特邀工程师
                 "invitedEngineer": [
                     
+                ],
+                // 实习生
+                "trainee" : [
+                    {
+                    "name": "赵辰阳",
+                    "mail": "zcy888@mail.ustc.edu.cn",
+                    "intro": "小小少年 不会烦恼 快乐多多 BUG少少"
+                    },
+                    {
+                    "name": "邬靖宇",
+                    "mail": "wujingyu@mail.ustc.edu.cn",
+                    "intro": "干啥啥不行，吃啥啥不剩，\n学啥啥不会，写啥啥bug。"
+                    }
                 ],
                 // 技术顾问
                 "techConsultant": [
@@ -518,7 +575,6 @@ export default {
                     "龚政": "/members/龚政.jpg",
                     "黄小青": "/members/黄小青.jpg",
                     "单明晖": "/members/单明晖.jpeg",
-                    "赵辰阳": "/members/赵辰阳.jpeg",
                     "马爽": "/members/马爽.jpeg",
                     "高海涵": "/members/高海涵.jpeg",
                     "姚方舟": "/members/姚方舟.jpeg",
@@ -529,6 +585,9 @@ export default {
                     "申一凯": "/members/申一凯.jpg",
                     // 特邀工程师
                     
+                    // 实习生
+                    "邬靖宇": "/members/邬靖宇.jpg",
+                    "赵辰阳": "/members/赵辰阳.jpeg",
                     // 技术顾问
                     "阴钰": "/members/阴钰.jpg",
                     "高维博": "/members/高维博.jpeg",
@@ -588,6 +647,15 @@ export default {
             var teacher = this.member_data.teachers[i];
             if(this.member_data.img_path[teacher.name]){
                 return this.member_data.img_path[teacher.name];
+            }else{
+                return "/members/unknown.png"
+            }
+        },
+        Get_Trainee_Img(row, index){
+            var i = (row-1)*3 + index
+            var trainee = this.member_data.trainee[i];
+            if(this.member_data.img_path[trainee.name]){
+                return this.member_data.img_path[trainee.name];
             }else{
                 return "/members/unknown.png"
             }
