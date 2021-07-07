@@ -213,7 +213,7 @@ export default {
       disabled:false,
       phoneCode:"",
       valiBtn:'获取验证码',
-      formName:'loginForm',
+      formName:'registerForm',
       getPhoneCodeUrl:'https://send-message-service-166-production.env.bdaa.pro/v1',
       // getPhoneCodeUrl:'http://localhost:2025',
       ruleForm: {
