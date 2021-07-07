@@ -1243,13 +1243,18 @@ export default {
 
       if(this.Type_Now == 'option'){
 
+
         let Temp_Doc = {
           type: "",
           stem: "",
+          stem_images: [],
           score: 0,
           options: [],
+          options_images: [],
           answer: "",
+          answer_images: [],
           analysis: "",
+          analysis_images: [],
           user_id: this.$store.state.user.token,
           subject: this.SubjectType,
           period: this.PeriodType
@@ -1260,30 +1265,21 @@ export default {
         Temp_Doc.type = Ques.detail_type;
 
         Temp_Doc.stem = Ques.content;
-        for(let i = 0; i < Ques.content_images.length; i++){
-          Temp_Doc.stem = Temp_Doc.stem + "<img src='" + Ques.content_images[i] + "'>"
-        }
+        Temp_Doc.stem_images = Ques.content_images;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
         Temp_Doc.options = Ques.options
         for(let i = 0; i < Ques.options_images.length; i++){
-          let Item = Temp_Doc.options[i]
-          if(Ques.options_images[i].length > 0){
-             Item = Item + "<img src='" + Ques.options_images[i] + "'>";
-          }
-          Temp_Doc.options.splice(i, 1, Item);
+          let Item = Ques.options_images[i]
+          Temp_Doc.options_images.push([Item]);
         }
 
         Temp_Doc.answer = Ques.answer;
-        for(let i = 0; i < Ques.answer_images.length; i++){
-          Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[i] + "'>"
-        }
+        Temp_Doc.answer_images = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        for(let i = 0; i < Ques.analyse_images.length; i++){
-          Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[i] + "'>"
-        }
+        Temp_Doc.analysis_images = Ques.analyse_images;
 
         let file = new File(
           [JSON.stringify(Temp_Doc, null, 4)],
@@ -1298,10 +1294,14 @@ export default {
         let Temp_Doc = {
           type: "",
           stem: "",
+          stem_images: [],
           score: 0,
           options: [],
+          options_images: [],
           answer: "",
+          answer_images: [],
           analysis: "",
+          analysis_images: [],
           user_id: this.$store.state.user.token,
           subject: this.SubjectType,
           period: this.PeriodType
@@ -1312,21 +1312,15 @@ export default {
         Temp_Doc.type = Ques.detail_type;
 
         Temp_Doc.stem = Ques.content;
-        for(let i = 0; i < Ques.content_images.length; i++){
-          Temp_Doc.stem = Temp_Doc.stem + "<img src='" + Ques.content_images[i] + "'>"
-        }
+        Temp_Doc.stem_images = Ques.content_images;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
         Temp_Doc.answer = Ques.answer;
-        for(let i = 0; i < Ques.answer_images.length; i++){
-          Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[i] + "'>"
-        }
+        Temp_Doc.answer_images = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        for(let i = 0; i < Ques.analyse_images.length; i++){
-          Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[i] + "'>"
-        }
+        Temp_Doc.analysis_images = Ques.analyse_images;
 
         let file = new File(
           [JSON.stringify(Temp_Doc, null, 4)],
@@ -1342,6 +1336,7 @@ export default {
 
         let Temp_Doc = {
           desc: "",
+          desc_images: [],
           type: "大题",
           score: 0,
           subquestions: [],
@@ -1349,13 +1344,13 @@ export default {
           subject: this.SubjectType,
           period: this.PeriodType,
           answer: "",
-          analysis: ""
+          answer_images: [],
+          analysis: "",
+          analysis_images: []
         }
 
         Temp_Doc.desc = Ques.content;
-        for(let i = 0; i < Ques.content_images.length; i++){
-          Temp_Doc.desc = Temp_Doc.desc + "<img src='" + Ques.content_images[i] + "'>"
-        }
+        Temp_Doc.desc_images = Ques.content_images;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
@@ -1364,31 +1359,26 @@ export default {
             type: Ques.detail_type,
             score: parseFloat(Ques.sub_questions_scores[i] + ""),
             stem: Ques.sub_questions[i],
+            stem_images: Ques.sub_questions_images[i],
             options: [],
+            options_images: [],
             answer: "",
-            analysis: ""
+            answer_images: [],
+            analysis: "",
+            analysis_images: []
           }
-
-          for(let j = 0; j < Ques.sub_questions_images[i].length; j++){
-            Item.stem = Item.stem + "<img src='" + Ques.sub_questions_images[i][j] + "'>"
-          }
-
           Temp_Doc.subquestions.push(Item)
         }
 
         Temp_Doc.answer = Ques.answer;
-        for(let i = 0; i < Ques.answer_images.length; i++){
-          Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[i] + "'>"
-        }
+        Temp_Doc.answer_images = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        for(let i = 0; i < Ques.analyse_images.length; i++){
-          Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[i] + "'>"
-        }
+        Temp_Doc.analysis_images = Ques.analysis_images;
         
         let file = new File(
           [JSON.stringify(Temp_Doc, null, 4)],
-          "Fill.json",
+          "Answer.json",
           { type: "text/plain;charset=utf-8" }
         );
         FileSaver.saveAs(file);
@@ -1400,6 +1390,7 @@ export default {
 
         let Temp_Doc = {
           desc: "",
+          desc_images: [],
           type: "大题",
           score: 0,
           subquestions: [],
@@ -1407,13 +1398,13 @@ export default {
           subject: this.SubjectType,
           period: this.PeriodType,
           answer: "",
-          analysis: ""
+          answer_images: [],
+          analysis: "",
+          analysis_images: []
         }
 
         Temp_Doc.desc = Ques.content;
-        for(let i = 0; i < Ques.content_images.length; i++){
-          Temp_Doc.desc = Temp_Doc.desc + "<img src='" + Ques.content_images[i] + "'>"
-        }
+        Temp_Doc.desc_images = Ques.content_images;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
@@ -1422,30 +1413,20 @@ export default {
             type: Ques.sub_questions[i].detail_type,
             score: parseFloat(Ques.sub_questions[i].score + ""),
             stem: Ques.sub_questions[i].content,
+            stem_images: Ques.sub_questions[i].content_images,
             options: [],
+            options_images: [],
             answer: Ques.sub_questions[i].answer,
-            analysis: Ques.sub_questions[i].analyse
-          }
-
-          for(let j = 0; j < Ques.sub_questions[i].content_images.length; j++){
-            Item.stem = Item.stem + "<img src='" + Ques.sub_questions[i].content_images[j] + "'>"
-          }
-
-          for(let j = 0; j < Ques.sub_questions[i].answer_images.length; j++){
-            Item.answer = Item.answer + "<img src='" + Ques.sub_questions[i].answer_images[j] + "'>"
-          }
-
-          for(let j = 0; j < Ques.sub_questions[i].analyse_images.length; j++){
-            Item.analysis = Item.analysis + "<img src='" + Ques.sub_questions[i].analyse_images[j] + "'>"
+            answer_images: Ques.sub_questions[i].answer_images,
+            analysis: Ques.sub_questions[i].analyse,
+            analysis_images: Ques.sub_questions[i].analyse_images
           }
 
           if(Ques.sub_questions[i].type == 'option'){
             for(let k = 0; k < Ques.sub_questions[i].options.length; k++){
               let opt = Ques.sub_questions[i].options[k]
-              if(Ques.sub_questions[i].options_images[k].length > 0){
-                opt = opt + "<img src='" + Ques.sub_questions[i].options_images[k] + "'>"
-              }
               Item.options.push(opt);
+              Item.options_images.push([Ques.sub_questions[i].options_images[k]])
             }
           }
 
@@ -1453,18 +1434,14 @@ export default {
         }
 
         Temp_Doc.answer = Ques.answer;
-        for(let i = 0; i < Ques.answer_images.length; i++){
-          Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[i] + "'>"
-        }
+        Temp_Doc.answer_images = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        for(let i = 0; i < Ques.analyse_images.length; i++){
-          Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[i] + "'>"
-        }
+        Temp_Doc.analysis_images = Ques.analyse_images;
         
         let file = new File(
           [JSON.stringify(Temp_Doc, null, 4)],
-          "Fill.json",
+          "Mix.json",
           { type: "text/plain;charset=utf-8" }
         );
         FileSaver.saveAs(file);
