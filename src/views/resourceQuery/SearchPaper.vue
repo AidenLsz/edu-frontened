@@ -12,6 +12,13 @@
       width="80%"
       :modal-append-to-body="false"
       :close-on-click-modal="false">
+        <el-row type="flex" justify="start" style="margin-left: 2.4vw;">
+          <label style="margin-right: 3vw; margin-top: -0.3vh;">图片检索模式：</label>
+          <el-radio-group v-model="Img_Search_Type">
+            <el-radio :label="0" disabled>图例检索</el-radio>
+            <el-radio :label="1">内容识别</el-radio>
+          </el-radio-group>
+        </el-row>
         <el-row style="margin: 0px; padding: 0px">
           <el-col :span="24">
             <el-row v-if="option.img != ''" type="flex" justify="center">
@@ -322,6 +329,8 @@ export default {
   name: "SearchPaper",
   data() {
     return {
+      // 用于之后进行图片搜索类型筛选的变量
+      Img_Search_Type: 1,
       // 图片剪切用的一系列变量
       // 对话框显示
       picSearchDialogShow: false,
