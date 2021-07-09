@@ -88,7 +88,9 @@ export default {
       analyseReport: false,
       analyseData: {},
       Refresh: false,
-      Question_Analysing: false
+      Question_Analysing: false,
+      Index_Cache: -1,
+      Database: 'public'
       // Test_Layer_Data: {
       //   kp: [
       //       "圆内接四边形的性质定理与判定定理",
@@ -146,18 +148,32 @@ export default {
     },
     Change_Expand(Index){
       this.Refresh = !this.Refresh;
+      this.Index_Cache = Index;
       this.Question_Analysing = true;
       commonAjax(this.backendIP+'/api/questionAnalyse',
         {
-          databasename: 'public',
+          databasename: this.Database,
           ID: this.PackedQuestion[Index].id
         }
       ).then((data)=>{
-        this.analyseData = data.que_dic
-        this.Question_Analysing = false
-        this.$emit("QuestionReport", JSON.stringify(this.analyseData));
+        if(data.status == 'fail' && this.Database == 'public'){
+          this.Database = 'test'
+          this.Change_Expand(this.Index_Cache);
+        }else if(data.status == 'fail' && this.Database != 'public'){
+          this.$message.error("此题暂无法获取单题分析报告。")
+          this.Question_Analysing = false
+          return;
+        }else{
+          this.analyseData = data.que_dic
+          this.Question_Analysing = false
+          this.$emit("QuestionReport", JSON.stringify(this.analyseData));
+        }
       }).catch(()=>{
-        this.$message.error("服务器正忙，请稍后重试。")
+        if(this.Database == 'public'){
+          this.$message.error("服务器正忙，请稍后重试。")
+        }else{
+          this.$message.warning("文件上传的试题暂不支持单题分析，正在更新过程中，敬请期待。")
+        }
         this.Question_Analysing = false
       })
     },
