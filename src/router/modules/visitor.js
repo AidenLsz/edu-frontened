@@ -28,6 +28,9 @@ import PaperAnalyseInput from "@/views/resourceAnalyse/PaperAnalyseInput";
 import QuestionAnalyse from "@/views/resourceAnalyse/QuestionAnalyse";
 import QuestionAnalyseInput from "@/views/resourceAnalyse/QuestionAnalyseInput";
 
+// 标注管理类页面
+import QuestionUpdate from "@/views/labelManage/QuestionUpdate";
+
 // 组卷
 import PaperCombine from "@/views/paperCombine/PaperCombine.vue"
 
@@ -119,6 +122,16 @@ const visitorRouter=[
     path: "/questionAnalyseInput",
     name: "QuestionAnalyseInput",
     component: QuestionAnalyseInput
+  },
+  {
+    path: "/inputPaper",
+    name: "inputPaper",
+    component: InputPaper,
+  },
+  {
+    path: "/questionUpdate",
+    name: "questionUpdate",
+    component: QuestionUpdate,
   },
   {
     path: "/inputPaper",
