@@ -11,7 +11,8 @@
       title="图片检索"
       width="80%"
       :modal-append-to-body="false"
-      :close-on-click-modal="false">
+      :close-on-click-modal="false"
+      @close="Reset_Interval()">
         <el-row type="flex" justify="start" style="margin-left: 2.4vw;">
           <label style="margin-right: 3vw; margin-top: -0.3vh;">图片检索模式：</label>
           <el-radio-group v-model="Img_Search_Type">
@@ -97,7 +98,7 @@
                     v-else
                     type="danger"
                     icon="el-icon-close"
-                    @click="picSearchDialogShow = false"
+                    @click="Reset_Interval()"
                     plain>
                     关闭页面
                   </el-button>
@@ -197,7 +198,7 @@
           </el-button>
         </el-col>
         <el-col :span="1">
-          <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="picSearchDialogShow = true">
+          <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="Open_Pic_Search()">
             <i class="el-icon-camera-solid"></i>
           </el-button>
         </el-col>
@@ -407,6 +408,9 @@ export default {
   },
   destroyed(){
     sessionStorage.removeItem(PaperDetailShow);
+    sessionStorage.removeItem("PicPaste");
+    clearInterval(this.Paste_Catcher);
+    window.removeEventListener('paste', this.Paste_Function)
   },
   mounted(){
     this.ToTop()
@@ -417,10 +421,54 @@ export default {
     upload.addEventListener('drop', this.onDrop, false);
   },
   methods: {
+    // 清空计时器
+    Reset_Interval(){
+      clearInterval(this.Paste_Catcher)
+      this.picSearchDialogShow = false
+      window.removeEventListener('paste', this.Paste_Function)
+    },
+    // 打开图片搜索栏
+    Open_Pic_Search(){
+      this.Init_Img_Paster();
+      this.Paste_Catcher = setInterval(()=>{
+        if(sessionStorage.getItem("PicPaste")){
+          this.option.img = sessionStorage.getItem("PicPaste")
+        }
+      }
+      , 20);
+      this.picSearchDialogShow = true
+    },
+    // 尝试利用截图工具的粘贴板
+    Init_Img_Paster(){
+      window.addEventListener('paste', this.Paste_Function)
+    },
+    Paste_Function(e){
+        let Pic = e.clipboardData.items[0].getAsFile();
+        // 保存读取内容用的临时变量
+        var Picresult = "";
+        // Promise方法避免异步操作
+        var promise = new Promise(function(resolve){
+          // 用文件读取来读取图片的base64格式代码
+          var reader = new FileReader();
+          reader.readAsDataURL(Pic);
+          reader.onloadend = function (e) {
+            Picresult = e.target.result;
+            resolve('1');
+          };
+        });
+        promise.then(function(){
+          // 用捕捉到的this对象来进行搜索
+          sessionStorage.setItem("PicPaste", Picresult)
+        }).catch(function(err){
+          // 报错了就打印错误
+          alert("您最新的粘贴对象不是图片内容。")
+        })
+      },
         openInstructionDialog(){
           this.$refs.instruction.openDialog();
         },
         clearData(){
+          sessionStorage.setItem("PicPaste", "");
           this.option.img = "";
         },
         onDragIn (e) {
