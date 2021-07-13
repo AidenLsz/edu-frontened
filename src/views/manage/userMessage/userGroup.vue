@@ -20,7 +20,7 @@
             <label style="font-size: 14px;line-height: 35px;">组织架构：</label>
             <el-select v-model="groupid" placeholder="请选择">
               <el-option
-                v-for="item,i in groupnameArray"
+                v-for="(item,i) in groupnameArray"
                 :key="i"
                 :label="item.groupname"
                 :value="item.groupid">
