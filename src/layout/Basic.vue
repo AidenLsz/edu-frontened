@@ -194,7 +194,7 @@
     </el-header>
     <!-- <basic-header/> -->
     <el-main>
-      <router-view :key="$route.fullPath"></router-view>
+      <router-view :key="$route.fullPath" style="min-height: 100%;"></router-view>
       <basic-footer/>
     </el-main>
   </el-container>
