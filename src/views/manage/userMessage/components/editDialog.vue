@@ -17,7 +17,18 @@
                 v-model="userData.username"
                 auto-complete="off"
                 disabled
-                placeholder="请输入账号名称"
+              />
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="grid-content bg-purple">
+            <el-form-item label="真实姓名"  prop="username" style="margin-bottom: 15px">
+              <el-input
+                type="text"
+                v-model="userData.legal_name"
+                auto-complete="off"
+                disabled
               />
             </el-form-item>
           </div>
@@ -29,7 +40,6 @@
               v-model="userData.email"
               auto-complete="off"
               disabled
-              placeholder="请输入您的邮箱"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -39,7 +49,6 @@
               type="text"
               v-model="userData.phone"
               auto-complete="off"
-              placeholder="请输入您的手机号码"
               disabled
             ></el-input>
           </el-form-item>

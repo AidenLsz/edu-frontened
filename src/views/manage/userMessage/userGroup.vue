@@ -53,10 +53,10 @@
                 prop="username"
                 label="账号">
             </el-table-column>
-            <!-- <el-table-column
-                prop="userNick"
-                label="昵称">
-            </el-table-column> -->
+            <el-table-column
+                prop="legal_name"
+                label="真实姓名">
+            </el-table-column>
             <el-table-column
                 prop="groupname"
                 label="所属单位">

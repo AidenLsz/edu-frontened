@@ -26,6 +26,15 @@
       </el-row>
       <el-row>
         <el-col :span="20" :offset="1">
+          <el-form-item  label="真实姓名" prop="legal_name" style="margin-bottom: 15px">
+            <el-row type="flex" justify="start">
+              <el-input v-model="userData.legal_name" style="width: 300px"></el-input>
+            </el-row>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="20" :offset="1">
           <el-form-item  label="邮箱" prop="email" style="margin-bottom: 15px">
             <el-row type="flex" justify="start">
               <el-input v-model="userData.email" style="width: 300px"></el-input>
@@ -195,6 +204,7 @@ export default {
       groupData:[],
       userData: {
         user_name: '',
+        legal_name: '',
         email: '',
         phone: '',
         ug_ID:'',
@@ -245,6 +255,7 @@ export default {
       if (validateList.every((err) => err === '')) {
         let fd = {
           user_name: this.userData.user_name,
+          legal_name: this.userData.legal_name,
           phone: this.userData.phone,
           email: this.userData.email,
         }
