@@ -51,9 +51,16 @@ router.beforeEach((to, from, next) => {
     "/inputPaper"
   ];
   let isUserRoute = ()=>route.some((r)=>to.path.includes(r))
+<<<<<<< HEAD
   if (isUserRoute() && !store.state.user.token) {
       Message({
         message: '您需要登录后才能进行相关操作！',
+=======
+console.log('isUserRoute',isUserRoute());
+  if (isUserRoute() && !store.state.user.token) {
+      Message({
+        message: '您尚未登录或登录信息已过期，请登录！',
+>>>>>>> bec16b5... authority check
         type: 'error',
         duration: 5 * 1000
       })
