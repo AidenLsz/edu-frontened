@@ -91,8 +91,8 @@
         </el-form-item>
       </el-col>
     </el-row>
-    <template v-if="joinGroupSetting">
-      <el-row>
+    <div v-if="joinGroupSetting">
+      <el-row >
         <el-col :span="20" :offset="1">
           <el-form-item  label="组织邀请码" prop="ug_ID" style="margin-bottom: 15px">
             <el-row type="flex" justify="start">
@@ -105,7 +105,7 @@
         <el-button @click="joinGroupSetting=false">取消</el-button>
         <el-button type="primary" @click="joinGroup()">保存</el-button>
       </div>
-    </template>
+    </div>
     <el-divider></el-divider>
     <el-row type="flex" justify="start" class="sub-header" >
         <label style="font-size: 18px">安全设置</label>
@@ -160,7 +160,6 @@
   </div>
 </template>
 <script>
-import {Message} from 'element-ui'
 import {commonAjax} from '@/common/utils/ajax'
 export default {
   name: 'userInfo',
@@ -190,6 +189,7 @@ export default {
       }
     };
     var validateUg_ID = (rule, value, callback) => {
+      console.log(this.groupData);
       let inGroup = this.groupData.some((item)=>item.ug_ID==value)
       if(inGroup){
         callback(new Error('您已加入该组织!'));
@@ -200,7 +200,6 @@ export default {
       securitySetting: false,
       joinGroupSetting: false,
       formName: 'UserForm',
-      ug_ID:'',
       groupData:[],
       userData: {
         user_name: '',
@@ -226,9 +225,8 @@ export default {
           {min: 11,max: 11,message: "请输入11位手机号码",trigger: "blur"},
           {pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,message: "请输入正确的手机号码"}
         ],
-        ug_ID: [{required: true,message: '请输入组织邀请码',},
-          { validator: validateUg_ID, trigger: ['change'] }
-        ],
+        ug_ID: [{required: true,message: "请输入密码",trigger: "blur"},
+          { validator: validateUg_ID, trigger: ['blur','change' ]}],
       },
     }
   },
@@ -259,22 +257,16 @@ export default {
           phone: this.userData.phone,
           email: this.userData.email,
         }
-        commonAjax(this.backendIP + "/api/update_user_info", fd).then(() => {
+        commonAjax(this.backendIP + "/api/update_user_info", fd).then((res) => {
+          if (!res.status)
+            throw Error()
           this.$store.dispatch('user/setUserData', {
             token:this.$store.state.user.token,
             name:this.userData.user_name,
           })
-          Message({
-            message: '修改基本信息成功！',
-            type: 'success',
-            duration: 5 * 1000
-          })
+          this.$message.success('修改基本信息成功！')
         }).catch(() => {
-          Message({
-            message: '修改基本信息失败！',
-            type: 'error',
-            duration: 5 * 1000
-          })
+          this.$message.error('修改基本信息失败！')
         })
       }
     },
@@ -284,34 +276,23 @@ export default {
       })
     },
     joinGroup(){
-      let validateList=[]
-      this.$refs[this.formName].validateField(['ug_ID'], (err) =>{
-          validateList.push(err)
-      })
-      if (validateList.every((err) => err === '')) {
+      this.$refs[this.formName].validateField('ug_ID', (err) =>{
+        if (err) {
+          return ;
+        }
         let fd={
           ug_ID:this.userData.ug_ID
         }
         commonAjax(this.backendIP+'/api/join_group',fd).then((res)=>{
-          if (res.status) {
-            Message({
-              message: '申请加入组织成功！',
-              type: 'success',
-              duration: 5 * 1000
-            })
-            this.userData.ug_ID=""
-            this.getGroups()
-          }else{
-            Message({
-              message: '申请加入组织失败！',
-              type: 'error',
-              duration: 5 * 1000
-            })
-          }
+          if (!res.status)
+            throw Error()
+          this.$message.success('申请加入组织成功！')
+          this.userData.ug_ID=""
+          this.getGroups()
         }).catch(()=>{
-
+          this.$message.error('申请加入组织失败！')
         })
-      }
+      })
     },
     changePassword(){
       let validateList=[]
