@@ -574,7 +574,6 @@ export default {
     name: "PaperAnalyse",
     data(){
         return {
-<<<<<<< HEAD
             loading: false,
             // 计时器，用Remaining做计时
             Timer: "",
@@ -604,10 +603,6 @@ export default {
                 }
                 // 双向细目表的表格是我自己手搓的，没图
             },
-=======
-            // 双向分析报告位置先加一个loading来做“跳出来”页面的遮罩
-            Question_Analysing: false,
->>>>>>> 046d2a2... issue33 - Double-Analyse-New-Function
             // 双相啥的分析报告
             Double_Analyse: [],
             // 还是写个最后一行的标签吧
