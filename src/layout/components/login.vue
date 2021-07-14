@@ -119,7 +119,7 @@ export default {
           // isAdmin:data.body.isAdmin,
         }
         this.$store.dispatch('user/setUserData', userInfo).then(() => {
-          // this.$router.push("/dashboard");
+          this.$router.go()
           this.visible = false;
         })
       }).catch(()=>{

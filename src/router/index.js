@@ -45,22 +45,19 @@ router.beforeEach((to, from, next) => {
   //   "checkExercise",
   // ];
   const route = [
-    "/analysis/",
+    "/user/",
     "/manage/",
+    "/inputMarked",
+    "/inputPaper"
   ];
-  let isUserRoute = ()=>{
-      let arr=route.filter((r)=>to.path.includes(r))
-      return arr.length>0
-  }
-  if (isUserRoute()) {
-    if (!store.state.user.token) {
+  let isUserRoute = ()=>route.some((r)=>to.path.includes(r))
+  if (isUserRoute() && !store.state.user.token) {
       Message({
-        message: '您的登录信息已过期，请重新登录！',
+        message: '您需要登录后才能进行相关操作！',
         type: 'error',
         duration: 5 * 1000
       })
       next({ path: "/" });
-    }
   }
   next();
 });
