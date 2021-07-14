@@ -59,7 +59,7 @@
             </el-table-column>
             <el-table-column
                 prop="groupname"
-                label="所属单位">
+                label="所属组织">
             </el-table-column>
             <!-- <el-table-column
                 prop="userProfession"
@@ -113,7 +113,7 @@
       </el-pagination>
     </el-row>
     <createDialog ref="CreateDialog" :groupid="groupid" @userCreated="GET_USER_DATA()"/>
-    <addDialog ref="AddDialog" :groupid="groupid" :tableData="tableData" :groupname="groupname" @userAdded="GET_USER_DATA()"/>
+    <addDialog ref="AddDialog" :groupid="groupid" :tableData="currentGroupData" :groupname="groupname" @userAdded="GET_USER_DATA()"/>
     <deleteDialog ref="DeleteDialog" :userData="userData" @userDeleted="GET_USER_DATA()"/>
     <editDialog ref="EditDialog" :userData="userData" @userUpdated="GET_USER_DATA()"/>
   </div>
@@ -154,10 +154,25 @@ export default {
     this.GET_USER_DATA();
   },
   computed:{
-    tableData(){
+    currentGroupData(){
       if(!this.groupData[this.groupid])
         return []
       return this.groupData[this.groupid]
+    },
+    tableData(){
+      let tableColumns=['username','legal_name','groupname','email','phone','is_admin_ch','status_ch']
+      let resData= this.currentGroupData;
+      if(this.searchData){
+        resData = resData.filter(data => {
+          for (let key in data) {
+            if(data[key] && tableColumns.includes(key) && data[key].includes(this.searchData))
+              return true
+          }
+          return false
+        })
+      }
+      resData = resData.slice(this.pagenation.startNumber,this.pagenation.endNumber)
+      return resData
     },
     groupname(){
       let arr = this.groupnameArray.filter((item)=>(item.groupid==this.groupid))
