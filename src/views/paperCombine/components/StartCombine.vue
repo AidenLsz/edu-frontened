@@ -73,15 +73,15 @@
     <el-dialog 
       :visible.sync="Download_Combine_Paper_Dialog"
       title="试卷下载"
-      width="70%"
+      width="50%"
       @close="Reset_Combine_Paper_Download_Setting()"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
       >
       <!-- 纸张类型 -->
-      <el-row type="flex" justify="start">
+      <el-row type="flex" justify="start" style="margin-bottom: 20px;">
         <el-col :span="3">
-          <el-row type="flex" justify="start">
+          <el-row type="flex" justify="start" style="margin-top: -3px;">
             试卷纸张：
           </el-row>
         </el-col>
@@ -96,18 +96,50 @@
         </el-col>
       </el-row>
       <!-- 试卷内容 -->
-      <el-row type="flex" justify="start">
+      <el-row type="flex" justify="start" style="margin-bottom: 20px;">
         <el-col :span="3">
-          <el-row type="flex" justify="start">
+          <el-row type="flex" justify="start" style="margin-top: -3px;">
             试卷内容：
           </el-row>
         </el-col>
         <el-col :span="21">
           <el-row type="flex" justify="start">
-            <el-radio-group v-model="Combine_Paper_Type">
+            <el-radio-group v-model="Combine_Paper_Content">
               <el-radio label="Paper">试卷</el-radio>
               <el-radio label="Analyse">解析</el-radio>
             </el-radio-group>
+          </el-row>
+        </el-col>
+      </el-row>
+      <!-- 试卷类型 -->
+      <el-row type="flex" justify="start">
+        <el-col :span="3">
+          <el-row type="flex" justify="start" style="margin-top: -3px;">
+            试卷类型：
+          </el-row>
+        </el-col>
+        <el-col :span="21">
+          <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+            <el-radio v-model="Combine_Paper_Type" label="Teacher">教师用卷（题目后附带答案及解析）</el-radio>
+          </el-row>
+          <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+            <el-radio v-model="Combine_Paper_Type" label="Student">学生用卷（无答案及解析）</el-radio>
+          </el-row>
+          <el-row type="flex" justify="start" style="margin-bottom: 30px;">
+            <el-radio v-model="Combine_Paper_Type" label="Normal">普通用卷（卷后统一提供答案及解析）</el-radio>
+          </el-row>
+        </el-col>
+      </el-row>
+      <!-- 下载行 -->
+      <el-row type="flex" justify="center">
+        <el-col :span="4">
+          <el-row type="flex" justify="center">
+            <el-button type="info" @click="Download_Combine_Paper_Dialog = false">取消</el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="4">
+          <el-row type="flex" justify="center">
+            <el-button type="success" @click="Unfinish()">下载</el-button>
           </el-row>
         </el-col>
       </el-row>
@@ -711,8 +743,10 @@ export default {
     return {
       // 试卷纸张
       Combine_Paper_Size: "A4",
-      // 试卷给谁用
-      Combine_Paper_Type: "Paper",
+      // 试卷内容
+      Combine_Paper_Content: "Paper",
+      // 试卷类型
+      Combine_Paper_Type: "Teacher",
       // 试卷下载对话框是否展示
       Download_Combine_Paper_Dialog: false,
       // 试卷导出设置
@@ -785,7 +819,8 @@ export default {
     // 重置下载设置
     Reset_Combine_Paper_Download_Setting(){
       this.Combine_Paper_Size = "A4";
-      this.Combine_Paper_Type = "Paper";
+      this.Combine_Paper_Content = "Paper";
+      this.Combine_Paper_Type = "Teacher";
     },
     // 尝试打开下载页面
     Download_Combine_Paper(){
