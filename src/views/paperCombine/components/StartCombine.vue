@@ -71,6 +71,48 @@
       </el-row>
     </el-dialog>
     <el-dialog 
+      :visible.sync="Download_Combine_Paper_Dialog"
+      title="试卷下载"
+      width="70%"
+      @close="Reset_Combine_Paper_Download_Setting()"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false"
+      >
+      <!-- 纸张类型 -->
+      <el-row type="flex" justify="start">
+        <el-col :span="3">
+          <el-row type="flex" justify="start">
+            试卷纸张：
+          </el-row>
+        </el-col>
+        <el-col :span="21">
+          <el-row type="flex" justify="start">
+            <el-radio-group v-model="Combine_Paper_Size">
+              <el-radio label="A4">标准A4</el-radio>
+              <el-radio label="A3">双栏A3</el-radio>
+              <el-radio label="B4">双栏B4</el-radio>
+            </el-radio-group>
+          </el-row>
+        </el-col>
+      </el-row>
+      <!-- 试卷内容 -->
+      <el-row type="flex" justify="start">
+        <el-col :span="3">
+          <el-row type="flex" justify="start">
+            试卷内容：
+          </el-row>
+        </el-col>
+        <el-col :span="21">
+          <el-row type="flex" justify="start">
+            <el-radio-group v-model="Combine_Paper_Type">
+              <el-radio label="Paper">试卷</el-radio>
+              <el-radio label="Analyse">解析</el-radio>
+            </el-radio-group>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-dialog>
+    <el-dialog 
       :visible.sync="Replace_Dialog_Show"
       title="换一题"
       width="70%"
@@ -164,7 +206,7 @@
             <el-col>
 
               <el-row type="flex" justify="center" style="margin-bottom: 5px;">
-                <el-button type="primary" plain round style="font-size: 14px" @click.native="Unfinish()">
+                <el-button type="primary" plain round style="font-size: 14px" @click.native="Download_Combine_Paper()">
                   <i class="el-icon-download"></i>
                   <span>下载试卷</span>
                 </el-button>
@@ -667,6 +709,12 @@ export default {
   },
   data() {
     return {
+      // 试卷纸张
+      Combine_Paper_Size: "A4",
+      // 试卷给谁用
+      Combine_Paper_Type: "Paper",
+      // 试卷下载对话框是否展示
+      Download_Combine_Paper_Dialog: false,
       // 试卷导出设置
       Export_Setting_Type: "simple",
       // 设置项的值列表
@@ -734,6 +782,15 @@ export default {
     this.Init_User_Database_List();
   },
   methods: {
+    // 重置下载设置
+    Reset_Combine_Paper_Download_Setting(){
+      this.Combine_Paper_Size = "A4";
+      this.Combine_Paper_Type = "Paper";
+    },
+    // 尝试打开下载页面
+    Download_Combine_Paper(){
+      this.Download_Combine_Paper_Dialog = true;
+    },
     // 判断这道题是否应该可以被替换
     Replacable(ID){
       for(let i = 0; i < this.Question_List.length; i++){
