@@ -99,7 +99,7 @@
       </el-col>
       <el-col :span="2" v-for="(databaseName, databaseIndex) in databaseAim" :key="'Database_' + databaseIndex">
           <el-row type="flex" justify="center" :class="filterButtonStyle('database', databaseIndex)" @click.native="database_Change(databaseIndex)">
-              <span>{{databaseName == 'public' ? "公共题库" : databaseName}}</span>
+              <span>{{databaseName.nick || databaseName.name}}</span>
           </el-row>
       </el-col>
     </el-row>
@@ -130,7 +130,7 @@
             <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown></el-row>
           </el-col>
         </el-row>
-        <el-row style="margin-bottom: 15px">
+        <el-row style="margin-bottom: 10px; padding-top: 10px;">
             <el-col :span="5" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
               所属题库：{{Question.database}}
             </el-col>
@@ -229,14 +229,14 @@ export default {
         // 用于保存检索条件的Json
         filterRecord: {
             // 题型
-            type: [false, false, false, false],
+            type: [false, false, false, false, false, false, false],
             // 难度
             difficulty: [0.0, 1.0],
             // 题库
             database: []
         },
         // 用于显示的题目类型
-        typeAim: ['全部', '单选题', "多选题", "填空题", "解答题"],
+        typeAim: ['全部', '单选题', "多选题", "判断题", "填空题", '简答题', "计算题", "其他"],
         // 用于筛选的题目难度
         difficultyAim: ['全部', '容易', '较易', '中等', '较难', '困难'],
         // 用于筛选的数据库名
@@ -316,7 +316,7 @@ export default {
         let database = [];
         for(let i = 0 ; i < this.filterRecord.database.length; i++){
             if(this.filterRecord.database[i]){
-                database.push(this.databaseAim[i+1])
+                database.push(this.databaseAim[i+1].name)
             }
         }
 
@@ -360,7 +360,9 @@ export default {
     // 获取用户所具有的题库权限
     initDatabaseList(){
         this.filterRecord.database = [true]
-        this.databaseAim = ['全部', 'public']
+        this.databaseAim = [
+          {name: '全部', nick: '全部'}, 
+          {name: 'public', nick: '公开题库'}]
         //未登录时，不调用获取题库的端口
         if(!this.$store.state.user.token){
             return ;
@@ -374,9 +376,9 @@ export default {
             let data=res.ig_name;
             for (var i = 0; i < data.length; i++) {
                 this.filterRecord.database.push(false)
-                this.databaseAim.push(data[i])
+                this.databaseAim.push({name: data[i], nick: data[i]})
             }
-            
+            this.databaseAim[2].nick = "个人题库"
         })
     },
     // 根据不同选择的状况调整按钮样式
@@ -430,9 +432,9 @@ export default {
             this.filterRecord.type.splice(typeIndex - 1, 1, !this.filterRecord.type[typeIndex-1])
         }else{
             if(this.filterRecord.type.indexOf(false) == -1){
-                this.filterRecord.type.splice(0, 4, false, false, false, false)
+                this.filterRecord.type.splice(0, 7, false, false, false, false, false, false, false)
             }else{
-                this.filterRecord.type.splice(0, 4, true, true, true, true)
+                this.filterRecord.type.splice(0, 7, true, true, true, true, true, true, true)
             }
         }
     },
