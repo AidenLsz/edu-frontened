@@ -47,20 +47,18 @@ router.beforeEach((to, from, next) => {
   const route = [
     "/user/",
     "/manage/",
+    "/inputMarked",
+    "/inputPaper"
   ];
-  let isUserRoute = ()=>{
-      let arr=route.filter((r)=>to.path.includes(r))
-      return arr.length>0
-  }
-  if (isUserRoute()) {
-    if (!store.state.user.token) {
+  let isUserRoute = ()=>route.some((r)=>to.path.includes(r))
+console.log('isUserRoute',isUserRoute());
+  if (isUserRoute() && !store.state.user.token) {
       Message({
-        message: '您的登录信息已过期，请重新登录！',
+        message: '您尚未登录或登录信息已过期，请登录！',
         type: 'error',
         duration: 5 * 1000
       })
       next({ path: "/" });
-    }
   }
   next();
 });
