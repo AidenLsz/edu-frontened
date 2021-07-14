@@ -48,7 +48,7 @@
     <el-row type="flex" justify="center" style="margin-top: 40px">
         <el-table
             border
-            :data="tableData.filter(data => !searchData || JSON.stringify(data).includes(searchData.toLowerCase())).slice(this.pagenation.startNumber,this.pagenation.endNumber)">
+            :data="tableData.slice(this.pagenation.startNumber,this.pagenation.endNumber)">
             <el-table-column
                 prop="username"
                 label="账号">
@@ -103,12 +103,10 @@
     </el-row>
     <el-row class="block" style="margin:25px auto;" v-show="this.tableData.length!=0">
       <el-pagination
-        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pagenation.page"
-        :page-sizes="[10, 20, 50, 100]"
         :page-size="pagenation.limit"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, prev, pager, next, jumper"
         :total="this.tableData.length">
       </el-pagination>
     </el-row>
@@ -165,13 +163,14 @@ export default {
       if(this.searchData){
         resData = resData.filter(data => {
           for (let key in data) {
-            if(data[key] && tableColumns.includes(key) && data[key].includes(this.searchData))
+            if(data[key] && tableColumns.includes(key) && data[key].includes(this.searchData)){
               return true
+            }
           }
           return false
         })
+        this.handleCurrentChange(1)
       }
-      resData = resData.slice(this.pagenation.startNumber,this.pagenation.endNumber)
       return resData
     },
     groupname(){
@@ -196,9 +195,6 @@ export default {
     openEditDialog(data){
       this.userData=data
       this.$refs.EditDialog.openDialog();
-    },
-    handleSizeChange(val) {
-      this.pagenation.limit=val
     },
     handleCurrentChange(val) {
       this.pagenation.page=val
