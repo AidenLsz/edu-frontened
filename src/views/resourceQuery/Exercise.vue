@@ -157,7 +157,7 @@
       <template v-for="(item,i) in database_list">
         <el-col :key="i" :span="2">
           <div :class="Check_Focus_Database(i)" @click="Database_Aim(i)">
-            {{item.nick||item.name}}
+            {{item.nick || item.name}}
           </div>
         </el-col>
       </template>
@@ -243,7 +243,7 @@
             <el-checkbox label="物理">物理</el-checkbox>
             <el-checkbox label="化学">化学</el-checkbox>
             <el-checkbox label="生物">生物</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Subject()}}</el-button>
           <el-button slot="reference" type="text" v-if="Subject_Type.length > 0" @click="Subject_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
@@ -260,9 +260,28 @@
             <el-checkbox label="高中">高中</el-checkbox>
             <el-checkbox label="大学">大学</el-checkbox>
             <el-checkbox label="成人">成人</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Period()}}</el-button>
+          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+        </el-popover>
+      </el-col>
+      <el-col :span="3">
+        <el-popover
+          placement="bottom-start"
+          width="770"
+          trigger="hover">
+          <el-checkbox-group v-model="Search_Ques_Type">
+            <el-checkbox label="单选题">单选题</el-checkbox>
+            <el-checkbox label="多选题">多选题</el-checkbox>
+            <el-checkbox label="判断题">判断题</el-checkbox>
+            <el-checkbox label="填空题">填空题</el-checkbox>
+            <el-checkbox label="简答题">简答题</el-checkbox>
+            <el-checkbox label="计算题">计算题</el-checkbox>
+            <el-checkbox label="其他">其他</el-checkbox>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+          </el-checkbox-group>
+          <el-button slot="reference" class="FilterButton" type="text">{{Get_Search_Ques_Type()}}</el-button>
           <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
@@ -404,6 +423,9 @@ export default {
       // 学科和学段
       Subject_Type: [],
       Period_Type: [],
+      // 题型及历史题型
+      Search_Ques_Type: [],
+      history_Search_Ques_Type: [],
       // 上次选择的学科和学段
       history_Subject_Type: [],
       history_Period_Type: [],
@@ -491,6 +513,14 @@ export default {
     upload.addEventListener('drop', this.onDrop, false);
   },
   methods: {
+    // 给筛选器的提交做个检测
+    submit_prepare(){
+      if(this.Cache_Pic[0] != ""){
+        this.submit(1, this.Cache_Pic[0])
+      }else{
+        this.submit(0, "")
+      }
+    },
     // 清空计时器
     Reset_Interval(){
       clearInterval(this.Paste_Catcher)
@@ -629,10 +659,10 @@ export default {
       ).then((res)=>{
         let data=res.ig_name;
         for (var i = 0; i < data.length; i++) {
-          this.database_list.push({name:data[i]})
+          this.database_list.push({name:data[i], nick: data[i]})
           this.database_aim.push(false)
         }
-        this.database_list[1].name='个人题库'
+        this.database_list[1].nick='个人题库'
       })
     },
     // 清除图片
@@ -831,7 +861,9 @@ export default {
         "database": database_list,
         "page_count": this.Page_Index,
         "subject": this.Subject_Type,
-        "period": this.Period_Type
+        "period": this.Period_Type,
+        "type": this.Search_Ques_Type,
+        "difficulty": [0.0, 1.0]
       })
 
       // param.append("data", data);
@@ -891,6 +923,15 @@ export default {
         return this.Period_Type[0]
       }else{
         return this.Period_Type[0] + "（等" + this.Period_Type.length + "项）"
+      }
+    },
+    Get_Search_Ques_Type(){
+      if(this.Search_Ques_Type.length == 0){
+        return "选择题型"
+      }else if(this.Search_Ques_Type.length == 1){
+        return this.Search_Ques_Type[0]
+      }else{
+        return this.Search_Ques_Type[0] + "（等" + this.Search_Ques_Type.length + "项）"
       }
     }
   }
