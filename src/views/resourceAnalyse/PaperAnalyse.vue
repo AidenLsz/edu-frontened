@@ -404,13 +404,7 @@
                 </el-row>
             </el-row>
             <!-- 双向细目表分析 -->
-            <el-row 
-                :class="Paper_Total_Analyse_Hidden(2)" 
-                style="margin-bottom: 30px"
-                v-loading="Question_Analysing"
-                element-loading-text="正在加载分析报告..."
-                element-loading-spinner="el-icon-loading"
-                >
+            <el-row :class="Paper_Total_Analyse_Hidden(2)" style="margin-bottom: 30px">
                 <!-- 表头 -->
                 <el-row style="margin: 30px 16.5vw 0px 16.5vw;">
                   <el-col :span="3">
@@ -454,10 +448,10 @@
                           <el-row type="flex" justify="center" :style="Get_Double_Table_Background(Info.index)">
                             <el-col :span="2">
                                 <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border">
-                                    <el-button type="text" @click="Jump_To_Question(Index, ii)" style="margin-top: -5px">{{Info.index}}</el-button>
+                                    {{Info.index}}
                                 </el-row>
                                 <el-row v-else type="flex" justify="center" class="Double_Table_Border" style="border-bottom: 2px solid #D8D8D8;">
-                                    <el-button type="text" @click="Jump_To_Question(Index, ii)" style="margin-top: -5px">{{Info.index}}</el-button>
+                                    {{Info.index}}
                                 </el-row>
                             </el-col>
                             <el-col :span="2">
@@ -563,8 +557,6 @@ import PaperAnalysePQRoot from './components/PaperAnalysePQRoot.vue';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import QuestionAnalyse from "./QuestionAnalyse.vue"
-
-import {commonAjax} from '@/common/utils/ajax'
 
 var PDF = new jsPDF('', 'pt', 'a4');
 
@@ -747,42 +739,6 @@ export default {
         window.scrollTo(0, 0);
     },
     methods: {
-        // 跳转到这道题（也不知道啥意思）
-        Jump_To_Question(Index_Out, Index_In){
-            let ID = this.Double_Analyse[Index_Out].items[Index_In].id;
-            this.Search(ID, 'public')
-        },
-        // 对于对应ID的题目进行检索
-        Search(ID, Database){
-            this.Question_Analysing = true;
-            commonAjax(this.backendIP+'/api/questionAnalyse',
-                {
-                    databasename: Database,
-                    ID: ID
-                }
-                ).then((data)=>{
-                    if(data.status == 'fail' && Database == 'public'){
-                        this.Search(ID, 'test');
-                    }else if(data.status == 'fail' && Database != 'public'){
-                        this.$message.error("此题暂无法获取单题分析报告。")
-                        this.Question_Analysing = false;
-                        return;
-                    }else{
-                        this.analyseData = data.que_dic;
-                        this.analyseDataShow = true;
-                        this.Refresh = !this.Refresh;
-                        this.$message.success("获取成功！")
-                        this.Question_Analysing = false;
-                    }
-                }).catch(()=>{
-                    if(Database == 'public'){
-                        this.$message.error("服务器正忙，请稍后重试。")
-                    }else{
-                        this.$message.warning("文件上传的试题暂不支持单题分析，正在更新过程中，敬请期待。")
-                    }
-                    this.Question_Analysing = false;
-                })
-        },
         // 点击检索
         submit(KU) {
             let routeData = this.$router.resolve({
@@ -2417,8 +2373,7 @@ export default {
                         score: this.Paper_Json.sub_question[i].sub_question[j].score,
                         kp: [],
                         difficulty: this.Paper_Json.sub_question[i].sub_question[j].difficulty,
-                        index: count,
-                        id: this.Paper_Json.sub_question[i].sub_question[j].id
+                        index: count
                     };
 
                     for(let eleI = 0; eleI < this.Paper_Json.sub_question[i].sub_question[j].knowledge_points_frontend.kp_layer.length; eleI++){
