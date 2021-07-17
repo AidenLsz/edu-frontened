@@ -139,7 +139,7 @@
         </el-col>
         <el-col :span="4">
           <el-row type="flex" justify="center">
-            <el-button type="success" @click="Unfinish()">下载</el-button>
+            <el-button type="success" @click="Download_Paper()">下载</el-button>
           </el-row>
         </el-col>
       </el-row>
@@ -716,6 +716,9 @@
   </div>
 </template>
 <script>
+
+import FileSaver from "file-saver";
+
 import Mathdown from '@/common/components/Mathdown'
 import {commonAjax} from '@/common/utils/ajax'
 export default {
@@ -816,6 +819,57 @@ export default {
     this.Init_User_Database_List();
   },
   methods: {
+    // 开始导出用于下载的数据
+    Download_Paper(){
+      let Download_Paper_JSON = {
+        paperSize: this.Combine_Paper_Size,
+        paperPart: this.Combine_Paper_Content,
+        paperType: this.Combine_Paper_Type,
+        paperformat: [],
+        formatinfo:{
+            title: this.Setting_Info.title,
+            subtitle: this.Setting_Info.subTitle,
+            examInfo: "考试总分: " + this.Setting_Info.examInfo.score + "分，考试时间: " + this.Setting_Info.examInfo.time + "分钟。",
+            sealLabel: "绝密 ★ 启用前",
+            gutter: "学校：____________ 班级：____________ 姓名：____________ 考号：___________",
+            studentInput: this.Setting_Info.studentWrite,
+            cautions: this.Setting_Info.cautions
+        },
+        questions: []
+      }
+
+      let Label_Using = ['title', 'subtitle', 'examInfo', 'sealLabel', 'gutter', 'studentInput', 'cautions', 'partInfo', 'bundleInfo'];
+      for(let i = 0; i < this.Setting_CheckBox_List.length; i++){
+        Download_Paper_JSON.paperformat.push(Label_Using[this.Setting_CheckBox_Label.indexOf(this.Setting_CheckBox_List[i])])
+      }
+
+      for(let i = 0; i < this.Question_List.length; i++){
+        let Questions_Format = {
+            type: this.Question_List[i].type,
+            partInfo: this.Getting_Part_Introduce(i),
+            bundleInfo: this.Getting_Bundle_Introduce(i) + this.Setting_Info.bundleIntroduce[i] + "）",
+            questions: []
+        }
+        for(let j = 0; j < this.Question_List[i].list.length; j++){
+          let Question_Item = {
+              score: this.Question_List[i].list[j].score,
+              stem: this.Question_List[i].list[j].stem,
+              options: this.Question_List[i].list[j].options,
+              answer: this.Question_List[i].list[j].answer,
+              analysis: this.Question_List[i].list[j].analysis
+          }
+          Questions_Format.questions.push(Question_Item)
+        }
+        Download_Paper_JSON.questions.push(Questions_Format)
+      }
+
+      let file = new File(
+          [JSON.stringify(Download_Paper_JSON, null, 2)],
+          "A.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
+    },
     // 重置下载设置
     Reset_Combine_Paper_Download_Setting(){
       this.Combine_Paper_Size = "A4";
