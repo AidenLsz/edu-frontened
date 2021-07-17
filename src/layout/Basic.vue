@@ -260,48 +260,6 @@
                         </el-menu-item>
                       </router-link>
                     </el-submenu>
-										<el-menu-item index="5">
-											<router-link to="/paperCombine" :underline="false" @click.native="ToTop">
-												<span style="color: black;">
-													组卷系统
-												</span>
-											</router-link>
-										</el-menu-item>
-										<el-menu-item index="6">
-											<router-link to="/manage/dashboard" v-if="$store.state.user.name"
-												:underline="false" @click.native="ToTop">
-												<span style="color: #409EFF; font-weight: bold">
-													资源管理
-												</span>
-											</router-link>
-											<el-button type="text" @click.native="login_show(); ToTop()" v-else
-												:underline="false">
-												<span style="color: silver">
-													资源管理
-												</span>
-											</el-button>
-										</el-menu-item>
-										<router-link to="/estimate" :underline="false" @click.native="ToTop"
-											style="display: none">
-											<el-menu-item index="7">
-												<span style="color: black;">试题属性预估</span>
-											</el-menu-item>
-										</router-link>
-										<router-link to="/similarity" :underline="false" @click.native="ToTop"
-											style="display: none">
-											<el-menu-item index="8">
-												<span style="color: black;">相似题预估</span>
-											</el-menu-item>
-										</router-link>
-										<router-link to="/admin" v-if="Get_Priority()" :underline="false"
-											@click.native="ToTop">
-											<el-menu-item index="9">
-												<span style="color: red;">管理员页面</span>
-											</el-menu-item>
-										</router-link>
-									</el-submenu>
-								</el-menu>
-							</el-col>
 
                     <el-menu-item index="5">
                       <router-link

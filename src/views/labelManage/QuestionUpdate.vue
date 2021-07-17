@@ -561,7 +561,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 /*html, head, body {*/
 /*  margin: 0;*/
 /*  padding: 0;*/
