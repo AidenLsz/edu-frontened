@@ -873,7 +873,7 @@ export default {
     // 重置下载设置
     Reset_Combine_Paper_Download_Setting(){
       this.Combine_Paper_Size = "A4";
-      this.Combine_Paper_Content = "Paper";
+      this.Combine_Paper_Content = ["Answer", "Analyse"];
       this.Combine_Paper_Type = "Teacher";
     },
     // 尝试打开下载页面
