@@ -98,7 +98,7 @@
       <!-- 试卷内容 -->
       <el-row type="flex" justify="start" style="margin-bottom: 20px;">
         <el-col :span="3">
-          <el-row type="flex" justify="start" style="margin-top: -3px;">
+          <el-row type="flex" justify="start">
             试卷内容：
           </el-row>
         </el-col>
@@ -744,7 +744,7 @@ export default {
       // 试卷纸张
       Combine_Paper_Size: "A4",
       // 试卷内容
-      Combine_Paper_Content: [],
+      Combine_Paper_Content: ["Answer", "Analyse"],
       // 试卷类型
       Combine_Paper_Type: "Teacher",
       // 试卷下载对话框是否展示
