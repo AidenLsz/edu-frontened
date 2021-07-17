@@ -104,10 +104,10 @@
         </el-col>
         <el-col :span="21">
           <el-row type="flex" justify="start">
-            <el-radio-group v-model="Combine_Paper_Content">
-              <el-radio label="Paper">试卷</el-radio>
-              <el-radio label="Analyse">解析</el-radio>
-            </el-radio-group>
+            <el-checkbox-group v-model="Combine_Paper_Content">
+              <el-checkbox label="Answer">答案</el-checkbox>
+              <el-checkbox label="Analyse">解析</el-checkbox>
+            </el-checkbox-group>
           </el-row>
         </el-col>
       </el-row>
@@ -744,7 +744,7 @@ export default {
       // 试卷纸张
       Combine_Paper_Size: "A4",
       // 试卷内容
-      Combine_Paper_Content: "Paper",
+      Combine_Paper_Content: [],
       // 试卷类型
       Combine_Paper_Type: "Teacher",
       // 试卷下载对话框是否展示
