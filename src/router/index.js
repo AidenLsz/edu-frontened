@@ -76,6 +76,7 @@ function validateLoginPermission(path){
     "/inputMarked",
     "/inputPaper"
   ];
+<<<<<<< HEAD
   let isUserRoute = ()=>route.some((r)=>path.includes(r))
   return !isUserRoute() || store.state.user.token
 }
@@ -88,6 +89,16 @@ function validateExamVersionPermission(path){
     return false
   if(!switchFromNEEA()&&switchToNEEA()) {
     store.dispatch('user/setRootPath','/neea/')
+=======
+  let isUserRoute = ()=>route.some((r)=>to.path.includes(r))
+  if (isUserRoute() && !store.state.user.token) {
+      Message({
+        message: '您需要登录后才能进行相关操作！',
+        type: 'error',
+        duration: 5 * 1000
+      })
+      next({ path: "/" });
+>>>>>>> c5e789a... issue34 - Fix-Little-Bug
   }
   //切换为普通版
   if(switchFromNEEA()&&!switchToNEEA()){
