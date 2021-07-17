@@ -1179,7 +1179,7 @@ export default {
 
           type: "fill",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],

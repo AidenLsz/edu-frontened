@@ -269,13 +269,13 @@ export default {
           analyse: ""
         }
         if(['单选题', '多选题', '判断题'].indexOf(Aim.type) != -1){
-          Question_Show_Infos.type = "选择题";
+          Question_Show_Infos.type = Aim.type;
           Question_Show_Infos.score = 5;
         }else if(['简答题', '计算题'].indexOf(Aim.type) != -1){
-          Question_Show_Infos.type = "解答题"
+          Question_Show_Infos.type = Aim.type
           Question_Show_Infos.score = 12;
         }else if(Aim.type == '填空题'){
-          Question_Show_Infos.type = '填空题'
+          Question_Show_Infos.type = Aim.type
           Question_Show_Infos.score = 5;
         }
 
