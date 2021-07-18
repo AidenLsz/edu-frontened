@@ -1,12 +1,12 @@
 <template>
   <div class="main-container">
     <el-row
-        style="
+      style="
         padding: 40px 10% 30px;
         text-shadow: 2px 6px 10px rgba(67, 92, 130, 0.14);
       "
-        justify="start"
-        type="flex"
+      justify="start"
+      type="flex"
     >
       <el-col>
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -161,88 +161,88 @@
               </el-select>
               <el-select v-model="item.period" placeholder="学段">
                 <el-option
-                    v-for="(item, id) in [
-                  '其他',
-                  '初中',
-                  '高中',
-                  '大学',
-                  '成人',
-                  '小学',
-                ]"
-                    :label="'学段：' + item"
-                    :key="id"
-                    :value="id"
+                  v-for="(item, id) in [
+                    '其他',
+                    '初中',
+                    '高中',
+                    '大学',
+                    '成人',
+                    '小学',
+                  ]"
+                  :label="'学段：' + item"
+                  :key="id"
+                  :value="id"
                 ></el-option>
               </el-select>
               <el-select v-model="item.system" placeholder="来源">
                 <el-option
-                    v-for="(item, id) in [
-                  '其他',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '高考',
-                  '讯飞',
-                  '考试中心',
-                  'LUNA',
-                  '题库中国',
-                ]"
-                    :v-if="item !== ''"
-                    :label="'来源：' + item"
-                    :key="id"
-                    :value="id"
+                  v-for="(item, id) in [
+                    '其他',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '高考',
+                    '讯飞',
+                    '考试中心',
+                    'LUNA',
+                    '题库中国',
+                  ]"
+                  :v-if="item !== ''"
+                  :label="'来源：' + item"
+                  :key="id"
+                  :value="id"
                 ></el-option>
               </el-select>
               <el-select v-model="item.pastpaper" placeholder="真题">
                 <el-option
-                    v-for="(item, id) in [
-                  '未处理',
-                  '非真题',
-                  '真卷',
-                  '高考真卷',
-                  '中考真卷',
-                ]"
-                    :label="'真题：' + item"
-                    :key="id"
-                    :value="id"
+                  v-for="(item, id) in [
+                    '未处理',
+                    '非真题',
+                    '真卷',
+                    '高考真卷',
+                    '中考真卷',
+                  ]"
+                  :label="'真题：' + item"
+                  :key="id"
+                  :value="id"
                 ></el-option>
               </el-select>
               <el-select v-model="item.type" placeholder="题型">
                 <el-option
-                    v-for="(item, id) in [
-                  '其他',
-                  '多选题',
-                  '填空题',
-                  '判断题',
-                  '简答题',
-                  '计算题',
-                  '单选题',
-                ]"
-                    :label="'题型：' + item"
-                    :key="id"
-                    :value="id"
+                  v-for="(item, id) in [
+                    '其他',
+                    '多选题',
+                    '填空题',
+                    '判断题',
+                    '简答题',
+                    '计算题',
+                    '单选题',
+                  ]"
+                  :label="'题型：' + item"
+                  :key="id"
+                  :value="id"
                 ></el-option>
               </el-select>
               <el-date-picker
-                  style="width: 100%"
-                  v-model="item.date"
-                  type="date"
-                  placeholder="选择日期"
+                style="width: 100%"
+                v-model="item.date"
+                type="date"
+                placeholder="选择日期"
               >
               </el-date-picker>
             </div>
           </el-form-item>
           <el-form-item label="题干">
             <el-input
-                type="textarea"
-                :autosize="{ minRows: 5, maxRows: 10 }"
-                v-model="item.stem"
+              type="textarea"
+              :autosize="{ minRows: 5, maxRows: 10 }"
+              v-model="item.stem"
             ></el-input>
           </el-form-item>
           <el-form-item label="选项">
@@ -317,7 +317,7 @@ export default {
           pastpaper: 3,
           answer: "A",
           stem:
-              "西汉文帝时，申公、韩婴皆以传《诗》被任命为博士；景帝时，胡母生、董仲舒以传《公羊春秋》被任命博士。由此可以推知汉初",
+            "西汉文帝时，申公、韩婴皆以传《诗》被任命为博士；景帝时，胡母生、董仲舒以传《公羊春秋》被任命博士。由此可以推知汉初",
           options: [
             "经学地位上升成为入仕之途",
             "品行成为选官的主要标准",
@@ -787,4 +787,3 @@ body .el-scrollbar__wrap {
     font-size: 28px;
   }
 }
-</style>
