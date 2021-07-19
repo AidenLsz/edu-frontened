@@ -247,7 +247,7 @@
               <el-row>
                 <el-col :span="12">
                   <el-row type="flex" justify="center">
-                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Unfinish()">
+                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Analyse_Combine_Paper()">
                       <i class="el-icon-s-data"></i>
                       <span>分析试卷</span>
                     </el-button>
@@ -819,6 +819,41 @@ export default {
     this.Init_User_Database_List();
   },
   methods: {
+    // 开始导出用于分析报告的数据
+    Analyse_Combine_Paper(){
+      let Analyse_Paper_JSON = {
+        in_db: 0,
+        subject: this.Subject,
+        title: this.Setting_Info.title,
+        data: []
+      }
+
+      for(let i = 0; i < this.Question_List.length; i++){
+        let Bundle_Format = {
+          is_longques: 2,
+          desc: this.Getting_Bundle_Introduce(i) + this.Setting_Info.bundleIntroduce[i] + "）",
+          content: []
+        }
+        for(let j = 0; j < this.Question_List[i].list.length; j++){
+          let Question_Item = {
+            score: this.Question_List[i].list[j].score,
+            stem: this.Question_List[i].list[j].stem,
+            options: this.Question_List[i].list[j].options,
+            answer: this.Question_List[i].list[j].answer,
+            analysis: this.Question_List[i].list[j].analyse
+          }
+          Bundle_Format.content.push(Question_Item)
+        }
+        Analyse_Paper_JSON.data.push(Bundle_Format);
+      }
+
+      let file = new File(
+        [JSON.stringify(Analyse_Paper_JSON, null, 2)],
+        "A.json",
+        { type: "text/plain;charset=utf-8" }
+      );
+      FileSaver.saveAs(file);
+    },
     // 开始导出用于下载的数据
     Download_Paper(){
       let Download_Paper_JSON = {
@@ -856,7 +891,7 @@ export default {
               stem: this.Question_List[i].list[j].stem,
               options: this.Question_List[i].list[j].options,
               answer: this.Question_List[i].list[j].answer,
-              analysis: this.Question_List[i].list[j].analysis
+              analysis: this.Question_List[i].list[j].analyse
           }
           Questions_Format.questions.push(Question_Item)
         }
