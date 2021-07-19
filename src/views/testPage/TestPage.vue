@@ -1,20 +1,45 @@
 <template>
-  <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px">
-
-    <el-row type="flex" justify="center" style="padding: 40px; padding-bottom: 40px; width: 90%; margin-left: 5%; border: 1px solid black">
+  <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; margin-top: 50px">
+    <el-input
+      placeholder="输入关键字进行过滤"
+      v-model="filterText">
+    </el-input>
+    <el-row type="flex" justify="start" style="margin-top: 30px; margin-bottom: 30px;">
+      <label style="margin-top: -3px; margin-right: 10px;">
+        选择方式：
+      </label>
+      <el-radio-group v-model="KnowledgeSelectType">
+        <el-radio label="Single">单选</el-radio>
+        <el-radio label="Multiple">多选</el-radio>
+      </el-radio-group>
+    </el-row>
+    <!-- 关于el-tree的单选多选测试 -->
+    <el-tree 
+      :data="TreeData"
+      check-strictly
+      node-key="id"
+      show-checkbox
+      :props="defaultProps"
+      default-expand-all
+      :filter-node-method="filterNode"
+      @check-change="handleCheckChange"
+      ref="tree">
+    </el-tree>
+    <!-- 以下内容是20210719之前的测试内容，可能以后还会有用到的地方，先不删了 -->
+    <el-row type="flex" justify="center" style="display: none; padding: 40px; padding-bottom: 40px; width: 90%; margin-left: 5%; border: 1px solid black">
       <el-image :src="Paste_Info"></el-image>
     </el-row>
-    <el-row>
+    <el-row style="display: none;">
       <el-button @click="Send_Message()">123</el-button>
     </el-row>
-    <el-row type="flex" justify="center" style="margin-top: 40px">
+    <el-row type="flex" justify="center" style="display: none; margin-top: 40px">
       鼠标移入移除测试
     </el-row>
-    <el-row type="flex" justify="center" style="margin: 20px 0px">
+    <el-row type="flex" justify="center" style="display: none; margin: 20px 0px">
       <el-button v-if="!Self_Cut" @click="Self_Cut = true" type="text" style="color: blue">开启自定义切分</el-button>
       <el-button v-if="Self_Cut" @click="Self_Cut = false" type="text" style="color: pink">关闭自定义切分</el-button>
     </el-row>
-    <el-row v-for="(I, Index) in [0, 1, 2]" :key="Index">
+    <el-row v-for="(I, Index) in [0, 1, 2]" :key="Index" style="display: none;">
       <el-row type="flex" justify="start" style="font-size: 14px">
         待切分的第{{Index + 1}}部分
       </el-row>
@@ -37,11 +62,10 @@
           <span style="line-height: 30px; height: 30px;">-------------------------------</span>
       </el-row>
     </el-row>
-    <el-divider></el-divider>
-    <el-row style="margin-bottom: 30px; margin-top: 30px">
+    <el-row style="display: none; margin-bottom: 30px; margin-top: 30px">
       题目题干合并测试
     </el-row>
-    <el-row v-for="(Item, Item_Index) in TestList" :key="'TL' + Item_Index">
+    <el-row v-for="(Item, Item_Index) in TestList" :key="'TL' + Item_Index" style="display: none;">
       <el-row>
         <el-button type="text" v-if="Item_Index != 0" @click="Merge(Item_Index)">合并</el-button>
       </el-row>
@@ -62,6 +86,51 @@ export default {
   },
   data() {
     return {
+      // 知识体系单选或多选
+      KnowledgeSelectType: "Single",
+      // 输入框过滤
+      filterText: '',
+      // 测试树组件选择的数据
+      TreeData: [{
+        id: 1,
+        label: '几何',
+        children: [{
+          id: 4,
+          label: '圆',
+          children: [{
+            id: 9,
+            label: '半径'
+          }, {
+            id: 10,
+            label: '直径'
+          }]
+        }]
+      }, {
+        id: 2,
+        label: '四则运算',
+        children: [{
+          id: 5,
+          label: '加法'
+        }, {
+          id: 6,
+          label: '减法'
+        }]
+      }, {
+        id: 3,
+        label: '积分',
+        children: [{
+          id: 7,
+          label: '导数'
+        }, {
+          id: 8,
+          label: '极限'
+        }]
+      }],
+      // 这里用于定义哪些内容是用于生成树的，这里定义了字数的关键字为children，标签的标签值为label
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
       Paste_Info: "测试粘贴文件内容2",
       Paste_Catcher: "",
       Self_Cut: false,
@@ -82,8 +151,15 @@ export default {
       ]
     }
   },
-  watch:{
-
+  watch: {
+    filterText(val) {
+      this.$refs.tree.filter(val);
+    },
+    KnowledgeSelectType(newVal, oldVal){
+      if(newVal != oldVal){
+        this.$refs.tree.setCheckedKeys([])
+      }
+    }
   },
   mounted() {
     this.Init();
@@ -96,6 +172,17 @@ export default {
     
   },
   methods: {
+    // 点击节点后的方法
+    handleCheckChange(data, checked) {
+      if (checked && this.KnowledgeSelectType == "Single") {
+        this.$refs.tree.setCheckedKeys([data.id])
+      }
+    },
+    // 这里是输入过滤用的方法
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
+    },
     Init_Img_Paster(){
       window.addEventListener('paste', function(e){
         let Pic = e.clipboardData.items[0].getAsFile();

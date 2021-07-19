@@ -110,7 +110,7 @@
         <Keyword @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></Keyword>
     </el-row>
     <el-row v-if="Using_Menu_Index == 1">
-        <KnowledgePoint></KnowledgePoint>
+        <KnowledgePoint @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></KnowledgePoint>
     </el-row>
     <el-row v-if="Using_Menu_Index == 2">
         <InputQuestion @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></InputQuestion>
