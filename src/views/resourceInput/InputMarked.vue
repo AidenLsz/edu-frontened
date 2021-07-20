@@ -437,22 +437,55 @@
         </el-row>
       </el-col>
       <el-col :span="20" style="background: #F8FBFF; margin-top: 30px; min-height: 74vh; padding-top: 40px; border-right: 30px solid white; margin-bottom: 30px; padding-bottom: 40px;">
-        <el-row style="background: #F8FBFF; min-height: 50vh">
-          <OptionDisplay v-if="Type_Now == 'option'" :QI="Temp_OptionQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></OptionDisplay>
-          <FillDisplay v-else-if="Type_Now == 'fill'" :QI="Temp_FillQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></FillDisplay>
-          <AnswerDisplay v-else-if="Type_Now == 'answer'" :QI="Temp_AnswerQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></AnswerDisplay>
-          <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo" :BI="'Bundle_0'"></MixDisplay>
+        <el-row v-if="['option', 'fill', 'answer', 'mix'].indexOf(Type_Now) != -1">
+          <el-row style="background: #F8FBFF; min-height: 50vh">
+            <OptionDisplay v-if="Type_Now == 'option'" :QI="Temp_OptionQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></OptionDisplay>
+            <FillDisplay v-else-if="Type_Now == 'fill'" :QI="Temp_FillQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></FillDisplay>
+            <AnswerDisplay v-else-if="Type_Now == 'answer'" :QI="Temp_AnswerQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></AnswerDisplay>
+            <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo" :BI="'Bundle_0'"></MixDisplay>
+          </el-row>
+          <el-row v-if="Type_Now != '-1'">
+            <el-col :span="8">
+              <el-button type="primary" plain @click="Edit_Question()">重新编辑</el-button>
+            </el-col>
+            <el-col :span="8">
+              <el-button type="warning" v-if="Authority_Check()" plain @click="PaperUpload('export')">题目导出</el-button>
+              <p v-else>&nbsp;</p>
+            </el-col>
+            <el-col :span="8">
+              <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button>
+            </el-col>
+          </el-row>
         </el-row>
-        <el-row v-if="Type_Now != '-1'">
-          <el-col :span="8">
-            <el-button type="primary" plain @click="Edit_Question()">重新编辑</el-button>
-          </el-col>
-          <el-col :span="8">
-            <el-button type="warning" v-if="Authority_Check()" plain @click="PaperUpload('export')">题目导出</el-button>
-            <p v-else>&nbsp;</p>
-          </el-col>
-          <el-col :span="8">
-            <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button>
+        <el-row v-else style="padding-left: 3vw; padding-right: 3vw">
+          <el-col>
+            <el-row type="flex" justify="start" style="margin-bottom: 30px;">
+              <label>
+                复制题目文本到输入框进行自动切割
+              </label>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-bottom: 30px;">
+              <el-radio-group v-model="TextSplitType">
+                <el-radio label="option">选择题</el-radio>
+                <el-radio label="fill" disabled>填空题</el-radio>
+                <el-radio label="answer" disabled>解答题</el-radio>
+                <el-radio label="mix" disabled>综合题</el-radio>
+              </el-radio-group>
+            </el-row>
+            <el-row>
+              <el-input
+                type="textarea" 
+                v-model="TextSplit" 
+                :autosize="{minRows: 6, maxRows: 10}" 
+                resize="none" 
+                style="font-size: 15px"
+                placeholder="请输入需要切割的选择题内容"
+              >
+              </el-input>
+            </el-row>
+            <el-row type="flex" justify="center" style="margin-top: 30px;">
+              <el-button type="success" plain @click="TextSplitDo()">开始切分</el-button>
+            </el-row>
           </el-col>
         </el-row>
       </el-col>
@@ -477,6 +510,8 @@ import Instruction from './components/InstructionExercise.vue'
 
 import Mathdown from "../../common/components/Mathdown.vue";
 
+import { extract } from "@/common/utils/extraction.js"
+
 // import Vue from "vue";
 export default {
   components: { ComplexInput,
@@ -487,6 +522,10 @@ export default {
                 Mathdown,Instruction},
   data() {
     return {
+      // 用于文字切割的变量
+      TextSplit: "",
+      // 用于文字切割的题型
+      TextSplitType: "option",
       // 刷新组件
       refresh: false,
       // 是否展开题型
@@ -706,6 +745,40 @@ export default {
     this.ToTop();
   },
   methods: {
+    // 用于给试题文本自动切分，现在先只做选择吧，以后功能补齐了再说后面的
+    TextSplitDo(){
+      let result = extract(this.TextSplit);
+      this.TextSplit = "";
+      this.TextSplitType = "option";
+      if(this.TextSplitType == 'option'){
+        this.Type_Cache = 'option';
+        this.Type_Now = 'option';
+        this.Temp_OptionQuestionInfo = {
+            type: "option",
+            // 分值
+            score: 5,
+            // 题目内容，题目内容图片，是否显示图片
+            content: result.题干,
+            content_images: [],
+            // 选项的部分
+            options: [],
+            options_images: [],
+            // 答案的部分
+            answer: result.答案,
+            answer_images: [],
+            // 解析的部分
+            analyse: result.解析,
+            analyse_images: [],
+            // 细节的部分
+            detail_type: "单选题"
+        }
+        let Temp_Option = result.选项.split('，');
+        this.Temp_OptionQuestionInfo.options = Temp_Option;
+        for(let i = 0; i < Temp_Option.length; i++){
+          this.Temp_OptionQuestionInfo.options_images.push("")
+        }
+      }
+    },
     openInstructionDialog(){
       this.$refs.instruction.openDialog();
     },
