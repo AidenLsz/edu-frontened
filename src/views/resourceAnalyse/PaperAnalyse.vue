@@ -2358,8 +2358,6 @@ export default {
         // 千把来行着实太长了，展开了翻起来都费劲
         Init(){
 
-            console.log(sessionStorage.getItem('PaperJson'))
-
             if(sessionStorage.getItem('PaperJson')){
                 this.Paper_Json = JSON.parse(sessionStorage.getItem('PaperJson'))
             }
