@@ -381,7 +381,14 @@
           </el-row>
         </el-col>
         <!-- 显示区 -->
-        <el-col :span="18" :offset="1" class="Side_Card">
+        <el-col 
+          :span="18" 
+          :offset="1" 
+          class="Side_Card"
+          v-loading="waiting"
+          element-loading-text="正在生成分析报告中..."
+          element-loading-spinner="el-icon-loading"
+          >
           <el-row type="flex" justify="start">
             <el-col :span="1" v-if="Get_Paper_Setting('装订线')">
                 <div class="Paper_Seal">
@@ -744,6 +751,8 @@ export default {
   },
   data() {
     return {
+      // 获取分析报告的时候用于等待的值
+      waiting: false,
       // 试卷纸张
       Combine_Paper_Size: "A4",
       // 试卷内容
@@ -821,8 +830,10 @@ export default {
   methods: {
     // 开始导出用于分析报告的数据
     Analyse_Combine_Paper(){
+
+      this.waiting = true;
+
       let Analyse_Paper_JSON = {
-        in_db: 0,
         subject: this.Subject,
         title: this.Setting_Info.title,
         data: []
@@ -847,12 +858,21 @@ export default {
         Analyse_Paper_JSON.data.push(Bundle_Format);
       }
 
-      let file = new File(
-        [JSON.stringify(Analyse_Paper_JSON, null, 2)],
-        "A.json",
-        { type: "text/plain;charset=utf-8" }
-      );
-      FileSaver.saveAs(file);
+      commonAjax(this.backendIP+'/api/combinePaperAnalyseReport',
+        {
+          Paper_Data: JSON.stringify(Analyse_Paper_JSON)
+        }
+      ).then((data)=>{
+        sessionStorage.setItem("PaperJson", JSON.stringify(data));
+        console.log(sessionStorage)
+        let routeData = this.$router.resolve({ path: '/paperAnalyse' });
+        window.open(routeData.href, '_blank');
+        this.$message.success("试题详情内容已在新页面展开。");
+        this.waiting = false;
+      }).catch(() => {
+        this.$message.error("服务器忙碌，请稍后再试。")
+        this.waiting = false;
+      })
     },
     // 开始导出用于下载的数据
     Download_Paper(){
