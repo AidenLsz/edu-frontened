@@ -55,7 +55,6 @@
         <el-tabs  @tab-click="handleClick">
         <el-tab-pane label="学科" name="first"></el-tab-pane>
         <el-tab-pane label="学段" name="second"></el-tab-pane>
-        <el-tab-pane label="题型" name="third"></el-tab-pane>
         </el-tabs>
       </div>
       <div id="data_chart" class="data_chart">
@@ -130,10 +129,6 @@ export default {
       else if(tab.name == 'second'){  
         this.Sort_Type = "学段";    
       }
-      else if(tab.name == 'third'){  
-        alert("该功能尚不需要——");    
-      }
-
       this.Redraw_Bar();
     },
 
