@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import App from './App.vue'
-// import User from './User.vue'
 import store from './store'
 import router from './router/index'
 import './plugins/element.js'
@@ -41,10 +40,4 @@ new Vue({
   router,
   store,
   render:h=> h(App),
-  // h => {
-  //   if(sessionStorage.getItem('accessToken')){
-  //     return h(User);
-  //   }
-  //   return h(App);
-  // },
 }).$mount('#app')
