@@ -842,7 +842,7 @@ export default {
       for(let i = 0; i < this.Question_List.length; i++){
         let Bundle_Format = {
           is_longques: 2,
-          desc: this.Getting_Bundle_Introduce(i) + this.Setting_Info.bundleIntroduce[i] + "）",
+          desc: this.Question_List[i].type,
           content: []
         }
         for(let j = 0; j < this.Question_List[i].list.length; j++){
