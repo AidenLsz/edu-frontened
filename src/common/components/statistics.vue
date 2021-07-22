@@ -48,8 +48,19 @@
         </el-button>
       </el-button-group>
     </el-row>
+
     <el-row>
-      <div id="data_chart" class="data_chart"></div>
+    <div class="bigBox">
+      <div class="labelBox">
+        <el-tabs  @tab-click="handleClick">
+        <el-tab-pane label="学科" name="first"></el-tab-pane>
+        <el-tab-pane label="学段" name="second"></el-tab-pane>
+        <el-tab-pane label="题型" name="third"></el-tab-pane>
+        </el-tabs>
+      </div>
+      <div id="data_chart" class="data_chart">
+      </div>
+    </div>
     </el-row>
   </div>
 </template>
@@ -72,11 +83,18 @@ export default {
       Num_Paper: 0,
       Num_Question: 0,
       Num_KU: 0,
-      Paper_Data: [],
-      Question_Data: [],
-      KU_Data: [],
+
+      Paper_Data_Sub: [],
+      Question_Data_Sub: [],
+      KU_Data_Sub: [],//修改的属性
+
+      Paper_Data_Per: [],
+      Question_Data_Per: [],
+      KU_Data_Per: [],//新加入属性
+
       Chart_Data: {},
-      Count_Type: "Question"
+      Count_Type: "Question",
+      Sort_Type: "学科"//新加入的属性
     };
   },
   mounted() {
@@ -103,6 +121,22 @@ export default {
         return "sleepingButton"
       }
     },
+
+    handleClick(tab,event) {//新加入的标签页
+      console.log(tab,event)
+      if(tab.name == 'first'){
+        this.Sort_Type = "学科";
+      }
+      else if(tab.name == 'second'){  
+        this.Sort_Type = "学段";    
+      }
+      else if(tab.name == 'third'){  
+        alert("该功能尚不需要——");    
+      }
+
+      this.Redraw_Bar();
+    },
+
     ToTop(){
       window.scrollTo(0,0);
     },
@@ -116,6 +150,7 @@ export default {
       this.functionStatus = [false, false, false, false]
       this.resourceStatus = [false, false, false, false]
     },
+
     // 重绘统计表图
     Redraw_Bar(){
       if (BarChart != null && BarChart != "" && BarChart != undefined) {
@@ -124,15 +159,15 @@ export default {
       BarChart = echarts.init(document.getElementById('data_chart'));
         let option = {
           grid: {
-            x: 70,
+            x: 80, //x=70时y轴坐标可能显示不全，可以改成百分比
             y: 90,
             x2: 30,
             y2: 35
           },
           title: {
-              text: "各学科数据统计",
-              x: "center",
-              y: "top",
+              text :'各' + this.Sort_Type + '数据统计',
+              x: 'center',
+              y: 'top',
               textStyle: {
                   fontSize: 16,
                   fontStyle: 'normal',
@@ -205,30 +240,42 @@ export default {
           series: []
       };
 
-      if(this.Count_Type == 'Question'){
+      if(this.Count_Type == 'Question' ){
         option.legend.data = ['试题']
         option.series = [{
               name:'试题',
               type:'bar',
               barWidth: '30%',
-              data: this.Question_Data
+              data:this.Question_Data_Sub 
           }]
+        if(this.Sort_Type == '学段') {
+          option.series[0].data = this.Question_Data_Per;
+          option.xAxis[0].data = this.Chart_Data.list_per;
+        }
       }else if(this.Count_Type == 'Paper'){
         option.legend.data = ['试卷']
         option.series = [{
               name:'试卷',
               type:'bar',
               barWidth: '30%',
-              data: this.Paper_Data
+              data: this.Paper_Data_Sub
           }]
+        if(this.Sort_Type == '学段') {
+          option.series[0].data = this.Paper_Data_Per;
+          option.xAxis[0].data = this.Chart_Data.list_per;
+        }  
       }else if(this.Count_Type == 'KU'){
         option.legend.data = ['知识单元']
         option.series = [{
               name:'知识单元',
               type:'bar',
               barWidth: '30%',
-              data: this.KU_Data
+              data: this.KU_Data_Sub
           }]
+        if(this.Sort_Type == '学段') {
+          option.series[0].data = this.KU_Data_Per;
+          option.xAxis[0].data = this.Chart_Data.list_per;
+        }
       }
       // console.log(option.series)
       BarChart.setOption(option);
@@ -252,9 +299,12 @@ export default {
 
         this.Chart_Data = {};
 
-        this.Paper_Data = [];
-        this.Question_Data = [];
-        this.KU_Data = [];
+        this.Paper_Data_Sub = [];
+        this.Question_Data_Sub = [];
+        this.KU_Data_Sub = [];       
+        this.Paper_Data_Per = [];
+        this.Question_Data_Per = [];
+        this.KU_Data_Per = [];
 
         this.Chart_Data = data.data;
 
@@ -262,9 +312,14 @@ export default {
         this.Num_Question = this.Chart_Data.num_question;
         this.Num_KU = this.Chart_Data.num_knowledge;
         for(var index = 0; index < this.Chart_Data.num_sub.length; index ++){
-          this.Paper_Data.push(this.Chart_Data.num_sub[index].paper);
-          this.Question_Data.push(this.Chart_Data.num_sub[index].question);
-          this.KU_Data.push(this.Chart_Data.num_sub[index].knowledge);
+            this.Paper_Data_Sub.push(this.Chart_Data.num_sub[index].Paper);
+            this.Question_Data_Sub.push(this.Chart_Data.num_sub[index].Question);
+            this.KU_Data_Sub.push(this.Chart_Data.num_sub[index].Knowledge);//后端PQK数据名已调整为大写！
+        }
+        for(var index2 = 0; index2 < this.Chart_Data.num_per.length; index2 ++){
+          this.Paper_Data_Per.push(this.Chart_Data.num_per[index2].Paper);
+          this.Question_Data_Per.push(this.Chart_Data.num_per[index2].Question);
+          this.KU_Data_Per.push(this.Chart_Data.num_per[index2].Knowledge);
         }
         this.Redraw_Bar();
       });
@@ -307,13 +362,20 @@ a {
   -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
   border-radius: 10px;
 }
-.data_chart{
+
+.bigBox{
    border-radius: 10px;
    width: 67%;
-   height:300px;
-   padding-top: 20px;
+   height:400px;
    margin-left: 16.5%;
    border: 3px solid #EEF5FE;
    margin-bottom: 40px;
+}
+.labelBox{
+  padding-left:2%; /*解决标签顶格问题*/
+  padding-right:2%;
+}
+.data_chart{
+   height:300px;
 }
 </style>
