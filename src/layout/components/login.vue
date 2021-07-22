@@ -63,7 +63,6 @@
 <script>
 import vueImgVerify from "@/common/components/vue-img-verify.vue";
 import {commonAjax} from "@/common/utils/ajax";
-import {Message } from 'element-ui'
 export default {
   components: { vueImgVerify },
   data(){
@@ -122,42 +121,13 @@ export default {
           this.$router.go()
           this.visible = false;
         })
-      }).catch(()=>{
-        Message({
-          message: '用户名或密码不正确！',
-          type: 'error',
-          duration: 5 * 1000
-        })
+      }).catch((err)=>{
+        if(err&&err.response&&err.response.status==401){
+          this.$message.error('用户名或密码不正确！')
+        }else {
+          this.$message.error('网络或服务器发生错误！')
+        }
       })
-      // this.$http
-      //   .post(
-      //     this.backendIP + "/api/login",
-      //     {
-      //       username: this.account,
-      //       // password: md5(this.password)
-      //       password: this.password
-      //     },
-      //     {
-      //       emulateJSON: true,
-      //     }
-      //   )
-      //   .then(function(data) {
-      //     if (data.status != 200) { //eslint-disable-line
-      //       alert("登录失败");
-      //       return;
-      //     }
-      //     let userInfo={
-      //       token:data.body.access_token,
-      //       name:this.account,
-      //       // isAdmin:data.body.isAdmin,
-      //     }
-      //     this.$store.dispatch('user/setUserData', userInfo).then(() => {
-      //       this.$router.push("/dashboard");
-      //       this.visible = false;
-      //     }).catch((err) => {
-      //       alert(err)
-      //     })
-      //   });
     },
     getImgCode(code) {
       this.imgCode = code;
