@@ -3040,12 +3040,14 @@ export default {
       }
     }
 
-    let file = new File(
-          [JSON.stringify(Upload_Json, null, 4)],
-          this.PaperTitle + ".json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
+    this.$message.warning("数据入库格式升级中.")
+
+    // let file = new File(
+    //       [JSON.stringify(Upload_Json, null, 4)],
+    //       this.PaperTitle + ".json",
+    //       { type: "text/plain;charset=utf-8" }
+    //     );
+    //     FileSaver.saveAs(file);
     let flag = true;
     if(flag){
         return;
@@ -3739,12 +3741,14 @@ export default {
         }
       }
 
-      let file = new File(
-          [JSON.stringify(Upload_Json, null, 2)],
-          "A.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
+      this.$message.warning("数据入库格式升级中.")
+
+      // let file = new File(
+      //     [JSON.stringify(Upload_Json, null, 2)],
+      //     "A.json",
+      //     { type: "text/plain;charset=utf-8" }
+      //   );
+      //   FileSaver.saveAs(file);
 
       let Flag = true;
       if(Flag){

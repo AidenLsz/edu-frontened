@@ -1368,12 +1368,13 @@ export default {
         Temp_Doc.analysis = Ques.analyse;
         Temp_Doc.analysis_images = Ques.analyse_images;
 
-        let file = new File(
-          [JSON.stringify(Temp_Doc, null, 4)],
-          "Option.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
+        // let file = new File(
+        //   [JSON.stringify(Temp_Doc, null, 4)],
+        //   "Option.json",
+        //   { type: "text/plain;charset=utf-8" }
+        // );
+        // FileSaver.saveAs(file);
+        this.$message.warning("数据入库格式升级中.")
         return;
 
       }else if(this.Type_Now == 'fill'){
@@ -1409,12 +1410,13 @@ export default {
         Temp_Doc.analysis = Ques.analyse;
         Temp_Doc.analysis_images = Ques.analyse_images;
 
-        let file = new File(
-          [JSON.stringify(Temp_Doc, null, 4)],
-          "Fill.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
+        // let file = new File(
+        //   [JSON.stringify(Temp_Doc, null, 4)],
+        //   "Fill.json",
+        //   { type: "text/plain;charset=utf-8" }
+        // );
+        // FileSaver.saveAs(file);
+        this.$message.warning("数据入库格式升级中.")
         return;
 
       }else if(this.Type_Now == 'answer'){
@@ -1463,12 +1465,13 @@ export default {
         Temp_Doc.analysis = Ques.analyse;
         Temp_Doc.analysis_images = Ques.analysis_images;
         
-        let file = new File(
-          [JSON.stringify(Temp_Doc, null, 4)],
-          "Answer.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
+        // let file = new File(
+        //   [JSON.stringify(Temp_Doc, null, 4)],
+        //   "Answer.json",
+        //   { type: "text/plain;charset=utf-8" }
+        // );
+        // FileSaver.saveAs(file);
+        this.$message.warning("数据入库格式升级中.")
         return;
 
       }else if(this.Type_Now == 'mix'){
@@ -1526,12 +1529,13 @@ export default {
         Temp_Doc.analysis = Ques.analyse;
         Temp_Doc.analysis_images = Ques.analyse_images;
         
-        let file = new File(
-          [JSON.stringify(Temp_Doc, null, 4)],
-          "Mix.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
+        // let file = new File(
+        //   [JSON.stringify(Temp_Doc, null, 4)],
+        //   "Mix.json",
+        //   { type: "text/plain;charset=utf-8" }
+        // );
+        // FileSaver.saveAs(file);
+        this.$message.warning("数据入库格式升级中.")
         return;
 
       }

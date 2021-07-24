@@ -386,7 +386,7 @@
           :offset="1" 
           class="Side_Card"
           v-loading="waiting"
-          element-loading-text="正在生成分析报告中..."
+          :element-loading-text="waiting_text"
           element-loading-spinner="el-icon-loading"
           >
           <el-row type="flex" justify="start">
@@ -724,8 +724,6 @@
 </template>
 <script>
 
-import FileSaver from "file-saver";
-
 import Mathdown from '@/common/components/Mathdown'
 import {commonAjax} from '@/common/utils/ajax'
 export default {
@@ -751,8 +749,10 @@ export default {
   },
   data() {
     return {
-      // 获取分析报告的时候用于等待的值
+      // 获取文件时用于等待的值
       waiting: false,
+      // 用于等待时显示的文字
+      waiting_text: "",
       // 试卷纸张
       Combine_Paper_Size: "A4",
       // 试卷内容
@@ -831,6 +831,7 @@ export default {
     // 开始导出用于分析报告的数据
     Analyse_Combine_Paper(){
 
+      this.waiting_text = "正在获取分析报告，请稍后..."
       this.waiting = true;
 
       let Analyse_Paper_JSON = {
@@ -869,13 +870,21 @@ export default {
         window.open(routeData.href, '_blank');
         this.$message.success("试题详情内容已在新页面展开。");
         this.waiting = false;
+        this.waiting_text = ""
       }).catch(() => {
-        this.$message.error("服务器忙碌，请稍后再试。")
+        this.$message.error("服务器忙碌，请稍后再试...")
         this.waiting = false;
+        this.waiting_text = ""
       })
     },
     // 开始导出用于下载的数据
     Download_Paper(){
+
+      this.waiting_text = "正在准备生成的试卷，请稍后..."
+      this.waiting = true;
+
+      this.Download_Combine_Paper_Dialog = false;
+
       let Download_Paper_JSON = {
         paperSize: this.Combine_Paper_Size,
         paperPart: this.Combine_Paper_Content,
@@ -918,12 +927,39 @@ export default {
         Download_Paper_JSON.questions.push(Questions_Format)
       }
 
-      let file = new File(
-          [JSON.stringify(Download_Paper_JSON, null, 2)],
-          "A.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
+      let config = {
+          headers: {
+              "Content-Type": "multipart/form-data"
+          },
+          responseType: 'arraybuffer',
+          emulateJSON: true
+      }
+
+      let param = new FormData();
+
+      param.append('Paper_Data', JSON.stringify(Download_Paper_JSON, null, 4));
+
+      this.$http
+          .post(this.backendIP + "/api/combinePaperDownload", param, config)
+          .then(function(data) {
+          if(data.data){
+              this.waiting = false;
+              const link = document.createElement('a')
+              let blob = new Blob([data.data],
+                  {type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"})
+              let objectUrl = URL.createObjectURL(blob)
+              link.href = objectUrl
+              link.download = this.Setting_Info.title + '.docx'
+              link.click()
+              URL.revokeObjectURL(objectUrl);
+              this.waiting_text = ""
+          }
+          }).catch(() => {
+              this.$message.error("服务器忙碌，请稍后再试...");
+              this.waiting = false;
+              this.waiting_text = "";
+              return
+          });
     },
     // 重置下载设置
     Reset_Combine_Paper_Download_Setting(){
