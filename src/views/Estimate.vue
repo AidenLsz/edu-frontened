@@ -5,6 +5,7 @@
         <el-col style="padding-left: 5vw">
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+						<el-breadcrumb-item>开放平台</el-breadcrumb-item>
             <el-breadcrumb-item>试题属性预估</el-breadcrumb-item>
           </el-breadcrumb>
         </el-col>
