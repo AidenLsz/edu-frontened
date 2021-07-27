@@ -385,7 +385,23 @@ export default {
         this.KnowledgeUnitList.splice(0, this.KnowledgeUnitList.length)
         this.KnowledgeUnitIDList.splice(0, this.KnowledgeUnitIDList.length)
       }
-    }
+    },
+    Period(newVal, oldVal){
+      if(newVal!= oldVal){
+        this.KnowledgeUnitList = [];
+        this.KnowledgeUnitIDList = [];
+        this.$refs.tree.setCheckedKeys([])
+        this.Init();
+      }
+    },
+    Subject(newVal, oldVal){
+      if(newVal!= oldVal){
+        this.KnowledgeUnitList = [];
+        this.KnowledgeUnitIDList = [];
+        this.$refs.tree.setCheckedKeys([])
+        this.Init();
+      }
+    },
   },
   mounted() {
       this.initDatabaseList();
@@ -441,8 +457,6 @@ export default {
 
       this.waiting = true;
 
-      let T_URL = "https://kg-edu-backend-44-review-latex-mw1s2b.env.bdaa.pro/v1"
-
       let config = {
           headers: {
               "Content-Type": "multipart/form-data"
@@ -454,11 +468,13 @@ export default {
 
       param.append('system', 'tiku');
       param.append('subject', this.Subject);
+      param.append('period', this.Period);
 
       this.$http
-          .post(T_URL + "/api/getKnowledgeSystem", param, config)
+          .post(this.backendIP + "/api/getKnowledgeSystem", param, config)
           .then(function(data) {
             this.TreeData = data.body.knowledge_system
+            this.$refs.tree.setCheckedKeys([])
             this.waiting = false;
           })
     },
