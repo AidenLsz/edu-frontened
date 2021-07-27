@@ -6,6 +6,7 @@ import Estimate from "@/views/Estimate";
 import Home from "@/views/Home";
 import Members from "@/views/Members_Introduce";
 import Similarity from "@/views/Similarity";
+import ImageTranscription from "@/views/ImageTranscription"
 
 // 资源查询类页面
 import KU from "@/views/resourceQuery/KU.vue";
@@ -100,6 +101,11 @@ const visitorRouter=[
     name: "Members",
     component: Members
   },
+	{
+		path: "/ImageTranscription",
+		name: "ImageTranscription",
+		component: ImageTranscription
+	},
   {
     path: "/paperAnalyse",
     name: "PaperAnalyse",
