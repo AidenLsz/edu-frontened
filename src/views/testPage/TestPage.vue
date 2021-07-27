@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; margin-top: 50px">
+  <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; margin-top: 50px;">
     <el-input
       placeholder="输入关键字进行过滤"
       v-model="filterText">
@@ -13,6 +13,7 @@
         <el-radio label="Multiple">多选</el-radio>
       </el-radio-group>
     </el-row>
+    <el-row type="flex" justify="start" style="height: 60vh; overflow: scroll; width: 18vw">
     <!-- 关于el-tree的单选多选测试 -->
     <el-tree 
       :data="TreeData"
@@ -21,10 +22,16 @@
       show-checkbox
       :props="defaultProps"
       default-expand-all
+      check-on-click-node
       :filter-node-method="filterNode"
       @check-change="handleCheckChange"
-      ref="tree">
+      style="font-size: 10px;"
+      ref="tree"
+      v-loading="waiting"
+      element-loading-text="正在获取知识树..."
+      element-loading-spinner="el-icon-loading">
     </el-tree>
+    </el-row>
     <!-- 以下内容是20210719之前的测试内容，可能以后还会有用到的地方，先不删了 -->
     <el-row type="flex" justify="center" style="display: none; padding: 40px; padding-bottom: 40px; width: 90%; margin-left: 5%; border: 1px solid black">
       <el-image :src="Paste_Info"></el-image>
@@ -79,6 +86,9 @@
   </div>
 </template>
 <script>
+
+// import FileSaver from "file-saver";
+
 export default {
   name: 'ScreenShot',
   props: {
@@ -86,8 +96,12 @@ export default {
   },
   data() {
     return {
+      // 等待变量
+      waiting: false,
       // 知识体系单选或多选
       KnowledgeSelectType: "Single",
+      // 要展示的知识点槽
+      KnowledgeUnitList: [],
       // 输入框过滤
       filterText: '',
       // 测试树组件选择的数据
@@ -172,11 +186,50 @@ export default {
     
   },
   methods: {
+    Init(){
+
+      this.waiting = true;
+
+      let T_URL = "https://kg-edu-backend-44-review-latex-mw1s2b.env.bdaa.pro/v1"
+
+      let config = {
+          headers: {
+              "Content-Type": "multipart/form-data"
+          },
+          emulateJSON: true
+      }
+
+      let param = new FormData();
+
+      param.append('system', 'tiku');
+      param.append('subject', '数学');
+
+      this.$http
+          .post(T_URL + "/api/getKnowledgeSystem", param, config)
+          .then(function(data) {
+            this.TreeData = data.body.knowledge_system
+            this.waiting = false;
+            // let file = new File(
+            //   [JSON.stringify(this.TreeData, null, 4)],
+            //   "Tree.json",
+            //   { type: "text/plain;charset=utf-8" }
+            // );
+            // FileSaver.saveAs(file);
+          })
+    },
     // 点击节点后的方法
     handleCheckChange(data, checked) {
+      console.log(checked)
       if (checked && this.KnowledgeSelectType == "Single") {
         this.$refs.tree.setCheckedKeys([data.id])
+        this.KnowledgeUnitList = [data.label]
       }
+      else if(checked){
+        this.KnowledgeUnitList.push(data.label)
+      }else{
+        this.KnowledgeUnitList.splice(this.KnowledgeUnitList.indexOf(data.label), 1)
+      }
+      console.log(this.KnowledgeUnitList)
     },
     // 这里是输入过滤用的方法
     filterNode(value, data) {

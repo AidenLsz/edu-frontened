@@ -28,13 +28,20 @@
       <el-col :span="6" style="padding-left: 3vw; padding-right: 3vw;">
         <el-row type="flex" justify="center" class="KnowledgePointFilter">
           <el-col style="padding: 0px; margin: 0px; padding-top: 20px">
-            <el-row type="flex" justify="center">
+            <el-row type="flex" justify="center" style="margin: 0px 1.5vw 10px 1.5vw">
+              <el-input
+                placeholder="输入关键字进行过滤"
+                v-model="filterText">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              </el-input>
+            </el-row>
+            <el-row type="flex" justify="center" style="display: none">
               <el-select v-model="KnowledgeGroup" placeholder="请选择知识体系">
                 <el-option :value="'KnowledgeGroup_1'" :label="'知识体系一号'"></el-option>
                 <el-option :value="'KnowledgeGroup_2'" :label="'知识体系二号'"></el-option>
               </el-select>
             </el-row>
-            <el-row type="flex" justify="start" style="margin-top: 30px; margin-left: 1.5vw">
+            <el-row type="flex" justify="start" style="margin-top: 20px; margin-left: 1.5vw">
               <label style="margin-top: -3px; margin-right: 10px;">
                 选择方式：
               </label>
@@ -43,7 +50,7 @@
                 <el-radio label="Multiple">多选</el-radio>
               </el-radio-group>
             </el-row>
-            <el-row type="flex" justify="start" style="margin-top: 20px; margin-left: 1.5vw">
+            <el-row type="flex" justify="start" style="margin-top: 10px; margin-left: 1.5vw">
               <label style="margin-top: -3px; margin-right: 10px;">
                 过滤方式：
               </label>
@@ -52,40 +59,66 @@
                 <el-radio label="Cross">交集</el-radio>
               </el-radio-group>
             </el-row>
-            <el-row type="flex" justify="start" style="margin-top: 30px; margin-left: 1.5vw">
-              <label>预定的知识点树位置</label>
+            <el-row 
+              type="flex" 
+              justify="start" 
+              style="margin-top: 20px; margin-left: 0.5vw; margin-right: 0.5vw; overflow: scroll; height: 80vh;"
+              v-loading="waiting"
+              element-loading-text="正在获取知识树..."
+              element-loading-spinner="el-icon-loading">
+              <el-tree 
+                :data="TreeData"
+                check-strictly
+                node-key="id"
+                show-checkbox
+                :props="defaultProps"
+                check-on-click-node
+                :filter-node-method="filterNode"
+                @check-change="handleCheckChange"
+                style="font-size: 10px;"
+                ref="tree">
+              </el-tree>
             </el-row>
           </el-col>
         </el-row>
       </el-col>
       <el-col :span="18" style="margin-right: 5vw;">
-        <el-row type="flex" justify="start" class="SearchArea">
-          <!-- enter.native才能监听到组件化的事件，要注意一下 -->
-            <el-col :span="21">
-              <el-input class="SearchInput" v-model="searchKeyword" type="text" @keyup.enter.native="submit()">
-
-              </el-input>
-            </el-col>
-            <el-col :span="1">
-              <el-divider direction="vertical"></el-divider>
-            </el-col>
-            <el-col :span="1">
+        <!-- 已选择知识点行 -->
+        <el-row type="flex" justify="start" :style="ExistFilter()">
+          <el-col :span="22">
+            <el-row 
+              v-for="Row_Index in Math.ceil(KnowledgeUnitList.length/6)" 
+              :key="'KU_Row' + Row_Index"
+              >
+              <el-col :span="4" v-for="Col_Index in 6" :key="'KU_COL_' + Row_Index + '_' + Col_Index">
+                <el-row 
+                  type="flex" 
+                  justify="center" 
+                  v-if="KU_Show((Row_Index-1) * 6 + Col_Index - 1)"
+                  class="KU_Button"
+                  @click.native="Delete_KU((Row_Index-1) * 6 + Col_Index - 1)">
+                  {{Get_Show(KnowledgeUnitList[(Row_Index-1) * 6 + Col_Index - 1])}}
+                  <i class="el-icon-delete" style="line-height: 20px; margin-left: 10px"></i>
+                </el-row>
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col :span="2">
+            <el-row type="flex" justify="center" :style="Get_Suitable_Height()" v-if="KnowledgeUnitList.length > 0">
               <el-button 
-                type="text" 
-                style="font-size: 22px; color: #409EFF; display: block; margin-left: -6px;" 
-                size="small" 
-                @click="complexInput = true">
-                &Sigma;
-              </el-button>
-            </el-col>
-            <el-col :span="1">
-              <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit()">
+                type="primary" 
+                @click="Unfinish()">
                 <i class="el-icon-search"></i>
+                检索
               </el-button>
-            </el-col>
+            </el-row>
+            <el-row v-else style="min-height: 10px">
+
+            </el-row>
+          </el-col>
         </el-row>
         <!-- 筛选行 - 题型 -->
-        <el-row style="margin-top: 4vh; font-size: 16px;">
+        <el-row style="font-size: 16px;">
           <el-col :span="2">
               <el-row type="flex" justify="start" style="height: 30px; line-height: 30px">
                   <label>题型：</label>
@@ -242,6 +275,56 @@ export default {
   components: {ComplexInput, Mathdown, QuestionAnalyse},
   data() {
     return {
+      // 知识树用到的变量
+        // 等待变量
+        waiting: false,
+        // 要展示的知识点槽
+        KnowledgeUnitList: [],
+        // 展示的知识点对应的ID
+        KnowledgeUnitIDList: [],
+        // 输入框过滤
+        filterText: '',
+        // 测试树组件选择的数据
+        TreeData: [{
+          id: 1,
+          label: '几何',
+          children: [{
+            id: 4,
+            label: '圆',
+            children: [{
+              id: 9,
+              label: '半径'
+            }, {
+              id: 10,
+              label: '直径'
+            }]
+          }]
+        }, {
+          id: 2,
+          label: '四则运算',
+          children: [{
+            id: 5,
+            label: '加法'
+          }, {
+            id: 6,
+            label: '减法'
+          }]
+        }, {
+          id: 3,
+          label: '积分',
+          children: [{
+            id: 7,
+            label: '导数'
+          }, {
+            id: 8,
+            label: '极限'
+          }]
+        }],
+        // 这里用于定义哪些内容是用于生成树的，这里定义了字数的关键字为children，标签的标签值为label
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
         // 知识体系名
         KnowledgeGroup: "KnowledgeGroup_1",
         // 知识体系单选或多选
@@ -293,12 +376,116 @@ export default {
     }
   },
   watch:{
-
+    filterText(val) {
+      this.$refs.tree.filter(val);
+    },
+    KnowledgeSelectType(newVal, oldVal){
+      if(newVal != oldVal){
+        this.$refs.tree.setCheckedKeys([])
+        this.KnowledgeUnitList.splice(0, this.KnowledgeUnitList.length)
+        this.KnowledgeUnitIDList.splice(0, this.KnowledgeUnitIDList.length)
+      }
+    }
   },
   mounted() {
       this.initDatabaseList();
+      this.Init();
   },
   methods: {
+    // 尚未完成
+    Unfinish(){
+      this.$message.error("这部分还没做完")
+    },
+    // 调整一下知识点的位置对应的边距
+    ExistFilter(){
+      let Style = {
+        'margin-bottom': '4vh'
+      }
+      if(this.KnowledgeUnitList.length > 0){
+        return Style
+      }else{
+        return {}
+      }
+    },
+    // 调整一下检索按钮的行高
+    Get_Suitable_Height(){
+      let Style = { 
+        'height': (Math.ceil(this.KnowledgeUnitList.length/6) * 46) + 'px',
+        'line-height': (Math.ceil(this.KnowledgeUnitList.length/6) * 46) + 'px'
+      }
+      return Style
+    },
+    KU_Show(index){
+      if(index < this.KnowledgeUnitList.length){
+        return true
+      }else{
+        return false
+      }
+    },
+    // 移除某个选中的知识点
+    Delete_KU(index){
+      this.KnowledgeUnitIDList.splice(index, 1);
+      this.KnowledgeUnitList.splice(index, 1);
+      this.$refs.tree.setCheckedKeys(this.KnowledgeUnitIDList);
+    },
+    // 获取知识点显示内容
+    Get_Show(label){
+      if(label.length > 6){
+        return label.substring(0, 5) + "..."
+      }else{
+        return label
+      }
+    },
+    // 获取知识树
+    Init(){
+
+      this.waiting = true;
+
+      let T_URL = "https://kg-edu-backend-44-review-latex-mw1s2b.env.bdaa.pro/v1"
+
+      let config = {
+          headers: {
+              "Content-Type": "multipart/form-data"
+          },
+          emulateJSON: true
+      }
+
+      let param = new FormData();
+
+      param.append('system', 'tiku');
+      param.append('subject', this.Subject);
+
+      this.$http
+          .post(T_URL + "/api/getKnowledgeSystem", param, config)
+          .then(function(data) {
+            this.TreeData = data.body.knowledge_system
+            this.waiting = false;
+          })
+    },
+      // 点击节点后的方法
+      handleCheckChange(data, checked) {
+        if (checked && this.KnowledgeSelectType == "Single") {
+          this.KnowledgeUnitList = [];
+          this.KnowledgeUnitIDList = []
+          this.$refs.tree.setCheckedKeys([data.id])
+          this.KnowledgeUnitList.push(data.label)
+          this.KnowledgeUnitIDList.push(data.id)
+        }
+        else if(checked && this.KnowledgeSelectType == "Multiple"){
+          this.KnowledgeUnitList.push(data.label)
+          this.KnowledgeUnitIDList.push(data.id)
+        }else if(!checked && this.KnowledgeSelectType == "Multiple" && this.KnowledgeUnitIDList.indexOf(data.id) != -1){
+          this.KnowledgeUnitList.splice(this.KnowledgeUnitIDList.indexOf(data.id), 1);
+          this.KnowledgeUnitIDList.splice(this.KnowledgeUnitIDList.indexOf(data.id), 1);
+          this.$refs.tree.setCheckedKeys(this.KnowledgeUnitIDList);
+        }
+      },
+      // 知识点过滤
+      // 这里是输入过滤用的方法
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
+      },
       // 加入试题篮
       Add_To_Question_Cart(Question_Index){
         let Aim = this.questionList[Question_Index]
@@ -653,5 +840,16 @@ export default {
   min-height: 500px;
   box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
   -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
+}
+// 过滤出的知识点
+// 手搓
+.KU_Button{
+  border: 1px solid #409EFF;
+  background: #F8FBFF;
+  margin: 5px 20px;
+  padding: 6px;
+  color: #409EFF;
+  border-radius: 10px;
+  cursor: pointer;
 }
 </style>
