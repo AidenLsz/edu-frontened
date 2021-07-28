@@ -282,6 +282,8 @@ export default {
         KnowledgeUnitList: [],
         // 展示的知识点对应的ID
         KnowledgeUnitIDList: [],
+        // 知识点的层级关系
+        KnowledgeUnitLevelList: [],
         // 输入框过滤
         filterText: '',
         // 测试树组件选择的数据
@@ -384,12 +386,14 @@ export default {
         this.$refs.tree.setCheckedKeys([])
         this.KnowledgeUnitList.splice(0, this.KnowledgeUnitList.length)
         this.KnowledgeUnitIDList.splice(0, this.KnowledgeUnitIDList.length)
+        this.KnowledgeUnitLevelList.splice(0, this.KnowledgeUnitLevelList.length)
       }
     },
     Period(newVal, oldVal){
       if(newVal!= oldVal){
         this.KnowledgeUnitList = [];
         this.KnowledgeUnitIDList = [];
+        this.KnowledgeUnitLevelList = [];
         this.$refs.tree.setCheckedKeys([])
         this.Init();
       }
@@ -398,6 +402,7 @@ export default {
       if(newVal!= oldVal){
         this.KnowledgeUnitList = [];
         this.KnowledgeUnitIDList = [];
+        this.KnowledgeUnitLevelList = [];
         this.$refs.tree.setCheckedKeys([])
         this.Init();
       }
@@ -442,6 +447,7 @@ export default {
     Delete_KU(index){
       this.KnowledgeUnitIDList.splice(index, 1);
       this.KnowledgeUnitList.splice(index, 1);
+      this.KnowledgeUnitLevelList.splice(index, 1)
       this.$refs.tree.setCheckedKeys(this.KnowledgeUnitIDList);
     },
     // 获取知识点显示内容
@@ -482,17 +488,21 @@ export default {
       handleCheckChange(data, checked) {
         if (checked && this.KnowledgeSelectType == "Single") {
           this.KnowledgeUnitList = [];
-          this.KnowledgeUnitIDList = []
+          this.KnowledgeUnitIDList = [];
+          this.KnowledgeUnitLevelList = [];
           this.$refs.tree.setCheckedKeys([data.id])
           this.KnowledgeUnitList.push(data.label)
           this.KnowledgeUnitIDList.push(data.id)
+          this.KnowledgeUnitLevelList.push(data.level)
         }
         else if(checked && this.KnowledgeSelectType == "Multiple"){
           this.KnowledgeUnitList.push(data.label)
           this.KnowledgeUnitIDList.push(data.id)
+          this.KnowledgeUnitLevelList.push(data.level)
         }else if(!checked && this.KnowledgeSelectType == "Multiple" && this.KnowledgeUnitIDList.indexOf(data.id) != -1){
           this.KnowledgeUnitList.splice(this.KnowledgeUnitIDList.indexOf(data.id), 1);
           this.KnowledgeUnitIDList.splice(this.KnowledgeUnitIDList.indexOf(data.id), 1);
+          this.KnowledgeUnitLevelList.splice(this.KnowledgeUnitIDList.indexOf(data.id), 1);
           this.$refs.tree.setCheckedKeys(this.KnowledgeUnitIDList);
         }
       },

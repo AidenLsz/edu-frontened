@@ -116,7 +116,7 @@
         <InputQuestion @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></InputQuestion>
     </el-row>
     <el-row v-if="Using_Menu_Index == 3">
-        <DetailTable></DetailTable>
+        <DetailTable :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></DetailTable>
     </el-row>
     <el-row v-if="Using_Menu_Index == 4">
         <StartCombine 
