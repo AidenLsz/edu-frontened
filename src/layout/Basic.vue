@@ -191,7 +191,7 @@
 								</el-menu>
 							</el-col>
 
-							<el-col :span="6" style="padding-top: 15px;">
+							<el-col :span="6" style="padding-top: 15px; display: none">
 								<el-menu mode="horizontal"
 									style=" border-bottom: 3px solid #FFFFFF; padding-bottom: 10px">
 									<el-submenu index="0">
