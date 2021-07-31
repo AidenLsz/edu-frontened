@@ -22,7 +22,7 @@ const UserRouter=[
     ]
   },
   {
-    path: '/manage',
+    path: 'manage',
     component: SidebarLayout,
     showSideBar:true,
     children: [
@@ -130,7 +130,7 @@ const UserRouter=[
           },
         ]
       },
-      
+
     ]
   },
 

@@ -2,9 +2,11 @@ import Vue from "vue";
 import Router from "vue-router";
 import VisitorRouter from '@/router/modules/visitor.js'
 import UserRouter from '@/router/modules/user.js'
+import NEEARouter from '@/router/modules/neea.js'
 import store from '@/store'
 import {Message } from 'element-ui'
-import Layout from '@/layout/Basic'
+import BasicLayout from '@/layout/Basic'
+import NEEALayout from '@/layout/NEEA'
 
 // import  AppMain from '@/layout/components/AppMain'
 
@@ -23,9 +25,16 @@ const router = new Router({
   mode: "history",
   routes: [
     {
+      path: "/neea",
+      name: "NEEA",
+      component: NEEALayout,
+      children:UserRouter.concat(NEEARouter)
+
+    },
+    {
       path: "/",
       name: "Home",
-      component: Layout,
+      component: BasicLayout,
       children:UserRouter.concat(VisitorRouter)
     }
   ]

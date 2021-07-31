@@ -96,7 +96,9 @@ export default {
       if (isExternal(this.basePath)) {
         return this.basePath
       }
-      return path.resolve('/manage/',this.basePath, routePath)
+      // console.log('1:',this.basePath,"2:",routePath);
+      this.rootPath="/neea/"
+      return path.resolve(this.rootPath+'manage/',this.basePath, routePath)
     }
   }
 }
