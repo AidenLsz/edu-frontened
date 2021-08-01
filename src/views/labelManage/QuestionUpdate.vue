@@ -169,14 +169,14 @@
                     '成人',
                     '小学',
                   ]"
-                  :label="'学段：' + item"
-                  :key="id"
-                  :value="id"
-                ></el-option>
-              </el-select>
-              <el-select v-model="item.system" placeholder="来源">
-                <el-option
-                  v-for="(item, id) in [
+                      :label="'学段：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-select v-model="item.system" placeholder="来源">
+                  <el-option
+                      v-for="(item, id) in [
                     '其他',
                     '',
                     '',
@@ -193,29 +193,29 @@
                     'LUNA',
                     '题库中国',
                   ]"
-                  :v-if="item !== ''"
-                  :label="'来源：' + item"
-                  :key="id"
-                  :value="id"
-                ></el-option>
-              </el-select>
-              <el-select v-model="item.pastpaper" placeholder="真题">
-                <el-option
-                  v-for="(item, id) in [
+                      :v-if="item !== ''"
+                      :label="'来源：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-select v-model="item.pastpaper" placeholder="真题">
+                  <el-option
+                      v-for="(item, id) in [
                     '未处理',
                     '非真题',
                     '真卷',
                     '高考真卷',
                     '中考真卷',
                   ]"
-                  :label="'真题：' + item"
-                  :key="id"
-                  :value="id"
-                ></el-option>
-              </el-select>
-              <el-select v-model="item.type" placeholder="题型">
-                <el-option
-                  v-for="(item, id) in [
+                      :label="'真题：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-select v-model="item.type" placeholder="题型">
+                  <el-option
+                      v-for="(item, id) in [
                     '其他',
                     '多选题',
                     '填空题',
@@ -552,6 +552,10 @@ export default {
       // document.documentElement.scrollTop = document.body.scrollTop = 0;
       // document.documentElement.scrollIntoView(true)
       // window.scroll(0, 0);
+    },
+    // 返回选项标签
+    Get_Option_Label(Index){
+      return String.fromCharCode(Index + 65)
     },
     // 返回选项标签
     Get_Option_Label(Index){
