@@ -100,10 +100,10 @@
           </el-row>
           <hr/>
           <el-row type="flex" justify="start" style="margin-bottom: 6px">
-            答案：<Mathdown :content="item.answer"></Mathdown>
+            <span style="white-space: nowrap;">答案：</span><Mathdown :content="item.answer"></Mathdown>
           </el-row>
           <el-row type="flex" justify="start">
-            解析：<Mathdown :content="item.analysis"></Mathdown>
+            <span style="white-space: nowrap;">解析：</span><Mathdown :content="item.analysis"></Mathdown>
           </el-row>
           <hr/>
           <el-row type="flex" justify="space-between" align="middle">
@@ -115,7 +115,7 @@
               <span style="margin-right: 20px">真题：{{['未处理', '非真题', '真卷', '高考真卷', '中考真卷'][item.pastpaper]}}</span>
             </el-row>
 <!--              <el-button round plain @click="item.unfold = true">查看解析</el-button>-->
-            <el-button round plain @click="onEdit(index)" :key="item.edit" :loading="loading === true">切换修改</el-button>
+            <el-button round plain @click="onEdit(index)" :loading="loading === true">编辑</el-button>
           </el-row>
         </div>
         <el-form v-else ref="form" :model="item" label-width="44px">
@@ -266,8 +266,8 @@
           </el-form-item>
           <el-row type="flex" justify="end">
             <!--            <el-button round plain>切换图片显示</el-button>-->
-            <el-button round plain @click="onPreview(index)" :key="item.edit">预览</el-button>
             <el-button round plain @click="update(index)" :loading="loading === true">提交修改</el-button>
+            <el-button round plain @click="onPreview(index)">预览</el-button>
           </el-row>
         </el-form>
       </div>
@@ -282,8 +282,8 @@ import Mathdown from "../../common/components/Mathdown.vue";
 import Clipboard from 'clipboard'
 
 //后端api正式上线后修改
-// const backendURL = "https://kg-edu-backend-44-review-question-r-tlide6.env.bdaa.pro/v1/api"
-const backendURL = 'http://localhost:7921/api' // <- 本地测试
+const backendURL = "https://kg-edu-backend-44-review-label-plat-mqukc4.env.bdaa.pro/v1/api"
+// const backendURL = 'http://localhost:7921/api' // <- 本地测试
 
 export default {
   components: { Mathdown },
@@ -422,11 +422,16 @@ export default {
       console.log(this.questions[id].edit)
       console.log(this.questions)
       this.questions[id].edit = false;
+      this.$forceUpdate()
     },
     onEdit(id) {
       console.log(this.questions[id].edit)
       console.log(this.questions)
       this.questions[id].edit = true;
+      this.$forceUpdate()
+      // Vue.set(this.questions,id,{
+      //   edit: false
+      // })
     },
     update(id) {
       console.log("提交修改按钮被点击，列表的id:", id);
@@ -456,7 +461,17 @@ export default {
       let formData = {
         question_ID: question.question_ID,
         stem: question.stem,
-        test: question.fromTestDB
+        test: question.fromTestDB,
+        system: question.system,
+        type: question.type,
+        subject: question.subject,
+        period: question.period,
+        pastpaper: question.pastpaper,
+        source_type: question.source_type,
+        options: question.options,
+        answer: question.answer,
+        analysis: question.analysis,
+        date: question.date,
       }
 
       this.$http
