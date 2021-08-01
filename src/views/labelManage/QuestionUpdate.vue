@@ -18,7 +18,7 @@
     </el-row>
 
     <transition name="el-fade-in">
-      <p v-show="questions.length === 0" class="title">试题信息修改</p>
+      <p id="title" class="title">试题信息修改</p>
     </transition>
 
     <div class="search-bar">
@@ -29,16 +29,16 @@
         @keyup.enter.native="search"
       >
 <!--        <el-tooltip class="item" effect="light" content="hhh" placement="top">-->
+        <el-tooltip slot="suffix" class="item" effect="dark" content="测试库" placement="top">
           <i v-if="testDB"
              @click="toggleTestDB"
-             slot="suffix"
              class="el-input__icon el-icon-open search-btn"
           />
           <i v-else
              @click="toggleTestDB"
-             slot="suffix"
              class="el-input__icon el-icon-turn-off search-btn"
           />
+        </el-tooltip>
 <!--        </el-tooltip>-->
         <i v-if="searching"
            class="el-input__icon el-icon-loading search-btn"
@@ -86,28 +86,49 @@
         v-bind:key="item.question_ID"
         class="question-item"
       >
-          <div style="font-size: 26px; margin-bottom: 16px; text-align: center">
+        <div style="font-size: 26px; margin-bottom: 12px; text-align: center">
             试题{{ index + 1 }}
-          </div>
+        </div>
+
+        <div v-if="item.edit !== true">
+          <Mathdown :content="item.stem" :name="'Q_' + index + '_Stem'"></Mathdown>
+          <el-row v-for="(v, i) in item.options" v-bind:key="v" type="flex" justify="start"
+                  style="margin-top:10px"
+          >
+<!--            <Mathdown :content="item.stem" :name="'Q_' + index + '_Stem'"></Mathdown>-->
+            <span>{{ Get_Option_Label(i) }}：</span>
+            <Mathdown :content="item.options[i]"></Mathdown>
+          </el-row>
+          <hr/>
+          <el-row type="flex" justify="end">
+            <el-col>111</el-col>
+            <el-col>
+              <el-button round plain @click="preview(index)">查看解析</el-button>
+              <el-button round plain @click="preview(index)" :loading="loading === true">修改</el-button>
+            </el-col>
+          </el-row>
+        </div>
+
+        <div v-else>
           <el-form ref="form" :model="item" label-width="44px">
-          <el-form-item label="ID">
-            <el-button
-                @click="copyQuestionID($event,item.question_ID)"
-               plain style="user-select: none; user-focus: none; width: 100%;text-align: start"
-            >{{item.question_ID}}</el-button>
-          </el-form-item>
-          <el-form-item label="属性">
-            <div
-              style="
+            <el-form-item label="ID">
+              <el-button
+                  @click="copyQuestionID($event,item.question_ID)"
+                  plain style="user-select: none; user-focus: none; width: 100%;text-align: start"
+              >{{item.question_ID}}</el-button>
+            </el-form-item>
+            <el-form-item label="属性">
+              <div
+                  style="
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 grid-row-gap: 14px;
                 grid-column-gap: 10px;
               "
-            >
-              <el-select v-model="item.subject" placeholder="学科">
-                <el-option
-                  v-for="(item, id) in [
+              >
+                <el-select v-model="item.subject" placeholder="学科">
+                  <el-option
+                      v-for="(item, id) in [
                     '其他',
                     '数学',
                     '英语',
@@ -119,14 +140,14 @@
                     '语文',
                     '地理',
                   ]"
-                  :label="'学科：' + item"
-                  :key="id"
-                  :value="id"
-                ></el-option>
-              </el-select>
-              <el-select v-model="item.period" placeholder="学段">
-                <el-option
-                  v-for="(item, id) in [
+                      :label="'学科：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-select v-model="item.period" placeholder="学段">
+                  <el-option
+                      v-for="(item, id) in [
                     '其他',
                     '初中',
                     '高中',
@@ -134,14 +155,14 @@
                     '成人',
                     '小学',
                   ]"
-                  :label="'学段：' + item"
-                  :key="id"
-                  :value="id"
-                ></el-option>
-              </el-select>
-              <el-select v-model="item.system" placeholder="来源">
-                <el-option
-                  v-for="(item, id) in [
+                      :label="'学段：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-select v-model="item.system" placeholder="来源">
+                  <el-option
+                      v-for="(item, id) in [
                     '其他',
                     '',
                     '',
@@ -158,29 +179,29 @@
                     'LUNA',
                     '题库中国',
                   ]"
-                  :v-if="item !== ''"
-                  :label="'来源：' + item"
-                  :key="id"
-                  :value="id"
-                ></el-option>
-              </el-select>
-              <el-select v-model="item.pastpaper" placeholder="真题">
-                <el-option
-                  v-for="(item, id) in [
+                      :v-if="item !== ''"
+                      :label="'来源：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-select v-model="item.pastpaper" placeholder="真题">
+                  <el-option
+                      v-for="(item, id) in [
                     '未处理',
                     '非真题',
                     '真卷',
                     '高考真卷',
                     '中考真卷',
                   ]"
-                  :label="'真题：' + item"
-                  :key="id"
-                  :value="id"
-                ></el-option>
-              </el-select>
-              <el-select v-model="item.type" placeholder="题型">
-                <el-option
-                  v-for="(item, id) in [
+                      :label="'真题：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-select v-model="item.type" placeholder="题型">
+                  <el-option
+                      v-for="(item, id) in [
                     '其他',
                     '多选题',
                     '填空题',
@@ -189,65 +210,67 @@
                     '计算题',
                     '单选题',
                   ]"
-                  :label="'题型：' + item"
-                  :key="id"
-                  :value="id"
-                ></el-option>
-              </el-select>
-              <el-date-picker
-                style="width: 100%"
-                v-model="item.date"
-                type="date"
-                placeholder="选择日期"
-              >
-              </el-date-picker>
-            </div>
-          </el-form-item>
-          <el-form-item label="题干">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 5, maxRows: 10 }"
-              v-model="item.stem"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="选项">
-            <div style="display: flex; flex-direction: column; row-gap: 14px">
-              <div v-for="(v, i) in item.options" v-bind:key="v">
-                <el-input
-                  v-model="item.options[i]"
-                  type="textarea"
-                  :autosize="{ minRows: 2, maxRows: 10 }"
-                ></el-input>
+                      :label="'题型：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-date-picker
+                    style="width: 100%"
+                    v-model="item.date"
+                    type="date"
+                    placeholder="选择日期"
+                >
+                </el-date-picker>
               </div>
-            </div>
-          </el-form-item>
+            </el-form-item>
+            <el-form-item label="题干">
+              <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 5, maxRows: 10 }"
+                  v-model="item.stem"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="选项">
+              <div style="display: flex; flex-direction: column; row-gap: 14px">
+                <div v-for="(opt, j) in item.options" v-bind:key="opt">
+                  <el-input
+                      v-model="item.options[j]"
+                      type="textarea"
+                      :autosize="{ minRows: 2, maxRows: 10 }"
+                  ></el-input>
+                </div>
+              </div>
+            </el-form-item>
             <el-form-item label="答案">
               <el-input
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 10 }"
-                v-model="item.answer"
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 10 }"
+                  v-model="item.answer"
               ></el-input>
-          </el-form-item>
-          <el-form-item label="解析">
-            <el-input
-              type="textarea"
-              class="leastHeight"
-              :autosize="{ minRows: 2, maxRows: 10 }"
-              v-model="item.analysis"
-            ></el-input>
-          </el-form-item>
-          <el-row type="flex" justify="end">
-<!--            <el-button round plain>切换图片显示</el-button>-->
-<!--            <el-button round plain>预览修改</el-button>-->
-            <el-button round plain @click="update(index)" :loading="loading === true">提交修改</el-button>
-          </el-row>
-        </el-form>
+            </el-form-item>
+            <el-form-item label="解析">
+              <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 10 }"
+                  v-model="item.analysis"
+              ></el-input>
+            </el-form-item>
+            <el-row type="flex" justify="end">
+              <!--            <el-button round plain>切换图片显示</el-button>-->
+              <el-button round plain @click="preview(index)">预览</el-button>
+              <el-button round plain @click="update(index)" :loading="loading === true">提交修改</el-button>
+            </el-row>
+          </el-form>
+        </div>
+
       </div>
     </transition-group>
   </div>
 </template>
 
 <script>
+import Mathdown from "../../common/components/Mathdown.vue";
 import Clipboard from 'clipboard'
 
 //后端api正式上线后修改
@@ -255,6 +278,7 @@ const backendURL = "https://kg-edu-backend-44-review-question-r-tlide6.env.bdaa.
 // const backendURL = 'http://0.0.0.0:5000/api' // <- 本地测试
 
 export default {
+  components: { Mathdown },
   name: "QuestionUpdate",
   data() {
     return {
@@ -283,6 +307,7 @@ export default {
           analysis:
             "【详解】依据材料可知，汉初《诗》、《公羊春秋》等儒家经典被作为皇帝任命官职的依据，由此可见儒学地位上升成为入仕途径，因此A选项正确。B选项错误，材料并未体现品行作为选官的主要标准；C选项错误，材料并未涉及黄老之学；D选项错误，汉武帝时期，采取董仲舒的建议，罢黜百家，独尊儒术，设立太学，传授五经，使儒学获得了独尊地位。故正确答案为A选项。",
           date: "2021-05-29 13:07:49",
+          edit: false,
         },
         {
           question_ID: "0001244c-b212-11eb-b5d1-3c9c0fb58abe",
@@ -297,52 +322,88 @@ export default {
           options: ["批判现实主义", "古典主义", "现代主义", "浪漫主义"],
           answer: "A",
           date: "2021-05-29 13:07:49",
+          edit: true,
         },
       ],
     };
   },
   mounted() {
-    this.questions = this.mockData;
+    //测试用
+    // this.questions = this.mockData;
   },
   methods: {
     toggleTestDB(){
       this.testDB = this.testDB !== true;
     },
     search() {
+      // const idReg = new RegExp("[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}")
+
       this.searching = true;
       let test = this.testDB;
       console.log("搜索按钮被点击: " + this.searchText);
       //005dcfa8-b211-11eb-90bf-3c9c0fb58abe
 
       //Json形式
-      let formData = new FormData();
-      formData.append(
-        "data",
-        JSON.stringify({
-          query: this.searchText,
-          test: test,
-        })
-      );
+      // let formData = new FormData();
+      // formData.append(
+      //   "data",
+      //   JSON.stringify({
+      //     query: this.searchText,
+      //     test: test,
+      //   })
+      // );
 
       //Post传参形式
-      // let formData = {
-      //   query: this.searchText,
-      //   test: test,
+      let formData = {
+        query: this.searchText,
+        test: test,
+      }
+
+      // if (idReg.test(this.searchText)) {
+      //
       // }
 
       this.$http
-        .post(backendURL + "/query_question", formData, { emulateJSON: true })
+        .post( "http://localhost:7921/api/query_question", formData, { emulateJSON: true })
+        // .post(backendURL + "/query_question", formData, { emulateJSON: true })
         .then(function (res) {
           let data = res.data;
+          console.log('获得结果')
+          //判断错误
+          if(data.error !== "" || data.questions.length === 0) {
+            this.searching = false
+            this.$notify.error({
+              title: '检索失败',
+            });
+            console.log(data)
+          }
+
+          let edit = this.questions.length === 1;
           this.questions = data.questions;
           for(let question of this.questions) {
-            question['fromTestDB'] = test;
+            question.fromTestDB = test;
+            question.edit = edit
           }
           this.searching = false
+
+          let title = document.getElementById('title')
+          title.style.marginTop = '20px'
+        })
+        .catch((e) => {
+          this.searching = false
+          this.$notify.error({
+            title: '检索失败',
+          });
+          console.log(e)
         });
 
       //debug
       // this.questions = this.mockData;
+    },
+    preview(id) {
+      console.log(this.questions[id].edit)
+      console.log(this.questions)
+      this.questions[id].edit = !this.questions[id].edit;
     },
     update(id) {
       console.log("提交修改按钮被点击，列表的id:", id);
@@ -358,22 +419,22 @@ export default {
       console.log(question);
 
       //Json形式
-      let formData = new FormData();
-      formData.append(
-        "data",
-        JSON.stringify({
-          question_ID: question.question_ID,
-          stem: question.stem,
-          test: true,
-        })
-      );
+      // let formData = new FormData();
+      // formData.append(
+      //   "data",
+      //   JSON.stringify({
+      //     question_ID: question.question_ID,
+      //     stem: question.stem,
+      //     test: true,
+      //   })
+      // );
 
       //Post传参形式
-      // let formData = {
-      //   question_ID: question.question_ID,
-      //   stem: question.stem,
-      //   test: question.fromTestDB
-      // }
+      let formData = {
+        question_ID: question.question_ID,
+        stem: question.stem,
+        test: question.fromTestDB
+      }
 
       this.$http
         .put(backendURL + "/update_question", formData, { emulateJSON: true })
@@ -397,6 +458,15 @@ export default {
               this.loading = false
             }, 300)
           }
+        })
+        .catch((e)=>{
+          this.loading = false
+          this.$notify.error({
+            title: '修改提交失败',
+
+          });
+          console.log("提交修改出错");
+          console.log(e);
         });
     },
     copyQuestionID(e, text) {
@@ -438,6 +508,10 @@ export default {
       // document.documentElement.scrollTop = document.body.scrollTop = 0;
       document.documentElement.scrollIntoView(true)
       window.scroll(0, 0);
+    },
+    // 返回选项标签
+    Get_Option_Label(Index){
+      return String.fromCharCode(Index + 65)
     },
   },
 };
@@ -497,10 +571,19 @@ body .el-scrollbar__wrap {
 
 .search-bar {
   width: 50%;
-  margin: 30px auto 30px;
+  margin: 30px auto 46px;
   filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.08));
+  transition: all;
+  transition-duration: 300ms;
   /*display: inline*/
 }
+
+.search-bar:hover {
+  /*transform: scale(1.02);*/
+  filter: drop-shadow(0px 4px 10px rgba(0, 0, 24, 0.1));
+  border-color: #1E88C7;
+}
+
 
 .sidebar {
   position: fixed;
@@ -519,9 +602,22 @@ body .el-scrollbar__wrap {
   margin-right: 4px;
 }
 
-/deep/ .search-input .el-input__inner {
+.search-btn:hover {
+  color: #36a9df;
+  transform: scale(1.1);
+}
+
+/deep/ .search-bar .search-input .el-input__inner {
   border-radius: 12px;
   border-color: #d0d0d0;
+  transition: all;
+  transition-duration: 300ms;
+}
+
+/deep/ .search-bar .search-input .el-input__inner:hover {
+  /*border-radius: 14px;*/
+  /*border-color: rgba(64,158,255, .7);*/
+  border-color: #bababa;
 }
 
 .question-item {
