@@ -24,6 +24,7 @@
     <div class="search-bar">
       <el-input
         class="search-input"
+        id="search-input"
         placeholder="输入题目文本或者ID"
         v-model="searchText"
         @keyup.enter.native="search"
