@@ -82,14 +82,14 @@
 
     <transition-group name="el-fade-in">
       <div
-        v-for="(item, id) in questions"
-        v-bind:key="id"
+        v-for="(item, index) in questions"
+        v-bind:key="item.question_ID"
         class="question-item"
       >
-        <div style="font-size: 26px; margin-bottom: 16px; text-align: center">
-          试题{{ id + 1 }}
-        </div>
-        <el-form ref="form" :model="item" label-width="44px">
+          <div style="font-size: 26px; margin-bottom: 16px; text-align: center">
+            试题{{ index + 1 }}
+          </div>
+          <el-form ref="form" :model="item" label-width="44px">
           <el-form-item label="ID">
             <el-button
                 @click="copyQuestionID($event,item.question_ID)"
@@ -221,24 +221,25 @@
               </div>
             </div>
           </el-form-item>
-          <el-form-item label="答案">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 1, maxRows: 10 }"
-              v-model="item.answer"
-            ></el-input>
+            <el-form-item label="答案">
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 10 }"
+                v-model="item.answer"
+              ></el-input>
           </el-form-item>
           <el-form-item label="解析">
             <el-input
+              type="textarea"
               class="leastHeight"
-              :autosize="{ minRows: 1, maxRows: 10 }"
+              :autosize="{ minRows: 2, maxRows: 10 }"
               v-model="item.analysis"
             ></el-input>
           </el-form-item>
           <el-row type="flex" justify="end">
 <!--            <el-button round plain>切换图片显示</el-button>-->
 <!--            <el-button round plain>预览修改</el-button>-->
-            <el-button round plain @click="update(id)" :loading="loading === true">提交修改</el-button>
+            <el-button round plain @click="update(index)" :loading="loading === true">提交修改</el-button>
           </el-row>
         </el-form>
       </div>
@@ -299,6 +300,9 @@ export default {
         },
       ],
     };
+  },
+  mounted() {
+    this.questions = this.mockData;
   },
   methods: {
     toggleTestDB(){
@@ -446,6 +450,10 @@ export default {
 /*  width: 100%;*/
 /*  height: 100%;*/
 /*}*/
+
+body .el-scrollbar__wrap {
+  overflow-x: hidden;
+}
 
 .main-container {
   /*width: 100%;*/
