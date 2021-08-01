@@ -83,6 +83,7 @@
 
     <transition-group name="el-fade-in">
       <div
+<<<<<<< HEAD
           v-for="(item, index) in questions"
           v-bind:key="item.question_ID"
           class="question-item"
@@ -125,6 +126,16 @@
           <!--          </el-row>-->
         </div>
         <el-form v-else ref="form" :model="item" label-width="44px">
+=======
+        v-for="(item, index) in questions"
+        v-bind:key="item.question_ID"
+        class="question-item"
+      >
+          <div style="font-size: 26px; margin-bottom: 16px; text-align: center">
+            试题{{ index + 1 }}
+          </div>
+          <el-form ref="form" :model="item" label-width="44px">
+>>>>>>> 1dfda6b (修复transition-group下v-for带来的warning)
           <el-form-item label="ID">
             <el-button
                 @click="copyQuestionID($event,item.question_ID)"
@@ -256,6 +267,7 @@
               </div>
             </div>
           </el-form-item>
+<<<<<<< HEAD
           <el-form-item label="答案">
             <el-input
                 type="textarea"
@@ -274,6 +286,27 @@
             <!--            <el-button round plain>切换图片显示</el-button>-->
             <el-button round plain @click="update(index)" :loading="loading === true">提交修改</el-button>
             <el-button round plain @click="onPreview(index)">预览</el-button>
+=======
+            <el-form-item label="答案">
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 10 }"
+                v-model="item.answer"
+              ></el-input>
+          </el-form-item>
+          <el-form-item label="解析">
+            <el-input
+              type="textarea"
+              class="leastHeight"
+              :autosize="{ minRows: 2, maxRows: 10 }"
+              v-model="item.analysis"
+            ></el-input>
+          </el-form-item>
+          <el-row type="flex" justify="end">
+<!--            <el-button round plain>切换图片显示</el-button>-->
+<!--            <el-button round plain>预览修改</el-button>-->
+            <el-button round plain @click="update(index)" :loading="loading === true">提交修改</el-button>
+>>>>>>> 1dfda6b (修复transition-group下v-for带来的warning)
           </el-row>
         </el-form>
       </div>
@@ -348,8 +381,12 @@ export default {
     };
   },
   mounted() {
+<<<<<<< HEAD
     //测试用
     // this.questions = this.mockData;
+=======
+    this.questions = this.mockData;
+>>>>>>> 1dfda6b (修复transition-group下v-for带来的warning)
   },
   methods: {
     toggleTestDB(){
