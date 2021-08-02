@@ -19,6 +19,13 @@ import NEEALayout from '@/layout/NEEA'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
+// 解决NavigationDuplicated的问题
+const originalPush = Router.prototype.push
+
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 Vue.use(Router);
 Vue.use(mavonEditor);
 const router = new Router({
@@ -42,33 +49,50 @@ const router = new Router({
 
 // 路由控制
 router.beforeEach((to, from, next) => {
-  // const route = [
-  //   "Admin",
-  //   "concept",
-  //   "knowledgePoint",
-  //   "relation",
-  //   "importNode",
-  //   "importEdge",
-  //   "bulkImport",
-  //   "importExercise",
-  //   "checkExercise",
-  // ];
+  if(!validateLoginPermission(to.path)){
+    Message({
+      message: '您需要登录后才能进行相关操作！',
+      type: 'error',
+      duration: 5 * 1000
+    })
+    router.go(-1);
+    // next(false)
+  }else if(!validateExamVersionPermission(to.path)){
+    Message({
+      message: '您没有权限查看考试版系统',
+      type: 'error',
+      duration: 5 * 1000
+    })
+    router.go(-1)
+    // next(false)
+  }else{
+    next()
+  }
+});
+function validateLoginPermission(path){
   const route = [
     "/user/",
     "/manage/",
     "/inputMarked",
     "/inputPaper"
   ];
-  let isUserRoute = ()=>route.some((r)=>to.path.includes(r))
-  if (isUserRoute() && !store.state.user.token) {
-      Message({
-        message: '您需要登录后才能进行相关操作！',
-        type: 'error',
-        duration: 5 * 1000
-      })
-      next({ path: "/" });
+  let isUserRoute = ()=>route.some((r)=>path.includes(r))
+  return !isUserRoute() || store.state.user.token
+}
+function validateExamVersionPermission(path){
+  let isNEEA = ()=>store.state.user.name=='NEEA'
+  let switchToNEEA=()=>path.endsWith('/neea')||path.includes('/neea/')
+  let switchFromNEEA=()=>store.state.user.rootPath=='/neea/'
+  //切换为考试版
+  if(switchToNEEA()&&!isNEEA())
+    return false
+  if(!switchFromNEEA()&&switchToNEEA()) {
+    store.dispatch('user/setRootPath','/neea/')
   }
-  next();
-});
-
+  //切换为普通版
+  if(switchFromNEEA()&&!switchToNEEA()){
+    store.dispatch('user/setRootPath','/')
+  }
+  return true
+}
 export default router;
