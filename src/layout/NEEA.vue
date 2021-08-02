@@ -24,12 +24,12 @@
 										</template>
 										<el-submenu index="1">
 											<template slot="title"><span style="color: black;">资源录入</span></template>
-											<router-link :to="rootPath+'inputMarked'" :underline="false" @click.native="ToTop">
+											<router-link :to="$store.state.user.rootPath+'inputMarked'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="1-2">
 													<span style="color: black;">试题资源</span>
 												</el-menu-item>
 											</router-link>
-											<router-link :to="rootPath+'inputPaper'" :underline="false" @click.native="ToTop">
+											<router-link :to="$store.state.user.rootPath+'inputPaper'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="1-3">
 													<span style="color: black;">试卷资源</span>
 												</el-menu-item>
@@ -37,20 +37,20 @@
 										</el-submenu>
 										<el-submenu index="2">
 											<template slot="title"><span style="color: black;">查重</span></template>
-											<router-link :to="rootPath+'exercise'" :underline="false" @click.native="ToTop">
+											<router-link :to="$store.state.user.rootPath+'exercise'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="2-1">
 													<span style="color: black;">试题检索</span>
 												</el-menu-item>
 											</router-link>
 
-											<router-link :to="rootPath+'searchPaper'" :underline="false" @click.native="ToTop">
+											<router-link :to="$store.state.user.rootPath+'searchPaper'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="2-2">
 													<span style="color: black;">试卷检索</span>
 												</el-menu-item>
 											</router-link>
 										</el-submenu>
 										<el-menu-item index="5">
-											<router-link :to="this.rootPath+'manage/dashboard'"
+											<router-link :to="$store.state.user.rootPath+'manage/dashboard'"
 												:underline="false" @click.native="ToTop">
 												<span style="color: #409EFF; font-weight: bold">
 													资源管理
@@ -109,7 +109,6 @@
 		},
 		data() {
 			return {
-				rootPath:'/neea/',
 				activeIndex: "",
 				// 跳转至试卷/试题分析的不同地点用的
 				PaperAnalyseSwitchFlag: false,
@@ -120,12 +119,12 @@
 			// 查看用户个人信息及组织架构
 			checkUserInfo() {
 				this.$router.push({
-					path: this.rootPath+"user/userInfo"
+					path: this.$store.state.user.rootPath+"user/userInfo"
 				});
 			},
 			checkUserGroup() {
 				this.$router.push({
-					path: this.rootPath+"user/userGroup"
+					path: this.$store.state.user.rootPath+"user/userGroup"
 				});
 			},
 			// 跳转至试题分析的不同位置的对话框
@@ -148,13 +147,13 @@
 			},
 			goToMainPage() {
 				this.$router.push({
-					path: this.rootPath
+					path: this.$store.state.user.rootPath
 				});
 				this.ToTop();
 			},
 			show_members() {
 				this.$router.push({
-					path: this.rootPath+"members"
+					path: this.$store.state.user.rootPath+"members"
 				});
 				this.ToTop();
 			},
