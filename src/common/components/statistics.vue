@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="">
     <el-row style="margin-top: 40px; padding-bottom: 40px">
-      <el-col :span="$store.getters.isLuna?4:5" :offset="$store.getters.isLuna?4:5" class="partData">
+      <el-col :span="isLuna?4:5" :offset="isLuna?4:5" class="partData">
         <el-row>
           <el-col :span="12">
             <img src="@/assets/dataIcon1.png" width="60px" style="padding-top: 30px"/>
@@ -12,7 +12,7 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="$store.getters.isLuna?4:5" :offset="$store.getters.isLuna?2:4" class="partData">
+      <el-col :span="isLuna?4:5" :offset="isLuna?2:4" class="partData">
         <el-row>
           <el-col :span="12">
             <img src="@/assets/dataIcon2.png" width="60px" style="padding-top: 30px"/>
@@ -23,7 +23,7 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col v-if="$store.getters.isLuna" :span="4" :offset="2" class="partData">
+      <el-col v-if="isLuna" :span="4" :offset="2" class="partData">
         <el-row>
           <el-col :span="12">
             <img src="@/assets/dataIcon3.png" width="60px" style="padding-top: 30px"/>
@@ -43,7 +43,7 @@
         <el-button round @click="changeCountButton('Paper')" ref="countButtonPaper" :class="Get_Count_Style('Paper')">
           试卷资源
         </el-button>
-        <el-button v-if="$store.getters.isLuna" round @click="changeCountButton('KU')" ref="countButtonKU" :class="Get_Count_Style('KU')">
+        <el-button v-if="isLuna" round @click="changeCountButton('KU')" ref="countButtonKU" :class="Get_Count_Style('KU')">
           知识单元
         </el-button>
       </el-button-group>
@@ -98,6 +98,7 @@ export default {
     };
   },
   mounted() {
+    this.isLuna=this.$store.state.user.rootPath=='/'
     this.Init_Bar();
     // data - background
     $("[data-background]").each(function() {
