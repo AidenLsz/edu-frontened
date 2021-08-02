@@ -6,8 +6,8 @@
 		<el-header style="height: 70px;">
 			<div id="header-sticky" class="sticky-menu">
 				<el-row>
-					<el-col :span="4" style="padding-top: 20px; padding-left: 30px">
-						<img src="@/assets/bdaa.png" alt="Logo" width="40px" style="cursor: pointer"
+					<el-col :span="4" style="padding-top: 0px; padding-left: 30px">
+						<img src="@/assets/bdaa.png" alt="Logo" height="70px" style="cursor: pointer"
 							@click="goToMainPage" />
 					</el-col>
 					<el-col :span="8" :offset="11">
