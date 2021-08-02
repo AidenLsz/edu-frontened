@@ -90,7 +90,9 @@
 			</div>
 		</el-header>
 		<el-main>
-			<router-view :key="$route.fullPath"></router-view>
+			<div style="height:100vh">
+				<router-view :key="$route.fullPath"></router-view>
+			</div>
 			<basic-footer />
 		</el-main>
 	</el-container>
