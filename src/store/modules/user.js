@@ -5,6 +5,7 @@ const state = {
   token: get('token'),
   name: get('name'),
   // isExamVersion:get('isExamVersion'),
+  rootPath:get('rootPath'),
   // isAdmin: get('isAdmin'),
 }
 const mutations = {
@@ -20,7 +21,10 @@ const mutations = {
   //   state.isExamVersion=data
   //   set('isExamVersion',data)
   // },
-
+  SET_ROOTPATH:(state,data) => {
+    state.rootPath=data
+    set('rootPath',data)
+  },
   RESET_STATE:()=>{
     remove('token')
     remove('name')
@@ -38,8 +42,12 @@ const actions = {
   async setUserData({commit},data){
     commit('SET_TOKEN', data.token)
     commit('SET_NAME', data.name)
+    commit('SET_ROOTPATH','/')
   },
 
+  async setRootPath({ commit },data) {
+    commit('SET_ROOTPATH',data)
+  },
   // user logout
   async logout({ commit }) {
     await MessageBox.confirm("确认退出吗？", "提示", {

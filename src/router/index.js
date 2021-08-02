@@ -49,34 +49,26 @@ const router = new Router({
 // 路由控制
 
 router.beforeEach((to, from, next) => {
-  if(!validateEEMSPermission(to.path)){
-    next()
-    openLoginDialog()
-  }else if(!switchToEEMS(to.path)&&!validateLoginPermission(to.path)){
-    if(from.path=='/'){
-      //输入url跳转时
-      next('/')
-    }else{
-      // 点击跳转时
-      next(false);
-    }
-    openLoginDialog()
-  }else{
-    next()
-  }
-});
-function switchToEEMS(path){
-  return path&&(path.endsWith('/eems')||path.includes('/eems/'))
-}
-function openLoginDialog(){
-  store.dispatch('app/openLoginDialog').then(()=>{
+  if(!validateLoginPermission(to.path)){
     Message({
       message: '您需要登录后才能进行相关操作！',
       type: 'error',
       duration: 5 * 1000
     })
-  })
-}
+    router.go(-1);
+    // next(false)
+  }else if(!validateExamVersionPermission(to.path)){
+    Message({
+      message: '您没有权限查看考试版系统',
+      type: 'error',
+      duration: 5 * 1000
+    })
+    router.go(-1)
+    // next(false)
+  }else{
+    next()
+  }
+});
 function validateLoginPermission(path){
   const route = [
     "/user/",
@@ -88,17 +80,19 @@ function validateLoginPermission(path){
   let isUserRoute = ()=>route.some((r)=>path.includes(r))
   return !isUserRoute() || store.state.user.token
 }
-function validateEEMSPermission(path){
+function validateExamVersionPermission(path){
+  let isNEEA = ()=>store.state.user.name=='NEEA'
+  let switchToNEEA=()=>path.endsWith('/neea')||path.includes('/neea/')
+  let switchFromNEEA=()=>store.state.user.rootPath=='/neea/'
   //切换为考试版
-  if(switchToEEMS(path)) {
-    store.dispatch('app/setSysState',{rootPath:'/eems/',isLuna:false})
-    if (!store.state.user.token) {
-      return false
-    }
-  }else{
-    //切换为普通版
-    store.dispatch('app/setSysState',{rootPath:'/',isLuna:true})
-    store.dispatch('app/closeLoginDialog')
+  if(switchToNEEA()&&!isNEEA())
+    return false
+  if(!switchFromNEEA()&&switchToNEEA()) {
+    store.dispatch('user/setRootPath','/neea/')
+  }
+  //切换为普通版
+  if(switchFromNEEA()&&!switchToNEEA()){
+    store.dispatch('user/setRootPath','/')
   }
   return true
 }
