@@ -64,81 +64,51 @@
 		<el-header style="height: 70px;">
 			<div id="header-sticky" class="sticky-menu">
 				<el-row>
-					<el-col :span="4" style="padding-top: 20px; padding-left: 30px">
-						<img src="@/assets/luna_icon.png" alt="Logo" width="150px" style="cursor: pointer"
+					<el-col :span="4" style="padding-top: 0px; padding-left: 30px">
+						<img src="@/assets/bdaa.png" alt="Logo" height="70px" style="cursor: pointer"
 							@click="goToMainPage" />
 					</el-col>
 					<el-col :span="8" :offset="11">
 						<el-row type="flex" justify="end">
-							<!--
 							<el-col :span="4" style="padding-top: 15px;">
-								<el-button type="text" @click="goTolalala" class="navbar">啦啦啦</el-button>
-							</el-col>
-							-->
-							<el-col :span="4" v-if="$store.state.user.name" style="padding-top: 15px;">
-								<el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
-							</el-col>
-							<el-col :span="4" :offset="1" v-else style="padding-top: 15px;">
 								<el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
 							</el-col>
 							<el-col :span="4" style="padding-top: 15px;">
 								<el-menu mode="horizontal"
 									style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px">
-									<!-- <el-menu :default-active="activeIndex" mode="horizontal" style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px"> -->
 									<el-submenu index="0">
 										<template slot="title">
 											<span :style="Title_Pos()">功能</span>
 										</template>
 										<el-submenu index="1">
 											<template slot="title"><span style="color: black;">资源录入</span></template>
-											<el-menu-item index="1-1"><span style="color:	Gainsboro;">学习资源</span>
-											</el-menu-item>
-											<router-link to="/inputMarked" :underline="false" @click.native="ToTop">
+											<router-link :to="$store.state.user.rootPath+'inputMarked'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="1-2">
 													<span style="color: black;">试题资源</span>
 												</el-menu-item>
 											</router-link>
-											<router-link to="/inputPaper" :underline="false" @click.native="ToTop">
+											<router-link :to="$store.state.user.rootPath+'inputPaper'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="1-3">
 													<span style="color: black;">试卷资源</span>
 												</el-menu-item>
 											</router-link>
-											<el-menu-item index="1-4"><span style="color:	Gainsboro;">知识体系</span>
-											</el-menu-item>
 										</el-submenu>
 										<el-submenu index="2">
-
-											<template slot="title"><span style="color: black;">查询</span></template>
-
-											<router-link to="/exercise" :underline="false" @click.native="ToTop">
+											<template slot="title"><span style="color: black;">查重</span></template>
+											<router-link :to="$store.state.user.rootPath+'exercise'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="2-1">
 													<span style="color: black;">试题检索</span>
 												</el-menu-item>
 											</router-link>
 
-											<router-link to="/searchPaper" :underline="false" @click.native="ToTop">
+											<router-link :to="$store.state.user.rootPath+'searchPaper'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="2-2">
 													<span style="color: black;">试卷检索</span>
 												</el-menu-item>
 											</router-link>
-
-											<router-link to="/ku" :underline="false" @click.native="ToTop">
-												<el-menu-item index="2-3">
-													<span style="color: black;">知识单元检索</span>
-												</el-menu-item>
-											</router-link>
-
-											<router-link to="/resources" :underline="false" @click.native="ToTop">
-												<el-menu-item index="2-4">
-													<span style="color: black;">学习资源检索</span>
-												</el-menu-item>
-											</router-link>
-
 										</el-submenu>
 										<el-submenu index="3">
 											<template slot="title"><span style="color: black;">分析</span></template>
-											<el-menu-item index="3-1"><span style="color: Gainsboro;">学习资源</span>
-											</el-menu-item>
 											<el-menu-item index="3-2" @click="QuestionAnalyseSwitch()"
 												@click.native="ToTop">
 												<span style="color: black;">试题资源</span>
@@ -148,94 +118,17 @@
 												<span style="color: black;">试卷资源</span>
 											</el-menu-item>
 										</el-submenu>
-										<el-menu-item index="4">
-											<router-link to="/paperCombine" :underline="false" @click.native="ToTop">
-												<span style="color: black;">
-													组卷系统
-												</span>
-											</router-link>
-										</el-menu-item>
 										<el-menu-item index="5">
-											<router-link to="/manage/dashboard" v-if="$store.state.user.name"
+											<router-link :to="$store.state.user.rootPath+'manage/dashboard'"
 												:underline="false" @click.native="ToTop">
 												<span style="color: #409EFF; font-weight: bold">
 													资源管理
 												</span>
 											</router-link>
-											<el-button type="text" @click.native="login_show(); ToTop()" v-else
-												:underline="false">
-												<span style="color: silver">
-													资源管理
-												</span>
-											</el-button>
-										</el-menu-item>
-										<router-link to="/estimate" :underline="false" @click.native="ToTop"
-											style="display: none">
-											<el-menu-item index="6">
-												<span style="color: black;">试题属性预估</span>
-											</el-menu-item>
-										</router-link>
-										<router-link to="/similarity" :underline="false" @click.native="ToTop"
-											style="display: none">
-											<el-menu-item index="7">
-												<span style="color: black;">相似题预估</span>
-											</el-menu-item>
-										</router-link>
-										<router-link to="/admin" v-if="Get_Priority()" :underline="false"
-											@click.native="ToTop">
-											<el-menu-item index="8">
-												<span style="color: red;">管理员页面</span>
-											</el-menu-item>
-										</router-link>
-									</el-submenu>
-								</el-menu>
-							</el-col>
-
-							<el-col :span="6" style="padding-top: 15px; display: none">
-								<el-menu mode="horizontal"
-									style=" border-bottom: 3px solid #FFFFFF; padding-bottom: 10px">
-									<el-submenu index="0">
-										<template slot="title">
-											<span :style="Title_Pos()">开放平台</span>
-										</template>
-										<el-menu-item index="1">
-											<router-link to="/ImageTranscription" :underline="false"
-												@click.native="ToTop">
-												<span style="color: black; display:block">
-													图片转写
-												</span>
-											</router-link>
-										</el-menu-item>
-										<el-menu-item index="2">
-											<router-link to="/Estimate" :underline="false"
-												@click.native="ToTop">
-												<span style="color: black; display:block">
-													属性预估
-												</span>
-											</router-link>
 										</el-menu-item>
 									</el-submenu>
 								</el-menu>
 							</el-col>
-							<!-- <el-col :span="8" style="padding-top: 15px;">
-								<el-menu :mode="horizontal" style=" margin-bottom: 13px">
-									<el-submenu index="7">
-										<template slot="title">
-											<span :style="Title_Pos()">开放平台</span>
-										</template>
-
-										<el-menu-item index="1">
-											<router-link to="/ImageTranscription" :underline="false" @click.native="ToTop">
-												<span style="color: black;">
-													图片转写
-												</span>
-											</router-link>
-										</el-menu-item>
-
-									</el-submenu>
-								</el-menu>
-							</el-col> -->
-
 							<el-col :span="4" style="padding-top: 15px;">
 								<el-button type="text" @click="show_members" class="navbar">成员</el-button>
 							</el-col>
@@ -265,7 +158,6 @@
 				</el-row>
 			</div>
 		</el-header>
-		<!-- <basic-header/> -->
 		<el-main>
 			<div style="min-height:100vh">
 				<router-view :key="$route.fullPath"></router-view>
@@ -276,85 +168,49 @@
 </template>
 
 <script>
-	// import $ from "jquery";
 	import BasicFooter from '@/layout/components/footer.vue'
 	import login from '@/layout/components/login.vue'
 	import register from '@/layout/components/register.vue'
-	// import BasicHeader from '@/layout/header.vue'
-	// import vueImgVerify from "@/common/components/vue-img-verify.vue";
 	export default {
 		name: "App",
 		components: {
-			// vueImgVerify,
 			BasicFooter,
 			login,
 			register
-			// BasicHeader,
 		},
 		data() {
 			return {
-				root: false, // root用户
-				isAdmin: false,
-				isUser: false,
-				username: "",
-				// activeIndex: 下拉菜单用的
 				activeIndex: "",
 				// 跳转至试卷/试题分析的不同地点用的
 				PaperAnalyseSwitchFlag: false,
-				QuestionAnalyseSwitchFlag: false
+				QuestionAnalyseSwitchFlag: false,
+				rootPath:''
 			};
 		},
-		mounted() {
-			// if(this.$route.name=='user'){
-			//     this.isUser=true
-			// }
-			// var user = sessionStorage.getItem("user");
-			// if (user) {
-			//   this.username = user;
-			// }
-			// if (this.username === "advanced" || this.username === "admin") {
-			//   this.isAdmin = true;
-			// }
-			// this.root = this.username === "root";
-			// console.log(this.root);
-			// $(window).on("scroll", function () {
-			//   var scroll = $(window).scrollTop();
-			//   if (scroll < 700) {
-			//     $("#header-sticky").removeClass("sticky-menu");
-			//   } else {
-			//     $("#header-sticky").addClass("sticky-menu");
-			//   }
-			// });
-		},
-		updated() {
-			var user = sessionStorage.getItem("user");
-			if (user) {
-				this.username = user;
-			} else {
-				this.username = ""
-			}
+		mounted(){
+			this.rootPath=this.$store.state.user.rootPath
 		},
 		methods: {
 			// 查看用户个人信息及组织架构
 			checkUserInfo() {
 				this.$router.push({
-					path: "/user/userInfo"
+					path: this.rootPath+"user/userInfo"
 				});
 			},
 			checkUserGroup() {
 				this.$router.push({
-					path: "/user/userGroup"
+					path: this.rootPath+"user/userGroup"
 				});
 			},
 			QAS(index) {
 				if (index == 0) {
 					this.$router.push({
-						path: "/QuestionAnalyseInput"
+						path: this.rootPath+"QuestionAnalyseInput"
 					});
 					this.QuestionAnalyseSwitchFlag = false;
 				} else {
 					this.$router.push({
-						path: "/exercise"
+						path: this.rootPath+"exercise"
 					});
 					this.QuestionAnalyseSwitchFlag = false;
 				}
@@ -366,12 +222,12 @@
 			PAS(index) {
 				if (index == 0) {
 					this.$router.push({
-						path: "/paperAnalyseInput"
+						path: this.rootPath+"paperAnalyseInput"
 					});
 					this.PaperAnalyseSwitchFlag = false;
 				} else {
 					this.$router.push({
-						path: "/searchPaper"
+						path: this.rootPath+"searchPaper"
 					});
 					this.PaperAnalyseSwitchFlag = false;
 				}
@@ -394,34 +250,18 @@
 					"margin-left": "0px"
 				}
 			},
-			Calculate_Title_Margin() {
-				var Width = window.screen.width;
-				var CWidth = document.body.clientWidth;
-				// console.log(Width, CWidth)
-				if (Width - CWidth < 300) {
-					return "0px"
-				} else {
-					return (0 - (CWidth / Width) * (CWidth / Width) * 40) + "px";
-				}
-			},
 			ToTop() {
 				window.scrollTo(0, 0);
 			},
 			goToMainPage() {
 				this.$router.push({
-					path: "/"
+					path: this.$store.state.user.rootPath
 				});
-				this.ToTop();
-			},
-			goToImageTranscription() {
-				this.$router.push({
-					path: "/ImageTranscription"
-				})
 				this.ToTop();
 			},
 			show_members() {
 				this.$router.push({
-					path: "/members"
+					path: this.$store.state.user.rootPath+"members"
 				});
 				this.ToTop();
 			},
@@ -448,23 +288,16 @@
 			goToUserPage() {
 				this.$router.push("/dashboard");
 			}
-			// logout() {
-			//   var _this = this;
-			//   this.$confirm("确认退出吗？", "提示", {
-			//     // type:'warning'
-			//   })
-			//     .then(() => {
-			//       sessionStorage.removeItem("user");
-			//       sessionStorage.removeItem("isAdmin");
-			//       this.username = "";
-			//       this.isAdmin = false;
-			//       _this.$router.push("/");
-			//     })
-			//     .catch(() => {});
-			// },
 		},
 	};
 </script>
+<style>
+	html,
+	body,
+	#app {
+		min-height: 100vh;
+	}
+</style>
 <style scoped lang="scss">
 	.el-header .el-menu--horizontal /deep/ .el-submenu.is-active .el-submenu__title {
 		border-bottom: none;

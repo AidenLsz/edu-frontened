@@ -96,7 +96,10 @@ export default {
       if (isExternal(this.basePath)) {
         return this.basePath
       }
-      return path.resolve('/manage/',this.basePath, routePath)
+      // console.log('1:',this.basePath,"2:",routePath);
+      // console.log('this.$store.state.user.rootPath',this.$store.state.user.rootPath);
+      // console.log(path.resolve(this.$store.state.user.rootPath+'manage/',this.basePath, routePath));
+      return path.resolve(this.$store.state.user.rootPath+'manage/',this.basePath, routePath)
     }
   }
 }
