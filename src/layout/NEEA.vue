@@ -159,7 +159,7 @@
 			</div>
 		</el-header>
 		<el-main>
-			<div style="height:100vh">
+			<div style="min-height:100vh">
 				<router-view :key="$route.fullPath"></router-view>
 			</div>
 			<basic-footer />
