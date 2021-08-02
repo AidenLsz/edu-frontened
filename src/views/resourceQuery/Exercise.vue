@@ -662,7 +662,7 @@ export default {
           this.database_list.push({name:data[i], nick: data[i]})
           this.database_aim.push(false)
         }
-        this.database_list[1].nick='私有题库'
+        // this.database_list[1].nick='私有题库'
       })
     },
     // 清除图片
