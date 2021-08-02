@@ -223,7 +223,7 @@
 										<template slot="title">
 											<span :style="Title_Pos()">开放平台</span>
 										</template>
-										
+
 										<el-menu-item index="1">
 											<router-link to="/ImageTranscription" :underline="false" @click.native="ToTop">
 												<span style="color: black;">
@@ -231,7 +231,7 @@
 												</span>
 											</router-link>
 										</el-menu-item>
-										
+
 									</el-submenu>
 								</el-menu>
 							</el-col> -->
@@ -267,7 +267,9 @@
 		</el-header>
 		<!-- <basic-header/> -->
 		<el-main>
-			<router-view :key="$route.fullPath"></router-view>
+			<div style="min-height:100vh">
+				<router-view :key="$route.fullPath"></router-view>
+			</div>
 			<basic-footer />
 		</el-main>
 	</el-container>
@@ -463,13 +465,6 @@
 		},
 	};
 </script>
-<style>
-	html,
-	body,
-	#app {
-		min-height: 100vh;
-	}
-</style>
 <style scoped lang="scss">
 	.el-header .el-menu--horizontal /deep/ .el-submenu.is-active .el-submenu__title {
 		border-bottom: none;
