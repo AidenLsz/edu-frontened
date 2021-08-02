@@ -1,5 +1,63 @@
 <template>
 	<el-container id="app">
+		<!-- 试卷分析路径跳转 -->
+		<el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
+			<el-row>
+				<el-col :span="12">
+					<el-row>
+						<el-button @click="PAS(0)" circle style="height: 200px; width: 200px;"><img
+								src="@/assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px" />
+						</el-button>
+					</el-row>
+					<el-row>
+						<el-button type="text" @click="PAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
+							录入试卷进行分析
+						</el-button>
+					</el-row>
+				</el-col>
+				<el-col :span="12">
+					<el-row>
+						<el-button @click="PAS(1)" circle style="height: 200px; width: 200px"><img
+								src="@/assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px" />
+						</el-button>
+					</el-row>
+					<el-row>
+						<el-button type="text" @click="PAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
+							选择题库中试卷进行分析
+						</el-button>
+					</el-row>
+				</el-col>
+			</el-row>
+		</el-dialog>
+		<!-- 试题分析路径跳转 -->
+		<el-dialog :visible.sync="QuestionAnalyseSwitchFlag" width="70%">
+			<el-row>
+				<el-col :span="12">
+					<el-row>
+						<el-button @click="QAS(0)" circle style="height: 200px; width: 200px;"><img
+								src="@/assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px" />
+						</el-button>
+					</el-row>
+					<el-row>
+						<el-button type="text" @click="QAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
+							录入试题进行分析
+						</el-button>
+					</el-row>
+				</el-col>
+				<el-col :span="12">
+					<el-row>
+						<el-button @click="QAS(1)" circle style="height: 200px; width: 200px"><img
+								src="@/assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px" />
+						</el-button>
+					</el-row>
+					<el-row>
+						<el-button type="text" @click="QAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
+							搜索试题进行分析
+						</el-button>
+					</el-row>
+				</el-col>
+			</el-row>
+		</el-dialog>
 		<login ref="login" @register_show="register_show" />
 		<register ref="register" />
 		<!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
@@ -48,6 +106,17 @@
 													<span style="color: black;">试卷检索</span>
 												</el-menu-item>
 											</router-link>
+										</el-submenu>
+										<el-submenu index="3">
+											<template slot="title"><span style="color: black;">分析</span></template>
+											<el-menu-item index="3-2" @click="QuestionAnalyseSwitch()"
+												@click.native="ToTop">
+												<span style="color: black;">试题资源</span>
+											</el-menu-item>
+											<el-menu-item index="3-3" @click="PaperAnalyseSwitch()"
+												@click.native="ToTop">
+												<span style="color: black;">试卷资源</span>
+											</el-menu-item>
 										</el-submenu>
 										<el-menu-item index="5">
 											<router-link :to="$store.state.user.rootPath+'manage/dashboard'"
@@ -112,28 +181,65 @@
 				activeIndex: "",
 				// 跳转至试卷/试题分析的不同地点用的
 				PaperAnalyseSwitchFlag: false,
-				QuestionAnalyseSwitchFlag: false
+				QuestionAnalyseSwitchFlag: false,
+				rootPath:''
 			};
+		},
+		mounted(){
+			this.rootPath=this.$store.state.user.rootPath
 		},
 		methods: {
 			// 查看用户个人信息及组织架构
 			checkUserInfo() {
 				this.$router.push({
-					path: this.$store.state.user.rootPath+"user/userInfo"
+					path: this.rootPath+"user/userInfo"
 				});
 			},
 			checkUserGroup() {
 				this.$router.push({
-					path: this.$store.state.user.rootPath+"user/userGroup"
+					path: this.rootPath+"user/userGroup"
 				});
+			},
+			QAS(index) {
+				if (index == 0) {
+					this.$router.push({
+						path: this.rootPath+"QuestionAnalyseInput"
+					});
+					this.QuestionAnalyseSwitchFlag = false;
+				} else {
+					this.$router.push({
+						path: this.rootPath+"exercise"
+					});
+					this.QuestionAnalyseSwitchFlag = false;
+				}
 			},
 			// 跳转至试题分析的不同位置的对话框
 			QuestionAnalyseSwitch() {
 				this.QuestionAnalyseSwitchFlag = true;
 			},
+			PAS(index) {
+				if (index == 0) {
+					this.$router.push({
+						path: this.rootPath+"paperAnalyseInput"
+					});
+					this.PaperAnalyseSwitchFlag = false;
+				} else {
+					this.$router.push({
+						path: this.rootPath+"searchPaper"
+					});
+					this.PaperAnalyseSwitchFlag = false;
+				}
+			},
 			// 跳转至试卷分析的不同位置的对话框
 			PaperAnalyseSwitch() {
 				this.PaperAnalyseSwitchFlag = true;
+			},
+			Get_Priority() {
+				if (sessionStorage.isAdmin) {
+					return true
+				} else {
+					return false
+				}
 			},
 			Title_Pos() {
 				return {
