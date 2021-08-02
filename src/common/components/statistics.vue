@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="">
     <el-row style="margin-top: 40px; padding-bottom: 40px">
-      <el-col :span="4" :offset="4" class="partData">
+      <el-col :span="isLuna?4:5" :offset="isLuna?4:5" class="partData">
         <el-row>
           <el-col :span="12">
             <img src="@/assets/dataIcon1.png" width="60px" style="padding-top: 30px"/>
@@ -12,7 +12,7 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="4" :offset="2" class="partData">
+      <el-col :span="isLuna?4:5" :offset="isLuna?2:4" class="partData">
         <el-row>
           <el-col :span="12">
             <img src="@/assets/dataIcon2.png" width="60px" style="padding-top: 30px"/>
@@ -23,7 +23,7 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="4" :offset="2" class="partData">
+      <el-col v-if="isLuna" :span="4" :offset="2" class="partData">
         <el-row>
           <el-col :span="12">
             <img src="@/assets/dataIcon3.png" width="60px" style="padding-top: 30px"/>
@@ -43,7 +43,7 @@
         <el-button round @click="changeCountButton('Paper')" ref="countButtonPaper" :class="Get_Count_Style('Paper')">
           试卷资源
         </el-button>
-        <el-button round @click="changeCountButton('KU')" ref="countButtonKU" :class="Get_Count_Style('KU')">
+        <el-button v-if="isLuna" round @click="changeCountButton('KU')" ref="countButtonKU" :class="Get_Count_Style('KU')">
           知识单元
         </el-button>
       </el-button-group>
@@ -74,6 +74,7 @@ export default {
   name: "statistics",
   data() {
     return {
+      isLuna:true,
       ku_name: "三角函数",
       image_infos: [],
       ToolsLabelNow: "资源",
@@ -97,6 +98,7 @@ export default {
     };
   },
   mounted() {
+    this.isLuna=this.$store.state.user.rootPath=='/'
     this.Init_Bar();
     // data - background
     $("[data-background]").each(function() {
@@ -126,8 +128,8 @@ export default {
       if(tab.name == 'first'){
         this.Sort_Type = "学科";
       }
-      else if(tab.name == 'second'){  
-        this.Sort_Type = "学段";    
+      else if(tab.name == 'second'){
+        this.Sort_Type = "学段";
       }
       this.Redraw_Bar();
     },
@@ -241,7 +243,7 @@ export default {
               name:'试题',
               type:'bar',
               barWidth: '30%',
-              data:this.Question_Data_Sub 
+              data:this.Question_Data_Sub
           }]
         if(this.Sort_Type == '学段') {
           option.series[0].data = this.Question_Data_Per;
@@ -258,7 +260,7 @@ export default {
         if(this.Sort_Type == '学段') {
           option.series[0].data = this.Paper_Data_Per;
           option.xAxis[0].data = this.Chart_Data.list_per;
-        }  
+        }
       }else if(this.Count_Type == 'KU'){
         option.legend.data = ['知识单元']
         option.series = [{
@@ -296,7 +298,7 @@ export default {
 
         this.Paper_Data_Sub = [];
         this.Question_Data_Sub = [];
-        this.KU_Data_Sub = [];       
+        this.KU_Data_Sub = [];
         this.Paper_Data_Per = [];
         this.Question_Data_Per = [];
         this.KU_Data_Per = [];
