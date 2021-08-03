@@ -36,7 +36,6 @@ const router = new Router({
       name: "EEMS",
       component: EEMSLayout,
       children:UserRouter.concat(EEMSRouter)
-
     },
     {
       path: "/",
@@ -50,34 +49,29 @@ const router = new Router({
 // 路由控制
 let switchToEEMS=(path)=>path&&(path.endsWith('/eems')||path.includes('/eems/'))
 router.beforeEach((to, from, next) => {
-  // 进行eems权限控制（switchToEEMS)
-  //   没有登录 ｜｜ 已经登录但没有访问权限
-  //     一定要登录-提示没有权限登录后非neea则提示当前账号没有权限 modal不消失
-  // 进行luna权限控制
-  //   没有登录-Modal框
-  console.log(to.path);
+  // console.log(to.path);
   if(!validateEEMSPermission(to.path)){
-    console.log(1);
+    // console.log(1);
     next()
-    store.dispatch('app/openLoginDialog')
-    Message({
-      message: '您没有使用考试系统的权限！',
-      type: 'error',
-      duration: 5 * 1000
+    store.dispatch('app/openLoginDialog').then(()=>{
+      Message({
+        message: '您没有使用考试系统的权限！',
+        type: 'error',
+        duration: 5 * 1000
+      })
     })
-    // modal框
   }else if(!switchToEEMS(to.path)&&!validateLoginPermission(to.path)){
-    console.log(2);
-
-    Message({
-      message: '您需要登录后才能进行相关操作！',
-      type: 'error',
-      duration: 5 * 1000
-    })
-    store.dispatch('app/openLoginDialog')
+    // console.log(2);
     next('/');
+    store.dispatch('app/openLoginDialog').then(()=>{
+      Message({
+        message: '您需要登录后才能进行相关操作！',
+        type: 'error',
+        duration: 5 * 1000
+      })
+    })
   }else{
-    console.log(3);
+    // console.log(3);
     next()
   }
 });
@@ -101,6 +95,7 @@ function validateEEMSPermission(path){
   }else{
     //切换为普通版
     store.dispatch('app/setSysState',{rootPath:'/',isLuna:true})
+    store.dispatch('app/closeLoginDialog')
   }
   return true
 }
