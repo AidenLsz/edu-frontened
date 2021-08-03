@@ -1,6 +1,11 @@
 <template>
   <!-- 登录 -->
-  <el-dialog :visible="$store.state.app.loginDialog.opened" width="70%" @close='hide()'>
+  <el-dialog :visible="$store.state.app.loginDialog.opened"
+    width="70%" @close="hide()"
+    :show-close="isLuna"
+    :close-on-click-modal="isLuna"
+    :close-on-press-escape="isLuna"
+    >
     <el-row>
       <el-col :span="10" :offset="2">
         <el-row>
