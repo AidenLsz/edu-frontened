@@ -5,6 +5,7 @@
     :show-close="isLuna"
     :close-on-click-modal="isLuna"
     :close-on-press-escape="isLuna"
+    @open="draw()"
     >
     <el-row>
       <el-col :span="10" :offset="2">
@@ -103,6 +104,8 @@ export default {
   methods:{
     show(){
       this.$store.dispatch('app/openLoginDialog')
+    },
+    draw(){
       setTimeout(()=>{
         this.$refs.vueImgVerify.handleDraw();},
       1)
@@ -130,7 +133,7 @@ export default {
         password: this.password
       }).then((data)=>{
         if(!this.isLuna&&this.account!='NEEA'){
-          this.$message.error('您没有访问考试系统的权限')
+          this.$message.error('您没有访问考试系统的权限!')
         }else{
           let userInfo={
             token:data.access_token,
