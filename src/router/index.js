@@ -48,12 +48,16 @@ const router = new Router({
 
 // 路由控制
 let switchToEEMS=(path)=>path&&(path.endsWith('/eems')||path.includes('/eems/'))
+let msg='您需要登录后才能进行相关操作！'
 router.beforeEach((to, from, next) => {
   if(!validateEEMSPermission(to.path)){
     next()
     store.dispatch('app/openLoginDialog').then(()=>{
+      if (store.state.user.name) {
+        msg='您没有使用考试系统的权限！'
+      }
       Message({
-        message: '您没有使用考试系统的权限！',
+        message: msg,
         type: 'error',
         duration: 5 * 1000
       })
@@ -68,7 +72,7 @@ router.beforeEach((to, from, next) => {
     }
     store.dispatch('app/openLoginDialog').then(()=>{
       Message({
-        message: '您需要登录后才能进行相关操作！',
+        message: msg,
         type: 'error',
         duration: 5 * 1000
       })
