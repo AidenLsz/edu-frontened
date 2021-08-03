@@ -5,6 +5,7 @@
     :show-close="isLuna"
     :close-on-click-modal="isLuna"
     :close-on-press-escape="isLuna"
+    @open="draw()"
     >
     <el-row>
       <el-col :span="10" :offset="2">
@@ -99,10 +100,13 @@ export default {
       }
       this.visible = newVal;
     },
+
   },
   methods:{
     show(){
       this.$store.dispatch('app/openLoginDialog')
+    },
+    draw(){
       setTimeout(()=>{
         this.$refs.vueImgVerify.handleDraw();},
       1)
@@ -119,6 +123,7 @@ export default {
         return;
       }
       if (this.verifyCode.toUpperCase() !== this.imgCode.toUpperCase()) {
+        console.log(1,this.verifyCode.toUpperCase(),2,this.imgCode.toUpperCase());
         alert("验证码错误");
         return;
       }
@@ -129,7 +134,7 @@ export default {
         password: this.password
       }).then((data)=>{
         if(!this.isLuna&&this.account!='NEEA'){
-          this.$message.error('您没有访问考试系统的权限')
+          this.$message.error('您没有访问考试系统的权限!')
         }else{
           let userInfo={
             token:data.access_token,
