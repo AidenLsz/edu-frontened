@@ -121,8 +121,8 @@
                 选择方式：
               </label>
               <el-radio-group v-model="Editing_Info.select">
-                <el-radio label="Single">单选</el-radio>
-                <el-radio label="Multiple">多选</el-radio>
+                <el-radio label="单选">单选</el-radio>
+                <el-radio label="多选">多选</el-radio>
               </el-radio-group>
             </el-row>
             <el-row type="flex" justify="start" style="margin-top: 10px; margin-left: 1.5vw">
@@ -130,8 +130,8 @@
                 过滤方式：
               </label>
               <el-radio-group v-model="Editing_Info.filter">
-                <el-radio label="Add">并集</el-radio>
-                <el-radio label="Cross">交集</el-radio>
+                <el-radio label="并集">并集</el-radio>
+                <el-radio label="交集">交集</el-radio>
               </el-radio-group>
             </el-row>
             <el-row 
@@ -175,7 +175,12 @@
         <el-button type="success" @click="Edit_Finish()">编辑完成</el-button>
       </el-row>
     </el-dialog>
-      <el-row style="margin-left: 5vw; margin-right: 5vw">
+      <el-row 
+        style="margin-left: 5vw; margin-right: 5vw"
+        v-loading="Loading"
+        :element-loading-text="Loading_Text"
+        element-loading-spinner="el-icon-loading"
+        >
         <el-col :span="18" style="padding: 20px 30px;" class="Shadow_Border">
           <el-row type="flex" justify="center" style="margin-bottom: 15px;">
             <label style="font-size: 18px">双向细目表名称</label>
@@ -453,6 +458,9 @@ export default {
   },
   data() {
     return {
+      // 关于正在等待生成题目的变量和等待文字
+      Loading: false,
+      Loading_Text: "",
       // 关于知识树的操作
       // 等待变量
       waiting: false,
@@ -493,9 +501,17 @@ export default {
         difficulty: [0.0, 0.2],
         // 题库
         source: 'default',
-        select: 'Single',
-        filter: 'Add'
-      }
+        select: '单选',
+        filter: '并集'
+      },
+      // 用于试题ID重复时过滤
+      Dup_Index: 1,
+      // 用于保存已经存入试卷篮的试题ID
+      Cart_IDS: [],
+      // 用于给检索试题计数,
+      Count: 0,
+      // 用于统计一共应当有多少道题
+      Total: 0,
     }
   },
   watch:{
@@ -541,15 +557,134 @@ export default {
         this.Init();
       }
     },
+    Count(newVal){
+      this.Loading_Text = "正在检索第 " + newVal + " 道题目..."
+    }
   },
   mounted() {
     this.initDatabaseList();
+    if(sessionStorage.getItem("Table_Info")){
+      this.Table_Info = JSON.parse(sessionStorage.getItem("Table_Info"))
+    }
     this.Init();
   },
   methods: {
+    // 
+    Search_KP(Info, Type){
+
+      let param={}
+
+      let database = Info.DatabaseAim == "default" ? this.DatabaseAim : [Info.DatabaseAim];
+
+      let type = [Type];
+
+      let kl = [[0], [1], [2]];
+
+      for(let i = 0; i < Info.knowledgePointsIDs.length; i++){
+        kl[Info.knowledgePointsLevels[i]].push(Info.knowledgePoints[i])
+      }
+
+      for(let i = 2; i >= 0; i--){
+        if(kl[i].length == 1){
+          kl.splice(i, 1)
+        }
+      }
+
+      var data = JSON.stringify({
+          "size": 5,
+          "database": database,
+          "page_count": Math.ceil(this.Dup_Index/5),
+          "subject": [this.Subject],
+          "period": [this.Period],
+          "difficulty": Info.difficulty,
+          "type": type,
+          "knowledge": {
+            "knowledge_list": kl,
+            "select_way": Info.select,
+            "filter_way": Info.filter
+          }
+        })
+
+        param.data=data
+
+        commonAjax(this.backendIP+'/api/search', param)
+        .then((data)=>{
+            this.Add_New_Ques_To_Cart(data.results[(this.Dup_Index - 1) % 5], Info.score, Info, Type);
+        }).catch(() => {
+            this.$message.error("服务器过忙，请稍后再试。")
+        })
+    },
+    // 尝试添加试题
+    Add_New_Ques_To_Cart(Ques_Info, Score, Info, Type){
+
+        let Aim = Ques_Info
+
+        if(this.Cart_IDS.indexOf(Aim.id) != -1){
+          this.Dup_Index = this.Dup_Index + 1;
+          this.Search_KP(Info, Type);
+          return
+        }else{
+          this.Cart_IDS.push(Aim.id);
+          this.Dup_Index = 1;
+        }
+
+        let Question_Show_Infos = {
+          id: "",
+          type: "",
+          score: Score,
+          stem: "",
+          options: [],
+          answer: "",
+          analyse: ""
+        }
+        if(['单选题', '多选题', '判断题'].indexOf(Aim.type) != -1){
+          Question_Show_Infos.type = Aim.type;
+        }else if(['简答题', '计算题'].indexOf(Aim.type) != -1){
+          Question_Show_Infos.type = Aim.type
+        }else if(Aim.type == '填空题'){
+          Question_Show_Infos.type = Aim.type
+        }
+
+        Question_Show_Infos.id = Aim.id;
+        Question_Show_Infos.options = Aim.options;
+        Question_Show_Infos.stem = Aim.stem;
+        Question_Show_Infos.answer = Aim.answer;
+        Question_Show_Infos.analyse = Aim.analysis;
+        
+        this.$emit("Add_To_Cart", JSON.stringify(Question_Show_Infos));
+
+        if(this.Count == this.Total){
+          this.Loading = false;
+          this.Count = 1;
+        }
+        
+    },
     // 开始生成试卷
     Use_Table_Info(){
-      this.$message.warning("准备生成试卷。")
+      this.$confirm("使用细目表组卷将清空已存入试题篮的试题，确定要继续吗？", "提示", {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+      .then(() => {
+        sessionStorage.setItem('Table_Info', JSON.stringify(this.Table_Info))
+        for(let i = 0; i < this.Table_Info.length; i++){
+          this.Total = this.Total + this.Table_Info[i].List.length;
+        }
+        this.$emit("Clear_Cart", true)
+        this.Loading = true;
+        for(let i = 0; i < this.Table_Info.length; i++){
+          let Bundle = this.Table_Info[i];
+          for(let j = 0; j < Bundle.List.length; j++){
+            this.Count = this.Count + 1;
+            this.Search_KP(Bundle.List[j], Bundle.Type)
+          }
+        }
+      })
+      .catch(() => {
+        this.$message.warning("已取消。")
+      })
+      
     },
     // 删除大题
     Delete_Bundle(Bundle_Index){
@@ -568,8 +703,8 @@ export default {
         difficulty: [0.0, 0.2],
         // 题库
         source: this.DatabaseAim[0].nick,
-        select: 'Single',
-        filter: 'Add'
+        select: '单选',
+        filter: '交集'
       }
 
       this.Table_Info[Bundle_Index].List.push(Item);
@@ -588,7 +723,7 @@ export default {
     // 返回知识点内能显示的内容
     Ques_KP_Shows(Ques){
       let KP_List = Ques.knowledgePoints;
-      let Sym = Ques.filter == "Add" ? "∩": "∪"
+      let Sym = Ques.filter == "交集" ? "∩": "∪"
       let Result = KP_List[0];
       let Switch = false;
       for(let i = 1; i < KP_List.length; i++){
@@ -737,8 +872,8 @@ export default {
           difficulty: [0.0, 0.2],
           // 题库
           source: this.DatabaseAim[0].nick,
-          select: 'Single',
-          filter: 'Add'
+          select: '单选',
+          filter: '并集'
         }
         Bundle.List.push(Item)
       }
@@ -805,7 +940,7 @@ export default {
     },
     // 点击节点后的方法
     handleCheckChange(data, checked) {
-      if (checked && this.Editing_Info.select == "Single") {
+      if (checked && this.Editing_Info.select == "单选") {
         this.Editing_Info.knowledgePoints = [];
         this.Editing_Info.knowledgePointsIDs = [];
         this.Editing_Info.knowledgePointsLevels = [];
@@ -814,13 +949,13 @@ export default {
         this.Editing_Info.knowledgePointsIDs.push(data.id)
         this.Editing_Info.knowledgePointsLevels.push(data.level);
       }
-      else if(checked && this.Editing_Info.select == "Multiple"){
+      else if(checked && this.Editing_Info.select == "多选"){
         if(this.Editing_Info.knowledgePointsIDs.indexOf(data.id) == -1){
           this.Editing_Info.knowledgePoints.push(data.label)
           this.Editing_Info.knowledgePointsIDs.push(data.id)
           this.Editing_Info.knowledgePointsLevels.push(data.level);
         }
-      }else if(!checked && this.Editing_Info.select == "Multiple" && this.Editing_Info.knowledgePointsIDs.indexOf(data.id) != -1){
+      }else if(!checked && this.Editing_Info.select == "多选" && this.Editing_Info.knowledgePointsIDs.indexOf(data.id) != -1){
         this.Editing_Info.knowledgePoints.splice(this.Editing_Info.knowledgePointsIDs.indexOf(data.id), 1);
         this.Editing_Info.knowledgePointsIDs.splice(this.Editing_Info.knowledgePointsIDs.indexOf(data.id), 1);
         this.Editing_Info.knowledgePointsLevels.splice(this.Editing_Info.knowledgePointsIDs.indexOf(data.id), 1);

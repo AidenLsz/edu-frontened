@@ -1,15 +1,5 @@
 <template>
   <div style=" margin-top: 5vh; margin-bottom: 5vh;">
-      <!-- 输入助手 -->
-      <el-dialog
-        :visible.sync="complexInput"
-        title="LUNA输入助手"
-        width="65%"
-        :modal-append-to-body="false"
-        :close-on-click-modal="false">
-      <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="searchKeyword"></ComplexInput>
-      <el-button type="success" plain @click="complexInput = false">完成输入</el-button>
-    </el-dialog>
     <!-- 查看分析报告 -->
     <el-dialog
         :visible.sync="analyseReport"
@@ -46,8 +36,8 @@
                 选择方式：
               </label>
               <el-radio-group v-model="KnowledgeSelectType">
-                <el-radio label="Single">单选</el-radio>
-                <el-radio label="Multiple">多选</el-radio>
+                <el-radio label="单选">单选</el-radio>
+                <el-radio label="多选">多选</el-radio>
               </el-radio-group>
             </el-row>
             <el-row type="flex" justify="start" style="margin-top: 10px; margin-left: 1.5vw">
@@ -55,8 +45,8 @@
                 过滤方式：
               </label>
               <el-radio-group v-model="KnowledgeFilterType">
-                <el-radio label="Add">并集</el-radio>
-                <el-radio label="Cross">交集</el-radio>
+                <el-radio label="并集">并集</el-radio>
+                <el-radio label="交集">交集</el-radio>
               </el-radio-group>
             </el-row>
             <el-row 
@@ -107,7 +97,7 @@
             <el-row type="flex" justify="center" :style="Get_Suitable_Height()" v-if="KnowledgeUnitList.length > 0">
               <el-button 
                 type="primary" 
-                @click="Unfinish()">
+                @click="Search_KP()">
                 <i class="el-icon-search"></i>
                 检索
               </el-button>
@@ -253,8 +243,6 @@
 </template>
 <script>
 
-import ComplexInput from '@/common/components/ComplexInput'
-
 import {commonAjax} from '@/common/utils/ajax'
 import Mathdown from '@/common/components/Mathdown'
 
@@ -272,7 +260,7 @@ export default {
           default: "高中"
       }
   },
-  components: {ComplexInput, Mathdown, QuestionAnalyse},
+  components: {Mathdown, QuestionAnalyse},
   data() {
     return {
       // 知识树用到的变量
@@ -282,6 +270,7 @@ export default {
         KnowledgeUnitList: [],
         // 展示的知识点对应的ID
         KnowledgeUnitIDList: [],
+        KnowledgeUnitIDList_Cache: [],
         // 知识点的层级关系
         KnowledgeUnitLevelList: [],
         // 输入框过滤
@@ -330,9 +319,9 @@ export default {
         // 知识体系名
         KnowledgeGroup: "KnowledgeGroup_1",
         // 知识体系单选或多选
-        KnowledgeSelectType: "Single",
+        KnowledgeSelectType: "单选",
         // 知识点交集或并集
-        KnowledgeFilterType: "Cross",
+        KnowledgeFilterType: "并集",
         // 正在加载
         loading: false,
         // 刷新分析报告
@@ -343,9 +332,6 @@ export default {
         analyseData: {},
         // 复杂输入框是否打开
         complexInput: false,
-        // 检索的关键字，缓存的检索关键字，用于和新词进行比对
-        searchKeyword: "",
-        searchKwCache: "",
         // 页码
         Page_Index: 1,
         // 单页长度
@@ -413,6 +399,80 @@ export default {
       this.Init();
   },
   methods: {
+    // 检索试题
+    Search_KP(){
+
+      this.loading = true;
+
+      if(this.KnowledgeUnitIDList != this.KnowledgeUnitIDList_Cache){
+        this.Page_Index = 1;
+      }
+
+      this.KnowledgeUnitIDList_Cache = this.KnowledgeUnitIDList;
+
+      let param={}
+
+      let database = [];
+      for(let i = 0 ; i < this.filterRecord.database.length; i++){
+          if(this.filterRecord.database[i]){
+              database.push(this.databaseAim[i+1].name)
+          }
+      }
+
+      let type = [];
+      for(let i = 0 ; i < this.filterRecord.type.length; i++){
+          if(this.filterRecord.type[i]){
+              type.push(this.typeAim[i+1])
+          }
+      }
+
+      let kl = [[0], [1], [2]];
+
+      for(let i = 0; i < this.KnowledgeUnitIDList.length; i++){
+        kl[this.KnowledgeUnitLevelList[i]].push(this.KnowledgeUnitList[i])
+      }
+
+
+      for(let i = 2; i >= 0; i--){
+        if(kl[i].length == 1){
+          kl.splice(i, 1)
+        }
+      }
+
+      var data = JSON.stringify({
+          "size": 5,
+          "database": database,
+          "page_count": this.Page_Index,
+          "subject": [this.Subject],
+          "period": [this.Period],
+          "difficulty": this.filterRecord.difficulty,
+          "type": type,
+          "knowledge": {
+            "knowledge_list": kl,
+            "select": this.KnowledgeSelectType,
+            "filter": this.KnowledgeFilterType
+          }
+        })
+
+        param.data=data
+
+        console.log(param)
+
+        commonAjax(this.backendIP+'/api/search', param)
+        .then((data)=>{
+            this.Expand_List = [];
+            this.questionList = [];
+            for(var i = 0; i < data.results.length; i++){
+                this.questionList.push(data.results[i])
+                this.Expand_List.push(false);
+            }
+            this.Total_Count = data.totalLength
+            this.loading = false
+        }).catch(() => {
+            this.$message.error("服务器过忙，请稍后再试。")
+            this.loading = false;
+        })
+    },
     // 尚未完成
     Unfinish(){
       this.$message.error("这部分还没做完")
@@ -486,7 +546,7 @@ export default {
     },
       // 点击节点后的方法
       handleCheckChange(data, checked) {
-        if (checked && this.KnowledgeSelectType == "Single") {
+        if (checked && this.KnowledgeSelectType == "单选") {
           this.KnowledgeUnitList = [];
           this.KnowledgeUnitIDList = [];
           this.KnowledgeUnitLevelList = [];
@@ -495,11 +555,11 @@ export default {
           this.KnowledgeUnitIDList.push(data.id)
           this.KnowledgeUnitLevelList.push(data.level)
         }
-        else if(checked && this.KnowledgeSelectType == "Multiple"){
+        else if(checked && this.KnowledgeSelectType == "多选"){
           this.KnowledgeUnitList.push(data.label)
           this.KnowledgeUnitIDList.push(data.id)
           this.KnowledgeUnitLevelList.push(data.level)
-        }else if(!checked && this.KnowledgeSelectType == "Multiple" && this.KnowledgeUnitIDList.indexOf(data.id) != -1){
+        }else if(!checked && this.KnowledgeSelectType == "多选" && this.KnowledgeUnitIDList.indexOf(data.id) != -1){
           this.KnowledgeUnitList.splice(this.KnowledgeUnitIDList.indexOf(data.id), 1);
           this.KnowledgeUnitIDList.splice(this.KnowledgeUnitIDList.indexOf(data.id), 1);
           this.KnowledgeUnitLevelList.splice(this.KnowledgeUnitIDList.indexOf(data.id), 1);
@@ -545,73 +605,8 @@ export default {
       },
       // 页码变化搜索
     BackToTop(){
-      this.submit();
-      window.scrollTo(0,0);
-    },
-    // Update_Complex_Input
-    UCI(val){
-      this.searchKeyword = val;
-    },
-    // UCI_Images
-    UCII(val){
-      val
-    },
-    // 检索试题内容
-    submit() {
-
-        this.loading = true;
-
-        if(this.searchKwCache != this.searchKeyword){
-          this.Page_Index = 1;
-        }
-
-        this.searchKwCache = this.searchKeyword;
-
-        let param={}
-
-        let database = [];
-        for(let i = 0 ; i < this.filterRecord.database.length; i++){
-            if(this.filterRecord.database[i]){
-                database.push(this.databaseAim[i+1].name)
-            }
-        }
-
-        let type = [];
-        for(let i = 0 ; i < this.filterRecord.type.length; i++){
-            if(this.filterRecord.type[i]){
-                type.push(this.typeAim[i+1])
-            }
-        }
-
-        var data = JSON.stringify({
-          "content": this.searchKeyword,
-          "size": 5,
-          "database": database,
-          "page_count": this.Page_Index,
-          "subject": [this.Subject],
-          "period": [this.Period],
-          "difficulty": this.filterRecord.difficulty,
-          "type": type
-        })
-
-        // param.append("data", data);
-        param.data=data
-
-        commonAjax(this.backendIP+'/api/search', param)
-        .then((data)=>{
-            this.Expand_List = [];
-            this.questionList = [];
-            console.log(data.results)
-            for(var i = 0; i < data.results.length; i++){
-                this.questionList.push(data.results[i])
-                this.Expand_List.push(false);
-            }
-            this.Total_Count = data.totalLength
-            this.loading = false
-        }).catch(() => {
-            this.$message.error("服务器过忙，请稍后再试。")
-            this.loading = false;
-        })
+      this.Search_KP();
+      document.documentElement.scrollTop = 0 
     },
     // 获取用户所具有的题库权限
     initDatabaseList(){

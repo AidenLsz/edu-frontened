@@ -116,7 +116,7 @@
         <InputQuestion @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></InputQuestion>
     </el-row>
     <el-row v-if="Using_Menu_Index == 3">
-        <DetailTable :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></DetailTable>
+        <DetailTable @Add_To_Cart="Add_To_Question_Cart" @Clear_Cart="Clear_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></DetailTable>
     </el-row>
     <el-row v-if="Using_Menu_Index == 4">
         <StartCombine 
@@ -177,10 +177,15 @@ export default {
       this.Init_Question_Type_Chart();
   },
   methods: {
+      // 清空试题篮
+      Clear_Cart(){
+        this.$message.warning("您的试题篮已清空。");
+        this.Question_List = [];
+        this.Init_Question_Type_Chart();
+      },
       // 从组卷那边更新题目列表
       Update_Question_List(val){
         this.Question_List = JSON.parse(val);
-        console.log(this.Question_List.length)
         if(this.Question_List.length == 0){
             this.$message.warning("您的试题篮内已清空，已返回至关键词挑题页面。");
             this.Using_Menu_Index = 0;
@@ -227,6 +232,7 @@ export default {
                 list: [Question]
             })
         }
+        this.$message.success("已添加试题至试题篮。")
         this.Init_Question_Type_Chart();
     },
     // 通过当前选择的学科学段来判断筛选按钮的样式
@@ -386,6 +392,7 @@ export default {
     // 清空试题篮
     Clear_Question_Cart(){
         this.Question_List = [];
+        this.$message.warning("您的试题篮已清空。");
         this.Init_Question_Type_Chart();
     },
     // 切换至组卷页面
