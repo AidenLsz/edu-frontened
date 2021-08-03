@@ -97,9 +97,7 @@ export default {
         return this.basePath
       }
       // console.log('1:',this.basePath,"2:",routePath);
-      // console.log('this.$store.state.user.rootPath',this.$store.state.user.rootPath);
-      // console.log(path.resolve(this.$store.state.user.rootPath+'manage/',this.basePath, routePath));
-      return path.resolve(this.$store.state.user.rootPath+'manage/',this.basePath, routePath)
+      return path.resolve(this.$store.rootPath+'manage/',this.basePath, routePath)
     }
   }
 }

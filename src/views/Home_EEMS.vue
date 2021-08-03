@@ -69,13 +69,6 @@ export default {
       ToolsLabelNow: "资源",
       functionStatus: [false, false, false, false],
       resourceStatus: [false, false, false, false],
-      Num_Paper: 0,
-      Num_Question: 0,
-      Num_KU: 0,
-      Paper_Data: [],
-      Question_Data: [],
-      KU_Data: [],
-      Chart_Data: {},
       PaperAnalyseSwitchFlag: false,
       QuestionAnalyseSwitchFlag: false,
       Count_Type: "Question"

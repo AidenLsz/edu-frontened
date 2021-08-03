@@ -1,11 +1,17 @@
 <template lang="html">
   <!-- 登录 -->
-  <el-dialog :visible.sync="visible" width="70%">
+  <el-dialog :visible="$store.state.app.loginDialog.opened" width="70%" @close='hide()'>
     <el-row>
       <el-col :span="10" :offset="2">
         <el-row>
           <span style="font-weight: bold; color: #47A2FF; font-size: 24px">
-            欢迎使用LUNA智慧教育知识图谱
+            欢迎使用
+            <template v-if="isLuna">
+              LUNA智慧教育知识图谱
+            </template>
+            <template v-else>
+              智慧考试管理系统
+            </template>
           </span>
         </el-row>
         <el-row style="margin: 50px 0px 30px 0px;">
@@ -46,7 +52,7 @@
           <el-col :span="6" :offset="1">
             <el-button type="text" style="color: #aaa">忘记密码？</el-button>
           </el-col>
-          <el-col :span="6" :offset="3">
+          <el-col v-if="isLuna" :span="6" :offset="3">
             <el-row type="flex" justify="end" >
               <el-button type="text" @click="register_show">注册新用户</el-button>
             </el-row>
@@ -74,6 +80,11 @@ export default {
       imgCode: "",
     }
   },
+  computed: {
+    isLuna() {
+      return this.$store.getters.isLuna;
+    }
+  },
   watch:{
     visible(newVal){
       if(!newVal){
@@ -86,13 +97,13 @@ export default {
   },
   methods:{
     show(){
-      this.visible=true
+      this.$store.dispatch('app/openLoginDialog')
       setTimeout(()=>{
         this.$refs.vueImgVerify.handleDraw();},
       1)
     },
     hide(){
-      this.visible=false
+      this.$store.dispatch('app/closeLoginDialog')
     },
     register_show(){
       this.$emit('register_show');
@@ -112,15 +123,21 @@ export default {
         // password: md5(this.password)
         password: this.password
       }).then((data)=>{
-        let userInfo={
-          token:data.access_token,
-          name:this.account,
-          // isAdmin:data.body.isAdmin,
+        if(!this.isLuna&&this.account!='NEEA'){
+          this.$message.error('您没有访问考试系统的权限')
+        }else{
+          let userInfo={
+            token:data.access_token,
+            name:this.account,
+            // isAdmin:data.body.isAdmin,
+          }
+          this.$store.dispatch('user/setUserData', userInfo).then(() => {
+            this.$router.go()
+            this.hide()
+          })
         }
-        this.$store.dispatch('user/setUserData', userInfo).then(() => {
-          this.$router.go()
-          this.visible = false;
-        })
+
+
       }).catch((err)=>{
         if(err&&err.response&&err.response.status==401){
           this.$message.error('用户名或密码不正确！')
