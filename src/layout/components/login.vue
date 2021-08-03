@@ -5,6 +5,7 @@
     :show-close="isLuna"
     :close-on-click-modal="isLuna"
     :close-on-press-escape="isLuna"
+    @open="draw()"
     >
     <el-row>
       <el-col :span="10" :offset="2">
@@ -88,6 +89,7 @@ export default {
     isLuna() {
       return this.$store.getters.isLuna;
     },
+
   },
   methods:{
     show(){
