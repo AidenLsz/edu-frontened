@@ -272,27 +272,14 @@
                     </el-menu-item>
 
                     <el-menu-item index="6">
-                      <router-link
-                        to="/manage/dashboard"
-                        v-if="$store.state.user.name"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <span style="color: #409eff; font-weight: bold">
-                          资源管理
-                        </span>
-                      </router-link>
-                      <el-button
-                        type="text"
-                        @click.native="
-                          login_show();
-                          ToTop();
-                        "
-                        v-else
-                        :underline="false"
-                      >
-                        <span style="color: silver"> 资源管理 </span>
-                      </el-button>
+                      <router-link to="/manage/dashboard" :underline="false" @click.native="ToTop">
+												<span v-if="$store.state.user.name" style="color: #409EFF; font-weight: bold">
+													资源管理
+												</span>
+												<span v-else style="color: silver">
+													资源管理
+												</span>
+											</router-link>
                     </el-menu-item>
 
                     <router-link
