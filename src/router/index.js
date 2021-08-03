@@ -47,34 +47,36 @@ const router = new Router({
 });
 
 // 路由控制
-let switchToEEMS=(path)=>path&&(path.endsWith('/eems')||path.includes('/eems/'))
+
 router.beforeEach((to, from, next) => {
-  // console.log(to.path);
   if(!validateEEMSPermission(to.path)){
-    // console.log(1);
     next()
-    store.dispatch('app/openLoginDialog').then(()=>{
-      Message({
-        message: '您没有使用考试系统的权限！',
-        type: 'error',
-        duration: 5 * 1000
-      })
-    })
+    openLoginDialog()
   }else if(!switchToEEMS(to.path)&&!validateLoginPermission(to.path)){
-    // console.log(2);
-    next('/');
-    store.dispatch('app/openLoginDialog').then(()=>{
-      Message({
-        message: '您需要登录后才能进行相关操作！',
-        type: 'error',
-        duration: 5 * 1000
-      })
-    })
+    if(from.path=='/'){
+      //输入url跳转时
+      next('/')
+    }else{
+      // 点击跳转时
+      next(false);
+    }
+    openLoginDialog()
   }else{
-    // console.log(3);
     next()
   }
 });
+function switchToEEMS(path){
+  return path&&(path.endsWith('/eems')||path.includes('/eems/'))
+}
+function openLoginDialog(){
+  store.dispatch('app/openLoginDialog').then(()=>{
+    Message({
+      message: '您需要登录后才能进行相关操作！',
+      type: 'error',
+      duration: 5 * 1000
+    })
+  })
+}
 function validateLoginPermission(path){
   const route = [
     "/user/",
@@ -90,7 +92,7 @@ function validateEEMSPermission(path){
   //切换为考试版
   if(switchToEEMS(path)) {
     store.dispatch('app/setSysState',{rootPath:'/eems/',isLuna:false})
-    if (!store.state.user.name||store.state.user.name!='NEEA') {
+    if (!store.state.user.token) {
       return false
     }
   }else{
