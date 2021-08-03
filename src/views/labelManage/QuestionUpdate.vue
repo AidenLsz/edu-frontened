@@ -11,7 +11,7 @@
       <el-col>
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>资源标注平台</el-breadcrumb-item>
+          <el-breadcrumb-item>标注管理平台</el-breadcrumb-item>
           <el-breadcrumb-item>试题信息修改</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
@@ -62,24 +62,24 @@
 <!--      </el-switch>-->
 <!--    </div>-->
 
-    <div v-show="questions.length !== 0" class="sidebar">
-      <el-button
-        plain
-        v-for="j in questions.length"
-        v-bind:key="j"
-        style="margin: 4px auto; padding: 10px; width: 100%; text-align: center"
-      >
-        {{ j }}
-      </el-button>
+<!--    <div v-show="questions.length !== 0" class="sidebar">-->
+<!--      <el-button-->
+<!--        plain-->
+<!--        v-for="j in questions.length"-->
+<!--        v-bind:key="j"-->
+<!--        style="margin: 4px auto; padding: 10px; width: 100%; text-align: center"-->
+<!--      >-->
+<!--        {{ j }}-->
+<!--      </el-button>-->
 
-      <el-button
-        @click="toTop"
-        plain
-        style="margin: 4px auto; padding: 10px; width: 100%; height: 100%; text-align: center"
-      >
-        <i class="el-icon-top"></i>
-      </el-button>
-    </div>
+<!--      <el-button-->
+<!--        @click="toTop"-->
+<!--        plain-->
+<!--        style="margin: 4px auto; padding: 10px; width: 100%; height: 100%; text-align: center"-->
+<!--      >-->
+<!--        <i class="el-icon-top"></i>-->
+<!--      </el-button>-->
+<!--    </div>-->
 
     <transition-group name="el-fade-in">
       <div
@@ -107,23 +107,28 @@
             <span style="white-space: nowrap;">解析：</span><Mathdown :content="item.analysis"></Mathdown>
           </el-row>
           <hr/>
-          <el-row type="flex" justify="space-between" align="middle">
-            <el-row type="flex" justify="start" align="middle">
-              <span style="margin-right: 20px">学科：{{['其他', '数学', '英语', '历史', '政治', '物理', '化学', '生物', '语文', '地理'][item.subject]}}</span>
-              <span style="margin-right: 20px">学段：{{['其他', '初中', '高中', '大学', '成人', '小学'][item.period]}}</span>
-              <span style="margin-right: 20px">题型：{{['其他', '多选题', '填空题', '判断题', '简答题', '计算题', '单选题'][item.type]}}</span>
-              <span style="margin-right: 20px">来源：{{['其他', '', '', '', '', '', '', '', '', '', '高考', '讯飞', '考试中心', 'LUNA', '题库中国'][item.system]}}</span>
-              <span style="margin-right: 20px">真题：{{['未处理', '非真题', '真卷', '高考真卷', '中考真卷'][item.pastpaper]}}</span>
-            </el-row>
+          <div class="question-prop">
+            <span style="">学科：{{['其他', '数学', '英语', '历史', '政治', '物理', '化学', '生物', '语文', '地理'][item.subject]}}</span>
+            <span style="">学段：{{['其他', '初中', '高中', '大学', '成人', '小学'][item.period]}}</span>
+            <span style="">题型：{{['其他', '多选题', '填空题', '判断题', '简答题', '计算题', '单选题'][item.type]}}</span>
+            <span style="">来源：{{['其他', '', '', '', '', '', '', '', '', '', '高考', '讯飞', '考试中心', 'LUNA', '题库中国'][item.system]}}</span>
+            <span style="">真题：{{['未处理', '非真题', '真卷', '高考真卷', '中考真卷'][item.pastpaper]}}</span>
+<!--            display: grid;justify-items: end;align-items: center;grid-template-columns: 1fr;-->
+            <div class="edit-div">
+              <el-button class="edit-btn" round plain @click="onEdit(index)" :loading="loading === true">编辑</el-button>
+            </div>
+          </div>
+<!--          <el-row type="flex" justify="space-between" align="middle">-->
+<!--            <el-row type="flex" justify="start" align="middle">-->
+              <!--            </el-row>-->
 <!--              <el-button round plain @click="item.unfold = true">查看解析</el-button>-->
-            <el-button round plain @click="onEdit(index)" :loading="loading === true">编辑</el-button>
-          </el-row>
+<!--          </el-row>-->
         </div>
         <el-form v-else ref="form" :model="item" label-width="44px">
           <el-form-item label="ID">
             <el-button
                 @click="copyQuestionID($event,item.question_ID)"
-                plain style="user-select: none; user-focus: none; width: 100%;text-align: start"
+                plain style="user-select: none; user-focus: none; width: 100%;text-align: start;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"
             >{{item.question_ID}}</el-button>
           </el-form-item>
           <el-form-item label="属性">
@@ -344,7 +349,7 @@ export default {
   },
   mounted() {
     //测试用
-    // this.questions = this.mockData;
+    this.questions = this.mockData;
   },
   methods: {
     toggleTestDB(){
@@ -545,8 +550,8 @@ export default {
       // }, 16)
       // document.documentElement.scrollTop = 0
       // document.documentElement.scrollTop = document.body.scrollTop = 0;
-      document.documentElement.scrollIntoView(true)
-      window.scroll(0, 0);
+      // document.documentElement.scrollIntoView(true)
+      // window.scroll(0, 0);
     },
     // 返回选项标签
     Get_Option_Label(Index){
@@ -609,7 +614,7 @@ body .el-scrollbar__wrap {
 }
 
 .search-bar {
-  width: 50%;
+  /*width: 50%;*/
   margin: 30px auto 46px;
   filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.08));
   transition: all;
@@ -619,10 +624,9 @@ body .el-scrollbar__wrap {
 
 .search-bar:hover {
   /*transform: scale(1.02);*/
-  filter: drop-shadow(0px 4px 10px rgba(0, 0, 24, 0.1));
+  filter: drop-shadow(0px 4px 10px rgba(0, 0, 24, 0.12));
   border-color: #1E88C7;
 }
-
 
 .sidebar {
   position: fixed;
@@ -664,11 +668,16 @@ body .el-scrollbar__wrap {
   border: 1px solid rgba(196, 196, 196, 0.4);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   border-radius: 10px;
-  width: 68%;
+  /*width: 68%;*/
   height: available;
   margin: 46px auto 32px;
   padding: 20px 34px 24px;
   transition: all 500ms;
+}
+
+.question-item:hover {
+  border: 1px solid rgba(196, 196, 196, .8);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
 }
 
 .question-item .el-input__inner {
@@ -702,5 +711,76 @@ body .el-scrollbar__wrap {
 
 .el-date-editor {
   border-radius: 6px !important;
+}
+
+/*@media (min-width: 1280px) {*/
+
+/*}*/
+
+.question-prop {
+  justify-items: start;
+  align-items: center;
+  display: grid;
+}
+
+.edit-div {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  /*background-color: #D0EEFF;*/
+}
+
+@media (min-width: 1024px) {
+  .question-item {
+    width: 880px;
+  }
+
+  .search-bar {
+    width: 560px;
+  }
+
+
+  .question-prop {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(1, 1fr)
+  }
+}
+
+@media (max-width: 1024px) {
+  .question-item {
+    width: 90%;
+  }
+
+  .search-bar {
+    width: 55%;
+  }
+
+  .question-prop {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr)
+  }
+
+  .edit-div {
+    grid-column-end: 5;
+  }
+}
+
+@media (max-width: 768px) {
+  .question-item {
+    width: 94%;
+  }
+
+  .search-bar {
+    width: 60%;
+  }
+
+  .question-prop {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr)
+  }
+
+  .edit-div {
+    grid-column-end: 4;
+  }
 }
 </style>
