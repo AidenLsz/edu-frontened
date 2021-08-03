@@ -90,6 +90,7 @@ function validateLoginPermission(path){
 }
 function validateEEMSPermission(path){
   //切换为考试版
+<<<<<<< HEAD
   if(switchToEEMS(path)) {
     store.dispatch('app/setSysState',{rootPath:'/eems/',isLuna:false})
     if (!store.state.user.token) {
@@ -99,6 +100,16 @@ function validateEEMSPermission(path){
     //切换为普通版
     store.dispatch('app/setSysState',{rootPath:'/',isLuna:true})
     store.dispatch('app/closeLoginDialog')
+=======
+  if(switchToNEEA()&&!isNEEA())
+    return false
+  if(!switchFromNEEA()&&switchToNEEA()) {
+    store.dispatch('user/setRootPath','/neea/')
+  }
+  //切换为普通版
+  if(switchFromNEEA()&&!switchToNEEA()){
+    store.dispatch('user/setRootPath','/')
+>>>>>>> 45f75e8... issue34-2 - Little-Fix
   }
   return true
 }
