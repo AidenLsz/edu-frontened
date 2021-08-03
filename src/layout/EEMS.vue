@@ -58,9 +58,7 @@
 				</el-col>
 			</el-row>
 		</el-dialog>
-		<login ref="login" @register_show="register_show" />
-		<register ref="register" />
-		<!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
+		<login ref="login" />
 		<el-header style="height: 70px;">
 			<div id="header-sticky" class="sticky-menu">
 				<el-row>
@@ -82,12 +80,12 @@
 										</template>
 										<el-submenu index="1">
 											<template slot="title"><span style="color: black;">资源录入</span></template>
-											<router-link :to="$store.state.user.rootPath+'inputMarked'" :underline="false" @click.native="ToTop">
+											<router-link :to="rootPath+'inputMarked'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="1-2">
 													<span style="color: black;">试题资源</span>
 												</el-menu-item>
 											</router-link>
-											<router-link :to="$store.state.user.rootPath+'inputPaper'" :underline="false" @click.native="ToTop">
+											<router-link :to="rootPath+'inputPaper'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="1-3">
 													<span style="color: black;">试卷资源</span>
 												</el-menu-item>
@@ -95,13 +93,13 @@
 										</el-submenu>
 										<el-submenu index="2">
 											<template slot="title"><span style="color: black;">查重</span></template>
-											<router-link :to="$store.state.user.rootPath+'exercise'" :underline="false" @click.native="ToTop">
+											<router-link :to="rootPath+'exercise'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="2-1">
 													<span style="color: black;">试题检索</span>
 												</el-menu-item>
 											</router-link>
 
-											<router-link :to="$store.state.user.rootPath+'searchPaper'" :underline="false" @click.native="ToTop">
+											<router-link :to="rootPath+'searchPaper'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="2-2">
 													<span style="color: black;">试卷检索</span>
 												</el-menu-item>
@@ -119,7 +117,7 @@
 											</el-menu-item>
 										</el-submenu>
 										<el-menu-item index="5">
-											<router-link :to="$store.state.user.rootPath+'manage/dashboard'"
+											<router-link :to="rootPath+'manage/dashboard'"
 												:underline="false" @click.native="ToTop">
 												<span style="color: #409EFF; font-weight: bold">
 													资源管理
@@ -150,9 +148,6 @@
 							<el-col :span="4" style="padding-top: 15px;" v-else>
 								<el-button type="text" @click="login_show" class="navbar">登录</el-button>
 							</el-col>
-							<el-col :span="2" style="padding-top: 15px;">
-								<el-button type="text" @click="register_show" class="navbar">注册</el-button>
-							</el-col>
 						</el-row>
 					</el-col>
 				</el-row>
@@ -170,13 +165,11 @@
 <script>
 	import BasicFooter from '@/layout/components/footer.vue'
 	import login from '@/layout/components/login.vue'
-	import register from '@/layout/components/register.vue'
 	export default {
 		name: "App",
 		components: {
 			BasicFooter,
 			login,
-			register
 		},
 		data() {
 			return {
@@ -184,11 +177,13 @@
 				// 跳转至试卷/试题分析的不同地点用的
 				PaperAnalyseSwitchFlag: false,
 				QuestionAnalyseSwitchFlag: false,
-				rootPath:''
+				// rootPath:''
 			};
 		},
-		mounted(){
-			this.rootPath=this.$store.state.user.rootPath
+		computed: {
+			rootPath() {
+				return this.$store.getters.rootPath;
+			}
 		},
 		methods: {
 			// 查看用户个人信息及组织架构
@@ -255,23 +250,19 @@
 			},
 			goToMainPage() {
 				this.$router.push({
-					path: this.$store.state.user.rootPath
+					path: this.rootPath
 				});
 				this.ToTop();
 			},
 			show_members() {
 				this.$router.push({
-					path: this.$store.state.user.rootPath+"members"
+					path: this.rootPath+"members"
 				});
 				this.ToTop();
 			},
 			login_show() {
 				this.$refs.login.show()
-				this.$refs.register.hide()
-			},
-			register_show() {
-				this.$refs.login.hide()
-				this.$refs.register.show()
+				// this.$refs.register.hide()
 			},
 			login_admin() {
 				this.$router.push({
