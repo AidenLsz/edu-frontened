@@ -47,25 +47,36 @@ const router = new Router({
 });
 
 // 路由控制
-
+let switchToEEMS=(path)=>path&&(path.endsWith('/eems')||path.includes('/eems/'))
 router.beforeEach((to, from, next) => {
-  if(!validateLoginPermission(to.path)){
+  // 进行eems权限控制（switchToEEMS)
+  //   没有登录 ｜｜ 已经登录但没有访问权限
+  //     一定要登录-提示没有权限登录后非neea则提示当前账号没有权限 modal不消失
+  // 进行luna权限控制
+  //   没有登录-Modal框
+  console.log(to.path);
+  if(!validateEEMSPermission(to.path)){
+    console.log(1);
+    next()
+    store.dispatch('app/openLoginDialog')
+    Message({
+      message: '您没有使用考试系统的权限！',
+      type: 'error',
+      duration: 5 * 1000
+    })
+    // modal框
+  }else if(!switchToEEMS(to.path)&&!validateLoginPermission(to.path)){
+    console.log(2);
+
     Message({
       message: '您需要登录后才能进行相关操作！',
       type: 'error',
       duration: 5 * 1000
     })
-    router.go(-1);
-    // next(false)
-  }else if(!validateExamVersionPermission(to.path)){
-    Message({
-      message: '您没有权限查看考试版系统',
-      type: 'error',
-      duration: 5 * 1000
-    })
-    router.go(-1)
-    // next(false)
+    store.dispatch('app/openLoginDialog')
+    next('/');
   }else{
+    console.log(3);
     next()
   }
 });
@@ -80,19 +91,16 @@ function validateLoginPermission(path){
   let isUserRoute = ()=>route.some((r)=>path.includes(r))
   return !isUserRoute() || store.state.user.token
 }
-function validateExamVersionPermission(path){
-  let isNEEA = ()=>store.state.user.name=='NEEA'
-  let switchToNEEA=()=>path.endsWith('/neea')||path.includes('/neea/')
-  let switchFromNEEA=()=>store.state.user.rootPath=='/neea/'
+function validateEEMSPermission(path){
   //切换为考试版
-  if(switchToNEEA()&&!isNEEA())
-    return false
-  if(!switchFromNEEA()&&switchToNEEA()) {
-    store.dispatch('user/setRootPath','/neea/')
-  }
-  //切换为普通版
-  if(switchFromNEEA()&&!switchToNEEA()){
-    store.dispatch('user/setRootPath','/')
+  if(switchToEEMS(path)) {
+    store.dispatch('app/setSysState',{rootPath:'/eems/',isLuna:false})
+    if (!store.state.user.name||store.state.user.name!='NEEA') {
+      return false
+    }
+  }else{
+    //切换为普通版
+    store.dispatch('app/setSysState',{rootPath:'/',isLuna:true})
   }
   return true
 }

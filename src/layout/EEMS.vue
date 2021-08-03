@@ -273,7 +273,7 @@
 			// 测试退出函数
 			async logout() {
 				await this.$store.dispatch('user/logout')
-				this.$router.push(this.rootPath);
+				this.$router.push("/");
 				location.reload();
 			},
 			goToUserPage() {
