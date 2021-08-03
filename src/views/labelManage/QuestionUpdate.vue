@@ -782,5 +782,9 @@ body .el-scrollbar__wrap {
   .edit-div {
     grid-column-end: 4;
   }
+
+  .title {
+    font-size: 28px;
+  }
 }
 </style>
