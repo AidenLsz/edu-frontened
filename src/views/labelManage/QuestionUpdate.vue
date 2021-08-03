@@ -349,7 +349,7 @@ export default {
   },
   mounted() {
     //测试用
-    this.questions = this.mockData;
+    // this.questions = this.mockData;
   },
   methods: {
     toggleTestDB(){
