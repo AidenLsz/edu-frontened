@@ -261,23 +261,6 @@
                       </router-link>
                     </el-submenu>
 
-                    <el-submenu index="4">
-                      <template slot="title"
-                        ><span style="color: black"
-                          >标注管理平台</span
-                        ></template
-                      >
-                      <router-link
-                        to="/questionUpdate"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="4-1">
-                          <span style="color: black">试题信息修改</span>
-                        </el-menu-item>
-                      </router-link>
-                    </el-submenu>
-
                     <el-menu-item index="5">
                       <router-link
                         to="/paperCombine"
