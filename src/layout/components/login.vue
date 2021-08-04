@@ -121,21 +121,15 @@ export default {
         // password: md5(this.password)
         password: this.password
       }).then((data)=>{
-        if(!this.isLuna&&this.account!='NEEA'){
-          this.$message.error('您没有访问考试系统的权限!')
-        }else{
-          let userInfo={
-            token:data.access_token,
-            name:this.account,
-            // isAdmin:data.body.isAdmin,
-          }
-          this.$store.dispatch('user/setUserData', userInfo).then(() => {
-            this.$router.go()
-            this.hide()
-          })
+        let userInfo={
+          token:data.access_token,
+          name:this.account,
+          // isAdmin:data.body.isAdmin,
         }
-
-
+        this.$store.dispatch('user/setUserData', userInfo).then(() => {
+          this.$router.go()
+          this.hide()
+        })
       }).catch((err)=>{
         if(err&&err.response&&err.response.status==401){
           this.$message.error('用户名或密码不正确！')
