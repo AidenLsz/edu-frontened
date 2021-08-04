@@ -100,6 +100,9 @@ function validateEEMSPermission(path){
     store.dispatch('app/setSysState',{rootPath:'/',isLuna:true})
     store.dispatch('app/closeLoginDialog')
   }
+  if (!store.state.user.name) {
+    return false
+  }
   return true
 }
 export default router;
