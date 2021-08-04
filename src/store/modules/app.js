@@ -1,11 +1,16 @@
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
+import { set,get } from '@/common/utils/auth'
 
 const state = {
   sidebar: {
-    opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
+    opened: get('sidebarStatus') ? !!+get('sidebarStatus') : true,
     withoutAnimation: false
   },
-  device: 'desktop'
+  loginDialog: {
+    opened: get('loginDialogStatus') ? !!+get('loginDialogStatus') : true,
+  },
+  rootPath:get('rootPath')||'/',
+  isLuna:get('isLuna')||true,
 }
 
 const mutations = {
@@ -13,19 +18,30 @@ const mutations = {
     state.sidebar.opened = !state.sidebar.opened
     state.sidebar.withoutAnimation = false
     if (state.sidebar.opened) {
-      Cookies.set('sidebarStatus', 1)
+      set('sidebarStatus', 1)
     } else {
-      Cookies.set('sidebarStatus', 0)
+      set('sidebarStatus', 0)
     }
   },
   CLOSE_SIDEBAR: (state, withoutAnimation) => {
-    Cookies.set('sidebarStatus', 0)
+    set('sidebarStatus', 0)
     state.sidebar.opened = false
     state.sidebar.withoutAnimation = withoutAnimation
   },
-  TOGGLE_DEVICE: (state, device) => {
-    state.device = device
-  }
+  OPEN_LOGIN_DIALOG: (state) => {
+    set('loginDialogStatus', 1)
+    state.loginDialog.opened = true
+  },
+  CLOSE_LOGIN_DIALOG: (state) => {
+    set('loginDialogStatus', 0)
+    state.loginDialog.opened = false
+  },
+  SET_SYS_STATE:(state,data) => {
+    set('rootPath',data.rootPath)
+    state.rootPath=data.rootPath
+    set('isLuna',data.isLuna)
+    state.isLuna=data.isLuna
+  },
 }
 
 const actions = {
@@ -35,9 +51,16 @@ const actions = {
   closeSideBar({ commit }, { withoutAnimation }) {
     commit('CLOSE_SIDEBAR', withoutAnimation)
   },
-  toggleDevice({ commit }, device) {
-    commit('TOGGLE_DEVICE', device)
-  }
+  openLoginDialog({ commit }){
+    commit('OPEN_LOGIN_DIALOG')
+  },
+  closeLoginDialog({ commit }){
+    commit('CLOSE_LOGIN_DIALOG')
+  },
+  setSysState({ commit },data) {
+    commit('SET_SYS_STATE',data)
+  },
+
 }
 
 export default {

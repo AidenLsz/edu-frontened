@@ -1,7 +1,7 @@
 const router=[
   {
     path: '',
-    component:()=>import("@/views/Home_NEEA"),
+    component:()=>import("@/views/Home_EEMS"),
   },
   {
     path: "exercise",
