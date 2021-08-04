@@ -1,11 +1,22 @@
 <template lang="html">
   <!-- 登录 -->
-  <el-dialog :visible.sync="visible" width="70%">
+  <el-dialog :visible="$store.getters.loginDialog.opened"
+    width="70%" @close="hide()" @opened="draw()"
+    :show-close="isLuna"
+    :close-on-click-modal="isLuna"
+    :close-on-press-escape="isLuna"
+    >
     <el-row>
       <el-col :span="10" :offset="2">
         <el-row>
           <span style="font-weight: bold; color: #47A2FF; font-size: 24px">
-            欢迎使用LUNA智慧教育知识图谱
+            欢迎使用
+            <template v-if="isLuna">
+              LUNA智慧教育知识图谱
+            </template>
+            <template v-else>
+              智慧考试管理系统
+            </template>
           </span>
         </el-row>
         <el-row style="margin: 50px 0px 30px 0px;">
@@ -46,7 +57,7 @@
           <el-col :span="6" :offset="1">
             <el-button type="text" style="color: #aaa">忘记密码？</el-button>
           </el-col>
-          <el-col :span="6" :offset="3">
+          <el-col v-if="isLuna" :span="6" :offset="3">
             <el-row type="flex" justify="end" >
               <el-button type="text" @click="register_show">注册新用户</el-button>
             </el-row>
@@ -70,29 +81,26 @@ export default {
       account:"",
       password:"",
       verifyCode:"",
-      visible:false,
       imgCode: "",
     }
   },
-  watch:{
-    visible(newVal){
-      if(!newVal){
-        this.imgCode = "";
-        this.account = "";
-        this.password = "";
-      }
-      this.visible = newVal;
+  computed: {
+    isLuna() {
+      return this.$store.getters.isLuna;
     },
   },
   methods:{
     show(){
-      this.visible=true
-      setTimeout(()=>{
-        this.$refs.vueImgVerify.handleDraw();},
-      1)
+      this.$store.dispatch('app/openLoginDialog')
+    },
+    draw(){
+      this.$refs.vueImgVerify.handleDraw();
     },
     hide(){
-      this.visible=false
+      this.$store.dispatch('app/closeLoginDialog')
+      this.account = "";
+      this.password = "";
+      this.imgCode = "";
     },
     register_show(){
       this.$emit('register_show');
@@ -103,6 +111,7 @@ export default {
         return;
       }
       if (this.verifyCode.toUpperCase() !== this.imgCode.toUpperCase()) {
+        console.log(1,this.verifyCode.toUpperCase(),2,this.imgCode.toUpperCase());
         alert("验证码错误");
         return;
       }
@@ -119,7 +128,7 @@ export default {
         }
         this.$store.dispatch('user/setUserData', userInfo).then(() => {
           this.$router.go()
-          this.visible = false;
+          this.hide()
         })
       }).catch((err)=>{
         if(err&&err.response&&err.response.status==401){
