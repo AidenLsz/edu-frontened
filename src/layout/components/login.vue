@@ -1,11 +1,10 @@
 <template>
   <!-- 登录 -->
-  <el-dialog :visible="$store.state.app.loginDialog.opened"
-    width="70%" @close="hide()"
+  <el-dialog :visible="$store.getters.loginDialog.opened"
+    width="70%" @close="hide()" @opened="draw()"
     :show-close="isLuna"
     :close-on-click-modal="isLuna"
     :close-on-press-escape="isLuna"
-    @open="draw()"
     >
     <el-row>
       <el-col :span="10" :offset="2">
@@ -88,30 +87,20 @@ export default {
   computed: {
     isLuna() {
       return this.$store.getters.isLuna;
-    }
-  },
-  watch:{
-    visible(newVal){
-      if(!newVal){
-        this.imgCode = "";
-        this.account = "";
-        this.password = "";
-      }
-      this.visible = newVal;
     },
-
   },
   methods:{
     show(){
       this.$store.dispatch('app/openLoginDialog')
     },
     draw(){
-      setTimeout(()=>{
-        this.$refs.vueImgVerify.handleDraw();},
-      1)
+      this.$refs.vueImgVerify.handleDraw();
     },
     hide(){
       this.$store.dispatch('app/closeLoginDialog')
+      this.account = "";
+      this.password = "";
+      this.imgCode = "";
     },
     register_show(){
       this.$emit('register_show');
