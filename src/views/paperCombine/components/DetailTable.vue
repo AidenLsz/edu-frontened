@@ -959,8 +959,12 @@ export default {
         this.Editing_Info.knowledgePoints.push(data.label)
         this.Editing_Info.knowledgePointsIDs.push(data.id)
         this.Editing_Info.knowledgePointsLevels.push(data.level);
-      }
-      else if(checked && this.Editing_Info.select == "多选"){
+      }else if (!checked && this.Editing_Info.select == "单选") {
+        this.Editing_Info.knowledgePoints = [];
+        this.Editing_Info.knowledgePointsIDs = [];
+        this.Editing_Info.knowledgePointsLevels = [];
+        this.$refs.tree.setCheckedKeys([])
+      }else if(checked && this.Editing_Info.select == "多选"){
         if(this.Editing_Info.knowledgePointsIDs.indexOf(data.id) == -1){
           this.Editing_Info.knowledgePoints.push(data.label)
           this.Editing_Info.knowledgePointsIDs.push(data.id)
