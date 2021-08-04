@@ -92,13 +92,13 @@ function validateEEMSPermission(path){
   //切换为考试版
   if(switchToEEMS(path)) {
     store.dispatch('app/setSysState',{rootPath:'/eems/',isLuna:false})
+    if (!store.state.user.token) {
+      return false
+    }
   }else{
     //切换为普通版
     store.dispatch('app/setSysState',{rootPath:'/',isLuna:true})
     store.dispatch('app/closeLoginDialog')
-  }
-  if (!store.state.user.name) {
-    return false
   }
   return true
 }
