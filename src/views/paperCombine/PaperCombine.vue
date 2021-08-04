@@ -116,7 +116,11 @@
         <InputQuestion @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></InputQuestion>
     </el-row>
     <el-row v-if="Using_Menu_Index == 3">
-        <DetailTable @Add_To_Cart="Add_To_Question_Cart" @Clear_Cart="Clear_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></DetailTable>
+        <DetailTable 
+            @Jump_To_SC="Jump_To_SC"
+            @Add_To_Cart="Add_To_Question_Cart" 
+            @Clear_Cart="Clear_Cart" 
+            :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></DetailTable>
     </el-row>
     <el-row v-if="Using_Menu_Index == 4">
         <StartCombine 
@@ -177,6 +181,9 @@ export default {
       this.Init_Question_Type_Chart();
   },
   methods: {
+      Jump_To_SC(){
+          this.Combine_Paper()
+      },
       // 清空试题篮
       Clear_Cart(){
         this.$message.warning("您的试题篮已清空。");

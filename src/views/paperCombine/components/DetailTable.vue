@@ -178,7 +178,7 @@
       <el-row 
         style="margin-left: 5vw; margin-right: 5vw"
         v-loading="Loading"
-        :element-loading-text="Loading_Text"
+        :element-loading-text="Get_Waiting_Label()"
         element-loading-spinner="el-icon-loading"
         >
         <el-col :span="18" style="padding: 20px 30px;" class="Shadow_Border">
@@ -508,10 +508,10 @@ export default {
       Dup_Index: 1,
       // 用于保存已经存入试卷篮的试题ID
       Cart_IDS: [],
-      // 用于给检索试题计数,
-      Count: 0,
       // 用于统计一共应当有多少道题
       Total: 0,
+      // 用于暂存要发送到主页面的试题
+      Ques_List: []
     }
   },
   watch:{
@@ -557,9 +557,6 @@ export default {
         this.Init();
       }
     },
-    Count(newVal){
-      this.Loading_Text = "正在检索第 " + newVal + " 道题目..."
-    }
   },
   mounted() {
     this.initDatabaseList();
@@ -569,6 +566,9 @@ export default {
     this.Init();
   },
   methods: {
+    Get_Waiting_Label(){
+      return "正在检索第 " + (this.Ques_List.length + 1) + " 道试题。"
+    },
     // 
     Search_KP(Info, Type){
 
@@ -651,13 +651,24 @@ export default {
         Question_Show_Infos.answer = Aim.answer;
         Question_Show_Infos.analyse = Aim.analysis;
         
-        this.$emit("Add_To_Cart", JSON.stringify(Question_Show_Infos));
+        this.Ques_List.push(Question_Show_Infos)
 
-        if(this.Count == this.Total){
+        if(this.Ques_List.length == this.Total){
           this.Loading = false;
-          this.Count = 1;
+          this.Emit_All();
         }
         
+    },
+    Emit_All(){
+      for(let i = 0; i < this.Ques_List.length; i++){
+        console.log("Add.")
+        this.$emit("Add_To_Cart", JSON.stringify(this.Ques_List[i]));
+      }
+      this.$emit("Jump_To_SC", true)
+      this.Dup_Index = 1
+      this.Cart_IDS = []
+      this.Total = 0
+      this.Ques_List = []
     },
     // 开始生成试卷
     Use_Table_Info(){
@@ -668,15 +679,14 @@ export default {
       })
       .then(() => {
         sessionStorage.setItem('Table_Info', JSON.stringify(this.Table_Info))
+        this.$emit("Clear_Cart", true)
         for(let i = 0; i < this.Table_Info.length; i++){
           this.Total = this.Total + this.Table_Info[i].List.length;
         }
-        this.$emit("Clear_Cart", true)
         this.Loading = true;
         for(let i = 0; i < this.Table_Info.length; i++){
           let Bundle = this.Table_Info[i];
           for(let j = 0; j < Bundle.List.length; j++){
-            this.Count = this.Count + 1;
             this.Search_KP(Bundle.List[j], Bundle.Type)
           }
         }
@@ -689,6 +699,7 @@ export default {
     // 删除大题
     Delete_Bundle(Bundle_Index){
       this.Table_Info.splice(Bundle_Index, 1);
+      this.Init_Paint();
     },
     // 点击添加新的小题想
     Add_New_Ques(Bundle_Index){
@@ -1365,6 +1376,10 @@ export default {
             Value_List.splice(j, 0, Data_Dict[i].value);
             Swit = true
           }
+        }
+        if(!Swit){
+          Name_List.push(Data_Dict[i].name);
+          Value_List.push(Data_Dict[i].value);
         }
       }
 

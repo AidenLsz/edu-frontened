@@ -554,6 +554,11 @@ export default {
           this.KnowledgeUnitList.push(data.label)
           this.KnowledgeUnitIDList.push(data.id)
           this.KnowledgeUnitLevelList.push(data.level)
+        }else if(!checked && this.KnowledgeSelectType == "单选") {
+          this.KnowledgeUnitList = [];
+          this.KnowledgeUnitIDList = [];
+          this.KnowledgeUnitLevelList = [];
+          this.$refs.tree.setCheckedKeys([])
         }
         else if(checked && this.KnowledgeSelectType == "多选"){
           this.KnowledgeUnitList.push(data.label)
