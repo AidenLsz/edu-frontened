@@ -107,6 +107,7 @@ export default {
       this.$store.dispatch('app/openLoginDialog')
     },
     draw(){
+      console.log('drawing');
       setTimeout(()=>{
         this.$refs.vueImgVerify.handleDraw();},
       1)
