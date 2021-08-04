@@ -21,7 +21,7 @@ export default {
   },
   mounted() {
     // 绘制图片验证码
-    this.draw()
+    this.handleDraw()
   },
   methods: {
     // 点击图片重新绘制
