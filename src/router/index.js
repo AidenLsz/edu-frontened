@@ -81,7 +81,7 @@ function openLoginDialog(){
         duration: 5 * 1000
       })
     })
-  },1)
+  },1000)
 }
 function validateLoginPermission(path){
   const route = [
