@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <!-- 登录 -->
   <el-dialog :visible="$store.getters.loginDialog.opened"
     width="70%" @close="hide()" @opened="draw()"
