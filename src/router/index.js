@@ -70,18 +70,16 @@ function switchToEEMS(path){
 }
 function openLoginDialog(){
   let msg='您需要登录后才能进行相关操作！'
-  setTimeout(()=>{
-    store.dispatch('app/openLoginDialog').then(()=>{
-      if (store.state.user.name) {
-        msg='您没有使用考试系统的权限！'
-      }
-      Message({
-        message: msg,
-        type: 'error',
-        duration: 5 * 1000
-      })
+  store.dispatch('app/openLoginDialog').then(()=>{
+    if (store.state.user.name) {
+      msg='您没有使用考试系统的权限！'
+    }
+    Message({
+      message: msg,
+      type: 'error',
+      duration: 5 * 1000
     })
-  },1000)
+  })
 }
 function validateLoginPermission(path){
   const route = [
