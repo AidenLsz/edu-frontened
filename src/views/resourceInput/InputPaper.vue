@@ -3669,7 +3669,7 @@ export default {
       this.TestData.doc = Docs;
 
       let Upload_Json = {
-        title: this.TestData.title,
+        title: this.TestData.title == "None" ? this.downloadPaperName : this.TestData.title,
         desc: "",
         Question_list: [],
         user_id: this.$store.state.user.token,
@@ -3741,14 +3741,14 @@ export default {
         }
       }
 
-      this.$message.warning("数据入库格式升级中.")
+      // this.$message.warning("数据入库格式升级中.")
 
-      // let file = new File(
-      //     [JSON.stringify(Upload_Json, null, 2)],
-      //     "A.json",
-      //     { type: "text/plain;charset=utf-8" }
-      //   );
-      //   FileSaver.saveAs(file);
+      let file = new File(
+          [JSON.stringify(Upload_Json, null, 2)],
+          "A.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
 
       let Flag = true;
       if(Flag){
