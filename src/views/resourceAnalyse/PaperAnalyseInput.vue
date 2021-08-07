@@ -1656,7 +1656,7 @@ export default {
             type: Ques.sub_questions[i].detail_type,
             score: parseFloat(Ques.sub_questions[i].score + ""),
             stem: Ques.sub_questions[i].content,
-            stem_images: Ques.sub_questions[i].content_images,
+            stem_image: Ques.sub_questions[i].content_images,
             options: [],
             options_image: [],
             answer: Ques.sub_questions[i].answer,

@@ -1469,7 +1469,7 @@ export default {
         Temp_Doc.answer_image = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_image = Ques.analysis_images;
+        Temp_Doc.analysis_image = Ques.analyse_images;
 
         // this.$message.warning("数据入库格式升级中.")
         
@@ -1535,10 +1535,10 @@ export default {
         }
 
         Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_images = Ques.answer_images;
+        Temp_Doc.answer_image = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_images = Ques.analyse_images;
+        Temp_Doc.analysis_image = Ques.analyse_images;
 
         // this.$message.warning("数据入库格式升级中.")
         
