@@ -2853,34 +2853,37 @@ export default {
         let Temp_Doc = {
           type: "",
           stem: "",
-          stem_images: [],
+          stem_image: [],
           score: 0,
           options: [],
-          options_images: [],
+          options_image: [],
           answer: "",
-          answer_images: [],
+          answer_image: [],
           analysis: "",
-          analysis_images: []
+          analysis_image: []
         }
 
         Temp_Doc.type = Ques.detail_type;
 
         Temp_Doc.stem = Ques.content;
-        Temp_Doc.stem_images = Ques.content_images;
+        Temp_Doc.stem_image = Ques.content_images;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
         Temp_Doc.options = Ques.options
         for(let i = 0; i < Ques.options_images.length; i++){
-          let Item = Temp_Doc.options_images[i]
-          Temp_Doc.options_images.push([Item])
+          let Item = Ques.options_images[i]
+          if(Item != null && Item.length > 0)
+            Temp_Doc.options_image.push([Item])
+          else
+            Temp_Doc.options_image.push([])
         }
 
         Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_images = Ques.answer_images;
+        Temp_Doc.answer_image = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_images = Ques.analyse_images;
+        Temp_Doc.analysis_image = Ques.analyse_images;
 
         return Temp_Doc;
 
@@ -2889,28 +2892,28 @@ export default {
         let Temp_Doc = {
           type: "",
           stem: "",
-          stem_images: [],
+          stem_image: [],
           score: 0,
           options: [],
-          options_images: [],
+          options_image: [],
           answer: "",
-          answer_images: [],
+          answer_image: [],
           analysis: "",
-          analysis_images: []
+          analysis_image: []
         }
 
         Temp_Doc.type = Ques.detail_type;
 
         Temp_Doc.stem = Ques.content;
-        Temp_Doc.stem_images = Ques.content_images;
+        Temp_Doc.stem_image = Ques.content_images;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
         Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_images = Ques.answer_images;
+        Temp_Doc.answer_image = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_images = Ques.analyse_images;
+        Temp_Doc.analysis_image = Ques.analyse_images;
 
         return Temp_Doc;
 
@@ -2918,18 +2921,18 @@ export default {
 
         let Temp_Doc = {
           desc: "",
-          desc_images: [],
+          desc_image: [],
           type: "大题",
           score: 0,
           subquestions: [],
           answer: "",
-          answer_images: [],
+          answer_image: [],
           analysis: "",
-          analysis_images: []
+          analysis_image: []
         }
 
         Temp_Doc.desc = Ques.content;
-        Temp_Doc.desc_images = Ques.content_images;
+        Temp_Doc.desc_image = Ques.content_images;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
@@ -2938,22 +2941,22 @@ export default {
             type: Ques.detail_type,
             score: parseFloat(Ques.sub_questions_scores[i] + ""),
             stem: Ques.sub_questions[i],
-            stem_images: Ques.sub_questions_images[i],
+            stem_image: Ques.sub_questions_images[i],
             options: [],
-            options_images: [],
+            options_image: [],
             answer: "",
-            answer_images: [],
+            answer_image: [],
             analysis: "",
-            analysis_images: []
+            analysis_image: []
           }
           Temp_Doc.subquestions.push(Item)
         }
 
         Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_images = Ques.answer_images;
+        Temp_Doc.answer_image = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_images = Ques.analyse_images;
+        Temp_Doc.analysis_image = Ques.analyse_images;
 
         return Temp_Doc;
 
@@ -2961,18 +2964,18 @@ export default {
 
         let Temp_Doc = {
           desc: "",
-          desc_images: [],
+          desc_image: [],
           type: "大题",
           score: 0,
           subquestions: [],
           answer: "",
-          answer_images: [],
+          answer_image: [],
           analysis: "",
-          analysis_images: []
+          analysis_image: []
         }
 
         Temp_Doc.desc = Ques.content;
-        Temp_Doc.desc_images = Ques.content_images;
+        Temp_Doc.desc_image = Ques.content_images;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
@@ -2983,18 +2986,22 @@ export default {
             stem: Ques.sub_questions[i].content,
             stem_images: Ques.sub_questions[i].content_images,
             options: [],
-            options_images: [],
+            options_image: [],
             answer: Ques.sub_questions[i].answer,
-            answer_images: Ques.sub_questions[i].answer_images,
+            answer_image: Ques.sub_questions[i].answer_images,
             analysis: Ques.sub_questions[i].analyse,
-            analysis_images: Ques.sub_questions[i].analysis_images
+            analysis_image: Ques.sub_questions[i].analyse_images
           }
 
           if(Ques.sub_questions[i].type == 'option'){
             for(let k = 0; k < Ques.sub_questions[i].options.length; k++){
               let opt = Ques.sub_questions[i].options[k]
               Item.options.push(opt);
-              Item.options_images.push([Ques.sub_questions[i].options_images[k]])
+              if(Ques.sub_questions[i].options_images[k] != null && Ques.sub_questions[i].options_images[k].length > 0)
+                Item.options_image.push([Ques.sub_questions[i].options_images[k]])
+              else{
+                Item.options_image.push([])
+              }
             }
           }
 
@@ -3002,10 +3009,10 @@ export default {
         }
 
         Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_images = Ques.answer_images;
+        Temp_Doc.answer_image = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_images = Ques.analyse_images;
+        Temp_Doc.analysis_image = Ques.analyse_images;
         
         return Temp_Doc;
 
@@ -3033,21 +3040,29 @@ export default {
         period: this.PeriodType,
     }
 
+
     for(let i = 0; i < this.Questions.length; i++){
+      let Question_Item = {
+        desc : this.Questions[i].Bundle_Introduce,
+        type : "",
+        material : "",
+        questions : []
+      }
       for(let j = 0; j < this.Questions[i].Bundle_Questions.length; j++){
         let Item = JSON.parse(JSON.stringify(this.Questions[i].Bundle_Questions[j]));
-        Upload_Json.Question_list.push(this.Transfrom_Structure(Item))
+        Question_Item.questions.push(this.Transfrom_Structure(Item))
       }
+      Upload_Json.Question_list.push(Question_Item)
     }
 
     this.$message.warning("数据入库格式升级中.")
 
-    // let file = new File(
-    //       [JSON.stringify(Upload_Json, null, 4)],
-    //       this.PaperTitle + ".json",
-    //       { type: "text/plain;charset=utf-8" }
-    //     );
-    //     FileSaver.saveAs(file);
+    let file = new File(
+          [JSON.stringify(Upload_Json, null, 4)],
+          this.PaperTitle + ".json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
     let flag = true;
     if(flag){
         return;
@@ -3668,8 +3683,10 @@ export default {
 
       this.TestData.doc = Docs;
 
+      let Name = this.TestData.title == "None" ? this.downloadPaperName : this.TestData.title
+
       let Upload_Json = {
-        title: this.TestData.title == "None" ? this.downloadPaperName : this.TestData.title,
+        title: Name,
         desc: "",
         Question_list: [],
         user_id: this.$store.state.user.token,
@@ -3677,19 +3694,26 @@ export default {
         period: this.PeriodType,
       }
 
+      let Question_Item = {
+        desc : "",
+        type : "",
+        material : "",
+        questions : []
+      }
+
       for(let i = 0; i < this.TestData.doc.length; i++){
         let Item = this.TestData.doc[i];
         let Temp_Doc = {
           type: "",
           stem: "",
-          stem_images: [],
+          stem_image: [],
           score: 0,
           options: [],
-          options_images: [],
+          options_image: [],
           answer: "",
-          answer_images: [],
+          answer_image: [],
           analysis: "",
-          analysis_images: []
+          analysis_image: []
         }
         if(Item.question_type == "选择题"){
           Temp_Doc.type = "单选题"
@@ -3698,38 +3722,38 @@ export default {
           Temp_Doc.options = Item.question_options;
           Temp_Doc.answer = Item.answer.join("\n");
           Temp_Doc.analysis = Item.analysis;
-          Upload_Json.Question_list.push(Temp_Doc);
+          Question_Item.questions.push(Temp_Doc);
         }else if(Item.question_type == "填空题"){
           Temp_Doc.type = "填空题"
           Temp_Doc.stem = Item.question_stem;
           Temp_Doc.score = parseFloat(Item.score + "")
           Temp_Doc.answer = Item.answer.join("\n");
           Temp_Doc.analysis = Item.analysis;
-          Upload_Json.Question_list.push(Temp_Doc);
+          Question_Item.questions.push(Temp_Doc);
         }else if(Item.question_type == "解答题"){
           let Temp_Doc_2 = {
             desc: Item.question_stem,
-            desc_images: [],
+            desc_image: [],
             type: "大题",
             score: parseFloat(Item.score + ""),
             subquestions: [],
             answer: "",
-            answer_images: [],
+            answer_image: [],
             analysis: "",
-            analysis_images: []
+            analysis_image: []
           }
           for(let k = 0; k < Item.sub_questions.length; k++){
             let Ques_Item = {
               type: "计算题",
               score: parseFloat(Item.score/Item.sub_questions.length + ""),
               stem: "",
-              stem_images: [],
+              stem_image: [],
               options: [],
-              options_images: [],
+              options_image: [],
               answer: "",
-              answer_images: [],
+              answer_image: [],
               analysis: "",
-              analysis_images: []
+              analysis_image: []
             }
             Ques_Item.stem = Item.sub_questions[k];
             Temp_Doc_2.subquestions.push(Ques_Item);
@@ -3737,9 +3761,18 @@ export default {
  
           Temp_Doc_2.answer = Item.answer.join("\n");
           Temp_Doc_2.analysis = Item.analysis;
-          Upload_Json.Question_list.push(Temp_Doc_2);
+          Question_Item.questions.push(Temp_Doc_2);
+        }else{
+          Temp_Doc.type = "未知"
+          Temp_Doc.stem = Item.question_stem;
+          Temp_Doc.score = parseFloat(Item.score + "")
+          Temp_Doc.options = Item.question_options;
+          Temp_Doc.answer = Item.answer.join("\n");
+          Temp_Doc.analysis = Item.analysis;
         }
       }
+
+      Upload_Json.Question_list.push(Question_Item)
 
       // this.$message.warning("数据入库格式升级中.")
 

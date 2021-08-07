@@ -1320,14 +1320,14 @@ export default {
         let Temp_Doc = {
           type: "",
           stem: "",
-          stem_images: [],
+          stem_image: [],
           score: 0,
           options: [],
-          options_images: [],
+          options_image: [],
           answer: "",
-          answer_images: [],
+          answer_image: [],
           analysis: "",
-          analysis_images: [],
+          analysis_image: [],
           user_id: this.$store.state.user.token,
           subject: this.SubjectType,
           period: this.PeriodType
@@ -1338,30 +1338,34 @@ export default {
         Temp_Doc.type = Ques.detail_type;
 
         Temp_Doc.stem = Ques.content;
-        Temp_Doc.stem_images = Ques.content_images;
+        Temp_Doc.stem_image = Ques.content_images;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
         Temp_Doc.options = Ques.options
         for(let i = 0; i < Ques.options_images.length; i++){
           let Item = Ques.options_images[i]
-          Temp_Doc.options_images.push([Item]);
+          if(Item != null && Item.length > 0){
+            Temp_Doc.options_image.push([Item]);
+          }else{
+            Temp_Doc.options_image.push([])
+          }
         }
 
         Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_images = Ques.answer_images;
+        Temp_Doc.answer_image = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_images = Ques.analyse_images;
+        Temp_Doc.analysis_image = Ques.analyse_images;
 
-        this.$message.warning("数据入库格式升级中.")
+        // this.$message.warning("数据入库格式升级中.")
 
-        // let file = new File(
-        //   [JSON.stringify(Temp_Doc, null, 4)],
-        //   "Option.json",
-        //   { type: "text/plain;charset=utf-8" }
-        // );
-        // FileSaver.saveAs(file);
+        let file = new File(
+          [JSON.stringify(Temp_Doc, null, 4)],
+          "Option.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
         return;
 
       }else if(this.Type_Now == 'fill'){
@@ -1369,14 +1373,14 @@ export default {
         let Temp_Doc = {
           type: "",
           stem: "",
-          stem_images: [],
+          stem_image: [],
           score: 0,
           options: [],
-          options_images: [],
+          options_image: [],
           answer: "",
-          answer_images: [],
+          answer_image: [],
           analysis: "",
-          analysis_images: [],
+          analysis_image: [],
           user_id: this.$store.state.user.token,
           subject: this.SubjectType,
           period: this.PeriodType
@@ -1387,24 +1391,24 @@ export default {
         Temp_Doc.type = Ques.detail_type;
 
         Temp_Doc.stem = Ques.content;
-        Temp_Doc.stem_images = Ques.content_images;
+        Temp_Doc.stem_image = Ques.content_images;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
         Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_images = Ques.answer_images;
+        Temp_Doc.answer_image = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_images = Ques.analyse_images;
+        Temp_Doc.analysis_image = Ques.analyse_images;
 
-        this.$message.warning("数据入库格式升级中.")
+        // this.$message.warning("数据入库格式升级中.")
 
-        // let file = new File(
-        //   [JSON.stringify(Temp_Doc, null, 4)],
-        //   "Fill.json",
-        //   { type: "text/plain;charset=utf-8" }
-        // );
-        // FileSaver.saveAs(file);
+        let file = new File(
+          [JSON.stringify(Temp_Doc, null, 4)],
+          "Fill.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
         return;
 
       }else if(this.Type_Now == 'answer'){
@@ -1413,7 +1417,7 @@ export default {
 
         let Temp_Doc = {
           desc: "",
-          desc_images: [],
+          desc_image: [],
           type: "大题",
           score: 0,
           subquestions: [],
@@ -1421,13 +1425,13 @@ export default {
           subject: this.SubjectType,
           period: this.PeriodType,
           answer: "",
-          answer_images: [],
+          answer_image: [],
           analysis: "",
-          analysis_images: []
+          analysis_image: []
         }
 
         Temp_Doc.desc = Ques.content;
-        Temp_Doc.desc_images = Ques.content_images;
+        Temp_Doc.desc_image = Ques.content_images;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
@@ -1436,31 +1440,31 @@ export default {
             type: Ques.detail_type,
             score: parseFloat(Ques.sub_questions_scores[i] + ""),
             stem: Ques.sub_questions[i],
-            stem_images: Ques.sub_questions_images[i],
+            stem_image: Ques.sub_questions_images[i],
             options: [],
-            options_images: [],
+            options_image: [],
             answer: "",
-            answer_images: [],
+            answer_image: [],
             analysis: "",
-            analysis_images: []
+            analysis_image: []
           }
           Temp_Doc.subquestions.push(Item)
         }
 
         Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_images = Ques.answer_images;
+        Temp_Doc.answer_image = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_images = Ques.analysis_images;
+        Temp_Doc.analysis_image = Ques.analysis_images;
 
-        this.$message.warning("数据入库格式升级中.")
+        // this.$message.warning("数据入库格式升级中.")
         
-        // let file = new File(
-        //   [JSON.stringify(Temp_Doc, null, 4)],
-        //   "Answer.json",
-        //   { type: "text/plain;charset=utf-8" }
-        // );
-        // FileSaver.saveAs(file);
+        let file = new File(
+          [JSON.stringify(Temp_Doc, null, 4)],
+          "Answer.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
         return;
 
       }else if(this.Type_Now == 'mix'){
@@ -1469,7 +1473,7 @@ export default {
 
         let Temp_Doc = {
           desc: "",
-          desc_images: [],
+          desc_image: [],
           type: "大题",
           score: 0,
           subquestions: [],
@@ -1477,13 +1481,13 @@ export default {
           subject: this.SubjectType,
           period: this.PeriodType,
           answer: "",
-          answer_images: [],
+          answer_image: [],
           analysis: "",
-          analysis_images: []
+          analysis_image: []
         }
 
         Temp_Doc.desc = Ques.content;
-        Temp_Doc.desc_images = Ques.content_images;
+        Temp_Doc.desc_image = Ques.content_images;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
@@ -1492,20 +1496,24 @@ export default {
             type: Ques.sub_questions[i].detail_type,
             score: parseFloat(Ques.sub_questions[i].score + ""),
             stem: Ques.sub_questions[i].content,
-            stem_images: Ques.sub_questions[i].content_images,
+            stem_image: Ques.sub_questions[i].content_images,
             options: [],
-            options_images: [],
+            options_image: [],
             answer: Ques.sub_questions[i].answer,
-            answer_images: Ques.sub_questions[i].answer_images,
+            answer_image: Ques.sub_questions[i].answer_images,
             analysis: Ques.sub_questions[i].analyse,
-            analysis_images: Ques.sub_questions[i].analyse_images
+            analysis_image: Ques.sub_questions[i].analyse_images
           }
 
           if(Ques.sub_questions[i].type == 'option'){
             for(let k = 0; k < Ques.sub_questions[i].options.length; k++){
               let opt = Ques.sub_questions[i].options[k]
               Item.options.push(opt);
-              Item.options_images.push([Ques.sub_questions[i].options_images[k]])
+              if(Ques.sub_questions[i].options_images[k] != null && Ques.sub_questions[i].options_images[k].length > 0)
+                Item.options_image.push([Ques.sub_questions[i].options_images[k]])
+              else{
+                Item.options_image.push([])
+              }
             }
           }
 
@@ -1518,14 +1526,14 @@ export default {
         Temp_Doc.analysis = Ques.analyse;
         Temp_Doc.analysis_images = Ques.analyse_images;
 
-        this.$message.warning("数据入库格式升级中.")
+        // this.$message.warning("数据入库格式升级中.")
         
-        // let file = new File(
-        //   [JSON.stringify(Temp_Doc, null, 4)],
-        //   "Mix.json",
-        //   { type: "text/plain;charset=utf-8" }
-        // );
-        // FileSaver.saveAs(file);
+        let file = new File(
+          [JSON.stringify(Temp_Doc, null, 4)],
+          "Mix.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
         return;
 
       }
