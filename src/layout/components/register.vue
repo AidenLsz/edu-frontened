@@ -53,7 +53,7 @@
               placeholder="请输入您的手机号码"
             ></el-input>
           </el-form-item>
-          <el-form-item prop="inviteCode">
+          <el-form-item prop="inviteCode" style="margin-bottom: 15px">
             <template slot="label">
               邀请码
               <el-tooltip  class="item" effect="dark" placement="right">
@@ -75,7 +75,19 @@
               placeholder="请输入邀请码"
             ></el-input>
           </el-form-item>
-          <el-form-item label="" label-width="0px" prop="imgCode">
+          <el-form-item label="用户类型" prop="type" style="margin-bottom: 15px">
+            <el-radio v-model="ruleForm.type" label="user">个人用户</el-radio>
+            <el-radio v-model="ruleForm.type" label="group">组织用户</el-radio>
+          </el-form-item>
+          <el-form-item label="组织名称" v-show="ruleForm.type=='group'" prop="groupname" style="margin-bottom: 15px">
+            <el-input
+              type="text"
+              v-model="ruleForm.groupname"
+              auto-complete="off"
+              placeholder="请输入组织名称"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="" label-width="0px" prop="imgCode" style="margin-bottom: 15px">
             <el-col :span="15">
               <el-input
                 type="text"
@@ -181,6 +193,13 @@ export default {
         callback()
       }
     }
+    var validateGroupname =(rule,value,callback) =>{
+      if (this.ruleForm.type=='group' && !value) {
+        callback(new Error('请输入组织名称!'));
+      }else{
+        callback()
+      }
+    }
     return {
       // 用户政策和隐私协议
       UserAgreement: false,
@@ -194,7 +213,7 @@ export default {
       disabled:false,
       phoneCode:"",
       valiBtn:'获取验证码',
-      formName:'loginForm',
+      formName:'registerForm',
       getPhoneCodeUrl:'https://send-message-service-166-production.env.bdaa.pro/v1',
       // getPhoneCodeUrl:'http://localhost:2025',
       ruleForm: {
@@ -202,7 +221,8 @@ export default {
         password: '',
         email: '',
         phone: '',
-        inviteCode:''
+        inviteCode:'',
+        type:'user'
         // phone: '19916935265'
       },
       rules: {
@@ -241,6 +261,12 @@ export default {
           { required: true, message: '请输入手机验证码', trigger: 'blur' },
           // { required: false, message: '请输入手机验证码', trigger: 'blur' },
           { validator: validatePhoneCode, trigger: ['blur'] }
+        ],
+        type:[
+          { required: true, message: '请选择用户类型', trigger: 'blur' },
+        ],
+        groupname:[
+          { validator: validateGroupname, trigger: ['blur'] }
         ]
       }
     }
@@ -363,6 +389,8 @@ export default {
           // password:md5(this.ruleForm.password),
           phone:this.ruleForm.phone,
           email:this.ruleForm.email,
+          type:this.ruleForm.type,
+          groupname:this.ruleForm.groupname,
         }
         commonAjax(this.backendIP + "/api/register",fd).then((data)=>{
           let userInfo={
@@ -371,7 +399,7 @@ export default {
             // isAdmin:data.body.isAdmin,
           }
           this.$store.dispatch('user/setUserData', userInfo).then(() => {
-            // this.$router.push("/dashboard");
+            this.$router.go()
             this.visible = false;
           })
         }).catch(()=>{

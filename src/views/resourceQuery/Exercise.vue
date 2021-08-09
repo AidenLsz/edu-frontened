@@ -11,7 +11,15 @@
       title="图片检索"
       width="80%"
       :modal-append-to-body="false"
-      :close-on-click-modal="false">
+      :close-on-click-modal="false"
+      @close="Reset_Interval()">
+        <el-row type="flex" justify="start" style="margin-left: 2.4vw;">
+          <label style="margin-right: 3vw; margin-top: -0.3vh;">图片检索模式：</label>
+          <el-radio-group v-model="Img_Search_Type">
+            <el-radio :label="0" disabled>图例检索</el-radio>
+            <el-radio :label="1">内容识别</el-radio>
+          </el-radio-group>
+        </el-row>
         <el-row style="margin: 0px; padding: 0px">
           <el-col :span="24">
             <el-row v-if="option.img != ''" type="flex" justify="center">
@@ -90,7 +98,7 @@
                     v-else
                     type="danger"
                     icon="el-icon-close"
-                    @click="picSearchDialogShow = false"
+                    @click="Reset_Interval()"
                     plain>
                     关闭页面
                   </el-button>
@@ -149,7 +157,7 @@
       <template v-for="(item,i) in database_list">
         <el-col :key="i" :span="2">
           <div :class="Check_Focus_Database(i)" @click="Database_Aim(i)">
-            {{item.nick||item.name}}
+            {{item.nick || item.name}}
           </div>
         </el-col>
       </template>
@@ -205,7 +213,7 @@
           </el-button>
         </el-col>
         <el-col :span="1">
-          <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="picSearchDialogShow = true">
+          <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="Open_Pic_Search()">
             <i class="el-icon-camera-solid"></i>
           </el-button>
         </el-col>
@@ -235,7 +243,7 @@
             <el-checkbox label="物理">物理</el-checkbox>
             <el-checkbox label="化学">化学</el-checkbox>
             <el-checkbox label="生物">生物</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Subject()}}</el-button>
           <el-button slot="reference" type="text" v-if="Subject_Type.length > 0" @click="Subject_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
@@ -252,9 +260,28 @@
             <el-checkbox label="高中">高中</el-checkbox>
             <el-checkbox label="大学">大学</el-checkbox>
             <el-checkbox label="成人">成人</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Period()}}</el-button>
+          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+        </el-popover>
+      </el-col>
+      <el-col :span="3">
+        <el-popover
+          placement="bottom-start"
+          width="770"
+          trigger="hover">
+          <el-checkbox-group v-model="Search_Ques_Type">
+            <el-checkbox label="单选题">单选题</el-checkbox>
+            <el-checkbox label="多选题">多选题</el-checkbox>
+            <el-checkbox label="判断题">判断题</el-checkbox>
+            <el-checkbox label="填空题">填空题</el-checkbox>
+            <el-checkbox label="简答题">简答题</el-checkbox>
+            <el-checkbox label="计算题">计算题</el-checkbox>
+            <el-checkbox label="其他">其他</el-checkbox>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+          </el-checkbox-group>
+          <el-button slot="reference" class="FilterButton" type="text">{{Get_Search_Ques_Type()}}</el-button>
           <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
@@ -339,6 +366,8 @@ export default {
   name: "exercise",
   data() {
     return {
+      // 用于之后进行图片搜索类型筛选的变量
+      Img_Search_Type: 1,
       Refresh: false,
       // 图片剪切用的一系列变量
       // 对话框显示
@@ -394,6 +423,9 @@ export default {
       // 学科和学段
       Subject_Type: [],
       Period_Type: [],
+      // 题型及历史题型
+      Search_Ques_Type: [],
+      history_Search_Ques_Type: [],
       // 上次选择的学科和学段
       history_Subject_Type: [],
       history_Period_Type: [],
@@ -467,6 +499,11 @@ export default {
       this.submit();
     },
   },
+  destroyed(){
+    sessionStorage.removeItem("PicPaste");
+    clearInterval(this.Paste_Catcher);
+    window.removeEventListener('paste', this.Paste_Function)
+  },
   mounted(){
     this.ToTop()
     this.initDatabaseList();
@@ -476,10 +513,62 @@ export default {
     upload.addEventListener('drop', this.onDrop, false);
   },
   methods: {
+    // 给筛选器的提交做个检测
+    submit_prepare(){
+      if(this.Cache_Pic[0] != ""){
+        this.submit(1, this.Cache_Pic[0])
+      }else{
+        this.submit(0, "")
+      }
+    },
+    // 清空计时器
+    Reset_Interval(){
+      clearInterval(this.Paste_Catcher)
+      this.picSearchDialogShow = false
+      window.removeEventListener('paste', this.Paste_Function)
+    },
+    // 打开图片搜索栏
+    Open_Pic_Search(){
+      this.Init_Img_Paster();
+      this.Paste_Catcher = setInterval(()=>{
+        if(sessionStorage.getItem("PicPaste")){
+          this.option.img = sessionStorage.getItem("PicPaste")
+        }
+      }
+      , 20);
+      this.picSearchDialogShow = true
+    },
+    // 尝试利用截图工具的粘贴板
+    Init_Img_Paster(){
+      window.addEventListener('paste', this.Paste_Function)
+    },
+    Paste_Function(e){
+        let Pic = e.clipboardData.items[0].getAsFile();
+        // 保存读取内容用的临时变量
+        var Picresult = "";
+        // Promise方法避免异步操作
+        var promise = new Promise(function(resolve){
+          // 用文件读取来读取图片的base64格式代码
+          var reader = new FileReader();
+          reader.readAsDataURL(Pic);
+          reader.onloadend = function (e) {
+            Picresult = e.target.result;
+            resolve('1');
+          };
+        });
+        promise.then(function(){
+          // 用捕捉到的this对象来进行搜索
+          sessionStorage.setItem("PicPaste", Picresult)
+        }).catch(function(err){
+          // 报错了就打印错误
+          alert("您最新的粘贴对象不是图片内容。")
+        })
+      },
         openInstructionDialog(){
           this.$refs.instruction.openDialog();
         },
         clearData(){
+          sessionStorage.setItem("PicPaste", "");
           this.option.img = "";
         },
         onDragIn (e) {
@@ -570,10 +659,10 @@ export default {
       ).then((res)=>{
         let data=res.ig_name;
         for (var i = 0; i < data.length; i++) {
-          this.database_list.push({name:data[i]})
+          this.database_list.push({name:data[i], nick: data[i]})
           this.database_aim.push(false)
         }
-        // this.database_list[1].name='个人题库'
+        // this.database_list[1].nick='私有题库'
       })
     },
     // 清除图片
@@ -772,7 +861,9 @@ export default {
         "database": database_list,
         "page_count": this.Page_Index,
         "subject": this.Subject_Type,
-        "period": this.Period_Type
+        "period": this.Period_Type,
+        "type": this.Search_Ques_Type,
+        "difficulty": [0.0, 1.0]
       })
 
       // param.append("data", data);
@@ -832,6 +923,15 @@ export default {
         return this.Period_Type[0]
       }else{
         return this.Period_Type[0] + "（等" + this.Period_Type.length + "项）"
+      }
+    },
+    Get_Search_Ques_Type(){
+      if(this.Search_Ques_Type.length == 0){
+        return "选择题型"
+      }else if(this.Search_Ques_Type.length == 1){
+        return this.Search_Ques_Type[0]
+      }else{
+        return this.Search_Ques_Type[0] + "（等" + this.Search_Ques_Type.length + "项）"
       }
     }
   }

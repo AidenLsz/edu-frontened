@@ -2,11 +2,12 @@
   <el-dialog
       :visible.sync="visible"
       title="使用说明"
-      width="65%"
+      top="5%"
+      width="80%"
       :modal-append-to-body="false"
       :close-on-click-modal="true"
       >
-      <el-carousel :autoplay="false" arrow="always" height="60vh">
+      <el-carousel :autoplay="false" arrow="always" height="70vh">
         <el-carousel-item v-for="(item,i) in data" :key="i">
           <div class="desc">{{i+1}}、{{item.desc}} </div>
           <div class="img-container">
@@ -53,6 +54,8 @@ export default {
     align-items: center;
     img{
       max-width: 100%;
+      max-height: 100%;
+      // overflow-y: scroll;
       padding:5vh;
       margin: auto;
     }

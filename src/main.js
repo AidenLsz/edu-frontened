@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import App from './App.vue'
-// import User from './User.vue'
 import store from './store'
 import router from './router/index'
 import './plugins/element.js'
@@ -29,6 +28,7 @@ if (process.env.NODE_ENV === "production") {
       //test 测试环境
       Vue.prototype.backendIP = process.env.VUE_APP_URL;
       // Vue.prototype.backendIP = "https://kg-edu-backend-44-review-user-u9mmdq.env.bdaa.pro/v1";
+
   }
 } else {
   //dev 开发环境
@@ -40,10 +40,4 @@ new Vue({
   router,
   store,
   render:h=> h(App),
-  // h => {
-  //   if(sessionStorage.getItem('accessToken')){
-  //     return h(User);
-  //   }
-  //   return h(App);
-  // },
 }).$mount('#app')

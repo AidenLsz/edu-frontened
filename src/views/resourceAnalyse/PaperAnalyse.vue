@@ -1,7 +1,12 @@
 // 这一页面主要用于测试各类新功能的显示是否符合具体要求，等待完成后再放到正式页面上去
 
 <template>
-    <div style="min-height: 600px" ref="PaperAnalyseInfo">
+    <div 
+        style="min-height: 600px" 
+        ref="PaperAnalyseInfo"
+        v-loading="loading"
+        element-loading-text="文档生成中，请等待..."
+        element-loading-spinner="el-icon-loading">
           <!-- 试卷分析路径跳转 -->
     <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
       <el-row>
@@ -533,7 +538,14 @@
         </el-row>
     </div>
     <el-row type="flex" justify="center" style="margin-bottom: 50px">
-        <el-button type="success" plain @click="PDF_Switch()">保存当前页面为PDF文档</el-button>
+        <el-button 
+            type="success" 
+            plain 
+            @click="Report_Download()" 
+            :disabled="Remaining > 0">
+            下载分析报告
+            <span v-if="Remaining > 0"> - {{Remaining}} 秒</span>
+        </el-button>
         <el-button type="success" plain @click="PaperAnalyseSwitch()">分析其他试卷</el-button>
     </el-row>  
     </div>
@@ -555,6 +567,35 @@ export default {
     name: "PaperAnalyse",
     data(){
         return {
+            loading: false,
+            // 计时器，用Remaining做计时
+            Timer: "",
+            // 倒计时五秒前不允许下载，为了方便Echarts完全生成
+            Remaining: 6,
+            // 保存图用的字典
+            Chart_Base_Dict: {
+                // 最顶上的字典
+                Total_Bar: "",
+                // 知识点分析
+                KU: {
+                    // 难度
+                    Average_Diff: "",
+                    // 分数
+                    Score: "",
+                    // 知识点对
+                    KU_Pair: "",
+                    // 覆盖率
+                    Cover: ""
+                },
+                // 难度分析部分
+                Difficulty: {
+                    // 难度区间
+                    Diff_Gap: "",
+                    // 难度波动
+                    Diff_Wave: ""
+                }
+                // 双向细目表的表格是我自己手搓的，没图
+            },
             // 双相啥的分析报告
             Double_Analyse: [],
             // 还是写个最后一行的标签吧
@@ -629,6 +670,13 @@ export default {
     destroyed(){
         sessionStorage.removeItem('PaperJson')
     },
+    watch: {
+        Remaining(){
+            if(this.Remaining <= 0){
+                clearInterval(this.Timer)
+            }
+        }
+    },
     props: {
         Paper_J:{
             type: Object,
@@ -683,6 +731,9 @@ export default {
         }
     },
     mounted() {
+        this.Timer = setInterval( () => {
+            this.Remaining = this.Remaining - 1;
+        }, 1000)
         this.Init();
         window.scrollTo(0, 0);
     },
@@ -744,16 +795,90 @@ export default {
         PaperAnalyseSwitch(){
             this.PaperAnalyseSwitchFlag = true;
         },
-        PDF_Switch(){
-            window.scrollTo(0, 0);
-            this.Part_Expand = [true, true, true, true];
-            // this.transing = true;
-            // this.PDF_Download("Paper_Title");
-            // this.PDF_Download("Paper_Total");
-            // this.PDF_Download("Paper_Analyse");
-            // this.PDF_Download("Paper_Similarity");
-            // this.PDF_Download("Paper_Detail");
-            this.PDF_Download("PaperAnalyseInfo");
+        Report_Download(){
+
+            this.loading = true;
+
+            let Paper_Data = {
+                title: this.Paper_Json.title,
+                score: this.Paper_Json.score,
+                difficulty_list: this.Paper_Json.difficulty_list,
+                level_one_knowledge_point: this.Paper_Json.level_one_knowledge_point,
+                all_level_one_knowledge_point: this.Paper_Json.all_level_one_knowledge_point,
+                difficulty_statistics: this.Paper_Json.difficulty_statistics,
+                knowledge_knowledge2num: this.Paper_Json.knowledge_knowledge2num,
+                knowledge2score: this.Paper_Json.knowledge2score,
+                knowledge2difficulty: this.Paper_Json.knowledge2difficulty,
+                sub_question: this.Paper_Json.sub_question,
+                Total_Bar: this.Chart_Base_Dict.Total_Bar,
+                KU: {
+                    Average_Diff: this.Chart_Base_Dict.KU.Average_Diff,
+                    Score: this.Chart_Base_Dict.KU.Score,
+                    KU_Pair: this.Chart_Base_Dict.KU.KU_Pair,
+                    Cover: this.Chart_Base_Dict.KU.Cover
+                },
+                Difficulty: {
+                    Diff_Gap: this.Chart_Base_Dict.Difficulty.Diff_Gap,
+                    Diff_Wave: this.Chart_Base_Dict.Difficulty.Diff_Wave
+                }
+            }
+
+            let config = {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
+                responseType: 'arraybuffer',
+                emulateJSON: true
+            }
+
+            let param = new FormData();
+
+            param.append('Paper_Data', JSON.stringify(Paper_Data, null, 4));
+
+            this.$http
+                .post(this.backendIP + "/api/paperAnalyseReport", param, config)
+                .then(function(data) {
+                if(data.data){
+                    this.loading = false;
+                    const link = document.createElement('a')
+                    let blob = new Blob([data.data],
+                        {type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"})
+                    let objectUrl = URL.createObjectURL(blob)
+                    link.href = objectUrl
+                    link.download = '试卷分析报告 - ' + this.Paper_Json.title + '.docx'
+                    link.click()
+                    URL.revokeObjectURL(objectUrl);
+                }
+                }).catch(() => {
+                    alert("服务器过忙，请稍后重新尝试...");
+                    this.loading = false;
+                    return
+                });
+            // var file = new File(
+            //     [JSON.stringify(this.Chart_Base_Dict, null, 4)],
+            //     "Cover.json",
+            //     { type: "text/plain;charset=utf-8" }
+            // );
+            // FileSaver.saveAs(file);
+            // file = new File(
+            //     [JSON.stringify(this.Paper_Json, null, 4)],
+            //     "Paper.json",
+            //     { type: "text/plain;charset=utf-8" }
+            // );
+            // FileSaver.saveAs(file);
+            // let flag = true;
+            // if(flag){
+            //     return
+            // }
+            // window.scrollTo(0, 0);
+            // this.Part_Expand = [true, true, true, true];
+            // // this.transing = true;
+            // // this.PDF_Download("Paper_Title");
+            // // this.PDF_Download("Paper_Total");
+            // // this.PDF_Download("Paper_Analyse");
+            // // this.PDF_Download("Paper_Similarity");
+            // // this.PDF_Download("Paper_Detail");
+            // this.PDF_Download("PaperAnalyseInfo");
             
         },
         // 下载PDF格式的分析报告
@@ -1196,7 +1321,10 @@ export default {
 
             //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
             window.addEventListener('resize',function() {myChart.resize()});
-
+            setTimeout(() => {
+                this.Chart_Base_Dict.Total_Bar = myChart.getDataURL();
+            }
+            , 4000)
         },
         // 初始化大题分析的那张柱状图的方法
         Init_QB_Total_Bar(){
@@ -1394,6 +1522,11 @@ export default {
 
             myChart.setOption(option);
             window.addEventListener('resize',function() {myChart.resize()});
+            
+            setTimeout(() => {
+                this.Chart_Base_Dict.Difficulty.Diff_Gap = myChart.getDataURL();
+            }
+            , 4000)
 
         },
         Init_Paper_Total_Difficult_Analyse_Line(){
@@ -1451,6 +1584,12 @@ export default {
 
             myChart.setOption(option);
             window.addEventListener('resize',function() {myChart.resize()});
+
+            
+            setTimeout(() => {
+                this.Chart_Base_Dict.Difficulty.Diff_Wave = myChart.getDataURL();
+            }
+            , 4000)
 
         },
         // 初始化总体的知识点难度分布的那张柱状图的方法
@@ -1559,6 +1698,12 @@ export default {
 
             //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
             window.addEventListener('resize',function() {myChart.resize()});
+
+            
+            setTimeout(() => {
+                this.Chart_Base_Dict.KU.Average_Diff = myChart.getDataURL();
+            }
+            , 4000)
         },
         // 初始化总体的知识点分数分布的那张饼图的方法
         Init_Paper_Knowledge_Score_Analyse(){
@@ -1633,6 +1778,10 @@ export default {
 
             myChart.setOption(option);
             window.addEventListener('resize',function() {myChart.resize()});
+            setTimeout(() => {
+                this.Chart_Base_Dict.KU.Score = myChart.getDataURL()
+            }
+            , 4000)
 
         },
         // 初始化总体的知识点点对分布的那张关系图的办法
@@ -1741,6 +1890,12 @@ export default {
 
             //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
             window.addEventListener('resize',function() {myChart.resize()});
+
+            
+            setTimeout(() => {
+                this.Chart_Base_Dict.KU.KU_Pair = myChart.getDataURL()
+            }
+            , 4000)
 
         },
         // 初始化大题的知识点难度分布的那张柱状图的方法
@@ -2085,8 +2240,6 @@ export default {
                 }
             }
 
-            console.log(Level_Data)
-
             let Liberal_Option_1 = {
             
                 title: {
@@ -2129,6 +2282,11 @@ export default {
 
             Line_Chart_1.setOption(Liberal_Option_1);
             window.addEventListener('resize',function() {Line_Chart_1.resize()});
+            setTimeout(() => {
+                this.Chart_Base_Dict.KU.Cover = Line_Chart_1.getDataURL();
+            }
+            , 4000)
+            
         },
         // 覆盖率的计算
         Get_Cover_Ratio(){
