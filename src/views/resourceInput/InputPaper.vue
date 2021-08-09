@@ -3050,8 +3050,8 @@ export default {
         desc: "",
         Question_list: [],
         user_id: this.UUID,
-        // subject: this.SubjectType,
-        // period: this.PeriodType,
+        subject: this.SubjectType,
+        period: this.PeriodType,
     }
 
     let TYPE_DICT = {
