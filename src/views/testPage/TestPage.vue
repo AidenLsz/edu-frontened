@@ -1,36 +1,54 @@
 <template>
   <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; margin-top: 50px;">
-    <el-input
-      placeholder="输入关键字进行过滤"
-      v-model="filterText">
-    </el-input>
-    <el-row type="flex" justify="start" style="margin-top: 30px; margin-bottom: 30px;">
-      <label style="margin-top: -3px; margin-right: 10px;">
-        选择方式：
-      </label>
-      <el-radio-group v-model="KnowledgeSelectType">
-        <el-radio label="Single">单选</el-radio>
-        <el-radio label="Multiple">多选</el-radio>
-      </el-radio-group>
+    <el-row>
+      <el-input 
+        type="textarea" 
+        v-model="TextLine" 
+        ref="InputArea">
+      </el-input>
     </el-row>
-    <el-row type="flex" justify="start" style="height: 60vh; overflow: scroll; width: 18vw">
-    <!-- 关于el-tree的单选多选测试 -->
-    <el-tree 
-      :data="TreeData"
-      check-strictly
-      node-key="id"
-      show-checkbox
-      :props="defaultProps"
-      default-expand-all
-      check-on-click-node
-      :filter-node-method="filterNode"
-      @check-change="handleCheckChange"
-      style="font-size: 10px;"
-      ref="tree"
-      v-loading="waiting"
-      element-loading-text="正在获取知识树..."
-      element-loading-spinner="el-icon-loading">
-    </el-tree>
+    <el-row style="margin-top: 20px; margin-bottom: 20px">
+      <el-button @click="Get_Area_Class()">格式信息</el-button>
+    </el-row>
+    <el-row>
+      <div v-html="Get_TextLine()">
+
+      </div>
+    </el-row>
+    <!-- 知识点内容过滤的而部分，隐藏日期：20210808 -->
+    <el-row style="display: none">
+      <el-input
+        placeholder="输入关键字进行过滤"
+        v-model="filterText">
+      </el-input>
+      <el-row type="flex" justify="start" style="margin-top: 30px; margin-bottom: 30px;">
+        <label style="margin-top: -3px; margin-right: 10px;">
+          选择方式：
+        </label>
+        <el-radio-group v-model="KnowledgeSelectType">
+          <el-radio label="Single">单选</el-radio>
+          <el-radio label="Multiple">多选</el-radio>
+        </el-radio-group>
+      </el-row>
+      <el-row type="flex" justify="start" style="height: 60vh; overflow: scroll; width: 18vw">
+        <!-- 关于el-tree的单选多选测试 -->
+        <el-tree 
+          :data="TreeData"
+          check-strictly
+          node-key="id"
+          show-checkbox
+          :props="defaultProps"
+          default-expand-all
+          check-on-click-node
+          :filter-node-method="filterNode"
+          @check-change="handleCheckChange"
+          style="font-size: 10px;"
+          ref="tree"
+          v-loading="waiting"
+          element-loading-text="正在获取知识树..."
+          element-loading-spinner="el-icon-loading">
+        </el-tree>
+      </el-row>
     </el-row>
     <!-- 以下内容是20210719之前的测试内容，可能以后还会有用到的地方，先不删了 -->
     <el-row type="flex" justify="center" style="display: none; padding: 40px; padding-bottom: 40px; width: 90%; margin-left: 5%; border: 1px solid black">
@@ -96,6 +114,9 @@ export default {
   },
   data() {
     return {
+      // 开始尝试做一个输入框组件
+      // 文本内容
+      TextLine: "",
       // 等待变量
       waiting: false,
       // 知识体系单选或多选
@@ -186,7 +207,25 @@ export default {
     
   },
   methods: {
+    // 点击按钮后获取文本框的样式
+    Get_Area_Class(){
+      console.log(this.$refs.InputArea.$el.clientHeight)
+    },
+    // 随时盯着文本内容转化的方法
+    Get_TextLine(){
+      let TextList = this.TextLine.split("\n")
+      let Result = ""
+      for(let i = 0; i < TextList.length; i++){
+        Result = Result + "<p>" + TextList[i] + "</p>"
+      }
+      return Result
+    },
     Init(){
+
+      let Flag = true
+      if(Flag){
+        return
+      }
 
       this.waiting = true;
 

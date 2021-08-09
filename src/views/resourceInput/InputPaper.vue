@@ -1266,6 +1266,8 @@ import Instruction from './components/InstructionPaper.vue'
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from '../../common/components/ComplexInput.vue'
 
+import {commonAjax} from '@/common/utils/ajax'
+
 export default {
   components: { ComplexInput,
                 OptionDisplay, OptionQuestions,
@@ -1454,7 +1456,8 @@ export default {
       Hand_Cut_Now: [-1, -1],
       // 用于标记当前是否是手动切分模式的变量
       Hand_Cut_Mode: false,
-      Type_Cache: "-1"
+      Type_Cache: "-1",
+      UUID: ""
     };
   },
   computed: {
@@ -1561,6 +1564,7 @@ export default {
     },
   },
   mounted(){
+    this.Get_User_UUID();
     if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
       this.$message.error("您尚未登录，请登录后使用录入功能。")
       this.$router.push("/")
@@ -3018,6 +3022,16 @@ export default {
 
       }
     },
+    Get_User_UUID(){
+      commonAjax(this.backendIP + '/api/getUserUUID', {}).then((res)=>{
+        this.UUID = res.UUID
+      }).catch(
+        (err)=>{
+          console.log(err)
+          console.log("Failed.")
+        }
+      )
+    },
     // 尝试进行导出
     PaperUpload(Control){
 
@@ -3035,16 +3049,22 @@ export default {
         title: this.PaperTitle,
         desc: "",
         Question_list: [],
-        user_id: this.$store.state.user.token,
-        subject: this.SubjectType,
-        period: this.PeriodType,
+        user_id: this.UUID,
+        // subject: this.SubjectType,
+        // period: this.PeriodType,
     }
 
+    let TYPE_DICT = {
+      "option": "选择题",
+      "fill": "填空题",
+      "answer": "解答题",
+      "mix": "综合题"
+    }
 
     for(let i = 0; i < this.Questions.length; i++){
       let Question_Item = {
         desc : this.Questions[i].Bundle_Introduce,
-        type : "",
+        type : TYPE_DICT[this.Questions[i].Bundle_Type],
         material : "",
         questions : []
       }
@@ -3058,11 +3078,12 @@ export default {
     this.$message.warning("数据入库格式升级中.")
 
     let file = new File(
-          [JSON.stringify(Upload_Json, null, 4)],
-          this.PaperTitle + ".json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
+      [JSON.stringify(Upload_Json, null, 4)],
+      "InputPaper.json",
+      { type: "text/plain;charset=utf-8" }
+    );
+    FileSaver.saveAs(file);
+    
     let flag = true;
     if(flag){
         return;
@@ -3078,36 +3099,55 @@ export default {
           return
         }
 
-        let config = {
-            headers: {
-              "Content-Type": "multipart/form-data"
-            }
-        };
-        let param = new FormData();
+        let Param = {
+          post_type: 1,
+          questions: JSON.stringify(Upload_Json),
+          subject: this.SubjectType,
+          period: this.PeriodType
+        }
 
-        param.append('result_json',
-                        JSON.stringify({
-                          "post_type": 1,
-                          "title": this.PaperTitle,
-                          "subject_type": this.SubjectType,
-                          "period_type": this.PeriodType,
-                          "questions": this.Questions,
-                        }, null, 4));
-        param.append('questionInput', true)
+        commonAjax(this.backendIP + '/api/mathUpload', Param).then((res)=>{
+          console.log(res)
+          console.log("Success")
+          this.Uploading = false;
+        }).catch(
+          (err)=>{
+            console.log(err)
+            console.log("Failed.")
+            this.Uploading = false;
+          }
+        )
 
-        this.$http
-        .post(this.backendIP + "/api/mathUpload", param, config, {
-          emulateJSON: true
-        })
-        .then(function() {
-          this.$message.success("整卷上传已完成。");
-          this.Uploading = false;
-          return
-        }).catch(() => {
-          this.$message.error("过程出现错误，请稍后重新尝试...");
-          this.Uploading = false;
-          return
-        });
+        // let config = {
+        //     headers: {
+        //       "Content-Type": "multipart/form-data"
+        //     }
+        // };
+        // let param = new FormData();
+
+        // param.append('result_json',
+        //                 JSON.stringify({
+        //                   "post_type": 1,
+        //                   "title": this.PaperTitle,
+        //                   "subject_type": this.SubjectType,
+        //                   "period_type": this.PeriodType,
+        //                   "questions": this.Questions,
+        //                 }, null, 4));
+        // param.append('questionInput', true)
+
+        // this.$http
+        // .post(this.backendIP + "/api/mathUpload", param, config, {
+        //   emulateJSON: true
+        // })
+        // .then(function() {
+        //   this.$message.success("整卷上传已完成。");
+        //   this.Uploading = false;
+        //   return
+        // }).catch(() => {
+        //   this.$message.error("过程出现错误，请稍后重新尝试...");
+        //   this.Uploading = false;
+        //   return
+        // });
 
       }else if(Control == 'export'){
 
