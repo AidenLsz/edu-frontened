@@ -3048,10 +3048,7 @@ export default {
       let Upload_Json = {
         title: this.PaperTitle,
         desc: "",
-        Question_list: [],
-        user_id: this.UUID,
-        subject: this.SubjectType,
-        period: this.PeriodType,
+        Question_list: []
     }
 
     let TYPE_DICT = {
@@ -3075,19 +3072,19 @@ export default {
       Upload_Json.Question_list.push(Question_Item)
     }
 
-    this.$message.warning("数据入库格式升级中.")
+    // this.$message.warning("数据入库格式升级中.")
 
-    let file = new File(
-      [JSON.stringify(Upload_Json, null, 4)],
-      "InputPaper.json",
-      { type: "text/plain;charset=utf-8" }
-    );
-    FileSaver.saveAs(file);
+    // let file = new File(
+    //   [JSON.stringify(Upload_Json, null, 4)],
+    //   "InputPaper.json",
+    //   { type: "text/plain;charset=utf-8" }
+    // );
+    // FileSaver.saveAs(file);
     
-    let flag = true;
-    if(flag){
-        return;
-      }
+    // let flag = true;
+    // if(flag){
+    //     return;
+    //   }
 
 
       if(Control == 'upload'){
@@ -3100,20 +3097,22 @@ export default {
         }
 
         let Param = {
-          post_type: 1,
-          questions: JSON.stringify(Upload_Json),
-          subject: this.SubjectType,
-          period: this.PeriodType
+          'Input_Data': JSON.stringify({
+                          "post_type": 1,
+                          "user_id": this.UUID,
+                          "subject": this.SubjectType,
+                          "period": this.PeriodType,
+                          "questions": JSON.stringify(Upload_Json),
+                        }, null, 4),
+          'questionInput': true
         }
 
-        commonAjax(this.backendIP + '/api/mathUpload', Param).then((res)=>{
-          console.log(res)
-          console.log("Success")
+        commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
+          this.$message.success("入库完成")
           this.Uploading = false;
         }).catch(
-          (err)=>{
-            console.log(err)
-            console.log("Failed.")
+          ()=>{
+            this.$message.error("入库失败")
             this.Uploading = false;
           }
         )
@@ -3132,6 +3131,7 @@ export default {
         //                   "subject_type": this.SubjectType,
         //                   "period_type": this.PeriodType,
         //                   "questions": this.Questions,
+
         //                 }, null, 4));
         // param.append('questionInput', true)
 

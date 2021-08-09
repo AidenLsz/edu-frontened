@@ -130,11 +130,14 @@
       <!-- 关于答题卡最上面的信息部分 -->
       <el-row>
         <el-col :span="Get_Input_Span()" style="border-right: 1px solid black; border-bottom: 1px solid black; height: 253px">
+          <div class="EditArea" @click="Unfinish()">
+            <span>编辑</span>
+          </div>
           <el-row v-for="Item in UserFillInfo" :key="'User_Fill_' + Item" :style="Get_User_Fill_Line_Style()">
-            <el-col :span="2" :offset="1">
-              {{Item}}：
+            <el-col :span="4">
+              <el-row type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; font-weight: bold">{{Item}}：</el-row>
             </el-col>
-            <el-col :span="14" :style="Get_User_Fill_UnderLine()"></el-col>
+            <el-col :span="13" :style="Get_User_Fill_UnderLine()"></el-col>
           </el-row>
         </el-col>
         <el-col :span="Get_Code_Span()" style="border-bottom: 1px solid black; height: 253px">
@@ -143,9 +146,9 @@
             v-if="IDCodeType == '考号填涂'"
             type="flex"
             justify="center"
-            style="height: 36px; line-height: 36px; font-size: 20px; font-weight: bold; width: 100%; border-bottom: 1px solid black"
+            style="height: 36px; line-height: 36px; font-size: 18px; font-weight: bold; width: 100%; border-bottom: 1px solid black"
           >
-            准考证号
+            准考证号填涂区
           </el-row>
           <el-row
             v-if="IDCodeType == '考号填涂'"
@@ -218,7 +221,7 @@ export default {
       },
       // 试卷信息
       PaperInfo: {
-        title: "123",
+        title: "20210809 - 测试卷用标题",
         StudentCodeLength: 9
       }
     }
@@ -234,18 +237,15 @@ export default {
     Get_User_Fill_Line_Style(){
       let Style = {
         'height': 250 / this.UserFillInfo.length + 'px',
-        'line-height':  250 / this.UserFillInfo.length + 'px',
-        'text-align': 'left',
-        'padding-left': '3vw',
-        'font-size': '16px',
-        'font-weight': 'bold'
+        'line-height':  250 / this.UserFillInfo.length + 'px'
       }
       return Style
     },
     // 返回用户填写项的下划线填写位置
     Get_User_Fill_UnderLine(){
+      let Gap = this.UserFillInfo.length > 5 ? 5 : 10
       let Style = {
-        'height': 250 / this.UserFillInfo.length - 10 + 'px',
+        'height': 250 / this.UserFillInfo.length - Gap + 'px',
         'text-align': 'left',
         'border-bottom': '2px solid black'
       }
@@ -342,6 +342,19 @@ export default {
   border: 1px dashed black;
   background: #EEF5FE;
   box-sizing: border-box;
+}
+.EditArea{
+  position: relative;
+  float: right;
+  width: 60px;
+  height: 36px;
+  background: #409EFD;
+  color: white;
+  border-bottom-left-radius: 20px;
+  font-size: 14px;
+  padding-top: 7px;
+  cursor: pointer;
+  z-index: 10;
 }
 </style>
 <style scoped>
