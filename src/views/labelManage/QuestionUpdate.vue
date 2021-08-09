@@ -83,9 +83,9 @@
 
     <transition-group name="el-fade-in">
       <div
-          v-for="(item, index) in questions"
-          v-bind:key="item.question_ID"
-          class="question-item"
+        v-for="(item, index) in questions"
+        v-bind:key="item.question_ID"
+        class="question-item"
       >
         <div style="font-size: 26px; margin-bottom: 12px; text-align: center">
           试题{{ index + 1 }}
@@ -288,7 +288,7 @@ import Mathdown from "../../common/components/Mathdown.vue";
 import Clipboard from 'clipboard'
 
 //后端api正式上线后修改
-const backendURL = "https://kg-edu-backend-44-review-label-plat-mqukc4.env.bdaa.pro/v1/api"
+// const backendURL = "https://kg-edu-backend-44-review-label-plat-mqukc4.env.bdaa.pro/v1/api"
 // const backendURL = 'http://localhost:7921/api' // <- 本地测试
 
 export default {
@@ -325,7 +325,7 @@ export default {
             "儒学逐步取得了独尊地位",
           ],
           analysis:
-              "【详解】依据材料可知，汉初《诗》、《公羊春秋》等儒家经典被作为皇帝任命官职的依据，由此可见儒学地位上升成为入仕途径，因此A选项正确。B选项错误，材料并未体现品行作为选官的主要标准；C选项错误，材料并未涉及黄老之学；D选项错误，汉武帝时期，采取董仲舒的建议，罢黜百家，独尊儒术，设立太学，传授五经，使儒学获得了独尊地位。故正确答案为A选项。",
+            "【详解】依据材料可知，汉初《诗》、《公羊春秋》等儒家经典被作为皇帝任命官职的依据，由此可见儒学地位上升成为入仕途径，因此A选项正确。B选项错误，材料并未体现品行作为选官的主要标准；C选项错误，材料并未涉及黄老之学；D选项错误，汉武帝时期，采取董仲舒的建议，罢黜百家，独尊儒术，设立太学，传授五经，使儒学获得了独尊地位。故正确答案为A选项。",
           date: "2021-05-29 13:07:49",
           edit: false,
         },
@@ -338,7 +338,7 @@ export default {
           pastpaper: 0,
           source_type: 1,
           stem:
-              "<p>一同学在开展研究性学习，他阅读了《战争与和平》《人间喜剧》《双城记》《红与黑》等一系列相关的作品。依据你的判断，他研究的课题可能与哪一文学流派有关（   ）</p>",
+            "<p>一同学在开展研究性学习，他阅读了《战争与和平》《人间喜剧》《双城记》《红与黑》等一系列相关的作品。依据你的判断，他研究的课题可能与哪一文学流派有关（   ）</p>",
           options: ["批判现实主义", "古典主义", "现代主义", "浪漫主义"],
           answer: "A",
           date: "2021-05-29 13:07:49",
@@ -384,18 +384,18 @@ export default {
       // }
 
       this.$http
-          .post(backendURL + "/query_question", formData, { emulateJSON: true })
-          .then(function (res) {
-            let data = res.data;
-            console.log('获得结果')
-            //判断错误
-            if(data.error !== "" || data.questions.length === 0) {
-              this.searching = false
-              this.$notify.error({
-                title: '检索失败',
-              });
-              console.log(data)
-            }
+        .post(this.backendIP + "/api/query_question", formData, { emulateJSON: true })
+        .then(function (res) {
+          let data = res.data;
+          console.log('获得结果')
+          //判断错误
+          if(data.error !== "" || data.questions.length === 0) {
+            this.searching = false
+            this.$notify.error({
+              title: '检索失败',
+            });
+            console.log(data)
+          }
 
             let edit = this.questions.length === 1;
             console.log(edit)
@@ -481,37 +481,37 @@ export default {
       }
 
       this.$http
-          .put(backendURL + "/update_question", formData, { emulateJSON: true })
-          .then(function (res) {
-            let data = res.data;
-            if (data.error) {
-              this.loading = false
-              this.$notify.error({
-                title: '修改提交失败',
-
-              });
-              console.log("提交修改出错");
-              console.log(data.error);
-            } else {
-              this.$notify({
-                title: '修改提交成功',
-                type: 'success'
-              });
-              console.log("提交成功");
-              setTimeout(() => {
-                this.loading = false
-              }, 300)
-            }
-          })
-          .catch((e)=>{
+        .put(this.backendIP + "/api/update_question", formData, { emulateJSON: true })
+        .then(function (res) {
+          let data = res.data;
+          if (data.error) {
             this.loading = false
             this.$notify.error({
               title: '修改提交失败',
 
             });
             console.log("提交修改出错");
-            console.log(e);
+            console.log(data.error);
+          } else {
+            this.$notify({
+              title: '修改提交成功',
+              type: 'success'
+            });
+            console.log("提交成功");
+            setTimeout(() => {
+              this.loading = false
+            }, 300)
+          }
+        })
+        .catch((e)=>{
+          this.loading = false
+          this.$notify.error({
+            title: '修改提交失败',
+
           });
+          console.log("提交修改出错");
+          console.log(e);
+        });
     },
     copyQuestionID(e, text) {
       const clipboard = new Clipboard(e.target, { text: () => text })
@@ -561,7 +561,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 /*html, head, body {*/
 /*  margin: 0;*/
 /*  padding: 0;*/
@@ -787,3 +787,4 @@ body .el-scrollbar__wrap {
     font-size: 28px;
   }
 }
+</style>
