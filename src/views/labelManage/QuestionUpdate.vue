@@ -288,8 +288,8 @@ import Mathdown from "../../common/components/Mathdown.vue";
 import Clipboard from 'clipboard'
 
 //后端api正式上线后修改
-// const backendURL = "https://kg-edu-backend-44-review-label-plat-mqukc4.env.bdaa.pro/v1/api"
-// const backendURL = 'http://localhost:7921/api' // <- 本地测试
+const backendURL = "https://kg-edu-backend-44-production.env.bdaa.pro/v1"
+// const backendURL = 'http://localhost:23331' // <- 本地测试
 
 export default {
   components: { Mathdown },
@@ -384,7 +384,7 @@ export default {
       // }
 
       this.$http
-        .post(this.backendIP + "/api/query_question", formData, { emulateJSON: true })
+        .post(backendURL + "/api/query_question", formData, { emulateJSON: true })
         .then(function (res) {
           let data = res.data;
           console.log('获得结果')
@@ -481,7 +481,7 @@ export default {
       }
 
       this.$http
-        .put(this.backendIP + "/api/update_question", formData, { emulateJSON: true })
+        .put(backendURL + "/api/update_question", formData, { emulateJSON: true })
         .then(function (res) {
           let data = res.data;
           if (data.error) {
