@@ -130,9 +130,21 @@
       <!-- 关于答题卡最上面的信息部分 -->
       <el-row>
         <el-col :span="Get_Input_Span()" style="border-right: 1px solid black; border-bottom: 1px solid black; height: 253px">
-          <div class="EditArea" @click="Unfinish()">
-            <span>编辑</span>
-          </div>
+          <el-popover 
+            placement="bottom"
+            width="150"
+            trigger="hover">
+            <el-row type="flex" justify="start">
+              <el-col>
+                <el-row type="flex" justify="start">
+                  <label>已选信息</label>
+                </el-row>
+              </el-col>
+            </el-row>
+            <div slot="reference" class="EditArea" @click="Unfinish()">
+              <span>编辑</span>
+            </div>
+          </el-popover>
           <el-row v-for="Item in UserFillInfo" :key="'User_Fill_' + Item" :style="Get_User_Fill_Line_Style()">
             <el-col :span="4">
               <el-row type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; font-weight: bold">{{Item}}：</el-row>

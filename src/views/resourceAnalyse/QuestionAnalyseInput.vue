@@ -492,6 +492,8 @@
 </template>
 <script>
 
+import {commonAjax} from '@/common/utils/ajax'
+
 import FileSaver from "file-saver";
 
 import ComplexInput from '../../common/components/ComplexInput.vue'
@@ -518,6 +520,8 @@ export default {
                 Mathdown, QuestionAnalyse},
   data() {
     return {
+      // 保存UUID
+      UUID: "",
       refresh: false,
       // 是否展开题型
       Expand: true,
@@ -787,9 +791,19 @@ export default {
     }
     this.Init_Question_Check()
     this.ToTop();
+    this.Get_User_UUID();
   },
   methods: {
-
+    Get_User_UUID(){
+      commonAjax(this.backendIP + '/api/getUserUUID', {}).then((res)=>{
+        this.UUID = res.UUID
+      }).catch(
+        (err)=>{
+          console.log(err)
+          console.log("Failed.")
+        }
+      )
+    },
     QAS(index){
       if(index == 0){
         this.$router.push({ path: "/QuestionAnalyseInput" });
@@ -1327,9 +1341,9 @@ export default {
       }
 
       var Ques = "";
+      let Temp_Result = "";
 
       if(this.Type_Now == 'option'){
-
 
         let Temp_Doc = {
           type: "",
@@ -1341,10 +1355,7 @@ export default {
           answer: "",
           answer_image: [],
           analysis: "",
-          analysis_image: [],
-          user_id: this.$store.state.user.token,
-          subject: this.SubjectType,
-          period: this.PeriodType
+          analysis_image: []
         }
 
         Ques = JSON.parse(JSON.stringify(this.Temp_OptionQuestionInfo));
@@ -1372,15 +1383,7 @@ export default {
         Temp_Doc.analysis = Ques.analyse;
         Temp_Doc.analysis_image = Ques.analyse_images;
 
-        // this.$message.warning("数据入库格式升级中.")
-
-        let file = new File(
-          [JSON.stringify(Temp_Doc, null, 4)],
-          "Option.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
-        return;
+        Temp_Result = Temp_Doc
 
       }else if(this.Type_Now == 'fill'){
 
@@ -1394,10 +1397,7 @@ export default {
           answer: "",
           answer_image: [],
           analysis: "",
-          analysis_image: [],
-          user_id: this.$store.state.user.token,
-          subject: this.SubjectType,
-          period: this.PeriodType
+          analysis_image: []
         }
         
         Ques = JSON.parse(JSON.stringify(this.Temp_FillQuestionInfo))
@@ -1415,15 +1415,7 @@ export default {
         Temp_Doc.analysis = Ques.analyse;
         Temp_Doc.analysis_image = Ques.analyse_images;
 
-        // this.$message.warning("数据入库格式升级中.")
-
-        let file = new File(
-          [JSON.stringify(Temp_Doc, null, 4)],
-          "Fill.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
-        return;
+        Temp_Result = Temp_Doc
 
       }else if(this.Type_Now == 'answer'){
 
@@ -1435,9 +1427,6 @@ export default {
           type: "大题",
           score: 0,
           subquestions: [],
-          user_id: this.$store.state.user.token,
-          subject: this.SubjectType,
-          period: this.PeriodType,
           answer: "",
           answer_image: [],
           analysis: "",
@@ -1471,15 +1460,7 @@ export default {
         Temp_Doc.analysis = Ques.analyse;
         Temp_Doc.analysis_image = Ques.analyse_images;
 
-        // this.$message.warning("数据入库格式升级中.")
-        
-        let file = new File(
-          [JSON.stringify(Temp_Doc, null, 4)],
-          "Answer.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
-        return;
+        Temp_Result = Temp_Doc
 
       }else if(this.Type_Now == 'mix'){
 
@@ -1491,9 +1472,6 @@ export default {
           type: "大题",
           score: 0,
           subquestions: [],
-          user_id: this.$store.state.user.token,
-          subject: this.SubjectType,
-          period: this.PeriodType,
           answer: "",
           answer_image: [],
           analysis: "",
@@ -1540,65 +1518,78 @@ export default {
         Temp_Doc.analysis = Ques.analyse;
         Temp_Doc.analysis_image = Ques.analyse_images;
 
-        // this.$message.warning("数据入库格式升级中.")
-        
-        let file = new File(
-          [JSON.stringify(Temp_Doc, null, 4)],
-          "Mix.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
-        return;
+        Temp_Result = Temp_Doc
 
       }
 
       if(Control == 'upload'){
 
-        var Question_ID = "";
-
-        let config = {
-            headers: { "Content-Type": "multipart/form-data" }
-        };
-        let param = new FormData();
-
-        param.append('result_json', 
-                        JSON.stringify({
+        let Param = {
+          'Input_Data': JSON.stringify({
                           "post_type": 0,
-                          "title": this.PaperTitle,
-                          "subject_type": this.SubjectType,
-                          "period_type": this.PeriodType,
-                          "questions": Ques,
-                        }, null, 4));
-        param.append('questionInput', true)
+                          "user_id": this.UUID,
+                          "subject": this.SubjectType,
+                          "period": this.PeriodType,
+                          "questions": JSON.stringify(Temp_Result),
+                        }, null, 4),
+          'questionInput': true
+        }
 
-        this.$http
-        .post(this.backendIP + "/api/mathUpload", param, config, {
-          emulateJSON: true
-        })
-        .then(function(data) {
-          if(data.data){
-
-            Question_ID = data.data.Question_ID
-
-            config = {
-                headers: { "Content-Type": "multipart/form-data" }
-            };
-
-            param = new FormData();
-            param.append("ID", Question_ID);
-            param.append("databasename", "test")
-
-            this.$http
-            .post(this.backendIP + "/api/questionAnalyse", param, config, {
-              emulateJSON: true
-            })
-            .then(function(data) {
-              this.Question_Analysing = false;
-              this.analyseData = data.data.que_dic
-              this.analyseReport = true;
-            });
+        commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
+          this.$message.success("入库完成")
+          this.Uploading = false;
+        }).catch(
+          ()=>{
+            this.$message.error("入库失败")
+            this.Uploading = false;
           }
-        });
+        )
+
+        // var Question_ID = "";
+
+        // let config = {
+        //     headers: { "Content-Type": "multipart/form-data" }
+        // };
+        // let param = new FormData();
+
+        // param.append('result_json', 
+        //                 JSON.stringify({
+        //                   "post_type": 0,
+        //                   "title": this.PaperTitle,
+        //                   "subject_type": this.SubjectType,
+        //                   "period_type": this.PeriodType,
+        //                   "questions": Ques,
+        //                 }, null, 4));
+        // param.append('questionInput', true)
+
+        // this.$http
+        // .post(this.backendIP + "/api/mathUpload", param, config, {
+        //   emulateJSON: true
+        // })
+        // .then(function(data) {
+        //   if(data.data){
+
+        //     Question_ID = data.data.Question_ID
+
+        //     config = {
+        //         headers: { "Content-Type": "multipart/form-data" }
+        //     };
+
+        //     param = new FormData();
+        //     param.append("ID", Question_ID);
+        //     param.append("databasename", "test")
+
+        //     this.$http
+        //     .post(this.backendIP + "/api/questionAnalyse", param, config, {
+        //       emulateJSON: true
+        //     })
+        //     .then(function(data) {
+        //       this.Question_Analysing = false;
+        //       this.analyseData = data.data.que_dic
+        //       this.analyseReport = true;
+        //     });
+        //   }
+        // });
 
         
 

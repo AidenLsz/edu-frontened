@@ -1245,6 +1245,8 @@
 </template>
 <script>
 
+import {commonAjax} from '@/common/utils/ajax'
+
 import FileSaver from "file-saver";
 
 import OptionDisplay from './../resourceInput/components/OptionDisplay.vue'
@@ -1503,6 +1505,7 @@ export default {
     },
   },
   mounted(){
+    this.Get_User_UUID();
     if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
       this.$message.error("您尚未登录，请登录后使用录入功能。")
       this.$router.push("/")
@@ -1515,6 +1518,16 @@ export default {
     }
   },
   methods: {
+    Get_User_UUID(){
+      commonAjax(this.backendIP + '/api/getUserUUID', {}).then((res)=>{
+        this.UUID = res.UUID
+      }).catch(
+        (err)=>{
+          console.log(err)
+          console.log("Failed.")
+        }
+      )
+    },
     // 这个方法用于将录入的格式转换成可以用于入库的模式 
     Transfrom_Structure(Item){
 
@@ -2981,10 +2994,7 @@ export default {
       let Upload_Json = {
         title: this.PaperTitle,
         desc: "",
-        Question_list: [],
-        user_id: this.$store.state.user.token,
-        subject: this.SubjectType,
-        period: this.PeriodType,
+        Question_list: []
     }
 
 
@@ -3002,19 +3012,6 @@ export default {
       Upload_Json.Question_list.push(Question_Item)
     }
 
-    // this.$message.warning("数据入库格式升级中.")
-
-    let file = new File(
-          [JSON.stringify(Upload_Json, null, 4)],
-          this.PaperTitle + ".json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
-    let flag = true;
-    if(flag){
-      return;
-    }
-
       if(Control == 'upload'){
 
         if(this.PaperTitle == ""){
@@ -3022,29 +3019,24 @@ export default {
           return
         }
 
-        let config = {
-            headers: {
-              "Content-Type": "multipart/form-data"
-            }
-        };
-        let param = new FormData();
-
-        param.append('result_json',
-                        JSON.stringify({
+        let Param = {
+          'Input_Data': JSON.stringify({
                           "post_type": 1,
-                          "title": this.PaperTitle,
-                          "subject_type": this.SubjectType,
-                          "period_type": this.PeriodType,
-                          "questions": this.Questions,
-                        }, null, 4));
+                          "user_id": this.UUID,
+                          "subject": this.SubjectType,
+                          "period": this.PeriodType,
+                          "questions": JSON.stringify(Upload_Json),
+                        }, null, 4),
+          'questionInput': true
+        }
 
-        this.$http
-        .post(this.backendIP + "/api/mathUpload", param, config, {
-          emulateJSON: true
-        })
-        .then(function() {
-          this.$message.success("整卷上传已完成。");
-        });
+        commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
+          this.$message.success("入库完成")
+        }).catch(
+          ()=>{
+            this.$message.error("入库失败")
+          }
+        )
 
       }else if(Control == 'export'){
 
