@@ -263,6 +263,17 @@
                 </el-col>
               </el-row>
 
+              <el-row type="flex" justify="start">
+                <el-col :span="12">
+                  <el-row type="flex" justify="center">
+                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Check_Answer_Card()">
+                      <i class="el-icon-s-data"></i>
+                      <span>查看答题卡</span>
+                    </el-button>
+                  </el-row>
+                </el-col>
+              </el-row>
+
             </el-col>
           </el-row>
           <el-row style="margin-top: 30px;" class="Side_Card">
@@ -828,6 +839,12 @@ export default {
     this.Init_User_Database_List();
   },
   methods: {
+    // 打开答题卡页面
+    Check_Answer_Card(){
+      sessionStorage.setItem("CombinePaper_AnswerCard", JSON.stringify(this.Question_List));
+      let routeData = this.$router.resolve({ path: '/answerCard' });
+      window.open(routeData.href, '_blank');
+    },
     // 开始导出用于分析报告的数据
     Analyse_Combine_Paper(){
 
@@ -865,7 +882,6 @@ export default {
         }
       ).then((data)=>{
         sessionStorage.setItem("PaperJson", JSON.stringify(data));
-        console.log(sessionStorage)
         let routeData = this.$router.resolve({ path: '/paperAnalyse' });
         window.open(routeData.href, '_blank');
         this.$message.success("试题详情内容已在新页面展开。");
