@@ -199,7 +199,6 @@
 								</el-menu>
 							</el-col>
 
-<<<<<<< HEAD
 							<el-col :span="6" style="padding-top: 15px; display: none">
 								<el-menu mode="horizontal"
 									style=" border-bottom: 3px solid #FFFFFF; padding-bottom: 10px">
@@ -282,119 +281,6 @@
 			<basic-footer />
 		</el-main>
 	</el-container>
-=======
-                    <el-menu-item index="5">
-                      <router-link
-                        to="/paperCombine"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <span style="color: black"> 组卷系统 </span>
-                      </router-link>
-                    </el-menu-item>
-
-                    <el-menu-item index="6">
-                      <router-link to="/manage/dashboard" :underline="false" @click.native="ToTop">
-												<span v-if="$store.state.user.name" style="color: #409EFF; font-weight: bold">
-													资源管理
-												</span>
-												<span v-else style="color: silver">
-													资源管理
-												</span>
-											</router-link>
-                    </el-menu-item>
-
-                    <router-link
-                      to="/estimate"
-                      :underline="false"
-                      @click.native="ToTop"
-                      style="display: none"
-                    >
-                      <el-menu-item index="7">
-                        <span style="color: black">试题属性预估</span>
-                      </el-menu-item>
-                    </router-link>
-
-                    <router-link
-                      to="/similarity"
-                      :underline="false"
-                      @click.native="ToTop"
-                      style="display: none"
-                    >
-                      <el-menu-item index="8">
-                        <span style="color: black">相似题预估</span>
-                      </el-menu-item>
-                    </router-link>
-
-                    <router-link
-                      to="/admin"
-                      v-if="Get_Priority()"
-                      :underline="false"
-                      @click.native="ToTop"
-                    >
-                      <el-menu-item index="9">
-                        <span style="color: red">管理员页面</span>
-                      </el-menu-item>
-                    </router-link>
-                  </el-submenu>
-                </el-menu>
-              </el-col>
-              <el-col :span="4" style="padding-top: 15px">
-                <el-button type="text" @click="show_members" class="navbar"
-                  >成员</el-button
-                >
-              </el-col>
-              <el-col
-                :span="5"
-                style="padding-top: 15px"
-                v-if="$store.state.user.name"
-              >
-                <el-row>
-                  <el-dropdown
-                    trigger="hover"
-                    style="padding-top: 8px"
-                    class="navbar"
-                  >
-                    <span class="el-dropdown-link user-inner">
-                      {{ $store.state.user.name
-                      }}<i class="el-icon-arrow-down el-icon--right"></i>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item @click.native="checkUserInfo"
-                        >个人设置</el-dropdown-item
-                      >
-                      <el-dropdown-item @click.native="checkUserGroup"
-                        >组织架构</el-dropdown-item
-                      >
-                      <el-dropdown-item @click.native="logout"
-                        >退出登录</el-dropdown-item
-                      >
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                </el-row>
-              </el-col>
-              <el-col :span="4" style="padding-top: 15px" v-else>
-                <el-button type="text" @click="login_show" class="navbar"
-                  >登录</el-button
-                >
-              </el-col>
-              <el-col :span="2" style="padding-top: 15px">
-                <el-button type="text" @click="register_show" class="navbar"
-                  >注册</el-button
-                >
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-      </div>
-    </el-header>
-    <!-- <basic-header/> -->
-    <el-main>
-      <router-view :key="$route.fullPath"></router-view>
-      <basic-footer />
-    </el-main>
-  </el-container>
->>>>>>> 654deff... when need login ,do not redirect to home page
 </template>
 
 <script>
