@@ -1,636 +1,723 @@
 <template>
-  <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; margin-top: 50px; margin-bottom: 30px">
-    <el-dialog 
-      :visible.sync="Cautions_Editor_Dialog"
-      title="编辑注意事项信息"
-      width="50%"
-      :modal-append-to-body="false"
-      :close-on-click-modal="true">
-      <el-row type="flex" justify="center" style="font-size: 18px; width: 100%"
-      >
-        <el-input 
-          v-model="PaperInfo.Cautions"
-          type="textarea"
-          :autosize="{ minRows: 4, maxRows: 8}"
-          resize="none"></el-input>
-      </el-row>
-      <el-row type="flex" justify="center" style="margin-top: 20px">
-        <el-button type="primary" plain size="small" @click="Cautions_Editor_Dialog = false">完成</el-button>
-      </el-row>
-    </el-dialog>
-    <!-- 左侧的纸页样式调整 -->
-    <div class="PaperStableIcon">
-      <el-row type="flex" justify="start" style="margin-top: 20px; margin-left: 5px">
-        <label>
-          点击切换
-        </label>
-      </el-row>
-      <el-row type="flex" justify="start" style="margin-top: -5px; margin-left: 5px">
-        <label>
-          纸页布局
-        </label>
-      </el-row>
-      <el-row type="flex" justify="start" style="margin-top: 10px; margin-left: 5px">
-        <label>
-          纸页
-        </label>
-      </el-row>
-      <el-row type="flex" justify="center" class="PaperSettingIconArea">
-        <label @click="ChangePaperType()" style="cursor: pointer">{{PaperType}}</label>
-      </el-row>
-      <el-row type="flex" justify="start" style="margin-top: 10px; margin-left: 5px">
-        <label>
-          布局
-        </label>
-      </el-row>
-      <el-row type="flex" justify="center" class="PaperSettingIconArea">
-        <label @click="ChangeFillType()" style="cursor: pointer">{{FillType}}</label>
-      </el-row>
-      <el-row type="flex" justify="center" style="margin-top: 10px;">
-        <label>
-          总分
-        </label>
-      </el-row>
-      <el-row type="flex" justify="center">
-        <label>
-          xxx分
-        </label>
-      </el-row>
-    </div>
-    <!-- 右侧的内容合适调整 -->
-    <div class="StyleStableIcon">
-      <!-- 身份识别区 -->
-      <el-row type="flex" justify="start">
-        <el-col>
-          <el-row type="flex" justify="start" style="padding-left: 15px; padding-top: 15px">
-            <label>
-              答题卡内容基础设置
-            </label>
-          </el-row>
-          <el-divider></el-divider>
-        </el-col>
-      </el-row>
-      <!-- 身份识别区 -->
-      <el-row type="flex" justify="start" style="margin-left: 15px">
-        <el-col>
-          <el-row type="flex" justify="start">
-            <label>
-              身份识别方式
-            </label>
-          </el-row>
-          <el-row type="flex" justify="start" style="margin-top: 10px;">
-            <el-radio v-model="IDCodeType" label="考号填涂">考号填涂</el-radio>
-          </el-row>
-          <el-row type="flex" justify="start" style="margin-top: 5px;">
-            <el-radio v-model="IDCodeType" label="条形码">条形码</el-radio>
-          </el-row>
-        </el-col>
-      </el-row>
-      <!-- 其他设置区 -->
-      <el-row type="flex" justify="start" style="margin-top: 30px; margin-left: 15px">
-        <el-col>
-          <el-row type="flex" justify="start">
-            <label>
-              其他内容设置
-            </label>
-          </el-row>
-          <el-row type="flex" justify="start" style="margin-top: 10px;">
-            <el-checkbox v-model="ContentSetting" label="注意事项与缺考标记"></el-checkbox>
-          </el-row>
-          <el-row type="flex" justify="start" style="margin-top: 5px;">
-            <el-checkbox v-model="ContentSetting" label="存在AB卷"></el-checkbox>
-          </el-row>
-          <el-row type="flex" justify="start" style="margin-top: 5px;">
-            <el-checkbox v-model="ContentSetting" label="红色答题卡"></el-checkbox>
-          </el-row>
-          <el-row type="flex" justify="start" style="margin-top: 5px;">
-            <el-checkbox v-model="ContentSetting" label="客观题竖向排列"></el-checkbox>
-          </el-row>
-          <el-row type="flex" justify="start" style="margin-top: 5px;">
-            <el-checkbox v-model="ContentSetting" label="分区答题卡"></el-checkbox>
-          </el-row>
-        </el-col>
-      </el-row>
-    </div>
-    <el-row style="min-height: 50vh; border: 1px solid black; border-bottom: none; margin-right: 7vw;">
-      <!-- 关于标题 -->
-      <el-row 
-        type="flex" 
-        justify="center" 
-        @mouseleave.native="Expand_Change('title', 0)" 
-        @mouseenter.native="Expand_Change('title', 1)">
-        <el-row
-          v-if="Expand_Model.title == 0" 
-          style="border-bottom: 1px solid black; width: 100%; padding-top: 5px"
-          type="flex" justify="center">
-          <label 
-            style="font-size: 20px;">
-            {{PaperInfo.title}}
+  <div style="background: #F5FEFF">
+    <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; padding-top: 50px; margin-bottom: 30px;">
+      <el-dialog 
+        :visible.sync="Cautions_Editor_Dialog"
+        title="编辑注意事项信息"
+        width="50%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="true">
+        <el-row type="flex" justify="center" style="font-size: 18px; width: 100%"
+        >
+          <el-input 
+            v-model="PaperInfo.Cautions"
+            type="textarea"
+            :autosize="{ minRows: 4, maxRows: 8}"
+            resize="none"></el-input>
+        </el-row>
+        <el-row type="flex" justify="center" style="margin-top: 20px">
+          <el-button type="primary" plain size="small" @click="Cautions_Editor_Dialog = false">完成</el-button>
+        </el-row>
+      </el-dialog>
+      <!-- 左侧的纸页样式调整 -->
+      <div class="PaperStableIcon">
+        <el-row type="flex" justify="start" style="margin-top: 20px; margin-left: 5px">
+          <label>
+            点击切换
           </label>
         </el-row>
-        <el-row 
-          v-if="Expand_Model.title == 1"
-          class="Focusing_Part" 
-          @click.native="Expand_Change('title', 2)"
-          style="font-size: 20px; font-weight: bold;"
-          type="flex" justify="center">
-          {{PaperInfo.title}}
+        <el-row type="flex" justify="start" style="margin-top: -5px; margin-left: 5px">
+          <label>
+            纸页布局
+          </label>
         </el-row>
+        <el-row type="flex" justify="start" style="margin-top: 10px; margin-left: 5px">
+          <label>
+            纸页
+          </label>
+        </el-row>
+        <el-row type="flex" justify="center" class="PaperSettingIconArea">
+          <label @click="ChangePaperType()" style="cursor: pointer">{{PaperType}}</label>
+        </el-row>
+        <el-row type="flex" justify="start" style="margin-top: 10px; margin-left: 5px">
+          <label>
+            布局
+          </label>
+        </el-row>
+        <el-row type="flex" justify="center" class="PaperSettingIconArea">
+          <label @click="ChangeFillType()" style="cursor: pointer">{{FillType}}</label>
+        </el-row>
+        <el-row type="flex" justify="center" style="margin-top: 10px;">
+          <label>
+            总分
+          </label>
+        </el-row>
+        <el-row type="flex" justify="center">
+          <label>
+            xxx分
+          </label>
+        </el-row>
+      </div>
+      <!-- 右侧的内容合适调整 -->
+      <div class="StyleStableIcon">
+        <!-- 身份识别区 -->
+        <el-row type="flex" justify="start">
+          <el-col>
+            <el-row type="flex" justify="start" style="padding-left: 15px; padding-top: 15px">
+              <label>
+                答题卡内容基础设置
+              </label>
+            </el-row>
+            <el-divider></el-divider>
+          </el-col>
+        </el-row>
+        <!-- 身份识别区 -->
+        <el-row type="flex" justify="start" style="margin-left: 15px">
+          <el-col>
+            <el-row type="flex" justify="start">
+              <label>
+                身份识别方式
+              </label>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-top: 10px;">
+              <el-radio v-model="IDCodeType" label="考号填涂">考号填涂</el-radio>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-top: 5px;">
+              <el-radio v-model="IDCodeType" label="条形码">条形码</el-radio>
+            </el-row>
+          </el-col>
+        </el-row>
+        <!-- 其他设置区 -->
+        <el-row type="flex" justify="start" style="margin-top: 30px; margin-left: 15px">
+          <el-col>
+            <el-row type="flex" justify="start">
+              <label>
+                其他内容设置
+              </label>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-top: 10px;">
+              <el-checkbox v-model="ContentSetting" label="注意事项与缺考标记"></el-checkbox>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-top: 5px;">
+              <el-checkbox v-model="ContentSetting" label="存在AB卷"></el-checkbox>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-top: 5px;">
+              <el-checkbox v-model="ContentSetting" label="红色答题卡"></el-checkbox>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-top: 5px;">
+              <el-checkbox v-model="ContentSetting" label="客观题竖向排列"></el-checkbox>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-top: 5px;">
+              <el-checkbox v-model="ContentSetting" label="分区答题卡"></el-checkbox>
+            </el-row>
+          </el-col>
+        </el-row>
+        <el-row type="flex" justify="center" style="margin-top: 30px">
+          <el-button type="success" plain>下载</el-button>
+        </el-row>
+      </div>
+      <el-row :style="'min-height: 50vh; border: 1px solid ' + Get_Color() + '; border-bottom: none; margin-right: 7vw; background: white; box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.3);'">
+        <!-- 关于标题 -->
         <el-row
-          v-if="Expand_Model.title == 2" 
-          style="font-size: 20px;"
-          class="Focusing_Part"
-        >
-          <el-input style="text-align: center" v-model="PaperInfo.title"></el-input>
-        </el-row>
-        
-      </el-row>
-      <!-- 关于答题卡最上面的信息部分 -->
-      <el-row>
-        <!-- 正常的填涂部分 -->
-        <el-col 
-          :span="Get_Input_Span()" 
-          v-if="ContentSetting.indexOf('注意事项与缺考标记') == -1"
-          style="border-right: 1px solid black; border-bottom: 1px solid black; height: 253px"
-          @mouseleave.native="Setting_Visible.UserFill = false" 
-          @mouseenter.native="Setting_Visible.UserFill = true">
-          <el-popover 
-            placement="bottom"
-            width="150"
-            trigger="hover">
-            <el-row type="flex" justify="start" @mouseenter.native="Setting_Visible.UserFill = true">
-              <el-col>
-                <el-row type="flex" justify="start">
-                  <label>已选信息</label>
+          v-if="ContentSetting.indexOf('存在AB卷') != -1"
+          type="flex" 
+          justify="center"
+          >
+          <el-col :span="4">
+            <el-row type="flex" justify="center" :style="'border-bottom: 1px solid ' + Get_Color() + '; border-right: 1px solid ' + Get_Color() + '; height: 39px; line-height: 39px'">
+              <el-col :span="12">
+                <el-row type="flex" justify="center" :style="'border-right: 1px solid ' + Get_Color() + ''">
+                  A卷<span style="height: 15px; margin-top: 11px; border: 2px solid black; margin-left: 6px; width: 40px"></span>
                 </el-row>
-                <el-row 
-                  v-for="Item in UserFillInfoFull" 
-                  :key="'User_Fill_Full_' + Item" 
-                  class="UserFillInfoFullItem"
-                  @click.native="Edit_User_Fill_Info(Item)">
-                  <el-col :span="20">
-                    <el-row type="flex" justify="start">
-                      {{Item}}
-                    </el-row>
-                  </el-col>
-                  <el-col :span="4">
-                    <el-row type="flex" justify="end">
-                      <i class="el-icon-plus" v-if="UserFillInfo.indexOf(Item) == -1"></i>
-                      <i class="el-icon-delete" v-else></i>
-                    </el-row>
-                  </el-col>
+              </el-col>
+              <el-col :span="12">
+                <el-row type="flex" justify="center">
+                  B卷<span style="height: 15px; margin-top: 11px; border: 2px solid black; margin-left: 6px; width: 40px"></span>
                 </el-row>
               </el-col>
             </el-row>
-            <div slot="reference" class="EditArea" v-show="Setting_Visible.UserFill">
-              <span>编辑</span>
-            </div>
-          </el-popover>
-          <el-row v-for="Item in UserFillInfo" :key="'User_Fill_' + Item" :style="Get_User_Fill_Line_Style()">
-            <el-col :span="4">
-              <el-row type="flex" justify="start" style="padding-left: 2vw; font-size: 1.5rem; font-weight: bold">{{Item}}：</el-row>
-            </el-col>
-            <el-col :span="13" :style="Get_User_Fill_UnderLine()"></el-col>
-          </el-row>
-        </el-col>
-        <!-- 带有注意事项与缺考标记的部分 -->
-        <el-col 
-          :span="Get_Input_Span()" 
-          v-else
-          style="border-right: 1px solid black; border-bottom: 1px solid black; height: 253px"
-          >
-          <el-row type="flex" justify="center">
-            <el-col 
-              style="height: 90px; border-bottom: 1px solid black"
-              @mouseleave.native="Setting_Visible.UserFill = false" 
-              @mouseenter.native="Setting_Visible.UserFill = true"
+          </el-col>
+          <el-col :span="20">
+            <el-row
+              type="flex" 
+              justify="center" 
+              @mouseleave.native="Expand_Change('title', 0)" 
+              @mouseenter.native="Expand_Change('title', 1)">
+              <el-row
+                v-if="Expand_Model.title == 0" 
+                :style="'border-bottom: 1px solid ' + Get_Color() + '; width: 100%; padding-top: 5px'"
+                type="flex" justify="center">
+                <label 
+                  style="font-size: 20px;">
+                  {{PaperInfo.title}}
+                </label>
+              </el-row>
+              <el-row 
+                v-if="Expand_Model.title == 1"
+                class="Focusing_Part" 
+                @click.native="Expand_Change('title', 2)"
+                style="font-size: 20px; font-weight: bold;"
+                type="flex" justify="center">
+                {{PaperInfo.title}}
+              </el-row>
+              <el-row
+                v-if="Expand_Model.title == 2" 
+                style="font-size: 20px;"
+                class="Focusing_Part"
               >
-              <el-popover 
-                placement="bottom"
-                width="150"
-                trigger="hover">
-                <el-row type="flex" justify="start" @mouseenter.native="Setting_Visible.UserFill = true">
-                  <el-col>
-                    <el-row type="flex" justify="start">
-                      <label>已选信息</label>
-                    </el-row>
-                    <el-row 
-                      v-for="Item in UserFillInfoFull" 
-                      :key="'User_Fill_Full_' + Item" 
-                      class="UserFillInfoFullItem"
-                      @click.native="Edit_User_Fill_Info(Item)">
-                      <el-col :span="20">
-                        <el-row type="flex" justify="start">
-                          {{Item}}
-                        </el-row>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-row type="flex" justify="end">
-                          <i class="el-icon-plus" v-if="UserFillInfo.indexOf(Item) == -1"></i>
-                          <i class="el-icon-delete" v-else></i>
-                        </el-row>
-                      </el-col>
-                    </el-row>
-                  </el-col>
-                </el-row>
-                <div slot="reference" class="EditArea" v-show="Setting_Visible.UserFill">
-                  <span>编辑</span>
-                </div>
-              </el-popover>
-              <el-row v-for="Item in UserFillInfo" :key="'User_Fill_' + Item" :style="Get_User_Fill_Line_Style_Mix()">
-                <el-col :span="4">
-                  <el-row type="flex" justify="start" style="padding-left: 2vw; font-size: 1.5rem; font-weight: bold">{{Item}}：</el-row>
-                </el-col>
-                <el-col :span="13" :style="Get_User_Fill_UnderLine_Mix()"></el-col>
+                <el-input style="text-align: center" v-model="PaperInfo.title"></el-input>
               </el-row>
-            </el-col>
-          </el-row>
-          <el-row type="flex" justify="start" style="padding-left: 2vw; border-bottom: 1px solid black; height: 30px; line-height: 30px">
-            <span style="font-weight: bold">正确填涂：</span><span style="margin-left: 20px; margin-top: 7px; height: 16px; background: black; width: 40px"></span>
-          </el-row>
-          <el-row type="flex" justify="start" style="padding-left: 2vw; border-bottom: 1px solid black; height: 30px; line-height: 30px">
-            <span style="font-weight: bold">缺考标记：</span><span style="margin-left: 20px; margin-top: 7px; height: 16px; background: transparent; width: 40px; border: 1px solid black"></span>
-          </el-row>
-          <!-- 关于注意事项 -->
-          <el-row 
-            type="flex" 
-            justify="center"
-            @mouseleave.native="Expand_Change('cautions', 0)" 
-            @mouseenter.native="Expand_Change('cautions', 1)">
-            <el-row
-              v-if="Expand_Model.cautions == 0" 
-              style="padding: 3px; border: 3px solid transparent; min-height: 20px; width: 100%"
-              type="flex" justify="center">
-              <span 
-                style="font-size: 14px; white-space: pre-line; text-align: left; width: 100%; color: #909399">
-                {{PaperInfo.Cautions}}
-              </span>
+              
             </el-row>
-            <el-row 
-              v-if="Expand_Model.cautions == 1"
-              class="Focusing_Part" 
-              @click.native="Expand_Change('cautions', 2)"
-              style="font-size: 14px; font-weight: bold; min-height: 20px; white-space: pre-line; text-align: left; width: 100%;"
-              type="flex" justify="start">
-              {{PaperInfo.Cautions}}
-            </el-row>
-            <el-row
-              v-if="Expand_Model.cautions == 2" 
-              style="font-size: 18px; width: 100%"
-              class="Focusing_Part"
-            >
-              <el-input 
-                v-model="PaperInfo.Cautions"
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 4}"
-                resize="none"></el-input>
-            </el-row>
-          </el-row>
-        </el-col>
-        <!-- 填涂准考证号或贴条形码的部分 -->
-        <el-col 
-          :span="Get_Code_Span()" 
-          style="border-bottom: 1px solid black; height: 253px"
-          @mouseleave.native="Setting_Visible.IDCode = false" 
-          @mouseenter.native="Setting_Visible.IDCode = true"
-          >
-          <el-popover 
-            placement="bottom"
-            width="150"
-            trigger="hover">
-            <el-row type="flex" justify="start" @mouseenter.native="Setting_Visible.IDCode = true">
-              <el-col>
-                <el-row type="flex" justify="start">
-                  <label>当前考号位数</label>
-                </el-row>
-                <el-row type="flex" justify="start">
-                  <el-input-number v-model="PaperInfo.StudentCodeLength" placeholder="" :min="4" :max="12"></el-input-number>
-                </el-row>
-              </el-col>
-            </el-row>
-            <div slot="reference" class="EditArea" v-show="Setting_Visible.IDCode && IDCodeType == '考号填涂'">
-              <span>编辑</span>
-            </div>
-          </el-popover>
-          <!-- 考号填涂 -->
+          </el-col>
+        </el-row>
+        <el-row 
+          v-else
+          type="flex" 
+          justify="center" 
+          @mouseleave.native="Expand_Change('title', 0)" 
+          @mouseenter.native="Expand_Change('title', 1)">
           <el-row
-            v-if="IDCodeType == '考号填涂'"
-            style="height: 36px; line-height: 36px; font-size: 18px; font-weight: bold; width: 100%; border-bottom: 1px solid black; text-align: center"
-          >
-            准考证号填涂区
+            v-if="Expand_Model.title == 0" 
+            :style="'border-bottom: 1px solid ' + Get_Color() + '; width: 100%; padding-top: 5px'"
+            type="flex" justify="center">
+            <label 
+              style="font-size: 20px;">
+              {{PaperInfo.title}}
+            </label>
+          </el-row>
+          <el-row 
+            v-if="Expand_Model.title == 1"
+            class="Focusing_Part" 
+            @click.native="Expand_Change('title', 2)"
+            style="font-size: 20px; font-weight: bold;"
+            type="flex" justify="center">
+            {{PaperInfo.title}}
           </el-row>
           <el-row
-            v-if="IDCodeType == '考号填涂'"
-            type="flex"
-            justify="center"
+            v-if="Expand_Model.title == 2" 
+            style="font-size: 20px;"
+            class="Focusing_Part"
           >
-            <el-col v-for="Ind in PaperInfo.StudentCodeLength - 1" :key="'Student_Code_' + Ind" :span="24/PaperInfo.StudentCodeLength" style="border-right: 1px solid black; height: 214px; width: 100%">
-              <el-row type="flex" style="height: 34px; width: 100%; border-bottom: 1px solid black">
-
-              </el-row>
-              <el-row 
-                v-for="J in 10" 
-                :key="'SC_' + Ind + '_' + J" 
-                type="flex" 
-                justify="center" 
-                style="height: 18px; line-height: 18px; font-size: 14px; width: 100%;">
-                <span style="margin-right: 12%">[</span>{{J-1}}<span style="margin-left: 12%">]</span>
-              </el-row>
-            </el-col>
-            <el-col :span="24/PaperInfo.StudentCodeLength" style="height: 214px; width: 100%">
-              <el-row type="flex" style="height: 34px; width: 100%; border-bottom: 1px solid black">
-
-              </el-row>
-              <el-row 
-                v-for="J in 10" 
-                :key="'SC_' + Ind + '_' + J" 
-                type="flex" 
-                justify="center" 
-                style="height: 18px; line-height: 18px; font-size: 14px; width: 100%;">
-                <span style="margin-right: 12%">[</span>{{J-1}}<span style="margin-left: 12%">]</span>
-              </el-row>
-            </el-col>
+            <el-input style="text-align: center" v-model="PaperInfo.title"></el-input>
           </el-row>
-          <!-- 条形码 -->
-          <el-row 
-            v-else
-            type="flex" 
-            justify="center" 
-            style="height: 200px; margin: 25px 20px 0px 20px; border: 1px dashed black; border-radius: 20px; line-height: 200px">
-            <span style="font-size: 24px">条形码粘贴区</span>
-          </el-row>
-        </el-col>
-      </el-row>
-      <!-- 关于题目填涂的部分 -->
-      <el-row 
-        v-for="(Bundle, Bundle_Index) in Question_Lists" 
-        :key="'Question_Bundle_' + Bundle_Index"
-        style="padding-bottom: 15px; border-bottom: 1px solid black">
-        <el-col
-          @mouseleave.native="Setting_Visible.Editing_Bundle = -1" 
-          @mouseenter.native="Setting_Visible.Editing_Bundle = Bundle_Index">
-          <el-popover 
-            placement="bottom"
-            width="180"
-            trigger="hover">
-            <el-row type="flex" justify="center" @mouseenter.native="Setting_Visible.Editing_Bundle == Bundle_Index">
-              <!-- 针对于选择题类型的版本 -->
-              <el-col v-if="['单选题', '多选题', '判断题'].indexOf(Bundle.type) != -1">
-                <el-row type="flex" justify="center">
-                  <label>每组选择题数量</label>
-                </el-row>
-                <el-row type="flex" justify="center">
-                  <el-input-number 
-                    v-model="Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item" 
-                    placeholder=""
-                    :min="1"
-                    :max="10"
-                    ></el-input-number>
-                </el-row>
-              </el-col>
-              <!-- 针对于填空题版本的类型 -->
-              <el-col v-if="['填空题'].indexOf(Bundle.type) != -1">
-                <el-row type="flex" justify="center">
-                  <label>每行填空的空格数量</label>
-                </el-row>
-                <el-row type="flex" justify="center">
-                  <el-input-number 
-                    v-model="Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item" 
-                    placeholder=""
-                    :min="1"
-                    :max="FillType == '两栏' ? 4 : 3"
-                    ></el-input-number>
-                </el-row>
-              </el-col>
-              <!-- 针对于解答题版本的类型 -->
-              <!-- <el-col v-if="['简答题', '计算题'].indexOf(Bundle.type) != -1">
-                <el-row type="flex" justify="start">
-                  <label>增加或减少答题栏行数</label>
-                </el-row>
-              </el-col> -->
-            </el-row>
-            <div 
-              slot="reference" 
-              class="EditArea" 
-              v-show="Setting_Visible.Editing_Bundle == Bundle_Index && ['简答题', '计算题'].indexOf(Bundle.type) == -1">
-              <span>编辑</span>
-            </div>
-          </el-popover>
-          <!-- 题型的部分 -->
-          <el-row type="flex" justify="start" style="margin-left: 15px; margin-top: 15px;">
-            <label>{{Get_Bundle_Title_Show(Bundle, Bundle_Index)}}</label>
-          </el-row>
-          <!-- 选择部分的模板 -->
-          <el-row v-if="Bundle.type == '单选题'">
-            <!-- 计算一共会有几大行 -->
-            <el-row 
-              v-for="Row_Index in Get_Opt_Row_Index(Bundle_Index)" 
-              :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index"
-              type="flex" justify="start">
-              <!-- 计算这一大行里面会有几列 -->
-              <el-col 
-                v-for="Col_Index in Get_Opt_Col_Group(Bundle_Index, Row_Index)"
-                :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index"
-                :span="6">
-                <!-- 计算这一列里面会有几个题目元素 -->
-                <el-row 
-                  v-for="Item_Index in Get_Opt_Item_Count(Bundle_Index, Row_Index, Col_Index)"
-                  :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index"
-                  type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; height: 22px; line-height: 22px">
-                  <el-col :span="3">
-                    <el-row type="flex" justify="start">
-                      <!-- 得到题号 -->
-                      <span>{{Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index)}}:</span>
-                    </el-row>
-                  </el-col>
-                  <el-col :span="21">
-                    <el-row type="flex" justify="start">
-                      <!-- 画出选项 -->
-                      <span 
-                        v-for="OptIndex in 4" 
-                        :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index + '_' + OptIndex"
-                        style="padding-left: 10px; font-size: 14px; ">
-                        <span style="margin-right: 0.5vw">[</span>{{Get_Opt_Fill(OptIndex)}}<span style="margin-left: 0.5vw">]</span>  
-                      </span>
-                    </el-row>
-                  </el-col>
-                </el-row>
-              </el-col>
-            </el-row>
-          </el-row>
-          <!-- 参照单选 -->
-          <el-row v-if="Bundle.type == '多选题'">
-            <el-row 
-              v-for="Row_Index in Get_Opt_Row_Index(Bundle_Index)" 
-              :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index"
-              type="flex" justify="start">
-              <el-col 
-                v-for="Col_Index in Get_Opt_Col_Group(Bundle_Index, Row_Index)"
-                :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index"
-                :span="6">
-                <el-row 
-                  v-for="Item_Index in Get_Opt_Item_Count(Bundle_Index, Row_Index, Col_Index)"
-                  :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index"
-                  type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; height: 22px; line-height: 22px">
-                  <el-col :span="3">
-                    <el-row type="flex" justify="start">
-                      <!-- 得到题号 -->
-                      <span>{{Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index)}}:</span>
-                    </el-row>
-                  </el-col>
-                  <el-col :span="21">
-                    <el-row type="flex" justify="start">
-                      <!-- 画出选项 -->
-                      <span 
-                        v-for="OptIndex in 4" 
-                        :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index + '_' + OptIndex"
-                        style="padding-left: 10px; font-size: 14px; ">
-                        <span style="margin-right: 0.5vw">[</span>{{Get_Opt_Fill(OptIndex)}}<span style="margin-left: 0.5vw">]</span>  
-                      </span>
-                    </el-row>
-                  </el-col>
-                </el-row>
-              </el-col>
-            </el-row>
-          </el-row>
-          <!-- 参照单选，但选项只有对错两项 -->
-          <el-row v-if="Bundle.type == '判断题'">
-            <el-row 
-              v-for="Row_Index in Get_Opt_Row_Index(Bundle_Index)" 
-              :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index"
-              type="flex" justify="start">
-              <el-col 
-                v-for="Col_Index in Get_Opt_Col_Group(Bundle_Index, Row_Index)"
-                :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index"
-                :span="6">
-                <el-row 
-                  v-for="Item_Index in Get_Opt_Item_Count(Bundle_Index, Row_Index, Col_Index)"
-                  :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index"
-                  type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; height: 22px; line-height: 22px">
-                  <el-col :span="3">
-                    <el-row type="flex" justify="start">
-                      <!-- 得到题号 -->
-                      <span>{{Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index)}}:</span>
-                    </el-row>
-                  </el-col>
-                  <el-col :span="21">
-                    <el-row type="flex" justify="start">
-                      <!-- 画出选项 -->
-                      <span 
-                        v-for="OptIndex in 2" 
-                        :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index + '_' + OptIndex"
-                        style="padding-left: 10px; font-size: 14px; ">
-
-                        <span style="margin-right: 0.35vw">[</span>
-                        <span v-if="OptIndex == 1"><i class="el-icon-check"></i></span>
-                        <span v-if="OptIndex == 2"><i class="el-icon-close"></i></span>
-                        <span style="margin-left: 0.35vw">]</span>  
-                      </span>
-                    </el-row>
-                  </el-col>
-                </el-row>
-              </el-col>
-            </el-row>
-          </el-row>
-          <!-- 填空部分的模板 -->
-          <el-row v-if="Bundle.type == '填空题'">
-            <el-col>
-              <el-row 
-                v-for="(Fill_Ques, Fill_Index) in Bundle.list" 
-                :key="'Fill_' + Bundle_Index + '_' + Fill_Index"
-                type="flex" justify="start"
-                style="margin-top: 7px;">
-                <!-- 获取题号的部分 -->
-                <el-col :span="1">
-                  <el-row type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; height: 32px; line-height: 32px">
-                    <span>
-                      {{Get_Normal_Ques_Index(Bundle_Index, Fill_Index)}}:
-                    </span>
+          
+        </el-row>
+        <!-- 关于答题卡最上面的信息部分 -->
+        <el-row>
+          <!-- 正常的填涂部分 -->
+          <el-col 
+            :span="Get_Input_Span()" 
+            v-if="ContentSetting.indexOf('注意事项与缺考标记') == -1"
+            :style="'border-right: 1px solid ' + Get_Color() + '; border-bottom: 1px solid ' + Get_Color() + '; height: 253px'"
+            @mouseleave.native="Setting_Visible.UserFill = false" 
+            @mouseenter.native="Setting_Visible.UserFill = true">
+            <el-popover 
+              placement="bottom"
+              width="150"
+              trigger="hover">
+              <el-row type="flex" justify="start" @mouseenter.native="Setting_Visible.UserFill = true">
+                <el-col>
+                  <el-row type="flex" justify="start">
+                    <label>已选信息</label>
                   </el-row>
-                </el-col>
-                <!-- 勾画填涂位置的部分 -->
-                <el-col :span="23">
                   <el-row 
-                    type="flex" 
-                    justify="start"
-                    v-for="Fill_Row_Index in Get_Fill_Row_Count(Bundle_Index, Fill_Index)"
-                    :key="'Fill_' + Bundle_Index + '_' + Fill_Index + '_' + Fill_Row_Index"
-                    style="padding-left: 0.5vw; font-size: 16px; height: 32px; line-height: 32px">
-                    <el-col 
-                      v-for="Fill_Blank_Index in Get_Fill_Blank_Count(Bundle_Index, Fill_Index, Fill_Row_Index)" 
-                      :key="'Fill_' + Bundle_Index + '_' + Fill_Index + '_' + Fill_Row_Index + '_' + Fill_Blank_Index"
-                      :span="Get_Fill_Span(Bundle_Index)">
-                      <el-row style="width: 90%; height: 32px; border-bottom: 2px solid black">
-
+                    v-for="Item in UserFillInfoFull" 
+                    :key="'User_Fill_Full_' + Item" 
+                    class="UserFillInfoFullItem"
+                    @click.native="Edit_User_Fill_Info(Item)">
+                    <el-col :span="20">
+                      <el-row type="flex" justify="start">
+                        {{Item}}
+                      </el-row>
+                    </el-col>
+                    <el-col :span="4">
+                      <el-row type="flex" justify="end">
+                        <i class="el-icon-plus" v-if="UserFillInfo.indexOf(Item) == -1"></i>
+                        <i class="el-icon-delete" v-else></i>
                       </el-row>
                     </el-col>
                   </el-row>
                 </el-col>
               </el-row>
-            </el-col>
-            
-          </el-row>
-          <!-- 简答和计算部分的模板 -->
-          <el-row v-if="Bundle.type == '计算题' || Bundle.type == '简答题'">
-            <el-col>
-              <el-row
-                v-for="(Ans_Ques, Ans_Index) in Bundle.list" 
-                :key="'Ans_' + Bundle_Index + '_' + Ans_Index"
-                type="flex" justify="start"
-                style="margin-top: 7px;"
-                @mouseleave.native="Setting_Visible.Editing_Bundle = -1" 
-                @mouseenter.native="Setting_Visible.Editing_Bundle = Bundle_Index + '_' + Ans_Index">
-                
-                <!-- 获取题号的部分 -->
-                <el-col :span="1">
-                  <el-row type="flex" justify="center" style="padding-left: 1vw; font-size: 16px; height: 32px; line-height: 32px">
-                    <span>
-                      {{Get_Normal_Ques_Index(Bundle_Index, Ans_Index)}}:
-                    </span>
-                  </el-row>
-                  <el-popover 
-                    placement="bottom"
-                    width="200"
-                    trigger="hover">
-                    <el-row type="flex" justify="center" @mouseenter.native="Setting_Visible.Editing_Bundle == Bundle_Index + '_' + Ans_Index">
-                      <el-col v-if="['简答题', '计算题'].indexOf(Bundle.type) != -1">
-                        <el-row type="flex" justify="center">
-                          <label>增加或减少答题栏行数</label>
-                        </el-row>
-                        <el-row type="flex" justify="center">
-                        <el-input-number 
-                          v-model="Bundle_Card_Option_List[Bundle_Index][Ans_Index]" 
-                          placeholder=""
-                          :min="4"
-                          ></el-input-number>
+              <div slot="reference" class="EditArea" v-show="Setting_Visible.UserFill">
+                <span>编辑</span>
+              </div>
+            </el-popover>
+            <el-row v-for="Item in UserFillInfo" :key="'User_Fill_' + Item" :style="Get_User_Fill_Line_Style()">
+              <el-col :span="4">
+                <el-row type="flex" justify="start" style="padding-left: 2vw; font-size: 1.5rem; font-weight: bold">{{Item}}：</el-row>
+              </el-col>
+              <el-col :span="13" :style="Get_User_Fill_UnderLine()"></el-col>
+            </el-row>
+          </el-col>
+          <!-- 带有注意事项与缺考标记的部分 -->
+          <el-col 
+            :span="Get_Input_Span()" 
+            v-else
+            :style="'border-right: 1px solid ' + Get_Color() + '; border-bottom: 1px solid ' + Get_Color() + '; height: 253px'"
+            >
+            <el-row type="flex" justify="center">
+              <el-col 
+                :style="'height: 90px; border-bottom: 1px solid ' + Get_Color()"
+                @mouseleave.native="Setting_Visible.UserFill = false" 
+                @mouseenter.native="Setting_Visible.UserFill = true"
+                >
+                <el-popover 
+                  placement="bottom"
+                  width="150"
+                  trigger="hover">
+                  <el-row type="flex" justify="start" @mouseenter.native="Setting_Visible.UserFill = true">
+                    <el-col>
+                      <el-row type="flex" justify="start">
+                        <label>已选信息</label>
                       </el-row>
-                      </el-col>
-                    </el-row>
-                    <div 
-                      slot="reference" 
-                      class="EditArea_2" 
-                      v-show="Setting_Visible.Editing_Bundle == Bundle_Index + '_' + Ans_Index">
-                      <span>编辑</span>
-                    </div>
-                  </el-popover>
-                </el-col>
-                <!-- 答题区域的部分 -->
-                <el-col :span="23" :style="Get_Ans_Style(Bundle_Index, Ans_Index)">
-                  <el-row 
-                    type="flex" 
-                    justify="center"
-                    v-for="Row_Index in Bundle_Card_Option_List[Bundle_Index][Ans_Index]"
-                    :key="'Ans_' + Bundle_Index + '_' + Ans_Index + '_Row_' + Row_Index"
-                    style="border-bottom: 1px solid black; height: 30px; margin-left: 20px; margin-right: 20px"
-                    >
+                      <el-row 
+                        v-for="Item in UserFillInfoFull" 
+                        :key="'User_Fill_Full_' + Item" 
+                        class="UserFillInfoFullItem"
+                        @click.native="Edit_User_Fill_Info(Item)">
+                        <el-col :span="20">
+                          <el-row type="flex" justify="start">
+                            {{Item}}
+                          </el-row>
+                        </el-col>
+                        <el-col :span="4">
+                          <el-row type="flex" justify="end">
+                            <i class="el-icon-plus" v-if="UserFillInfo.indexOf(Item) == -1"></i>
+                            <i class="el-icon-delete" v-else></i>
+                          </el-row>
+                        </el-col>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                  <div slot="reference" class="EditArea" v-show="Setting_Visible.UserFill">
+                    <span>编辑</span>
+                  </div>
+                </el-popover>
+                <el-row v-for="Item in UserFillInfo" :key="'User_Fill_' + Item" :style="Get_User_Fill_Line_Style_Mix()">
+                  <el-col :span="4">
+                    <el-row type="flex" justify="start" style="padding-left: 2vw; font-size: 1.5rem; font-weight: bold">{{Item}}：</el-row>
+                  </el-col>
+                  <el-col :span="13" :style="Get_User_Fill_UnderLine_Mix()"></el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+            <el-row type="flex" justify="start" :style="'padding-left: 2vw; border-bottom: 1px solid ' + Get_Color() + '; height: 30px; line-height: 30px'">
+              <span style="font-weight: bold">正确填涂：</span><span style="margin-left: 20px; margin-top: 7px; height: 16px; background: black; width: 40px"></span>
+            </el-row>
+            <el-row type="flex" justify="start" :style="'padding-left: 2vw; border-bottom: 1px solid ' + Get_Color() + '; height: 30px; line-height: 30px'">
+              <span style="font-weight: bold">缺考标记：</span><span style="margin-left: 20px; margin-top: 7px; height: 16px; background: transparent; width: 40px; border: 1px solid black"></span>
+            </el-row>
+            <!-- 关于注意事项 -->
+            <el-row 
+              type="flex" 
+              justify="center"
+              @mouseleave.native="Expand_Change('cautions', 0)" 
+              @mouseenter.native="Expand_Change('cautions', 1)">
+              <el-row
+                v-if="Expand_Model.cautions == 0" 
+                style="padding: 3px; border: 3px solid transparent; min-height: 20px; width: 100%"
+                type="flex" justify="center">
+                <span 
+                  style="font-size: 14px; white-space: pre-line; text-align: left; width: 100%; color: #909399">
+                  {{PaperInfo.Cautions}}
+                </span>
+              </el-row>
+              <el-row 
+                v-if="Expand_Model.cautions == 1"
+                class="Focusing_Part" 
+                @click.native="Expand_Change('cautions', 2)"
+                style="font-size: 14px; font-weight: bold; min-height: 20px; white-space: pre-line; text-align: left; width: 100%;"
+                type="flex" justify="start">
+                {{PaperInfo.Cautions}}
+              </el-row>
+              <el-row
+                v-if="Expand_Model.cautions == 2" 
+                style="font-size: 18px; width: 100%"
+                class="Focusing_Part"
+              >
+                <el-input 
+                  v-model="PaperInfo.Cautions"
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  resize="none"></el-input>
+              </el-row>
+            </el-row>
+          </el-col>
+          <!-- 填涂准考证号或贴条形码的部分 -->
+          <el-col 
+            :span="Get_Code_Span()" 
+            :style="'border-bottom: 1px solid ' + Get_Color() + '; height: 253px'"
+            @mouseleave.native="Setting_Visible.IDCode = false" 
+            @mouseenter.native="Setting_Visible.IDCode = true"
+            >
+            <el-popover 
+              placement="bottom"
+              width="150"
+              trigger="hover">
+              <el-row type="flex" justify="start" @mouseenter.native="Setting_Visible.IDCode = true">
+                <el-col>
+                  <el-row type="flex" justify="start">
+                    <label>当前考号位数</label>
+                  </el-row>
+                  <el-row type="flex" justify="start">
+                    <el-input-number v-model="PaperInfo.StudentCodeLength" placeholder="" :min="4" :max="12"></el-input-number>
                   </el-row>
                 </el-col>
               </el-row>
-            </el-col>
-          </el-row>
-        </el-col>
+              <div slot="reference" class="EditArea" v-show="Setting_Visible.IDCode && IDCodeType == '考号填涂'">
+                <span>编辑</span>
+              </div>
+            </el-popover>
+            <!-- 考号填涂 -->
+            <el-row
+              v-if="IDCodeType == '考号填涂'"
+              :style="'height: 36px; line-height: 36px; font-size: 18px; font-weight: bold; width: 100%; border-bottom: 1px solid ' + Get_Color() + '; text-align: center'"
+            >
+              准考证号填涂区
+            </el-row>
+            <el-row
+              v-if="IDCodeType == '考号填涂'"
+              type="flex"
+              justify="center"
+            >
+              <el-col v-for="Ind in PaperInfo.StudentCodeLength - 1" :key="'Student_Code_' + Ind" :span="24/PaperInfo.StudentCodeLength" :style="'border-right: 1px solid ' + Get_Color() + '; height: 214px; width: 100%'">
+                <el-row type="flex" :style="'height: 34px; width: 100%; border-bottom: 1px solid ' + Get_Color() + ''">
+
+                </el-row>
+                <el-row 
+                  v-for="J in 10" 
+                  :key="'SC_' + Ind + '_' + J" 
+                  type="flex" 
+                  justify="center" 
+                  :style="'height: 18px; line-height: 18px; font-size: 14px; width: 100%; color: ' + Get_Color()">
+                  <span style="margin-right: 12%">[</span>{{J-1}}<span style="margin-left: 12%">]</span>
+                </el-row>
+              </el-col>
+              <el-col :span="24/PaperInfo.StudentCodeLength" style="height: 214px; width: 100%">
+                <el-row type="flex" :style="'height: 34px; width: 100%; border-bottom: 1px solid ' + Get_Color() + ''">
+
+                </el-row>
+                <el-row 
+                  v-for="J in 10" 
+                  :key="'SC_' + Ind + '_' + J" 
+                  type="flex" 
+                  justify="center" 
+                  :style="'height: 18px; line-height: 18px; font-size: 14px; width: 100%; color: ' + Get_Color()">
+                  <span style="margin-right: 12%">[</span>{{J-1}}<span style="margin-left: 12%">]</span>
+                </el-row>
+              </el-col>
+            </el-row>
+            <!-- 条形码 -->
+            <el-row 
+              v-else
+              type="flex" 
+              justify="center" 
+              :style="'height: 200px; margin: 25px 20px 0px 20px; border: 1px dashed ' + Get_Color() + '; border-radius: 20px; line-height: 200px'">
+              <span style="font-size: 24px">条形码粘贴区</span>
+            </el-row>
+          </el-col>
+        </el-row>
+        <!-- 关于题目填涂的部分 -->
+        <el-row 
+          v-for="(Bundle, Bundle_Index) in Question_Lists" 
+          :key="'Question_Bundle_' + Bundle_Index"
+          :style="'padding-bottom: 15px; border-bottom: 1px solid '  + Get_Color() + ''">
+          <el-col
+            @mouseleave.native="Setting_Visible.Editing_Bundle = -1" 
+            @mouseenter.native="Setting_Visible.Editing_Bundle = Bundle_Index">
+            <el-popover 
+              placement="bottom"
+              width="180"
+              trigger="hover">
+              <el-row type="flex" justify="center" @mouseenter.native="Setting_Visible.Editing_Bundle == Bundle_Index">
+                <!-- 针对于选择题类型的版本 -->
+                <el-col v-if="['单选题', '多选题', '判断题'].indexOf(Bundle.type) != -1">
+                  <el-row type="flex" justify="center">
+                    <label>每组选择题数量</label>
+                  </el-row>
+                  <el-row type="flex" justify="center">
+                    <el-input-number 
+                      v-model="Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item" 
+                      placeholder=""
+                      :min="1"
+                      :max="10"
+                      ></el-input-number>
+                  </el-row>
+                </el-col>
+                <!-- 针对于填空题版本的类型 -->
+                <el-col v-if="['填空题'].indexOf(Bundle.type) != -1">
+                  <el-row type="flex" justify="center">
+                    <label>每行填空的空格数量</label>
+                  </el-row>
+                  <el-row type="flex" justify="center">
+                    <el-input-number 
+                      v-model="Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item" 
+                      placeholder=""
+                      :min="1"
+                      :max="FillType == '两栏' ? 4 : 3"
+                      ></el-input-number>
+                  </el-row>
+                </el-col>
+              </el-row>
+              <div 
+                slot="reference" 
+                class="EditArea" 
+                v-show="Setting_Visible.Editing_Bundle == Bundle_Index && ['简答题', '计算题'].indexOf(Bundle.type) == -1">
+                <span>编辑</span>
+              </div>
+            </el-popover>
+            <!-- 题型的部分 -->
+            <el-row type="flex" justify="start" style="margin-left: 15px; margin-top: 15px;">
+              <label>{{Get_Bundle_Title_Show(Bundle, Bundle_Index)}}</label>
+            </el-row>
+            <!-- 选择部分的模板 -->
+            <el-row v-if="Bundle.type == '单选题'">
+              <!-- 计算一共会有几大行 -->
+              <el-row 
+                v-for="Row_Index in Get_Opt_Row_Index(Bundle_Index)" 
+                :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index"
+                type="flex" justify="start">
+                <!-- 计算这一大行里面会有几列 -->
+                <el-col 
+                  v-for="Col_Index in Get_Opt_Col_Group(Bundle_Index, Row_Index)"
+                  :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index"
+                  :span="6">
+                  <div v-if="ContentSetting.indexOf('客观题竖向排列') != -1">
+                    <el-row type="flex" justify="center">
+                      <!-- 计算这一列里面会有几个题目元素 -->
+                      <el-col 
+                        v-for="Item_Index in Get_Opt_Item_Count_Vertical(Bundle_Index)"
+                        :span="Get_Opt_Item_Span_Vertical(Bundle_Index)"
+                        :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index"
+                        style="font-size: 16px; height: 100px;">
+                        <div v-if="Show_Or_Not(Bundle_Index, Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index))">
+                          <el-row type="flex" justify="center">
+                            <!-- 得到题号 -->
+                            <span>{{Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index)}}</span>
+                          </el-row>
+                          <el-row 
+                            type="flex" 
+                            justify="center" 
+                            v-for="OptIndex in 4"
+                            :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index + '_' + OptIndex">
+                            <!-- 画出选项 -->
+                            <span :style="'font-size: 14px; color: ' + Get_Color()">
+                              <span style="margin-right: 0.5vw">[</span>{{Get_Opt_Fill(OptIndex)}}<span style="margin-left: 0.5vw">]</span>  
+                            </span>
+                          </el-row>
+                        </div>
+                        <div v-else>
+                          <span style="font-size: 14px; color: transparent">
+                            <span style="margin-right: 0.5vw">[</span>A<span style="margin-left: 0.5vw">]</span>  
+                          </span>
+                        </div>
+                      </el-col>
+                    </el-row>
+                  </div>
+                  <div v-else>
+                    <!-- 计算这一列里面会有几个题目元素 -->
+                    <el-row 
+                      v-for="Item_Index in Get_Opt_Item_Count(Bundle_Index, Row_Index, Col_Index)"
+                      :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index"
+                      type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; height: 22px; line-height: 22px">
+                      <el-col :span="3">
+                        <el-row type="flex" justify="start">
+                          <!-- 得到题号 -->
+                          <span>{{Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index)}}:</span>
+                        </el-row>
+                      </el-col>
+                      <el-col :span="21">
+                        <el-row type="flex" justify="start">
+                          <!-- 画出选项 -->
+                          <span 
+                            v-for="OptIndex in 4" 
+                            :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index + '_' + OptIndex"
+                            :style="'padding-left: 10px; font-size: 14px; color: ' + Get_Color()">
+                            <span style="margin-right: 0.5vw">[</span>{{Get_Opt_Fill(OptIndex)}}<span style="margin-left: 0.5vw">]</span>  
+                          </span>
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                  </div>
+                </el-col>
+              </el-row>
+            </el-row>
+            <!-- 参照单选 -->
+            <el-row v-if="Bundle.type == '多选题'">
+              <el-row 
+                v-for="Row_Index in Get_Opt_Row_Index(Bundle_Index)" 
+                :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index"
+                type="flex" justify="start">
+                <el-col 
+                  v-for="Col_Index in Get_Opt_Col_Group(Bundle_Index, Row_Index)"
+                  :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index"
+                  :span="6">
+                  <el-row 
+                    v-for="Item_Index in Get_Opt_Item_Count(Bundle_Index, Row_Index, Col_Index)"
+                    :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index"
+                    type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; height: 22px; line-height: 22px">
+                    <el-col :span="3">
+                      <el-row type="flex" justify="start">
+                        <!-- 得到题号 -->
+                        <span>{{Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index)}}:</span>
+                      </el-row>
+                    </el-col>
+                    <el-col :span="21">
+                      <el-row type="flex" justify="start">
+                        <!-- 画出选项 -->
+                        <span 
+                          v-for="OptIndex in 4" 
+                          :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index + '_' + OptIndex"
+                          style="padding-left: 10px; font-size: 14px; ">
+                          <span style="margin-right: 0.5vw">[</span>{{Get_Opt_Fill(OptIndex)}}<span style="margin-left: 0.5vw">]</span>  
+                        </span>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                </el-col>
+              </el-row>
+            </el-row>
+            <!-- 参照单选，但选项只有对错两项 -->
+            <el-row v-if="Bundle.type == '判断题'">
+              <el-row 
+                v-for="Row_Index in Get_Opt_Row_Index(Bundle_Index)" 
+                :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index"
+                type="flex" justify="start">
+                <el-col 
+                  v-for="Col_Index in Get_Opt_Col_Group(Bundle_Index, Row_Index)"
+                  :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index"
+                  :span="6">
+                  <el-row 
+                    v-for="Item_Index in Get_Opt_Item_Count(Bundle_Index, Row_Index, Col_Index)"
+                    :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index"
+                    type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; height: 22px; line-height: 22px">
+                    <el-col :span="3">
+                      <el-row type="flex" justify="start">
+                        <!-- 得到题号 -->
+                        <span>{{Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index)}}:</span>
+                      </el-row>
+                    </el-col>
+                    <el-col :span="21">
+                      <el-row type="flex" justify="start">
+                        <!-- 画出选项 -->
+                        <span 
+                          v-for="OptIndex in 2" 
+                          :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index + '_' + OptIndex"
+                          style="padding-left: 10px; font-size: 14px; ">
+
+                          <span style="margin-right: 0.35vw">[</span>
+                          <span v-if="OptIndex == 1"><i class="el-icon-check"></i></span>
+                          <span v-if="OptIndex == 2"><i class="el-icon-close"></i></span>
+                          <span style="margin-left: 0.35vw">]</span>  
+                        </span>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                </el-col>
+              </el-row>
+            </el-row>
+            <!-- 填空部分的模板 -->
+            <el-row v-if="Bundle.type == '填空题'">
+              <el-col>
+                <el-row 
+                  v-for="(Fill_Ques, Fill_Index) in Bundle.list" 
+                  :key="'Fill_' + Bundle_Index + '_' + Fill_Index"
+                  type="flex" justify="start"
+                  style="margin-top: 7px;">
+                  <!-- 获取题号的部分 -->
+                  <el-col :span="1">
+                    <el-row type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; height: 32px; line-height: 32px">
+                      <span>
+                        {{Get_Normal_Ques_Index(Bundle_Index, Fill_Index)}}:
+                      </span>
+                    </el-row>
+                  </el-col>
+                  <!-- 勾画填涂位置的部分 -->
+                  <el-col :span="23">
+                    <el-row 
+                      type="flex" 
+                      justify="start"
+                      v-for="Fill_Row_Index in Get_Fill_Row_Count(Bundle_Index, Fill_Index)"
+                      :key="'Fill_' + Bundle_Index + '_' + Fill_Index + '_' + Fill_Row_Index"
+                      style="padding-left: 0.5vw; font-size: 16px; height: 32px; line-height: 32px">
+                      <el-col 
+                        v-for="Fill_Blank_Index in Get_Fill_Blank_Count(Bundle_Index, Fill_Index, Fill_Row_Index)" 
+                        :key="'Fill_' + Bundle_Index + '_' + Fill_Index + '_' + Fill_Row_Index + '_' + Fill_Blank_Index"
+                        :span="Get_Fill_Span(Bundle_Index)">
+                        <el-row :style="'width: 90%; height: 32px; border-bottom: 2px solid ' + Get_Color() + ''">
+
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                  </el-col>
+                </el-row>
+              </el-col>
+              
+            </el-row>
+            <!-- 简答和计算部分的模板 -->
+            <el-row v-if="Bundle.type == '计算题' || Bundle.type == '简答题'">
+              <el-col>
+                <el-row
+                  v-for="(Ans_Ques, Ans_Index) in Bundle.list" 
+                  :key="'Ans_' + Bundle_Index + '_' + Ans_Index"
+                  type="flex" justify="start"
+                  style="margin-top: 7px;"
+                  @mouseleave.native="Setting_Visible.Editing_Bundle = -1" 
+                  @mouseenter.native="Setting_Visible.Editing_Bundle = Bundle_Index + '_' + Ans_Index">
+                  
+                  <!-- 获取题号的部分 -->
+                  <el-col :span="1">
+                    <el-row type="flex" justify="center" style="padding-left: 1vw; font-size: 16px; height: 32px; line-height: 32px">
+                      <span>
+                        {{Get_Normal_Ques_Index(Bundle_Index, Ans_Index)}}:
+                      </span>
+                    </el-row>
+                    <el-popover 
+                      placement="bottom"
+                      width="200"
+                      trigger="hover">
+                      <el-row type="flex" justify="center" @mouseenter.native="Setting_Visible.Editing_Bundle == Bundle_Index + '_' + Ans_Index">
+                        <el-col v-if="['简答题', '计算题'].indexOf(Bundle.type) != -1">
+                          <el-row type="flex" justify="center">
+                            <label>增加或减少答题栏行数</label>
+                          </el-row>
+                          <el-row type="flex" justify="center">
+                          <el-input-number 
+                            v-model="Bundle_Card_Option_List[Bundle_Index][Ans_Index]" 
+                            placeholder=""
+                            :min="4"
+                            ></el-input-number>
+                        </el-row>
+                        </el-col>
+                      </el-row>
+                      <div 
+                        slot="reference" 
+                        class="EditArea_2" 
+                        v-show="Setting_Visible.Editing_Bundle == Bundle_Index + '_' + Ans_Index">
+                        <span>编辑</span>
+                      </div>
+                    </el-popover>
+                  </el-col>
+                  <!-- 答题区域的部分 -->
+                  <el-col :span="23" :style="Get_Ans_Style(Bundle_Index, Ans_Index)">
+                    <el-row 
+                      type="flex" 
+                      justify="center"
+                      v-for="Row_Index in Bundle_Card_Option_List[Bundle_Index][Ans_Index]"
+                      :key="'Ans_' + Bundle_Index + '_' + Ans_Index + '_Row_' + Row_Index"
+                      :style="'border-bottom: 1px solid ' + Get_Color() + '; height: 30px; margin-left: 20px; margin-right: 20px'"
+                      >
+                    </el-row>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
       </el-row>
-    </el-row>
+    </div>
   </div>
 </template>
 <script>
@@ -695,13 +782,22 @@ export default {
     this.Init_Bundle_Options();
   },
   methods: {
+    // 调整答题卡颜色
+    Get_Color(){
+      if(this.ContentSetting.indexOf('红色答题卡') != -1){
+        return "red"
+      }else{
+        return "black"
+      }
+    },
     // 返回解答题类型的题目的解答区域高度
     Get_Ans_Style(Bundle_Index, Ans_Index){
       let Answer_Length = this.Bundle_Card_Option_List[Bundle_Index][Ans_Index] * 30 + 15
+      let Color = this.Get_Color()
       let Style = {
         "height": Answer_Length + 'px',
         "line-height": Answer_Length + 'px',
-        "border": "1px dashed #409EFD",
+        "border": "1px dashed " + Color,
         "border-radius": "10px",
         "margin-bottom": "15px",
         "color": "#409EFD",
@@ -741,6 +837,22 @@ export default {
       }
       return Base + Fill_Index + 1
     },
+    // 纵向排列的时候对于空列的处理
+    Show_Or_Not(Bundle_Index, OptIndex){
+      let Base = 0;
+      for(let i = 0; i <= Bundle_Index; i++){
+        Base = Base + this.Question_Lists[i].list.length
+      }
+      if(OptIndex > Base){
+        return false
+      }else{
+        return true
+      }
+    },
+    // 计算当选择题纵向排列时每组元素应当占据的宽度
+    Get_Opt_Item_Span_Vertical(Bundle_Index){
+      return 24/this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item
+    },
     // 计算应当显示的选项编号
     Get_Opt_Fill(OptIndex){
       return String.fromCharCode(OptIndex + 64)
@@ -777,6 +889,9 @@ export default {
           return Item_Length - ((Row_Index - 1) * 4 + Col_Index - 1) * this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item
         }
       }
+    },
+    Get_Opt_Item_Count_Vertical(Bundle_Index){
+      return this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item
     },
     // 看看这些题目应当是什么编号
     Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index){
@@ -892,19 +1007,21 @@ export default {
     // 返回用户填写项的下划线填写位置
     Get_User_Fill_UnderLine(){
       let Gap = this.UserFillInfo.length > 5 ? 5 : 10
+      let Color = this.Get_Color();
       let Style = {
         'height': 250 / this.UserFillInfo.length - Gap + 'px',
         'text-align': 'left',
-        'border-bottom': '2px solid black'
+        'border-bottom': '2px solid ' + Color
       }
       return Style
     },
     // 返回用户填写项的下划线填写位置 - 混合版本
     Get_User_Fill_UnderLine_Mix(){
+      let Color = this.Get_Color();
       let Style = {
         'height': 90 / this.UserFillInfo.length - 5 + 'px',
         'text-align': 'left',
-        'border-bottom': '2px solid black'
+        'border-bottom': '2px solid ' + Color
       }
       return Style
     },
@@ -987,10 +1104,9 @@ export default {
     width: 5vw;
     border-bottom-right-radius: 20px;
     border-top-right-radius: 20px;
-    border: 1px solid black;
     border-left-style: none;
-    background: white
-    
+    background: white;
+    box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.3);
 }
 /* 右侧，答题卡内容控制区域 */
 .StyleStableIcon{
@@ -1002,8 +1118,8 @@ export default {
   width: 12vw;
   border-bottom-left-radius: 20px;
   border-top-left-radius: 20px;
-  border: 1px solid black;
-  background: white
+  background: white;
+  box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.3);
 }
 /* 以后用于替换点击切换纸样图标的占位Style */
 .PaperSettingIconArea{
