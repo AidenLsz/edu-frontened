@@ -5,7 +5,7 @@
       <el-col style="padding-left: 1vw">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>学习资源检索
+          <el-breadcrumb-item>教材教辅检索
             <span @click="openInstructionDialog" style="cursor:pointer;">
               <i class="el-icon-question"></i>
             </span>
