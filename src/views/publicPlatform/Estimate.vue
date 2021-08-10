@@ -82,7 +82,7 @@
 							<el-row>
 								<div style="position:absolute; top:70px; left:15px;"
 									v-if="checkList.indexOf('难度') > -1">
-									<el-card class="box-card">
+									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span>难度</span>
 										</div>
@@ -95,12 +95,12 @@
 								</div>
 								<div style="position:absolute; top:210px; left:15px;"
 									v-if="checkList.indexOf('知识点') > -1">
-									<el-card class="box-card">
+									<el-card class="card">
 										<div slot="header" style="text-align:left;">
-											<span v-if="subject_id == 'math'">知识点（标号越小权重越大，无标号则权重较低）</span>
-											<span v-if="subject_id != 'math'">知识点</span>
+											<span v-if="subject_id == '数学'">知识点（标号越小权重越大，无标号则权重较低）</span>
+											<span v-if="subject_id != '数学'">知识点</span>
 										</div>
-										<div style="text-align:left;" v-if="subject_id == 'math'">
+										<div style="text-align:left;" v-if="subject_id == '数学'">
 											<el-tag style="background: #a7cdff" v-for="(item, index) in kp_result"
 												:key="index" effect="plain" class="kp_tag">
 												<el-badge :hidden="kp_priority.indexOf(item) == -1"
@@ -109,22 +109,22 @@
 												</el-badge>
 											</el-tag>
 										</div>
-										<div style="text-align:left; background: #a7cdff" v-if="subject_id != 'math'">
+										<div style="text-align:left; background: #a7cdff" v-if="subject_id != '数学'">
 											<el-tag class="kp_tag" effect="plain">暂不支持数学题目以外的知识点查询</el-tag>
 
 										</div>
 									</el-card>
 								</div>
-								<div style="position:absolute; top:320px; left:15px;"
+								<div style="position:absolute; top:400px; left:15px;"
 									v-if="checkList.indexOf('知识点') > -1">
-									<el-card class="box-card">
+									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span>知识树状结构</span>
 										</div>
 										<el-tree style="background: #a7cdff" :data="kp_layer" :props="defaultProps"
-											v-if="subject_id == 'math'"></el-tree>
+											v-if="subject_id == '数学'"></el-tree>
 										<el-tag style="background: #a7cdff" class="kp_tag" effect="plain"
-											v-if="subject_id != 'math'">暂不支持数学题目以外的知识点结构查询</el-tag>
+											v-if="subject_id != '数学'">暂不支持数学题目以外的知识点结构查询</el-tag>
 
 									</el-card>
 								</div>
@@ -223,7 +223,8 @@ r = requests.post(url, data=json.dumps(data))
 
 assert r.status_code == 200, r.status_code
 print(json.loads(r.content)["data"])</code></pre>
-							<p>如果<code>data</code>里不包含图片的话将<code>&quot;image&quot;</code>置为 <code>&quot;&quot;</code> 即可, 即</p>
+							<p>如果<code>data</code>里不包含图片的话将<code>&quot;image&quot;</code>置为 <code>&quot;&quot;</code>
+								即可, 即</p>
 							<pre><code>data = [{
     "id": "123",
     "itemdata": {
@@ -278,11 +279,11 @@ print(json.loads(r.content)["data"])</code></pre>
 				checkList: ["难度", "知识点"],
 				// 学科选择属性
 				options: [{
-						value_id: "math", // 学科值
+						value_id: "数学", // 学科值
 						label: "数学" // 学科名
 					},
 					{
-						value_id: "english",
+						value_id: "英语",
 						label: "英语"
 					}
 				],
@@ -327,7 +328,7 @@ print(json.loads(r.content)["data"])</code></pre>
 				this.show_result = false;
 			},
 			subject_id() {
-				if (this.subject_id === "math") {
+				if (this.subject_id === "数学") {
 					this.type_options = [{
 							value_id: "selection_test", // 数学题型值
 							label: "选择" // 数学题型名
@@ -342,7 +343,7 @@ print(json.loads(r.content)["data"])</code></pre>
 						}
 					];
 				}
-				if (this.subject_id === "english") {
+				if (this.subject_id === "英语") {
 					this.type_options = [{
 							value_id: "selection_test", // 英语题型值
 							label: "选择" // 英语题型名
@@ -390,6 +391,16 @@ print(json.loads(r.content)["data"])</code></pre>
 				param.append("estimate_content", this.content); // 后端接收estimate_content字段
 				param.append("estimate_subject", this.subject_id); // 后端接收estimate_subject字段
 				param.append("exercise_type", this.type_id); // 后端接收exercise_type字段
+
+				let param_beta = new FormData();
+
+				param_beta.append("files", JSON.stringify(temp_list));
+				param_beta.append("estimate_content", this.content); // 后端接收estimate_content字段
+				param_beta.append("exercise_type", this.type_id); // 后端接收exercise_type字段
+				if (this.subject_id == "数学") param_beta.append("estimate_subject", "math");
+				else //addition
+					if (this.subject_id == "英语") param_beta.append("estimate_subject", "english");
+
 				if (this.checkList.length === 2) {
 					this.checkList[0] = "难度";
 					this.checkList[1] = "知识点";
@@ -397,7 +408,7 @@ print(json.loads(r.content)["data"])</code></pre>
 				if (this.checkList.indexOf("难度") > -1) {
 					// 请求难度属性接口
 					this.$http
-						.post(this.backendIP + "/api/difficulty", param, config, {
+						.post(this.backendIP + "/api/difficulty", param_beta, config, {
 							emulateJSON: true
 						})
 						.then(function(data) {
@@ -405,6 +416,7 @@ print(json.loads(r.content)["data"])</code></pre>
 							this.loading = false;
 						});
 				}
+
 				if (this.checkList.indexOf("知识点") > -1) {
 					// 请求知识点属性接口
 					this.$http
@@ -483,7 +495,7 @@ print(json.loads(r.content)["data"])</code></pre>
 		background-color: #a7cdff;
 	}
 
-	.box-card {
+	.card {
 		width: 370px;
 
 	}
