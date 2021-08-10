@@ -5,18 +5,21 @@
 			<el-col style="padding-left: 25px">
 				<el-breadcrumb separator-class="el-icon-arrow-right">
 					<el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-					<el-breadcrumb-item>开放平台</el-breadcrumb-item>
+					<el-breadcrumb-item>AI实验室</el-breadcrumb-item>
 					<el-breadcrumb-item>图片转写</el-breadcrumb-item>
 				</el-breadcrumb>
 			</el-col>
 		</el-row>
 
-		<el-row style="margin: 30px 0px 10px 0px">
-			<label style="font-size: 20px">图片转写</label>
+		<!-- <el-row style="margin: 30px 0px 10px 0px">
+			<label style="font-size: 30px">图片转写</label>
 		</el-row>
-		<p type="text" style="margin: 40px 150px 40px 150px;">
-			图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写图片转写
-		</p>
+
+		<el-row style="margin: 50px 200px 10px 200px">
+			<p style="font-size: 18px;">
+				图片转写功能旨在辅助用户从图片格式的教育资源中快速提取格式化富文本内容。仅需上传一张图片，人工智能算法便可自动识别图片中的文字、公式与图例，并将其中的公式转化为统一标准的排版语言（如latex）。
+			</p>
+		</el-row> -->
 
 		<div id="main">
 			<div id="image">
@@ -43,25 +46,6 @@
 				</div>
 			</div>
 
-			<!-- 	<div id="option">
-				<div class="optional_img" style="left:20px;">
-					<img :src="optional_image[0]" alt="image0" class="self_adaption"
-						@click="ChooseDefaultImage(optional_image[0])">
-				</div>
-				<div class="optional_img" style="left:220px;">
-					<img :src="optional_image[1]" alt="image1" class="self_adaption"
-						@click="ChooseDefaultImage(optional_image[1])">
-				</div>
-				<div class="optional_img" style="left:420px;">
-					<img :src="optional_image[2]" alt="image2" class="self_adaption"
-						@click="ChooseDefaultImage(optional_image[2])">
-				</div>
-				<div class="optional_img" style="left:620px;">
-					<img :src="optional_image[3]" alt="image3" class="self_adaption"
-						@click="ChooseDefaultImage(optional_image[3])">
-				</div>
-			</div> -->
-
 			<div id="option">
 				<div v-for="(img,index) in optional_image" :key="img" class="optional_img"
 					:style="{'left' : index*200+20+'px'}">
@@ -73,7 +57,7 @@
 				<div style="font-size: 30px; font-weight: bold; float:left; margin:20px 0px 20px 20px;">
 					识别结果
 				</div>
-				<el-table :data="tableData" border style="width: 100%">
+				<el-table :data="tableData" border style="width: 100%" empty-text="加载中...">
 					<!-- <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="tableData[num].content"></ComplexInput> -->
 					<el-table-column prop="num" label="序号" width="60">
 					</el-table-column>
@@ -144,25 +128,172 @@
 			</el-row>
 		</el-dialog>
 
-		<!-- <p>When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are $$x = {-b \pm \sqrt{b^2-4ac}
-			\over 2a}.$$</p> -->
+		<!-- 测试dialogue组件 -->
+		<!-- <div>
+			<Dialogue :optional_image="optional_image"></Dialogue>
+		</div> -->
+
+		<!-- 侧边对话框 -->
+		<!-- <el-row class="panel-body"> -->
+		<div class="tab panel-btn" id="openBtn" @click="openPanel()">
+			<div>使用说明</div>
+			<div class="arrow"></div>
+		</div>
+		<el-card class="box-card left">
+			<div class="panel-btn" id="closeBtn" @click="closePanel()">
+				<i class="el-icon-d-arrow-left"></i>
+			</div>
+			<div class="container">
+				<div class="intro">
+					<el-row type="flex" justify="start" class="title">
+						介绍
+					</el-row>
+					<el-row type="flex" justify="start" class="content">
+						<el-col>
+							图片转写模块综合了当下最为流行的OCR技术和机器翻译技术。当输入一张图片时，模块首先通过布局分析分割试题中的图片、表格、公式以及文字部分，然后利用OCR识别模型将图片区域转换为文本形式的题目，从而轻松录入题目。
+						</el-col>
+					</el-row>
+				</div>
+				<!-- <el-divider></el-divider> -->
+				<div class="intro">
+					<el-row type="flex" justify="start" class="title">
+						API说明
+					</el-row>
+					<el-row type="flex" justify="start" class="content">
+						<el-col>
+							<ul>
+								<li>
+									<p>首先将试题图片转化为base64的格式，发送到识别API。在模型识别完成后，从返回的数据中提取出图片转写后的试题文本。</p>
+								</li>
+								<li>
+									<p>API URL: https://formula-recognition-service-157-production.env.bdaa.pro/v1
+									</p>
+								</li>
+								<li>
+									<p>接口类型：POST</p>
+								</li>
+								<li>
+									<p>参数说明：</p>
+									<p><strong>接收参数</strong></p>
+									<el-table :data="ReceivedPara" border style="width: 100%">
+										<!-- <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="tableData[num].content"></ComplexInput> -->
+										<el-table-column prop="field" label="字段">
+										</el-table-column>
+										<el-table-column prop="type" label="类型">
+										</el-table-column>
+										<el-table-column prop="necessary" label="是否必填">
+										</el-table-column>
+										<el-table-column prop="desc" label="描述">
+										</el-table-column>
+									</el-table>
+									<p><strong>返回参数</strong></p>
+									<el-table :data="ReturnedPara" border style="width: 100%">
+										<!-- <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="tableData[num].content"></ComplexInput> -->
+										<el-table-column prop="field" label="字段">
+										</el-table-column>
+										<el-table-column prop="type" label="类型">
+										</el-table-column>
+										<el-table-column prop="desc" label="描述">
+										</el-table-column>
+									</el-table>
+								</li>
+							</ul>
+						</el-col>
+					</el-row>
+				</div>
+				<!-- <el-divider></el-divider> -->
+				<div class="intro">
+					<el-row type="flex" justify="start" class="title">
+						使用示例
+					</el-row>
+					<el-row type="flex" justify="start" class="content">
+						<el-col>
+							<p><strong>发送请求</strong></p>
+							<pre><code>import json
+import requests
+import base64
+import os
+
+baseDir = os.path.dirname(os.path.abspath(__file__)) + '/'
+
+if __name__ == "__main__":
+    url = "https://formula-recognition-service-157-production.env.bdaa.pro/v1"
+
+    image_paths = ['./img_1.png', './img_2.png', './img_3.png']
+    images = []
+    for image_path in image_paths:
+        with open(os.path.join(baseDir, image_path), 'rb') as f:
+            image = base64.b64encode(f.read()).decode()
+            images.append(image)
+
+    data = []
+    for idx, image in enumerate(images):
+        query = {
+            'qid': idx,
+            'image': image
+        }
+        data.append(query)
+
+    resp = requests.post(url, data=json.dumps(data))
+
+    assert resp.status_code == 200, resp.text
+    try:
+        print(json.loads(resp.content))
+    except Exception:
+        print(resp.text)</code></pre>
+							<p><strong>返回值</strong></p>
+							<pre><code>[{
+    'code': 200, 
+    'msg': '', 
+    'data': {'qid': '0', 
+             'success': 1, 
+             'is_formula': 1, 
+             'detect_formula': 1, 
+             'latex': '| f ( x ) - g ( x ) | \\leq k ( k &gt; 0 )'}
+}, 
+{'code': 200, 
+ 'msg': '', 
+ 'data': {'qid': '1', 
+          'success': 1, 
+          'is_formula': 1, 
+          'detect_formula': 1, 
+          'latex': 'f ( x ) = ( \\frac { 1 } { 3 } ) ^ { x } - \\sqrt { x }'}
+},
+{'code': 200, 
+ 'msg': 'This image is not formula!', 
+ 'data': {'qid': '2', 
+          'success': 1, 
+          'is_formula': 0, 
+          'detect_formula': 0, 
+          'latex': ''}
+}]</code></pre>
+						</el-col>
+					</el-row>
+				</div>
+			</div>
+		</el-card>
+		<!-- </el-row> -->
 	</div>
 </template>
 
 <script>
 	// import Mathdown from "@/common/components/Mathdown.vue";
 	require("mathjax/es5/tex-svg");
+	import $ from 'jquery'
 	import {
 		commonAjax
 	} from '@/common/utils/ajax'
+	//import Dialogue from "./components/Dialogue.vue"
 
 	export default {
 		components: {
+			//Dialogue
 			//ComplexInput
 		},
 		name: "ImageTranscription",
 		mounted() {
 			this.ToTop();
+			this.openPanel();
 		},
 		data() {
 			return {
@@ -177,6 +308,8 @@
 					centerBox: true,
 					canScale: false
 				},
+				//图片是否需要转base64
+				need_trans: 1,
 				optional_image: [
 					require("@/assets/default_image/0.png"),
 					require("@/assets/default_image/1.png"),
@@ -185,16 +318,54 @@
 				],
 				tableData: [{
 					num: "1",
-					content: "http: //www.baidu.com"
+					content: "关 于 函 数 f ( x ) = 4 \\sin \\left ( 2 x + \\frac { \\pi } { 3 } \\right ) ( x \\in R ) ， 有 下 列 命 题 ："
 				}, {
 					num: "2",
-					content: "北京市海淀区上地十街10号100085",
+					content: "① y = f ( x ) 的 表 达 式 可 改 写 为 y = 4 \\cos \\left ( 2 x - \\frac { \\pi } { 6 } \\right ) ；",
 				}, {
 					num: "3",
-					content: " No. 10 Shangdi 10th Street, Haidian District, Beijing 100085",
+					content: "② y = f ( x ) 是 以 2 π 为 最 小 正 周 期 的 周 期 函 数 ；,"
 				}, {
 					num: "4",
-					content: "Tel:+8610-5292-2888fax:+8610-5992-0900"
+					content: "2 y = f ( x ) 的 图 象 关 于 点 \\left ( - \\frac { \\pi } { 6 } , 0 \\right ) 对 称 ；"
+				}, {
+					num: "5",
+					content: "④ y = f ( x ) 的 图 象 关 于 直 线 x = - \\frac { \\pi } { 6 } 对 称 。"
+				}, {
+					num: "6",
+					content: "其 中 正 确 的 命 题 的 序 号 是 _ _ _ _ _ _ _ _ _ _ _ _ 。 （ 注 ： 把 你 认 为 正 确 的 命 题 的 序 号 都 填 上 上"
+				}],
+				ReceivedPara: [{
+					field: "image",
+					type: "str(base64 encode)",
+					necessary: "是",
+					desc: "待识别的图片，需要用base64编码"
+				}, {
+					field: "qid",
+					type: "int/str",
+					necessary: "否",
+					desc: "查询id"
+				}],
+				ReturnedPara: [{
+					field: "qid",
+					type: "str",
+					desc: "查询id，若发送参数不包含则返回空字符串"
+				}, {
+					field: "success",
+					type: "int",
+					desc: "1代表识别成功，0代表识别失败"
+				}, {
+					field: "is_formula",
+					type: "int",
+					desc: "1代表该图片是公式，0代表该图片不是公式，不进行识别"
+				}, {
+					field: "detect_formula",
+					type: "int",
+					desc: "1代表检测到公式，0代表未检测到公式，不进行识别。该参数仅在is_formula为1的时候有意义"
+				}, {
+					field: "latex",
+					type: "str",
+					desc: "识别出的公式转换成latex格式，若未识别出来则返回空字符串\"\"。该参数仅在上面三个参数都为1时才有意义"
 				}],
 				// loading: false,
 				error: false,
@@ -308,6 +479,7 @@
 			ConfirmImg() {
 				this.error = false;
 				this.image = this.option.img;
+				this.need_trans = 0;
 				this.Reset_Interval();
 			},
 
@@ -324,11 +496,13 @@
 					console.log("error\n");
 					this.error = true;
 				}
+				this.need_trans = 1;
 			},
 
 			ChooseDefaultImage(default_image) {
 				this.error = false;
 				this.image = default_image;
+				this.need_trans = 1;
 			},
 
 			getBase64(url) {
@@ -362,18 +536,22 @@
 
 			async identify() {
 				//let reader = new FileReader();
-				let result;
+				this.tableData = [];
+				let result, data;
 				let res = '!!!';
 				console.log('执行');
 				console.log(this.image + '!!!');
 
-				try {
-					res = await this.getBase64(this.image);
-				} catch (err) {
-					console.log(err);
-				}
-				this.base64_code = res; // 将结果赋值给需要用的变量属性
-				console.log(this.base64_code); // 获取到结果
+				if (this.need_trans == 1) { //要转
+					try {
+						res = await this.getBase64(this.image);
+					} catch (err) {
+						console.log(err);
+					}
+					this.base64_code = res; // 将结果赋值给需要用的变量属性
+					// console.log(this.base64_code); // 获取到结果
+				} else
+					this.base64_code = this.image;
 
 				console.log(this.base64_code.length);
 				if (this.base64_code.length / 1024 > 1024) {
@@ -382,29 +560,60 @@
 				}
 
 				try {
-					result = await commonAjax(
+					data = await commonAjax(
 						"https://formula-recognition-service-157-production.env.bdaa.pro/v1", {
 							image: this.base64_code,
 							qid: this.qid
 						});
 				} catch (err) {
 					console.log(err);
-					console.log(err);
 				}
+
+				// commonAjax(
+				// 	"https://formula-recognition-service-157-production.env.bdaa.pro/v1", {
+				// 		image: this.base64_code,
+				// 		qid: this.qid
+				// 	}).then(data=>{
+				// 		// console.log("then qid:  "+data)
+				// 		console.log(111,JSON.parse(JSON.stringify(data)))
+				// 	})
+
+				console.log(data);
+				result = data.data;
 				this.qid++;
 				console.log(result.qid);
 				if (result.success && result.is_formula && result.detect_formula) {
-					this.tableData = [{
-						num: "0",
-						content: result.latex
-					}];
+					console.log("success!");
+					for (let i = 0; i < result.latex.length; i++) {
+						// console.log(i,result.latex[i])
+						this.tableData.push({
+							content: result.latex[i],
+							num: i + 1
+						});
+					}
 				} else {
 					this.tableData.length = 0;
 				}
+				//console.log(this.tableData[0].content);
+			},
 
-				// let data = await commonAjax(this.backendIP + '/api/count', {})
-				// console.log("paper_num=" + data.num_paper);
-			}
+			openPanel() {
+				$('.box-card.left').animate({
+					left: '0%',
+					opacity: 1
+				}, 'easeInOutExpo')
+				$('#openBtn').hide()
+				$('#closeBtn').show()
+			},
+
+			closePanel() {
+				$('.box-card.left').animate({
+					left: '-50%',
+					opacity: 0,
+				}, 'easeInOutExpo')
+				$('#openBtn').show()
+				$('#closeBtn').hide()
+			},
 		}
 	}
 </script>
@@ -415,11 +624,13 @@
 		margin: auto;
 		width: 1200px;
 		height: 650px;
+		margin-top: 100px;
 		margin-bottom: 100px;
 	}
 
 	#image {
 		position: absolute;
+		background-color: #EEF5FE;
 		top: 0px;
 		left: 0px;
 		width: 800px;
@@ -523,7 +734,7 @@
 		height: 100%;
 		width: 100%;
 		background-color: #FFFFFF;
-		background-image: url("../assets/failure.png");
+		background-image: url("../../assets/failure.png");
 		background-repeat: no-repeat;
 		background-position: 20% 50%;
 		background-size: 30%;
@@ -542,11 +753,90 @@
 		white-space: pre;
 	}
 
-	// #image /deep/ .el-icon-loading {
-	// 	position:absolute;
-	// 	height: 80px;
-	// 	width:80px;
-	// 	top: 400px;
-	// 	left:250px;
+	// .panel-body {
+	// 	position: absolute;
+	// 	width: 840px;
+	// 	height: 90%;
+	// 	left: -10px;
+	// 	top: 50px;
+	// 	//z-index: 10;
 	// }
+
+	.box-card {
+		position: absolute;
+		margin-left: 15px;
+		background: rgba(248, 251, 255, .9);
+		// width: 100%;
+		// height: 100%;
+		// z-index: 10;
+		width: 840px;
+		height: 93%;
+		left: 0;
+		top: 50px;
+		opacity: 0;
+	}
+
+	.panel-btn {
+		position: absolute;
+		top: 10px;
+		font-size: 16px;
+		font-weight: bold;
+		color: #888888;
+	}
+
+	.tab {
+		position: absolute;
+		width: 25px;
+		height: 95px;
+		border-radius: 0px 10px 10px 0px;
+		background-color: #eef1f7;
+		cursor: pointer;
+		z-index: 10;
+
+		.arrow {
+			border-color: #eef1f7 transparent transparent #eef1f7;
+			border-style: solid;
+			border-width: 15px 15px 15px 15px;
+			height: 0;
+			width: 0;
+			position: absolute;
+			bottom: -23px;
+		}
+	}
+
+	.container {
+		display: flex;
+		width: 100%;
+		flex-flow: column;
+		padding-left: 5%;
+		padding-right: 5%;
+		padding-top: 5%;
+		height: 650px;
+		overflow-y: scroll;
+	}
+
+	.title {
+		text-align: left;
+		font-weight: bold;
+		font-size: 22px;
+		color: #0a1612;
+	}
+
+	.intro .content {
+		margin-top: 20px;
+		margin-bottom: 20px;
+		//max-height: 45%;
+		text-align: left;
+	}
+
+	#openBtn {
+		top: 15vh;
+		// left:15px;
+	}
+
+	#closeBtn {
+		right: 50px;
+		top: 50px;
+		font-size: 30px;
+	}
 </style>
