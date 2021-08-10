@@ -153,7 +153,7 @@
                         ><span style="color: black">资源录入</span></template
                       >
                       <el-menu-item index="1-1"
-                        ><span style="color: Gainsboro">学习资源</span>
+                        ><span style="color: Gainsboro">教材教辅资源</span>
                       </el-menu-item>
                       <router-link
                         to="/inputMarked"
@@ -218,7 +218,7 @@
                         @click.native="ToTop"
                       >
                         <el-menu-item index="2-4">
-                          <span style="color: black">学习资源检索</span>
+                          <span style="color: black">教材教辅检索</span>
                         </el-menu-item>
                       </router-link>
                     </el-submenu>
@@ -227,7 +227,7 @@
                         ><span style="color: black">分析</span></template
                       >
                       <el-menu-item index="3-1"
-                        ><span style="color: Gainsboro">学习资源</span>
+                        ><span style="color: Gainsboro">教材教辅资源</span>
                       </el-menu-item>
                       <el-menu-item
                         index="3-2"
