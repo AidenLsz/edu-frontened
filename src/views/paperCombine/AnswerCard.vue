@@ -2,6 +2,25 @@
   <div style="background: #F5FEFF">
     <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; padding-top: 50px; margin-bottom: 30px;">
       <el-dialog 
+        :visible.sync="Edit_Part_Dialog"
+        title="编辑题目分区信息"
+        width="50%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="true"
+        @close="Reset_Edit_Part_Info()">
+        <el-row type="flex" justify="center" style="font-size: 18px; width: 100%"
+        >
+          <el-input 
+            v-model="Editing_Part_Info"
+            type="textarea"
+            :autosize="{ minRows: 4, maxRows: 8}"
+            resize="none"></el-input>
+        </el-row>
+        <el-row type="flex" justify="center" style="margin-top: 20px">
+          <el-button type="primary" plain size="small" @click="Finish_Edit_Part_Info()">完成</el-button>
+        </el-row>
+      </el-dialog>
+      <el-dialog 
         :visible.sync="Cautions_Editor_Dialog"
         title="编辑注意事项信息"
         width="50%"
@@ -113,7 +132,7 @@
           </el-col>
         </el-row>
         <el-row type="flex" justify="center" style="margin-top: 30px">
-          <el-button type="success" plain>下载</el-button>
+          <el-button type="success" plain @click="Download_Answer_Card()">下载</el-button>
         </el-row>
       </div>
       <el-row :style="'min-height: 50vh; border: 1px solid ' + Get_Color() + '; border-bottom: none; margin-right: 7vw; background: white; box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.3);'">
@@ -401,7 +420,7 @@
                 </el-row>
                 <el-row 
                   v-for="J in 10" 
-                  :key="'SC_' + Ind + '_' + J" 
+                  :key="'SC__' + J" 
                   type="flex" 
                   justify="center" 
                   :style="'height: 18px; line-height: 18px; font-size: 14px; width: 100%; color: ' + Get_Color()">
@@ -456,7 +475,7 @@
                       v-model="Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item" 
                       placeholder=""
                       :min="1"
-                      :max="FillType == '两栏' ? 4 : 3"
+                      :max="PaperType != 'A3/B4/8K' ? 5 : FillType == '双栏' ? 4 : 3"
                       ></el-input-number>
                   </el-row>
                 </el-col>
@@ -464,12 +483,60 @@
               <div 
                 slot="reference" 
                 class="EditArea" 
-                v-show="Setting_Visible.Editing_Bundle == Bundle_Index && ['简答题', '计算题'].indexOf(Bundle.type) == -1">
+                v-show="Setting_Visible.Editing_Bundle == Bundle_Index">
                 <span>编辑</span>
               </div>
             </el-popover>
+            <!-- 分区答题卡 -->
+            <el-row 
+              v-if="ContentSetting.indexOf('分区答题卡') != -1 && !PaperInfo.Partshow[Bundle_Index]"
+              type="flex" justify="center"
+              :style="'height: 36px; line-height: 36px; color: black; border-bottom: 1px solid ' + Get_Color() + ';'">
+              <el-button type="text" @click="Change_Part_Info(Bundle_Index)">
+                <span v-if="!PaperInfo.Partshow[Bundle_Index]" >点击在此添加分区</span>
+              </el-button>
+            </el-row>
+            <el-row 
+              v-if="ContentSetting.indexOf('分区答题卡') != -1 && PaperInfo.Partshow[Bundle_Index]"
+              type="flex" justify="start"
+              :style="'height: 36px; line-height: 36px; color: black'">
+              <el-col :span="16">
+                <el-row type="flex" justify="center">
+                  <el-row
+                    :style="'border-bottom: 1px solid ' + Get_Color() + '; border-right: 1px solid ' + Get_Color() + '; width: 100%; padding-top: 5px'"
+                    type="flex" justify="center">
+                    <el-button type="text" @click="Edit_Part_Info(Bundle_Index)">
+                      {{PaperInfo.PartInfo[Get_Info_Index(Bundle_Index)].type}}<span v-if="PaperInfo.PartInfo[Get_Info_Index(Bundle_Index)].showScore">（共{{PaperInfo.PartInfo[Get_Info_Index(Bundle_Index)].score}}分）</span>
+                    </el-button> 
+                  </el-row>
+                </el-row>
+              </el-col>
+              <el-col :span="4">
+                <el-row type="flex" justify="center">
+                  <el-row
+                    :style="'border-bottom: 1px solid ' + Get_Color() + '; border-right: 1px solid ' + Get_Color() + '; width: 100%; padding-top: 5px'"
+                    type="flex" justify="center">
+                    <el-button type="text" @click="Part_Score_Show(Bundle_Index)">
+                      <span v-if="PaperInfo.PartInfo[Get_Info_Index(Bundle_Index)].showScore">隐藏本区域分数</span>
+                      <span v-else>显示本区域分数</span>
+                    </el-button> 
+                  </el-row>
+                </el-row>
+              </el-col>
+              <el-col :span="4">
+                <el-row type="flex" justify="center">
+                  <el-row
+                    :style="'border-bottom: 1px solid ' + Get_Color() + '; width: 100%; padding-top: 5px'"
+                    type="flex" justify="center">
+                    <el-button type="text" @click="Change_Part_Info(Bundle_Index)">
+                      <span v-if="PaperInfo.Partshow[Bundle_Index]" >点击取消此处分区</span>
+                    </el-button>
+                  </el-row>
+                </el-row>
+              </el-col>
+            </el-row>
             <!-- 题型的部分 -->
-            <el-row type="flex" justify="start" style="margin-left: 15px; margin-top: 15px;">
+            <el-row type="flex" justify="start" style="margin-left: 15px; margin-top: 25px; padding-bottom: 10px">
               <label>{{Get_Bundle_Title_Show(Bundle, Bundle_Index)}}</label>
             </el-row>
             <!-- 选择部分的模板 -->
@@ -733,7 +800,7 @@ export default {
       Cautions_Editor_Dialog: false,
       // 纸页大小与纸页样式
       PaperType: "A3/B4/8K",
-      FillType: "两栏",
+      FillType: "双栏",
       // 身份识别的不同方式
       IDCodeType: "考号填涂",
       // 身份识别左侧的填涂内容
@@ -745,13 +812,18 @@ export default {
       // 废物利用，拿来控制标题和注意事项
       Expand_Model: {
         title: 0,
-        cautions: 0
+        cautions: 0,
+        part: []
       },
       // 试卷信息
       PaperInfo: {
         title: "20210809 - 测试卷用标题",
         StudentCodeLength: 9,
-        Cautions: "注意事项：\n答题前填写好自己的班级、姓名、考号等信息。\n请将答案正确填写在答题卡上。\n填涂时用2B铅笔将选项涂黑涂满，修改时用橡皮擦干净。注意题号顺序并保持卷面整洁，请勿折叠或做标记。"
+        Cautions: "注意事项：\n答题前填写好自己的班级、姓名、考号等信息。\n请将答案正确填写在答题卡上。\n填涂时用2B铅笔将选项涂黑涂满，修改时用橡皮擦干净。注意题号顺序并保持卷面整洁，请勿折叠或做标记。",
+        // 用于分区显示过滤
+        Partshow: [],
+        // 用于分区内容显示
+        PartInfo: []
       },
       Setting_Visible: {
         // 左侧填写框
@@ -763,7 +835,13 @@ export default {
         Editing_Bundle: -1
       },
       // 记录每道大题的特殊编辑信息的记录器
-      Bundle_Card_Option_List: []
+      Bundle_Card_Option_List: [],
+      // 记录用于编辑的题目信息的位置
+      Editing_Part_Info: "",
+      // 记录编辑的是哪个位置的标记
+      Editing_Index: -1,
+      // 编辑用的对话框
+      Edit_Part_Dialog: false
     }
   },
   watch: {
@@ -775,6 +853,20 @@ export default {
           this.UserFillInfo = ['考号', '学校', '姓名', '班级']
         }
       }
+      if(newVal.indexOf('分区答题卡') != oldVal.indexOf('分区答题卡')){
+        if(newVal.indexOf('分区答题卡') == -1){
+          this.$message.warning("由于分区设置改变，分区结果已初始化。")
+        }else{
+          this.$message.warning("已打开分区答题卡，修改分区将初始化修改信息，请注意。\n初始化后，只有仅包含选择题的分区将被认定为选择题。")
+          this.Init_Part_Info();
+        }
+        this.PaperInfo.Partshow.splice(0, 1, true)
+        for(let i = 1; i < this.PaperInfo.Partshow.length; i++){
+          if(this.PaperInfo.Partshow[i]){
+            this.PaperInfo.Partshow.splice(i, 1, false)
+          }
+        }
+      }
     },
   },
   mounted() {
@@ -782,6 +874,75 @@ export default {
     this.Init_Bundle_Options();
   },
   methods: {
+    // 下载答题卡
+    Download_Answer_Card(){
+      this.$message.success("正在准备中，敬请期待。")
+    },
+    // 切换分数显示
+    Part_Score_Show(Bundle_Index){
+      let Index = this.Get_Info_Index(Bundle_Index);
+      this.PaperInfo.PartInfo[Index].showScore = !this.PaperInfo.PartInfo[Index].showScore
+    },
+    // 获得分卷信息
+    Get_Info_Index(Bundle_Index){
+      let Count = 0;
+      for(let i = 0; i < Bundle_Index; i++){
+        if(this.PaperInfo.Partshow[i]){
+          Count = Count + 1
+        }
+      }
+      return Count
+    },
+    // 初始化分卷标题内容
+    Init_Part_Info(){
+      
+      this.PaperInfo.PartInfo = [];
+      let Type = ['单选题', '多选题', '判断题'];
+      let Str = Type.indexOf(this.Question_Lists[0].type) == -1 ? "非选择题" : "选择题"
+      let Score = 0
+      let Start = 0
+      for(let i = 1; i <= this.PaperInfo.Partshow.length; i++){
+        if(this.PaperInfo.Partshow[i] || i == this.PaperInfo.Partshow.length){
+          let Label = this.Get_Part_Show(Start)
+          for(let j = Start; j < i; j++){
+            for(let k = 0; k < this.Question_Lists[j].list.length; k++){
+              Score = Score + this.Question_Lists[j].list[k].score
+            }
+          }
+          this.PaperInfo.PartInfo.push({
+            type: '第' + Label + '卷：' + Str,
+            score: Score,
+            showScore: true
+          })
+          Score = 0
+          Start = i
+          Str = "选择题"
+        }  
+        if(i < this.PaperInfo.Partshow.length && Type.indexOf(this.Question_Lists[i].type) == -1){
+          Str = "非选择题"
+        }
+      }
+    },
+    // 返回分区内容显示
+    Get_Part_Show(Bundle_Index){
+      let Index_Label = ['', 'Ⅰ','Ⅱ','Ⅲ','Ⅳ','Ⅴ','Ⅵ','Ⅶ']
+      let Count = 0;
+      for(let i = 0; i <= Bundle_Index; i++){
+        if(this.PaperInfo.Partshow[i]){
+          Count = Count + 1
+        }
+      }
+      return Index_Label[Count]
+    },
+    // 修改分区标记
+    Change_Part_Info(Bundle_Index){
+      if(Bundle_Index == 0){
+        this.$message.error("分区答题卡模式下不能取消此位置的分区。")
+        return
+      }
+      this.PaperInfo.Partshow.splice(Bundle_Index, 1, !this.PaperInfo.Partshow[Bundle_Index])
+      this.Init_Part_Info()
+    },
     // 调整答题卡颜色
     Get_Color(){
       if(this.ContentSetting.indexOf('红色答题卡') != -1){
@@ -914,7 +1075,7 @@ export default {
           let Space_Reg = new RegExp("____+", 'g')
           let Quote_Reg = new RegExp("(\\(|\\（|\\[)(\\s*)(\\)|\\）|\\])", "g")
           let Item = {
-            Each_Rows_Item: this.FillType == '两栏' ? 4 : 3,
+            Each_Rows_Item: this.PaperType != 'A3/B4/8K' ? 5 : this.FillType == '双栏' ? 4 : 3,
             List: []
           }
           for(let i = 0; i < Bundle.list.length; i++){
@@ -944,6 +1105,11 @@ export default {
             Item.push(Answer_List.length >= 4 ? Answer_List.length : 4)
           }
           this.Bundle_Card_Option_List.push(Item)
+        }
+        if(i == 0){
+          this.PaperInfo.Partshow.push(true)
+        }else{
+          this.PaperInfo.Partshow.push(false)
         }
       }
     },
@@ -1058,15 +1224,41 @@ export default {
     ChangePaperType(){
       if(this.PaperType == 'A3/B4/8K'){
         this.PaperType = "A4/B5"
+        this.FillType = "单栏"
+        for(let i = 0; i < this.Question_Lists.length; i++){
+          if(this.Question_Lists[i].type == '填空题'){
+            this.Bundle_Card_Option_List[i].Each_Rows_Item = 5
+          }
+        }
       }else{
         this.PaperType = 'A3/B4/8K'
+        this.FillType = "双栏"
+        for(let i = 0; i < this.Question_Lists.length; i++){
+          if(this.Question_Lists[i].type == '填空题'){
+            this.Bundle_Card_Option_List[i].Each_Rows_Item = 4
+          }
+        }
       }
     },
     ChangeFillType(){
-      if(this.FillType == '两栏'){
-        this.FillType = "三栏"
+      if(this.PaperType == "A3/B4/8K"){
+        if(this.FillType == '双栏'){
+          this.FillType = "三栏"
+          for(let i = 0; i < this.Question_Lists.length; i++){
+            if(this.Question_Lists[i].type == '填空题'){
+              this.Bundle_Card_Option_List[i].Each_Rows_Item = 3
+            }
+          }
+        }else{
+          this.FillType = "双栏"
+          for(let i = 0; i < this.Question_Lists.length; i++){
+            if(this.Question_Lists[i].type == '填空题'){
+              this.Bundle_Card_Option_List[i].Each_Rows_Item = 4
+            }
+          }
+        }
       }else{
-        this.FillType = "两栏"
+        this.FillType = "单栏"
       }
     },
     // 废物利用，调整标题格式
@@ -1091,6 +1283,23 @@ export default {
         this.PaperInfo.Cautions = List.join("\n")
       }
     },
+    // 废物利用二号，调整分区信息
+    Edit_Part_Info(Index){
+      let Ind = this.Get_Info_Index(Index);
+      this.Editing_Index = Ind;
+      this.Editing_Part_Info = this.PaperInfo.PartInfo[Ind].type
+      this.Edit_Part_Dialog = true;
+    },
+    // 完成分区内容编辑
+    Finish_Edit_Part_Info(){
+      this.PaperInfo.PartInfo[this.Editing_Index].type = this.Editing_Part_Info;
+      this.Edit_Part_Dialog = false;
+      this.Reset_Edit_Part_Info()
+    },
+    Reset_Edit_Part_Info(){
+      this.Editing_Index = -1;
+      this.Editing_Part_Info = ""
+    }
   },
 }
 </script>
