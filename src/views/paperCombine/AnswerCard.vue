@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; margin-top: 50px;">
+  <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; margin-top: 50px; margin-bottom: 30px">
     <el-dialog 
       :visible.sync="Cautions_Editor_Dialog"
       title="编辑注意事项信息"
@@ -112,7 +112,7 @@
         </el-col>
       </el-row>
     </div>
-    <el-row style="min-height: 50vh; border: 1px solid black; margin-right: 7vw;">
+    <el-row style="min-height: 50vh; border: 1px solid black; border-bottom: none; margin-right: 7vw;">
       <!-- 关于标题 -->
       <el-row 
         type="flex" 
@@ -362,8 +362,273 @@
         </el-col>
       </el-row>
       <!-- 关于题目填涂的部分 -->
-      <el-row v-for="(Bundle, Bundle_Index) in Question_Lists" :key="'Question_Bundle_' + Bundle_Index">
-        这里要加一个{{Bundle.type}}的填涂组
+      <el-row 
+        v-for="(Bundle, Bundle_Index) in Question_Lists" 
+        :key="'Question_Bundle_' + Bundle_Index"
+        style="padding-bottom: 15px; border-bottom: 1px solid black">
+        <el-col
+          @mouseleave.native="Setting_Visible.Editing_Bundle = -1" 
+          @mouseenter.native="Setting_Visible.Editing_Bundle = Bundle_Index">
+          <el-popover 
+            placement="bottom"
+            width="180"
+            trigger="hover">
+            <el-row type="flex" justify="center" @mouseenter.native="Setting_Visible.Editing_Bundle == Bundle_Index">
+              <!-- 针对于选择题类型的版本 -->
+              <el-col v-if="['单选题', '多选题', '判断题'].indexOf(Bundle.type) != -1">
+                <el-row type="flex" justify="center">
+                  <label>每组选择题数量</label>
+                </el-row>
+                <el-row type="flex" justify="center">
+                  <el-input-number 
+                    v-model="Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item" 
+                    placeholder=""
+                    :min="1"
+                    :max="10"
+                    ></el-input-number>
+                </el-row>
+              </el-col>
+              <!-- 针对于填空题版本的类型 -->
+              <el-col v-if="['填空题'].indexOf(Bundle.type) != -1">
+                <el-row type="flex" justify="center">
+                  <label>每行填空的空格数量</label>
+                </el-row>
+                <el-row type="flex" justify="center">
+                  <el-input-number 
+                    v-model="Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item" 
+                    placeholder=""
+                    :min="1"
+                    :max="FillType == '两栏' ? 4 : 3"
+                    ></el-input-number>
+                </el-row>
+              </el-col>
+              <!-- 针对于解答题版本的类型 -->
+              <!-- <el-col v-if="['简答题', '计算题'].indexOf(Bundle.type) != -1">
+                <el-row type="flex" justify="start">
+                  <label>增加或减少答题栏行数</label>
+                </el-row>
+              </el-col> -->
+            </el-row>
+            <div 
+              slot="reference" 
+              class="EditArea" 
+              v-show="Setting_Visible.Editing_Bundle == Bundle_Index && ['简答题', '计算题'].indexOf(Bundle.type) == -1">
+              <span>编辑</span>
+            </div>
+          </el-popover>
+          <!-- 题型的部分 -->
+          <el-row type="flex" justify="start" style="margin-left: 15px; margin-top: 15px;">
+            <label>{{Get_Bundle_Title_Show(Bundle, Bundle_Index)}}</label>
+          </el-row>
+          <!-- 选择部分的模板 -->
+          <el-row v-if="Bundle.type == '单选题'">
+            <!-- 计算一共会有几大行 -->
+            <el-row 
+              v-for="Row_Index in Get_Opt_Row_Index(Bundle_Index)" 
+              :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index"
+              type="flex" justify="start">
+              <!-- 计算这一大行里面会有几列 -->
+              <el-col 
+                v-for="Col_Index in Get_Opt_Col_Group(Bundle_Index, Row_Index)"
+                :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index"
+                :span="6">
+                <!-- 计算这一列里面会有几个题目元素 -->
+                <el-row 
+                  v-for="Item_Index in Get_Opt_Item_Count(Bundle_Index, Row_Index, Col_Index)"
+                  :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index"
+                  type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; height: 22px; line-height: 22px">
+                  <el-col :span="3">
+                    <el-row type="flex" justify="start">
+                      <!-- 得到题号 -->
+                      <span>{{Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index)}}:</span>
+                    </el-row>
+                  </el-col>
+                  <el-col :span="21">
+                    <el-row type="flex" justify="start">
+                      <!-- 画出选项 -->
+                      <span 
+                        v-for="OptIndex in 4" 
+                        :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index + '_' + OptIndex"
+                        style="padding-left: 10px; font-size: 14px; ">
+                        <span style="margin-right: 0.5vw">[</span>{{Get_Opt_Fill(OptIndex)}}<span style="margin-left: 0.5vw">]</span>  
+                      </span>
+                    </el-row>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </el-row>
+          <!-- 参照单选 -->
+          <el-row v-if="Bundle.type == '多选题'">
+            <el-row 
+              v-for="Row_Index in Get_Opt_Row_Index(Bundle_Index)" 
+              :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index"
+              type="flex" justify="start">
+              <el-col 
+                v-for="Col_Index in Get_Opt_Col_Group(Bundle_Index, Row_Index)"
+                :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index"
+                :span="6">
+                <el-row 
+                  v-for="Item_Index in Get_Opt_Item_Count(Bundle_Index, Row_Index, Col_Index)"
+                  :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index"
+                  type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; height: 22px; line-height: 22px">
+                  <el-col :span="3">
+                    <el-row type="flex" justify="start">
+                      <!-- 得到题号 -->
+                      <span>{{Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index)}}:</span>
+                    </el-row>
+                  </el-col>
+                  <el-col :span="21">
+                    <el-row type="flex" justify="start">
+                      <!-- 画出选项 -->
+                      <span 
+                        v-for="OptIndex in 4" 
+                        :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index + '_' + OptIndex"
+                        style="padding-left: 10px; font-size: 14px; ">
+                        <span style="margin-right: 0.5vw">[</span>{{Get_Opt_Fill(OptIndex)}}<span style="margin-left: 0.5vw">]</span>  
+                      </span>
+                    </el-row>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </el-row>
+          <!-- 参照单选，但选项只有对错两项 -->
+          <el-row v-if="Bundle.type == '判断题'">
+            <el-row 
+              v-for="Row_Index in Get_Opt_Row_Index(Bundle_Index)" 
+              :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index"
+              type="flex" justify="start">
+              <el-col 
+                v-for="Col_Index in Get_Opt_Col_Group(Bundle_Index, Row_Index)"
+                :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index"
+                :span="6">
+                <el-row 
+                  v-for="Item_Index in Get_Opt_Item_Count(Bundle_Index, Row_Index, Col_Index)"
+                  :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index"
+                  type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; height: 22px; line-height: 22px">
+                  <el-col :span="3">
+                    <el-row type="flex" justify="start">
+                      <!-- 得到题号 -->
+                      <span>{{Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index)}}:</span>
+                    </el-row>
+                  </el-col>
+                  <el-col :span="21">
+                    <el-row type="flex" justify="start">
+                      <!-- 画出选项 -->
+                      <span 
+                        v-for="OptIndex in 2" 
+                        :key="'Single_Opt_' + Bundle_Index + '_' + Row_Index + '_' + Col_Index + '_' + Item_Index + '_' + OptIndex"
+                        style="padding-left: 10px; font-size: 14px; ">
+
+                        <span style="margin-right: 0.35vw">[</span>
+                        <span v-if="OptIndex == 1"><i class="el-icon-check"></i></span>
+                        <span v-if="OptIndex == 2"><i class="el-icon-close"></i></span>
+                        <span style="margin-left: 0.35vw">]</span>  
+                      </span>
+                    </el-row>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </el-row>
+          <!-- 填空部分的模板 -->
+          <el-row v-if="Bundle.type == '填空题'">
+            <el-col>
+              <el-row 
+                v-for="(Fill_Ques, Fill_Index) in Bundle.list" 
+                :key="'Fill_' + Bundle_Index + '_' + Fill_Index"
+                type="flex" justify="start"
+                style="margin-top: 7px;">
+                <!-- 获取题号的部分 -->
+                <el-col :span="1">
+                  <el-row type="flex" justify="start" style="padding-left: 2vw; font-size: 16px; height: 32px; line-height: 32px">
+                    <span>
+                      {{Get_Normal_Ques_Index(Bundle_Index, Fill_Index)}}:
+                    </span>
+                  </el-row>
+                </el-col>
+                <!-- 勾画填涂位置的部分 -->
+                <el-col :span="23">
+                  <el-row 
+                    type="flex" 
+                    justify="start"
+                    v-for="Fill_Row_Index in Get_Fill_Row_Count(Bundle_Index, Fill_Index)"
+                    :key="'Fill_' + Bundle_Index + '_' + Fill_Index + '_' + Fill_Row_Index"
+                    style="padding-left: 0.5vw; font-size: 16px; height: 32px; line-height: 32px">
+                    <el-col 
+                      v-for="Fill_Blank_Index in Get_Fill_Blank_Count(Bundle_Index, Fill_Index, Fill_Row_Index)" 
+                      :key="'Fill_' + Bundle_Index + '_' + Fill_Index + '_' + Fill_Row_Index + '_' + Fill_Blank_Index"
+                      :span="Get_Fill_Span(Bundle_Index)">
+                      <el-row style="width: 90%; height: 32px; border-bottom: 2px solid black">
+
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                </el-col>
+              </el-row>
+            </el-col>
+            
+          </el-row>
+          <!-- 简答和计算部分的模板 -->
+          <el-row v-if="Bundle.type == '计算题' || Bundle.type == '简答题'">
+            <el-col>
+              <el-row
+                v-for="(Ans_Ques, Ans_Index) in Bundle.list" 
+                :key="'Ans_' + Bundle_Index + '_' + Ans_Index"
+                type="flex" justify="start"
+                style="margin-top: 7px;"
+                @mouseleave.native="Setting_Visible.Editing_Bundle = -1" 
+                @mouseenter.native="Setting_Visible.Editing_Bundle = Bundle_Index + '_' + Ans_Index">
+                
+                <!-- 获取题号的部分 -->
+                <el-col :span="1">
+                  <el-row type="flex" justify="center" style="padding-left: 1vw; font-size: 16px; height: 32px; line-height: 32px">
+                    <span>
+                      {{Get_Normal_Ques_Index(Bundle_Index, Ans_Index)}}:
+                    </span>
+                  </el-row>
+                  <el-popover 
+                    placement="bottom"
+                    width="200"
+                    trigger="hover">
+                    <el-row type="flex" justify="center" @mouseenter.native="Setting_Visible.Editing_Bundle == Bundle_Index + '_' + Ans_Index">
+                      <el-col v-if="['简答题', '计算题'].indexOf(Bundle.type) != -1">
+                        <el-row type="flex" justify="center">
+                          <label>增加或减少答题栏行数</label>
+                        </el-row>
+                        <el-row type="flex" justify="center">
+                        <el-input-number 
+                          v-model="Bundle_Card_Option_List[Bundle_Index][Ans_Index]" 
+                          placeholder=""
+                          :min="4"
+                          ></el-input-number>
+                      </el-row>
+                      </el-col>
+                    </el-row>
+                    <div 
+                      slot="reference" 
+                      class="EditArea_2" 
+                      v-show="Setting_Visible.Editing_Bundle == Bundle_Index + '_' + Ans_Index">
+                      <span>编辑</span>
+                    </div>
+                  </el-popover>
+                </el-col>
+                <!-- 答题区域的部分 -->
+                <el-col :span="23" :style="Get_Ans_Style(Bundle_Index, Ans_Index)">
+                  <el-row 
+                    type="flex" 
+                    justify="center"
+                    v-for="Row_Index in Bundle_Card_Option_List[Bundle_Index][Ans_Index]"
+                    :key="'Ans_' + Bundle_Index + '_' + Ans_Index + '_Row_' + Row_Index"
+                    style="border-bottom: 1px solid black; height: 30px; margin-left: 20px; margin-right: 20px"
+                    >
+                  </el-row>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-row>
+        </el-col>
       </el-row>
     </el-row>
   </div>
@@ -407,8 +672,11 @@ export default {
         // 右侧填涂框（只在非条形码时生效）
         IDCode: false,
         // 注意事项
-        Cautions: false
-      }
+        Cautions: false,
+        Editing_Bundle: -1
+      },
+      // 记录每道大题的特殊编辑信息的记录器
+      Bundle_Card_Option_List: []
     }
   },
   watch: {
@@ -423,12 +691,155 @@ export default {
     },
   },
   mounted() {
-    this.Question_Lists = JSON.parse(sessionStorage.getItem('CombinePaper_AnswerCard'))
+    this.Question_Lists = JSON.parse(sessionStorage.getItem('CombinePaper_AnswerCard'));
+    this.Init_Bundle_Options();
   },
   methods: {
-    Edit_Cautions(){
-      this.Setting_Visible.Cautions = true;
-      this.$refs.CautionsEditor.focus;
+    // 返回解答题类型的题目的解答区域高度
+    Get_Ans_Style(Bundle_Index, Ans_Index){
+      let Answer_Length = this.Bundle_Card_Option_List[Bundle_Index][Ans_Index] * 30 + 15
+      let Style = {
+        "height": Answer_Length + 'px',
+        "line-height": Answer_Length + 'px',
+        "border": "1px dashed #409EFD",
+        "border-radius": "10px",
+        "margin-bottom": "15px",
+        "color": "#409EFD",
+        "text-align": "center",
+        "font-size": "18px",
+        "margin-left": "15px",
+        "margin-right": "15px"
+      }
+      return Style
+    },
+    // 获取这道填空题每行最多有多少个空
+    Get_Fill_Span(Bundle_Index){
+      return Math.ceil(24/this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item)
+    },
+    // 获取这道填空题应当有多少行的空
+    Get_Fill_Row_Count(Bundle_Index, Fill_Index){
+      let Total = this.Bundle_Card_Option_List[Bundle_Index].List[Fill_Index]
+      let Gap = this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item
+      return Math.ceil(Total / Gap)
+    },
+    // 获取这道填空题这行应当有多少个空
+    Get_Fill_Blank_Count(Bundle_Index, Fill_Index, Fill_Row_Index){
+      let Total = this.Bundle_Card_Option_List[Bundle_Index].List[Fill_Index]
+      let Gap = this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item
+      let Row_Count = Math.ceil(Total / Gap)
+      if(Fill_Row_Index < Row_Count){
+        return Gap
+      }else{
+        return Total - (Fill_Row_Index - 1) * Gap
+      }
+    },
+    // 获取一般题目的序号
+    Get_Normal_Ques_Index(Bundle_Index, Fill_Index){
+      let Base = 0;
+      for(let i = 0; i < Bundle_Index; i++){
+        Base = Base + this.Question_Lists[i].list.length
+      }
+      return Base + Fill_Index + 1
+    },
+    // 计算应当显示的选项编号
+    Get_Opt_Fill(OptIndex){
+      return String.fromCharCode(OptIndex + 64)
+    },
+    // 计算应当显示多少行选择题
+    Get_Opt_Row_Index(Bundle_Index){
+      let Item_Length = this.Question_Lists[Bundle_Index].list.length;
+      let Group = Math.ceil(Item_Length/this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item)
+      return Math.ceil(Group/4);
+    },
+    // 计算这一行的这一列应当显示多少行选择题
+    Get_Opt_Col_Group(Bundle_Index, Row_Index){
+      let Item_Length = this.Question_Lists[Bundle_Index].list.length;
+      let Group = Math.ceil(Item_Length/this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item)
+      let Row_Count = Math.ceil(Group/4)
+      if(Row_Index < Row_Count){
+        return 4
+      }else{
+        return Group - (Row_Count - 1) * 4
+      }
+    },
+    // 计算这一个单元格内应当有多少个元素行
+    Get_Opt_Item_Count(Bundle_Index, Row_Index, Col_Index){
+      let Item_Length = this.Question_Lists[Bundle_Index].list.length;
+      let Group = Math.ceil(Item_Length/this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item)
+      let Row_Count = Math.ceil(Group/4)
+      let Col_Count = Group - (Row_Count - 1) * 4;
+      if(Row_Index < Row_Count){
+        return this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item
+      }else{
+        if(Col_Index < Col_Count){
+          return this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item
+        }else{
+          return Item_Length - ((Row_Index - 1) * 4 + Col_Index - 1) * this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item
+        }
+      }
+    },
+    // 看看这些题目应当是什么编号
+    Get_Opt_Item_Index(Bundle_Index, Row_Index, Col_Index, Item_Index){
+      let Base = 0;
+      for(let i = 0; i < Bundle_Index; i++){
+        Base = Base + this.Question_Lists[i].list.length
+      }
+      return ((Row_Index - 1) * 4 + Col_Index - 1) * this.Bundle_Card_Option_List[Bundle_Index].Each_Rows_Item + Item_Index + Base
+    },
+    // 用于记录每道大题的特殊设置项
+    Init_Bundle_Options(){
+      for(let i = 0; i < this.Question_Lists.length; i++){
+        let Bundle = this.Question_Lists[i];
+        if(['单选题', '多选题', '判断题'].indexOf(Bundle.type) != -1){
+          let Item = {
+            Each_Rows_Item: 5,
+          }
+          this.Bundle_Card_Option_List.push(Item)
+        }else if(['填空题'].indexOf(Bundle.type) != -1){
+          let Space_Reg = new RegExp("____+", 'g')
+          let Quote_Reg = new RegExp("(\\(|\\（|\\[)(\\s*)(\\)|\\）|\\])", "g")
+          let Item = {
+            Each_Rows_Item: this.FillType == '两栏' ? 4 : 3,
+            List: []
+          }
+          for(let i = 0; i < Bundle.list.length; i++){
+            let Count = 0;
+            let Ques = Bundle.list[i];
+            let Stem = Ques.stem;
+            let res = Quote_Reg.exec(Stem)
+            while(res != null){
+              Stem = Stem.replace(res[0], "", 1)
+              res = Quote_Reg.exec(Stem)
+              Count = Count + 1
+            }
+            res = Space_Reg.exec(Stem)
+            while(res != null){
+              res = Space_Reg.exec(Stem)
+              Count = Count + 1
+            }
+            Item.List.push(Count)
+          }
+          this.Bundle_Card_Option_List.push(Item)
+        }else if(['简答题', '计算题'].indexOf(Bundle.type) != -1){
+
+          let Item = [];
+          for(let i = 0; i < Bundle.list.length; i++){
+            let Ans_Ques = Bundle.list[i];
+            let Answer_List = Ans_Ques.answer.split("\n")
+            Item.push(Answer_List.length >= 4 ? Answer_List.length : 4)
+          }
+          this.Bundle_Card_Option_List.push(Item)
+        }
+      }
+    },
+    // 返回每道大题的标题信息 
+    Get_Bundle_Title_Show(Bundle, Bundle_Index){
+      let Result = ['一', '二', '三', '四', '五', '六', '七', '八', '九']
+      let Score = 0;
+      for(let i = 0; i < Bundle.list.length; i++){
+        Score = Score + parseFloat(Bundle.list[i].score)
+      }
+      return Result[Bundle_Index] + '、' + Bundle.type + '(' + Score + '分)'
     },
     // 修改左侧区域的显示内容
     Edit_User_Fill_Info(Item){
@@ -625,6 +1036,21 @@ export default {
   background: #409EFD;
   color: white;
   border-bottom-left-radius: 20px;
+  font-size: 14px;
+  padding-top: 7px;
+  cursor: pointer;
+  z-index: 10;
+}
+.EditArea_2{
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 36px;
+  background: #409EFD;
+  color: white;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
   font-size: 14px;
   padding-top: 7px;
   cursor: pointer;

@@ -1,6 +1,10 @@
 <template>
   <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; margin-top: 50px;">
     <el-row>
+      123
+      <el-button type="primary" @click="Get_Reg_Test()"></el-button>
+    </el-row>
+    <!-- <el-row>
       <el-input 
         type="textarea" 
         v-model="TextLine" 
@@ -14,7 +18,7 @@
       <div v-html="Get_TextLine()">
 
       </div>
-    </el-row>
+    </el-row> -->
     <!-- 知识点内容过滤的而部分，隐藏日期：20210808 -->
     <el-row style="display: none">
       <el-input
@@ -207,6 +211,27 @@ export default {
     
   },
   methods: {
+    // 尝试看Re的判别式对不对
+    Get_Reg_Test(){
+      let Count = 0
+      let Str = " (    )  （   ）  （  )   (    ）______ _________ _ __ ___ ____"
+      let Space_Reg = new RegExp("____+", 'g')
+      let Quote_Reg = new RegExp("(\\(|\\（)(\\s*)(\\)|\\）)", "g")
+      let res = Quote_Reg.exec(Str)
+      while(res != null){
+        console.log(res[0])
+        res = Quote_Reg.exec(Str)
+        Count = Count + 1
+      }
+      res = Space_Reg.exec(Str)
+      while(res != null){
+        console.log(res[0])
+        res = Space_Reg.exec(Str)
+        Count = Count + 1
+      }
+      console.log(Count)
+      return Count
+    },
     // 点击按钮后获取文本框的样式
     Get_Area_Class(){
       console.log(this.$refs.InputArea.$el.clientHeight)
