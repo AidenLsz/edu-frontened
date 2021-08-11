@@ -118,7 +118,8 @@ export default {
                     answer_images: [],
                     // 解析的部分
                     analyse: "",
-                    analyse_images: []
+                    analyse_images: [],
+                    detail_type: "填空题"
                 }
             }
         },

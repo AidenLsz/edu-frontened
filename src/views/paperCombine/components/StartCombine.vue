@@ -3,13 +3,13 @@
     <el-dialog 
       :visible.sync="Question_Check_Switch"
       title="题目内容检查"
-      width="50%"
+      width="80%"
       :modal-append-to-body="false"
       :close-on-click-modal="true">
       <el-row type="flex" justify="center">
         <el-col>
           <!-- 分数，题型，题干 -->
-          <el-row type="flex" justify="center">
+          <el-row type="flex" justify="center" style="width: 100%">
             <el-col :span="4">
               <el-row type="flex" justify="start">
                 <label style="margin-right: 10px;">{{Checked_Question_Info.type}}</label>
@@ -98,7 +98,7 @@
       <!-- 试卷内容 -->
       <el-row type="flex" justify="start" style="margin-bottom: 20px;">
         <el-col :span="3">
-          <el-row type="flex" justify="start" style="margin-top: -3px;">
+          <el-row type="flex" justify="start">
             试卷内容：
           </el-row>
         </el-col>
@@ -139,7 +139,7 @@
         </el-col>
         <el-col :span="4">
           <el-row type="flex" justify="center">
-            <el-button type="success" @click="Unfinish()">下载</el-button>
+            <el-button type="success" @click="Download_Paper()">下载</el-button>
           </el-row>
         </el-col>
       </el-row>
@@ -247,7 +247,7 @@
               <el-row>
                 <el-col :span="12">
                   <el-row type="flex" justify="center">
-                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Unfinish()">
+                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Analyse_Combine_Paper()">
                       <i class="el-icon-s-data"></i>
                       <span>分析试卷</span>
                     </el-button>
@@ -258,6 +258,17 @@
                     <el-button type="text" style="font-size: 14px; color: grey" @click.native="Unfinish()">
                       <i class="el-icon-document-checked"></i>
                       <span>保存试卷</span>
+                    </el-button>
+                  </el-row>
+                </el-col>
+              </el-row>
+
+              <el-row type="flex" justify="start">
+                <el-col :span="12">
+                  <el-row type="flex" justify="center">
+                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Check_Answer_Card()">
+                      <i class="el-icon-s-data"></i>
+                      <span>查看答题卡</span>
                     </el-button>
                   </el-row>
                 </el-col>
@@ -381,7 +392,14 @@
           </el-row>
         </el-col>
         <!-- 显示区 -->
-        <el-col :span="18" :offset="1" class="Side_Card">
+        <el-col 
+          :span="18" 
+          :offset="1" 
+          class="Side_Card"
+          v-loading="waiting"
+          :element-loading-text="waiting_text"
+          element-loading-spinner="el-icon-loading"
+          >
           <el-row type="flex" justify="start">
             <el-col :span="1" v-if="Get_Paper_Setting('装订线')">
                 <div class="Paper_Seal">
@@ -716,6 +734,7 @@
   </div>
 </template>
 <script>
+
 import Mathdown from '@/common/components/Mathdown'
 import {commonAjax} from '@/common/utils/ajax'
 export default {
@@ -741,10 +760,14 @@ export default {
   },
   data() {
     return {
+      // 获取文件时用于等待的值
+      waiting: false,
+      // 用于等待时显示的文字
+      waiting_text: "",
       // 试卷纸张
       Combine_Paper_Size: "A4",
       // 试卷内容
-      Combine_Paper_Content: [],
+      Combine_Paper_Content: ["Answer", "Analyse"],
       // 试卷类型
       Combine_Paper_Type: "Teacher",
       // 试卷下载对话框是否展示
@@ -816,10 +839,148 @@ export default {
     this.Init_User_Database_List();
   },
   methods: {
+    // 打开答题卡页面
+    Check_Answer_Card(){
+      sessionStorage.setItem("CombinePaper_AnswerCard", JSON.stringify(this.Question_List));
+      let routeData = this.$router.resolve({ path: '/answerCard' });
+      window.open(routeData.href, '_blank');
+    },
+    // 开始导出用于分析报告的数据
+    Analyse_Combine_Paper(){
+
+      this.waiting_text = "正在获取分析报告，请稍后..."
+      this.waiting = true;
+
+      let Analyse_Paper_JSON = {
+        subject: this.Subject,
+        title: this.Setting_Info.title,
+        data: []
+      }
+
+      for(let i = 0; i < this.Question_List.length; i++){
+        let Bundle_Format = {
+          is_longques: 2,
+          desc: this.Question_List[i].type,
+          content: []
+        }
+        for(let j = 0; j < this.Question_List[i].list.length; j++){
+          let Question_Item = {
+            score: this.Question_List[i].list[j].score,
+            stem: this.Question_List[i].list[j].stem,
+            options: this.Question_List[i].list[j].options,
+            answer: this.Question_List[i].list[j].answer,
+            analysis: this.Question_List[i].list[j].analyse
+          }
+          Bundle_Format.content.push(Question_Item)
+        }
+        Analyse_Paper_JSON.data.push(Bundle_Format);
+      }
+
+      commonAjax(this.backendIP+'/api/combinePaperAnalyseReport',
+        {
+          Paper_Data: JSON.stringify(Analyse_Paper_JSON)
+        }
+      ).then((data)=>{
+        sessionStorage.setItem("PaperJson", JSON.stringify(data));
+        let routeData = this.$router.resolve({ path: '/paperAnalyse' });
+        window.open(routeData.href, '_blank');
+        this.$message.success("试题详情内容已在新页面展开。");
+        this.waiting = false;
+        this.waiting_text = ""
+      }).catch(() => {
+        this.$message.error("服务器忙碌，请稍后再试...")
+        this.waiting = false;
+        this.waiting_text = ""
+      })
+    },
+    // 开始导出用于下载的数据
+    Download_Paper(){
+
+      this.waiting_text = "正在准备生成的试卷，请稍后..."
+      this.waiting = true;
+
+      this.Download_Combine_Paper_Dialog = false;
+
+      let Download_Paper_JSON = {
+        paperSize: this.Combine_Paper_Size,
+        paperPart: this.Combine_Paper_Content,
+        paperType: this.Combine_Paper_Type,
+        paperformat: [],
+        formatinfo:{
+            title: this.Setting_Info.title,
+            subtitle: this.Setting_Info.subTitle,
+            examInfo: "考试总分: " + this.Setting_Info.examInfo.score + "分，考试时间: " + this.Setting_Info.examInfo.time + "分钟。",
+            sealLabel: "绝密 ★ 启用前",
+            gutter: "学校：____________ 班级：____________ 姓名：____________ 考号：___________",
+            studentInput: this.Setting_Info.studentWrite,
+            cautions: this.Setting_Info.cautions
+        },
+        questions: []
+      }
+
+      let Label_Using = ['title', 'subtitle', 'examInfo', 'sealLabel', 'gutter', 'studentInput', 'cautions', 'partInfo', 'bundleInfo'];
+      for(let i = 0; i < this.Setting_CheckBox_List.length; i++){
+        Download_Paper_JSON.paperformat.push(Label_Using[this.Setting_CheckBox_Label.indexOf(this.Setting_CheckBox_List[i])])
+      }
+
+      for(let i = 0; i < this.Question_List.length; i++){
+        let Questions_Format = {
+            type: this.Question_List[i].type,
+            partInfo: this.Getting_Part_Introduce(i),
+            bundleInfo: this.Getting_Bundle_Introduce(i) + this.Setting_Info.bundleIntroduce[i] + "）",
+            questions: []
+        }
+        for(let j = 0; j < this.Question_List[i].list.length; j++){
+          let Question_Item = {
+              score: this.Question_List[i].list[j].score,
+              stem: this.Question_List[i].list[j].stem,
+              options: this.Question_List[i].list[j].options,
+              answer: this.Question_List[i].list[j].answer,
+              analysis: this.Question_List[i].list[j].analyse
+          }
+          Questions_Format.questions.push(Question_Item)
+        }
+        Download_Paper_JSON.questions.push(Questions_Format)
+      }
+
+      let config = {
+          headers: {
+              "Content-Type": "multipart/form-data"
+          },
+          responseType: 'arraybuffer',
+          emulateJSON: true
+      }
+
+      let param = new FormData();
+
+      param.append('Paper_Data', JSON.stringify(Download_Paper_JSON, null, 4));
+
+      this.$http
+          .post(this.backendIP + "/api/combinePaperDownload", param, config)
+          .then(function(data) {
+          if(data.data){
+              this.waiting = false;
+              const link = document.createElement('a')
+              let blob = new Blob([data.data],
+                  {type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"})
+              let objectUrl = URL.createObjectURL(blob)
+              link.href = objectUrl
+              link.download = this.Setting_Info.title + '.docx'
+              link.click()
+              URL.revokeObjectURL(objectUrl);
+              this.waiting_text = ""
+          }
+          }).catch(() => {
+              this.$message.error("服务器忙碌，请稍后再试...");
+              this.waiting = false;
+              this.waiting_text = "";
+              return
+          });
+    },
     // 重置下载设置
     Reset_Combine_Paper_Download_Setting(){
       this.Combine_Paper_Size = "A4";
-      this.Combine_Paper_Content = "Paper";
+      this.Combine_Paper_Content = ["Answer", "Analyse"];
       this.Combine_Paper_Type = "Teacher";
     },
     // 尝试打开下载页面

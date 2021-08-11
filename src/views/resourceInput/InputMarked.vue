@@ -41,6 +41,7 @@
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
+        :key="'Option_Dia_' + refresh"
     >
         <el-row>
             <el-col v-if="complex_Input">
@@ -63,7 +64,6 @@
             @EditFinish="New_Questions"
             @ReEditFinish="ReEdit_Questions"
             :RE.sync="ReEditSwitch"
-            :QInfos.sync="Temp_OptionQuestionInfo"
             ref="OptionQuestionsEditor">
         </OptionQuestions>
     </el-dialog>
@@ -71,10 +71,11 @@
     <el-dialog
         :visible.sync="showDialog_Fill"
         title="请编辑想要插入/修改的填空题内容"
-        width="80%"
+        width="65%"
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
+        :key="'Fill_Dia_' + refresh"
     >
         <el-row>
             <el-col v-if="complex_Input">
@@ -97,17 +98,17 @@
             @EditFinish="New_Questions"
             @ReEditFinish="ReEdit_Questions"
             :RE.sync="ReEditSwitch"
-            :QInfos.sync="Temp_FillQuestionInfo"
         ></FillQuestions>
     </el-dialog>
     <!-- 提供给解答题的编辑器 -->
     <el-dialog
         :visible.sync="showDialog_Answer"
         title="请编辑想要插入/修改的解答题内容"
-        width="80%"
+        width="65%"
         @close="Editor_Dialog_Close()"
         :modal-append-to-body="false"
         :close-on-click-modal="false"
+        :key="'Answer_Dia_' + refresh"
     >
         <el-row>
             <el-col v-if="complex_Input">
@@ -130,7 +131,6 @@
             @EditFinish="New_Questions"
             @ReEditFinish="ReEdit_Questions"
             :RE.sync="ReEditSwitch"
-            :QInfos.sync="Temp_AnswerQuestionInfo"
         ></AnswerQuestions>
     </el-dialog>
     <!-- 提供给非选择题的编辑器 -->
@@ -139,7 +139,8 @@
         title="请编辑想要插入/修改的非选择题内容"
         width="80%"
         :modal-append-to-body="false"
-        :close-on-click-modal="false">
+        :close-on-click-modal="false"
+        :key="'Mix_Dia_' + refresh">
         <el-row>
             <el-col v-if="complex_Input">
                 <el-row>
@@ -435,23 +436,56 @@
           </el-button>
         </el-row>
       </el-col>
-      <el-col :span="20" style="background: #F8FBFF; margin-top: 30px; min-height: 65vh; padding-top: 40px; border-right: 30px solid white">
-        <el-row style="background: #F8FBFF; min-height: 50vh">
-          <OptionDisplay v-if="Type_Now == 'option'" :QI="Temp_OptionQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></OptionDisplay>
-          <FillDisplay v-else-if="Type_Now == 'fill'" :QI="Temp_FillQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></FillDisplay>
-          <AnswerDisplay v-else-if="Type_Now == 'answer'" :QI="Temp_AnswerQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></AnswerDisplay>
-          <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo" :BI="'Bundle_0'"></MixDisplay>
+      <el-col :span="20" style="background: #F8FBFF; margin-top: 30px; min-height: 74vh; padding-top: 40px; border-right: 30px solid white; margin-bottom: 30px; padding-bottom: 40px;">
+        <el-row v-if="['option', 'fill', 'answer', 'mix'].indexOf(Type_Now) != -1">
+          <el-row style="background: #F8FBFF; min-height: 50vh">
+            <OptionDisplay v-if="Type_Now == 'option'" :QI="Temp_OptionQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></OptionDisplay>
+            <FillDisplay v-else-if="Type_Now == 'fill'" :QI="Temp_FillQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></FillDisplay>
+            <AnswerDisplay v-else-if="Type_Now == 'answer'" :QI="Temp_AnswerQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></AnswerDisplay>
+            <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo" :BI="'Bundle_0'"></MixDisplay>
+          </el-row>
+          <el-row v-if="Type_Now != '-1'">
+            <el-col :span="8">
+              <el-button type="primary" plain @click="Edit_Question()">重新编辑</el-button>
+            </el-col>
+            <el-col :span="8">
+              <el-button type="warning" v-if="Authority_Check()" plain @click="PaperUpload('export')">题目导出</el-button>
+              <p v-else>&nbsp;</p>
+            </el-col>
+            <el-col :span="8">
+              <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button>
+            </el-col>
+          </el-row>
         </el-row>
-        <el-row v-if="Type_Now != '-1'">
-          <el-col :span="8">
-            <el-button type="primary" plain @click="Edit_Question()">重新编辑</el-button>
-          </el-col>
-          <el-col :span="8">
-            <el-button type="warning" v-if="Authority_Check()" plain @click="PaperUpload('export')">题目导出</el-button>
-            <p v-else>&nbsp;</p>
-          </el-col>
-          <el-col :span="8">
-            <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button>
+        <el-row v-else style="padding-left: 3vw; padding-right: 3vw">
+          <el-col>
+            <el-row type="flex" justify="start" style="margin-bottom: 30px;">
+              <label>
+                复制题目文本到输入框进行自动切割
+              </label>
+            </el-row>
+            <el-row type="flex" justify="start" style="margin-bottom: 30px;">
+              <el-radio-group v-model="TextSplitType">
+                <el-radio label="option">选择题</el-radio>
+                <el-radio label="fill" disabled>填空题</el-radio>
+                <el-radio label="answer" disabled>解答题</el-radio>
+                <el-radio label="mix" disabled>综合题</el-radio>
+              </el-radio-group>
+            </el-row>
+            <el-row>
+              <el-input
+                type="textarea" 
+                v-model="TextSplit" 
+                :autosize="{minRows: 6, maxRows: 10}" 
+                resize="none" 
+                style="font-size: 15px"
+                placeholder="请输入需要切割的选择题内容"
+              >
+              </el-input>
+            </el-row>
+            <el-row type="flex" justify="center" style="margin-top: 30px;">
+              <el-button type="success" plain @click="TextSplitDo()">开始切分</el-button>
+            </el-row>
           </el-col>
         </el-row>
       </el-col>
@@ -459,6 +493,8 @@
   </div>
 </template>
 <script>
+
+import {commonAjax} from '@/common/utils/ajax'
 
 import FileSaver from "file-saver";
 
@@ -476,6 +512,8 @@ import Instruction from './components/InstructionExercise.vue'
 
 import Mathdown from "../../common/components/Mathdown.vue";
 
+import { extract } from "@/common/utils/extraction.js"
+
 // import Vue from "vue";
 export default {
   components: { ComplexInput,
@@ -486,6 +524,14 @@ export default {
                 Mathdown,Instruction},
   data() {
     return {
+      // 保存UUID
+      UUID: "",
+      // 用于文字切割的变量
+      TextSplit: "",
+      // 用于文字切割的题型
+      TextSplitType: "option",
+      // 刷新组件
+      refresh: false,
       // 是否展开题型
       Expand: true,
       // 待选科目
@@ -598,7 +644,7 @@ export default {
 
           type: "option",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
@@ -610,12 +656,14 @@ export default {
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          // 细节选项
+          detail_type: "单选题"
 
       },
       Temp_MixQuestionInfo: {
           type: "mix",
-          score: "None",
+          score: 0,
           content: "",
           content_images: [],
           answer: "",
@@ -629,7 +677,7 @@ export default {
 
           type: "fill",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
@@ -638,27 +686,29 @@ export default {
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          detail_type: "填空题"
 
       },
       Temp_AnswerQuestionInfo: {
 
           type: "answer",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
           // 小题的部分
           sub_questions: [""],
           sub_questions_images: [[]],
-          sub_questions_scores: [1],
+          sub_questions_scores: [5],
           // 答案的部分
           answer: "",
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          detail_type: "简答题"
 
       }
 
@@ -690,10 +740,60 @@ export default {
       },
   },
   mounted(){
+    if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
+      this.$message.error("您尚未登录，请登录后使用录入功能。")
+      this.$router.push("/")
+      return 
+    }
     this.Init_Question_Check()
     this.ToTop();
+    this.Get_User_UUID();
   },
   methods: {
+    Get_User_UUID(){
+      commonAjax(this.backendIP + '/api/getUserUUID', {}).then((res)=>{
+        this.UUID = res.UUID
+      }).catch(
+        (err)=>{
+          console.log(err)
+          console.log("Failed.")
+        }
+      )
+    },
+    // 用于给试题文本自动切分，现在先只做选择吧，以后功能补齐了再说后面的
+    TextSplitDo(){
+      let result = extract(this.TextSplit);
+      this.TextSplit = "";
+      this.TextSplitType = "option";
+      if(this.TextSplitType == 'option'){
+        this.Type_Cache = 'option';
+        this.Type_Now = 'option';
+        this.Temp_OptionQuestionInfo = {
+            type: "option",
+            // 分值
+            score: 5,
+            // 题目内容，题目内容图片，是否显示图片
+            content: result.题干,
+            content_images: [],
+            // 选项的部分
+            options: [],
+            options_images: [],
+            // 答案的部分
+            answer: result.答案,
+            answer_images: [],
+            // 解析的部分
+            analyse: result.解析,
+            analyse_images: [],
+            // 细节的部分
+            detail_type: "单选题"
+        }
+        let Temp_Option = result.选项.split('，');
+        this.Temp_OptionQuestionInfo.options = Temp_Option;
+        for(let i = 0; i < Temp_Option.length; i++){
+          this.Temp_OptionQuestionInfo.options_images.push("")
+        }
+      }
+    },
     openInstructionDialog(){
       this.$refs.instruction.openDialog();
     },
@@ -742,7 +842,7 @@ export default {
 
             type: "option",
             // 分值
-            score: 1,
+            score: 5,
             // 题目内容，题目内容图片，是否显示图片
             content: "",
             content_images: [],
@@ -754,7 +854,9 @@ export default {
             answer_images: [],
             // 解析的部分
             analyse: "",
-            analyse_images: []
+            analyse_images: [],
+            // 细节的部分
+            detail_type: "单选题"
 
         }
 
@@ -762,7 +864,7 @@ export default {
 
             type: "fill",
             // 分值
-            score: 1,
+            score: 5,
             // 题目内容，题目内容图片，是否显示图片
             content: "",
             content_images: [],
@@ -771,36 +873,38 @@ export default {
             answer_images: [],
             // 解析的部分
             analyse: "",
-            analyse_images: []
-
+            analyse_images: [],
+            // 明细
+            detail_type: "填空题"
         }
 
         this.Temp_AnswerQuestionInfo = {
 
             type: "answer",
             // 分值
-            score: 1,
+            score: 5,
             // 题目内容，题目内容图片，是否显示图片
             content: "",
             content_images: [],
             // 小题的部分
             sub_questions: [""],
             sub_questions_images: [[]],
-            sub_questions_scores: [1],
+            sub_questions_scores: [5],
             // 答案的部分
             answer: "",
             answer_images: [],
             // 解析的部分
             analyse: "",
-            analyse_images: []
-
+            analyse_images: [],
+            // 细节区分
+            detail_type: "简答题"
         }
 
         this.Temp_MixQuestionInfo = {
           // 题目类型，分值，题干内容，题干图片，答案内容，答案图片
           // 小题内容，小题是否折叠，解析内容，解析图片
             type: "mix",
-            score: "None",
+            score: 0,
             content: "",
             content_images: [],
             answer: "",
@@ -856,13 +960,21 @@ export default {
     Edit_Question(){
 
         if(this.Type_Now == 'option'){
-            this.showDialog = true;
+          sessionStorage.setItem("InputMarkedEditQuestion", JSON.stringify(this.Temp_OptionQuestionInfo));
+          this.refresh = !this.refresh;
+          this.showDialog = true;
         }else if(this.Type_Now == 'fill'){
-            this.showDialog_Fill = true;
+          sessionStorage.setItem("InputMarkedEditQuestion", JSON.stringify(this.Temp_FillQuestionInfo));
+          this.refresh = !this.refresh;
+          this.showDialog_Fill = true;
         }else if(this.Type_Now == 'answer'){
-            this.showDialog_Answer = true;
+          sessionStorage.setItem("InputMarkedEditQuestion", JSON.stringify(this.Temp_AnswerQuestionInfo));
+          this.refresh = !this.refresh;
+          this.showDialog_Answer = true;
         }else if(this.Type_Now == 'mix'){
-            this.showDialog_Mix = true;
+          sessionStorage.setItem("InputMarkedEditQuestion", JSON.stringify(this.Temp_MixQuestionInfo));
+          this.refresh = !this.refresh;
+          this.showDialog_Mix = true;
         }
         this.ReEditSwitch = true;
 
@@ -1128,12 +1240,13 @@ export default {
       this.ReEditSwitch = false;
       this.Type_Now = "-1";
       this.complex_Input = false;
+      this.refresh = false;
 
       this.Temp_OptionQuestionInfo = {
 
           type: "option",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
@@ -1145,7 +1258,8 @@ export default {
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          detail_type: "单选题"
 
       }
 
@@ -1153,7 +1267,7 @@ export default {
 
           type: "fill",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
@@ -1162,7 +1276,8 @@ export default {
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          detail_type: "填空题"
 
       }
 
@@ -1170,20 +1285,21 @@ export default {
 
           type: "answer",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
           // 小题的部分
           sub_questions: [""],
           sub_questions_images: [[]],
-          sub_questions_scores: [1],
+          sub_questions_scores: [5],
           // 答案的部分
           answer: "",
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          detail_type: "简答题"
 
       }
 
@@ -1191,7 +1307,7 @@ export default {
         // 题目类型，分值，题干内容，题干图片，答案内容，答案图片
         // 小题内容，小题是否折叠，解析内容，解析图片
           type: "mix",
-          score: "None",
+          score: 0,
           content: "",
           content_images: [],
           answer: "",
@@ -1210,234 +1326,215 @@ export default {
         this.$message.error("仍有非法字符存在，请修改后重新尝试。")
         return null;
       }
-
-      // var Upload_Json = {
-      //   "title": this.PaperTitle,
-      //   "subject_type": this.SubjectType,
-      //   "period_type": this.PeriodType,
-      //   "source": "USER_ID",
-      //   "img": {},
-      //   "doc": []
-      // }
-
-      // var Temp_Doc = {
-      //   "question_stem": "",
-      //   "question_options": [],
-      //   "question_type": "",
-      //   "sub_questions": [],
-      //   "answer": "",
-      //   "analysis": "",
-      // }
-
+      
       var Ques = "";
+      var Temp_Result = ""
 
       if(this.Type_Now == 'option'){
-        Ques = this.Temp_OptionQuestionInfo;
-        // // 题型
-        // Temp_Doc.question_type = "选择题"
-        // // 题干
-        // Temp_Doc.question_stem = Ques.content;
-        // for(var img_l = 0; img_l < Ques.content_images.length; img_l++){
-        //   Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-        // }
-        // // 答案
-        // Temp_Doc.answer = Ques.answer;
-        // for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-        //   Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-        // }
-        // // 解析
-        // Temp_Doc.analysis = Ques.analyse;
-        // for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-        //   Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-        // }
-        // // 选项
-        // for(img_l = 0; img_l < Ques.options.length; img_l++){
-        //   var optionInfo = Ques.options[img_l];
-        //   if(Ques.options_images[img_l] != ""){
-        //     optionInfo = optionInfo + "<img src='" + Ques.options_images[img_l] + "'>"
-        //   }
-        //   Temp_Doc.question_options.push(optionInfo)
-        // }
 
-        // Upload_Json.doc.push(Temp_Doc)
+        let Temp_Doc = {
+          type: "",
+          stem: "",
+          stem_image: [],
+          score: 0,
+          options: [],
+          options_image: [],
+          answer: "",
+          answer_image: [],
+          analysis: "",
+          analysis_image: []
+        }
+
+        Ques = JSON.parse(JSON.stringify(this.Temp_OptionQuestionInfo));
+
+        Temp_Doc.type = Ques.detail_type;
+
+        Temp_Doc.stem = Ques.content;
+        Temp_Doc.stem_image = Ques.content_images;
+
+        Temp_Doc.score = parseFloat(Ques.score + "");
+
+        Temp_Doc.options = Ques.options
+        for(let i = 0; i < Ques.options_images.length; i++){
+          let Item = Ques.options_images[i]
+          if(Item != null && Item.length > 0){
+            Temp_Doc.options_image.push([Item]);
+          }else{
+            Temp_Doc.options_image.push([])
+          }
+        }
+
+        Temp_Doc.answer = Ques.answer;
+        Temp_Doc.answer_image = Ques.answer_images;
+
+        Temp_Doc.analysis = Ques.analyse;
+        Temp_Doc.analysis_image = Ques.analyse_images;
+
+        Temp_Result = Temp_Doc
+
       }else if(this.Type_Now == 'fill'){
-        Ques = this.Temp_FillQuestionInfo
-        // // 题型
-        // Temp_Doc.question_type = "填空题"
-        // // 题干
-        // Temp_Doc.question_stem = Ques.content;
-        // for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-        //   Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-        // }
-        // // 答案
-        // Temp_Doc.answer = Ques.answer;
-        // for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-        //   Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-        // }
-        // // 解析
-        // Temp_Doc.analysis = Ques.analyse;
-        // for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-        //   Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-        // }
 
-        // Upload_Json.doc.push(Temp_Doc)
+        let Temp_Doc = {
+          type: "",
+          stem: "",
+          stem_image: [],
+          score: 0,
+          options: [],
+          options_image: [],
+          answer: "",
+          answer_image: [],
+          analysis: "",
+          analysis_image: []
+        }
+        
+        Ques = JSON.parse(JSON.stringify(this.Temp_FillQuestionInfo))
+
+        Temp_Doc.type = Ques.detail_type;
+
+        Temp_Doc.stem = Ques.content;
+        Temp_Doc.stem_image = Ques.content_images;
+
+        Temp_Doc.score = parseFloat(Ques.score + "");
+
+        Temp_Doc.answer = Ques.answer;
+        Temp_Doc.answer_image = Ques.answer_images;
+
+        Temp_Doc.analysis = Ques.analyse;
+        Temp_Doc.analysis_image = Ques.analyse_images;
+
+        Temp_Result = Temp_Doc
+
       }else if(this.Type_Now == 'answer'){
-        Ques = this.Temp_AnswerQuestionInfo
-        // // 题型
-        // Temp_Doc.question_type = "解答题"
-        // // 题干
-        // Temp_Doc.question_stem = Ques.content;
-        // for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-        //   Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-        // }
-        // // 答案
-        // Temp_Doc.answer = Ques.answer;
-        // for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-        //   Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-        // }
-        // // 解析
-        // Temp_Doc.analysis = Ques.analyse;
-        // for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-        //   Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-        // }
-        // // 小题
-        // for(img_l = 0; img_l < Ques.sub_questions.length; img_l++){
-        //   var subTemp = Ques.sub_questions[img_l];
-        //   for(var inner = 0; inner < Ques.sub_questions_images[img_l].length; inner++){
-        //     subTemp = subTemp + "<img src='" + Ques.sub_questions_images[img_l][inner] + "'>"
-        //   }
-        //   Temp_Doc.sub_questions.push(subTemp)
-        // }
 
-        // Upload_Json.doc.push(Temp_Doc)
+        Ques = JSON.parse(JSON.stringify(this.Temp_AnswerQuestionInfo))
+
+        let Temp_Doc = {
+          desc: "",
+          desc_image: [],
+          type: "大题",
+          score: 0,
+          subquestions: [],
+          answer: "",
+          answer_image: [],
+          analysis: "",
+          analysis_image: []
+        }
+
+        Temp_Doc.desc = Ques.content;
+        Temp_Doc.desc_image = Ques.content_images;
+
+        Temp_Doc.score = parseFloat(Ques.score + "");
+
+        for(let i = 0; i < Ques.sub_questions.length; i++){
+          let Item = {
+            type: Ques.detail_type,
+            score: parseFloat(Ques.sub_questions_scores[i] + ""),
+            stem: Ques.sub_questions[i],
+            stem_image: Ques.sub_questions_images[i],
+            options: [],
+            options_image: [],
+            answer: "",
+            answer_image: [],
+            analysis: "",
+            analysis_image: []
+          }
+          Temp_Doc.subquestions.push(Item)
+        }
+
+        Temp_Doc.answer = Ques.answer;
+        Temp_Doc.answer_image = Ques.answer_images;
+
+        Temp_Doc.analysis = Ques.analyse;
+        Temp_Doc.analysis_image = Ques.analyse_images;
+
+        Temp_Result = Temp_Doc
+
       }else if(this.Type_Now == 'mix'){
 
-        Ques = this.Temp_MixQuestionInfo
-        // var O_Answer = Ques_Out.answer.split("::");
+        Ques = JSON.parse(JSON.stringify(this.Temp_MixQuestionInfo))
 
+        let Temp_Doc = {
+          desc: "",
+          desc_image: [],
+          type: "大题",
+          score: 0,
+          subquestions: [],
+          answer: "",
+          answer_image: [],
+          analysis: "",
+          analysis_image: []
+        }
 
-        // for(var B_inner = 0; B_inner < Ques_Out.sub_questions.length; B_inner++){
+        Temp_Doc.desc = Ques.content;
+        Temp_Doc.desc_image = Ques.content_images;
 
-        //   Temp_Doc = {
-        //     "question_stem": "",
-        //     "question_options": [],
-        //     "question_type": "",
-        //     "sub_questions": [],
-        //     "answer": "",
-        //     "analysis": "",
-        //   }
+        Temp_Doc.score = parseFloat(Ques.score + "");
 
-        //   Ques = Ques_Out.sub_questions[B_inner]
+        for(let i = 0; i < Ques.sub_questions.length; i++){
+          let Item = {
+            type: Ques.sub_questions[i].detail_type,
+            score: parseFloat(Ques.sub_questions[i].score + ""),
+            stem: Ques.sub_questions[i].content,
+            stem_image: Ques.sub_questions[i].content_images,
+            options: [],
+            options_image: [],
+            answer: Ques.sub_questions[i].answer,
+            answer_image: Ques.sub_questions[i].answer_images,
+            analysis: Ques.sub_questions[i].analyse,
+            analysis_image: Ques.sub_questions[i].analyse_images
+          }
 
-        //   if(Ques.type == 'option'){
-        //     // 题型
-        //     Temp_Doc.question_type = "选择题"
-        //     // 题干
-        //     Temp_Doc.question_stem = Ques_Out.content + " " + Ques.content;
-        //     for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-        //       Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-        //     }
-        //     // 答案
-        //     if(O_Answer[B_inner]){
-        //       Temp_Doc.answer = O_Answer[B_inner] + Ques.answer;
-        //     }else{
-        //       Temp_Doc.answer = Ques.answer;
-        //     }
-        //     for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-        //       Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-        //     }
-        //     // 解析
-        //     Temp_Doc.analysis = Ques.analyse;
-        //     for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-        //       Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-        //     }
-        //     // 选项
-        //     for(img_l = 0; img_l < Ques.options.length; img_l++){
-        //       optionInfo = Ques.options[img_l];
-        //       if(Ques.options_images[img_l] != ""){
-        //         optionInfo = optionInfo + "<img src='" + Ques.options_images[img_l] + "'>"
-        //       }
-        //       Temp_Doc.question_options.push(optionInfo)
-        //     }
-        //   }else if(Ques.type == 'fill'){
-        //     // 题型
-        //     Temp_Doc.question_type = "填空题"
-        //     // 题干
-        //     Temp_Doc.question_stem = Ques_Out.content + " " + Ques.content;
-        //     for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-        //       Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-        //     }
-        //     // 答案
-        //     Temp_Doc.answer = Ques.answer;
-        //     for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-        //       Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-        //     }
-        //     // 解析
-        //     Temp_Doc.analysis = Ques.analyse;
-        //     for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-        //       Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-        //     }
-        //   }else if(Ques.type == 'answer'){
-        //     // 题型
-        //     Temp_Doc.question_type = "解答题"
-        //     // 题干
-        //     Temp_Doc.question_stem = Ques_Out.content + " " + Ques.content;
-        //     for(img_l = 0; img_l < Ques.content_images.length; img_l++){
-        //       Temp_Doc.question_stem = Temp_Doc.question_stem + "<img src='" + Ques.content_images[img_l] + "'>"
-        //     }
-        //     // 答案
-        //     Temp_Doc.answer = Ques.answer;
-        //     for(img_l = 0; img_l < Ques.answer_images.length; img_l++){
-        //       Temp_Doc.answer = Temp_Doc.answer + "<img src='" + Ques.answer_images[img_l] + "'>"
-        //     }
-        //     // 解析
-        //     Temp_Doc.analysis = Ques.analyse;
-        //     for(img_l = 0; img_l < Ques.analyse_images.length; img_l++){
-        //       Temp_Doc.analysis = Temp_Doc.analysis + "<img src='" + Ques.analyse_images[img_l] + "'>"
-        //     }
-        //     // 小题
-        //     for(img_l = 0; img_l < Ques.sub_questions.length; img_l++){
-        //       subTemp = Ques.sub_questions[img_l];
-        //       for(inner = 0; inner < Ques.sub_questions_images[img_l].length; inner++){
-        //         subTemp = subTemp + "<img src='" + Ques.sub_questions_images[img_l][inner] + "'>"
-        //       }
-        //       Temp_Doc.sub_questions.push(subTemp)
-        //     }
-        //   }
+          if(Ques.sub_questions[i].type == 'option'){
+            for(let k = 0; k < Ques.sub_questions[i].options.length; k++){
+              let opt = Ques.sub_questions[i].options[k]
+              Item.options.push(opt);
+              if(Ques.sub_questions[i].options_images[k] != null && Ques.sub_questions[i].options_images[k].length > 0)
+                Item.options_image.push([Ques.sub_questions[i].options_images[k]])
+              else{
+                Item.options_image.push([])
+              }
+            }
+          }
 
-        //   Upload_Json.doc.push(Temp_Doc)
-        //}
+          Temp_Doc.subquestions.push(Item)
+        }
+
+        Temp_Doc.answer = Ques.answer;
+        Temp_Doc.answer_image = Ques.answer_images;
+
+        Temp_Doc.analysis = Ques.analyse;
+        Temp_Doc.analysis_image = Ques.analyse_images;
+
+        Temp_Result = Temp_Doc
+
       }
 
       if(Control == 'upload'){
 
-        let config = {
-            headers: { "Content-Type": "multipart/form-data" }
-        };
-        let param = new FormData();
-
-        param.append('result_json',
-                        JSON.stringify({
+        let Param = {
+          'Input_Data': JSON.stringify({
                           "post_type": 0,
-                          "title": this.PaperTitle,
-                          "subject_type": this.SubjectType,
-                          "period_type": this.PeriodType,
-                          "questions": Ques,
-                        }, null, 4));
+                          "user_id": this.UUID,
+                          "subject": this.SubjectType,
+                          "period": this.PeriodType,
+                          "questions": JSON.stringify(Temp_Result),
+                        }, null, 4),
+          'questionInput': true
+        }
 
-        this.$http
-        .post(this.backendIP + "/api/mathUpload", param, config, {
-          emulateJSON: true
-        })
-        .then(function(data) {
-          if(data.data){
-            this.$message.success("散题上传已完成。");
+        commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
+          this.$message.success("入库完成")
+          this.Uploading = false;
+        }).catch(
+          ()=>{
+            this.$message.error("入库失败")
+            this.Uploading = false;
           }
-        });
+        )
 
       }else if(Control == 'export'){
 
-        var file = new File(
+        let file = new File(
           [JSON.stringify({
                           "title": this.PaperTitle,
                           "subject_type": this.SubjectType,

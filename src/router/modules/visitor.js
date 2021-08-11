@@ -34,6 +34,7 @@ import QuestionUpdate from "@/views/labelManage/QuestionUpdate";
 
 // 组卷
 import PaperCombine from "@/views/paperCombine/PaperCombine.vue"
+import AnswerCard from '@/views/paperCombine/AnswerCard'
 
 // 用户政策与隐私协议
 import UserAgreement from "@/layout/components/UserAgreement";
@@ -53,6 +54,11 @@ const visitorRouter=[
     path: "/paperCombine",
     name: "PaperCombine",
     component: PaperCombine
+  },
+  {
+    path: "/answerCard",
+    name: "AnswerCard",
+    component: AnswerCard
   },
   {
     path: "/exercise",
@@ -138,6 +144,11 @@ const visitorRouter=[
     path: "/questionUpdate",
     name: "questionUpdate",
     component: QuestionUpdate,
+  },
+  {
+    path: "/inputPaper",
+    name: "inputPaper",
+    component: InputPaper,
   },
   {
     path: "/Agreement",

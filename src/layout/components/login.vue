@@ -1,10 +1,11 @@
-<template lang="html">
+<template>
   <!-- 登录 -->
   <el-dialog :visible="$store.getters.loginDialog.opened"
     width="70%" @close="hide()" @opened="draw()"
     :show-close="isLuna"
     :close-on-click-modal="isLuna"
     :close-on-press-escape="isLuna"
+    @open="draw()"
     >
     <el-row>
       <el-col :span="10" :offset="2">
@@ -88,6 +89,7 @@ export default {
     isLuna() {
       return this.$store.getters.isLuna;
     },
+
   },
   methods:{
     show(){
@@ -121,15 +123,21 @@ export default {
         // password: md5(this.password)
         password: this.password
       }).then((data)=>{
-        let userInfo={
-          token:data.access_token,
-          name:this.account,
-          // isAdmin:data.body.isAdmin,
+        if(!this.isLuna&&this.account!='NEEA'){
+          this.$message.error('您没有访问考试系统的权限!')
+        }else{
+          let userInfo={
+            token:data.access_token,
+            name:this.account,
+            // isAdmin:data.body.isAdmin,
+          }
+          this.$store.dispatch('user/setUserData', userInfo).then(() => {
+            this.$router.go()
+            this.hide()
+          })
         }
-        this.$store.dispatch('user/setUserData', userInfo).then(() => {
-          this.$router.go()
-          this.hide()
-        })
+
+
       }).catch((err)=>{
         if(err&&err.response&&err.response.status==401){
           this.$message.error('用户名或密码不正确！')

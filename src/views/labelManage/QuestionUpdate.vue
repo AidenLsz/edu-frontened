@@ -23,13 +23,13 @@
 
     <div class="search-bar">
       <el-input
-        class="search-input"
-        id="search-input"
-        placeholder="输入题目文本或者ID"
-        v-model="searchText"
-        @keyup.enter.native="search"
+          class="search-input"
+          id="search-input"
+          placeholder="输入题目文本或者ID"
+          v-model="searchText"
+          @keyup.enter.native="search"
       >
-<!--        <el-tooltip class="item" effect="light" content="hhh" placement="top">-->
+        <!--        <el-tooltip class="item" effect="light" content="hhh" placement="top">-->
         <el-tooltip slot="suffix" class="item" effect="dark" :content="testDB?'测试库':'正式库'" placement="top">
           <i v-if="testDB"
              @click="toggleTestDB"
@@ -40,7 +40,7 @@
              class="el-input__icon el-icon-turn-off search-btn"
           />
         </el-tooltip>
-<!--        </el-tooltip>-->
+        <!--        </el-tooltip>-->
         <i v-if="searching"
            class="el-input__icon el-icon-loading search-btn"
            slot="suffix"
@@ -53,42 +53,42 @@
       </el-input>
     </div>
 
-<!--    <div style="padding: 0">-->
-<!--      <el-switch-->
-<!--          v-model="testDB"-->
-<!--          active-text="测试库"-->
-<!--      >-->
-<!--        测试库-->
-<!--      </el-switch>-->
-<!--    </div>-->
+    <!--    <div style="padding: 0">-->
+    <!--      <el-switch-->
+    <!--          v-model="testDB"-->
+    <!--          active-text="测试库"-->
+    <!--      >-->
+    <!--        测试库-->
+    <!--      </el-switch>-->
+    <!--    </div>-->
 
-<!--    <div v-show="questions.length !== 0" class="sidebar">-->
-<!--      <el-button-->
-<!--        plain-->
-<!--        v-for="j in questions.length"-->
-<!--        v-bind:key="j"-->
-<!--        style="margin: 4px auto; padding: 10px; width: 100%; text-align: center"-->
-<!--      >-->
-<!--        {{ j }}-->
-<!--      </el-button>-->
+    <!--    <div v-show="questions.length !== 0" class="sidebar">-->
+    <!--      <el-button-->
+    <!--        plain-->
+    <!--        v-for="j in questions.length"-->
+    <!--        v-bind:key="j"-->
+    <!--        style="margin: 4px auto; padding: 10px; width: 100%; text-align: center"-->
+    <!--      >-->
+    <!--        {{ j }}-->
+    <!--      </el-button>-->
 
-<!--      <el-button-->
-<!--        @click="toTop"-->
-<!--        plain-->
-<!--        style="margin: 4px auto; padding: 10px; width: 100%; height: 100%; text-align: center"-->
-<!--      >-->
-<!--        <i class="el-icon-top"></i>-->
-<!--      </el-button>-->
-<!--    </div>-->
+    <!--      <el-button-->
+    <!--        @click="toTop"-->
+    <!--        plain-->
+    <!--        style="margin: 4px auto; padding: 10px; width: 100%; height: 100%; text-align: center"-->
+    <!--      >-->
+    <!--        <i class="el-icon-top"></i>-->
+    <!--      </el-button>-->
+    <!--    </div>-->
 
     <transition-group name="el-fade-in">
       <div
-        v-for="(item, index) in questions"
-        v-bind:key="item.question_ID"
-        class="question-item"
+          v-for="(item, index) in questions"
+          v-bind:key="item.question_ID"
+          class="question-item"
       >
         <div style="font-size: 26px; margin-bottom: 12px; text-align: center">
-            试题{{ index + 1 }}
+          试题{{ index + 1 }}
         </div>
 
         <div v-if="item.edit !== true">
@@ -113,16 +113,16 @@
             <span style="">题型：{{['其他', '多选题', '填空题', '判断题', '简答题', '计算题', '单选题'][item.type]}}</span>
             <span style="">来源：{{['其他', '', '', '', '', '', '', '', '', '', '高考', '讯飞', '考试中心', 'LUNA', '题库中国'][item.system]}}</span>
             <span style="">真题：{{['未处理', '非真题', '真卷', '高考真卷', '中考真卷'][item.pastpaper]}}</span>
-<!--            display: grid;justify-items: end;align-items: center;grid-template-columns: 1fr;-->
+            <!--            display: grid;justify-items: end;align-items: center;grid-template-columns: 1fr;-->
             <div class="edit-div">
               <el-button class="edit-btn" round plain @click="onEdit(index)" :loading="loading === true">编辑</el-button>
             </div>
           </div>
-<!--          <el-row type="flex" justify="space-between" align="middle">-->
-<!--            <el-row type="flex" justify="start" align="middle">-->
-              <!--            </el-row>-->
-<!--              <el-button round plain @click="item.unfold = true">查看解析</el-button>-->
-<!--          </el-row>-->
+          <!--          <el-row type="flex" justify="space-between" align="middle">-->
+          <!--            <el-row type="flex" justify="start" align="middle">-->
+          <!--            </el-row>-->
+          <!--              <el-button round plain @click="item.unfold = true">查看解析</el-button>-->
+          <!--          </el-row>-->
         </div>
         <el-form v-else ref="form" :model="item" label-width="44px">
           <el-form-item label="ID">
@@ -161,88 +161,88 @@
               </el-select>
               <el-select v-model="item.period" placeholder="学段">
                 <el-option
-                    v-for="(item, id) in [
-                  '其他',
-                  '初中',
-                  '高中',
-                  '大学',
-                  '成人',
-                  '小学',
-                ]"
-                    :label="'学段：' + item"
-                    :key="id"
-                    :value="id"
+                  v-for="(item, id) in [
+                    '其他',
+                    '初中',
+                    '高中',
+                    '大学',
+                    '成人',
+                    '小学',
+                  ]"
+                  :label="'学段：' + item"
+                  :key="id"
+                  :value="id"
                 ></el-option>
               </el-select>
               <el-select v-model="item.system" placeholder="来源">
                 <el-option
-                    v-for="(item, id) in [
-                  '其他',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '高考',
-                  '讯飞',
-                  '考试中心',
-                  'LUNA',
-                  '题库中国',
-                ]"
-                    :v-if="item !== ''"
-                    :label="'来源：' + item"
-                    :key="id"
-                    :value="id"
+                  v-for="(item, id) in [
+                    '其他',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '高考',
+                    '讯飞',
+                    '考试中心',
+                    'LUNA',
+                    '题库中国',
+                  ]"
+                  :v-if="item !== ''"
+                  :label="'来源：' + item"
+                  :key="id"
+                  :value="id"
                 ></el-option>
               </el-select>
               <el-select v-model="item.pastpaper" placeholder="真题">
                 <el-option
-                    v-for="(item, id) in [
-                  '未处理',
-                  '非真题',
-                  '真卷',
-                  '高考真卷',
-                  '中考真卷',
-                ]"
-                    :label="'真题：' + item"
-                    :key="id"
-                    :value="id"
+                  v-for="(item, id) in [
+                    '未处理',
+                    '非真题',
+                    '真卷',
+                    '高考真卷',
+                    '中考真卷',
+                  ]"
+                  :label="'真题：' + item"
+                  :key="id"
+                  :value="id"
                 ></el-option>
               </el-select>
               <el-select v-model="item.type" placeholder="题型">
                 <el-option
-                    v-for="(item, id) in [
-                  '其他',
-                  '多选题',
-                  '填空题',
-                  '判断题',
-                  '简答题',
-                  '计算题',
-                  '单选题',
-                ]"
-                    :label="'题型：' + item"
-                    :key="id"
-                    :value="id"
+                  v-for="(item, id) in [
+                    '其他',
+                    '多选题',
+                    '填空题',
+                    '判断题',
+                    '简答题',
+                    '计算题',
+                    '单选题',
+                  ]"
+                  :label="'题型：' + item"
+                  :key="id"
+                  :value="id"
                 ></el-option>
               </el-select>
               <el-date-picker
-                  style="width: 100%"
-                  v-model="item.date"
-                  type="date"
-                  placeholder="选择日期"
+                style="width: 100%"
+                v-model="item.date"
+                type="date"
+                placeholder="选择日期"
               >
               </el-date-picker>
             </div>
           </el-form-item>
           <el-form-item label="题干">
             <el-input
-                type="textarea"
-                :autosize="{ minRows: 5, maxRows: 10 }"
-                v-model="item.stem"
+              type="textarea"
+              :autosize="{ minRows: 5, maxRows: 10 }"
+              v-model="item.stem"
             ></el-input>
           </el-form-item>
           <el-form-item label="选项">
@@ -325,7 +325,7 @@ export default {
             "儒学逐步取得了独尊地位",
           ],
           analysis:
-            "【详解】依据材料可知，汉初《诗》、《公羊春秋》等儒家经典被作为皇帝任命官职的依据，由此可见儒学地位上升成为入仕途径，因此A选项正确。B选项错误，材料并未体现品行作为选官的主要标准；C选项错误，材料并未涉及黄老之学；D选项错误，汉武帝时期，采取董仲舒的建议，罢黜百家，独尊儒术，设立太学，传授五经，使儒学获得了独尊地位。故正确答案为A选项。",
+              "【详解】依据材料可知，汉初《诗》、《公羊春秋》等儒家经典被作为皇帝任命官职的依据，由此可见儒学地位上升成为入仕途径，因此A选项正确。B选项错误，材料并未体现品行作为选官的主要标准；C选项错误，材料并未涉及黄老之学；D选项错误，汉武帝时期，采取董仲舒的建议，罢黜百家，独尊儒术，设立太学，传授五经，使儒学获得了独尊地位。故正确答案为A选项。",
           date: "2021-05-29 13:07:49",
           edit: false,
         },
@@ -338,7 +338,7 @@ export default {
           pastpaper: 0,
           source_type: 1,
           stem:
-            "<p>一同学在开展研究性学习，他阅读了《战争与和平》《人间喜剧》《双城记》《红与黑》等一系列相关的作品。依据你的判断，他研究的课题可能与哪一文学流派有关（   ）</p>",
+              "<p>一同学在开展研究性学习，他阅读了《战争与和平》《人间喜剧》《双城记》《红与黑》等一系列相关的作品。依据你的判断，他研究的课题可能与哪一文学流派有关（   ）</p>",
           options: ["批判现实主义", "古典主义", "现代主义", "浪漫主义"],
           answer: "A",
           date: "2021-05-29 13:07:49",
@@ -384,42 +384,42 @@ export default {
       // }
 
       this.$http
-        .post(backendURL + "/query_question", formData, { emulateJSON: true })
-        .then(function (res) {
-          let data = res.data;
-          console.log('获得结果')
-          //判断错误
-          if(data.error !== "" || data.questions.length === 0) {
+          .post(backendURL + "/query_question", formData, { emulateJSON: true })
+          .then(function (res) {
+            let data = res.data;
+            console.log('获得结果')
+            //判断错误
+            if(data.error !== "" || data.questions.length === 0) {
+              this.searching = false
+              this.$notify.error({
+                title: '检索失败',
+              });
+              console.log(data)
+            }
+
+            let edit = this.questions.length === 1;
+            console.log(edit)
+            this.questions = data.questions;
+            // for(let question of this.questions) {
+            //   question.fromTestDB = test;
+            //   question.edit = edit
+            // }
+            for(let i = 0; i < this.questions.length; i++){
+              this.questions[i].edit = edit
+              this.questions[i].fromTestDB = test;
+            }
+            this.searching = false
+
+            let title = document.getElementById('title')
+            title.style.marginTop = '20px'
+          })
+          .catch((e) => {
             this.searching = false
             this.$notify.error({
               title: '检索失败',
             });
-            console.log(data)
-          }
-
-          let edit = this.questions.length === 1;
-          console.log(edit)
-          this.questions = data.questions;
-          // for(let question of this.questions) {
-          //   question.fromTestDB = test;
-          //   question.edit = edit
-          // }
-          for(let i = 0; i < this.questions.length; i++){
-            this.questions[i].edit = edit
-            this.questions[i].fromTestDB = test;
-          }
-          this.searching = false
-
-          let title = document.getElementById('title')
-          title.style.marginTop = '20px'
-        })
-        .catch((e) => {
-          this.searching = false
-          this.$notify.error({
-            title: '检索失败',
+            console.log(e)
           });
-          console.log(e)
-        });
 
       //debug
       // this.questions = this.mockData;
@@ -481,37 +481,37 @@ export default {
       }
 
       this.$http
-        .put(backendURL + "/update_question", formData, { emulateJSON: true })
-        .then(function (res) {
-          let data = res.data;
-          if (data.error) {
+          .put(backendURL + "/update_question", formData, { emulateJSON: true })
+          .then(function (res) {
+            let data = res.data;
+            if (data.error) {
+              this.loading = false
+              this.$notify.error({
+                title: '修改提交失败',
+
+              });
+              console.log("提交修改出错");
+              console.log(data.error);
+            } else {
+              this.$notify({
+                title: '修改提交成功',
+                type: 'success'
+              });
+              console.log("提交成功");
+              setTimeout(() => {
+                this.loading = false
+              }, 300)
+            }
+          })
+          .catch((e)=>{
             this.loading = false
             this.$notify.error({
               title: '修改提交失败',
 
             });
             console.log("提交修改出错");
-            console.log(data.error);
-          } else {
-            this.$notify({
-              title: '修改提交成功',
-              type: 'success'
-            });
-            console.log("提交成功");
-            setTimeout(() => {
-              this.loading = false
-            }, 300)
-          }
-        })
-        .catch((e)=>{
-          this.loading = false
-          this.$notify.error({
-            title: '修改提交失败',
-
+            console.log(e);
           });
-          console.log("提交修改出错");
-          console.log(e);
-        });
     },
     copyQuestionID(e, text) {
       const clipboard = new Clipboard(e.target, { text: () => text })
@@ -561,7 +561,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 /*html, head, body {*/
 /*  margin: 0;*/
 /*  padding: 0;*/
@@ -787,4 +787,3 @@ body .el-scrollbar__wrap {
     font-size: 28px;
   }
 }
-</style>

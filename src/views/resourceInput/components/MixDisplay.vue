@@ -140,7 +140,7 @@ export default {
             default: function(){
                 return {
                     type: "mix",
-                    score: 3,
+                    score: 0,
                     content: "",
                     content_images: [],
                     answer: "",

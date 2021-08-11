@@ -208,7 +208,7 @@ export default {
 
           type: "option",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
@@ -220,14 +220,16 @@ export default {
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          // 试题类型细节
+          detail_type: "单选题"
 
       },
       Temp_FillQuestionInfo: {
 
           type: "fill",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
@@ -236,27 +238,31 @@ export default {
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          // 试题类型细节
+          detail_type: "填空题"
 
       },
       Temp_AnswerQuestionInfo: {
 
           type: "answer",
           // 分值
-          score: 1,
+          score: 5,
           // 题目内容，题目内容图片，是否显示图片
           content: "",
           content_images: [],
           // 小题的部分
           sub_questions: [""],
           sub_questions_images: [[]],
-          sub_questions_scores: [1],
+          sub_questions_scores: [5],
           // 答案的部分
           answer: "",
           answer_images: [],
           // 解析的部分
           analyse: "",
-          analyse_images: []
+          analyse_images: [],
+          // 试题类型细节
+          detail_type: "简答题"
 
       }
     }
@@ -651,7 +657,7 @@ export default {
       }
       if(this.Type_Now == 'option'){
         let Aim = this.Temp_OptionQuestionInfo;
-        Question_Show_Infos.type = "选择题";
+        Question_Show_Infos.type = Aim.detail_type;
         Question_Show_Infos.score = Aim.score;
         Question_Show_Infos.stem = Aim.content;
         for(let i = 0; i < Aim.content_images.length; i++){
@@ -672,7 +678,7 @@ export default {
         }
       }else if(this.Type_Now == 'fill'){
         let Aim = this.Temp_FillQuestionInfo;
-        Question_Show_Infos.type = "填空题";
+        Question_Show_Infos.type = Aim.detail_type;
         Question_Show_Infos.score = Aim.score;
         Question_Show_Infos.stem = Aim.content;
         for(let i = 0; i < Aim.content_images.length; i++){
@@ -688,7 +694,7 @@ export default {
         }
       }else if(this.Type_Now == 'answer'){
         let Aim = this.Temp_AnswerQuestionInfo;
-        Question_Show_Infos.type = "解答题";
+        Question_Show_Infos.type = Aim.detail_type;
         Question_Show_Infos.score = Aim.score;
         Question_Show_Infos.stem = Aim.content;
         for(let i = 0; i < Aim.content_images.length; i++){

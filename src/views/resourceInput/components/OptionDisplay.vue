@@ -1,11 +1,11 @@
 <template>
     <div>
         <!-- 题目分数及题干 -->
-        <el-row style="font-size: 14px; text-align: center; margin-bottom: 15px">
+        <el-row style="font-size: 14px; text-align: center; margin-bottom: 10px">
             <el-col :span="2">
                 <span><label> ( {{ QI.score }}分 ) </label></span>
             </el-col>
-            <el-col :span="20">
+            <el-col :span="22">
                 <Mathdown :name="Bundle_Index + '_' + Sub_Index + 'OptionQuestions_Content'" :content="QI.content"></Mathdown>
             </el-col>
         </el-row>
@@ -19,20 +19,22 @@
                                     3 + (row_count - 1)*4]" 
                 :key="index"
                 >
-                <el-image 
-                    v-if="index < QI.content_images.length"
-                    :src="QI.content_images[index]" 
-                    style="height: 100px; width: 100px;" 
-                    fit="contain"
-                    :preview-src-list="QI.content_images">
-                </el-image>
+                <el-row type="flex" justify="center">
+                    <el-image 
+                        v-if="index < QI.content_images.length"
+                        :src="QI.content_images[index]" 
+                        style="height: 100px; width: 100px;" 
+                        fit="contain"
+                        :preview-src-list="QI.content_images">
+                    </el-image>
+                </el-row>
             </el-col>
         </el-row>
         <!-- 选项内容及图片 -->
         <el-row v-for="index in QI.options.length" :key="index">
-            <el-row>
+            <el-row type="flex" justify="start" style="margin-bottom: 10px;">
                 <el-col :span="2" style="font-size: 14px; text-align: center">
-                    <span><label>{{String.fromCharCode(64 + index)}}</label></span>
+                    <span><label>{{String.fromCharCode(64 + index)}}：</label></span>
                 </el-col>
                 <el-col :span="20">
                     <Mathdown 
@@ -51,13 +53,10 @@
                     </el-image>
                 </el-col>
             </el-row>
-            <el-row v-if="QI.options_images[index - 1] == ''">
-                <br/>
-            </el-row>
         </el-row>
         <!-- 答案内容及图片 -->
         <el-row v-if="QI.answer != '' || QI.answer_images.length > 0">
-            <el-row style="font-size: 14px; text-align: center">
+            <el-row type="flex" style="font-size: 14px; text-align: center">
                 <el-col :span="2">                        
                     <span><label>答案：</label></span>
                 </el-col>
@@ -68,7 +67,6 @@
                     <label>暂无文字答案，请参考附图</label>
                 </el-col>
             </el-row>
-            <br/>
             <el-row v-for="row_count in Math.ceil(QI.answer_images.length/4)" :key="row_count">
                 <el-col 
                     :span="6" 

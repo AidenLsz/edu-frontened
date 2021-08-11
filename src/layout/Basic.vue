@@ -124,254 +124,206 @@
 								<el-button type="text" @click="goTolalala" class="navbar">啦啦啦</el-button>
 							</el-col>
 							-->
-              <el-col
-                :span="4"
-                v-if="$store.state.user.name"
-                style="padding-top: 15px"
-              >
-                <el-button type="text" @click="goToMainPage" class="navbar"
-                  >首页</el-button
-                >
-              </el-col>
-              <el-col :span="4" :offset="1" v-else style="padding-top: 15px">
-                <el-button type="text" @click="goToMainPage" class="navbar"
-                  >首页</el-button
-                >
-              </el-col>
-              <el-col :span="4" style="padding-top: 15px">
-                <el-menu
-                  mode="horizontal"
-                  style="border-bottom: 3px solid #409eff; padding-bottom: 10px"
-                >
-                  <!-- <el-menu :default-active="activeIndex" mode="horizontal" style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px"> -->
-                  <el-submenu index="0">
-                    <template slot="title">
-                      <span :style="Title_Pos()">功能</span>
-                    </template>
-                    <el-submenu index="1">
-                      <template slot="title"
-                        ><span style="color: black">资源录入</span></template
-                      >
-                      <el-menu-item index="1-1"
-                        ><span style="color: Gainsboro">教材教辅资源</span>
-                      </el-menu-item>
-                      <router-link
-                        to="/inputMarked"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="1-2">
-                          <span style="color: black">试题资源</span>
-                        </el-menu-item>
-                      </router-link>
-                      <router-link
-                        to="/inputPaper"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="1-3">
-                          <span style="color: black">试卷资源</span>
-                        </el-menu-item>
-                      </router-link>
-                      <el-menu-item index="1-4"
-                        ><span style="color: Gainsboro">知识体系</span>
-                      </el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="2">
-                      <template slot="title"
-                        ><span style="color: black">查询</span></template
-                      >
+							<el-col :span="4" v-if="$store.state.user.name" style="padding-top: 15px;">
+								<el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
+							</el-col>
+							<el-col :span="4" :offset="1" v-else style="padding-top: 15px;">
+								<el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
+							</el-col>
+							<el-col :span="4" style="padding-top: 15px;">
+								<el-menu mode="horizontal"
+									style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px">
+									<!-- <el-menu :default-active="activeIndex" mode="horizontal" style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px"> -->
+									<el-submenu index="0">
+										<template slot="title">
+											<span :style="Title_Pos()">功能</span>
+										</template>
+										<el-submenu index="1">
+											<template slot="title"><span style="color: black;">资源录入</span></template>
+											<el-menu-item index="1-1"><span style="color:	Gainsboro;">学习资源</span>
+											</el-menu-item>
+											<router-link to="/inputMarked" :underline="false" @click.native="ToTop">
+												<el-menu-item index="1-2">
+													<span style="color: black;">试题资源</span>
+												</el-menu-item>
+											</router-link>
+											<router-link to="/inputPaper" :underline="false" @click.native="ToTop">
+												<el-menu-item index="1-3">
+													<span style="color: black;">试卷资源</span>
+												</el-menu-item>
+											</router-link>
+											<el-menu-item index="1-4"><span style="color:	Gainsboro;">知识体系</span>
+											</el-menu-item>
+										</el-submenu>
+										<el-submenu index="2">
 
-                      <router-link
-                        to="/exercise"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="2-1">
-                          <span style="color: black">试题检索</span>
-                        </el-menu-item>
-                      </router-link>
+											<template slot="title"><span style="color: black;">查询</span></template>
 
-                      <router-link
-                        to="/searchPaper"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="2-2">
-                          <span style="color: black">试卷检索</span>
-                        </el-menu-item>
-                      </router-link>
+											<router-link to="/exercise" :underline="false" @click.native="ToTop">
+												<el-menu-item index="2-1">
+													<span style="color: black;">试题检索</span>
+												</el-menu-item>
+											</router-link>
 
-                      <router-link
-                        to="/ku"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="2-3">
-                          <span style="color: black">知识单元检索</span>
-                        </el-menu-item>
-                      </router-link>
+											<router-link to="/searchPaper" :underline="false" @click.native="ToTop">
+												<el-menu-item index="2-2">
+													<span style="color: black;">试卷检索</span>
+												</el-menu-item>
+											</router-link>
 
-                      <router-link
-                        to="/resources"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="2-4">
-                          <span style="color: black">教材教辅检索</span>
-                        </el-menu-item>
-                      </router-link>
-                    </el-submenu>
-                    <el-submenu index="3">
-                      <template slot="title"
-                        ><span style="color: black">分析</span></template
-                      >
-                      <el-menu-item index="3-1"
-                        ><span style="color: Gainsboro">教材教辅资源</span>
-                      </el-menu-item>
-                      <el-menu-item
-                        index="3-2"
-                        @click="QuestionAnalyseSwitch()"
-                        @click.native="ToTop"
-                      >
-                        <span style="color: black">试题资源</span>
-                      </el-menu-item>
-                      <el-menu-item
-                        index="3-3"
-                        @click="PaperAnalyseSwitch()"
-                        @click.native="ToTop"
-                      >
-                        <span style="color: black">试卷资源</span>
-                      </el-menu-item>
-                    </el-submenu>
+											<router-link to="/ku" :underline="false" @click.native="ToTop">
+												<el-menu-item index="2-3">
+													<span style="color: black;">知识单元检索</span>
+												</el-menu-item>
+											</router-link>
+
+											<router-link to="/resources" :underline="false" @click.native="ToTop">
+												<el-menu-item index="2-4">
+													<span style="color: black;">学习资源检索</span>
+												</el-menu-item>
+											</router-link>
+
+										</el-submenu>
+										<el-submenu index="3">
+											<template slot="title"><span style="color: black;">分析</span></template>
+											<el-menu-item index="3-1"><span style="color: Gainsboro;">学习资源</span>
+											</el-menu-item>
+											<el-menu-item index="3-2" @click="QuestionAnalyseSwitch()"
+												@click.native="ToTop">
+												<span style="color: black;">试题资源</span>
+											</el-menu-item>
+											<el-menu-item index="3-3" @click="PaperAnalyseSwitch()"
+												@click.native="ToTop">
+												<span style="color: black;">试卷资源</span>
+											</el-menu-item>
+										</el-submenu>
                     <el-submenu index="4">
-                      <template slot="title"
-                        ><span style="color: black"
-                          >标注管理平台</span
-                        ></template
-                      >
-                      <router-link
-                        to="/questionUpdate"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
+                      <template slot="title"><span style="color: black;">标注管理平台</span></template>
+                      <router-link to="/questionUpdate" :underline="false" @click.native="ToTop">
                         <el-menu-item index="4-1">
-                          <span style="color: black">试题信息修改</span>
+                          <span style="color: black;">试题信息修改</span>
                         </el-menu-item>
                       </router-link>
                     </el-submenu>
-
-                    <el-menu-item index="5">
-                      <router-link
-                        to="/paperCombine"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <span style="color: black"> 组卷系统 </span>
-                      </router-link>
-                    </el-menu-item>
-
-                    <el-menu-item index="6">
-                      <router-link to="/manage/dashboard" :underline="false" @click.native="ToTop">
-												<span v-if="$store.state.user.name" style="color: #409EFF; font-weight: bold">
-													资源管理
+										<el-menu-item index="5">
+											<router-link to="/paperCombine" :underline="false" @click.native="ToTop">
+												<span style="color: black;">
+													组卷系统
 												</span>
-												<span v-else style="color: silver">
+											</router-link>
+										</el-menu-item>
+										<el-menu-item index="6">
+											<router-link to="/manage/dashboard" v-if="$store.state.user.name"
+												:underline="false" @click.native="ToTop">
+												<span style="color: #409EFF; font-weight: bold">
 													资源管理
 												</span>
 											</router-link>
-                    </el-menu-item>
+										</el-menu-item>
+										<router-link to="/estimate" :underline="false" @click.native="ToTop"
+											style="display: none">
+											<el-menu-item index="7">
+												<span style="color: black;">试题属性预估</span>
+											</el-menu-item>
+										</router-link>
+										<router-link to="/similarity" :underline="false" @click.native="ToTop"
+											style="display: none">
+											<el-menu-item index="8">
+												<span style="color: black;">相似题预估</span>
+											</el-menu-item>
+										</router-link>
+										<router-link to="/admin" v-if="Get_Priority()" :underline="false"
+											@click.native="ToTop">
+											<el-menu-item index="9">
+												<span style="color: red;">管理员页面</span>
+											</el-menu-item>
+										</router-link>
+									</el-submenu>
+								</el-menu>
+							</el-col>
 
-                    <router-link
-                      to="/estimate"
-                      :underline="false"
-                      @click.native="ToTop"
-                      style="display: none"
-                    >
-                      <el-menu-item index="7">
-                        <span style="color: black">试题属性预估</span>
-                      </el-menu-item>
-                    </router-link>
+							<el-col :span="6" style="padding-top: 15px; display: none">
+								<el-menu mode="horizontal"
+									style=" border-bottom: 3px solid #FFFFFF; padding-bottom: 10px">
+									<el-submenu index="0">
+										<template slot="title">
+											<span :style="Title_Pos()">开放平台</span>
+										</template>
+										<el-menu-item index="1">
+											<router-link to="/ImageTranscription" :underline="false"
+												@click.native="ToTop">
+												<span style="color: black; display:block">
+													图片转写
+												</span>
+											</router-link>
+										</el-menu-item>
+										<el-menu-item index="2">
+											<router-link to="/Estimate" :underline="false"
+												@click.native="ToTop">
+												<span style="color: black; display:block">
+													属性预估
+												</span>
+											</router-link>
+										</el-menu-item>
+									</el-submenu>
+								</el-menu>
+							</el-col>
+							<!-- <el-col :span="8" style="padding-top: 15px;">
+								<el-menu :mode="horizontal" style=" margin-bottom: 13px">
+									<el-submenu index="7">
+										<template slot="title">
+											<span :style="Title_Pos()">开放平台</span>
+										</template>
 
-                    <router-link
-                      to="/similarity"
-                      :underline="false"
-                      @click.native="ToTop"
-                      style="display: none"
-                    >
-                      <el-menu-item index="8">
-                        <span style="color: black">相似题预估</span>
-                      </el-menu-item>
-                    </router-link>
+										<el-menu-item index="1">
+											<router-link to="/ImageTranscription" :underline="false" @click.native="ToTop">
+												<span style="color: black;">
+													图片转写
+												</span>
+											</router-link>
+										</el-menu-item>
 
-                    <router-link
-                      to="/admin"
-                      v-if="Get_Priority()"
-                      :underline="false"
-                      @click.native="ToTop"
-                    >
-                      <el-menu-item index="9">
-                        <span style="color: red">管理员页面</span>
-                      </el-menu-item>
-                    </router-link>
-                  </el-submenu>
-                </el-menu>
-              </el-col>
-              <el-col :span="4" style="padding-top: 15px">
-                <el-button type="text" @click="show_members" class="navbar"
-                  >成员</el-button
-                >
-              </el-col>
-              <el-col
-                :span="5"
-                style="padding-top: 15px"
-                v-if="$store.state.user.name"
-              >
-                <el-row>
-                  <el-dropdown
-                    trigger="hover"
-                    style="padding-top: 8px"
-                    class="navbar"
-                  >
-                    <span class="el-dropdown-link user-inner">
-                      {{ $store.state.user.name
-                      }}<i class="el-icon-arrow-down el-icon--right"></i>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item @click.native="checkUserInfo"
-                        >个人设置</el-dropdown-item
-                      >
-                      <el-dropdown-item @click.native="checkUserGroup"
-                        >组织架构</el-dropdown-item
-                      >
-                      <el-dropdown-item @click.native="logout"
-                        >退出登录</el-dropdown-item
-                      >
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                </el-row>
-              </el-col>
-              <el-col :span="4" style="padding-top: 15px" v-else>
-                <el-button type="text" @click="login_show" class="navbar"
-                  >登录</el-button
-                >
-              </el-col>
-              <el-col :span="2" style="padding-top: 15px">
-                <el-button type="text" @click="register_show" class="navbar"
-                  >注册</el-button
-                >
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-      </div>
-    </el-header>
-    <!-- <basic-header/> -->
-    <el-main>
-      <router-view :key="$route.fullPath"></router-view>
-      <basic-footer />
-    </el-main>
-  </el-container>
+									</el-submenu>
+								</el-menu>
+							</el-col> -->
+
+							<el-col :span="4" style="padding-top: 15px;">
+								<el-button type="text" @click="show_members" class="navbar">成员</el-button>
+							</el-col>
+							<el-col :span="5" style="padding-top: 15px;" v-if="$store.state.user.name">
+								<el-row>
+									<el-dropdown trigger="hover" style="padding-top: 8px" class="navbar">
+										<span class="el-dropdown-link user-inner">
+											{{ $store.state.user.name }}<i
+												class="el-icon-arrow-down el-icon--right"></i>
+										</span>
+										<el-dropdown-menu slot="dropdown">
+											<el-dropdown-item @click.native="checkUserInfo">个人设置</el-dropdown-item>
+											<el-dropdown-item @click.native="checkUserGroup">组织架构</el-dropdown-item>
+											<el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
+										</el-dropdown-menu>
+									</el-dropdown>
+								</el-row>
+							</el-col>
+							<el-col :span="4" style="padding-top: 15px;" v-else>
+								<el-button type="text" @click="login_show" class="navbar">登录</el-button>
+							</el-col>
+							<el-col :span="2" style="padding-top: 15px;">
+								<el-button type="text" @click="register_show" class="navbar">注册</el-button>
+							</el-col>
+						</el-row>
+					</el-col>
+				</el-row>
+			</div>
+		</el-header>
+		<!-- <basic-header/> -->
+		<el-main>
+			<div style="min-height:100vh">
+				<router-view :key="$route.fullPath"></router-view>
+			</div>
+			<basic-footer />
+		</el-main>
+	</el-container>
 </template>
 
 <script>

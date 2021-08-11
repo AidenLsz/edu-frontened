@@ -48,27 +48,32 @@
                 </el-row>
             </el-popover>
         </el-col>
-        <el-col :span="2" :class="Menu_Now(0)" @click.native="Using_Menu_Index = 0">
+        <el-col :span="2" :class="Menu_Now(0)" @click.native="Jump_To(0)">
             <el-row type="flex" justify="center">
                 关键词挑题
             </el-row>
         </el-col>
-        <el-col :span="2" :class="Menu_Now(1)" @click.native="Using_Menu_Index = 1">
+        <el-col :span="2" :class="Menu_Now(1)" @click.native="Jump_To(1)">
             <el-row type="flex" justify="center">
                 知识点挑题
             </el-row>
         </el-col>
-        <el-col :span="2" :class="Menu_Now(2)" @click.native="Using_Menu_Index = 2">
+        <el-col :span="2" :class="Menu_Now(2)" @click.native="Jump_To(2)">
             <el-row type="flex" justify="center">
                 录入题目
             </el-row>
         </el-col>
-        <el-col :span="2" :class="Menu_Now(3)" @click.native="Using_Menu_Index = 3">
+        <el-col :span="2" :class="Menu_Now(4)" @click.native="Jump_To(4)">
+            <el-row type="flex" justify="center">
+                试卷挑题
+            </el-row>
+        </el-col>
+        <el-col :span="2" :class="Menu_Now(3)" @click.native="Jump_To(3)">
             <el-row type="flex" justify="center">
                 细目表挑题
             </el-row>
         </el-col>
-        <el-col :span="3" :offset="7" class="Question_Shopping_Card">
+        <el-col :span="3" :offset="6" class="Question_Shopping_Card">
             <el-popover
                 trigger="click"
                 width="400"
@@ -110,15 +115,22 @@
         <Keyword @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></Keyword>
     </el-row>
     <el-row v-if="Using_Menu_Index == 1">
-        <KnowledgePoint></KnowledgePoint>
+        <KnowledgePoint @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></KnowledgePoint>
     </el-row>
     <el-row v-if="Using_Menu_Index == 2">
         <InputQuestion @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></InputQuestion>
     </el-row>
     <el-row v-if="Using_Menu_Index == 3">
-        <DetailTable></DetailTable>
+        <DetailTable 
+            @Jump_To_SC="Jump_To_SC"
+            @Add_To_Cart="Add_To_Question_Cart" 
+            @Clear_Cart="Clear_Cart" 
+            :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></DetailTable>
     </el-row>
     <el-row v-if="Using_Menu_Index == 4">
+        <FromDatabasePaper @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></FromDatabasePaper>
+    </el-row>
+    <el-row v-if="Using_Menu_Index == 5">
         <StartCombine 
             @Update_Question_List="Update_Question_List"
             :Question_List.sync="Question_List"
@@ -134,6 +146,7 @@ import KnowledgePoint from '@/views/paperCombine/components/KnowledgePoint'
 import InputQuestion from '@/views/paperCombine/components/InputQuestion'
 import DetailTable from '@/views/paperCombine/components/DetailTable'
 import StartCombine from '@/views/paperCombine/components/StartCombine'
+import FromDatabasePaper from '@/views/paperCombine/components/FromDatabasePaper'
 
 import * as echarts from 'echarts';
 
@@ -146,7 +159,8 @@ export default {
   },
   components: {
         Keyword, KnowledgePoint,
-        InputQuestion, DetailTable, StartCombine
+        InputQuestion, DetailTable, StartCombine,
+        FromDatabasePaper
   },
   data() {
     return {
@@ -177,10 +191,18 @@ export default {
       this.Init_Question_Type_Chart();
   },
   methods: {
+      Jump_To_SC(){
+          this.Combine_Paper()
+      },
+      // 清空试题篮
+      Clear_Cart(){
+        this.$message.warning("您的试题篮已清空。");
+        this.Question_List = [];
+        this.Init_Question_Type_Chart();
+      },
       // 从组卷那边更新题目列表
       Update_Question_List(val){
         this.Question_List = JSON.parse(val);
-        console.log(this.Question_List.length)
         if(this.Question_List.length == 0){
             this.$message.warning("您的试题篮内已清空，已返回至关键词挑题页面。");
             this.Using_Menu_Index = 0;
@@ -227,6 +249,7 @@ export default {
                 list: [Question]
             })
         }
+        this.$message.success("已添加试题至试题篮。")
         this.Init_Question_Type_Chart();
     },
     // 通过当前选择的学科学段来判断筛选按钮的样式
@@ -386,6 +409,7 @@ export default {
     // 清空试题篮
     Clear_Question_Cart(){
         this.Question_List = [];
+        this.$message.warning("您的试题篮已清空。");
         this.Init_Question_Type_Chart();
     },
     // 切换至组卷页面
@@ -394,9 +418,18 @@ export default {
             this.$message.error("你的试题篮里目前没有题目，无法组卷。");
             return
         }else{
-            this.Using_Menu_Index = 4;
+            this.Jump_To(5);
             this.$refs['Question_Cart'].doClose();
         }
+    },
+    Jump_To(Aim){
+        if(Aim != 0 || Aim != 5){
+            if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
+                this.$message.error("您尚未登录，请登录后使用此功能。")
+                return 
+            }
+        }
+        this.Using_Menu_Index = Aim;
     }
   },
 }
