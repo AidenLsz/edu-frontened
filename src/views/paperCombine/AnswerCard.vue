@@ -919,6 +919,13 @@ export default {
         }
         Card_Form.questions.push(Item_Form)
       }
+      
+      this.$message.warning("答题卡下载仍在准备中，请期待后续更新。")
+
+      let Flag = true;
+      if(Flag){
+        return
+      }
 
       let file = new File([JSON.stringify(Card_Form)],
         "AnswerCardJson.json",
