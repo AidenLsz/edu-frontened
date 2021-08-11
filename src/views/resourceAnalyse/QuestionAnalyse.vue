@@ -200,6 +200,36 @@
                                     </el-row>
                                 </el-col>
                             </el-row>
+                            <!-- 第九行 -->
+                            <el-row style="width: 66.7%; display: none" class="Table_Unit_1">
+                                <!-- 左列 -->
+                                <el-col :span="6" style="padding-top: 8px;">
+                                    <el-row type="flex" justify="start">
+                                        <label style="text-align: left">信度</label>
+                                    </el-row>
+                                </el-col>
+                                <!-- 右列 -->
+                                <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                    <el-row type="flex" justify="start">
+                                        <span style="text-align: left">{{Question.rel}}</span>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                            <!-- 第十行 -->
+                            <el-row style="width: 66.7%; display: none" class="Table_Unit_0">
+                                <!-- 左列 -->
+                                <el-col :span="6" style="padding-top: 8px;">
+                                    <el-row type="flex" justify="start">
+                                        <label style="text-align: left">素养考核</label>
+                                    </el-row>
+                                </el-col>
+                                <!-- 右列 -->
+                                <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                    <el-row type="flex" justify="start">
+                                        <span style="text-align: left">{{Question.literacy}}</span>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
                         </el-row>
                         <!-- 树状结构 -->
                         <el-row type="flex" justify="start" style="margin: 25px 0px 10px 0px">
@@ -306,7 +336,7 @@
                     <el-button v-on:click.native="Expand_Or_Collapse(1)" round size="small" plain>收起</el-button>
                 </el-row>
             </el-row>
-            <el-row type="flex" justify="center" style="margin-bottom: 50px">
+            <el-row type="flex" justify="center" style="margin-bottom: 50px; display: none">
                 <el-button type="success" plain @click="PDF_Switch()">保存当前页面为PDF文档</el-button>
             </el-row> 
         </el-row>

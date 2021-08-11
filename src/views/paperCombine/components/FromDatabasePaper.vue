@@ -33,9 +33,13 @@
       :title="SearchingPaperTitle"
       width="90%"
       :modal-append-to-body="false"
-      :close-on-click-modal="false">
+      :close-on-click-modal="false"
+      @close="Reset_Searching_Paper()">
     <el-row v-for="(Bundle, Bundle_Index) in SearchingPaper" :key="'Paper_Bundle_' + Bundle_Index">
       <el-col>
+        <el-row type="flex" justify="start" style="padding-left: 3vw; font-size: 20px;">
+          <label>{{Get_Label_Show(Bundle, Bundle_Index)}}</label>  
+        </el-row>
         <el-row 
           v-for="(Question, Question_Index) in Bundle.sub_question" 
           :key="'Paper_Bundle_' + Bundle_Index + '_' + Question_Index" 
@@ -81,9 +85,12 @@
               </el-col>
             </el-row>
           </el-col>
-        </el-row>
+        </el-row>  
       </el-col>
     </el-row>
+    <el-row type="flex" justify="center" style="margin-top: 20px; margin-bottom: 30px">
+          <el-button type="primary" @click="Close_Searching_Paper()">完毕</el-button>
+        </el-row>
   </el-dialog>
     <!-- 搜索框行 -->
     <el-row type="flex" justify="start" class="SearchArea">
@@ -141,23 +148,13 @@
     <el-row
       v-for="(Paper, Paper_Index) in Paper_Ques_List"
       :key="Paper_Index"
-      style="margin-bottom: 70px;"
+      style="margin-bottom: 40px;"
       >
-      <el-row type="flex" justify="start" style="margin-left: 5vw;; padding-left: 16px; font-size: 16px">
-        <label>{{Paper_Title_List[Paper_Index]}}</label>
-      </el-row>
-      <el-row type="flex" justify="start" style="margin-left: 5vw;; padding-left: 16px; font-size: 16px">
-        <span>所包含的相似试题为：</span>
-      </el-row>
       <el-row>
         <el-col :span="17" class="quesCard">
-          <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
-            <el-col style="padding-bottom: 15px" >
-              <Mathdown :content="Paper_Ques_List[Paper_Index].stem" :name="'P_' + Paper_Index + '_Stem'"></Mathdown>
-            </el-col>
-            <el-col v-for="(Option, Option_Index) in Paper_Ques_List[Paper_Index].options" :key="'Option_'+ Option_Index + '_Of_' + Paper_Index">
-              <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Paper_Index + '_Option_' + Option_Index"></Mathdown></el-row>
-            </el-col>
+          <el-row 
+            style="text-align: left; padding-left: 30px; font-size: 16px; padding-top: 15px; background: white; padding-bottom: 15px;">
+            <label style="height: 60px; line-height: 60px">{{Paper_Title_List[Paper_Index]}}</label>
           </el-row>
           <el-row style="margin-bottom: 15px">
               <el-col :span="5" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
@@ -288,6 +285,21 @@ export default {
     this.initDatabaseList();
   },
   methods: {
+    Get_Label_Show(Bundle, Bundle_Index){
+      let Result = ['一', '二', '三', '四', '五', '六', '七', '八', '九']
+      return Result[Bundle_Index] + "、" + Bundle.desc
+    },
+    // 关闭试卷挑题内容
+    Close_Searching_Paper(){
+      this.PaperDetailDialog = false;
+      this.Reset_Searching_Paper();
+    },
+    // 重置数据
+    Reset_Searching_Paper(){
+      this.SearchingPaper = [];
+      this.Expand_List = []
+      this.SearchingPaperTitle = ""
+    },
     //发送单题至试题篮
     Add_To_Question_Cart(Question, Desc){
       let Aim = Question
@@ -488,6 +500,9 @@ export default {
           }
         }
         this.PaperDetailDialog = true;
+      }).catch(()=>{
+        this.Question_Analysing = false;
+        this.$message.error("服务器繁忙，请稍后再试。")
       })
     },
     // 返回选项标签

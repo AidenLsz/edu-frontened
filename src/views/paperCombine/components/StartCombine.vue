@@ -3,13 +3,13 @@
     <el-dialog 
       :visible.sync="Question_Check_Switch"
       title="题目内容检查"
-      width="50%"
+      width="80%"
       :modal-append-to-body="false"
       :close-on-click-modal="true">
       <el-row type="flex" justify="center">
         <el-col>
           <!-- 分数，题型，题干 -->
-          <el-row type="flex" justify="center">
+          <el-row type="flex" justify="center" style="width: 100%">
             <el-col :span="4">
               <el-row type="flex" justify="start">
                 <label style="margin-right: 10px;">{{Checked_Question_Info.type}}</label>
