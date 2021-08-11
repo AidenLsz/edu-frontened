@@ -2,7 +2,7 @@
 	<div style="margin-top: 5vh;">
 
 		<el-row justify="start" type="flex">
-			<el-col style="padding-left: 25px">
+			<el-col style="padding-left: 5vw">
 				<el-breadcrumb separator-class="el-icon-arrow-right">
 					<el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
 					<el-breadcrumb-item>AI实验室</el-breadcrumb-item>
@@ -294,7 +294,7 @@ if __name__ == "__main__":
 		name: "ImageTranscription",
 		mounted() {
 			this.ToTop();
-			// this.openPanel();
+			this.closePanel();
 		},
 		data() {
 			return {
@@ -585,13 +585,16 @@ if __name__ == "__main__":
 				console.log(result.qid);
 				if (result.success && result.is_formula && result.detect_formula) {
 					console.log("success!");
-					for (let i = 0; i < result.latex.length; i++) {
-						// console.log(i,result.latex[i])
-						this.tableData.push({
-							content: result.latex[i],
-							num: i + 1
-						});
-					}
+					if (typeof result.latex == "object")
+						for (let i = 0; i < result.latex.length; i++) {
+							// console.log(i,result.latex[i])
+							this.tableData.push({
+								content: result.latex[i],
+								num: i + 1
+							});
+						} else if (typeof result.latex == "string") {
+							this.content = result.latex;
+						}
 				} else {
 					this.tableData.length = 0;
 				}
@@ -622,10 +625,11 @@ if __name__ == "__main__":
 <style lang="scss" scoped>
 	#main {
 		position: relative;
-		margin: auto;
+		margin-left: 5vw;
+		//margin:auto;
 		width: 1200px;
 		height: 650px;
-		margin-top: 100px;
+		margin-top: 50px;
 		margin-bottom: 100px;
 	}
 
@@ -782,7 +786,7 @@ if __name__ == "__main__":
 		top: 10px;
 		font-size: 20px;
 		font-weight: bold;
-		padding:20px 20px 20px 10px;
+		padding: 20px 20px 20px 10px;
 		color: #888888;
 	}
 
