@@ -82,8 +82,8 @@
 
 					<el-row v-loading="loading">
 						<div v-if="show_result">
-							<el-row>
-								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('难度') > -1">
+							<el-row v-if="checkList.indexOf('难度') > -1 || checkList.indexOf('区分度') > -1">
+								<el-col :span="12" style="margin-bottom: 10px;" v-if="checkList.indexOf('难度') > -1">
 									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span>难度</span>
@@ -94,8 +94,8 @@
 											</el-tag>
 										</div>
 									</el-card>
-								</div>
-								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('区分度') > -1">
+								</el-col>
+								<el-col :span="12" style="margin-bottom: 10px;" v-if="checkList.indexOf('区分度') > -1">
 									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span>区分度</span>
@@ -106,8 +106,10 @@
 											</el-tag>
 										</div>
 									</el-card>
-								</div>
-								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('信度') > -1">
+								</el-col>
+							</el-row>
+							<el-row v-if="checkList.indexOf('信度') > -1 || checkList.indexOf('素养') > -1">
+								<el-col :span="12" style="margin-bottom: 10px;" v-if="checkList.indexOf('信度') > -1">
 									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span>信度</span>
@@ -118,8 +120,8 @@
 											</el-tag>
 										</div>
 									</el-card>
-								</div>
-								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('素养') > -1">
+								</el-col>
+								<el-col :span="12" style="margin-bottom: 10px;" v-if="checkList.indexOf('素养') > -1">
 									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span>素养</span>
@@ -130,16 +132,16 @@
 											</el-tag>
 										</div>
 									</el-card>
-								</div>
-								
-								
-								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('知识点') > -1">
+								</el-col>
+							</el-row>
+							<el-row v-if="checkList.indexOf('知识点') > -1">
+								<el-col :span="12" style="margin-bottom: 10px;" v-if="checkList.indexOf('知识点') > -1">
 									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span v-if="subject_id == '数学'">知识点（标号越小权重越大，无标号则权重较低）</span>
 											<span v-if="subject_id != '数学'">知识点</span>
 										</div>
-										<div style="text-align:left;" v-if="subject_id == '数学'">
+										<div style="text-align:left;">
 											<el-tag style="background: #a7cdff" v-for="(item, index) in kp_result"
 												:key="index" effect="plain" class="kp_tag">
 												<el-badge :hidden="kp_priority.indexOf(item) == -1"
@@ -148,23 +150,22 @@
 												</el-badge>
 											</el-tag>
 										</div>
-										<div style="text-align:left; background: #a7cdff" v-if="subject_id != '数学'">
-											<el-tag class="kp_tag" effect="plain">暂不支持数学题目以外的知识点查询</el-tag>
-										</div>
+										<!-- <div style="text-align:left; background: #a7cdff" v-if="subject_id != '数学'">
+											<el-tag style="background: #a7cdff" class="kp_tag" effect="plain">暂不支持数学以外的知识点查询</el-tag>
+										</div> -->
 									</el-card>
-								</div>
-								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('知识点') > -1">
+								</el-col>
+								<el-col :span="12" style="margin-bottom: 10px;" v-if="checkList.indexOf('知识点') > -1">
 									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span>知识树状结构</span>
 										</div>
-										<el-tree style="background: #a7cdff" :data="kp_layer" :props="defaultProps"
-											v-if="subject_id == '数学'"></el-tree>
-										<el-tag style="background: #a7cdff" class="kp_tag" effect="plain"
-											v-if="subject_id != '数学'">暂不支持数学题目以外的知识点结构查询</el-tag>
-
+										<el-tree style="background: #a7cdff" :data="kp_layer" :props="defaultProps">
+										</el-tree>
+										<!-- <el-tag style="background: #a7cdff" class="kp_tag" effect="plain"
+											v-if="subject_id != '数学'">暂不支持数学以外的知识结构查询</el-tag> -->
 									</el-card>
-								</div>
+								</el-col>
 							</el-row>
 						</div>
 					</el-row>
@@ -325,11 +326,51 @@ print(json.loads(r.content)["data"])</code></pre>
 					{
 						value_id: "英语",
 						label: "英语"
-					}
+					},
+					{
+						value_id: "语文",
+						label: "语文"
+					},
+					{
+						value_id: "化学",
+						label: "化学"
+					},
+					{
+						value_id: "物理",
+						label: "物理"
+					},
+					{
+						value_id: "生物",
+						label: "生物"
+					},
+					{
+						value_id: "政治",
+						label: "政治"
+					},
+					{
+						value_id: "历史",
+						label: "历史"
+					},
+					{
+						value_id: "地理",
+						label: "地理"
+					},
 				],
-				subject_id: "",
-				type_options: [], // 题型选择属性
-				type_id: "",
+				subject_id: "数学",
+				type_options: [{
+						value_id: "selection_test", // 数学题型值
+						label: "选择" // 数学题型名
+					},
+					{
+						value_id: "fill_test",
+						label: "填空"
+					},
+					{
+						value_id: "answer_test",
+						label: "解答"
+					}
+				], // 题型选择属性
+				type_id: "解答",
 				marks: {
 					0: "易",
 					1: "难"
@@ -367,7 +408,12 @@ print(json.loads(r.content)["data"])</code></pre>
 			checkList() {
 				this.show_result = false;
 			},
+			type_id() {
+				this.show_result = false;
+			},
 			subject_id() {
+				this.show_result = false;
+				this.type_id = "";
 				if (this.subject_id === "数学") {
 					this.type_options = [{
 							value_id: "selection_test", // 数学题型值
@@ -382,7 +428,7 @@ print(json.loads(r.content)["data"])</code></pre>
 							label: "解答"
 						}
 					];
-				}
+				} else
 				if (this.subject_id === "英语") {
 					this.type_options = [{
 							value_id: "selection_test", // 英语题型值
@@ -397,7 +443,11 @@ print(json.loads(r.content)["data"])</code></pre>
 							label: "阅读理解"
 						}
 					];
-				}
+				} else
+					this.type_options = [{
+						value_id: "fill_test",
+						label: "填空"
+					}];
 			}
 		},
 		mounted() {
@@ -464,9 +514,10 @@ print(json.loads(r.content)["data"])</code></pre>
 				if (this.checkList.indexOf("区分度") > -1) {
 					// 请求区分度属性接口
 					this.$http
-						.post("https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/disc", param, config, {
-							emulateJSON: true
-						})
+						.post("https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/disc", param,
+							config, {
+								emulateJSON: true
+							})
 						.then(function(data) {
 							this.disc_result = data.data.disc;
 							this.loading = false;
@@ -475,9 +526,10 @@ print(json.loads(r.content)["data"])</code></pre>
 				if (this.checkList.indexOf("信度") > -1) {
 					// 请求信度属性接口
 					this.$http
-						.post("https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/rel", param, config, {
-							emulateJSON: true
-						})
+						.post("https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/rel", param,
+							config, {
+								emulateJSON: true
+							})
 						.then(function(data) {
 							this.rel_result = data.data.rel;
 							this.loading = false;
@@ -497,7 +549,7 @@ print(json.loads(r.content)["data"])</code></pre>
 							this.loading = false;
 						});
 				}
-				
+
 				if (this.checkList.indexOf("素养") > -1) {
 					// 请求知识点属性接口
 					this.$http
@@ -575,7 +627,7 @@ print(json.loads(r.content)["data"])</code></pre>
 	}
 
 	.card {
-		width: 370px;
+		width: 250px;
 		margin: 0 auto;
 	}
 
@@ -601,7 +653,7 @@ print(json.loads(r.content)["data"])</code></pre>
 	}
 
 	.kp_tag {
-		margin: 5px;
+		//margin: 5px;
 		border: hidden;
 	}
 
@@ -620,7 +672,9 @@ print(json.loads(r.content)["data"])</code></pre>
 	}
 
 	.el-tag {
-		//margin-left: 10px;
+		//margin-right: 10px;
+		padding-left: 0;
+		padding-right: 0;
 		font-size: 14px;
 		color: #2c07ff;
 	}
@@ -631,7 +685,7 @@ print(json.loads(r.content)["data"])</code></pre>
 
 	#main {
 		position: relative;
-		height: 1200px;
+		height: 650px;
 		width: 1200px;
 		margin-bottom: 100px;
 		margin-left: 80px;
@@ -660,10 +714,12 @@ print(json.loads(r.content)["data"])</code></pre>
 
 	#result {
 		position: absolute;
+		padding-left: 5px;
+		padding-right: 5px;
 		left: 800px;
 		top: 0px;
-		width: 400px;
-		height: 1200px;
+		width: 520px;
+		height: 650px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
 		border-radius: 4px;
 	}
