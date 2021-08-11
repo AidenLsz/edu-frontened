@@ -95,7 +95,7 @@
 										</div>
 									</el-card>
 								</div>
-								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('难度') > -1">
+								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('区分度') > -1">
 									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span>区分度</span>
@@ -107,7 +107,7 @@
 										</div>
 									</el-card>
 								</div>
-								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('难度') > -1">
+								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('信度') > -1">
 									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span>信度</span>
@@ -115,6 +115,18 @@
 										<div style="text-align:left;">
 											<el-tag effect="plain" style="border: hidden; background: #a7cdff">
 												{{ rel_result }}
+											</el-tag>
+										</div>
+									</el-card>
+								</div>
+								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('素养') > -1">
+									<el-card class="card">
+										<div slot="header" style="text-align:left;">
+											<span>素养</span>
+										</div>
+										<div style="text-align:left;">
+											<el-tag effect="plain" style="border: hidden; background: #a7cdff">
+												{{ lp_result }}
 											</el-tag>
 										</div>
 									</el-card>
@@ -619,7 +631,7 @@ print(json.loads(r.content)["data"])</code></pre>
 
 	#main {
 		position: relative;
-		height: 1000px;
+		height: 1200px;
 		width: 1200px;
 		margin-bottom: 100px;
 		margin-left: 80px;
@@ -651,7 +663,7 @@ print(json.loads(r.content)["data"])</code></pre>
 		left: 800px;
 		top: 0px;
 		width: 400px;
-		height: 1000px;
+		height: 1200px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
 		border-radius: 4px;
 	}
