@@ -146,11 +146,6 @@ const visitorRouter=[
     component: QuestionUpdate,
   },
   {
-    path: "/inputPaper",
-    name: "inputPaper",
-    component: InputPaper,
-  },
-  {
     path: "/Agreement",
     name: "UserAgreement",
     component: UserAgreement
