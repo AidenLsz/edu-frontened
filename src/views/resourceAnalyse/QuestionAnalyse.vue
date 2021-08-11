@@ -201,7 +201,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 第九行 -->
-                            <el-row style="width: 66.7%; display: none" class="Table_Unit_1">
+                            <el-row style="width: 66.7%" class="Table_Unit_1">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
@@ -216,7 +216,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 第十行 -->
-                            <el-row style="width: 66.7%; display: none" class="Table_Unit_0">
+                            <el-row style="width: 66.7%" class="Table_Unit_0">
                                 <!-- 左列 -->
                                 <el-col :span="6" style="padding-top: 8px;">
                                     <el-row type="flex" justify="start">
