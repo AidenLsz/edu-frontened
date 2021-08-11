@@ -77,7 +77,8 @@
 		<!-- <el-row class="panel-body"> -->
 		<div class="tab panel-btn" id="openBtn" @click="openPanel()">
 			<div>使用说明</div>
-			<div class="arrow"></div>
+			<i class="el-icon-d-arrow-right"></i>
+			<!-- <div class="arrow"></div> -->
 		</div>
 		<el-card class="box-card left" style="background-color: #FFFFFF;">
 			<div class="panel-btn" id="closeBtn" @click="closePanel()">
@@ -246,7 +247,7 @@ if __name__ == '__main__':
 		},
 		mounted() {
 			this.ToTop();
-			this.openPanel();
+			// this.openPanel();
 		},
 		methods: {
 			ToTop() {
@@ -419,29 +420,30 @@ if __name__ == '__main__':
 	.panel-btn {
 		position: absolute;
 		top: 10px;
-		font-size: 16px;
+		font-size: 20px;
 		font-weight: bold;
+		padding:20px 20px 20px 10px;
 		color: #888888;
 	}
 
 	.tab {
 		position: absolute;
-		width: 25px;
-		height: 95px;
+		width: 40px;
+		height: 180px;
 		border-radius: 0px 10px 10px 0px;
 		background-color: #eef1f7;
 		cursor: pointer;
 		z-index: 10;
-
-		.arrow {
-			border-color: #eef1f7 transparent transparent #eef1f7;
-			border-style: solid;
-			border-width: 15px 15px 15px 15px;
-			height: 0;
-			width: 0;
-			position: absolute;
-			bottom: -23px;
-		}
+	
+		// .arrow {
+		// 	border-color: #eef1f7 transparent transparent #eef1f7;
+		// 	border-style: solid;
+		// 	border-width: 15px 15px 15px 15px;
+		// 	height: 0;
+		// 	width: 0;
+		// 	position: absolute;
+		// 	bottom: -23px;
+		// }
 	}
 
 	.container {
@@ -478,6 +480,7 @@ if __name__ == '__main__':
 		right: 50px;
 		top: 50px;
 		font-size: 30px;
+		z-index: 11;
 	}
 
 	// .el-button {

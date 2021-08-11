@@ -137,7 +137,8 @@
 		<!-- <el-row class="panel-body"> -->
 		<div class="tab panel-btn" id="openBtn" @click="openPanel()">
 			<div>使用说明</div>
-			<div class="arrow"></div>
+			<i class="el-icon-d-arrow-right"></i>
+			<!-- <div class="arrow"></div> -->
 		</div>
 		<el-card class="box-card left">
 			<div class="panel-btn" id="closeBtn" @click="closePanel()">
@@ -293,7 +294,7 @@ if __name__ == "__main__":
 		name: "ImageTranscription",
 		mounted() {
 			this.ToTop();
-			this.openPanel();
+			// this.openPanel();
 		},
 		data() {
 			return {
@@ -318,22 +319,22 @@ if __name__ == "__main__":
 				],
 				tableData: [{
 					num: "1",
-					content: "关 于 函 数 f ( x ) = 4 \\sin \\left ( 2 x + \\frac { \\pi } { 3 } \\right ) ( x \\in R ) ， 有 下 列 命 题 ："
+					content: "关于函数f(x)=4\\sin \\left (2x+\\frac {\\pi }{3}\\right )(x\\in R)，有下列命题：关 于 函 数 f ( x ) = 4 \\sin \\left ( 2 x + \\frac { \\pi } { 3 } \\right ) ( x \\in R ) ， 有 下 列 命 题 ："
 				}, {
 					num: "2",
-					content: "① y = f ( x ) 的 表 达 式 可 改 写 为 y = 4 \\cos \\left ( 2 x - \\frac { \\pi } { 6 } \\right ) ；",
+					content: "①y=f(x)的表达式可改写为y=4\\cos \\left (2x-\\frac {\\pi }{6}\\right )；",
 				}, {
 					num: "3",
-					content: "② y = f ( x ) 是 以 2 π 为 最 小 正 周 期 的 周 期 函 数 ；,"
+					content: "②y=f(x)是以2π为最小正周期的周期函数；"
 				}, {
 					num: "4",
-					content: "2 y = f ( x ) 的 图 象 关 于 点 \\left ( - \\frac { \\pi } { 6 } , 0 \\right ) 对 称 ；"
+					content: "2y=f(x)的图象关于点\\left (-\\frac {\\pi }{6},0\\right )对称；"
 				}, {
 					num: "5",
-					content: "④ y = f ( x ) 的 图 象 关 于 直 线 x = - \\frac { \\pi } { 6 } 对 称 。"
+					content: "④y=f(x)的图象关于直线x=-\\frac {\\pi }{6}对称。"
 				}, {
 					num: "6",
-					content: "其 中 正 确 的 命 题 的 序 号 是 _ _ _ _ _ _ _ _ _ _ _ _ 。 （ 注 ： 把 你 认 为 正 确 的 命 题 的 序 号 都 填 上 上"
+					content: "其中正确的命题的序号是____________。（注：把你认为正确的命题的序号都填上上"
 				}],
 				ReceivedPara: [{
 					field: "image",
@@ -779,29 +780,30 @@ if __name__ == "__main__":
 	.panel-btn {
 		position: absolute;
 		top: 10px;
-		font-size: 16px;
+		font-size: 20px;
 		font-weight: bold;
+		padding:20px 20px 20px 10px;
 		color: #888888;
 	}
 
 	.tab {
 		position: absolute;
-		width: 25px;
-		height: 95px;
+		width: 40px;
+		height: 180px;
 		border-radius: 0px 10px 10px 0px;
 		background-color: #eef1f7;
 		cursor: pointer;
 		z-index: 10;
 
-		.arrow {
-			border-color: #eef1f7 transparent transparent #eef1f7;
-			border-style: solid;
-			border-width: 15px 15px 15px 15px;
-			height: 0;
-			width: 0;
-			position: absolute;
-			bottom: -23px;
-		}
+		// .arrow {
+		// 	border-color: #eef1f7 transparent transparent #eef1f7;
+		// 	border-style: solid;
+		// 	border-width: 15px 15px 15px 15px;
+		// 	height: 0;
+		// 	width: 0;
+		// 	position: absolute;
+		// 	bottom: -23px;
+		// }
 	}
 
 	.container {
@@ -830,7 +832,7 @@ if __name__ == "__main__":
 	}
 
 	#openBtn {
-		top: 15vh;
+		top: 18vh;
 		// left:15px;
 	}
 
@@ -838,5 +840,6 @@ if __name__ == "__main__":
 		right: 50px;
 		top: 50px;
 		font-size: 30px;
+		z-index: 11;
 	}
 </style>

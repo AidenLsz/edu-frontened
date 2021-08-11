@@ -80,8 +80,7 @@
 					<el-row v-loading="loading">
 						<div v-if="show_result">
 							<el-row>
-								<div style="position:absolute; top:70px; left:15px;"
-									v-if="checkList.indexOf('难度') > -1">
+								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('难度') > -1">
 									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span>难度</span>
@@ -93,8 +92,7 @@
 										</div>
 									</el-card>
 								</div>
-								<div style="position:absolute; top:210px; left:15px;"
-									v-if="checkList.indexOf('知识点') > -1">
+								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('知识点') > -1">
 									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span v-if="subject_id == '数学'">知识点（标号越小权重越大，无标号则权重较低）</span>
@@ -111,12 +109,10 @@
 										</div>
 										<div style="text-align:left; background: #a7cdff" v-if="subject_id != '数学'">
 											<el-tag class="kp_tag" effect="plain">暂不支持数学题目以外的知识点查询</el-tag>
-
 										</div>
 									</el-card>
 								</div>
-								<div style="position:absolute; top:400px; left:15px;"
-									v-if="checkList.indexOf('知识点') > -1">
+								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('知识点') > -1">
 									<el-card class="card">
 										<div slot="header" style="text-align:left;">
 											<span>知识树状结构</span>
@@ -138,7 +134,8 @@
 		<!-- 侧边对话框 -->
 		<div class="tab panel-btn" id="openBtn" @click="openPanel()">
 			<div>使用说明</div>
-			<div class="arrow"></div>
+			<i class="el-icon-d-arrow-right"></i>
+			<!-- <div class="arrow"></div> -->
 		</div>
 		<el-card class="box-card left" style="background-color: #FFFFFF;">
 			<div class="panel-btn" id="closeBtn" @click="closePanel()">
@@ -362,7 +359,7 @@ print(json.loads(r.content)["data"])</code></pre>
 		},
 		mounted() {
 			this.ToTop();
-			this.openPanel();
+			//this.openPanel();
 		},
 		methods: {
 			ToTop() {
@@ -392,7 +389,7 @@ print(json.loads(r.content)["data"])</code></pre>
 				param.append("estimate_subject", this.subject_id); // 后端接收estimate_subject字段
 				param.append("exercise_type", this.type_id); // 后端接收exercise_type字段
 
-				let param_beta = new FormData();
+				/*let param_beta = new FormData();
 
 				param_beta.append("files", JSON.stringify(temp_list));
 				param_beta.append("estimate_content", this.content); // 后端接收estimate_content字段
@@ -400,6 +397,7 @@ print(json.loads(r.content)["data"])</code></pre>
 				if (this.subject_id == "数学") param_beta.append("estimate_subject", "math");
 				else //addition
 					if (this.subject_id == "英语") param_beta.append("estimate_subject", "english");
+					*/
 
 				if (this.checkList.length === 2) {
 					this.checkList[0] = "难度";
@@ -408,7 +406,7 @@ print(json.loads(r.content)["data"])</code></pre>
 				if (this.checkList.indexOf("难度") > -1) {
 					// 请求难度属性接口
 					this.$http
-						.post(this.backendIP + "/api/difficulty", param_beta, config, {
+						.post(this.backendIP + "/api/difficulty", param, config, {
 							emulateJSON: true
 						})
 						.then(function(data) {
@@ -497,7 +495,7 @@ print(json.loads(r.content)["data"])</code></pre>
 
 	.card {
 		width: 370px;
-
+		margin: 0 auto;
 	}
 
 	.estimate {
@@ -606,29 +604,30 @@ print(json.loads(r.content)["data"])</code></pre>
 	.panel-btn {
 		position: absolute;
 		top: 10px;
-		font-size: 16px;
+		font-size: 20px;
 		font-weight: bold;
+		padding: 20px 20px 20px 10px;
 		color: #888888;
 	}
 
 	.tab {
 		position: absolute;
-		width: 25px;
-		height: 95px;
+		width: 40px;
+		height: 180px;
 		border-radius: 0px 10px 10px 0px;
 		background-color: #eef1f7;
 		cursor: pointer;
 		z-index: 10;
 
-		.arrow {
-			border-color: #eef1f7 transparent transparent #eef1f7;
-			border-style: solid;
-			border-width: 15px 15px 15px 15px;
-			height: 0;
-			width: 0;
-			position: absolute;
-			bottom: -23px;
-		}
+		// .arrow {
+		// 	border-color: #eef1f7 transparent transparent #eef1f7;
+		// 	border-style: solid;
+		// 	border-width: 15px 15px 15px 15px;
+		// 	height: 0;
+		// 	width: 0;
+		// 	position: absolute;
+		// 	bottom: -23px;
+		// }
 	}
 
 	.container {
@@ -665,6 +664,7 @@ print(json.loads(r.content)["data"])</code></pre>
 		right: 50px;
 		top: 50px;
 		font-size: 30px;
+		z-index: 11;
 	}
 </style>
 
