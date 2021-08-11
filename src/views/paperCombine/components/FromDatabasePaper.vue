@@ -1,76 +1,142 @@
-// 啥也还没弄，明天开始搞这个东西
 <template>
   <div
     class="exercise"
-    style="margin-bottom: 40px; margin-top: 5vh"
+    style="padding-bottom: 40px; padding-top: 5vh"
     v-loading="Question_Analysing"
     element-loading-text="正在加载，请稍后..."
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(211, 211, 211, 0.4)">
+    <!-- 查看分析报告 -->
     <el-dialog
-        :visible.sync="simpleInput"
-        title="LUNA输入助手"
-        width="65%"
+        :visible.sync="analyseReport"
+        width="90%"
         :modal-append-to-body="false"
-        :close-on-click-modal="false">
-      <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="content"></ComplexInput>
-      <el-button type="success" plain @click="simpleInput = false">完成输入</el-button>
+        :close-on-click-modal="true"
+        :key="Refresh">
+        <template slot="title"></template>
+        <el-row
+          style="margin: 0px">
+          <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
+        </el-row>
     </el-dialog>
-    <!-- 地址框 -->
-    <el-row justify="start" type="flex">
-      <el-col :span="7" style="margin-left: 5vw;">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>试卷检索
-            <span @click="openInstructionDialog" style="cursor:pointer;">
-            <i class="el-icon-question"></i>
-          </span></el-breadcrumb-item>
-        </el-breadcrumb>
+    <el-dialog
+      :visible.sync="simpleInput"
+      title="LUNA输入助手"
+      width="65%"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false">
+    <ComplexInput @Update_CI="UCI" :Get_Out_Content="content"></ComplexInput>
+    <el-button type="success" plain @click="simpleInput = false">完成输入</el-button>
+  </el-dialog>
+  <el-dialog
+      :visible.sync="PaperDetailDialog"
+      :title="SearchingPaperTitle"
+      width="90%"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false">
+    <el-row v-for="(Bundle, Bundle_Index) in SearchingPaper" :key="'Paper_Bundle_' + Bundle_Index">
+      <el-col>
+        <el-row 
+          v-for="(Question, Question_Index) in Bundle.sub_question" 
+          :key="'Paper_Bundle_' + Bundle_Index + '_' + Question_Index" 
+          style="width: 100%" type="flex" justify="center">
+          <!-- {{Ques.id}}<br>{{Ques.stem}}<br>{{Ques.options}}<br>{{Ques.answer}}<br>{{Ques.analysis}} -->
+          <el-col :span="20" class="quesCard" style="margin-left: 0">
+            <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
+              <el-col style="padding-bottom: 15px" >
+                <Mathdown :content="Question.stem" :name="'Q_' + Bundle_Index + '_' + Question_Index + '_Stem'"></Mathdown>
+              </el-col>
+              <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_' + Option_Index + '_Of_' + Question_Index + '_' + Bundle_Index">
+                <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index + '_' + Bundle_Index"></Mathdown></el-row>
+              </el-col>
+            </el-row>
+            <el-row style="margin-bottom: 10px;">
+                <el-col :span="5" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
+                  所属题库：{{SearchingSource}}
+                </el-col>
+                <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem;">
+                  题型：{{Bundle.desc == '选择题' ? '单选题' : Bundle.desc == '填空题' ? '填空题' : '简答题'}}
+                </el-col>
+                <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
+                  难度：{{Question.difficulty.toFixed(3)}}
+                </el-col>
+                <el-col :span="4" :offset="2" style="line-height: 40px">
+                  <el-button size="medium" plain round type="primary" @click="Expand(Bundle_Index, Question_Index)">查看答案与解析</el-button>
+                </el-col>
+                <el-col :span="3" style="line-height: 40px">
+                  <el-button size="medium" plain round type="primary" @click="Check_Analyse_Ques(Question.id, Question.database)">查看分析报告</el-button>
+                </el-col>
+                <el-col :span="3" style="line-height: 40px; margin-left: 6px;">
+                  <el-button size="medium" plain round type="primary" @click="Add_To_Question_Cart(Question, Bundle.desc)">加入试题篮</el-button>
+                </el-col>
+            </el-row>
+            <el-row v-if="Expand_List[Get_Expand(Bundle_Index, Question_Index)]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: 20px; border-top: 1px dashed black">
+              <el-col>
+                <span style="margin-bottom: 10px; display: block">答案：</span><Mathdown :content="Question.answer" :name="'Q_' + Question_Index + '_Answer' + '_' + Bundle_Index"></Mathdown>
+              </el-col>
+            </el-row>
+            <el-row v-if="Expand_List[Get_Expand(Bundle_Index, Question_Index)]" style="text-align: left; padding-left: 40px; padding-bottom: 20px">
+              <el-col>
+                <span style="margin-bottom: 20px; display: block">解析：</span><Mathdown :content="Question.analysis" :name="'Q_' + Question_Index + '_Analysis' + '_' + Bundle_Index"></Mathdown>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
-    <instruction
-      ref="instruction"
-    />
-    <!-- 题库选择 -->
-    <el-row style="padding-top: 8px; height: 40px;">
-      <el-col :span="4" style="text-align: left; line-height: 30px; margin-left: 5vw;">
-        请选择要查询的数据库：
-      </el-col>
-      <!-- 0 - public, 1 - neea, 2 - iflytek -->
-      <template v-for="(item,i) in database_list">
-        <el-col :key="i" :span="2">
-          <div :class="Check_Focus_Database(i)" @click="Database_Aim(i)">
-            {{item.nick||item.name}}
-          </div>
-        </el-col>
-      </template>
-    </el-row>
+  </el-dialog>
     <!-- 搜索框行 -->
     <el-row type="flex" justify="start" class="SearchArea">
       <!-- enter.native才能监听到组件化的事件，要注意一下 -->
-        <el-col :span="19" v-if="Cache_Pic[0] == ''">
-          <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit(0, '')">
+      <el-col :span="20">
+        <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit()">
 
-          </el-input>
-        </el-col>
-        <el-col :span="1" v-if="Cache_Pic[0] == ''">
-          <el-button type="text" style="font-size: 20px; color: black;" size="small" v-if="content != ''" @click="content = ''">
-            <i class="el-icon-close"></i>
-          </el-button>
-        </el-col>
-        <el-col :span="1" v-if="Cache_Pic[0] == ''">
-          <el-divider direction="vertical"></el-divider>
-        </el-col>
-        <el-col :span="1">
-          <el-button type="text" style="font-size: 22px; color: #409EFF; display: block; margin-left: -6px;"  size="small" @click="simpleInput = true">
-            &Sigma;
-          </el-button>
-        </el-col>
-        <el-col :span="1">
-          <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit(0, '')">
-            <i class="el-icon-search"></i>
-          </el-button>
-        </el-col>
+        </el-input>
+      </el-col>
+      <el-col :span="1">
+        <el-button type="text" style="font-size: 20px; color: black;" size="small" v-if="content != ''" @click="content = ''">
+          <i class="el-icon-close"></i>
+        </el-button>
+      </el-col>
+      <el-col :span="1">
+        <el-divider direction="vertical"></el-divider>
+      </el-col>
+      <el-col :span="1">
+        <el-button type="text" style="font-size: 22px; color: #409EFF; display: block; margin-left: -6px;"  size="small" @click="simpleInput = true">
+          &Sigma;
+        </el-button>
+      </el-col>
+      <el-col :span="1">
+        <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit()">
+          <i class="el-icon-search"></i>
+        </el-button>
+      </el-col>
+    </el-row>
+    <!-- 筛选行 - 题库 -->
+    <el-row style="margin-left: 5vw; margin-top: 4vh; font-size: 16px;">
+      <el-col :span="1">
+          <el-row type="flex" justify="start" style="height: 30px; line-height: 30px">
+              <label>题库：</label>
+          </el-row>
+      </el-col>
+      <el-col :span="2" v-for="(databaseName, databaseIndex) in databaseAim" :key="'Database_' + databaseIndex">
+          <el-row type="flex" justify="center" :class="filterButtonStyle('database', databaseIndex)" @click.native="database_Change(databaseIndex)">
+              <span>{{databaseName.nick || databaseName.name}}</span>
+          </el-row>
+      </el-col>
+    </el-row>
+    <!-- 筛选行 - 排序方式 -->
+    <el-row style="margin-left: 5vw; margin-top: 2vh; font-size: 16px; margin-bottom: 30px">
+      <el-col :span="1">
+          <el-row type="flex" justify="start" style="height: 30px; line-height: 30px">
+              <label>排序：</label>
+          </el-row>
+      </el-col>
+      <el-col :span="2" >
+          <el-row type="flex" justify="center" class="filterButtonFocus">
+              <span>智能排序</span>
+          </el-row>
+      </el-col>
     </el-row>
     <el-row
       v-for="(Paper, Paper_Index) in Paper_Ques_List"
@@ -138,61 +204,38 @@
 
 <script>
 /* eslint-disable */
-import Mathdown from "../../common/components/Mathdown.vue";
-import ComplexInput from "../../common/components/ComplexInput.vue";
-import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
-import Instruction from './components/InstructionExercise.vue'
+import Mathdown from '@/common/components/Mathdown'
+import ComplexInput from '@/common/components/ComplexInput'
+import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
+import Instruction from '@/views/resourceQuery/components/InstructionExercise'
 
 import {commonAjax} from '@/common/utils/ajax'
 
 export default {
-  components: { Mathdown, ComplexInput, QuestionAnalyse,Instruction },
+  components: { Mathdown, ComplexInput, QuestionAnalyse, Instruction },
   name: "SearchPaper",
+  props: {
+      Subject: {
+          type: String,
+          default: "数学"
+      },
+      Period: {
+          type: String,
+          default: "高中"
+      }
+  },
   data() {
     return {
-      // 用于之后进行图片搜索类型筛选的变量
-      Img_Search_Type: 1,
-      // 图片剪切用的一系列变量
-      // 对话框显示
-      picSearchDialogShow: false,
-      option: {
-        img: "", // 裁剪图片的地址
-        autoCrop: true, //是否默认生成截图框
-        fixedBox: true, //固定截图框大小 不允许改变
-        canMove: false,
-        centerBox: true,
-        canScale: false
-      },
-      // 输入的简单文本
-      exercise_text: "",
-      // 试题文本
-      raw_text: "试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本试题文本",
-      // 题目内容
-      entities_groups: {},
-      entity_type: "kp2.0",
-      sour: "",
       // Latex格式的内容
       content: "",
       // 老内容
       old_content: "",
       // 当前是否为简单输入格式
       simpleInput: false,
-      // 新版本用的mavon-editor带来的自带回调函数用的json格式
-      // name: 图片名
-      // info: base64转换后的数据段
-      image_infos: [],
       // 存放返回的题目内容
       Paper_Ques_List: [],
-      // 存放学科信息
-      subject_name: [],
-      // 存放题型信息
-      question_type: [],
       // 存放将要查询的数据库名称
-      // public, neea, iflytek
-      // database_aim: [true, false, false],
-      // database_name: ['public', 'neea', 'iflytek'],
-      database_aim: [],
-      database_list:[],
+      databaseAim: [],
       // 试卷的ID和标题组
       Paper_ID_List: [],
       Paper_Title_List: [],
@@ -205,20 +248,28 @@ export default {
       Total_Count: -1,
       // loading
       loading: false,
-      // 学科和学段
-      Subject_Type: [],
-      Period_Type: [],
-      // 上次选择的学科和学段
-      history_Subject_Type: [],
-      history_Period_Type: [],
-      // 分析报告页是否显示
-      analyseReport: false,
       // 是否正在返回分析报告
       Question_Analysing: false,
-      // 暂存的图片内容
-      Cache_Pic: [""],
       // 暂时获得了分析报告的试卷ID
-      Paper_Cache_ID: ""
+      Paper_Cache_ID: "",
+      // 用于保存检索条件的Json
+      filterRecord: {
+        // 题库
+        database: []
+      },
+      // 用于准备筛选单题的JSON
+      SearchingPaper: [],
+      // 这张卷子的标题
+      SearchingPaperTitle: "",
+      SearchingSource: "",
+      // 对话框
+      PaperDetailDialog: false,
+      // 题目是否展开
+      Expand_List: [],
+      // 单题分析报告
+      analyseReport: false,
+      analyseData: {},
+      Refresh: false
     };
   },
   watch:{
@@ -235,154 +286,113 @@ export default {
   mounted(){
     this.ToTop()
     this.initDatabaseList();
-    let upload = document.querySelector('#DragItem');
-    upload.addEventListener('dragenter', this.onDragIn, true);
-    upload.addEventListener('dragleave', this.onDragOut, true);
-    upload.addEventListener('drop', this.onDrop, false);
   },
   methods: {
-    // 清空计时器
-    Reset_Interval(){
-      clearInterval(this.Paste_Catcher)
-      this.picSearchDialogShow = false
-      window.removeEventListener('paste', this.Paste_Function)
-    },
-    // 打开图片搜索栏
-    Open_Pic_Search(){
-      this.Init_Img_Paster();
-      this.Paste_Catcher = setInterval(()=>{
-        if(sessionStorage.getItem("PicPaste")){
-          this.option.img = sessionStorage.getItem("PicPaste")
-        }
+    //发送单题至试题篮
+    Add_To_Question_Cart(Question, Desc){
+      let Aim = Question
+      let Question_Show_Infos = {
+        id: "",
+        type: "",
+        score: 0,
+        stem: "",
+        options: [],
+        answer: "",
+        analyse: ""
       }
-      , 20);
-      this.picSearchDialogShow = true
-    },
-    // 尝试利用截图工具的粘贴板
-    Init_Img_Paster(){
-      window.addEventListener('paste', this.Paste_Function)
-    },
-    Paste_Function(e){
-        let Pic = e.clipboardData.items[0].getAsFile();
-        // 保存读取内容用的临时变量
-        var Picresult = "";
-        // Promise方法避免异步操作
-        var promise = new Promise(function(resolve){
-          // 用文件读取来读取图片的base64格式代码
-          var reader = new FileReader();
-          reader.readAsDataURL(Pic);
-          reader.onloadend = function (e) {
-            Picresult = e.target.result;
-            resolve('1');
-          };
-        });
-        promise.then(function(){
-          // 用捕捉到的this对象来进行搜索
-          sessionStorage.setItem("PicPaste", Picresult)
-        }).catch(function(err){
-          // 报错了就打印错误
-          alert("您最新的粘贴对象不是图片内容。")
-        })
-      },
-        openInstructionDialog(){
-          this.$refs.instruction.openDialog();
-        },
-        clearData(){
-          sessionStorage.setItem("PicPaste", "");
-          this.option.img = "";
-        },
-        onDragIn (e) {
-          e.stopPropagation();
-          e.preventDefault();
-        },
-        onDragOut (e) {
-          e.stopPropagation();
-          e.preventDefault();
-        },
-        onDrop (e) {
-          e.stopPropagation();
-          e.preventDefault();
-          this.imgPreview(e.dataTransfer.files);
-          this.$refs.picSearchInput.value = "";
-          this.$refs.cropper.refresh();
-        },
-        //图片预览
-        imgPreview (files) {
-          const _this = this;
-          let read = new FileReader();
-          read.readAsDataURL(files[0]);
-          read.onloadend = function () {
-            _this.show = true
-            _this.option.img = read.result;
-          }
-        },
-        // 左旋转
-        rotateLeft() {
-          this.$refs.cropper.rotateLeft();
-        },
-        // 右旋转
-        rotateRight() {
-          this.$refs.cropper.rotateRight();
-        },
-        // 生成blob图片
-        getCropData() {
-          this.$refs.cropper.getCropData((data) => {
-              this.submit(1, data);
-              this.picSearchDialogShow = false;
-          })
-        },
-        // 照片上传
-    pictureSearch(event){
-      if(event.target.files){
-        // 获取图片
-        let Pic = event.target.files[0];
-        // 保存读取内容用的临时变量
-        var Picresult = "";
-        // 获取this对象
-        const _this = this;
-        // 重置input组件
-        this.$refs.picSearchInput.value = "";
-        // Promise方法避免异步操作
-        var promise = new Promise(function(resolve){
-          // 用文件读取来读取图片的base64格式代码
-          var reader = new FileReader();
-          reader.readAsDataURL(Pic);
-          reader.onloadend = function (e) {
-            Picresult = e.target.result;
-            resolve('1');
-          };
-        });
-        promise.then(function(){
-          // 用捕捉到的this对象来进行搜索
-          _this.option.img = Picresult;
-        }).catch(function(error){
-          // 报错了就打印错误
-          // console.log(error)
-        })
-
+      if(['单选题', '多选题', '判断题'].indexOf(Aim.type) != -1){
+        Question_Show_Infos.type = Aim.type;
+        Question_Show_Infos.score = 5;
+      }else if(['简答题', '计算题'].indexOf(Aim.type) != -1){
+        Question_Show_Infos.type = Aim.type
+        Question_Show_Infos.score = 12;
+      }else if(Aim.type == '填空题'){
+        Question_Show_Infos.type = Aim.type
+        Question_Show_Infos.score = 5;
       }else{
-        return
+        if(Desc == '选择题'){
+          Question_Show_Infos.type = '单选题'
+          Question_Show_Infos.score = 5;
+        }else if(Desc == '填空题'){
+          Question_Show_Infos.type = '填空题'
+          Question_Show_Infos.score = 5;
+        }else if(Desc == '解答题'){
+          Question_Show_Infos.type = '简答题'
+          Question_Show_Infos.score = 5;
+        }
       }
+
+      Question_Show_Infos.id = Aim.id;
+      Question_Show_Infos.options = Aim.options;
+      Question_Show_Infos.stem = Aim.stem;
+      Question_Show_Infos.answer = Aim.answer;
+      Question_Show_Infos.analyse = Aim.analysis;
+      
+      this.$emit("Add_To_Cart", JSON.stringify(Question_Show_Infos));
     },
-    initDatabaseList(){
-      this.database_list=[{name:'public',nick:'公共题库'}]
-      this.database_aim=[true]
-      commonAjax(this.backendIP+'/api/get_user_ig_name',
+    // 查看单题分析报告
+    Check_Analyse_Ques(ID, DatabaseName){
+
+      this.Question_Analysing = true;
+
+      commonAjax(this.backendIP+'/api/questionAnalyse',
         {
-          type:'Question',
-          action:'R',
+          databasename:DatabaseName=='公开题库'?'public':DatabaseName,
+          ID:ID
         }
-      ).then((res)=>{
-        let data=res.ig_name;
-        for (var i = 0; i < data.length; i++) {
-          this.database_list.push({name:data[i]})
-          this.database_aim.push(false)
-        }
+      ).then((data)=>{
+        this.Refresh = !this.Refresh;
+        this.analyseData = data.que_dic;
+        this.analyseReport = true;
       })
     },
-    // 清除图片
-    Clear_Pic(){
-      this.Cache_Pic.splice(0, 1, "");
+    // 获取是否应当展开
+    Get_Expand(Bundle_Index, Question_Index){
+      let Base = 0;
+      for(let i = 0; i < Bundle_Index; i++){
+        Base = Base + this.SearchingPaper[i].sub_question.length
+      }
+      let Index = Base + Question_Index
+      return Index
+    },
+    // 调整试卷试题选择的展开与否
+    Expand(Bundle_Index, Question_Index){
+      let Base = 0;
+      for(let i = 0; i < Bundle_Index; i++){
+        Base = Base + this.SearchingPaper[i].sub_question.length
+      }
+      let Index = Base + Question_Index
+      this.Expand_List.splice(Index, 1, !this.Expand_List[Index])
+    },
+    openInstructionDialog(){
+      this.$refs.instruction.openDialog();
+    },
+    // Update_Complex_Input
+    UCI(val){
+      this.content = val;
+    },
+    initDatabaseList(){
+      this.filterRecord.database = [true]
+      this.databaseAim = [
+        {name: '全部', nick: '全部'}, 
+        {name: 'public', nick: '公开题库'}]
+      //未登录时，不调用获取题库的端口
+      if(!this.$store.state.user.token){
+          return ;
+      }
+      commonAjax(this.backendIP+'/api/get_user_ig_name',
+          {
+          type:'Question',
+          action:'R',
+          }
+      ).then((res)=>{
+          let data=res.ig_name;
+          for (var i = 0; i < data.length; i++) {
+              this.filterRecord.database.push(false)
+              this.databaseAim.push({name: data[i], nick: data[i]})
+          }
+          this.databaseAim[2].nick = "个人题库"
+      })
     },
     // 查看试卷分析报告
     Check_Analyse(ID, DatabaseName){
@@ -421,11 +431,7 @@ export default {
       window.scrollTo(0,0);
     },
     BackToTop(){
-      if(this.Cache_Pic[0].length > 0){
-        this.submit(1, this.Cache_Pic[0]);
-      }else{
-        this.submit(0, "");
-      }
+      this.submit();
       window.scrollTo(0,0);
     },
     // 修改翻页内容
@@ -439,13 +445,22 @@ export default {
     // 修改当前展示的试题的内容
     Paper_Detail_Show(Index){
 
-      this.Question_Analysing = true;
+      this.Question_Analysing = true
+      this.SearchingSource = this.Paper_Ques_List[Index].database
+
+      this.SearchingPaper = [];
+      this.Expand_List = []
+      this.SearchingPaperTitle = ""
 
       if(this.Paper_Cache_ID == this.Paper_ID_List[Index]){
-        let routeData = this.$router.resolve({ path: '/paperDetailShow' });
-        window.open(routeData.href, '_blank');
-        this.$message.success("试题详情内容已在新页面展开。");
+        this.SearchingPaper = JSON.parse(sessionStorage.getItem("PaperDetailShow"))
+        for(let i = 0; i < this.SearchingPaper.length; i++){
+          for(let j = 0; j < this.SearchingPaper[i].sub_question.length; j++){
+            this.Expand_List.push(false)
+          }
+        }
         this.Question_Analysing = false;
+        this.PaperDetailDialog = true;
         return
       }
 
@@ -460,25 +475,61 @@ export default {
           this.$message.error("服务器繁忙，请稍后再试。")
           return
         }
+        this.SearchingPaperTitle = data.Paper_Json.title
         this.Paper_Cache_ID = this.Paper_ID_List[Index];
         if(sessionStorage.getItem("PaperDetailShow")){
           sessionStorage.removeItem("PaperDetailShow");
         }
-        sessionStorage.PaperDetailShow = JSON.stringify(data.Paper_Json)
-        let routeData = this.$router.resolve({ path: '/paperDetailShow' });
-        window.open(routeData.href, '_blank');
-        this.$message.success("试题详情内容已在新页面展开。");
+        sessionStorage.PaperDetailShow = JSON.stringify(data.Paper_Json.sub_question)
+        this.SearchingPaper = JSON.parse(sessionStorage.getItem("PaperDetailShow"))
+        for(let i = 0; i < this.SearchingPaper.length; i++){
+          for(let j = 0; j < this.SearchingPaper[i].sub_question.length; j++){
+            this.Expand_List.push(false)
+          }
+        }
+        this.PaperDetailDialog = true;
       })
-
-
     },
     // 返回选项标签
     Get_Option_Label(Index){
       return String.fromCharCode(Index + 65)
     },
-    // 修改目标数据库
-    Database_Aim(Index){
-      this.database_aim.splice(Index, 1, !this.database_aim[Index])
+    // 根据不同选择的状况调整按钮样式
+    filterButtonStyle(type, index){
+        if(type == "database"){
+            if(index == 0){
+                if(this.filterRecord.database.indexOf(true) == -1 || this.filterRecord.database.indexOf(false) == -1){
+                    return "filterButtonFocus"
+                }else{
+                    return "filterButtonUnfocus"
+                }
+            }else{
+                if(this.filterRecord.database[index-1]){
+                    return "filterButtonFocus"
+                }else{
+                    return "filterButtonUnfocus"
+                }
+            }
+        }
+    },
+    // 更新数据库选择情况
+    database_Change(databaseIndex){
+        if(databaseIndex > 0){
+            this.filterRecord.database.splice(databaseIndex - 1, 1, !this.filterRecord.database[databaseIndex-1])
+        }else{
+            let l = this.filterRecord.database.length;
+            if(this.filterRecord.database.indexOf(false) == -1){
+                this.filterRecord.database.splice(0, this.filterRecord.database.length)
+                for(let i = 0; i < l; i++){
+                    this.filterRecord.database.push(false);
+                }
+            }else{
+                this.filterRecord.database.splice(0, this.filterRecord.database.length)
+                for(let i = 0; i < l; i++){
+                    this.filterRecord.database.push(true);
+                }
+            }
+        }
     },
     // 检查用户
     User_Check(){
@@ -488,39 +539,8 @@ export default {
         return false;
       }
     },
-    // Update_Complex_Input
-    UCI(val){
-      this.content = val;
-    },
-    // UCI_Images
-    UCII(val){
-      this.image_infos = val;
-    },
-    dataSource(tab, event) {
-      this.sour = tab.name;
-      //黄小青师兄12月提供数据
-      if(this.sour == 'rjb_new'){
-        this.entity_type = "kp2.0";
-      }
-      return tab.name;
-    },
     changeInput() {
       this.simpleInput = !this.simpleInput;
-    },
-   // 删除图片并保持图片数组顺序
-    forkImage(index) {
-      this.src.splice(index, 1);
-      for (var i = 0; i < this.filelists.length; i++) {
-        if (typeof this.filelists[i] === "undefined") {
-          this.filelists.splice(i, 1);
-          i = i - 1;
-        }
-      }
-      this.filelists.splice(index, 1);
-      document.getElementsByTagName("input").value = "";
-      // console.log(this.src);
-      // console.log(this.filelists);
-      // console.log(document.getElementsByTagName("input").value);
     },
     Same_Check(Arr1, Arr2){
       if(Arr1.length != Arr2.length){
@@ -533,26 +553,9 @@ export default {
       }
       return true
     },
-    submit(type, Pic = "") {
+    submit() {
 
       this.loading = true;
-
-      // type为1，代表图片搜索，只有当传入的图片和原来的不一样，才需要替换页数为1
-      // 而且使用图片搜索时，为了防止和普通的文字搜索混淆，把content改写为空字符串
-      // 如果与缓存的图片不一致，则说明是新图片，需要替换图片内容
-      if(type != 0){
-        this.content = "";
-        if(Pic != this.Cache_Pic[0]){
-          this.Cache_Pic.splice(0, 1, Pic);
-          this.Page_Index = 1;
-        }
-      }
-      // 默认传入一个空字符串，这代表了使用文字搜索或者同一张图片的换页操作
-      // 文字栏为空，Pic也为空字符串而触发了submit函数，说明应该是换页，继续流程即可
-      // 文字栏不为空，Pic为空字符串，说明应该是文字搜索，此时应当清理图片缓存
-      else{
-        this.Cache_Pic = [""];
-      }
 
       // 后续逻辑和原先一致
 
@@ -561,45 +564,23 @@ export default {
       }
 
       this.old_content = this.content
-
-      if(!this.Same_Check(this.history_Subject_Type, this.Subject_Type)){
-        this.Page_Index = 1;
-      }
-
-      this.history_Subject_Type = this.Subject_Type;
-
-      if(!this.Same_Check(this.history_Period_Type, this.Period_Type)){
-        this.Page_Index = 1;
-      }
-
-      this.history_Period_Type = this.Period_Type;
-
       this.Paper_Ques_List = [];
 
-      let config = {
-          headers: { "Content-Type": "multipart/form-data" }
-      };
-
-      // let param = new FormData();
       let param={}
       var database_list = [];
-      for(var i = 0; i < this.database_aim.length; i++){
-        if(this.database_aim[i]){
-          database_list.push(this.database_list[i].name)
+        for(let i = 0 ; i < this.filterRecord.database.length; i++){
+            if(this.filterRecord.database[i]){
+                database_list.push(this.databaseAim[i+1].name)
+            }
         }
-      }
 
-      if(this.Cache_Pic[0].length > 0){
-        // param.append('pic', this.Cache_Pic[0]);
-        param.pic=this.Cache_Pic[0]
-      }
       var data = JSON.stringify({
         "content": this.content,
         "size": 5,
         "database": database_list,
         "page_count": this.Page_Index,
-        "subject": this.Subject_Type,
-        "period": this.Period_Type
+        "subject": [this.Subject],
+        "period": [this.Period]
       })
 
       param.data=data
@@ -620,14 +601,6 @@ export default {
       }).catch((err)=>{
         this.$message.error("服务器繁忙，请稍后再试。")
       })
-    },
-    Check_Focus_Database(Index){
-      if(this.database_aim[Index]){
-        return "focusDatabase"
-      }else{
-        return "unFocusDatabase"
-      }
-
     },
     // 修改学科，学段时的配套显示
     Get_Subject(){
@@ -771,7 +744,7 @@ export default {
   height: 20px;
   display: inline-block;
   background: rgba(0, 0, 0, 0.1);
-  background-image: url(./../../assets/delete.jpeg);
+  background-image: url(./../../../assets/delete.jpeg);
   background-size: 10px;
   background-repeat: no-repeat;
   background-position: 50%;
@@ -813,6 +786,29 @@ export default {
 
 </style>
 <style lang="scss" scoped>
+.filterButtonUnfocus{
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #409EFF;
+    color: #409EFF;
+    border-radius: 30px;
+    margin-left: 8px; 
+    margin-right: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.filterButtonFocus{
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #409EFF;
+    color: white;
+    border-radius: 30px;
+    margin-left: 8px; 
+    margin-right: 8px;
+    box-sizing: border-box;
+    background: #409EFF;
+    cursor: pointer;
+}
 .SearchInput{
   font-size: 16px;
   line-height: 28px;
@@ -841,26 +837,6 @@ export default {
   border-radius: 18px;
   box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
   -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
-}
-// 照相机按钮使用的区域
-.picSearchArea{
-  position: relative;
-  background-color: transparent;
-  height: 36px;
-  padding-top: 4px;
-  color: #409EFF;
-  cursor: pointer;
-  margin-left: -7px;
-}
-// 照相机按钮使用的样式
-.picSearch{
-  position: absolute;
-  top: 0;
-  right: 0;
-  overflow: hidden;
-  cursor: pointer;
-  opacity: 0;
-  width: 34px;
 }
 .el-pagination {
     text-align: center;

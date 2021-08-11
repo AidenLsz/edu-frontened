@@ -63,12 +63,17 @@
                 录入题目
             </el-row>
         </el-col>
+        <el-col :span="2" :class="Menu_Now(4)" @click.native="Jump_To(4)">
+            <el-row type="flex" justify="center">
+                试卷挑题
+            </el-row>
+        </el-col>
         <el-col :span="2" :class="Menu_Now(3)" @click.native="Jump_To(3)">
             <el-row type="flex" justify="center">
                 细目表挑题
             </el-row>
         </el-col>
-        <el-col :span="3" :offset="7" class="Question_Shopping_Card">
+        <el-col :span="3" :offset="6" class="Question_Shopping_Card">
             <el-popover
                 trigger="click"
                 width="400"
@@ -123,6 +128,9 @@
             :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></DetailTable>
     </el-row>
     <el-row v-if="Using_Menu_Index == 4">
+        <FromDatabasePaper @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></FromDatabasePaper>
+    </el-row>
+    <el-row v-if="Using_Menu_Index == 5">
         <StartCombine 
             @Update_Question_List="Update_Question_List"
             :Question_List.sync="Question_List"
@@ -138,6 +146,7 @@ import KnowledgePoint from '@/views/paperCombine/components/KnowledgePoint'
 import InputQuestion from '@/views/paperCombine/components/InputQuestion'
 import DetailTable from '@/views/paperCombine/components/DetailTable'
 import StartCombine from '@/views/paperCombine/components/StartCombine'
+import FromDatabasePaper from '@/views/paperCombine/components/FromDatabasePaper'
 
 import * as echarts from 'echarts';
 
@@ -150,7 +159,8 @@ export default {
   },
   components: {
         Keyword, KnowledgePoint,
-        InputQuestion, DetailTable, StartCombine
+        InputQuestion, DetailTable, StartCombine,
+        FromDatabasePaper
   },
   data() {
     return {
@@ -408,12 +418,12 @@ export default {
             this.$message.error("你的试题篮里目前没有题目，无法组卷。");
             return
         }else{
-            this.Jump_To(4);
+            this.Jump_To(5);
             this.$refs['Question_Cart'].doClose();
         }
     },
     Jump_To(Aim){
-        if(Aim != 0 || Aim != 4){
+        if(Aim != 0 || Aim != 5){
             if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
                 this.$message.error("您尚未登录，请登录后使用此功能。")
                 return 

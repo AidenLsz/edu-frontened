@@ -539,16 +539,6 @@
 							"intro": "不想画画的程序猿不是金牌厨师"
 						},
 						{
-							"name": "马爽",
-							"mail": "mashuang2@mail.ustc.edu.cn",
-							"intro": "脊索动物门、哺乳纲、灵长目、类人猿超科、人属、人种的一个个体。"
-						},
-						{
-							"name": "高海涵",
-							"mail": "kd193104@mail.ustc.edu.cn",
-							"intro": "中科大18级本科，现从事数据挖掘、机器学习和NLP方面的科研"
-						},
-						{
 							"name": "姚方舟",
 							"mail": "bfsudcs_fanzy@163.com",
 							"intro": "never goona look back"
@@ -577,6 +567,16 @@
 							"name": "申一凯",
 							"mail": "shenyikai@mail.ustc.edu.cn",
 							"intro": "兴趣使然的前端画图工"
+						},
+						{
+							"name": "黄炜喆",
+							"mail": "871982879@qq.com",
+							"intro": "USTC / CS /\n 程序猿 / 二次元 /\n JO厨巨厨 / 云吸猫"
+						},
+						{
+							"name": "肖桐",
+							"mail": "xt20020109@mail.ustc.edu.cn",
+							"intro": "遇到困难睡大觉"
 						}
 					],
 					// 特邀工程师
@@ -593,6 +593,16 @@
 							"name": "邬靖宇",
 							"mail": "wujingyu@mail.ustc.edu.cn",
 							"intro": "干啥啥不行，吃啥啥不剩，\n学啥啥不会，写啥啥bug。"
+						},
+						{
+							"name": "马爽",
+							"mail": "mashuang2@mail.ustc.edu.cn",
+							"intro": "脊索动物门、哺乳纲、灵长目、类人猿超科、人属、人种的一个个体。"
+						},
+						{
+							"name": "高海涵",
+							"mail": "kd193104@mail.ustc.edu.cn",
+							"intro": "中科大18级本科，现从事数据挖掘、机器学习和NLP方面的科研"
 						}
 					],
 					// 技术顾问
@@ -661,19 +671,21 @@
 						"龚政": "/members/龚政.jpg",
 						"黄小青": "/members/黄小青.jpg",
 						"单明晖": "/members/单明晖.jpeg",
-						"马爽": "/members/马爽.jpeg",
-						"高海涵": "/members/高海涵.jpeg",
 						"姚方舟": "/members/姚方舟.jpeg",
 						"林鑫": "/members/林鑫.jpeg",
 						"韩东轩": "/members/韩东轩.jpeg",
 						"余阳": "/members/余阳.png",
 						"张裕人": "/members/张裕人.jpeg",
 						"申一凯": "/members/申一凯.jpg",
+						"黄炜喆": "/members/黄炜喆.png",
+						"肖桐": "/members/肖桐.png",
 						// 特邀工程师
 
 						// 实习生
 						"邬靖宇": "/members/邬靖宇.jpg",
 						"赵辰阳": "/members/赵辰阳.jpeg",
+						"马爽": "/members/马爽.jpeg",
+						"高海涵": "/members/高海涵.jpeg",
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
 						"高维博": "/members/高维博.jpeg",

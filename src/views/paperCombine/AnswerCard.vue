@@ -68,12 +68,12 @@
         </el-row>
         <el-row type="flex" justify="center" style="margin-top: 10px;">
           <label>
-            总分
+            试卷总分
           </label>
         </el-row>
         <el-row type="flex" justify="center">
           <label>
-            xxx分
+            {{TotalScore}}<span style="margin-left: 5px">分</span>
           </label>
         </el-row>
       </div>
@@ -789,6 +789,8 @@
 </template>
 <script>
 
+import FileSaver from "file-saver";
+
 export default {
   name: 'AnswerCard',
   props: {
@@ -841,7 +843,8 @@ export default {
       // 记录编辑的是哪个位置的标记
       Editing_Index: -1,
       // 编辑用的对话框
-      Edit_Part_Dialog: false
+      Edit_Part_Dialog: false,
+      TotalScore: 0
     }
   },
   watch: {
@@ -876,7 +879,52 @@ export default {
   methods: {
     // 下载答题卡
     Download_Answer_Card(){
-      this.$message.success("正在准备中，敬请期待。")
+
+      let Setting_English = {
+        注意事项与缺考标记: "cautions",
+        存在AB卷: "existAB",
+        红色答题卡: "redSheet",
+        客观题竖向排列: "verticalChoice",
+        分区答题卡: "partInfo"
+      }
+
+      let Card_Form = {
+        sheetSize: this.PaperType,
+        columnNum: this.FillType == "双栏" ? 2 : this.FillType == "三栏" ? 3 : 1,
+        fileType: this.IDCodeType == "考号填涂" ? "paint" : "barCode",
+        examNumberDigits: this.IDCodeType == "考号填涂" ? this.PaperInfo.StudentCodeLength + "" : "",
+        sheetFormat: [],
+        fillPart: this.UserFillInfo,
+        title: this.PaperInfo.title,
+        questions: []
+      }
+
+      for(let i = 0; i < this.ContentSetting.length; i++){
+        Card_Form.sheetFormat.push(Setting_English[this.ContentSetting[i]])
+      }
+
+      for(let j = 0; j < this.Question_Lists.length; j++){
+        let Item_Form = {
+            type: this.Question_Lists[j].type,
+            bundleInfo: this.Get_Bundle_Title_Show(this.Question_Lists[j], j),
+            partInfo: !(this.ContentSetting.indexOf("分区答题卡") != -1 && this.PaperInfo.Partshow[j]) ? 
+                        "" : this.PaperInfo.PartInfo[this.Get_Info_Index(j)].showScore ? 
+                        this.PaperInfo.PartInfo[this.Get_Info_Index(j)].type : this.PaperInfo.PartInfo[this.Get_Info_Index(j)].type + "（共" + this.PaperInfo.PartInfo[this.Get_Info_Index(this.Bundle_Index)].score + "分）",
+            questions: this.Question_Lists[j].list.length,
+            EachRowsItem: this.Bundle_Card_Option_List[j].Each_Rows_Item ? this.Bundle_Card_Option_List[j].Each_Rows_Item : "",
+            AnswerLength: ['单选题', '多选题', '判断题'].indexOf(this.Question_Lists[j].type) != -1 ?
+                            [] : ['填空题'].indexOf(this.Question_Lists[j].type) != -1 ?
+                              this.Bundle_Card_Option_List[j].List : ['简答题', '计算题'].indexOf(this.Question_Lists[j].type) != -1 ?
+                                this.Bundle_Card_Option_List[j]: []
+        }
+        Card_Form.questions.push(Item_Form)
+      }
+
+      let file = new File([JSON.stringify(Card_Form)],
+        "AnswerCardJson.json",
+        { type: "text/plain;charset=utf-8" }
+      );
+      FileSaver.saveAs(file);
     },
     // 切换分数显示
     Part_Score_Show(Bundle_Index){
@@ -1110,6 +1158,9 @@ export default {
           this.PaperInfo.Partshow.push(true)
         }else{
           this.PaperInfo.Partshow.push(false)
+        }
+        for(let j = 0; j < Bundle.list.length; j++){
+          this.TotalScore = this.TotalScore + Bundle.list[j].score
         }
       }
     },
