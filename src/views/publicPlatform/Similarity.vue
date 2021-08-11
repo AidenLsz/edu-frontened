@@ -248,6 +248,7 @@ if __name__ == '__main__':
 		mounted() {
 			this.ToTop();
 			// this.openPanel();
+			this.closePanel();
 		},
 		methods: {
 			ToTop() {
@@ -255,7 +256,7 @@ if __name__ == '__main__':
 			},
 			OpacityCheck(Index) {
 				if (this.visibleList[Index]) {
-					return "unvisible"
+					return "unvisible";
 				}
 			},
 			DisableCheck() {

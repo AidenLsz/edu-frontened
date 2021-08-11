@@ -49,10 +49,13 @@
 				<el-col :span="2.5">
 					<span>预测属性勾选：</span>
 				</el-col>
-				<el-col :span="5">
+				<el-col :span="7">
 					<el-checkbox-group v-model="checkList" id="checkbox">
 						<el-checkbox label="难度"></el-checkbox>
 						<el-checkbox label="知识点"></el-checkbox>
+						<el-checkbox label="区分度"></el-checkbox>
+						<el-checkbox label="信度"></el-checkbox>
+						<el-checkbox label="素养"></el-checkbox>
 					</el-checkbox-group>
 				</el-col>
 			</el-row>
@@ -73,7 +76,7 @@
 				</div>
 
 				<div id="result">
-					<div style="font-size: 30px; font-weight: bold; float:left; margin:20px 0px 20px 20px;">
+					<div style="font-size: 30px; font-weight: bold; text-align:left; margin:20px 20px 20px 20px;">
 						预估结果
 					</div>
 
@@ -92,6 +95,32 @@
 										</div>
 									</el-card>
 								</div>
+								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('难度') > -1">
+									<el-card class="card">
+										<div slot="header" style="text-align:left;">
+											<span>区分度</span>
+										</div>
+										<div style="text-align:left;">
+											<el-tag effect="plain" style="border: hidden; background: #a7cdff">
+												{{ disc_result }}
+											</el-tag>
+										</div>
+									</el-card>
+								</div>
+								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('难度') > -1">
+									<el-card class="card">
+										<div slot="header" style="text-align:left;">
+											<span>信度</span>
+										</div>
+										<div style="text-align:left;">
+											<el-tag effect="plain" style="border: hidden; background: #a7cdff">
+												{{ rel_result }}
+											</el-tag>
+										</div>
+									</el-card>
+								</div>
+								
+								
 								<div style="margin-bottom: 10px;" v-if="checkList.indexOf('知识点') > -1">
 									<el-card class="card">
 										<div slot="header" style="text-align:left;">
@@ -135,7 +164,6 @@
 		<div class="tab panel-btn" id="openBtn" @click="openPanel()">
 			<div>使用说明</div>
 			<i class="el-icon-d-arrow-right"></i>
-			<!-- <div class="arrow"></div> -->
 		</div>
 		<el-card class="box-card left" style="background-color: #FFFFFF;">
 			<div class="panel-btn" id="closeBtn" @click="closePanel()">
@@ -262,8 +290,11 @@ print(json.loads(r.content)["data"])</code></pre>
 			return {
 				content: "", // 用户输入试题文本
 				difficulty_result: "", // 难度预估返回值
+				rel_result: "", // 信度预估返回值
+				disc_result: "", // 区分度预估返回值
 				kp_result: "", // 知识点返回值
 				kp_layer: "",
+				lp_result: "",
 				kp_priority: [],
 				defaultProps: {
 					label: "label",
@@ -273,7 +304,7 @@ print(json.loads(r.content)["data"])</code></pre>
 				show_result: false,
 				order: 0,
 				filelists: [],
-				checkList: ["难度", "知识点"],
+				checkList: ["难度", "知识点", "区分度", "信度", "素养"],
 				// 学科选择属性
 				options: [{
 						value_id: "数学", // 学科值
@@ -360,6 +391,7 @@ print(json.loads(r.content)["data"])</code></pre>
 		mounted() {
 			this.ToTop();
 			//this.openPanel();
+			this.closePanel();
 		},
 		methods: {
 			ToTop() {
@@ -402,6 +434,9 @@ print(json.loads(r.content)["data"])</code></pre>
 				if (this.checkList.length === 2) {
 					this.checkList[0] = "难度";
 					this.checkList[1] = "知识点";
+					this.checkList[2] = "区分度";
+					this.checkList[3] = "信度";
+					this.checkList[4] = "素养";
 				}
 				if (this.checkList.indexOf("难度") > -1) {
 					// 请求难度属性接口
@@ -411,6 +446,28 @@ print(json.loads(r.content)["data"])</code></pre>
 						})
 						.then(function(data) {
 							this.difficulty_result = data.data.difficulty;
+							this.loading = false;
+						});
+				}
+				if (this.checkList.indexOf("区分度") > -1) {
+					// 请求区分度属性接口
+					this.$http
+						.post("https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/disc", param, config, {
+							emulateJSON: true
+						})
+						.then(function(data) {
+							this.disc_result = data.data.disc;
+							this.loading = false;
+						});
+				}
+				if (this.checkList.indexOf("信度") > -1) {
+					// 请求信度属性接口
+					this.$http
+						.post("https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/rel", param, config, {
+							emulateJSON: true
+						})
+						.then(function(data) {
+							this.rel_result = data.data.rel;
 							this.loading = false;
 						});
 				}
@@ -425,6 +482,18 @@ print(json.loads(r.content)["data"])</code></pre>
 							this.kp_result = data.data.knowledge_point.kp;
 							this.kp_layer = data.data.knowledge_point.kp_layer;
 							this.kp_priority = data.data.knowledge_point.kp_priority;
+							this.loading = false;
+						});
+				}
+				
+				if (this.checkList.indexOf("素养") > -1) {
+					// 请求知识点属性接口
+					this.$http
+						.post("https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/lp", param, config, {
+							emulateJSON: true
+						})
+						.then(function(data) {
+							this.lp_result = data.data.literacy;
 							this.loading = false;
 						});
 				}
@@ -550,7 +619,7 @@ print(json.loads(r.content)["data"])</code></pre>
 
 	#main {
 		position: relative;
-		height: 650px;
+		height: 1000px;
 		width: 1200px;
 		margin-bottom: 100px;
 		margin-left: 80px;
@@ -582,7 +651,7 @@ print(json.loads(r.content)["data"])</code></pre>
 		left: 800px;
 		top: 0px;
 		width: 400px;
-		height: 650px;
+		height: 1000px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
 		border-radius: 4px;
 	}
