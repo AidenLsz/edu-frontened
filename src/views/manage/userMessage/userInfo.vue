@@ -405,9 +405,9 @@ export default {
       // }
       let fd = {
         ug_ID: this.groupid,
-        ug_name: this.currentGroupData.name,
-        ug_email: this.currentGroupData.email,
-        ug_phone: this.currentGroupData.phone,
+        ug_name: this.currentGroupData.name||'',
+        ug_email: this.currentGroupData.email||'',
+        ug_phone: this.currentGroupData.phone||'',
       }
       commonAjax(this.backendIP + "/api/update_group_info", fd).then((res) => {
         if (!res.status)
