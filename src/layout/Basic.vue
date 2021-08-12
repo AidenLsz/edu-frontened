@@ -299,7 +299,7 @@
 										</span>
 										<el-dropdown-menu slot="dropdown">
 											<el-dropdown-item @click.native="checkUserInfo">个人设置</el-dropdown-item>
-											<el-dropdown-item @click.native="checkUserGroup">组织架构</el-dropdown-item>
+											<el-dropdown-item v-if="isGroup" @click.native="checkUserGroup">组织架构</el-dropdown-item>
 											<el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
 										</el-dropdown-menu>
 									</el-dropdown>
@@ -331,6 +331,9 @@
 import BasicFooter from "@/layout/components/footer.vue";
 import login from "@/layout/components/login.vue";
 import register from "@/layout/components/register.vue";
+import {
+  commonAjax
+} from '@/common/utils/ajax'
 // import BasicHeader from '@/layout/header.vue'
 // import vueImgVerify from "@/common/components/vue-img-verify.vue";
 export default {
@@ -353,6 +356,7 @@ export default {
       // 跳转至试卷/试题分析的不同地点用的
       PaperAnalyseSwitchFlag: false,
       QuestionAnalyseSwitchFlag: false,
+      isGroup: false
     };
   },
   mounted() {
@@ -376,6 +380,7 @@ export default {
     //     $("#header-sticky").addClass("sticky-menu");
     //   }
     // });
+    this.getGroups()
   },
   updated() {
     var user = sessionStorage.getItem("user");
@@ -396,6 +401,13 @@ export default {
       this.$router.push({
         path: "/user/userGroup",
       });
+    },
+    getGroups() {
+      commonAjax(this.backendIP + '/api/get_user_groups', {}).then((res) => {
+        if (res.data.length > 0 && res.data.some((data)=>data.is_admin)) {
+          this.isGroup = true
+        }
+      })
     },
     QAS(index) {
       if (index == 0) {

@@ -174,7 +174,7 @@ export default {
       // 跳转至试卷/试题分析的不同地点用的
       PaperAnalyseSwitchFlag: false,
       QuestionAnalyseSwitchFlag: false,
-      showGroup: false
+      isGroup: false
     };
   },
   computed: {
@@ -212,9 +212,8 @@ export default {
     },
     getGroups() {
       commonAjax(this.backendIP + '/api/get_user_groups', {}).then((res) => {
-				console.log('isgroup',res.data.some((data)=>data.is_admin));
         if (res.data.length > 0 && res.data.some((data)=>data.is_admin)) {
-          this.showGroup = true
+          this.isGroup = true
         }
       })
     },
