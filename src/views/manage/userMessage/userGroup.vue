@@ -5,7 +5,11 @@
       <el-col :span="7">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-          <el-breadcrumb-item>组织架构</el-breadcrumb-item>
+          <el-breadcrumb-item>组织架构
+            <span @click="openInstructionDialog" style="cursor:pointer;">
+              <i class="el-icon-question"></i>
+            </span>
+          </el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
@@ -110,6 +114,9 @@
         :total="this.tableData.length">
       </el-pagination>
     </el-row>
+    <instruction
+      ref="instruction"
+    />
     <createDialog ref="CreateDialog" :groupid="groupid" @userCreated="GET_USER_DATA()"/>
     <addDialog ref="AddDialog" :groupid="groupid" :tableData="currentGroupData" :groupname="groupname" @userAdded="GET_USER_DATA()"/>
     <deleteDialog ref="DeleteDialog" :userData="userData" @userDeleted="GET_USER_DATA()"/>
@@ -123,6 +130,7 @@ import deleteDialog from './components/deleteDialog'
 import addDialog from './components/addDialog'
 import editDialog from './components/editDialog'
 import * as variable from '@/common/utils/variable'
+import Instruction from './components/InstructionGroup.vue'
 
 export default {
   name: '',
@@ -130,7 +138,8 @@ export default {
     createDialog,
     addDialog,
     deleteDialog,
-    editDialog
+    editDialog,
+    Instruction
   },
   data() {
     return {
@@ -182,6 +191,9 @@ export default {
     }
   },
   methods: {
+    openInstructionDialog(){
+      this.$refs.instruction.openDialog();
+    },
     openCreateDialog(){
       this.$refs.CreateDialog.openDialog();
     },
@@ -220,7 +232,7 @@ export default {
           return tmp
         })
         if(!this.groupid&&this.groupnameArray)
-        this.groupid=this.groupnameArray[0].groupid
+          this.groupid=this.groupnameArray[0].groupid
       })
     },
     Edit_User(val){

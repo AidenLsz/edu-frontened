@@ -95,15 +95,19 @@
 											<template slot="title"><span style="color: black;">查重</span></template>
 											<router-link :to="rootPath+'exercise'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="2-1">
-													<span style="color: black;">试题检索</span>
+													<span style="color: black;">单试题查重</span>
 												</el-menu-item>
 											</router-link>
-
-											<router-link :to="rootPath+'searchPaper'" :underline="false" @click.native="ToTop">
+											<router-link :to="rootPath+'exercise'" :underline="false" @click.native="ToTop">
+												<el-menu-item index="2-1">
+													<span style="color: black;">多试题查重</span>
+												</el-menu-item>
+											</router-link>
+											<!-- <router-link :to="rootPath+'searchPaper'" :underline="false" @click.native="ToTop">
 												<el-menu-item index="2-2">
 													<span style="color: black;">试卷检索</span>
 												</el-menu-item>
-											</router-link>
+											</router-link> -->
 										</el-submenu>
 										<el-submenu index="3">
 											<template slot="title"><span style="color: black;">分析</span></template>
