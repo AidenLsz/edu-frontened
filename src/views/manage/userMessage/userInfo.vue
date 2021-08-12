@@ -13,7 +13,7 @@
       autocomplete="off"
       style="margin-top:30px">
     <el-row>
-      <el-col :span="12">
+      <el-col :span="12" v-if = "groupData.filter(item=>item.is_admin==1).length!==0">
         <el-row type="flex" justify="start" class="sub-header" >
             <label style="font-size: 18px">组织基本信息</label>
             <el-select v-model="groupid" placeholder="请选择"  style="margin:0 40px;">
