@@ -49,18 +49,21 @@
       </el-button-group>
     </el-row>
 
-    <el-row>
+
     <div class="bigBox">
-      <div class="labelBox">
-        <el-tabs  @tab-click="handleClick">
-        <el-tab-pane label="学科" name="first"></el-tab-pane>
-        <el-tab-pane label="学段" name="second"></el-tab-pane>
-        </el-tabs>
-      </div>
+      <el-col :span="4">
+        <el-switch    
+          v-model="value1"      
+          active-text="显示学段细分"
+          @change="handleClick(value1)">     
+        </el-switch>
+      </el-col>
+      
       <div id="data_chart" class="data_chart">
+      
       </div>
     </div>
-    </el-row>
+    
   </div>
 </template>
 
@@ -94,7 +97,8 @@ export default {
 
       Chart_Data: {},
       Count_Type: "Question",
-      Sort_Type: "学科"//新加入的属性
+      List:[],
+      value1 : false
     };
   },
   mounted() {
@@ -122,14 +126,8 @@ export default {
       }
     },
 
-    handleClick(tab,event) {//新加入的标签页
-      console.log(tab,event)
-      if(tab.name == 'first'){
-        this.Sort_Type = "学科";
-      }
-      else if(tab.name == 'second'){
-        this.Sort_Type = "学段";
-      }
+    handleClick(event) {//新加入的标签页
+      this.value1 = event;
       this.Redraw_Bar();
     },
 
@@ -161,7 +159,7 @@ export default {
             y2: 35
           },
           title: {
-              text :'各' + this.Sort_Type + '数据统计',
+              text :'各学科数据统计',
               x: 'center',
               y: 'top',
               textStyle: {
@@ -171,7 +169,7 @@ export default {
               },
               padding: [5,5,40,25]
           },
-          color: ['#409EFD'],
+          
           tooltip : {
               trigger: 'axis',
               axisPointer : {
@@ -215,6 +213,7 @@ export default {
               },
           }
           ],
+          color :['#48a6f3', '#91cc75','#5470c6',  '#73c0de','#3ba272','#ee6666',  '#fc8452', '#9a60b4', '#ea7ccc'],
           yAxis : [
           {
               type : 'value',
@@ -233,45 +232,45 @@ export default {
               }
           }
           ],
-          series: []
-      };
+          series: [],
+          animationEasing: 'linear',
 
-      if(this.Count_Type == 'Question' ){
-        option.legend.data = ['试题']
-        option.series = [{
-              name:'试题',
-              type:'bar',
-              barWidth: '30%',
-              data:this.Question_Data_Sub
-          }]
-        if(this.Sort_Type == '学段') {
-          option.series[0].data = this.Question_Data_Per;
-          option.xAxis[0].data = this.Chart_Data.list_per;
+      };
+      if(this.value1 == false){
+          option.series = [{
+                //name:'',
+                type:'bar',
+                barWidth: '30%',
+                //data:[] 
+            }]  
+        if(this.Count_Type == 'Question' ){
+          option.series[0].name = '试题'
+          option.series[0].data = this.Question_Data_Sub
+        }else if(this.Count_Type == 'Paper'){
+          option.series[0].name = '试卷'
+          option.series[0].data = this.Paper_Data_Sub
+        }else if(this.Count_Type == 'KU'){
+          option.series[0].name = '知识单元'
+          option.series[0].data = this.KU_Data_Sub
         }
-      }else if(this.Count_Type == 'Paper'){
-        option.legend.data = ['试卷']
-        option.series = [{
-              name:'试卷',
-              type:'bar',
-              barWidth: '30%',
-              data: this.Paper_Data_Sub
-          }]
-        if(this.Sort_Type == '学段') {
-          option.series[0].data = this.Paper_Data_Per;
-          option.xAxis[0].data = this.Chart_Data.list_per;
-        }
-      }else if(this.Count_Type == 'KU'){
-        option.legend.data = ['知识单元']
-        option.series = [{
-              name:'知识单元',
-              type:'bar',
-              barWidth: '30%',
-              data: this.KU_Data_Sub
-          }]
-        if(this.Sort_Type == '学段') {
-          option.series[0].data = this.KU_Data_Per;
-          option.xAxis[0].data = this.Chart_Data.list_per;
-        }
+      }
+      
+      else if(this.value1 == true){
+         option.legend.data = this.List;
+         option.legend.orient = 'vertical';
+         option.legend.itemGap = 8;//图列间隔
+         for(var ind = 0; ind < this.List.length; ind++){
+           option.series[ind] = new Object();
+           option.series[ind].name = this.List[ind];
+           option.series[ind].type = 'bar';
+           option.series[ind].barWidth = '30%';
+           option.series[ind].stack = this.Count_Type;
+           option.series[ind].animationDelay = ind * 500;
+           option.series[ind].animationDuration = 500;
+           if(this.Count_Type == 'Question' )            option.series[ind].data = this.Question_Data_Per[ind];
+           else if(this.Count_Type == 'Paper')           option.series[ind].data = this.Paper_Data_Per[ind];
+           else if(this.Count_Type == 'KU')              option.series[ind].data = this.KU_Data_Per[ind];
+         }      
       }
       // console.log(option.series)
       BarChart.setOption(option);
@@ -297,7 +296,7 @@ export default {
 
         this.Paper_Data_Sub = [];
         this.Question_Data_Sub = [];
-        this.KU_Data_Sub = [];
+        this.KU_Data_Sub = [];       
         this.Paper_Data_Per = [];
         this.Question_Data_Per = [];
         this.KU_Data_Per = [];
@@ -307,16 +306,28 @@ export default {
         this.Num_Paper = this.Chart_Data.num_paper;
         this.Num_Question = this.Chart_Data.num_question;
         this.Num_KU = this.Chart_Data.num_knowledge;
-        for(var index = 0; index < this.Chart_Data.num_sub.length; index ++){
+        this.List = this.Chart_Data.list_per;
+
+        for(var ind = 0; ind < this.Chart_Data.list_per.length; ind++){
+            this.Paper_Data_Per[ind] = new Array();
+            this.Question_Data_Per[ind] = new Array();
+            this.KU_Data_Per[ind] = new Array();
+        }
+
+        for(var index = 0; index < this.Chart_Data.list_sub.length; index ++){
             this.Paper_Data_Sub.push(this.Chart_Data.num_sub[index].Paper);
             this.Question_Data_Sub.push(this.Chart_Data.num_sub[index].Question);
             this.KU_Data_Sub.push(this.Chart_Data.num_sub[index].Knowledge);//后端PQK数据名已调整为大写！
+   
+            for(var index2 = 0; index2 < this.Chart_Data.list_per.length; index2 ++){
+              this.Paper_Data_Per[index2].push(this.Chart_Data.num_per[index].Paper[index2]);
+              this.Question_Data_Per[index2].push(this.Chart_Data.num_per[index].Question[index2]);
+              this.KU_Data_Per[index2].push(this.Chart_Data.num_per[index].Knowledge[index2]);
+            }
         }
-        for(var index2 = 0; index2 < this.Chart_Data.num_per.length; index2 ++){
-          this.Paper_Data_Per.push(this.Chart_Data.num_per[index2].Paper);
-          this.Question_Data_Per.push(this.Chart_Data.num_per[index2].Question);
-          this.KU_Data_Per.push(this.Chart_Data.num_per[index2].Knowledge);
-        }
+        console.log(this.Question_Data_Per);
+
+
         this.Redraw_Bar();
       });
     }
@@ -367,11 +378,8 @@ a {
    border: 3px solid #EEF5FE;
    margin-bottom: 40px;
 }
-.labelBox{
-  padding-left:2%; /*解决标签顶格问题*/
-  padding-right:2%;
-}
 .data_chart{
-   height:300px;
+  margin-top:20px;/*如果没有，则放在框里面的switch按钮点不到*/
+  height:300px;
 }
 </style>
