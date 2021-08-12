@@ -16,8 +16,16 @@
       <el-col :span="12">
         <el-row type="flex" justify="start" class="sub-header" >
             <label style="font-size: 18px">组织基本信息</label>
+            <el-select v-model="groupid" placeholder="请选择"  style="margin:0 40px;">
+              <el-option
+                v-for="(item,i) in groupData.filter(item=>item.is_admin==1)"
+                :key="i"
+                :label="item.name"
+                :value="item.ug_ID">
+              </el-option>
+            </el-select>
         </el-row>
-        <el-row >
+        <!-- <el-row >
             <el-col :span="20" :offset="1">
               <el-form-item  label="选择组织" style="margin-bottom: 15px">
                 <el-row type="flex" justify="start">
@@ -32,7 +40,7 @@
                 </el-row>
               </el-form-item>
             </el-col>
-        </el-row>
+        </el-row> -->
         <el-row>
           <el-col :span="20" :offset="1">
             <el-form-item  label="组织名称" prop="ug_name" style="margin-bottom: 15px">
@@ -446,23 +454,26 @@ export default {
       })
     },
     createGroup(){
-      this.$refs[this.formName].validateField('ug_name', (err) =>{
-        if (err) {
-          return ;
-        }
-        let fd={
-          ug_name:this.userData.ug_name
-        }
-        commonAjax(this.backendIP+'/api/create_group',fd).then((res)=>{
-          if (!res.status)
-            throw Error()
-          this.$message.success('创建组织成功！')
-          this.userData.ug_name=""
-          this.createGroupSetting=false;
-          this.getGroups()
-        }).catch(()=>{
-          this.$message.error('创建组织失败！')
-        })
+      // this.$refs[this.formName].validateField('ug_name', (err) =>{
+      //   if (err) {
+      //     return ;
+      //   }
+      // })
+      if(!this.userData.ug_name){
+        return
+      }
+      let fd={
+        ug_name:this.userData.ug_name
+      }
+      commonAjax(this.backendIP+'/api/create_group',fd).then((res)=>{
+        if (!res.status)
+          throw Error()
+        this.$message.success('创建组织成功！')
+        this.userData.ug_name=""
+        this.createGroupSetting=false;
+        this.getGroups()
+      }).catch(()=>{
+        this.$message.error('创建组织失败！')
       })
     },
     changePassword(){
@@ -498,6 +509,7 @@ export default {
 }
 .save-btn{
   text-align:right;
-   margin-bottom: 15px;
+  margin-right: 100px;
+  margin-bottom: 15px;
 }
 </style>
