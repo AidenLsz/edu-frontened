@@ -98,7 +98,7 @@ export default {
       Chart_Data: {},
       Count_Type: "Question",
       List:[],
-      value1 : false
+      value1 : false  //显示学段细分开关点击时的返回值
     };
   },
   mounted() {
@@ -126,7 +126,7 @@ export default {
       }
     },
 
-    handleClick(event) {//新加入的标签页
+    handleClick(event) {  //点击学段细分开关调用函数
       this.value1 = event;
       this.Redraw_Bar();
     },
@@ -256,21 +256,23 @@ export default {
       }
 
       else if(this.value1 == true){
-         option.legend.data = this.List;
          option.legend.orient = 'vertical';
          option.legend.itemGap = 8;//图列间隔
+         var storeName = new Array();//用于存储反转后的List列表
          for(var ind = 0; ind < this.List.length; ind++){
+           storeName.push(this.List[this.List.length - ind - 1]);//反转后的List再输入legend达到标签和图例同方向显示
            option.series[ind] = new Object();
            option.series[ind].name = this.List[ind];
            option.series[ind].type = 'bar';
            option.series[ind].barWidth = '30%';
            option.series[ind].stack = this.Count_Type;
-           option.series[ind].animationDelay = ind * 500;
-           option.series[ind].animationDuration = 500;
+           option.series[ind].animationDelay = ind * 400;
+           option.series[ind].animationDuration = 400;  //控制图像动画速度来达到欺骗眼睛的效果
            if(this.Count_Type == 'Question' )            option.series[ind].data = this.Question_Data_Per[ind];
            else if(this.Count_Type == 'Paper')           option.series[ind].data = this.Paper_Data_Per[ind];
            else if(this.Count_Type == 'KU')              option.series[ind].data = this.KU_Data_Per[ind];
          }
+         option.legend.data = storeName;
       }
       // console.log(option.series)
       BarChart.setOption(option);
