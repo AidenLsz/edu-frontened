@@ -66,7 +66,7 @@
         </el-col>
         <el-col :span="13">
             <el-row type="flex" justify="start" style="height: 40px; line-height: 40px;">
-                <el-col v-for="Type in Type_List" :key="'Ques_Type_' + Type" :span="24/8">
+                <el-col v-for="Type in Type_List" :key="'Ques_Type_' + Type.label" :span="24/8">
                     <el-row 
                         type="flex" 
                         justify="center" 
