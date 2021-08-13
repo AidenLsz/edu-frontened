@@ -1,8 +1,25 @@
 <template>
   <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; margin-top: 50px;">
+    <!-- 测试获取输入框的焦点 -->
     <el-row>
-      123
-      <el-button type="primary" @click="Get_Reg_Test()"></el-button>
+      <el-col>
+        <el-input @focus="Show_Blur" id="1" v-model="Content"></el-input>
+        <el-input @focus="Show_Blur" id="2"></el-input>
+        <el-input @focus="Show_Blur" id="3"></el-input>
+        <el-button type="primary" @click="Bold()">B</el-button>
+        <el-button type="primary" @click="Italic()">I</el-button>
+        <el-button type="primary" @click="Underline()">U</el-button>
+        <input type="file" accept=".jpg, .jpeg, .png" id="fileButton" style="display: none"/>
+        <el-button type="primary" @click="Upload_File()"><i class="el-icon-picture-outline"></i></el-button>
+        <el-row v-html="Content"></el-row>
+        <Mathdown :content="Content" :name="'Search123'"></Mathdown>
+      </el-col>
+    </el-row>
+    <el-row>
+      <div
+        style="width: 34px; height: 34px; line-height: 34px; font-size: 22px; border: 1px solid black; cursor: pointer; border-radius: 5px"
+        @click="Upload_File()"
+        ><i class="el-icon-picture-outline"></i></div>
     </el-row>
     <!-- <el-row>
       <el-input 
@@ -111,13 +128,26 @@
 
 // import FileSaver from "file-saver";
 
+import Mathdown from '@/common/components/Mathdown'
+
 export default {
   name: 'ScreenShot',
   props: {
-
+  },
+  components:{
+    Mathdown
   },
   data() {
     return {
+      // 绑定一个图片录入组件
+      Img_File_Upload_Button: "",
+      Content: "",
+      // 开始尝试获取选中的对象
+      Focusing_ID: "",
+      // 起点和重点
+      Start: 0,
+      End: 0,
+      Select_Watcher: "",
       // 开始尝试做一个输入框组件
       // 文本内容
       TextLine: "",
@@ -207,10 +237,51 @@ export default {
         this.Paste_Info = sessionStorage.getItem("PicPaste")
       }
     }
-    , 50)
-    
+    , 20)
+    this.Init_Select_Watcher();
+    this.Init_Img_Button();
   },
   methods: {
+    Init_Img_Button(){
+      this.Img_File_Upload_Button = document.getElementById("fileButton");
+      this.Img_File_Upload_Button.addEventListener("change", (e)=>{
+        console.log(e.target.files[0])
+      })
+    },
+    
+    // 尝试自定义按钮
+    Upload_File(){
+      this.Img_File_Upload_Button.click();
+    },
+    // 尝试加粗
+    Bold(){
+      if(Math.abs(this.Start - this.End) > 0){
+        this.Content = this.Content.substring(0, this.Start) + "<b>" + this.Content.substring(this.Start, this.End) + "</b>" + this.Content.substring(this.End, this.Content.length)
+      }
+    },
+    Italic(){
+      if(Math.abs(this.Start - this.End) > 0){
+        this.Content = this.Content.substring(0, this.Start) + "<i>" + this.Content.substring(this.Start, this.End) + "</i>" + this.Content.substring(this.End, this.Content.length)
+      }
+    },
+    Underline(){
+      if(Math.abs(this.Start - this.End) > 0){
+        this.Content = this.Content.substring(0, this.Start) + "<u>" + this.Content.substring(this.Start, this.End) + "</u>" + this.Content.substring(this.End, this.Content.length)
+      }
+    },
+    // 尝试看能不能获取到input框的元素
+    Show_Blur(e){
+      this.Focusing_ID = e.target.id;
+    },
+    Init_Select_Watcher(){
+      this.Select_Watcher = setInterval(()=>{
+        let Obj = document.getElementById(this.Focusing_ID);
+        if(Obj){
+          this.Start = Obj.selectionStart
+          this.End = Obj.selectionEnd
+        }
+      }, 50)
+    },
     // 尝试看Re的判别式对不对
     Get_Reg_Test(){
       let Count = 0
