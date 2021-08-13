@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="">
     <el-row style="margin-top: 40px; padding-bottom: 40px">
-      <el-col :span="$store.isLuna?4:5" :offset="$store.isLuna?4:5" class="partData">
+      <el-col :span="$store.getters.isLuna?4:5" :offset="$store.getters.isLuna?4:5" class="partData">
         <el-row>
           <el-col :span="12">
             <img src="@/assets/dataIcon1.png" width="60px" style="padding-top: 30px"/>
@@ -12,7 +12,7 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="$store.isLuna?4:5" :offset="$store.isLuna?2:4" class="partData">
+      <el-col :span="$store.getters.isLuna?4:5" :offset="$store.getters.isLuna?2:4" class="partData">
         <el-row>
           <el-col :span="12">
             <img src="@/assets/dataIcon2.png" width="60px" style="padding-top: 30px"/>
@@ -23,7 +23,7 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col v-if="$store.isLuna" :span="4" :offset="2" class="partData">
+      <el-col v-if="$store.getters.isLuna" :span="4" :offset="2" class="partData">
         <el-row>
           <el-col :span="12">
             <img src="@/assets/dataIcon3.png" width="60px" style="padding-top: 30px"/>
@@ -43,7 +43,7 @@
         <el-button round @click="changeCountButton('Paper')" ref="countButtonPaper" :class="Get_Count_Style('Paper')">
           试卷资源
         </el-button>
-        <el-button v-if="$store.isLuna" round @click="changeCountButton('KU')" ref="countButtonKU" :class="Get_Count_Style('KU')">
+        <el-button v-if="$store.getters.isLuna" round @click="changeCountButton('KU')" ref="countButtonKU" :class="Get_Count_Style('KU')">
           知识单元
         </el-button>
       </el-button-group>
@@ -52,18 +52,18 @@
 
     <div class="bigBox">
       <el-col :span="4">
-        <el-switch    
-          v-model="value1"      
+        <el-switch
+          v-model="value1"
           active-text="显示学段细分"
-          @change="handleClick(value1)">     
+          @change="handleClick(value1)">
         </el-switch>
       </el-col>
-      
+
       <div id="data_chart" class="data_chart">
-      
+
       </div>
     </div>
-    
+
   </div>
 </template>
 
@@ -169,7 +169,7 @@ export default {
               },
               padding: [5,5,40,25]
           },
-          
+
           tooltip : {
               trigger: 'axis',
               axisPointer : {
@@ -241,8 +241,8 @@ export default {
                 //name:'',
                 type:'bar',
                 barWidth: '30%',
-                //data:[] 
-            }]  
+                //data:[]
+            }]
         if(this.Count_Type == 'Question' ){
           option.series[0].name = '试题'
           option.series[0].data = this.Question_Data_Sub
@@ -254,7 +254,7 @@ export default {
           option.series[0].data = this.KU_Data_Sub
         }
       }
-      
+
       else if(this.value1 == true){
          option.legend.data = this.List;
          option.legend.orient = 'vertical';
@@ -270,7 +270,7 @@ export default {
            if(this.Count_Type == 'Question' )            option.series[ind].data = this.Question_Data_Per[ind];
            else if(this.Count_Type == 'Paper')           option.series[ind].data = this.Paper_Data_Per[ind];
            else if(this.Count_Type == 'KU')              option.series[ind].data = this.KU_Data_Per[ind];
-         }      
+         }
       }
       // console.log(option.series)
       BarChart.setOption(option);
@@ -296,7 +296,7 @@ export default {
 
         this.Paper_Data_Sub = [];
         this.Question_Data_Sub = [];
-        this.KU_Data_Sub = [];       
+        this.KU_Data_Sub = [];
         this.Paper_Data_Per = [];
         this.Question_Data_Per = [];
         this.KU_Data_Per = [];
@@ -318,7 +318,7 @@ export default {
             this.Paper_Data_Sub.push(this.Chart_Data.num_sub[index].Paper);
             this.Question_Data_Sub.push(this.Chart_Data.num_sub[index].Question);
             this.KU_Data_Sub.push(this.Chart_Data.num_sub[index].Knowledge);//后端PQK数据名已调整为大写！
-   
+
             for(var index2 = 0; index2 < this.Chart_Data.list_per.length; index2 ++){
               this.Paper_Data_Per[index2].push(this.Chart_Data.num_per[index].Paper[index2]);
               this.Question_Data_Per[index2].push(this.Chart_Data.num_per[index].Question[index2]);
