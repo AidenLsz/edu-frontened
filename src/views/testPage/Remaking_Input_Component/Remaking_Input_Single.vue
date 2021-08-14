@@ -95,6 +95,7 @@
         <OptionQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['单选题', '多选题', '判断题'].indexOf(Type) != -1" :detailType.sync="Type"></OptionQuestions>
         <FillQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['填空题'].indexOf(Type) != -1" :detailType.sync="Type"></FillQuestions>
         <AnswerQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['简答题', '计算题'].indexOf(Type) != -1" :detailType.sync="Type"></AnswerQuestions>
+        <MixQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['综合题'].indexOf(Type) != -1" :detailType.sync="Type"></MixQuestions>
     </el-row>
   </div>
 </template>
@@ -104,11 +105,12 @@
 import OptionQuestions from '@/views/testPage/Remaking_Input_Component/components/OptionQuestions.vue'
 import FillQuestions from '@/views/testPage/Remaking_Input_Component/components/FillQuestions.vue'
 import AnswerQuestions from '@/views/testPage/Remaking_Input_Component/components/AnswerQuestions.vue'
+import MixQuestions from '@/views/testPage/Remaking_Input_Component/components/MixQuestions.vue'
 
 export default {
   name: "RemakingInputPaper",
   components: {
-      OptionQuestions, FillQuestions, AnswerQuestions
+      OptionQuestions, FillQuestions, AnswerQuestions, MixQuestions
   },
   data() {
     return {
