@@ -4,6 +4,15 @@
         element-loading-text="正在加载图片，请稍后..."
         element-loading-spinner="el-icon-loading"
         >
+        <el-dialog
+            :visible.sync="Complex_Input_Dialog"
+            title="LUNA输入助手"
+            width="65%"
+            :modal-append-to-body="false"
+            :close-on-click-modal="false">
+            <ComplexInput @Update_CI="Update_Complex_Input" :Get_Out_Content="Complex_Content"></ComplexInput>
+            <el-button type="success" plain @click="Complex_Input_Dialog = false">完成输入</el-button>
+        </el-dialog>
         <!-- 顶部行 -->
         <el-row type="flex" justify="start" class="topBar">
             <!-- 编辑和预览 -->
@@ -38,31 +47,31 @@
                     <!-- 七个编辑按钮，依序为插入括号，插入填空占位符，清理编辑内容，加粗，斜体，插入图片和插入公式 -->
                     <el-tooltip placement="top">
                         <div slot="content">插入括号</div>
-                        <span class="editButton" style="font-size: 18px; font-weight: bold">
+                        <span @click="Insert_Quote()" class="editButton" style="font-size: 18px; font-weight: bold">
                             ( )
                         </span>
                     </el-tooltip>
                     <el-tooltip placement="top">
                         <div slot="content">插入占位符</div>
-                        <span class="editButton" style="font-size: 20px; font-weight: bold;">
+                        <span @click="Insert_Fill()" class="editButton" style="font-size: 20px; font-weight: bold;">
                             <u>U</u>
                         </span>
                     </el-tooltip>
                     <el-tooltip placement="top">
                         <div slot="content">清除编辑内容</div>
-                        <span class="editButton" style="font-size: 16px; font-weight: bold; padding-top: 2px">
+                        <span @click="Reset_Question_Info()" class="editButton" style="font-size: 16px; font-weight: bold; padding-top: 2px">
                             <i class="el-icon-circle-close" style="font-weight: bold; font-size: 20px;"></i>
                         </span>
                     </el-tooltip>
                     <el-tooltip placement="top">
                         <div slot="content">加粗</div>
-                        <span class="editButton" style="font-size: 20px; font-weight: bold;">
+                        <span @click="Font_Bold()" class="editButton" style="font-size: 20px; font-weight: bold;">
                             <b>B</b>
                         </span>
                     </el-tooltip>
                     <el-tooltip placement="top">
                         <div slot="content">斜体</div>
-                        <span class="editButton" style="font-size: 20px; font-weight: bold;">
+                        <span @click="Font_Italic()" class="editButton" style="font-size: 20px; font-weight: bold;">
                             <i>I</i>
                         </span>
                     </el-tooltip>
@@ -74,7 +83,7 @@
                     </el-tooltip>
                     <el-tooltip placement="top">
                         <div slot="content">插入公式</div>
-                        <span class="editButton" style="font-size: 20px; font-weight: bold;">
+                        <span @click="Complex_Input()" class="editButton" style="font-size: 20px; font-weight: bold;">
                             <img src="./fx.png" height="18px">
                         </span>
                     </el-tooltip>
@@ -95,6 +104,11 @@
                         <el-input-number v-model="Question.score" placeholder="" :min="1" :max="10"></el-input-number>
                     </el-row>
                 </el-col>
+                <el-col :span="15">
+                    <el-row type="flex" justify="end">
+                        <el-button type="success" @click="Emit_And_Submit()">开始入库</el-button>
+                    </el-row>
+                </el-col>
             </el-row>
             <!-- 第二行，题干 -->
             <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px;">
@@ -110,7 +124,8 @@
                             id="Opt_Stem" 
                             type="textarea" 
                             v-model="Question.stem" 
-                            resize="none" :rows="6"></el-input>
+                            resize="none" :rows="6"
+                            placeholder="请填写题干内容（必填）"></el-input>
                     </el-row>
                 </el-col>
             </el-row>
@@ -121,7 +136,7 @@
                         <span>题干配图：</span>
                     </el-row>
                 </el-col>
-                <el-col :span="22">
+                <el-col :span="21" :offset="1">
                     <el-row 
                         type="flex" 
                         justify="start"
@@ -133,7 +148,7 @@
                             :key="'Stem_Pic_Row_' + Stem_Pic_Row_Index + 'Col_' + Stem_Pic_Col_Index">
                             <el-row 
                                 type="flex" 
-                                justify="center" 
+                                justify="start" 
                                 v-if="(Stem_Pic_Row_Index - 1) * 12 + Stem_Pic_Col_Index - 1 < Question.stem_image.length"
                                 >
                                 <el-popover 
@@ -164,7 +179,7 @@
             </el-row>
             <!-- 第三行，选项，整体算作一个大行吧 -->
             <el-row
-                v-for="(Qption, Option_Index) in Question.option" 
+                v-for="(Qption, Option_Index) in Question.options" 
                 :key="'Opt_' + Option_Index" style="margin-bottom: 8px">
                 <!-- 纵向排列，因为实际上每个选项有两部分 -->
                 <el-col>
@@ -181,8 +196,9 @@
                                     @focus="Get_Focus('Opt_Option_' + Option_Index)" 
                                     :id="'Opt_Option_' + Option_Index" 
                                     type="textarea" 
-                                    v-model="Question.option[Option_Index]" 
-                                    resize="none" :rows="1"></el-input>
+                                    v-model="Question.options[Option_Index]" 
+                                    resize="none" :rows="1"
+                                    :placeholder="'请填写选项' + String.fromCharCode(65 + Option_Index) + '（必填）'"></el-input>
                             </el-row>
                         </el-col>
                         <el-col :span="7">
@@ -190,22 +206,22 @@
                                 <span class="optionButton" @click="Option_Up(Option_Index)"><i class="el-icon-top" style="font-weight: bold"></i></span>
                                 <span class="optionButton" @click="Option_Down(Option_Index)"><i class="el-icon-bottom" style="font-weight: bold"></i></span>
                                 <span class="optionButton" @click="Option_Delete(Option_Index)"><i class="el-icon-close" style="font-weight: bold"></i></span>
-                                <span class="optionButton" @click="Option_Add()" v-if="Option_Index == Question.option.length - 1"><i class="el-icon-plus" style="font-weight: bold"></i></span>
+                                <span class="optionButton" @click="Option_Add()" v-if="Option_Index == Question.options.length - 1"><i class="el-icon-plus" style="font-weight: bold"></i></span>
                             </el-row>
                         </el-col>
                     </el-row>
                     <!-- 第二部分，选项配图 -->
-                    <el-row v-show="Question.option_image[Option_Index].length > 0">
+                    <el-row v-show="Question.options_image[Option_Index].length > 0">
                         <el-col :span="2">
                             <el-row type="flex" justify="end" style="font-weight: bold; height: 30px; line-height: 30px; margin-top: 6px">
                                 <span>选项{{Get_Option_Label(Option_Index)}}配图：</span>
                             </el-row>
                         </el-col>
-                        <el-col :span="22">
+                        <el-col :span="21" :offset="1">
                             <el-row 
                                 type="flex" 
                                 justify="start"
-                                v-for="Option_Pic_Row_Index in Math.ceil(Question.option_image[Option_Index].length/12)"
+                                v-for="Option_Pic_Row_Index in Math.ceil(Question.options_image[Option_Index].length/12)"
                                 :key="'Opt_' + Option_Index + '_Pic_Row_' + Option_Pic_Row_Index">
                                 <el-col 
                                     :span="2"
@@ -213,8 +229,8 @@
                                     :key="'Opt_' + Option_Index + '_Pic_Row_' + Option_Pic_Row_Index + 'Col_' + Option_Pic_Col_Index">
                                     <el-row 
                                         type="flex" 
-                                        justify="center" 
-                                        v-if="(Option_Pic_Row_Index - 1) * 12 + Option_Pic_Col_Index - 1 < Question.option_image[Option_Index].length"
+                                        justify="start" 
+                                        v-if="(Option_Pic_Row_Index - 1) * 12 + Option_Pic_Col_Index - 1 < Question.options_image[Option_Index].length"
                                         >
                                         <el-popover 
                                             :ref="'Opt_' + Option_Index + '_Pic_Row_' + Option_Pic_Row_Index + 'Col_' + Option_Pic_Col_Index + '_Pop'"
@@ -222,13 +238,13 @@
                                             width="200" 
                                             trigger="hover">
                                             <el-row type="flex" justify="center">
-                                                <img width="160" :src="Get_Picture_Src('option_image ' + Option_Index , Option_Pic_Row_Index, Option_Pic_Col_Index)">
+                                                <img width="160" :src="Get_Picture_Src('options_image ' + Option_Index , Option_Pic_Row_Index, Option_Pic_Col_Index)">
                                             </el-row>
                                             <el-row type="flex" justify="center">
                                                 <el-button 
                                                     type="danger" 
                                                     size="small" 
-                                                    @click="Del_Picture_Src('option_image ' + Option_Index , Option_Pic_Row_Index, Option_Pic_Col_Index)"
+                                                    @click="Del_Picture_Src('options_image ' + Option_Index , Option_Pic_Row_Index, Option_Pic_Col_Index)"
                                                     style="margin-top: 10px">
                                                     删除此图片<i class="el-icon-delete" style="margin-left: 10px; font-size: 14px"></i>
                                                 </el-button>
@@ -253,9 +269,9 @@
                 </el-col>
                 <el-col :span="5" :offset="1">
                     <el-row type="flex" justify="start">
-                        <el-select v-model="Question.answer" placeholder="请选择正确答案">
+                        <el-select v-model="Question.answer" placeholder="请选择正确答案（可选）">
                             <el-option 
-                                v-for="answer_Index in Question.option.length" 
+                                v-for="answer_Index in Question.options.length" 
                                 :key="'Opt_ans_' + answer_Index" 
                                 :label="Get_Option_Label(answer_Index - 1)" 
                                 :value="Get_Option_Label(answer_Index - 1)">
@@ -275,7 +291,7 @@
                     <el-row type="flex" justify="start" style="height: 40px; line-height: 40px">
                         <el-checkbox-group v-model="Answer_List">
                             <el-checkbox 
-                                v-for="answer_Index in Question.option.length" 
+                                v-for="answer_Index in Question.options.length" 
                                 :key="'Opt_ans_' + answer_Index" 
                                 :label="Get_Option_Label(answer_Index - 1)">
                                 {{Get_Option_Label(answer_Index - 1)}}
@@ -298,7 +314,8 @@
                             id="Opt_Analysis"
                             type="textarea" 
                             v-model="Question.analysis" 
-                            resize="none" :rows="6"></el-input>
+                            resize="none" :rows="6"
+                            placeholder="请输入解析内容（可选）"></el-input>
                     </el-row>
                 </el-col>
             </el-row>
@@ -309,7 +326,7 @@
                         <span>解析配图：</span>
                     </el-row>
                 </el-col>
-                <el-col :span="22">
+                <el-col :span="21" :offset="1">
                     <el-row 
                         type="flex" 
                         justify="start"
@@ -321,7 +338,7 @@
                             :key="'Analysis_Pic_Row_' + Analysis_Pic_Row_Index + 'Col_' + Analysis_Pic_Col_Index">
                             <el-row 
                                 type="flex" 
-                                justify="center" 
+                                justify="start" 
                                 v-if="(Analysis_Pic_Row_Index - 1) * 12 + Analysis_Pic_Col_Index - 1 < Question.analysis_image.length"
                                 >
                                 <el-popover 
@@ -350,25 +367,208 @@
                     </el-row>
                 </el-col>
             </el-row>
-            <el-row type="flex" justify="start" style="margin-top: 10px; margin-bottom: 20px;">
+            <el-row type="flex" justify="start" style="margin-top: 10px; margin-bottom: 30px;">
                 <el-col :span="2">
                     <el-row type="flex" justify="end" style="font-weight: bold; height: 130px; line-height: 130px">
-                        <span>粘贴识别：</span>
+                        <span>文字粘贴识别：</span>
                     </el-row>
                 </el-col>
-                <el-col :span="20" :offset="1">
+                <el-col :span="18" :offset="1">
                     <el-row type="flex" justify="start">
-                        <el-input type="textarea" v-model="Paste_Analysis" resize="none" :rows="6"></el-input>
+                        <el-input 
+                            @focus="Get_Focus('Opt_Paste')" 
+                            type="textarea" 
+                            v-model="Paste_Analysis" 
+                            resize="none" :rows="6"></el-input>
                     </el-row>
                 </el-col>
+                <el-col :span="2">
+                    <el-row type="flex" justify="end" style="padding-top: 50px; ">
+                        <el-button type="primary" @click="Text_Split_Do()">开始识别</el-button>
+                    </el-row>
+                </el-col>
+            </el-row>
+        </div>
+        <!-- 以下部分是预览那一块的部分 -->
+        <div v-show="Focus_Function == 'PreView'" style="margin-left: 5vw; margin-right: 5vw; padding-top: 30px; padding-bottom: 30px">
+            <!-- 题干部分 -->
+            <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+                <el-col :span="2">
+                    <el-row type="flex" justify="end" style="font-weight: bold;">
+                        <span>题干：</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="22">
+                    <el-row type="flex" justify="start">
+                        <Mathdown :content="Question.stem" :name="'Opt_Stem'"></Mathdown>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <!-- 题干的配图部分 -->
+            <el-row type="flex" justify="end">
+                <el-col :span="22">
+                    <el-row 
+                        type="flex" 
+                        justify="start" 
+                        v-for="Stem_Pic_Row_Index in Math.ceil(Question.stem_image.length/12)"
+                        :key="'Pre_Opt_Stem_' + Stem_Pic_Row_Index"
+                        style="margin-bottom: 10px">
+                        <el-col 
+                            :span="2" 
+                            v-for="Stem_Pic_Col_Index in 12" 
+                            :key="'Pre_Opt_Stem_' + Stem_Pic_Row_Index + '_' + Stem_Pic_Col_Index">
+                            <el-row 
+                                type="flex" 
+                                justify="center" 
+                                v-if="(Stem_Pic_Row_Index - 1) * 12 + Stem_Pic_Col_Index - 1 < Question.stem_image.length"
+                                >
+                                <img width="100" :src="Get_Picture_Src('stem_image', Stem_Pic_Row_Index, Stem_Pic_Col_Index)">   
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+            
+            <!-- 选项部分 -->
+            <el-row 
+                type="flex" 
+                justify="start" 
+                v-for="(Option, Option_Index) in Question.options" :key="'Opt_Opt_' + Option_Index"
+                style="margin-bottom: 10px;">
+                <el-col>
+                    <!-- 选项文字 -->
+                    <el-row type="flex" justify="start">
+                        <el-col :span="2">
+                            <el-row type="flex" justify="end" style="font-weight: bold;">
+                                <span>{{Get_Option_Label(Option_Index)}}：</span>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="22">
+                            <el-row type="flex" justify="start">
+                                <Mathdown :content="Option" :name="'Opt_Opt_' + Option_Index"></Mathdown>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin-top: 10px;" v-show="Question.options_image[Option_Index].length > 0">
+                        <el-col :span="2">
+                            <el-row type="flex" justify="end" style="font-weight: bold; height: 30px; line-height: 30px; margin-top: 6px">
+                                <span>选项{{Get_Option_Label(Option_Index)}}配图：</span>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="22">
+                            <el-row 
+                                type="flex" 
+                                justify="start"
+                                v-for="Option_Pic_Row_Index in Math.ceil(Question.options_image[Option_Index].length/12)"
+                                :key="'Pre_Opt_' + Option_Index + '_Pic_Row_' + Option_Pic_Row_Index">
+                                <el-col 
+                                    :span="2"
+                                    v-for="Option_Pic_Col_Index in 12"
+                                    :key="'Pre_Opt_' + Option_Index + '_Pic_Row_' + Option_Pic_Row_Index + 'Col_' + Option_Pic_Col_Index">
+                                    <el-row 
+                                        type="flex" 
+                                        justify="center" 
+                                        v-if="(Option_Pic_Row_Index - 1) * 12 + Option_Pic_Col_Index - 1 < Question.options_image[Option_Index].length"
+                                        >
+                                        <img width="160" :src="Get_Picture_Src('options_image ' + Option_Index , Option_Pic_Row_Index, Option_Pic_Col_Index)">
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <!-- 答案部分 -->
+            <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+                <el-col :span="2">
+                    <el-row type="flex" justify="end" style="font-weight: bold;">
+                        <span>答案：</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="22">
+                    <el-row type="flex" justify="start">
+                        <Mathdown :content="Question.answer" :name="'Opt_Answer'"></Mathdown>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <!-- 答案配图 -->
+            <el-row type="flex" justify="end">
+                <el-col :span="22">
+                    <el-row 
+                        type="flex" 
+                        justify="start" 
+                        v-for="Answer_Pic_Row_Index in Math.ceil(Question.answer_image.length/12)"
+                        :key="'Pre_Opt_Answer_' + Answer_Pic_Row_Index"
+                        style="margin-bottom: 10px;">
+                        <el-col 
+                            :span="2" 
+                            v-for="Answer_Pic_Col_Index in 12" 
+                            :key="'Pre_Opt_Answer_' + Answer_Pic_Row_Index + '_' + Answer_Pic_Col_Index">
+                            <el-row 
+                                type="flex" 
+                                justify="center" 
+                                v-if="(Answer_Pic_Row_Index - 1) * 12 + Answer_Pic_Col_Index - 1 < Question.answer_image.length"
+                                >
+                                <img width="100" :src="Get_Picture_Src('answer_image', Answer_Pic_Row_Index, Answer_Pic_Col_Index)">   
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+            
+            <!-- 解析部分 -->
+            <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+                <el-col :span="2">
+                    <el-row type="flex" justify="end" style="font-weight: bold;">
+                        <span>解析：</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="22">
+                    <el-row type="flex" justify="start">
+                        <Mathdown :content="Question.analysis" :name="'Opt_Analysis'"></Mathdown>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <!-- 解析部分配图 -->
+            <el-row type="flex" justify="end">
+                <el-col :span="22">
+                    <el-row 
+                        type="flex" 
+                        justify="start" 
+                        v-for="Analysis_Pic_Row_Index in Math.ceil(Question.analysis_image.length/12)"
+                        :key="'Pre_Opt_Analysis_' + Analysis_Pic_Row_Index">
+                        <el-col 
+                            :span="2" 
+                            v-for="Analysis_Pic_Col_Index in 12" 
+                            :key="'Pre_Opt_Analysis_' + Analysis_Pic_Row_Index + '_' + Analysis_Pic_Col_Index">
+                            <el-row 
+                                type="flex" 
+                                justify="center" 
+                                v-if="(Analysis_Pic_Row_Index - 1) * 12 + Analysis_Pic_Col_Index - 1 < Question.analysis_image.length"
+                                >
+                                <img width="100" :src="Get_Picture_Src('analysis_image', Analysis_Pic_Row_Index, Analysis_Pic_Col_Index)">   
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+            
+            <el-row type="flex" justify="center" style="margin-top: 20px;">
+                <el-button type="success" @click="Emit_And_Submit()">开始入库</el-button>
             </el-row>
         </div>
     </div>
 </template>
 
 <script>
+
+import ComplexInput from '@/common/components/ComplexInput'
+import Mathdown from '@/common/components/Mathdown'
+
+import { extract } from "@/common/utils/extraction.js"
+
 export default {
-    components: {},
+    components: { ComplexInput, Mathdown },
     name: "OptionQuestions",
     props: {
         detailType: {
@@ -389,12 +589,16 @@ export default {
                 score: 5,
                 stem: "",
                 stem_image: [],
-                option: [],
-                option_image: [],
+                options: [],
+                options_image: [],
                 answer: "",
                 answer_image: [],
                 analysis: "",
-                analysis_image: []
+                analysis_image: [],
+                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                sub_questions: [],
+                sub_questions_image: [],
+                sub_questions_score: []
             },
             Answer_List: [],
             // 粘贴识别，但是暂时还没放进来
@@ -411,7 +615,11 @@ export default {
             // 选择观察期
             Select_Watcher: "",
             // 读取图片时用于等待
-            Picture_Loading: false
+            Picture_Loading: false,
+            // 用于给公式编辑器折腾内容
+            Complex_Content: "",
+            // 公式编辑器是否显示
+            Complex_Input_Dialog: false
         }
     },
     watch: {
@@ -434,6 +642,150 @@ export default {
         this.Init_Select_Watcher();
     },
     methods: {
+        // 发射题目信息并入库
+        Emit_And_Submit(){
+            this.$emit('Emit_And_Submit', JSON.stringify(this.Question));
+        },
+        // 将公式编辑器编辑完的内容弄回来
+        Update_Complex_Input(val){
+            let Aim = this.Focusing_Input.split(" ")
+            if(Aim.length == 1){
+                this.Question[Aim[0]] = val;
+            }else{
+                this.Question[Aim[0]].splice(parseInt(Aim[1]), 1, val)
+            }
+            this.Complex_Content = ""
+        },
+        // 插入括号
+        Insert_Quote(){
+            let Aim = this.Focusing_Input.split(" ")
+            if(Aim.length == 1){
+                if(this.Text_Start == this.Text_End){
+                    this.Question[Aim[0]] = 
+                        this.Question[Aim[0]].substring(0, this.Text_Start) 
+                        + "(        )" 
+                        + this.Question[Aim[0]].substring(this.Text_Start, this.Question[Aim[0]].length)
+                }else{
+                    this.Question[Aim[0]] = 
+                        this.Question[Aim[0]].substring(0, this.Text_Start) 
+                        + "(" 
+                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End) 
+                        + ")" 
+                        + this.Question[Aim[0]].substring(this.Text_End, this.Question[Aim[0]].length)
+                }
+            }else{
+                if(this.Text_Start == this.Text_End){
+                    this.Question[Aim[0]].splice(
+                        parseInt(Aim[1]), 
+                        1, 
+                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start) 
+                        + "(        )" 
+                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_End, this.Question[Aim[0]][parseInt(Aim[1])].length))
+                }else{
+                    this.Question[Aim[0]].splice(parseInt(Aim[1]), 1, 
+                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start) 
+                        + "(" 
+                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_Start, this.Text_End) 
+                        + ")" 
+                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_End, this.Question[Aim[0]][parseInt(Aim[1])].length))
+                }
+            }
+        },
+        // 插入占位符
+        Insert_Fill(){
+            let Aim = this.Focusing_Input.split(" ")
+            if(Aim.length == 1){
+                if(this.Text_Start == this.Text_End){
+                    this.Question[Aim[0]] = 
+                        this.Question[Aim[0]].substring(0, this.Text_Start) 
+                        + "________" 
+                        + this.Question[Aim[0]].substring(this.Text_Start, this.Question[Aim[0]].length)
+                }else{
+                    this.Question[Aim[0]] = 
+                        this.Question[Aim[0]].substring(0, this.Text_Start) 
+                        + "________"  
+                        + this.Question[Aim[0]].substring(this.Text_End, this.Question[Aim[0]].length)
+                }
+            }else{
+                if(this.Text_Start == this.Text_End){
+                    this.Question[Aim[0]].splice(
+                        parseInt(Aim[1]), 
+                        1, 
+                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start) 
+                        + "________"
+                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_End, this.Question[Aim[0]][parseInt(Aim[1])].length))
+                }else{
+                    this.Question[Aim[0]].splice(parseInt(Aim[1]), 1, 
+                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start) 
+                        + "________" 
+                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_End, this.Question[Aim[0]][parseInt(Aim[1])].length))
+                }
+            }
+        },
+        // 字体加粗
+        Font_Bold(){
+            let Aim = this.Focusing_Input.split(" ")
+            if(Aim.length == 1){
+                if(this.Text_Start == this.Text_End){
+                    return
+                }else{
+                    this.Question[Aim[0]] = 
+                        this.Question[Aim[0]].substring(0, this.Text_Start) 
+                        + "<b>" 
+                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End) 
+                        + "</b>" 
+                        + this.Question[Aim[0]].substring(this.Text_End, this.Question[Aim[0]].length)
+                }
+            }else{
+                if(this.Text_Start == this.Text_End){
+                    return    
+                }else{
+                    this.Question[Aim[0]].splice(parseInt(Aim[1]), 1, 
+                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start) 
+                        + "<b>" 
+                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_Start, this.Text_End) 
+                        + "</b>" 
+                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_End, this.Question[Aim[0]][parseInt(Aim[1])].length))
+                }
+            }
+        },
+        // 字体加粗
+        Font_Italic(){
+            let Aim = this.Focusing_Input.split(" ")
+            if(Aim.length == 1){
+                if(this.Text_Start == this.Text_End){
+                    return
+                }else{
+                    this.Question[Aim[0]] = 
+                        this.Question[Aim[0]].substring(0, this.Text_Start) 
+                        + "<i>" 
+                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End) 
+                        + "</i>" 
+                        + this.Question[Aim[0]].substring(this.Text_End, this.Question[Aim[0]].length)
+                }
+            }else{
+                if(this.Text_Start == this.Text_End){
+                    return    
+                }else{
+                    this.Question[Aim[0]].splice(parseInt(Aim[1]), 1, 
+                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start) 
+                        + "<i>" 
+                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_Start, this.Text_End) 
+                        + "</i>" 
+                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_End, this.Question[Aim[0]][parseInt(Aim[1])].length))
+                }
+            }
+        },
+        // 公式输入
+        Complex_Input(){
+            let Aim = this.Focusing_Input.split(" ")
+            if(Aim.length == 1){
+                this.Complex_Content = JSON.parse(JSON.stringify(this.Question[Aim[0]]))
+            }else{
+                this.Complex_Content = JSON.parse(JSON.stringify(this.Question[Aim[0]][parseInt(Aim[1])]))
+            }
+            this.Complex_Input_Dialog = true;
+        },
         // 看看能不能正常拿到图片信息
         Get_Picture_Src(position, Stem_Pic_Row_Index, Stem_Pic_Col_Index){
             let Index = (Stem_Pic_Row_Index - 1) * 12 + Stem_Pic_Col_Index - 1
@@ -462,12 +814,6 @@ export default {
                     this.Text_End = this.Focusing_Dom.selectionEnd
                 }
             }, 40)
-            // this.Select_Watcher = setInterval(()=>{
-            //     if(this.Focusing_Dom != ""){
-            //         console.log(this.Focusing_Dom)
-            //         console.log(this.Text_Start, this.Text_End)
-            //     }
-            // }, 1000)
         },
         // 根据传入的值来确定是谁被选中了
         Get_Focus(Info){
@@ -477,11 +823,15 @@ export default {
                 this.Focusing_Input = "stem"
             }else if(Info_List[1] == "Option"){
                 this.Focusing_Dom = document.getElementById("Opt_Option_" + Info_List[2])
-                this.Focusing_Input = "option " + Info_List[2]
+                this.Focusing_Input = "options " + Info_List[2]
             }
             else if(Info_List[1] == "Analysis"){
                 this.Focusing_Dom = document.getElementById("Opt_Analysis")
                 this.Focusing_Input = "analysis"
+            }else{
+                this.$message.info("此位置暂不支持配图及公式编辑，请注意。")
+                this.Focusing_Dom = ""
+                this.Focusing_Input = ""
             }
         },
         // 初始化上传图片的DOM对象
@@ -542,51 +892,51 @@ export default {
                 return
             }
 
-            let Item = this.Question.option[Option_Index];
-            let Item_image = this.Question.option_image[Option_Index];
+            let Item = this.Question.options[Option_Index];
+            let Item_image = this.Question.options_image[Option_Index];
 
-            this.Question.option.splice(Option_Index, 1);
-            this.Question.option.splice(Option_Index - 1, 0, Item);
+            this.Question.options.splice(Option_Index, 1);
+            this.Question.options.splice(Option_Index - 1, 0, Item);
 
-            this.Question.option_image.splice(Option_Index, 1);
-            this.Question.option_image.splice(Option_Index - 1, 0, Item_image);
+            this.Question.options_image.splice(Option_Index, 1);
+            this.Question.options_image.splice(Option_Index - 1, 0, Item_image);
         },
         // 选项下移
         Option_Down(Option_Index){
 
-            if(Option_Index == this.Question.option.length - 1){
+            if(Option_Index == this.Question.options.length - 1){
                 return
             }
 
-            let Item = this.Question.option[Option_Index];
-            let Item_image = this.Question.option_image[Option_Index];
+            let Item = this.Question.options[Option_Index];
+            let Item_image = this.Question.options_image[Option_Index];
 
-            this.Question.option.splice(Option_Index, 1);
-            this.Question.option.splice(Option_Index + 1, 0, Item);
+            this.Question.options.splice(Option_Index, 1);
+            this.Question.options.splice(Option_Index + 1, 0, Item);
 
-            this.Question.option_image.splice(Option_Index, 1);
-            this.Question.option_image.splice(Option_Index + 1, 0, Item_image);
+            this.Question.options_image.splice(Option_Index, 1);
+            this.Question.options_image.splice(Option_Index + 1, 0, Item_image);
         },
         // 选项删除
         Option_Delete(Option_Index){
 
-            if(this.Question.option.length <= 2){
+            if(this.Question.options.length <= 2){
                 this.$message.error("请保留至少两项选项。")
                 return
             }
 
-            this.Question.option.splice(Option_Index, 1);
-            this.Question.option_image.splice(Option_Index, 1);
+            this.Question.options.splice(Option_Index, 1);
+            this.Question.options_image.splice(Option_Index, 1);
 
         },
         // 选项增加
         Option_Add(){
-            if(this.Question.option.length >= 26){
+            if(this.Question.options.length >= 26){
                 this.$message.warning("选项过多。")
                 return
             }
-            this.Question.option.push("");
-            this.Question.option_image.push([])
+            this.Question.options.push("");
+            this.Question.options_image.push([])
         },
         // 返回选项ABCD...
         Get_Option_Label(Option_Index){
@@ -608,6 +958,9 @@ export default {
             this.Text_Start = 0
             this.Text_End = 0
 
+            // 用于公式输入
+            this.Complex_Content = ""
+
             this.$message.success("试题内容已重置")
 
             // 多选题部分的列表，重置
@@ -619,22 +972,70 @@ export default {
                 score: 5,
                 stem: "",
                 stem_image: [],
-                option: [],
-                option_image: [],
+                options: [],
+                options_image: [],
                 answer: "",
                 answer_image: [],
                 analysis: "",
-                analysis_image: []
+                analysis_image: [],
+                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                sub_questions: [],
+                sub_questions_image: [],
+                sub_questions_score: []
             }
 
             // 把选项信息塞回去
             if(this.detailType == "判断题"){
-                this.Question.option = ["", ""]
-                this.Question.option_image = [[], []]
+                this.Question.options = ["", ""]
+                this.Question.options_image = [[], []]
             }else{
-                this.Question.option = ["", "", "", ""]
-                this.Question.option_image = [[], [], [], []]
+                this.Question.options = ["", "", "", ""]
+                this.Question.options_image = [[], [], [], []]
             }
+        },
+        // 自动切分
+        // 用于给试题文本自动切分，现在先只做选择吧，以后功能补齐了再说后面的
+        Text_Split_Do(){
+            this.$confirm('这将清空你现在所录入的全部内容，确定要进行粘贴文字识别吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(()=>{
+
+                let result = extract(this.Paste_Analysis);
+
+                // 文本框相关重置
+                this.Focusing_Input = ""
+                this.Focusing_Dom = ""
+                this.Text_Start = 0
+                this.Text_End = 0
+
+                // 复杂输入重置
+                this.Complex_Content = ""
+
+                // 题目信息重置并重新录入
+                this.Question.score = 5;
+                this.Answer_List = []
+                this.Question.stem = result.题干
+                this.Question.stem_image = []
+                this.Question.answer = result.答案;
+                this.Question.answer_image = []
+                this.Question.analysis = result.解析
+                this.Question.analysis_image = []
+                let Option_List = result.选项.split('，');
+                this.Question.options = [];
+                this.Question.options_image = [];
+                
+                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                this.sub_questions = []
+                this.sub_questions_image = []
+                this.sub_questions_score = []
+
+                for(let i = 0; i < Option_List.length; i++){
+                    this.Question.options.push(Option_List[i])
+                    this.Question.options_image.push([])
+                }
+            })
         },
     }
 }
