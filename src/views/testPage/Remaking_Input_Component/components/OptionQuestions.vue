@@ -289,7 +289,9 @@
                 </el-col>
                 <el-col :span="21" :offset="1">
                     <el-row type="flex" justify="start" style="height: 40px; line-height: 40px">
-                        <el-checkbox-group v-model="Answer_List">
+                        <el-checkbox-group 
+                            v-model="Question.answer_list"
+                            @change="Union_Multiple_Option_Answer()">
                             <el-checkbox 
                                 v-for="answer_Index in Question.options.length" 
                                 :key="'Opt_ans_' + answer_Index" 
@@ -598,9 +600,9 @@ export default {
                 // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
                 sub_questions: [],
                 sub_questions_image: [],
-                sub_questions_score: []
+                sub_questions_score: [],
+                answer_list: []
             },
-            Answer_List: [],
             // 粘贴识别，但是暂时还没放进来
             Paste_Analysis: "",
             // 用于保存图片的Input对象，拿来做自定义按钮的
@@ -628,10 +630,6 @@ export default {
                 this.Reset_Question_Info();
             }
         },
-        Answer_List(newVal){
-            let Items = JSON.parse(JSON.stringify(newVal)).sort()
-            this.Question.answer = Items.join("")
-        },
         Paste_Analysis(newVal){
             this.$message.warning(newVal + " is Pasted.")
         }
@@ -642,6 +640,11 @@ export default {
         this.Init_Select_Watcher();
     },
     methods: {
+        // 结合多选题答案
+        Union_Multiple_Option_Answer(){
+            let Item = JSON.parse(JSON.stringify(this.Question.answer_list)).sort()
+            this.Question.answer = Item.join("")
+        },
         // 发射题目信息并入库
         Emit_And_Submit(){
             this.$emit('Emit_And_Submit', JSON.stringify(this.Question));
@@ -960,9 +963,6 @@ export default {
             // 用于公式输入
             this.Complex_Content = ""
 
-            // 多选题部分的列表，重置
-            this.Answer_List = []
-
             // 基础试题信息，重置
             this.Focus_Function = "Editing"
             this.Question = {
@@ -978,7 +978,8 @@ export default {
                 // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
                 sub_questions: [],
                 sub_questions_image: [],
-                sub_questions_score: []
+                sub_questions_score: [],
+                answer_list: []
             }
 
             // 把选项信息塞回去
@@ -1012,7 +1013,7 @@ export default {
 
                 // 题目信息重置并重新录入
                 this.Question.score = 5;
-                this.Answer_List = []
+                this.Question.answer_list = []
                 this.Question.stem = result.题干
                 this.Question.stem_image = []
                 this.Question.answer = result.答案;

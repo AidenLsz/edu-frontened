@@ -111,126 +111,251 @@
         <el-row type="flex" justify="center" class="PreviewPaperArea">
           <el-col>
             <el-row type="flex" justify="start" style="margin-bottom: 10px">
-              <label>试卷标题行</label>
+              <label>{{Title}}</label>
             </el-row>
-            <el-row type="flex" justify="start">
-              <el-col :span="6">
+            <el-row 
+              type="flex" 
+              justify="start" 
+              v-for="(Bundle, Bundle_Index) in Question_Bundle"
+              :key="'Total_Bundle_' + Bundle_Index">
+              <el-col>
                 <el-row type="flex" justify="start">
-                  <label>一、单选题</label>
-                </el-row>
-              </el-col>
-              <el-col :span="12">
-                <el-row type="flex" justify="start">
-                  <el-col :span="4">
-                    <el-row type="flex" justify="center">
-                      <i class="el-icon-top" style="color: #409EFF; font-size: 18px"></i>
+                  <el-col :span="6">
+                    <el-row type="flex" justify="start">
+                      <label>{{Get_Bundle_Label(Bundle.type, Bundle_Index)}}</label>
                     </el-row>
                   </el-col>
-                  <el-col :span="4">
-                    <el-row type="flex" justify="center">
-                      <i class="el-icon-bottom" style="color: #409EFF; font-size: 18px"></i>
+                  <el-col :span="12">
+                    <el-row type="flex" justify="start">
+                      <el-col :span="4">
+                        <el-row type="flex" justify="center">
+                          <el-button type="text" style="margin: 0px; padding: 0px;"><i class="el-icon-top" style="color: #409EFF; font-size: 18px"></i></el-button>
+                        </el-row>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-row type="flex" justify="center">
+                          <el-button type="text" style="margin: 0px; padding: 0px;"><i class="el-icon-bottom" style="color: #409EFF; font-size: 18px"></i></el-button>
+                        </el-row>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-row type="flex" justify="center">
+                          <el-button type="text" style="margin: 0px; padding: 0px;"><i class="el-icon-close" style="color: #409EFF; font-size: 18px"></i></el-button>
+                        </el-row>
+                      </el-col>
                     </el-row>
                   </el-col>
-                  <el-col :span="4">
-                    <el-row type="flex" justify="center">
-                      <i class="el-icon-close" style="color: #409EFF; font-size: 18px"></i>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 5px">
+                  <el-col 
+                    v-for="Question_Index in Bundle.list.length" 
+                    :key="'Total_Bundle_' + Bundle_Index + '_' + Question_Index"
+                    :span="1"
+                    >
+                    <el-popover 
+                      placement="top"
+                      width="800"
+                      trigger="hover"
+                      :ref="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Pop'"
+                      popper-class="Total_Bundle_Popover">
+                      <div class="Total_Bundle_Popover_Main">
+                      <!-- 触发popover的项 -->
+                      <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+                        <el-col :span="2">
+                            <el-row type="flex" justify="end" style="font-weight: bold;">
+                                <span>题干：</span>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="22">
+                            <el-row type="flex" justify="start">
+                                <Mathdown 
+                                  :content="Bundle.list[Question_Index - 1].stem" 
+                                  :name="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Stem'"></Mathdown>
+                            </el-row>
+                        </el-col>
                     </el-row>
+                    <!-- 题干的配图部分 -->
+                    <el-row type="flex" justify="end" v-show="Bundle.list[Question_Index - 1].stem_image.length > 0">
+                        <el-col :span="22">
+                            <el-row 
+                                type="flex" 
+                                justify="start" 
+                                v-for="TBQ_Stem_Pic_Row_Index in Math.ceil(Bundle.list[Question_Index - 1].stem_image.length/12)"
+                                :key="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Stem_Pic_Row_' + TBQ_Stem_Pic_Row_Index"
+                                style="margin-bottom: 10px">
+                                <el-col 
+                                    :span="2" 
+                                    v-for="TBQ_Stem_Pic_Col_Index in 12" 
+                                    :key="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Stem_Pic_Row_' + TBQ_Stem_Pic_Row_Index + '_' + TBQ_Stem_Pic_Col_Index">
+                                    <el-row 
+                                        type="flex" 
+                                        justify="center" 
+                                        v-if="(TBQ_Stem_Pic_Row_Index - 1) * 12 + TBQ_Stem_Pic_Col_Index - 1 < Bundle.list[Question_Index - 1].stem_image.length"
+                                        >
+                                        <img height="30" :src="Get_Picture_Src('stem_image', Bundle_Index, Question_Index - 1, TBQ_Stem_Pic_Row_Index, TBQ_Stem_Pic_Col_Index)">   
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                    
+                    <!-- 选项部分 -->
+                    <el-row 
+                        type="flex" 
+                        justify="start" 
+                        v-for="(Option, Option_Index) in Bundle.list[Question_Index - 1].options" 
+                        :key="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Opt_' + Option_Index"
+                        style="margin-bottom: 10px;">
+                        <el-col>
+                            <!-- 选项文字 -->
+                            <el-row type="flex" justify="start">
+                                <el-col :span="2">
+                                    <el-row type="flex" justify="end" style="font-weight: bold;">
+                                        <span>{{Get_Option_Label(Option_Index)}}：</span>
+                                    </el-row>
+                                </el-col>
+                                <el-col :span="22">
+                                    <el-row type="flex" justify="start">
+                                        <Mathdown 
+                                          :content="Option" 
+                                          :name="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Opt_' + Option_Index"></Mathdown>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                            <el-row style="margin-top: 10px;" v-show="Bundle.list[Question_Index - 1].options_image[Option_Index].length > 0">
+                                <el-col :span="22" :offset="2">
+                                    <el-row 
+                                        type="flex" 
+                                        justify="start"
+                                        v-for="TBQ_Option_Pic_Row_Index in Math.ceil(Bundle.list[Question_Index - 1].options_image[Option_Index].length/12)"
+                                        :key="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Opt_' + Option_Index + '_Pic_Row_' + TBQ_Option_Pic_Row_Index">
+                                        <el-col 
+                                            :span="2"
+                                            v-for="TBQ_Option_Pic_Col_Index in 12"
+                                            :key="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Opt_' + Option_Index + '_Pic_Row_' + TBQ_Option_Pic_Row_Index + 'Col_' + TBQ_Option_Pic_Col_Index">
+                                            <el-row 
+                                                type="flex" 
+                                                justify="center" 
+                                                v-if="(TBQ_Option_Pic_Row_Index - 1) * 12 + TBQ_Option_Pic_Col_Index - 1 < Bundle.list[Question_Index - 1].options_image[Option_Index].length"
+                                                >
+                                                <img height="30" :src="Get_Picture_Src('options_image ' + Option_Index , Bundle_Index, Question_Index - 1, TBQ_Option_Pic_Row_Index, TBQ_Option_Pic_Col_Index)">
+                                            </el-row>
+                                        </el-col>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                    <!-- 答案部分 -->
+                    <el-row type="flex" justify="start" style="margin-bottom: 10px;" v-show="Bundle.list[Question_Index - 1].answer_image.length > 0 || Bundle.list[Question_Index - 1].answer.length > 0">
+                        <el-col :span="2">
+                            <el-row type="flex" justify="end" style="font-weight: bold;">
+                                <span>答案：</span>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="22">
+                            <el-row type="flex" justify="start">
+                                <Mathdown 
+                                  :content="Bundle.list[Question_Index - 1].answer" 
+                                  :name="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Answer'"></Mathdown>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                    <!-- 答案配图 -->
+                    <el-row type="flex" justify="end" v-show="Bundle.list[Question_Index - 1].answer_image.length > 0">
+                        <el-col :span="22">
+                            <el-row 
+                                type="flex" 
+                                justify="start" 
+                                v-for="TBQ_Answer_Pic_Row_Index in Math.ceil(Bundle.list[Question_Index - 1].answer_image.length/12)"
+                                :key="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Answer_Pic_Row_' + TBQ_Answer_Pic_Row_Index"
+                                style="margin-bottom: 10px;">
+                                <el-col 
+                                    :span="2" 
+                                    v-for="TBQ_Answer_Pic_Col_Index in 12" 
+                                    :key="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Answer_Pic_Row_' + TBQ_Answer_Pic_Row_Index + '_' + TBQ_Answer_Pic_Col_Index">
+                                    <el-row 
+                                        type="flex" 
+                                        justify="center" 
+                                        v-if="(TBQ_Answer_Pic_Row_Index - 1) * 12 + TBQ_Answer_Pic_Col_Index - 1 < Bundle.list[Question_Index - 1].answer_image.length"
+                                        >
+                                        <img height="30" :src="Get_Picture_Src('answer_image', Bundle_Index, Question_Index - 1, TBQ_Answer_Pic_Row_Index, TBQ_Answer_Pic_Col_Index)">   
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                    
+                    <!-- 解析部分 -->
+                    <el-row type="flex" justify="start" style="margin-bottom: 10px;" v-show="Bundle.list[Question_Index - 1].analysis_image.length > 0 || Bundle.list[Question_Index - 1].analysis.length > 0">
+                        <el-col :span="2">
+                            <el-row type="flex" justify="end" style="font-weight: bold;">
+                                <span>解析：</span>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="22">
+                            <el-row type="flex" justify="start">
+                                <Mathdown 
+                                  :content="Bundle.list[Question_Index - 1].analysis" 
+                                  :name="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Analysis'"></Mathdown>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                    <!-- 解析部分配图 -->
+                    <el-row type="flex" justify="end" v-show="Bundle.list[Question_Index - 1].analysis_image.length > 0">
+                        <el-col :span="22">
+                            <el-row 
+                                type="flex" 
+                                justify="start" 
+                                v-for="TBQ_Analysis_Pic_Row_Index in Math.ceil(Bundle.list[Question_Index - 1].analysis_image.length/12)"
+                                :key="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Analysis_Pic_Row_' + TBQ_Analysis_Pic_Row_Index">
+                                <el-col 
+                                    :span="2" 
+                                    v-for="TBQ_Analysis_Pic_Col_Index in 12" 
+                                    :key="'Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Analysis_Pic_Row_' + TBQ_Analysis_Pic_Row_Index + '_' + TBQ_Analysis_Pic_Col_Index">
+                                    <el-row 
+                                        type="flex" 
+                                        justify="center" 
+                                        v-if="(TBQ_Analysis_Pic_Row_Index - 1) * 12 + TBQ_Analysis_Pic_Col_Index - 1 < Bundle.list[Question_Index - 1].analysis_image.length"
+                                        >
+                                        <img height="30" :src="Get_Picture_Src('analysis_image', Bundle_Index, Question_Index - 1, TBQ_Analysis_Pic_Row_Index, TBQ_Analysis_Pic_Col_Index)">   
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                    </el-row></div>
+                    <el-row type="flex" justify="center">
+                      <el-button 
+                        type="primary" 
+                        size="small" 
+                        plain 
+                        style="margin-right: 15px" 
+                        @click="Question_Move_Front(Bundle_Index, Question_Index - 1)" 
+                        :disabled="Question_Index == 1">前移</el-button>
+                      <el-button 
+                        type="primary" 
+                        size="small" 
+                        plain 
+                        style="margin-right: 15px" 
+                        @click="Question_Move_Back(Bundle_Index, Question_Index - 1)" 
+                        :disabled="Question_Index == Bundle.list.length">后移</el-button>
+                      <el-button 
+                        type="warning" 
+                        size="small" 
+                        plain 
+                        style="margin-right: 15px"
+                        @click="Question_Edit(Bundle_Index, Question_Index - 1)">编辑</el-button>
+                      <el-button 
+                        type="danger" 
+                        size="small" 
+                        plain 
+                        style="margin-right: 15px"
+                        @click="Question_Delete(Bundle_Index, Question_Index - 1)">删除</el-button>
+                    </el-row>
+                      <el-row type="flex" justify="center" class="Ques_Button" slot="reference">
+                        {{Question_Index}}
+                      </el-row>
+                    </el-popover>
                   </el-col>
-                </el-row>
-              </el-col>
-            </el-row>
-            <el-row type="flex" justify="start" style="margin-bottom: 5px">
-              <el-col 
-                v-for="Single_Index in 12" 
-                :key="'Single_' + Single_Index"
-                :span="1"
-                >
-                <el-row type="flex" justify="center" class="Ques_Button">
-                  {{Single_Index}}
-                </el-row>
-              </el-col>
-            </el-row>
-            <el-row type="flex" justify="start">
-              <label>二、多选题</label>
-            </el-row>
-            <el-row type="flex" justify="start" style="margin-bottom: 5px">
-              <el-col 
-                v-for="Single_Index in 12" 
-                :key="'Single_' + Single_Index"
-                :span="1"
-                >
-                <el-row type="flex" justify="center" class="Ques_Button">
-                  {{Single_Index}}
-                </el-row>
-              </el-col>
-            </el-row>
-            <el-row type="flex" justify="start">
-              <label>三、判断题</label>
-            </el-row>
-            <el-row type="flex" justify="start" style="margin-bottom: 5px">
-              <el-col 
-                v-for="Single_Index in 12" 
-                :key="'Single_' + Single_Index"
-                :span="1"
-                >
-                <el-row type="flex" justify="center" class="Ques_Button">
-                  {{Single_Index}}
-                </el-row>
-              </el-col>
-            </el-row>
-            <el-row type="flex" justify="start">
-              <label>四、填空题</label>
-            </el-row>
-            <el-row type="flex" justify="start" style="margin-bottom: 5px">
-              <el-col 
-                v-for="Single_Index in 12" 
-                :key="'Single_' + Single_Index"
-                :span="1"
-                >
-                <el-row type="flex" justify="center" class="Ques_Button">
-                  {{Single_Index}}
-                </el-row>
-              </el-col>
-            </el-row>
-            <el-row type="flex" justify="start">
-              <label>五、简答题</label>
-            </el-row>
-            <el-row type="flex" justify="start" style="margin-bottom: 5px">
-              <el-col 
-                v-for="Single_Index in 12" 
-                :key="'Single_' + Single_Index"
-                :span="1"
-                >
-                <el-row type="flex" justify="center" class="Ques_Button">
-                  {{Single_Index}}
-                </el-row>
-              </el-col>
-            </el-row>
-            <el-row type="flex" justify="start">
-              <label>六、计算题</label>
-            </el-row>
-            <el-row type="flex" justify="start" style="margin-bottom: 5px">
-              <el-col 
-                v-for="Single_Index in 12" 
-                :key="'Single_' + Single_Index"
-                :span="1"
-                >
-                <el-row type="flex" justify="center" class="Ques_Button">
-                  {{Single_Index}}
-                </el-row>
-              </el-col>
-            </el-row>
-            <el-row type="flex" justify="start">
-              <label>七、综合题</label>
-            </el-row>
-            <el-row type="flex" justify="start" style="margin-bottom: 5px">
-              <el-col 
-                v-for="Single_Index in 12" 
-                :key="'Single_' + Single_Index"
-                :span="1"
-                >
-                <el-row type="flex" justify="center" class="Ques_Button">
-                  {{Single_Index}}
                 </el-row>
               </el-col>
             </el-row>
@@ -243,8 +368,14 @@
 </template>
 
 <script>
+
+import Mathdown from '@/common/components/Mathdown'
+
 export default {
   name: "RemakingInputSingle",
+  components: {
+    Mathdown
+  },
   data() {
     return {
       // 试卷标题
@@ -287,11 +418,130 @@ export default {
         { value: "计算题", label: "计算题" },
         { value: "综合题", label: "综合题" }
       ],
+      // 所有题目的信息
+      Question_Bundle: [
+        {
+          type: '单选题',
+          list: [
+            {
+                score: 5,
+                stem: "反正是测试数据",
+                stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+                options: ["1", "2", "3", "4"],
+                options_image: [
+                    ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
+                    [],
+                    [],
+                    []],
+                answer: "A",
+                answer_image: [],
+                analysis: "解析",
+                analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                sub_questions: [],
+                sub_questions_image: [],
+                sub_questions_score: [],
+                answer_list: []
+            }
+          ]
+        },
+        {
+          type: '填空题',
+          list: [
+            {
+                score: 5,
+                stem: "反正是测试数据________",
+                stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+                options: [],
+                options_image: [],
+                answer: "没问题",
+                answer_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+                analysis: "解析测试",
+                analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                sub_questions: [],
+                sub_questions_image: [],
+                sub_questions_score: [],
+                answer_list: []
+            },
+            {
+                score: 5,
+                stem: "反正是测试数据2，注意是2________",
+                stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+                options: [],
+                options_image: [],
+                answer: "没问题，答案没什么问题",
+                answer_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+                analysis: "解析测试",
+                analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                sub_questions: [],
+                sub_questions_image: [],
+                sub_questions_score: [],
+                answer_list: []
+            }
+          ]
+        }
+      ]
     };
   },
   methods:{
       toSingle(){
         this.$router.push({path: "/remakeInputSingle"})
+      },
+      // 展示题目大类标题的方法
+      Get_Bundle_Label(Type, Bundle_Index){
+        let Symbol = ['一', '二', '三', '四', '五', '六', '七', '八']
+        return Symbol[Bundle_Index] + "、" + Type
+      },
+      Get_Picture_Src(position, Bundle_Index, Question_Index, Stem_Pic_Row_Index, Stem_Pic_Col_Index){
+        let Question = this.Question_Bundle[Bundle_Index].list[Question_Index];
+        let Pos_Info = position.split(" ")
+          // stem/answer/analysis_image
+          if(Pos_Info.length == 1){
+              let Index = (Stem_Pic_Row_Index - 1) * 12 + Stem_Pic_Col_Index - 1
+              return Question[Pos_Info[0]][Index]
+          }else{
+            // options/sub_questions_image Index
+            // 即第几个选项/第几个小题的第几组图片
+            if(Pos_Info.length == 2 && (Pos_Info[0] == 'options_image' || Pos_Info[0] == 'sub_questions_image')){
+              let Index = (Stem_Pic_Row_Index - 1) * 12 + Stem_Pic_Col_Index - 1
+              return Question[Pos_Info[0]][Pos_Info[1]][Index]
+            }
+            // stem/answer/analysis_image Big_Sub_Question_Index
+            // 即综合题存在小题时的对应题干/答案/解析的图片
+            else if(Pos_Info.length == 2 && (Pos_Info[0] == 'stem_image' || Pos_Info[0] == 'answer_image' ||  Pos_Info[0] == 'analysis_image' )){
+              let Index = (Stem_Pic_Row_Index - 1) * 12 + Stem_Pic_Col_Index - 1
+              return Question[Pos_Info[1]][Pos_Info[0]][Index]
+            }
+            // options/sub_questions_image Big_Sub_Question_Index Index
+            // 即综合题存在小题时，某个选项/小题的小题的对应图片
+            else if(Pos_Info.length == 3){
+              let Index = (Stem_Pic_Row_Index - 1) * 12 + Stem_Pic_Col_Index - 1
+              return Question[Pos_Info[1]][Pos_Info[0]][Pos_Info[2]][Index]
+            }
+          }
+      },
+      // 返回选项的字母信息
+      Get_Option_Label(Option_Index){
+        return String.fromCharCode(65 + Option_Index)
+      },
+      Question_Move_Front(Bundle_Index, Question_Index){
+        let Item = JSON.parse(JSON.stringify(this.Question_Bundle[Bundle_Index].list[Question_Index]))
+        this.Question_Bundle[Bundle_Index].list.splice(Question_Index, 1)
+        this.Question_Bundle[Bundle_Index].list.splice(Question_Index - 1, 0, Item)
+      },
+      Question_Move_Back(Bundle_Index, Question_Index){
+        let Item = JSON.parse(JSON.stringify(this.Question_Bundle[Bundle_Index].list[Question_Index]))
+        this.Question_Bundle[Bundle_Index].list.splice(Question_Index, 1)
+        this.Question_Bundle[Bundle_Index].list.splice(Question_Index + 1, 0, Item)
+      },
+      Question_Delete(Bundle_Index, Question_Index){
+        this.Question_Bundle[Bundle_Index].list.splice(Question_Index, 1)
+      },
+      Question_Edit(Bundle_Index, Question_Index){
+        let Item = JSON.parse(JSON.stringify(this.Question_Bundle[Bundle_Index].list[Question_Index]))
+        console.log(Item)
       }
   }
 };
@@ -331,5 +581,17 @@ export default {
   min-height: 400px; 
   padding: 20px;
   box-shadow: 2px 3px 4px 0 rgba(64, 158, 255, 0.7);
+}
+// 主要区域的高度
+.Total_Bundle_Popover_Main{
+  height: 290px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+</style>
+<style>
+/* 设定一下弹出框的属性 */
+.el-popover.Total_Bundle_Popover{
+  height: 350px;
 }
 </style>

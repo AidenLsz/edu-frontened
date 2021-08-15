@@ -1408,10 +1408,6 @@ export default {
                 this.Reset_Question_Info();
             }
         },
-        Answer_List(newVal){
-            let Items = JSON.parse(JSON.stringify(newVal)).sort()
-            this.Question.answer = Items.join("")
-        },
         Paste_Analysis(newVal){
             this.$message.warning(newVal + " is Pasted.")
         },

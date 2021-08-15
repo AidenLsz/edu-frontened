@@ -490,9 +490,9 @@ export default {
                 // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
                 sub_questions: [],
                 sub_questions_image: [],
-                sub_questions_score: []
+                sub_questions_score: [],
+                answer_list: []
             },
-            Answer_List: [],
             // 用于保存图片的Input对象，拿来做自定义按钮的
             Picture_Upload_Dom: "",
             // 用于保存当前选中的框识别信息 - 给图片和文本编辑定位用的
@@ -517,10 +517,6 @@ export default {
             if(newVal != oldVal){
                 this.Reset_Question_Info();
             }
-        },
-        Answer_List(newVal){
-            let Items = JSON.parse(JSON.stringify(newVal)).sort()
-            this.Question.answer = Items.join("")
         },
     },
     mounted() {
@@ -708,9 +704,6 @@ export default {
             // 用于公式输入
             this.Complex_Content = ""
 
-            // 多选题部分的列表，重置
-            this.Answer_List = []
-
             // 基础试题信息，重置
             this.Focus_Function = "Editing"
             this.Question = {
@@ -727,7 +720,8 @@ export default {
                 // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
                 sub_questions: [],
                 sub_questions_image: [],
-                sub_questions_score: []
+                sub_questions_score: [],
+                answer_list: []
             }
         },
     }
