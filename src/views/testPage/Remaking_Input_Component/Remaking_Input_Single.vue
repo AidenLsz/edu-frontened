@@ -776,6 +776,15 @@ export default {
                 if (Regx.test(content[i]) || this.math_pun_list.indexOf(content[i]) != -1) {
                     if(remakeContent[remakeContent.length - 1] == '$'){
                         remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
+                    }else if(['i', 'b'].indexOf(content[i]) != -1 && 
+                        (
+                            (content[i - 1] == '/' && content[i - 2] == '<' && content[i + 1] == '>') ||
+                            (content[i - 1] == '<' && content[i + 1] == '>')
+                        )
+                    ){
+                        remakeContent = remakeContent + content[i]
+                    }else if(content[i] == '/' && ['i', 'b'].indexOf(content[i+1]) != -1 && content[i-1] == '<' && content[i+2] == '>'){
+                        remakeContent = remakeContent + content[i]
                     }else{
                         remakeContent = remakeContent + "$" + content[i] + "$";
                     }
