@@ -2,8 +2,8 @@
   <div style="margin-top: 5vh; padding-left: 5vw; padding-right: 5vw">
     <el-dialog
         :visible.sync="Wrong_Char_Dialog"
-        title="错误字符提示"
-        width="65%"
+        title="格式错误提示"
+        width="40%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
         <div v-html="Wrong_Char_Info"></div>
@@ -107,6 +107,10 @@ import FillQuestions from '@/views/testPage/Remaking_Input_Component/components/
 import AnswerQuestions from '@/views/testPage/Remaking_Input_Component/components/AnswerQuestions.vue'
 import MixQuestions from '@/views/testPage/Remaking_Input_Component/components/MixQuestions.vue'
 
+import {commonAjax} from '@/common/utils/ajax'
+
+import FileSaver from "file-saver";
+
 export default {
   name: "RemakingInputPaper",
   components: {
@@ -159,10 +163,36 @@ export default {
         // 用于展示哪些字符需要修改的对话框
         Wrong_Char_Dialog: false,
         // 用于展示错误数据的信息栏
-        Wrong_Char_Info: ""
+        Wrong_Char_Info: "",
+        // 保存用户的UUID信息
+        UUID: ""
     };
   },
+  mounted(){
+      if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
+        this.$message.error("您尚未登录，请登录后使用录入功能。")
+        this.$router.push("/")
+        return 
+      }
+      this.Get_User_UUID();
+      this.To_Top();
+  },
   methods:{
+        // 卷动至最上方
+        To_Top(){
+            window.scrollTo(0,0);
+        },
+        // 获取UUID
+        Get_User_UUID(){
+            commonAjax(this.backendIP + '/api/getUserUUID', {}).then((res)=>{
+                this.UUID = res.UUID
+            }).catch(
+                (err)=>{
+                console.log(err)
+                console.log("Failed.")
+                }
+            )
+        },
       // 跳转至整卷录入页面
       toPaper(){
         this.$router.push({path: "/remakeInputPaper"})
@@ -180,35 +210,84 @@ export default {
           this.Type = Type_value
       },
     Prepare_For_Submit(Ques){
+
+        this.Wrong_Char_Info = ""
+        this.Wrong_Char_Dialog = false
+
         if(this.Type != '综合题'){
+
+            // 名称格式修正一下
             let Question = JSON.parse(Ques);
+
+            // 必填项检测
             if(Question.stem.length == 0){
-                this.$message.error("题干项尚未填写。")
+                this.Wrong_Char_Info = "题干项尚未填写。"
+                this.Wrong_Char_Dialog = true
                 return
             }
+
+            if(['单选题', '多选题', '判断题'].indexOf(this.Type) != -1){
+                let Str = Question.stem
+                let Quote_Reg = new RegExp("(\\(|\\（)(\\s*)(\\)|\\）)", "g")
+                let res = Quote_Reg.exec(Str)
+                while(res != null){
+                    Str = Str.replace(Quote_Reg, "$\\SIFChoice$")
+                    res = Quote_Reg.exec(Str)
+                }
+                Question.stem = Str
+            }else if(this.Type == '填空题'){
+                let Str = Question.stem
+                let Space_Reg = new RegExp("____+", 'g')
+                let res = Space_Reg.exec(Str)
+                while(res != null){
+                    Str = Str.replace(Space_Reg, "$\\SIFBlank$")
+                    res = Space_Reg.exec(Str)
+                }
+                Question.stem = Str
+            }
+
+            // 开始检测题干项是否正确
             let C_Stem = this.Check_Do(Question.stem);
-            if(C_Stem[1].length == 0){
+            if(C_Stem[2]){
+                this.Wrong_Char_Info = "题干部分存在包裹不完全的 Latex 公式，请修正后重试"
+                this.Wrong_Char_Dialog = true
+                return
+            }else if(C_Stem[1].length == 0){
                 Question.stem = C_Stem[0]
             }else{
-                this.Wrong_Char_Info = "你的题干部分存在不合适的字符，请修改、删除或将其包裹于$$字符内后再次尝试上传，以下是详细信息：<br><br>"
+                this.Wrong_Char_Info = "题干部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
                 for(let i = 0; i < C_Stem[1].length; i++){
                     this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
                 }
                 this.Wrong_Char_Dialog = true
                 return 
             }
-            // this.$message.success("题干内容格式检测已通过。")
-
+            
+            // 开始检测选项部分
+            this.Wrong_Char_Info = ""
             for(let i = 0; i < Question.options.length; i++){
+                // 必填项检测
                 if(Question.options[i].length == 0){
-                    this.$message.error("选项" + String.fromCharCode( 65 + i ) + "尚未填写。")
-                    return
+                    this.Wrong_Char_Info = this.Wrong_Char_Info + "选项 " + String.fromCharCode( 65 + i ) + " 尚未填写。请注意所有选项都是必填项。<br>"
                 }
+            }
+            if(this.Wrong_Char_Info != ""){
+                this.Wrong_Char_Dialog = true;
+                return
+            }
+            
+            // 内容检测
+            for(let i = 0; i < Question.options.length; i++){
+                
                 let C_Option_Item = this.Check_Do(Question.options[i])
-                if(C_Option_Item[1].length == 0){
+                if(C_Option_Item[2]){
+                    this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Option_Item[1].length == 0){
                     Question.options.splice(i, 1, C_Option_Item[0])
                 }else{
-                    this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "的部分存在不合适的字符，请修改、删除或将其包裹于$$字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
                     for(let j = 0; j < C_Option_Item[1].length; j++){
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Option_Item[1][j].position + " 处的 " + C_Option_Item[1][j].char + " 字符。<br>"
                     }
@@ -220,10 +299,14 @@ export default {
 
             if(Question.answer.length != 0){
                 let C_Answer = this.Check_Do(Question.answer);
-                if(C_Answer[1].length == 0){
+                if(C_Answer[2]){
+                    this.Wrong_Char_Info = "你的答案部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Answer[1].length == 0){
                     Question.answer = C_Answer[0]
                 }else{
-                    this.Wrong_Char_Info = "你的答案部分存在不合适的字符，请修改、删除或将其包裹于$$字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    this.Wrong_Char_Info = "你的答案部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
                     for(let i = 0; i < C_Answer[1].length; i++){
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
                     }
@@ -234,11 +317,15 @@ export default {
             // this.$message.success("答案内容格式检测已通过。")
 
             if(Question.analysis.length != 0){
-                let C_Analysis = this.Check_Do(Question.answer);
-                if(C_Analysis[1].length == 0){
-                    Question.answer = C_Analysis[0]
+                let C_Analysis = this.Check_Do(Question.analysis);
+                if(C_Analysis[2]){
+                    this.Wrong_Char_Info = "解析部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Analysis[1].length == 0){
+                    Question.analysis = C_Analysis[0]
                 }else{
-                    this.Wrong_Char_Info = "你的解析部分存在不合适的字符，请修改、删除或将其包裹于$$字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    this.Wrong_Char_Info = "解析部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
                     for(let i = 0; i < C_Analysis[1].length; i++){
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
                     }
@@ -247,17 +334,28 @@ export default {
                 }
             }
             
-            // 小题内容检测
+            // 小题内容检测 - 必填检测
+            this.Wrong_Char_Info = ""
             for(let i = 0; i < Question.sub_questions.length; i++){
                 if(Question.sub_questions[i].length == 0){
-                    this.$message.error("第" + (i+1) + "小题尚未填写。")
-                    return
+                    this.Wrong_Char_Info = this.Wrong_Char_Info + "第 " + (i+1) + " 小题尚未填写。<br>"
                 }
+            }
+            if(this.Wrong_Char_Info != ""){
+                this.Wrong_Char_Dialog = true;
+                return
+            }
+            // 内容检测
+            for(let i = 0; i < Question.sub_questions.length; i++){
                 let C_Sub_Ques_Item = this.Check_Do(Question.sub_questions[i])
-                if(C_Sub_Ques_Item[1].length == 0){
+                if(C_Sub_Ques_Item[2]){
+                    this.Wrong_Char_Info = "第" + ( i + 1 ) + "小题的部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Sub_Ques_Item[1].length == 0){
                     Question.sub_questions.splice(i, 1, C_Sub_Ques_Item[0])
                 }else{
-                    this.Wrong_Char_Info = "第" + ( i + 1 ) + "小题的部分存在不合适的字符，请修改、删除或将其包裹于$$字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    this.Wrong_Char_Info = "第" + ( i + 1 ) + "小题的部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
                     for(let j = 0; j < C_Sub_Ques_Item[1].length; j++){
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Sub_Ques_Item[1][j].position + " 处的 " + C_Sub_Ques_Item[1][j].char + " 字符。<br>"
                     }
@@ -267,8 +365,224 @@ export default {
             }
 
             this.Submit_Normal_Ques(Question);
-        }else{
-            this.$message.warning("接收到综合题小题，开始进行格式检测")
+        }
+        // 开始检测综合题部分
+        else{
+
+            // 名称规范化
+            let Question = JSON.parse(Ques);
+
+            // 必填项检测
+            if(Question.stem.length == 0){
+                this.Wrong_Char_Info = "题干项尚未填写。"
+                this.Wrong_Char_Dialog = true
+                return
+            }
+
+            // 开始检测题干项是否正确
+            let C_Stem = this.Check_Do(Question.stem);
+            if(C_Stem[2]){
+                this.Wrong_Char_Info = "题干部分存在包裹不完全的 Latex 公式，请修正后重试"
+                this.Wrong_Char_Dialog = true
+                return
+            }else if(C_Stem[1].length == 0){
+                Question.stem = C_Stem[0]
+            }else{
+                this.Wrong_Char_Info = "题干部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                for(let i = 0; i < C_Stem[1].length; i++){
+                    this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
+                }
+                this.Wrong_Char_Dialog = true
+                return 
+            }
+
+            // 检测答案项部分，由于是非必填项，不填也没事
+            if(Question.answer.length != 0){
+                let C_Answer = this.Check_Do(Question.answer);
+                if(C_Answer[2]){
+                    this.Wrong_Char_Info = "你的答案部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Answer[1].length == 0){
+                    Question.answer = C_Answer[0]
+                }else{
+                    this.Wrong_Char_Info = "你的答案部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    for(let i = 0; i < C_Answer[1].length; i++){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
+                    }
+                    this.Wrong_Char_Dialog = true
+                    return 
+                }
+            } 
+
+            // 检测解析字段 - 不填也没事
+            if(Question.analysis.length != 0){
+                let C_Analysis = this.Check_Do(Question.analysis);
+                if(C_Analysis[2]){
+                    this.Wrong_Char_Info = "解析部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Analysis[1].length == 0){
+                    Question.analysis = C_Analysis[0]
+                }else{
+                    this.Wrong_Char_Info = "解析部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    for(let i = 0; i < C_Analysis[1].length; i++){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
+                    }
+                    this.Wrong_Char_Dialog = true
+                    return 
+                }
+            }
+
+            for(let j = 0; j < Question.sub_questions.length; j++){
+
+                let Item = Question.sub_questions[j]
+                // 重置提示信息
+                this.Wrong_Char_Info = ""
+
+                // 必填项检测
+                if(Item.stem.length == 0){
+                    this.$message.error("题干项尚未填写。")
+                    return
+                }
+
+                if(['单选题', '多选题', '判断题'].indexOf(Question.sub_questions[j].type) != -1){
+                    let Str = Question.sub_questions[j].stem
+                    let Quote_Reg = new RegExp("(\\(|\\（)(\\s*)(\\)|\\）)", "g")
+                    let res = Quote_Reg.exec(Str)
+                    while(res != null){
+                        Str = Str.replace(Quote_Reg, "$\\SIFChoice$")
+                        res = Quote_Reg.exec(Str)
+                    }
+                    Question.sub_questions[j].stem = Str
+                }else if(Question.sub_questions[j].type == '填空题'){
+                    let Str = Question.sub_questions[j].stem
+                    let Space_Reg = new RegExp("____+", 'g')
+                    let res = Space_Reg.exec(Str)
+                    while(res != null){
+                        Str = Str.replace(Space_Reg, "$\\SIFBlank$")
+                        res = Space_Reg.exec(Str)
+                    }
+                    Question.sub_questions[j].stem = Str
+                }
+
+                // 开始检测题干项是否正确
+                let C_Stem = this.Check_Do(Item.stem);
+                if(C_Stem[2]){
+                    this.Wrong_Char_Info = "题干部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Stem[1].length == 0){
+                    Item.stem = C_Stem[0]
+                }else{
+                    this.Wrong_Char_Info = "题干部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    for(let i = 0; i < C_Stem[1].length; i++){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
+                    }
+                    this.Wrong_Char_Dialog = true
+                    return 
+                }
+                
+                // 开始检测选项部分
+                this.Wrong_Char_Info = ""
+                for(let i = 0; i < Item.options.length; i++){
+                    // 必填项检测
+                    if(Item.options[i].length == 0){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "选项 " + String.fromCharCode( 65 + i ) + " 尚未填写。请注意所有选项都是必填项。<br>"
+                    }
+                }
+                if(this.Wrong_Char_Info != ""){
+                    this.Wrong_Char_Dialog = true;
+                    return
+                }
+                
+                // 内容检测
+                for(let i = 0; i < Item.options.length; i++){
+                    
+                    let C_Option_Item = this.Check_Do(Item.options[i])
+                    if(C_Option_Item[2]){
+                        this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在包裹不完全的 Latex 公式，请修正后重试"
+                        this.Wrong_Char_Dialog = true
+                        return
+                    }else if(C_Option_Item[1].length == 0){
+                        Item.options.splice(i, 1, C_Option_Item[0])
+                    }else{
+                        this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                        for(let j = 0; j < C_Option_Item[1].length; j++){
+                            this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Option_Item[1][j].position + " 处的 " + C_Option_Item[1][j].char + " 字符。<br>"
+                        }
+                        this.Wrong_Char_Dialog = true
+                        return 
+                    }
+                }
+
+                if(Item.answer.length != 0){
+                    let C_Answer = this.Check_Do(Item.answer);
+                    if(C_Answer[2]){
+                        this.Wrong_Char_Info = "你的答案部分存在包裹不完全的 Latex 公式，请修正后重试"
+                        this.Wrong_Char_Dialog = true
+                        return
+                    }else if(C_Answer[1].length == 0){
+                        Item.answer = C_Answer[0]
+                    }else{
+                        this.Wrong_Char_Info = "你的答案部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                        for(let i = 0; i < C_Answer[1].length; i++){
+                            this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
+                        }
+                        this.Wrong_Char_Dialog = true
+                        return 
+                    }
+                } 
+
+                if(Item.analysis.length != 0){
+                    let C_Analysis = this.Check_Do(Item.analysis);
+                    if(C_Analysis[2]){
+                        this.Wrong_Char_Info = "解析部分存在包裹不完全的 Latex 公式，请修正后重试"
+                        this.Wrong_Char_Dialog = true
+                        return
+                    }else if(C_Analysis[1].length == 0){
+                        Item.analysis = C_Analysis[0]
+                    }else{
+                        this.Wrong_Char_Info = "解析部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                        for(let i = 0; i < C_Analysis[1].length; i++){
+                            this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
+                        }
+                        this.Wrong_Char_Dialog = true
+                        return 
+                    }
+                }
+                
+                // 小题内容检测 - 必填检测
+                this.Wrong_Char_Info = ""
+                for(let i = 0; i < Item.sub_questions.length; i++){
+                    if(Item.sub_questions[i].length == 0){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "第 " + (i+1) + " 小题尚未填写。<br>"
+                    }
+                }
+                if(this.Wrong_Char_Info != ""){
+                    this.Wrong_Char_Dialog = true;
+                    return
+                }
+                // 内容检测
+                for(let i = 0; i < Item.sub_questions.length; i++){
+                    let C_Sub_Ques_Item = this.Check_Do(Item.sub_questions[i])
+                    if(C_Sub_Ques_Item[2]){
+                        this.Wrong_Char_Info = "第" + ( i + 1 ) + "小题的部分存在包裹不完全的 Latex 公式，请修正后重试"
+                        this.Wrong_Char_Dialog = true
+                        return
+                    }else if(C_Sub_Ques_Item[1].length == 0){
+                        Item.sub_questions.splice(i, 1, C_Sub_Ques_Item[0])
+                    }else{
+                        this.Wrong_Char_Info = "第" + ( i + 1 ) + "小题的部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                        for(let j = 0; j < C_Sub_Ques_Item[1].length; j++){
+                            this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Sub_Ques_Item[1][j].position + " 处的 " + C_Sub_Ques_Item[1][j].char + " 字符。<br>"
+                        }
+                        this.Wrong_Char_Dialog = true
+                        return 
+                    }
+                }
+            }
+            this.Submit_Mix_Ques(Question)
         }
     },
     // 将基础题转化为可以入库的格式的部分
@@ -326,11 +640,92 @@ export default {
             }
             Temp_Result = Temp_Doc
         }
-        console.log(Temp_Result)
+        this.Submit_Do(Temp_Result)
     },
     // 将综合题转化为可以入库的格式的部分
     Submit_Mix_Ques(Ques){
-        Ques
+        let Temp_Doc = {
+            desc: "",
+            desc_image: [],
+            type: "大题",
+            score: 0,
+            subquestions: [],
+            answer: "",
+            answer_image: [],
+            analysis: "",
+            analysis_image: []
+        }
+
+        Temp_Doc.desc = Ques.stem;
+        Temp_Doc.desc_image = Ques.stem_image;
+
+        Temp_Doc.score = parseFloat(Ques.score + "");
+
+        for(let i = 0; i < Ques.sub_questions.length; i++){
+            let Item = {
+                type: Ques.sub_questions[i].type,
+                score: parseFloat(Ques.sub_questions[i].score + ""),
+                stem: Ques.sub_questions[i].stem,
+                stem_image: Ques.sub_questions[i].stem_image,
+                options: Ques.options,
+                options_image: Ques.options_image,
+                answer: Ques.sub_questions[i].answer,
+                answer_image: Ques.sub_questions[i].answer_image,
+                analysis: Ques.sub_questions[i].analysis,
+                analysis_image: Ques.sub_questions[i].analysis_image
+            }
+
+          Temp_Doc.subquestions.push(Item)
+        }
+
+        Temp_Doc.answer = Ques.answer;
+        Temp_Doc.answer_image = Ques.answer_images;
+
+        Temp_Doc.analysis = Ques.analysis;
+        Temp_Doc.analysis_image = Ques.analysis_image;
+
+        this.Submit_Do(Temp_Doc)
+
+    },
+    Submit_Do(Submit_JSON){
+        let Param = {
+            'Input_Data': JSON.stringify({
+                            "post_type": 0,
+                            "user_id": this.UUID,
+                            "subject": this.Subject,
+                            "period": this.Period,
+                            "questions": JSON.stringify(Submit_JSON),
+                            }, null, 4),
+            'questionInput': true
+        }
+
+        let file = new File(
+          [JSON.stringify({
+                "post_type": 0,
+                "user_id": this.UUID,
+                "subject": this.Subject,
+                "period": this.Period,
+                "questions": Submit_JSON,
+                }, null, 4)],
+          "RemakeInputSingle.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
+
+        let Flag = true;
+        if(Flag){
+            return
+        }
+
+        commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
+            this.$message.success("入库完成")
+            this.Uploading = false;
+        }).catch(
+            ()=>{
+                this.$message.error("入库失败")
+                this.Uploading = false;
+            }
+        )
     },
     // 负责实际检查的部分
     Check_Do(content){
@@ -338,7 +733,6 @@ export default {
         let remakeContent = "";
 
         var latexFlag = false;
-        let symbolError = false;
         let Regx = /[A-Za-z0-9]/;
 
         var Img_Catcher = new RegExp('<img src="(.*?)">', 'g')
@@ -391,8 +785,7 @@ export default {
                         this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
                         content[i] == ' ' || content[i] == '$' ||
                         content.charCodeAt(i) == 10)
-                        && !symbolError){
-                    symbolError = true;
+                        ){
                     Wrong_Char.push({
                         position: i+1,
                         char: content[i]
@@ -406,7 +799,7 @@ export default {
                 remakeContent = remakeContent + content[i];
             }
         }
-        return [remakeContent, Wrong_Char]
+        return [remakeContent, Wrong_Char, latexFlag]
     },
   }
 };

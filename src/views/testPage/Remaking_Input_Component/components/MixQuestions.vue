@@ -121,7 +121,7 @@
                 </el-col>
                 <el-col :span="9">
                     <el-row type="flex" justify="end">
-                        <el-button type="success" @click="Emit_And_Submit()">开始入库</el-button>
+                        <el-button type="success" @click="Emit_And_Submit()">确定提交</el-button>
                     </el-row>
                 </el-col>
             </el-row>
@@ -1319,7 +1319,7 @@
             </el-row>
             
             <el-row type="flex" justify="center" style="margin-top: 20px;">
-                <el-button type="success" @click="Emit_And_Submit()">开始入库</el-button>
+                <el-button type="success" @click="Emit_And_Submit()">确定提交</el-button>
             </el-row>
         </div>
     </div>
@@ -1991,8 +1991,6 @@ export default {
 
             // 小题分数统一用的变量
             this.Unit_Score = 5
-
-            this.$message.success("试题内容已重置")
 
             // 基础试题信息，重置
             this.Focus_Function = "Editing"

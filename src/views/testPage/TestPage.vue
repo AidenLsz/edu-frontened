@@ -240,6 +240,7 @@ export default {
     , 20)
     this.Init_Select_Watcher();
     this.Init_Img_Button();
+    this.Get_Reg_Test()
   },
   methods: {
     Init_Img_Button(){
@@ -290,10 +291,10 @@ export default {
       let Quote_Reg = new RegExp("(\\(|\\（)(\\s*)(\\)|\\）)", "g")
       let res = Quote_Reg.exec(Str)
       while(res != null){
-        console.log(res[0])
+        Str = Str.replace(Quote_Reg, " $\\SIFChoice$")
         res = Quote_Reg.exec(Str)
-        Count = Count + 1
       }
+      console.log(Str)
       res = Space_Reg.exec(Str)
       while(res != null){
         console.log(res[0])

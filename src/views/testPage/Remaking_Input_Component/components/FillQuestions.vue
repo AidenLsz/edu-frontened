@@ -106,7 +106,7 @@
                 </el-col>
                 <el-col :span="15">
                     <el-row type="flex" justify="end">
-                        <el-button type="success" @click="Emit_And_Submit()">开始入库</el-button>
+                        <el-button type="success" @click="Emit_And_Submit()">确定提交</el-button>
                     </el-row>
                 </el-col>
             </el-row>
@@ -448,7 +448,7 @@
                 </el-col>
             </el-row>
             <el-row type="flex" justify="center" style="margin-top: 20px;">
-                <el-button type="success" @click="Emit_And_Submit()">开始入库</el-button>
+                <el-button type="success" @click="Emit_And_Submit()">确定提交</el-button>
             </el-row>
         </div>
     </div>
@@ -707,8 +707,6 @@ export default {
 
             // 用于公式输入
             this.Complex_Content = ""
-
-            this.$message.success("试题内容已重置")
 
             // 多选题部分的列表，重置
             this.Answer_List = []
