@@ -129,17 +129,28 @@
                     <el-row type="flex" justify="start">
                       <el-col :span="4">
                         <el-row type="flex" justify="center">
-                          <el-button type="text" style="margin: 0px; padding: 0px;"><i class="el-icon-top" style="color: #409EFF; font-size: 18px"></i></el-button>
+                          <el-button 
+                            type="text" 
+                            style="margin: 0px; padding: 0px;"
+                            :disabled="Bundle_Index == 0"
+                            @click="Bundle_Move_Front(Bundle_Index)"><i class="el-icon-top" style="color: #409EFF; font-size: 18px"></i></el-button>
                         </el-row>
                       </el-col>
                       <el-col :span="4">
                         <el-row type="flex" justify="center">
-                          <el-button type="text" style="margin: 0px; padding: 0px;"><i class="el-icon-bottom" style="color: #409EFF; font-size: 18px"></i></el-button>
+                          <el-button 
+                            type="text" 
+                            style="margin: 0px; padding: 0px;"
+                            :disabled="Bundle_Index == Question_Bundle.length - 1"
+                            @click="Bundle_Move_Back(Bundle_Index)"><i class="el-icon-bottom" style="color: #409EFF; font-size: 18px"></i></el-button>
                         </el-row>
                       </el-col>
                       <el-col :span="4">
                         <el-row type="flex" justify="center">
-                          <el-button type="text" style="margin: 0px; padding: 0px;"><i class="el-icon-close" style="color: #409EFF; font-size: 18px"></i></el-button>
+                          <el-button 
+                            type="text" 
+                            style="margin: 0px; padding: 0px;"
+                            @click="Bundle_Delete(Bundle_Index)"><i class="el-icon-close" style="color: #409EFF; font-size: 18px"></i></el-button>
                         </el-row>
                       </el-col>
                     </el-row>
@@ -526,6 +537,7 @@ export default {
       Get_Option_Label(Option_Index){
         return String.fromCharCode(65 + Option_Index)
       },
+      // 题包内试题的前移，后移，删除，修改
       Question_Move_Front(Bundle_Index, Question_Index){
         let Item = JSON.parse(JSON.stringify(this.Question_Bundle[Bundle_Index].list[Question_Index]))
         this.Question_Bundle[Bundle_Index].list.splice(Question_Index, 1)
@@ -542,7 +554,21 @@ export default {
       Question_Edit(Bundle_Index, Question_Index){
         let Item = JSON.parse(JSON.stringify(this.Question_Bundle[Bundle_Index].list[Question_Index]))
         console.log(Item)
-      }
+      },
+      // 题包的前移，后移，删除
+      Bundle_Move_Front(Bundle_Index){
+        let Item = JSON.parse(JSON.stringify(this.Question_Bundle[Bundle_Index]))
+        this.Question_Bundle.splice(Bundle_Index, 1)
+        this.Question_Bundle.splice(Bundle_Index - 1, 0, Item)
+      },
+      Bundle_Move_Back(Bundle_Index){
+        let Item = JSON.parse(JSON.stringify(this.Question_Bundle[Bundle_Index]))
+        this.Question_Bundle.splice(Bundle_Index, 1)
+        this.Question_Bundle.splice(Bundle_Index + 1, 0, Item)
+      },
+      Bundle_Delete(Bundle_Index){
+        this.Question_Bundle.splice(Bundle_Index, 1)
+      },
   }
 };
 </script>
