@@ -458,7 +458,7 @@
                 </el-col>
             </el-row>
             <!-- 题干的配图部分 -->
-            <el-row type="flex" justify="end">
+            <el-row type="flex" justify="end" v-show="Question.stem_image.length > 0">
                 <el-col :span="22">
                     <el-row 
                         type="flex" 
@@ -475,7 +475,7 @@
                                 justify="center" 
                                 v-if="(Pre_Answer_Stem_Pic_Row_Index - 1) * 12 + Pre_Answer_Stem_Pic_Col_Index - 1 < Question.stem_image.length"
                                 >
-                                <img width="100" :src="Get_Picture_Src('stem_image', Pre_Answer_Stem_Pic_Row_Index, Pre_Answer_Stem_Pic_Col_Index)">   
+                                <img height="60" :src="Get_Picture_Src('stem_image', Pre_Answer_Stem_Pic_Row_Index, Pre_Answer_Stem_Pic_Col_Index)">   
                             </el-row>
                         </el-col>
                     </el-row>
@@ -522,7 +522,7 @@
                                         justify="center" 
                                         v-if="(Pre_Answer_Sub_Questions_Pic_Row_Index - 1) * 12 + Pre_Answer_Sub_Questions_Pic_Col_Index - 1 < Question.sub_questions_image[Sub_Questions_Index].length"
                                         >
-                                        <img width="160" :src="Get_Picture_Src('sub_questions_image ' + Sub_Questions_Index , Pre_Answer_Sub_Questions_Pic_Row_Index, Pre_Answer_Sub_Questions_Pic_Col_Index)">
+                                        <img height="60" :src="Get_Picture_Src('sub_questions_image ' + Sub_Questions_Index , Pre_Answer_Sub_Questions_Pic_Row_Index, Pre_Answer_Sub_Questions_Pic_Col_Index)">
                                     </el-row>
                                 </el-col>
                             </el-row>
@@ -532,7 +532,7 @@
             </el-row>
 
             <!-- 答案部分 -->
-            <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+            <el-row type="flex" justify="start" style="margin-bottom: 10px;" v-show="Question.answer_image.length > 0 || Question.answer.length > 0">
                 <el-col :span="2">
                     <el-row type="flex" justify="end" style="font-weight: bold;">
                         <span>答案：</span>
@@ -545,7 +545,7 @@
                 </el-col>
             </el-row>
             <!-- 答案配图 -->
-            <el-row type="flex" justify="end">
+            <el-row type="flex" justify="end" v-show="Question.answer_image.length > 0">
                 <el-col :span="22">
                     <el-row 
                         type="flex" 
@@ -562,7 +562,7 @@
                                 justify="center" 
                                 v-if="(Pre_Answer_Answer_Pic_Row_Index - 1) * 12 + Pre_Answer_Answer_Pic_Col_Index - 1 < Question.answer_image.length"
                                 >
-                                <img width="100" :src="Get_Picture_Src('answer_image', Pre_Answer_Answer_Pic_Row_Index, Pre_Answer_Answer_Pic_Col_Index)">   
+                                <img height="60" :src="Get_Picture_Src('answer_image', Pre_Answer_Answer_Pic_Row_Index, Pre_Answer_Answer_Pic_Col_Index)">   
                             </el-row>
                         </el-col>
                     </el-row>
@@ -570,7 +570,7 @@
             </el-row>
             
             <!-- 解析部分 -->
-            <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+            <el-row type="flex" justify="start" style="margin-bottom: 10px;" v-show="Question.analysis_image.length > 0 || Question.analysis.length > 0">
                 <el-col :span="2">
                     <el-row type="flex" justify="end" style="font-weight: bold;">
                         <span>解析：</span>
@@ -583,7 +583,7 @@
                 </el-col>
             </el-row>
             <!-- 解析部分配图 -->
-            <el-row type="flex" justify="end">
+            <el-row type="flex" justify="end" v-show="Question.analysis_image.length > 0">
                 <el-col :span="22">
                     <el-row 
                         type="flex" 
@@ -599,7 +599,7 @@
                                 justify="center" 
                                 v-if="(Pre_Answer_Analysis_Pic_Row_Index - 1) * 12 + Pre_Answer_Analysis_Pic_Col_Index - 1 < Question.analysis_image.length"
                                 >
-                                <img width="100" :src="Get_Picture_Src('analysis_image', Pre_Answer_Analysis_Pic_Row_Index, Pre_Answer_Analysis_Pic_Col_Index)">   
+                                <img height="60" :src="Get_Picture_Src('analysis_image', Pre_Answer_Analysis_Pic_Row_Index, Pre_Answer_Analysis_Pic_Col_Index)">   
                             </el-row>
                         </el-col>
                     </el-row>
@@ -710,7 +710,6 @@ export default {
             }else{
                 this.Question[Aim[0]].splice(parseInt(Aim[1]), 1, val)
             }
-            this.Complex_Content = ""
         },
         // 小题上移
         Sub_Questions_Up(Sub_Questions_Index){

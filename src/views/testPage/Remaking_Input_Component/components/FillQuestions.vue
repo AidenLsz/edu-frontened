@@ -349,7 +349,7 @@
                 </el-col>
             </el-row>
             <!-- 题干的配图部分 -->
-            <el-row type="flex" justify="end">
+            <el-row type="flex" justify="end"  v-show="Question.stem_image.length > 0">
                 <el-col :span="22">
                     <el-row 
                         type="flex" 
@@ -366,7 +366,7 @@
                                 justify="center" 
                                 v-if="(Stem_Pic_Row_Index - 1) * 12 + Stem_Pic_Col_Index - 1 < Question.stem_image.length"
                                 >
-                                <img width="100" :src="Get_Picture_Src('stem_image', Stem_Pic_Row_Index, Stem_Pic_Col_Index)">   
+                                <img height="60" :src="Get_Picture_Src('stem_image', Stem_Pic_Row_Index, Stem_Pic_Col_Index)">   
                             </el-row>
                         </el-col>
                     </el-row>
@@ -374,7 +374,7 @@
             </el-row>
 
             <!-- 答案部分 -->
-            <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+            <el-row type="flex" justify="start" style="margin-bottom: 10px;" v-show="Question.answer_image.length > 0 || Question.answer.length > 0">
                 <el-col :span="2">
                     <el-row type="flex" justify="end" style="font-weight: bold;">
                         <span>答案：</span>
@@ -387,7 +387,7 @@
                 </el-col>
             </el-row>
             <!-- 答案配图 -->
-            <el-row type="flex" justify="end">
+            <el-row type="flex" justify="end" v-show="Question.answer_image.length > 0">
                 <el-col :span="22">
                     <el-row 
                         type="flex" 
@@ -404,7 +404,7 @@
                                 justify="center" 
                                 v-if="(Answer_Pic_Row_Index - 1) * 12 + Answer_Pic_Col_Index - 1 < Question.answer_image.length"
                                 >
-                                <img width="100" :src="Get_Picture_Src('answer_image', Answer_Pic_Row_Index, Answer_Pic_Col_Index)">   
+                                <img height="60" :src="Get_Picture_Src('answer_image', Answer_Pic_Row_Index, Answer_Pic_Col_Index)">   
                             </el-row>
                         </el-col>
                     </el-row>
@@ -412,7 +412,7 @@
             </el-row>
             
             <!-- 解析部分 -->
-            <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+            <el-row type="flex" justify="start" style="margin-bottom: 10px;" v-show="Question.analysis_image.length > 0 || Question.analysis.length > 0">
                 <el-col :span="2">
                     <el-row type="flex" justify="end" style="font-weight: bold;">
                         <span>解析：</span>
@@ -425,7 +425,7 @@
                 </el-col>
             </el-row>
             <!-- 解析部分配图 -->
-            <el-row type="flex" justify="end">
+            <el-row type="flex" justify="end" v-show="Question.analysis_image.length > 0">
                 <el-col :span="22">
                     <el-row 
                         type="flex" 
@@ -441,7 +441,7 @@
                                 justify="center" 
                                 v-if="(Analysis_Pic_Row_Index - 1) * 12 + Analysis_Pic_Col_Index - 1 < Question.analysis_image.length"
                                 >
-                                <img width="100" :src="Get_Picture_Src('analysis_image', Analysis_Pic_Row_Index, Analysis_Pic_Col_Index)">   
+                                <img height="60" :src="Get_Picture_Src('analysis_image', Analysis_Pic_Row_Index, Analysis_Pic_Col_Index)">   
                             </el-row>
                         </el-col>
                     </el-row>
@@ -537,7 +537,6 @@ export default {
         Update_Complex_Input(val){
             let Aim = this.Focusing_Input.split(" ")
             this.Question[Aim[0]] = val;
-            this.Complex_Content = ""
         },
         // 插入括号
         Insert_Quote(){

@@ -91,7 +91,7 @@
             </el-row>
         </el-col>
     </el-row>
-    <el-row type="flex" justify="center" style="border: 3px solid #409EFF; min-height: 30vh; border-radius: 15px; margin-top: 30px;">
+    <el-row type="flex" justify="center" style="border: 3px solid #409EFF; min-height: 30vh; border-radius: 15px; margin-top: 30px; margin-bottom: 30px;">
         <OptionQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['单选题', '多选题', '判断题'].indexOf(Type) != -1" :detailType.sync="Type"></OptionQuestions>
         <FillQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['填空题'].indexOf(Type) != -1" :detailType.sync="Type"></FillQuestions>
         <AnswerQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['简答题', '计算题'].indexOf(Type) != -1" :detailType.sync="Type"></AnswerQuestions>
@@ -267,6 +267,8 @@ export default {
             }
 
             this.Submit_Normal_Ques(Question);
+        }else{
+            this.$message.warning("接收到综合题小题，开始进行格式检测")
         }
     },
     // 将基础题转化为可以入库的格式的部分
@@ -326,7 +328,11 @@ export default {
         }
         console.log(Temp_Result)
     },
-      // 负责实际检查的部分
+    // 将综合题转化为可以入库的格式的部分
+    Submit_Mix_Ques(Ques){
+        Ques
+    },
+    // 负责实际检查的部分
     Check_Do(content){
 
         let remakeContent = "";
