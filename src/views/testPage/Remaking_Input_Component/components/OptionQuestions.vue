@@ -635,11 +635,18 @@ export default {
         }
     },
     mounted() {
-        this.Reset_Question_Info();
         this.Init_Picture_Upload_Dom();
         this.Init_Select_Watcher();
+        this.Checking_Editing();
     },
     methods: {
+        Checking_Editing(){
+            if(sessionStorage.getItem("PaperEditing")){
+                this.Question = JSON.parse(sessionStorage.getItem("PaperEditing"))
+            }else{
+                this.Reset_Question_Info();
+            }
+        },
         // 结合多选题答案
         Union_Multiple_Option_Answer(){
             let Item = JSON.parse(JSON.stringify(this.Question.answer_list)).sort()

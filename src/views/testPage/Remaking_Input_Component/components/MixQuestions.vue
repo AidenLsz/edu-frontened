@@ -285,11 +285,13 @@
                                     <el-row type="flex" justify="end">
                                         <el-button 
                                             v-if="Question.sub_questions[Big_Sub_Question_Index].expand"
+                                            type="primary"
                                             @click="Expand_Change(Big_Sub_Question_Index)">
                                             展开
                                         </el-button>
                                         <el-button 
                                             v-else 
+                                            type="primary"
                                             @click="Expand_Change(Big_Sub_Question_Index)">
                                             折叠
                                         </el-button>
@@ -1363,7 +1365,7 @@ export default {
                         type: "单选题",
                         score: 5,
                         stem: "",
-                        stem_image: [""],
+                        stem_image: [],
                         options: ["", "", "", ""],
                         options_image: [[], [], [], []],
                         answer: "",
@@ -1413,11 +1415,18 @@ export default {
         },
     },
     mounted() {
-        this.Reset_Question_Info();
         this.Init_Picture_Upload_Dom();
         this.Init_Select_Watcher();
+        this.Checking_Editing();
     },
     methods: {
+        Checking_Editing(){
+            if(sessionStorage.getItem("PaperEditing")){
+                this.Question = JSON.parse(sessionStorage.getItem("PaperEditing"))
+            }else{
+                this.Reset_Question_Info();
+            }
+        },
         // 切换折叠模式
         Expand_Change(Big_Sub_Question_Index){
             this.Question.sub_questions[Big_Sub_Question_Index].expand = 

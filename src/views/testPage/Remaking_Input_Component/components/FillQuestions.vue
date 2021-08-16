@@ -520,11 +520,18 @@ export default {
         },
     },
     mounted() {
-        this.Reset_Question_Info();
         this.Init_Picture_Upload_Dom();
         this.Init_Select_Watcher();
+        this.Checking_Editing();
     },
     methods: {
+        Checking_Editing(){
+            if(sessionStorage.getItem("PaperEditing")){
+                this.Question = JSON.parse(sessionStorage.getItem("PaperEditing"))
+            }else{
+                this.Reset_Question_Info();
+            }
+        },
         // 发射题目信息并入库
         Emit_And_Submit(){
             this.$emit('Emit_And_Submit', JSON.stringify(this.Question));
