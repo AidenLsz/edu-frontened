@@ -11,7 +11,7 @@ const router=[
   {
     path: "multiexercise",
     name: "Exercise",
-    component:()=> import("@/views/resourceQuery/MultiExercise"),
+    component:()=> import("@/views/resourceQuery/MultiExercise/index.vue"),
   },
   {
     path: "searchPaper",
