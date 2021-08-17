@@ -169,7 +169,13 @@
           </el-col>
           <el-col :span="4">
             <el-row type="flex" justify="start">  
-              <el-button type="primary" style="width: 100px;">文件导入</el-button>
+              <input type="file" accept=".doc, .docx" id="fileSelect" :multiple="false" style="display: none">
+              <el-button type="primary" style="width: 100px;" @click="File_Import()">文件导入</el-button>
+            </el-row>
+          </el-col>
+          <el-col :span="16" v-show="File_Name != ''" style="height: 40px; line-height: 40px; margin-bottom: 10px">
+            <el-row type="flex" justify="start" style="overflow: hidden">  
+              文件名称：{{File_Name}}
             </el-row>
           </el-col>
         </el-row>
@@ -940,6 +946,7 @@
           type="flex" 
           justify="center" 
           :class="Part_Class('Fileinput')"
+          @click.native="Using_Part = 'Preview'"
           style="height: 30px; line-height: 30px; width: 100%; border-top-right-radius: 15px; border-bottom-right-radius: 15px">
           文件导入预览
         </el-row>
@@ -1506,7 +1513,43 @@
       </el-row>
     </div>
     <div v-show="Using_Part == 'Fileinput'">
-
+      <el-row
+        v-for="(Para, Para_Index) in Paper_Content"
+        :key="'LS_Para_' + Para_Index"
+        style="border-bottom: 2px dashed #ccc; ">
+          <el-row 
+            v-for="(Item, Item_Index) in Para.sub_para[0]" 
+            :key="'LS_P_SP_' + Item_Index" 
+            style="padding-left: 4vw; padding-right: 4vw; padding-top: 10px; padding-bottom: 10px">
+            <el-col :span="22">
+              <el-row v-if="Item.para_type == '0'" :style="Item.para_style">
+                <span
+                  v-for="(message, index_i) in Item.runs"
+                  :key="index_i + 'run'"
+                  :style="message.run_style"
+                >
+                  <span
+                    v-if="message.run_type == '0'"
+                    v-html="message.run_text"
+                  ></span>
+                  <img
+                    v-else-if="message.run_type == '1'"
+                    :src="Paper_Image_Dict[message.image.src]"
+                    :width="message.image.width"
+                    :height="message.image.height"
+                    :style="message.image.style"
+                    :alt="message.image.alt"
+                  />
+                </span>
+              </el-row>
+              <el-row v-if="Item.para_type == '1'">
+                <div :style="Item.para_style">
+                  表格内容
+                </div>
+              </el-row>
+            </el-col>
+          </el-row>
+      </el-row>
     </div>
   </div>
 </template>
@@ -1852,7 +1895,17 @@ export default {
       // 用于给多题包定位时进行等待
       Waiting_Question: {},
       // 跳跃变量
-      Jumping: ""
+      Jumping: "",
+      // 获取文件的组件
+      File_Selector: "",
+      // 文件名称
+      File_Name: "",
+      // 用于存放拿来显示的变量
+      Paper_Content: [],
+      // 存放拿来进行显示的图片
+      Paper_Image_Dict: {
+
+      }
     };
   },
   mounted(){
@@ -1862,8 +1915,80 @@ export default {
         return 
       }
       this.Get_User_UUID();
+      this.Init_File_Selector();
   },
   methods:{
+      // 初始化选择器
+      Init_File_Selector(){
+        this.File_Selector = document.getElementById("fileSelect");
+        this.File_Selector.addEventListener("change", (e)=>{
+          this.File_Upload(e.target.files[0])
+          this.File_Selector.value = ""
+        })
+      },
+      // 上传文件
+      File_Upload(file){
+        this.Using_Part = "Fileinput"
+        this.File_Name = file.name
+
+        let formData = new FormData();
+
+        let Num_Dict = {
+          英语: "0",
+          数学: "1_simple",
+          文综: "2",
+          理综: "3",
+          语文: "4",
+        }
+
+        formData.append("files", file);
+        formData.append("paper_type", Num_Dict[this.Subject]);
+        formData.append("data_format", '0')
+
+        let config = {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        };
+
+        this.uploadFile(formData, config);
+      },
+      // 触发上传事件
+      File_Import(){
+        this.File_Selector.click();
+      },
+      // 选择上传
+      uploadFile(formData, config) {
+
+        this.$http
+          .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
+          .then(function(data) {
+            console.log(data)
+            if(this.Subject != "数学"){
+              this.Paper_Content = data.data.paper
+              
+              this.Paper_Image_Dict = data.data.image_dict
+              let file = new File(
+                [JSON.stringify(this.Paper_Content, null, 4), JSON.stringify(this.Paper_Image_Dict, null, 4)],
+                "Other.json",
+                { type: "text/plain;charset=utf-8" }
+              );
+              FileSaver.saveAs(file);
+            }else{
+              this.Paper_Content = data.data.Paper.doc
+              this.Paper_Image_Dict = data.data.Paper.img
+              let file = new File(
+                [JSON.stringify(this.Paper_Content, null, 4), JSON.stringify(this.Paper_Image_Dict, null, 4)],
+                "Math.json",
+                { type: "text/plain;charset=utf-8" }
+              );
+              FileSaver.saveAs(file);
+            }
+          }).catch(() => {
+            this.$alert("切分过程出现错误，这可能是由于您拖拽的文件格式不正确，或服务器超载导致目前暂时无法提供服务，请重新提交文件或稍后再试。", "提示")
+          });
+
+      },
       // 获取UUID
       Get_User_UUID(){
         commonAjax(this.backendIP + '/api/getUserUUID', {}).then((res)=>{
