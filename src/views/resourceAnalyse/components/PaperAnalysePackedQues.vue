@@ -7,7 +7,7 @@
     element-loading-background="rgba(211, 211, 211, 0.6)">
       <!-- 这里是访问每个大题包最开始的地方，如果Analyse为true，说明是第一次访问，也就应当有展开分析的页面 -->
       <el-row v-for="(Question, Index) in PackedQuestion" :key="Question.id + '_' + Index" :class="Get_Class(Analyse)">
-        <el-col :span="24" v-if="Question.type == 'PackedQues'" type="flex" justify="start">
+        <el-col :span="24" v-if="Question.class == 'PackedQues'" type="flex" justify="start">
           <el-row type="flex" justify="start" style="margin-bottom: 10px">
             <label v-if="Analyse">（ 此题{{Question.score}}分 ）</label>
             <label v-else>（ 本节{{Question.score}}分 ）</label>

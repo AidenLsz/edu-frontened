@@ -13,6 +13,80 @@
             style="margin-top: 30px;"
             >确认</el-button>
     </el-dialog>
+    <el-dialog
+      custom-class="Multi_Type_Selector"
+        :visible.sync="Multi_Type_Insert"
+        :show-close="false"
+        width="70%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
+        <el-row slot="title" style="margin: 0px; padding: 0px">选择要插入的{{Type}}大题</el-row>
+        <el-row type="flex" justify="start" class="Multi_Choise_Table_Top">
+          <el-col :span="2" class="Multi_Choise_Table_Top_Label">
+            <el-row type="flex" justify="center">
+              大题序号
+            </el-row>
+          </el-col>
+          <el-col :span="2" class="Multi_Choise_Table_Top_Label">
+            <el-row type="flex" justify="center">
+              题目数量
+            </el-row>
+          </el-col>
+          <el-col :span="2" class="Multi_Choise_Table_Top_Label">
+            <el-row type="flex" justify="center">
+              题包总分
+            </el-row>
+          </el-col>
+          <el-col :span="15" class="Multi_Choise_Table_Top_Label">
+            <el-row type="flex" justify="center">
+              题包信息
+            </el-row>
+          </el-col>
+          <el-col :span="3" class="Multi_Choise_Table_Top_Label" style="border-right: none">
+            <el-row type="flex" justify="center">
+              确定添加
+            </el-row>
+          </el-col>
+        </el-row>
+        <el-row 
+          type="flex" 
+          justify="start" 
+          v-for="(Info, Info_Index) in Multi_Info"
+          :key="'Multi_' + Info_Index"
+          :class="Multi_Choise_Table_Row(Info_Index)"
+          :style="Info_Index == Multi_Info.length - 1? 'border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;': ''"
+          >
+          <el-col :span="2" style="border-right: 1px solid #409eff">
+            <el-row type="flex" justify="center">
+              {{Info.index != parseInt(Jumping.split(' ')[0]) ? Info.index + 1 : '当前大题'}}
+            </el-row>
+          </el-col>
+          <el-col :span="2" style="border-right: 1px solid #409eff">
+            <el-row type="flex" justify="center">
+              {{Info.length}}
+            </el-row>
+          </el-col>
+          <el-col :span="2" style="border-right: 1px solid #409eff">
+            <el-row type="flex" justify="center">
+              {{Info.score}}
+            </el-row>
+          </el-col>
+          <el-col :span="15" style="border-right: 1px solid #409eff">
+            <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; padding-left: 10px; padding-right: 10px; overflow: hidden">
+              {{Info.desc == "" ? "暂无介绍，请尽快填写以便于区分" : Info.desc}}
+            </el-row>
+          </el-col>
+          <el-col :span="3">
+            <el-row type="flex" justify="center" style="height: 40px; line-height: 40px">
+              <el-button 
+                type="text" 
+                @click="Waiting_Insert(Info.index)"
+                >添加</el-button>
+            </el-row>
+          </el-col>
+        </el-row>
+        
+    </el-dialog>
     <el-row justify="start" type="flex">
       <el-col :span="6">
         <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; padding-top: 13px">
@@ -86,15 +160,6 @@
               </el-row>
           </el-col>
         </el-row>
-        <!-- <el-row type="flex" justify="start" style="margin-top: 5vh;">
-          <span style="text-align: left">整体上是为了提高单题录入的服用效率（按设计稿做一个整卷的太麻烦了）
-            ，下面这部分之后会把单题那边包括题型和录入在内的两部分放过来，然后在右侧放了一个简单的试卷内容预览框。
-            单题录入那个按钮点了以后，先是会和单题一样进行一下简单的格式校验，然后放到试卷题包内，并且按题型自动归类。
-            现在就是简单看一下每个题型里面都有一些题目之后会长什么样子，具体样式可以再改。
-            题目编号上可以和组卷一样加入上移，下移，删除之类的弹出框，点击后给一个简单的确认提示，然后在下方单题录入部分进行编辑。
-            现在的主要问题是现在这块打字的地方光放按钮的话有点太空了，放别的什么又没想好，有点尬住了……
-          </span>
-        </el-row> -->
         <!-- 学段选择 -->
         <el-row type="flex" justify="start" style="margin-top: 7vh; margin-bottom: -1vh">
           <el-col :span="4">
@@ -112,10 +177,64 @@
       <el-col :span="11" :offset="1" v-show="Using_Part != 'Fileinput'">
         <el-row type="flex" justify="center" class="PreviewPaperArea">
           <el-col>
-            <el-row type="flex" justify="start" style="padding-bottom: 5px; margin-bottom: 10px; border-bottom: 2px dashed #ccc">
-              <label>全卷题目速览</label>
+            <el-row type="flex" justify="start" style="padding-bottom: 15px; margin-bottom: 15px; border-bottom: 2px dashed #ccc">
+              <el-col :span="6">
+                <el-row type="flex" justify="start" style="height: 40px; line-height: 40px">
+                  <label>全卷题目速览</label>
+                </el-row>
+              </el-col>
+              <el-col :span="12">
+                <el-row type="flex" justify="end">
+                  <el-select v-model="Add_Bundle_Type" placeholder="">
+                    <el-option 
+                      v-for="Type in Type_List" 
+                      :label="Type.label" 
+                      :value="Type.value"
+                      :key="'Add_Bundle_Of_' + Type.label"></el-option>
+                  </el-select>
+                </el-row>
+              </el-col>
+              <el-col :span="6">
+                <el-row type="flex" justify="end">
+                  <el-button type="primary" @click="Add_New_Empty_Bundle()">手动添加题包</el-button>
+                </el-row>
+              </el-col>
             </el-row>
             <!-- 循环遍历每一个题包 -->
+            <el-row v-if="Question_Bundle.length == 0" style="width: 100%;">
+              <el-col>
+                <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+                  关于如何创建题包：
+                </el-row>
+                <el-row type="flex" justify="start" style="text-align:left">
+                  1：使用下方的单题录入组件，试题将自动创建尚未存在的对应类型的题包并自动加入。
+                </el-row>
+                <el-row type="flex" justify="start">
+                  2：使用右上角的按钮，手动插入题包。
+                </el-row>
+                <el-row type="flex" justify="start">
+                  2-1：若手动插入的题包类型为唯一存在的此类型题包，则试题仍然会自动归类。
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 20px;">
+                  2-2：若手动插入的题包类型不是唯一存在的此类型题包，则应当填写说明项以便于区分。
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+                  关于如何使用单题录入组件：
+                </el-row>
+                <el-row type="flex" justify="start" style="text-align:left">
+                  1：选择或切换题目类型，至少填写所有必填项，点击确定提交，将自动检查语法是否符合规范，并提示应当修改哪些内容，通过检查后将加入题包。
+                </el-row>
+                <el-row type="flex" justify="start">
+                  2：若题目类型对应的题包唯一或不存在，将自动创建新题包或加入对应类型的题包。
+                </el-row>
+                <el-row type="flex" justify="start">
+                  3：若题目类型对应的题包不唯一，则需要用户手动在弹出的对话框中选择加入哪一个题包。
+                </el-row>
+                <el-row type="flex" justify="start">
+                  4：切换题目类型将视为创建新题目，会清空正在录入的题目数据，请注意。
+                </el-row>
+              </el-col>
+            </el-row>
             <el-row 
               type="flex" 
               justify="start" 
@@ -170,9 +289,9 @@
                   <el-col 
                     :span="6"
                     :offset="2"
-                    v-show="Focusing_Questions_Position.x != 0 && Focusing_Questions_Position.y != 0 && Bundle.type == Focusing_Type">
-                    <el-row type="flex" justify="center">
-                      <el-col :span="6">
+                    v-show="Focusing_Questions_Position.x != 0 && Focusing_Questions_Position.y != 0 && Bundle_Index == Focusing_Index">
+                    <el-row type="flex" justify="start">
+                      <el-col :span="4">
                         <el-row type="flex" justify="center">
                           <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="标记题目前移一位" placement="top">
                             <el-button 
@@ -183,7 +302,7 @@
                           </el-tooltip>
                         </el-row>
                       </el-col>
-                      <el-col :span="6">
+                      <el-col :span="4" :offset="1">
                         <el-row type="flex" justify="center">
                           <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="标记题目后移一位" placement="top">
                             <el-button 
@@ -194,7 +313,7 @@
                           </el-tooltip>
                         </el-row>
                       </el-col>
-                      <el-col :span="6">
+                      <el-col :span="4" :offset="1">
                         <el-row type="flex" justify="center">
                           <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="标记题目删除" placement="top">
                             <el-button 
@@ -205,7 +324,7 @@
                           </el-tooltip>
                         </el-row>
                       </el-col>
-                      <el-col :span="6">
+                      <el-col :span="4" :offset="1">
                         <el-row type="flex" justify="center">
                           <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="标记题目导入编辑区" placement="top">
                             <el-button 
@@ -215,6 +334,28 @@
                           </el-tooltip>
                         </el-row>
                       </el-col>
+                      <el-col :span="4" :offset="1" v-show="Focus_Jump_Check(Bundle.type)">
+                        <el-row type="flex" justify="center">
+                          <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="移动至某个同类型题包" placement="top">
+                            <el-button 
+                              type="text" 
+                              style="margin: 0px; padding: 0px;"
+                              @click="Focus_Question_Jump(Bundle_Index)"><i class="el-icon-position" style="color: #409EFF; font-size: 18px"></i></el-button>
+                          </el-tooltip>
+                        </el-row>
+                      </el-col>
+                    </el-row>
+                  </el-col>
+                </el-row>
+                <el-row type="flex" justify="start">
+                  <el-col :span="3">
+                    <el-row type="flex" justify="start" style="height: 20px; line-height: 20px; margin-top: 5px;">
+                      题目说明：
+                    </el-row>
+                  </el-col>
+                  <el-col :span="21">
+                    <el-row type="flex" justify="start">
+                      <el-input v-model="Question_Bundle[Bundle_Index].desc" class="Desc_Input"></el-input>
                     </el-row>
                   </el-col>
                 </el-row>
@@ -232,10 +373,11 @@
                         :span="1"
                         >
                         <el-popover 
-                          placement="top"
+                          placement="left"
                           width="800"
+                          :open-delay="500"
                           trigger="hover"
-                          :disabled="Draging_Questions_Type != ''"
+                          :disabled="Draging_Questions_Index != -1"
                           :ref="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Pop'">
                           <div class="Total_Bundle_Popover_Main">
                             <!-- 触发popover的项 -->
@@ -751,7 +893,7 @@
                             type="flex" 
                             justify="center" 
                             class="Ques_Button Un_Selectable" 
-                            :style="Get_Cursor('Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Label', Bundle_Index)"
+                            :style="Get_Cursor('Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Label', Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1)"
                             slot="reference"
                             v-if="(TBQ_Row_Index - 1) * 24 + Question_Index - 1 < Bundle.list.length"
                             :ref="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Label'"
@@ -804,7 +946,7 @@
       </el-col>
     </el-row>
     <!-- 题目录入组件 -->
-    <div v-show="Using_Part == 'Input'">
+    <div v-show="Using_Part == 'Input'"  @click="Reset_Focus()">
       <el-row type="flex" justify="start" style="margin-top: 2vh;">
           <el-col :span="2">
               <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; font-size: 18px">
@@ -863,7 +1005,7 @@
       </el-row>
     </div>
     <!-- 全卷内容预览 -->
-    <div v-show="Using_Part == 'Preview'" style="padding-left: 2vw; padding-top: 20px; padding-right: 2vw; border: 3px solid #409EFF; min-height: 30vh; border-radius: 15px; margin-top: 30px; margin-bottom: 30px;">
+    <div v-show="Using_Part == 'Preview'"  @click="Reset_Focus()" style="padding-left: 2vw; padding-top: 20px; padding-right: 2vw; border: 3px solid #409EFF; min-height: 30vh; border-radius: 15px; margin-top: 30px; margin-bottom: 30px;">
       <el-row type="flex" justify="center">
         <label style="font-size: 18px">{{Title == '' ? '暂无试卷标题' : Title}}</label>
       </el-row>
@@ -1391,6 +1533,9 @@ export default {
   },
   data() {
     return {
+      // 将要添加的题包类型
+      Add_Bundle_Type: "单选题",
+      // 正在使用的组件
       Using_Part: "Input",
       // 试卷标题
       Title: "",
@@ -1433,237 +1578,242 @@ export default {
         { value: "计算题", label: "计算题" },
         { value: "综合题", label: "综合题" }
       ],
+      Question_Bundle: [],
       // 所有题目的信息
-      Question_Bundle: [
-        {
-          type: '单选题',
-          list: [
-            {
-                score: 5,
-                stem: "反正是测试数据1",
-                stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                options: ["1", "2", "3", "4"],
-                options_image: [
-                    ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
-                    [],
-                    [],
-                    []],
-                answer: "A",
-                answer_image: [],
-                analysis: "解析",
-                analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
-                sub_questions: [],
-                sub_questions_image: [],
-                sub_questions_score: [],
-                answer_list: []
-            },
-            {
-                score: 5,
-                stem: "反正是测试数据2",
-                stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                options: ["1", "2", "3", "4"],
-                options_image: [
-                    ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
-                    [],
-                    [],
-                    []],
-                answer: "A",
-                answer_image: [],
-                analysis: "解析",
-                analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
-                sub_questions: [],
-                sub_questions_image: [],
-                sub_questions_score: [],
-                answer_list: []
-            },
-            {
-                score: 5,
-                stem: "反正是测试数据3",
-                stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                options: ["1", "2", "3", "4"],
-                options_image: [
-                    ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
-                    [],
-                    [],
-                    []],
-                answer: "A",
-                answer_image: [],
-                analysis: "解析",
-                analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
-                sub_questions: [],
-                sub_questions_image: [],
-                sub_questions_score: [],
-                answer_list: []
-            },
-            {
-                score: 5,
-                stem: "反正是测试数据4",
-                stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                options: ["1", "2", "3", "4"],
-                options_image: [
-                    ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
-                    [],
-                    [],
-                    []],
-                answer: "A",
-                answer_image: [],
-                analysis: "解析",
-                analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
-                sub_questions: [],
-                sub_questions_image: [],
-                sub_questions_score: [],
-                answer_list: []
-            },
-          ]
-        },
-        {
-          type: '填空题',
-          list: [
-            {
-                score: 5,
-                stem: "反正是测试数据________",
-                stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                options: [],
-                options_image: [],
-                answer: "没问题",
-                answer_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                analysis: "解析测试",
-                analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
-                sub_questions: [],
-                sub_questions_image: [],
-                sub_questions_score: [],
-                answer_list: []
-            },
-            {
-                score: 5,
-                stem: "反正是测试数据2，注意是2________",
-                stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                options: [],
-                options_image: [],
-                answer: "没问题，答案没什么问题",
-                answer_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                analysis: "解析测试",
-                analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
-                sub_questions: [],
-                sub_questions_image: [],
-                sub_questions_score: [],
-                answer_list: []
-            }
-          ]
-        },
-        {
-          type: '简答题',
-          list: [
-            {
-                score: 10,
-                stem: "简答题测试数据",
-                stem_image: [],
-                options: [],
-                options_image: [],
-                answer: "没问题",
-                answer_image: [],
-                analysis: "解析测试",
-                analysis_image: [],
-                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
-                sub_questions: ["$1$", "$2$"],
-                sub_questions_image: [["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], []],
-                sub_questions_score: [5, 5],
-                answer_list: []
-            },
-          ]
-        },
-        {
-          type: '综合题',
-          list: [
-            {
-              score: 10,
-              stem: "题干内容",
-              stem_image: [],
-              answer: "答案内容",
-              answer_image: [],
-              analysis: "解析内容",
-              analysis_image: [],
-              // 处理上的重大区别，就是综合题没有选项，只有小题，然后小题内本身允许
-              // 单选，多选，判断，填空，简答，计算这些题型
-              sub_questions: [
-                {
-                  type: "单选题",
-                  score: 5,
-                  stem: "测试用题干$1$,$2$",
-                  stem_image: [
-                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", 
-                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                  options: ["$1$", "2", "3", "4"],
-                  options_image: [
-                    [
-                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
-                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
-                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="
-                    ], 
-                    [], 
-                    [], 
-                    []
-                  ],
-                  answer: "A",
-                  answer_image: [],
-                  analysis: "选项",
-                  analysis_image: [
-                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", 
-                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                  // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
-                  sub_questions: [],
-                  sub_questions_image: [],
-                  sub_questions_score: [],
-                  // 给多选题类型拿来控制答案的，一般用不到
-                  answer_list: [],
-                  // 是否折叠
-                  expand: false
-                },
-                {
-                  type: "简答题",
-                  score: 5,
-                  stem: "题干",
-                  stem_image: [
-                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", 
-                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                  options: [],
-                  options_image: [],
-                  answer: "",
-                  answer_image: [],
-                  analysis: "选项",
-                  analysis_image: [
-                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", 
-                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
-                  // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
-                  sub_questions: ['1'],
-                  sub_questions_image: [
-                    [
-                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
-                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
-                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="
-                    ]
-                  ],
-                  sub_questions_score: [5],
-                  // 给多选题类型拿来控制答案的，一般用不到
-                  answer_list: [],
-                  // 是否折叠
-                  expand: true
-                }
-              ],
-            },
-          ]
-        }
-      ],
+      // Question_Bundle: [
+      //   {
+      //     type: '单选题',
+      //     list: [
+      //       {
+      //           score: 5,
+      //           stem: "反正是测试数据1",
+      //           stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           options: ["1", "2", "3", "4"],
+      //           options_image: [
+      //               ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
+      //               [],
+      //               [],
+      //               []],
+      //           answer: "A",
+      //           answer_image: [],
+      //           analysis: "解析",
+      //           analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+      //           sub_questions: [],
+      //           sub_questions_image: [],
+      //           sub_questions_score: [],
+      //           answer_list: []
+      //       },
+      //       {
+      //           score: 5,
+      //           stem: "反正是测试数据2",
+      //           stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           options: ["1", "2", "3", "4"],
+      //           options_image: [
+      //               ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
+      //               [],
+      //               [],
+      //               []],
+      //           answer: "A",
+      //           answer_image: [],
+      //           analysis: "解析",
+      //           analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+      //           sub_questions: [],
+      //           sub_questions_image: [],
+      //           sub_questions_score: [],
+      //           answer_list: []
+      //       },
+      //       {
+      //           score: 5,
+      //           stem: "反正是测试数据3",
+      //           stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           options: ["1", "2", "3", "4"],
+      //           options_image: [
+      //               ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
+      //               [],
+      //               [],
+      //               []],
+      //           answer: "A",
+      //           answer_image: [],
+      //           analysis: "解析",
+      //           analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+      //           sub_questions: [],
+      //           sub_questions_image: [],
+      //           sub_questions_score: [],
+      //           answer_list: []
+      //       },
+      //       {
+      //           score: 5,
+      //           stem: "反正是测试数据4",
+      //           stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           options: ["1", "2", "3", "4"],
+      //           options_image: [
+      //               ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
+      //               [],
+      //               [],
+      //               []],
+      //           answer: "A",
+      //           answer_image: [],
+      //           analysis: "解析",
+      //           analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+      //           sub_questions: [],
+      //           sub_questions_image: [],
+      //           sub_questions_score: [],
+      //           answer_list: []
+      //       },
+      //     ],
+      //     desc: "第一道单选题"
+      //   },
+      //   {
+      //     type: '填空题',
+      //     list: [
+      //       {
+      //           score: 5,
+      //           stem: "反正是测试数据________",
+      //           stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           options: [],
+      //           options_image: [],
+      //           answer: "没问题",
+      //           answer_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           analysis: "解析测试",
+      //           analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+      //           sub_questions: [],
+      //           sub_questions_image: [],
+      //           sub_questions_score: [],
+      //           answer_list: []
+      //       },
+      //       {
+      //           score: 5,
+      //           stem: "反正是测试数据2，注意是2________",
+      //           stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           options: [],
+      //           options_image: [],
+      //           answer: "没问题，答案没什么问题",
+      //           answer_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           analysis: "解析测试",
+      //           analysis_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //           // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+      //           sub_questions: [],
+      //           sub_questions_image: [],
+      //           sub_questions_score: [],
+      //           answer_list: []
+      //       }
+      //     ],
+      //     desc: "第一道填空题"
+      //   },
+      //   {
+      //     type: '简答题',
+      //     list: [
+      //       {
+      //           score: 10,
+      //           stem: "简答题测试数据",
+      //           stem_image: [],
+      //           options: [],
+      //           options_image: [],
+      //           answer: "没问题",
+      //           answer_image: [],
+      //           analysis: "解析测试",
+      //           analysis_image: [],
+      //           // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+      //           sub_questions: ["$1$", "$2$"],
+      //           sub_questions_image: [["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], []],
+      //           sub_questions_score: [5, 5],
+      //           answer_list: []
+      //       },
+      //     ],
+      //     desc: "第一道简答题"
+      //   },
+      //   {
+      //     type: '综合题',
+      //     list: [
+      //       {
+      //         score: 10,
+      //         stem: "题干内容",
+      //         stem_image: [],
+      //         answer: "答案内容",
+      //         answer_image: [],
+      //         analysis: "解析内容",
+      //         analysis_image: [],
+      //         // 处理上的重大区别，就是综合题没有选项，只有小题，然后小题内本身允许
+      //         // 单选，多选，判断，填空，简答，计算这些题型
+      //         sub_questions: [
+      //           {
+      //             type: "单选题",
+      //             score: 5,
+      //             stem: "测试用题干$1$,$2$",
+      //             stem_image: [
+      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", 
+      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //             options: ["$1$", "2", "3", "4"],
+      //             options_image: [
+      //               [
+      //                 "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
+      //                 "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
+      //                 "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="
+      //               ], 
+      //               [], 
+      //               [], 
+      //               []
+      //             ],
+      //             answer: "A",
+      //             answer_image: [],
+      //             analysis: "选项",
+      //             analysis_image: [
+      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", 
+      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //             // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+      //             sub_questions: [],
+      //             sub_questions_image: [],
+      //             sub_questions_score: [],
+      //             // 给多选题类型拿来控制答案的，一般用不到
+      //             answer_list: [],
+      //             // 是否折叠
+      //             expand: false
+      //           },
+      //           {
+      //             type: "简答题",
+      //             score: 5,
+      //             stem: "题干",
+      //             stem_image: [
+      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", 
+      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //             options: [],
+      //             options_image: [],
+      //             answer: "",
+      //             answer_image: [],
+      //             analysis: "选项",
+      //             analysis_image: [
+      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", 
+      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
+      //             // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+      //             sub_questions: ['1'],
+      //             sub_questions_image: [
+      //               [
+      //                 "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
+      //                 "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
+      //                 "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="
+      //               ]
+      //             ],
+      //             sub_questions_score: [5],
+      //             // 给多选题类型拿来控制答案的，一般用不到
+      //             answer_list: [],
+      //             // 是否折叠
+      //             expand: true
+      //           }
+      //         ],
+      //       },
+      //     ],
+      //     desc: "综合题题包"
+      //   }
+      // ],
       // 拖拽的题包坐标列表
       Draging_Questions_Rect: [],
       // 拖拽的题包题目类型
-      Draging_Questions_Type: "",
+      Draging_Questions_Index: -1,
       // 拖拽的题目坐标
       Draging_Questions_Position: {
         x: 0,
@@ -1674,10 +1824,10 @@ export default {
         x: 0,
         y: 0
       },
-      // 正在聚焦的题包类型
-      Focusing_Type: "",
+      // 正在聚焦的题包序号
+      Focusing_Index: -1,
       // 如果点击导入，那么默认进入的是编辑模式
-      // 此时Editing_Position 的 格式是【题目类型 题目在题包中的序号】
+      // 此时Editing_Position 的 格式是【题包序号 题目在题包中的序号】
       // 如果类型改变，那么这个值将被还原成空字符串
       // 如果类型不改变，则询问是替换还是新加，如果是新加，那么将其重置为空字符串
       // 如果是替换，则切分并读取信息，进行替换工作
@@ -1693,8 +1843,16 @@ export default {
       Wrong_Char_Info: "",
       // 保存用户的UUID信息
       UUID: "",
-      // 用于刷新组件
-      Refresh: ""
+      // 刷新变量
+      Refresh: false,
+      // 第二次尝试，定位不同题包
+      Multi_Type_Insert: false,
+      // 选择用的列表
+      Multi_Info: [],
+      // 用于给多题包定位时进行等待
+      Waiting_Question: {},
+      // 跳跃变量
+      Jumping: ""
     };
   },
   mounted(){
@@ -1723,8 +1881,18 @@ export default {
       },
       // 展示题目大类标题的方法
       Get_Bundle_Label(Type, Bundle_Index){
-        let Symbol = ['一', '二', '三', '四', '五', '六', '七', '八']
-        return Symbol[Bundle_Index] + "、" + Type
+        let Symbol = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
+        let String_BI = Bundle_Index + ""
+        
+        if(Bundle_Index < 10){
+          return Symbol[Bundle_Index] + "、" + Type
+        }else if(Bundle_Index < 19){
+          return "十" + Symbol[parseInt(String_BI[1])] + "、" + Type
+        }else if(Bundle_Index < 99 && String_BI[1] == "9"){
+          return Symbol[parseInt(String_BI[0])] + "十、" + Type
+        }else if(Bundle_Index < 99){
+          return Symbol[parseInt(String_BI[0]) - 1] + "十" + Symbol[parseInt(String_BI[1])] + "、" + Type
+        }
       },
       Get_Picture_Src(position, Bundle_Index, Question_Index, Stem_Pic_Row_Index, Stem_Pic_Col_Index){
         let Question = this.Question_Bundle[Bundle_Index].list[Question_Index];
@@ -1819,7 +1987,7 @@ export default {
               this.Draging_Questions_Rect[Index].y != this.Focusing_Questions_Position.y){
                 Index = Index + 1
               }
-        this.Editing_Position = this.Question_Bundle[Bundle_Index].type + " " + Index
+        this.Editing_Position = Bundle_Index + " " + Index
         this.Edit_Question(this.Question_Bundle[Bundle_Index].type, this.Question_Bundle[Bundle_Index].list[Index])
 
       },
@@ -1855,7 +2023,7 @@ export default {
       // 修改
       Question_Edit(Bundle_Index, Question_Index){
         let Item = JSON.parse(JSON.stringify(this.Question_Bundle[Bundle_Index].list[Question_Index]))
-        this.Editing_Position = this.Question_Bundle[Bundle_Index].type + " " + Question_Index
+        this.Editing_Position = Bundle_Index + " " + Question_Index
         this.Edit_Question(this.Question_Bundle[Bundle_Index].type, Item)
       },
       // 题包的前移，后移，删除
@@ -1901,16 +2069,13 @@ export default {
             y: Item.y
           })
         }
-        this.Draging_Questions_Type = this.Question_Bundle[Bundle_Index].type
+        this.Draging_Questions_Index = Bundle_Index
       },
       Get_Document_Pos_End(Ref_Name, Bundle_Index){
 
-        // 先判断一下是否进行了跨题型的移动
-        let Aim_Type = this.Question_Bundle[Bundle_Index].type;
-
-        if(Aim_Type != this.Draging_Questions_Type){
+        if(Bundle_Index != this.Draging_Questions_Index){
           this.$message.error("无效移动。")
-          this.Draging_Questions_Type = ""
+          this.Draging_Questions_Index = -1
           this.Draging_Questions_Position = {
             x: -1,
             y: -1
@@ -1947,25 +2112,25 @@ export default {
               break;
             }
         }
-        if(Start != End){
-          this.$message.success(this.Draging_Questions_Type + " 的第 " + (Start + 1) + " 题已移动到第 " + (End+1) + " 题处。")
+        if(Start != End && Start != -1 && End != -1){
+          this.$message.success("第 " + (this.Draging_Questions_Index + 1) + " 大题的第 " + (Start + 1) + " 题已移动到第 " + (End+1) + " 题处。")
           this.Focusing_Questions_Position = {
             x: 0,
             y: 0
           }
-          this.Focusing_Type = ""
+          this.Focusing_Index = -1
           let Item = JSON.parse(JSON.stringify(this.Question_Bundle[Bundle_Index].list[Start]))
           this.Question_Bundle[Bundle_Index].list.splice(Start, 1)
           this.Question_Bundle[Bundle_Index].list.splice(End, 0, Item)
-        }else{
+        }else if(Start == End && Start != -1 && End != -1){
           this.Focusing_Questions_Position = {
             x: Aim_Position.x,
             y: Aim_Position.y
           }
-          this.Focusing_Type = this.Question_Bundle[Bundle_Index].type
+          this.Focusing_Index = Bundle_Index
         }
 
-        this.Draging_Questions_Type = ""
+        this.Draging_Questions_Index = -1
         this.Draging_Questions_Position = {
           x: 0,
           y: 0
@@ -1977,14 +2142,14 @@ export default {
           x: 0,
           y: 0
         },
-        this.Focusing_Type = ""
+        this.Focusing_Index = -1
         this.Draging_Questions_Rect = [];
       },
       // 调整指针样式为抓握和松开
-      Get_Cursor(Ref_Name, Bundle_Index){
+      Get_Cursor(Ref_Name, Bundle_Index, Question_Index){
  
         let Search = this.$refs[Ref_Name]
-        if(!Search){
+        if(!Search || Search.length == 0){
           return 
         }
         let Document = Search[0].$el.getBoundingClientRect();
@@ -1993,13 +2158,12 @@ export default {
           y: Document.y
         }
 
-        let Aim_Type = this.Question_Bundle[Bundle_Index].type;
-
-        if(Aim_Type != this.Draging_Questions_Type && this.Draging_Questions_Type != ""){
+        if(Bundle_Index != this.Draging_Questions_Index && this.Draging_Questions_Index != -1){
           return {'cursor': 'not-allowed'}
         }
 
-        if(this.Draging_Questions_Type != "" 
+        // 同一题包，且是拖拽的起点
+        if(this.Draging_Questions_Index == Bundle_Index 
           && Aim_Position.x == this.Draging_Questions_Position.x 
           && Aim_Position.y == this.Draging_Questions_Position.y){
           return {
@@ -2007,15 +2171,20 @@ export default {
             'border': '2px solid #409EFF',
             'border-radius': '5px'
           }
-        }else if(this.Draging_Questions_Type != ""){
+        }
+        // 同一题包，但不同的题目
+        else if(this.Draging_Questions_Index == Bundle_Index){
           return {
             'cursor': 'grabbing',
             'border': '2px solid #FFE37F',
             'border-radius': '5px'
           }
-        }else if(Aim_Position.x == this.Focusing_Questions_Position.x 
+        }
+        // 
+        else if(Aim_Position.x == this.Focusing_Questions_Position.x 
           && Aim_Position.y == this.Focusing_Questions_Position.y){
-            if(this.Editing_Position != ""){
+            if(parseInt(this.Editing_Position.split(' ')[0]) == Bundle_Index && 
+              parseInt(this.Editing_Position.split(' ')[1]) == Question_Index){
               return {
                 'border': '2px solid red',
                 'border-radius': '5px',
@@ -2416,30 +2585,70 @@ export default {
         }
         this.Add_To_Bundle(JSON.parse(Ques))
     },
-    Add_To_Bundle(Question){
-      if(this.Editing_Position == ""){
-        let Flag = false
-        for(let i = 0; i < this.Question_Bundle.length; i++){
+    Multi_Choice(){
+      this.Multi_Info = []
+      for(let i = 0; i < this.Question_Bundle.length; i++){
           if(this.Question_Bundle[i].type == this.Type){
-            this.Question_Bundle[i].list.push(Question)
-            Flag = true
-            break
+            let Score = 0;
+            for(let j = 0; j < this.Question_Bundle[i].list.length; j++){
+              Score = Score + this.Question_Bundle[i].list[j].score
+            }
+            this.Multi_Info.push({
+              index: i,
+              desc: this.Question_Bundle[i].desc,
+              length: this.Question_Bundle[i].list.length,
+              score: Score
+            })
           }
         }
-        if(!Flag){
-          this.Question_Bundle.push({
-            type: this.Type,
-            list: [Question]
-          })
+      this.Multi_Type_Insert = true;
+    },
+    Waiting_Insert(Index){
+      console.log(this.Waiting_Question)
+      this.Question_Bundle[Index].list.push(JSON.parse(JSON.stringify(this.Waiting_Question)))
+      this.Multi_Info = [];
+      this.Multi_Type_Insert = false;
+      this.Refresh = !this.Refresh;
+      console.log(this.Jumping)
+      if(this.Jumping != ""){
+        let Aim = this.Jumping.split(" ")
+        this.Question_Bundle[Aim[0]].list.splice(Aim[1], 1)
+        this.Reset_Focus()
+        this.Jumping = ""
+      }
+    },
+    Add_To_Bundle(Question){
+      if(this.Editing_Position == ""){
+        let Count = 0
+        for(let i = 0; i < this.Question_Bundle.length; i++){
+          if(this.Question_Bundle[i].type == this.Type){
+            Count = Count + 1
+          }
+        }
+        if(Count > 1){
+          this.Waiting_Question = Question
+          this.Multi_Choice()
+          return
+        }else{
+          let Flag = false
+          for(let i = 0; i < this.Question_Bundle.length; i++){
+            if(this.Question_Bundle[i].type == this.Type){
+              this.Question_Bundle[i].list.push(Question)
+              Flag = true
+              break
+            }
+          }
+          if(!Flag){
+            this.Question_Bundle.push({
+              type: this.Type,
+              list: [Question],
+              desc: "第1个" + this.Type + "题包"
+            })
+          }
         }
       }else{
         let Aim = this.Editing_Position.split(" ");
-        for(let i = 0; i < this.Question_Bundle.length; i++){
-          if(this.Question_Bundle[i].type == Aim[0]){
-            this.Question_Bundle[i].list.splice(Aim[1], 1, Question)
-            break
-          }
-        }
+        this.Question_Bundle[Aim[0]].list.splice(Aim[1], 1, Question)
         this.Editing_Position = ""
       }
       sessionStorage.removeItem("PaperEditing")
@@ -2559,7 +2768,7 @@ export default {
       // 获取正在编辑的题目的题型和位置
       Get_Editing_Info(){
         let Aim_Info = this.Editing_Position.split(" ")
-        return "正在编辑 " + Aim_Info[0] + " 的第 " + (parseInt(Aim_Info[1]) + 1) + " 题"
+        return "正在编辑第 " + (parseInt(Aim_Info[0]) + 1) + " 大题的第 " + (parseInt(Aim_Info[1]) + 1) + " 题"
       },
       // 获取正在创建的题目的题型
       Get_Building_Info(){
@@ -2583,14 +2792,21 @@ export default {
         return "(" + Index + ")"
       },
       Submit(){
+
+        this.Title = this.Title.replace(/^\s*|\s*$/g,"");
+        if(this.Title == ""){
+          this.$message.error("尚未填写试卷标题或仅有空格，请重新填写。")
+          return
+        }
+        
         let Upload_Json = {
-          title: this.Title,
+          title: this.Title != "" ? this.Title : "未命名试卷",
           desc: "",
           Question_list: []
         }
         for(let i = 0; i < this.Question_Bundle.length; i++){
           let Question_Item = {
-            desc : "",
+            desc : this.Question_Bundle[i].desc,
             type : ['单选题', '多选题', '判断题'].indexOf(this.Question_Bundle[i].type) != -1 ? 
                       '选择题' : ['简答题', '计算题'].indexOf(this.Question_Bundle[i].type) != -1 ? 
                         '解答题' : this.Question_Bundle[i].type == '填空题' ? '填空题' : '综合题',
@@ -3102,6 +3318,67 @@ export default {
 
         return Temp_Doc
     },
+    // 添加新的空题包
+    Add_New_Empty_Bundle(){
+      let Count = 1;
+      for(let i = 0; i < this.Question_Bundle.length; i++){
+        if(this.Question_Bundle[i].type == this.Add_Bundle_Type){
+          Count = Count + 1
+        }
+      }
+      this.Question_Bundle.push({
+        type: this.Add_Bundle_Type,
+        list: [],
+        desc: "第" + Count + "个" + this.Add_Bundle_Type + "题包"
+      })
+    },
+    // 给表格的每一行赋予相对的样式
+    Multi_Choise_Table_Row(Info_Index){
+      if(Info_Index%2 == 1){
+        return "Multi_Choise_Table_Row_0"
+      }else{
+        return "Multi_Choise_Table_Row_1"
+      }
+    },
+    Focus_Jump_Check(Type){
+      let Count = 0
+      for(let i = 0; i < this.Question_Bundle.length; i++){
+        if(this.Question_Bundle[i].type == Type){
+          Count = Count + 1
+        }
+      }
+      if(Count > 1){
+        return true
+      }else{
+        return false
+      }
+    },
+    Focus_Question_Jump(Bundle_Index){
+      let Index = 0;
+      while(this.Draging_Questions_Rect[Index].x != this.Focusing_Questions_Position.x || 
+            this.Draging_Questions_Rect[Index].y != this.Focusing_Questions_Position.y){
+              Index = Index + 1
+            }
+      let Item = JSON.parse(JSON.stringify(this.Question_Bundle[Bundle_Index].list[Index]))
+      this.Jumping = Bundle_Index + " " + Index
+      this.Waiting_Question = Item;
+      this.Multi_Info = []
+      for(let i = 0; i < this.Question_Bundle.length; i++){
+          if(this.Question_Bundle[i].type == this.Question_Bundle[Bundle_Index].type){
+            let Score = 0;
+            for(let j = 0; j < this.Question_Bundle[i].list.length; j++){
+              Score = Score + this.Question_Bundle[i].list[j].score
+            }
+            this.Multi_Info.push({
+              index: i,
+              desc: this.Question_Bundle[i].desc,
+              length: this.Question_Bundle[i].list.length,
+              score: Score
+            })
+          }
+        }
+      this.Multi_Type_Insert = true;
+    }
   }
 };
 </script>
@@ -3212,10 +3489,50 @@ export default {
   cursor: pointer;
   box-sizing: border-box;
 }
+.Desc_Input /deep/ .el-input__inner{
+  margin: 5px 0px;
+  padding: 0px;
+  height: 20px;
+  line-height: 20px;
+}
+.Multi_Choise_Table_Top{
+  border: 1px solid #409eff;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.Multi_Choise_Table_Top_Label{
+  border-right: 1px solid #409eff; 
+  height: 40px; 
+  line-height: 40px;
+  color: #409EFF
+}
+.Multi_Choise_Table_Row_0{
+  height: 40px; 
+  line-height: 40px;
+  border: 1px solid #409eff;
+  border-top: none;
+}
+.Multi_Choise_Table_Row_1{
+  height: 40px; 
+  line-height: 40px;
+  border: 1px solid #409eff;
+  border-top: none;
+  background: rgba($color: 	#409EFF, $alpha: 0.1);;
+}
 </style>
 <style>
 /* 设定一下弹出框的属性 */
 .el-popover.Total_Bundle_Popover{
   height: 350px;
+}
+
+.el-dialog.Multi_Type_Selector{
+  display: flex;
+  flex-direction: column;
+  margin:0 !important;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
 }
 </style>
