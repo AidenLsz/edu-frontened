@@ -20,7 +20,7 @@
         width="70%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
-        <el-row slot="title" style="margin: 0px; padding: 0px">选择要插入的{{Type}}大题</el-row>
+        <el-row slot="title" style="margin: 0px; padding: 0px">选择要插入的{{Jumping != '' ? Question_Bundle[parseInt(Jumping.split(' ')[0])].type : Type}}大题</el-row>
         <el-row type="flex" justify="start" class="Multi_Choise_Table_Top">
           <el-col :span="2" class="Multi_Choise_Table_Top_Label">
             <el-row type="flex" justify="center">
