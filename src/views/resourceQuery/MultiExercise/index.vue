@@ -603,9 +603,9 @@
         </el-row>
 
         <!-- 数学，内容确认区域 -->
-        <el-row v-for="(Question_Info, Question_Index) in TestData.doc" :key="Question_Index" 
-          :class="selected"
-          style="border: 1px dashed black; background: #F8FBFF; margin: 25px">
+        <el-row v-for="(Question_Info, Question_Index) in TestData.doc" :key="Question_Index"
+          :class="selected(Question_Index)"
+          style="border: 1px dashed black;margin: 25px">
           <!-- 题型，上传用户，科目部分 -->
           <el-row type="flex" justify="start" style="margin: 30px 50px 0px 10px">
               <el-col :span="2" style="text-align: left" >
@@ -1064,6 +1064,11 @@ export default {
     },
     handleDatabaseChange(data){
       this.database_list=data
+    },
+    selected(Question_Index){
+      if(this.Question_Highlight[Question_Index])
+        return "selected"
+      return 'unselected'
     },
     search(Question_Index){
       this.Question_Check.splice(Question_Index, 1, true)
@@ -2718,7 +2723,7 @@ export default {
       for (var i = 0; i < this.Question_Highlight.length; i++) {
         this.Question_Highlight[i]=false
       }
-      this.Question_Highlight[Question_Index]=false
+      this.Question_Highlight[Question_Index]=true
     },
     Init_Question_Check(){
 
@@ -3311,18 +3316,19 @@ export default {
 }
 .center-text{
   line-height: 36px;
-  // height: 36px;
-  // vertical-align: middle;
 }
 
 .file-name{
   display: inline-block;
   margin-left: 30px;
   line-height:50px;
-  // margin-top: 15px;
-  // padding-top: 5px;
 }
-
+.selected{
+  background: #c3d7df;
+}
+.unselected{
+  background: #F8FBFF;
+}
 .panel {
   background-color: #fff;
   border: 1px solid #fff;
