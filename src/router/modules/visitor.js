@@ -123,16 +123,16 @@ const visitorRouter=[
     name: "Members",
     component: Members
   },
-	{
-		path: "/PublicPlatform",
-		name: "PublicPlatform",
-		component: PublicPlatform
-	},
-	{
-		path: "/ImageTranscription",
-		name: "ImageTranscription",
-		component: ImageTranscription
-	},
+  {
+    path: "/PublicPlatform",
+    name: "PublicPlatform",
+    component: PublicPlatform
+  },
+  {
+    path: "/ImageTranscription",
+    name: "ImageTranscription",
+    component: ImageTranscription
+  },
   {
     path: "/paperAnalyse",
     name: "PaperAnalyse",

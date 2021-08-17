@@ -153,7 +153,11 @@
                         ><span style="color: black">资源录入</span></template
                       >
                       <el-menu-item index="1-1"
+<<<<<<< HEAD
                         ><span style="color: Gainsboro">学习资源</span>
+=======
+                        ><span style="color: Gainsboro">教材教辅资源</span>
+>>>>>>> 2ac3ac6 (add instruction)
                       </el-menu-item>
                       <router-link
                         to="/inputMarked"
@@ -218,7 +222,11 @@
                         @click.native="ToTop"
                       >
                         <el-menu-item index="2-4">
+<<<<<<< HEAD
                           <span style="color: black">学习资源检索</span>
+=======
+                          <span style="color: black">教材教辅检索</span>
+>>>>>>> 2ac3ac6 (add instruction)
                         </el-menu-item>
                       </router-link>
                     </el-submenu>
@@ -227,7 +235,11 @@
                         ><span style="color: black">分析</span></template
                       >
                       <el-menu-item index="3-1"
+<<<<<<< HEAD
                         ><span style="color: Gainsboro">学习资源</span>
+=======
+                        ><span style="color: Gainsboro">教材教辅资源</span>
+>>>>>>> 2ac3ac6 (add instruction)
                       </el-menu-item>
                       <el-menu-item
                         index="3-2"
@@ -260,6 +272,10 @@
                         </el-menu-item>
                       </router-link>
                     </el-submenu>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2ac3ac6 (add instruction)
                     <el-menu-item index="5">
                       <router-link
                         to="/paperCombine"
@@ -269,16 +285,34 @@
                         <span style="color: black"> 组卷系统 </span>
                       </router-link>
                     </el-menu-item>
+<<<<<<< HEAD
                     <el-menu-item index="6">
                       <!-- <router-link to="/manage/dashboard" v-if="$store.state.user.name" -->
+=======
+
+                    <el-menu-item index="6">
+>>>>>>> 2ac3ac6 (add instruction)
                       <router-link
                         to="/manage/dashboard"
                         :underline="false"
                         @click.native="ToTop"
                       >
+<<<<<<< HEAD
                         <span style="color: black"> 资源管理 </span>
                       </router-link>
                     </el-menu-item>
+=======
+                        <span
+                          v-if="$store.state.user.name"
+                          style="color: #409eff; font-weight: bold"
+                        >
+                          资源管理
+                        </span>
+                        <span v-else style="color: silver"> 资源管理 </span>
+                      </router-link>
+                    </el-menu-item>
+
+>>>>>>> 2ac3ac6 (add instruction)
                     <router-link
                       to="/estimate"
                       :underline="false"
@@ -289,6 +323,10 @@
                         <span style="color: black">试题属性预估</span>
                       </el-menu-item>
                     </router-link>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2ac3ac6 (add instruction)
                     <router-link
                       to="/similarity"
                       :underline="false"
@@ -299,6 +337,10 @@
                         <span style="color: black">相似题预估</span>
                       </el-menu-item>
                     </router-link>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2ac3ac6 (add instruction)
                     <router-link
                       to="/admin"
                       v-if="Get_Priority()"
@@ -370,9 +412,13 @@
     </el-header>
     <!-- <basic-header/> -->
     <el-main>
+<<<<<<< HEAD
       <div style="min-height: 100vh">
         <router-view :key="$route.fullPath"></router-view>
       </div>
+=======
+      <router-view :key="$route.fullPath"></router-view>
+>>>>>>> 2ac3ac6 (add instruction)
       <basic-footer />
     </el-main>
   </el-container>
@@ -383,9 +429,12 @@
 import BasicFooter from "@/layout/components/footer.vue";
 import login from "@/layout/components/login.vue";
 import register from "@/layout/components/register.vue";
+<<<<<<< HEAD
 import {
   commonAjax
 } from '@/common/utils/ajax'
+=======
+>>>>>>> 2ac3ac6 (add instruction)
 // import BasicHeader from '@/layout/header.vue'
 // import vueImgVerify from "@/common/components/vue-img-verify.vue";
 export default {
@@ -408,7 +457,10 @@ export default {
       // 跳转至试卷/试题分析的不同地点用的
       PaperAnalyseSwitchFlag: false,
       QuestionAnalyseSwitchFlag: false,
+<<<<<<< HEAD
       isGroup: false
+=======
+>>>>>>> 2ac3ac6 (add instruction)
     };
   },
   mounted() {
@@ -432,7 +484,10 @@ export default {
     //     $("#header-sticky").addClass("sticky-menu");
     //   }
     // });
+<<<<<<< HEAD
     this.getGroups()
+=======
+>>>>>>> 2ac3ac6 (add instruction)
   },
   updated() {
     var user = sessionStorage.getItem("user");
@@ -454,6 +509,7 @@ export default {
         path: "/user/userGroup",
       });
     },
+<<<<<<< HEAD
     getGroups() {
       commonAjax(this.backendIP + '/api/get_user_groups', {}).then((res) => {
         if (res.data.length > 0 && res.data.some((data)=>data.is_admin)) {
@@ -461,6 +517,8 @@ export default {
         }
       })
     },
+=======
+>>>>>>> 2ac3ac6 (add instruction)
     QAS(index) {
       if (index == 0) {
         this.$router.push({
@@ -528,6 +586,15 @@ export default {
       });
       this.ToTop();
     },
+<<<<<<< HEAD
+=======
+    PublicPlatform() {
+      this.$router.push({
+        path: "/PublicPlatform",
+      });
+      this.ToTop();
+    },
+>>>>>>> 2ac3ac6 (add instruction)
     goToImageTranscription() {
       this.$router.push({
         path: "/ImageTranscription",
@@ -579,6 +646,7 @@ export default {
     // },
   },
 };
+<<<<<<< HEAD
 	// import $ from "jquery";
 	import BasicFooter from "@/layout/components/footer.vue";
 	import login from "@/layout/components/login.vue";
@@ -773,6 +841,8 @@ export default {
 			// },
 		},
 	};
+=======
+>>>>>>> 2ac3ac6 (add instruction)
 </script>
 <style scoped lang="scss">
 .el-header
