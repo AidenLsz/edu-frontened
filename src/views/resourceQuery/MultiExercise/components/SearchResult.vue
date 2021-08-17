@@ -18,69 +18,6 @@
           <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
         </el-row>
     </el-dialog>
-    <!-- 筛选条件行 -->
-    <!-- <el-row type="flex" justify="start" style="margin-left: 5vw; margin-right: 5vw; border-top: 1px solid Silver; border-bottom: 1px solid Silver;">
-      <el-col :span="2">
-        <span style="line-height: 40px; font-weight: bold">筛选条件：</span>
-      </el-col>
-      <el-col :span="3">
-        <el-popover
-          placement="bottom-start"
-          width="850"
-          trigger="hover">
-          <el-checkbox-group v-model="Subject_Type">
-            <el-checkbox label="语文">语文</el-checkbox>
-            <el-checkbox label="数学">数学</el-checkbox>
-            <el-checkbox label="英语">英语</el-checkbox>
-            <el-checkbox label="政治">政治</el-checkbox>
-            <el-checkbox label="历史">历史</el-checkbox>
-            <el-checkbox label="地理">地理</el-checkbox>
-            <el-checkbox label="物理">物理</el-checkbox>
-            <el-checkbox label="化学">化学</el-checkbox>
-            <el-checkbox label="生物">生物</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
-          </el-checkbox-group>
-          <el-button slot="reference" class="FilterButton" type="text">{{Get_Subject()}}</el-button>
-          <el-button slot="reference" type="text" v-if="Subject_Type.length > 0" @click="Subject_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
-        </el-popover>
-      </el-col>
-      <el-col :span="3">
-        <el-popover
-          placement="bottom-start"
-          width="510"
-          trigger="hover">
-          <el-checkbox-group v-model="Period_Type">
-            <el-checkbox label="小学">小学</el-checkbox>
-            <el-checkbox label="初中">初中</el-checkbox>
-            <el-checkbox label="高中">高中</el-checkbox>
-            <el-checkbox label="大学">大学</el-checkbox>
-            <el-checkbox label="成人">成人</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
-          </el-checkbox-group>
-          <el-button slot="reference" class="FilterButton" type="text">{{Get_Period()}}</el-button>
-          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
-        </el-popover>
-      </el-col>
-      <el-col :span="3">
-        <el-popover
-          placement="bottom-start"
-          width="770"
-          trigger="hover">
-          <el-checkbox-group v-model="Search_Ques_Type">
-            <el-checkbox label="单选题">单选题</el-checkbox>
-            <el-checkbox label="多选题">多选题</el-checkbox>
-            <el-checkbox label="判断题">判断题</el-checkbox>
-            <el-checkbox label="填空题">填空题</el-checkbox>
-            <el-checkbox label="简答题">简答题</el-checkbox>
-            <el-checkbox label="计算题">计算题</el-checkbox>
-            <el-checkbox label="其他">其他</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
-          </el-checkbox-group>
-          <el-button slot="reference" class="FilterButton" type="text">{{Get_Search_Ques_Type()}}</el-button>
-          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
-        </el-popover>
-      </el-col>
-    </el-row> -->
     <el-row
       v-for="(Question, Question_Index) in question_list"
       :key="Question_Index"

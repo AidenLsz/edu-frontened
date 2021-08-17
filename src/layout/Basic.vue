@@ -213,9 +213,10 @@
 											</router-link>
 										</el-menu-item>
 										<el-menu-item index="6">
-											<router-link to="/manage/dashboard" v-if="$store.state.user.name"
+                      <!-- <router-link to="/manage/dashboard" v-if="$store.state.user.name" -->
+											<router-link to="/manage/dashboard" 
 												:underline="false" @click.native="ToTop">
-												<span style="color: #409EFF; font-weight: bold">
+												<span style="color: black; ">
 													资源管理
 												</span>
 											</router-link>
