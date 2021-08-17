@@ -92,7 +92,7 @@
                         <span style="color: black;">单试题查重</span>
                       </el-menu-item>
                     </router-link>
-                    <router-link :to="rootPath+'exercise'" :underline="false" @click.native="ToTop">
+                    <router-link :to="rootPath+'multiexercise'" :underline="false" @click.native="ToTop">
                       <el-menu-item index="2-1">
                         <span style="color: black;">多试题查重</span>
                       </el-menu-item>
@@ -114,7 +114,7 @@
                   </el-submenu>
                   <el-menu-item index="5">
                     <router-link :to="rootPath+'manage/dashboard'" :underline="false" @click.native="ToTop">
-                      <span style="color: #409EFF; font-weight: bold">
+                      <span style="color: black">
                         资源管理
                       </span>
                     </router-link>

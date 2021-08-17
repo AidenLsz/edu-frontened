@@ -9,6 +9,11 @@ const router=[
     component:()=> import("@/views/resourceQuery/Exercise"),
   },
   {
+    path: "multiexercise",
+    name: "Exercise",
+    component:()=> import("@/views/resourceQuery/MultiExercise/index.vue"),
+  },
+  {
     path: "searchPaper",
     name: "SearchPaper",
     component:()=> import("@/views/resourceQuery/SearchPaper"),
