@@ -603,7 +603,8 @@
         </el-row>
 
         <!-- 数学，内容确认区域 -->
-        <el-row v-for="(Question_Info, Question_Index) in TestData.doc" :key="Question_Index"
+        <el-row v-for="(Question_Info, Question_Index) in TestData.doc" :key="Question_Index" 
+          :class="selected"
           style="border: 1px dashed black; background: #F8FBFF; margin: 25px">
           <!-- 题型，上传用户，科目部分 -->
           <el-row type="flex" justify="start" style="margin: 30px 50px 0px 10px">
@@ -868,6 +869,7 @@ export default {
       Question_Edit_Sub_Ques_Index: -1,
       Question_Edit_Answer_Index: -1,
       Question_Check: [],
+      Question_Highlight: [],
       Submit_Show: false,
 
       Sequence_Questions: "1",
@@ -1065,11 +1067,11 @@ export default {
     },
     search(Question_Index){
       this.Question_Check.splice(Question_Index, 1, true)
+      this.highlight(Question_Index)
       this.$nextTick(()=>{
         html2canvas(this.$refs['imageDom_'+Question_Index][0]).then(canvas => {
           // 转成图片，生成图片地址
           let subject = this.Subject_List.filter((item)=>item.val==this.paper_type)
-          // console.log(subject[0].list,[this.PeriodType]);
           this.$refs.searchRes.search(canvas.toDataURL("image/png"),this.database_list,subject[0].list,[this.PeriodType])
         });
       })
@@ -1221,15 +1223,6 @@ export default {
     Show_Score(score){
       score
       // console.log(score)
-    },
-    // 将所有题目状况更改为已确认
-    Check_All(){
-      for(let i = 0; i < this.Question_Check.length; i++){
-        if(!this.Question_Check[i]){
-          this.Question_Check.splice(i, 1, true);
-        }
-      }
-      this.Submit_Show = true;
     },
     // 向前切分数学试题
     Math_Front_Cut(index, sindex){
@@ -1494,18 +1487,14 @@ export default {
 
             this.$refs.math_paper_input.value = ""
 
-            if(this.math_input == 'paper'){
-              this.downloadPaper = data.body.Download_Paper;
-              this.TestData = data.body.TestData;
-              this.Init_Question_Check();
-              this.loading = false;
-            }else{
-              this.downloadPaper = data.body.Download_Paper;
+            if(this.math_input !== 'paper'){
               this.downloadAnswer = data.body.Download_Answer;
-              this.TestData = data.body.TestData;
-              this.Init_Question_Check();
-              this.loading = false;
             }
+            this.downloadPaper = data.body.Download_Paper;
+            this.TestData = data.body.TestData;
+            this.Init_Question_Check();
+            this.Init_Question_Highlight();
+            this.loading = false;
 
             if(this.math_input == 'combine'){
               this.$refs.math_answer_input.value = ""
@@ -2718,6 +2707,18 @@ export default {
         this.$message.success("试题分析内容已在本页面展开。");
         return
       })
+    },
+    Init_Question_Highlight(){
+      this.Question_Check = [];
+      for(var i = 0; i < this.TestData.doc.length; i++){
+        this.Question_Check.push(true);
+      }
+    },
+    highlight(Question_Index){
+      for (var i = 0; i < this.Question_Highlight.length; i++) {
+        this.Question_Highlight[i]=false
+      }
+      this.Question_Highlight[Question_Index]=false
     },
     Init_Question_Check(){
 
