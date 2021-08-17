@@ -183,6 +183,7 @@ export default {
                   fontStyle: 'normal',
                   align: 'left'
               },
+              order:'seriesDesc'//和图例改动初目的一样，为了让由上到下输入的图例、提示框与由下到上绘制的图标保持一致性
           },
           calculable: true,
           legend: {
