@@ -218,9 +218,9 @@
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>多试题查重
-            <span @click="openInstructionDialog" style="cursor:pointer;">
+            <!-- <span @click="openInstructionDialog" style="cursor:pointer;">
             <i class="el-icon-question"></i>
-            </span>
+            </span> -->
           </el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
