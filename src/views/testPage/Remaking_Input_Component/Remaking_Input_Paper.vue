@@ -1598,8 +1598,6 @@ import MixQuestions from '@/views/testPage/Remaking_Input_Component/components/M
 
 import Mathdown from '@/common/components/Mathdown'
 
-import FileSaver from "file-saver";
-
 import {commonAjax} from '@/common/utils/ajax'
 
 export default {
@@ -2053,24 +2051,136 @@ export default {
         }
         // 把累积到的最后一组也压进去
         Out_JSON.push(JSON.parse(JSON.stringify(Item)))
-        this.Title = this.File_Name.split(".")[0]
-        let file = new File(
-          [JSON.stringify(Out_JSON, null, 4)],
-          "切分线划分结果.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
+
         let Param = {
           'Paper_Cut_Result': JSON.stringify(Out_JSON, null, 4)
         }
 
+        let Temp_Result_Dict = {
+          单选题: {
+            list: [],
+            desc: ""
+          },
+          多选题: {
+            list: [],
+            desc: ""
+          },
+          判断题: {
+            list: [],
+            desc: ""
+          },
+          填空题: {
+            list: [],
+            desc: ""
+          },
+          简答题: {
+            list: [],
+            desc: ""
+          },
+          计算题: {
+            list: [],
+            desc: ""
+          }
+        }
+
+        let Type_List = ['单选题', '多选题', '判断题', '填空题', '简答题', '计算题']
+        for(let j = 0; j < Type_List.length; j++){
+          let Count = 1;
+          for(let i = 0; i < this.Question_Bundle.length; i++){
+            if(this.Question_Bundle[i].type == Type_List[j]){
+              Count = Count + 1
+            }
+          }
+          Temp_Result_Dict[Type_List[j]].desc = "第" + Count + "个" + Type_List[j] + "题包"
+        }
+
         commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param).then((res)=>{
-          let file = new File(
-            [JSON.stringify(res.data, null, 4)],
-            "切分线识别结果.json",
-            { type: "text/plain;charset=utf-8" }
-          );
-          FileSaver.saveAs(file);
+          
+          for(let i = 0; i < res.length; i++){
+            if(['单选题', '多选题', '判断题'].indexOf(res[i].type) != -1){
+              let Item = {
+                score: res[i].score == 0 ? 5 : res[i].score,
+                stem: res[i].stem,
+                stem_image: [],
+                options: [],
+                options_image: [],
+                answer: res[i].answer,
+                answer_image: [],
+                analysis: res[i].analysis,
+                analysis_image: [],
+                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                sub_questions: [],
+                sub_questions_image: [],
+                sub_questions_score: [],
+                answer_list: []
+              }
+              for(let j = 0; j < res[i].options.length; j++){
+                Item.options.push(res[i].options[j])
+                Item.options_image.push([])
+              }
+              Temp_Result_Dict[res[i].type].list.push(Item)
+            }else if(res[i].type == '填空题'){
+              let Item = {
+                score: res[i].score == 0 ? 5 : res[i].score,
+                stem: res[i].stem,
+                stem_image: [],
+                options: [],
+                options_image: [],
+                answer: res[i].answer,
+                answer_image: [],
+                analysis: res[i].analysis,
+                analysis_image: [],
+                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                sub_questions: [],
+                sub_questions_image: [],
+                sub_questions_score: [],
+                answer_list: []
+              }
+              Temp_Result_Dict[res[i].type].list.push(Item)
+            }else if(['简答题', '计算题'].indexOf(res[i].type) != -1){
+                let Item = {
+                  score: 5 * res[i].subquestions.length,
+                  stem: res[i].stem,
+                  stem_image: [],
+                  options: [],
+                  options_image: [],
+                  answer: res[i].answer,
+                  answer_image: [],
+                  analysis: res[i].analysis,
+                  analysis_image: [],
+                  // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                  sub_questions: [],
+                  sub_questions_image: [],
+                  sub_questions_score: [],
+                  answer_list: []
+              }
+              for(let j = 0; j < res[i].subquestions.length; j++){
+                Item.sub_questions.push(res[i].subquestions[j])
+                Item.sub_questions_image.push([])
+                Item.sub_questions_score.push(5)
+              }
+            }
+          }
+
+          for(let i = 0; i < Type_List.length; i++){
+            if(Temp_Result_Dict[Type_List[i]].list.length > 0){
+              this.Question_Bundle.push({
+                type: Type_List[i],
+                desc: Temp_Result_Dict[Type_List[i]].desc,
+                list: Temp_Result_Dict[Type_List[i]].list
+              })
+            }
+          }
+
+          this.$message.success("所切分的结果中，可识别的试题结果已全部导入录入结果当中。")
+
+          this.File_Name = ""
+          this.File_Uploading = false
+          this.Paper_Content = []
+          this.Paper_Image_Dict = {}
+          this.Paper_Divider_Index = -1;
+          this.Using_Part = "Input"
+
         }).catch(
           ()=>{
             this.$message.error("解析出现异常，请重试。")
@@ -3145,23 +3255,26 @@ export default {
           Upload_Json.Question_list.push(Question_Item)
         }
 
-        let file = new File(
-          [JSON.stringify({
-                "post_type": 1,
-                "user_id": this.UUID,
-                "subject": this.Subject,
-                "period": this.Period,
-                "questions": Upload_Json,
-                }, null, 4)],
-          "RemakeInputPaper.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
-
-        let Flag = true;
-        if(Flag){
-            return
+        let Param = {
+          'Input_Data': JSON.stringify({
+                          "post_type": 1,
+                          "user_id": this.UUID,
+                          "subject": this.Subject,
+                          "period": this.Period,
+                          "questions": JSON.stringify(Upload_Json),
+                        }, null, 4),
+          'questionInput': true
         }
+
+        commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
+          this.$message.success("入库完成")
+          this.Uploading = false;
+        }).catch(
+          ()=>{
+            this.$message.error("入库失败")
+            this.Uploading = false;
+          }
+        )
         
       },
       // 开始调用格式转换方法

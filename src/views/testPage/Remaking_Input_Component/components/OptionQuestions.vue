@@ -627,7 +627,7 @@ export default {
     watch: {
         detailType(newVal, oldVal){
             if(newVal != oldVal){
-                this.Reset_Question_Info();
+                this.Type_Reset();
             }
         },
         Paste_Analysis(newVal){
@@ -997,6 +997,23 @@ export default {
                 this.Question.options = ["", "", "", ""]
                 this.Question.options_image = [[], [], [], []]
             }
+        },
+        // 重置数据变量
+        Type_Reset(){
+            // 用于标记注意点的信息，可以重置
+            this.Focusing_Input = ""
+            this.Focusing_Dom = ""
+            this.Text_Start = 0
+            this.Text_End = 0
+
+            // 用于公式输入
+            this.Complex_Content = ""
+
+            // 基础试题信息，重置
+            this.Focus_Function = "Editing"
+            this.Question.answer = ""
+            this.Question.answer_image = []
+            this.Question.answer_list = []
         },
         // 自动切分
         // 用于给试题文本自动切分，现在先只做选择吧，以后功能补齐了再说后面的

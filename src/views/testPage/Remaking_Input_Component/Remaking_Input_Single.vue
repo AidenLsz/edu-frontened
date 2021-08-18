@@ -109,10 +109,8 @@ import MixQuestions from '@/views/testPage/Remaking_Input_Component/components/M
 
 import {commonAjax} from '@/common/utils/ajax'
 
-import FileSaver from "file-saver";
-
 export default {
-  name: "RemakingInputPaper",
+  name: "inp",
   components: {
       OptionQuestions, FillQuestions, AnswerQuestions, MixQuestions
   },
@@ -697,24 +695,6 @@ export default {
                             "questions": JSON.stringify(Submit_JSON),
                             }, null, 4),
             'questionInput': true
-        }
-
-        let file = new File(
-          [JSON.stringify({
-                "post_type": 0,
-                "user_id": this.UUID,
-                "subject": this.Subject,
-                "period": this.Period,
-                "questions": Submit_JSON,
-                }, null, 4)],
-          "RemakeInputSingle.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
-
-        let Flag = true;
-        if(Flag){
-            return
         }
 
         commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
