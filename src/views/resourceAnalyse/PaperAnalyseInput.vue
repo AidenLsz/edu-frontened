@@ -1947,7 +1947,7 @@ export default {
   },
   mounted(){
       if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
-        this.$message.error("您尚未登录，请登录后使用录入功能。")
+        this.$message.error("您尚未登录，请登录后使用录入式资源分析功能。")
         this.$router.push("/")
         return 
       }
