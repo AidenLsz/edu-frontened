@@ -242,7 +242,7 @@
                 <el-col :span="5">最小值</el-col>
             </el-row>
             <!-- 第一项 -->
-            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver; margin-bottom: 5vh">
+            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver;">
                 <el-col :span="4">难度</el-col>
                 <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.mean)}}</el-col>
                 <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.std)}}</el-col>
@@ -250,24 +250,31 @@
                 <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.min)}}</el-col>
             </el-row>
             <!-- 第二项 -->
-            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver; display: none">
-                <el-col :span="4">指标2</el-col>
-                <el-col :span="5">0</el-col>
-                <el-col :span="5">0</el-col>
-                <el-col :span="5">0</el-col>
-                <el-col :span="5">0</el-col>
+            <el-row 
+                v-if="Paper_Json.discrimination_statistics != ''"
+                style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver;">
+                <el-col :span="4">区分度</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json.discrimination_statistics.mean)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json.discrimination_statistics.std)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json.discrimination_statistics.max)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json.discrimination_statistics.min)}}</el-col>
             </el-row>
             <!-- 第三项 -->
-            <el-row style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; margin-bottom: 40px; padding-bottom: 5px; border-bottom: 1px solid silver; display: none">
-                <el-col :span="4">指标3</el-col>
-                <el-col :span="5">0</el-col>
-                <el-col :span="5">0</el-col>
-                <el-col :span="5">0</el-col>
-                <el-col :span="5">0</el-col>
+            <el-row
+                v-if="Paper_Json.reliability_statistics != ''" 
+                style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; margin-bottom: 5vh; padding-bottom: 5px; border-bottom: 1px solid silver">
+                <el-col :span="4">信度</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json.reliability_statistics.mean)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json.reliability_statistics.std)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json.reliability_statistics.max)}}</el-col>
+                <el-col :span="5">{{Reduce_Length(Paper_Json.reliability_statistics.min)}}</el-col>
             </el-row>
             <!-- 随意添加的一个假柱状图 -->
             <el-row>
                 <div id="Paper_Total_Bar" class="Paper_Total_Bar"></div>
+            </el-row>
+            <el-row style="width: 67vw; margin-left: 16.5vw; font-size: 1.5rem; text-align: left; margin-bottom: 20px" type="flex" justify="start">
+                <label>本卷共{{Question_Type_List.length}}种题型，各题型数量及所占比例为：</label>
             </el-row>
             <el-row>
                 <div id="Total_Type_Pie_Chart" class="Total_Type_Pie_Chart"></div>
@@ -416,46 +423,61 @@
                 >
                 <!-- 表头 -->
                 <el-row style="margin: 30px 16.5vw 0px 16.5vw;">
-                  <el-col :span="3">
+                  <el-col :span="Paper_Json.discrimination_statistics != '' ? 2 : 3">
                       <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8; border-left: 2px solid #D8D8D8;">
                           <label>题型</label>
                       </el-row>
                   </el-col>
-                  <el-col :span="21">
+                  <el-col :span="Paper_Json.discrimination_statistics != '' ? 22 : 21">
                       <el-row type="flex" justify="center">
-                        <el-col :span="2">
+                        <el-col :span="Paper_Json.discrimination_statistics != '' ? 1 : 2">
                             <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8;">
                                 <label>题号</label>
                             </el-row>
                         </el-col>
-                        <el-col :span="2">
+                        <el-col :span="Paper_Json.discrimination_statistics != '' ? 1 : 2">
                             <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8;">
                                 <label>分值</label>
                             </el-row>
                         </el-col>
-                        <el-col :span="16">
+                        <el-col :span="Paper_Json.discrimination_statistics != '' ? 14 : 16">
                             <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8;">
                                 <label>知识点</label>
                             </el-row>
                         </el-col>
-                        <el-col :span="4">
+                        <el-col :span="2" v-if="Paper_Json.discrimination_statistics != ''">
                             <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8; border-right: 2px solid #D8D8D8;">
-                                <label>试题难度</label>
+                                <label>考察素养</label>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="Paper_Json.discrimination_statistics != '' ? 2 : 4">
+                            <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8; border-right: 2px solid #D8D8D8;">
+                                <label>难度</label>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="2" v-if="Paper_Json.discrimination_statistics != ''">
+                            <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8; border-right: 2px solid #D8D8D8;">
+                                <label>区分度</label>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="2" v-if="Paper_Json.discrimination_statistics != ''">
+                            <el-row type="flex" justify="center" class="Double_Table_Border" style="border-top: 2px solid #D8D8D8; border-right: 2px solid #D8D8D8;">
+                                <label>信度</label>
                             </el-row>
                         </el-col>
                       </el-row>
                   </el-col>
                 </el-row>
                 <el-row style="margin: 0px 16.5vw 0px 16.5vw" v-for="(Item, Index) in Double_Analyse" :key="'DA_' + Index">
-                  <el-col :span="3">
+                  <el-col :span="Paper_Json.discrimination_statistics != '' ? 2 : 3">
                       <el-row :style="Double_Analyse_Pos(Index)">
                           <label>{{Item.type}}</label>
                       </el-row>
                   </el-col>
-                  <el-col :span="21">
+                  <el-col :span="Paper_Json.discrimination_statistics != '' ? 22 : 21">
                       <el-row v-for="(Info, ii) in Item.items" :key="'DA_' + Index + '_' + ii">
                           <el-row type="flex" justify="center" :style="Get_Double_Table_Background(Info.index)">
-                            <el-col :span="2">
+                            <el-col :span="Paper_Json.discrimination_statistics != '' ? 1 : 2">
                                 <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border">
                                     <el-button type="text" @click="Jump_To_Question(Index, ii)" style="margin-top: -5px">{{Info.index}}</el-button>
                                 </el-row>
@@ -463,7 +485,7 @@
                                     <el-button type="text" @click="Jump_To_Question(Index, ii)" style="margin-top: -5px">{{Info.index}}</el-button>
                                 </el-row>
                             </el-col>
-                            <el-col :span="2">
+                            <el-col :span="Paper_Json.discrimination_statistics != '' ? 1 : 2">
                                 <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border">
                                     {{Info.score}}
                                 </el-row>
@@ -471,7 +493,7 @@
                                     {{Info.score}}
                                 </el-row>
                             </el-col>
-                            <el-col :span="16">
+                            <el-col :span="Paper_Json.discrimination_statistics != '' ? 14 : 16">
                                 <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border">
                                     <el-button v-for="(KU, ki) in Info.kp" :key="'KU_' + ki" @click="submit(KU)" type="text" style="margin-top: -5px">{{ KU }}</el-button>
                                 </el-row>
@@ -479,12 +501,36 @@
                                     <el-button v-for="(KU, ki) in Info.kp" :key="'KU_' + ki" @click="submit(KU)" type="text" style="margin-top: -5px">{{ KU }}</el-button>
                                 </el-row>
                             </el-col>
-                            <el-col :span="4">
+                            <el-col :span="2"  v-if="Paper_Json.discrimination_statistics != ''">
+                                <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border" style="border-right: 2px solid #D8D8D8;">
+                                    {{Info.literacy}}
+                                </el-row>
+                                <el-row v-else type="flex" justify="center" class="Double_Table_Border" style="border-right: 2px solid #D8D8D8; border-bottom: 2px solid #D8D8D8;">
+                                    {{Info.literacy}}
+                                </el-row>
+                            </el-col>
+                            <el-col :span="Paper_Json.discrimination_statistics != '' ? 2 : 4">
                                 <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border" style="border-right: 2px solid #D8D8D8;">
                                     {{Info.difficulty.toFixed(2)}}
                                 </el-row>
                                 <el-row v-else type="flex" justify="center" class="Double_Table_Border" style="border-right: 2px solid #D8D8D8; border-bottom: 2px solid #D8D8D8;">
                                     {{Info.difficulty.toFixed(2)}}
+                                </el-row>
+                            </el-col>
+                            <el-col :span="2"  v-if="Paper_Json.discrimination_statistics != ''">
+                                <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border" style="border-right: 2px solid #D8D8D8;">
+                                    {{Info.discrimination.toFixed(2)}}
+                                </el-row>
+                                <el-row v-else type="flex" justify="center" class="Double_Table_Border" style="border-right: 2px solid #D8D8D8; border-bottom: 2px solid #D8D8D8;">
+                                    {{Info.discrimination.toFixed(2)}}
+                                </el-row>
+                            </el-col>
+                            <el-col :span="2" v-if="Paper_Json.discrimination_statistics != ''">
+                                <el-row v-if="Info.index != Double_Count" type="flex" justify="center" class="Double_Table_Border" style="border-right: 2px solid #D8D8D8;">
+                                    {{Info.reliability.toFixed(2)}}
+                                </el-row>
+                                <el-row v-else type="flex" justify="center" class="Double_Table_Border" style="border-right: 2px solid #D8D8D8; border-bottom: 2px solid #D8D8D8;">
+                                    {{Info.reliability.toFixed(2)}}
                                 </el-row>
                             </el-col>
                         </el-row>
@@ -2394,7 +2440,6 @@ export default {
         Get_Cover_Ratio(){
 
             let Temp_List = this.Paper_Json.all_level_one_knowledge_point;
-            console.log(Temp_List)
             let Check_List = [];
 
             for(let i = 0 ; i < Temp_List.length; i++){
@@ -2419,6 +2464,8 @@ export default {
             if(sessionStorage.getItem('PaperJson')){
                 this.Paper_Json = JSON.parse(sessionStorage.getItem('PaperJson'))
             }
+
+            console.log(this.Paper_Json)
 
             var Temp_Score_Dict = this.Paper_Json.knowledge2score;
             while(Object.keys(Temp_Score_Dict).length > this.KnowledgeScore_List.length){
@@ -2493,7 +2540,10 @@ export default {
                         kp: [],
                         difficulty: this.Paper_Json.sub_question[i].sub_question[j].difficulty,
                         index: count,
-                        id: this.Paper_Json.sub_question[i].sub_question[j].id
+                        id: this.Paper_Json.sub_question[i].sub_question[j].id,
+                        discrimination: this.Paper_Json.sub_question[i].sub_question[j].discrimination,
+                        reliability: this.Paper_Json.sub_question[i].sub_question[j].reliability,
+                        literacy: this.Paper_Json.sub_question[i].sub_question[j].literacy
                     };
 
                     for(let eleI = 0; eleI < this.Paper_Json.sub_question[i].sub_question[j].knowledge_points_frontend.kp_layer.length; eleI++){

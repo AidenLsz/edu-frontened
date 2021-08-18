@@ -18,24 +18,24 @@ Vue.use(VueCropper)
 
 Vue.config.productionTip = false
 
-// if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production") {
 
-//   if (process.env.VUE_APP_URL === "DEFAULT_BACKEND_URL") {
-//       //production 生产环境
-//       Vue.prototype.backendIP = "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
+  if (process.env.VUE_APP_URL === "DEFAULT_BACKEND_URL") {
+      //production 生产环境
+      Vue.prototype.backendIP = "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
 
-//   } else {
-//       //test 测试环境
-//       Vue.prototype.backendIP = process.env.VUE_APP_URL;
-//       // Vue.prototype.backendIP = "https://kg-edu-backend-44-review-user-u9mmdq.env.bdaa.pro/v1";
+  } else {
+      //test 测试环境
+      Vue.prototype.backendIP = process.env.VUE_APP_URL;
+      // Vue.prototype.backendIP = "https://kg-edu-backend-44-review-user-u9mmdq.env.bdaa.pro/v1";
 
-//   }
-// } else {
-//   //dev 开发环境
-//   Vue.prototype.backendIP = "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
-//   // Vue.prototype.backendIP = "https://kg-edu-backend-44-review-user-u9mmdq.env.bdaa.pro/v1";
-// }
-Vue.prototype.backendIP = "https://kg-edu-backend-44-review-paper-cut-5uuk0j.env.bdaa.pro/v1"
+  }
+} else {
+  //dev 开发环境
+  Vue.prototype.backendIP = "https://kg-edu-backend-44-production.env.bdaa.pro/v1";
+  // Vue.prototype.backendIP = "https://kg-edu-backend-44-review-user-u9mmdq.env.bdaa.pro/v1";
+}
+
 new Vue({
   router,
   store,
