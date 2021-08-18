@@ -1,5 +1,9 @@
 <template>
-  <div style="margin-top: 5vh; padding-left: 5vw; padding-right: 5vw">
+  <div 
+    style="padding-top: 5vh; padding-left: 5vw; padding-right: 5vw"
+    v-loading="File_Uploading"
+    element-loading-text="加载中，请等待..."
+    element-loading-spinner="el-icon-loading">
     <el-dialog
         :visible.sync="Wrong_Char_Dialog"
         title="格式错误提示"
@@ -170,12 +174,17 @@
           <el-col :span="4">
             <el-row type="flex" justify="start">  
               <input type="file" accept=".doc, .docx" id="fileSelect" :multiple="false" style="display: none">
-              <el-button type="primary" style="width: 100px;" @click="File_Import()">文件导入</el-button>
+              <el-button type="primary" style="width: 100px;" :disabled="Subject!='语文'" @click="File_Import()">文件导入</el-button>
             </el-row>
           </el-col>
-          <el-col :span="16" v-show="File_Name != ''" style="height: 40px; line-height: 40px; margin-bottom: 10px">
-            <el-row type="flex" justify="start" style="overflow: hidden">  
+          <el-col :span="15" v-show="File_Name != ''" style="margin-bottom: 10px">
+            <el-row type="flex" justify="start" style="overflow: hidden; height: 40px; line-height: 40px; ">  
               文件名称：{{File_Name}}
+            </el-row>
+          </el-col>
+          <el-col :span="1" v-show="File_Name != ''">
+            <el-row type="flex" justify="start">  
+              <el-button type="text" @click="Paper_Data_Clear()" style="margin: 0px; padding: 10px"><i class="el-icon-close" style="font-size: 20px;"></i></el-button>
             </el-row>
           </el-col>
         </el-row>
@@ -926,7 +935,7 @@
           type="flex" 
           justify="center" 
           :class="Part_Class('Input')"
-          @click.native="Using_Part = 'Input'"
+          @click.native="Change_Using_Part('Input')"
           style="height: 30px; line-height: 30px; width: 100%; border-top-left-radius: 15px; border-bottom-left-radius: 15px">
           题目录入
         </el-row>
@@ -936,7 +945,7 @@
           type="flex" 
           justify="center" 
           :class="Part_Class('Preview')"
-          @click.native="Using_Part = 'Preview'"
+          @click.native="Change_Using_Part('Preview')"
           style="height: 30px; line-height: 30px; width: 100%; ">
           整卷预览
         </el-row>
@@ -946,7 +955,7 @@
           type="flex" 
           justify="center" 
           :class="Part_Class('Fileinput')"
-          @click.native="Using_Part = 'Preview'"
+          @click.native="Change_Using_Part('Fileinput')"
           style="height: 30px; line-height: 30px; width: 100%; border-top-right-radius: 15px; border-bottom-right-radius: 15px">
           文件导入预览
         </el-row>
@@ -1512,43 +1521,67 @@
         </el-col>
       </el-row>
     </div>
-    <div v-show="Using_Part == 'Fileinput'">
+    <div 
+      v-show="Using_Part == 'Fileinput'" 
+      @click="Reset_Focus()" 
+      style="padding-left: 2vw; min-height: 100vh; padding-top: 20px; padding-right: 2vw; border: 3px solid #409EFF; border-radius: 15px; margin-top: 30px; margin-bottom: 30px;">
+      <div style="min-height: 90vh;">
       <el-row
-        v-for="(Para, Para_Index) in Paper_Content"
-        :key="'LS_Para_' + Para_Index"
-        style="border-bottom: 2px dashed #ccc; ">
-          <el-row 
-            v-for="(Item, Item_Index) in Para.sub_para[0]" 
-            :key="'LS_P_SP_' + Item_Index" 
-            style="padding-left: 4vw; padding-right: 4vw; padding-top: 10px; padding-bottom: 10px">
-            <el-col :span="22">
-              <el-row v-if="Item.para_type == '0'" :style="Item.para_style">
+        v-for="(Item, Item_Index) in Paper_Content"
+        :key="'Line_' + Item_Index">
+          <el-col>
+            <el-row v-if="Item != 'DIVIDER_LINES'&& Item.para_type == '0'" :style="Item.para_style">
+              <span
+                v-for="(message, index_i) in Item.runs"
+                :key="'Line_' + Item_Index + '_' + index_i + '_run'"
+                :style="message.run_style"
+              >
                 <span
-                  v-for="(message, index_i) in Item.runs"
-                  :key="index_i + 'run'"
-                  :style="message.run_style"
-                >
-                  <span
-                    v-if="message.run_type == '0'"
-                    v-html="message.run_text"
-                  ></span>
-                  <img
-                    v-else-if="message.run_type == '1'"
-                    :src="Paper_Image_Dict[message.image.src]"
-                    :width="message.image.width"
-                    :height="message.image.height"
-                    :style="message.image.style"
-                    :alt="message.image.alt"
-                  />
-                </span>
-              </el-row>
-              <el-row v-if="Item.para_type == '1'">
-                <div :style="Item.para_style">
-                  表格内容
-                </div>
-              </el-row>
-            </el-col>
-          </el-row>
+                  v-if="message.run_type == '0'"
+                  v-html="message.run_text"
+                ></span>
+                <img
+                  v-else-if="message.run_type == '1'"
+                  :src="Paper_Image_Dict[message.image.src]"
+                  :width="message.image.width"
+                  :height="message.image.height"
+                  :style="message.image.style"
+                  :alt="message.image.alt"
+                />
+              </span>
+            </el-row>
+            <el-row v-if="Item != 'DIVIDER_LINES' && Item.para_type == '1'">
+              <div :style="Item.para_style">
+                <span v-html="Table_Img_Get(Item.table_raw_html)"></span>
+              </div>
+            </el-row>
+            <el-row 
+              v-if="Item == 'DIVIDER_LINES'" 
+              style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer"
+              @click.native="Delete_Divider(Item_Index)"
+              @mouseenter.native="Paper_Divider_Index = Item_Index"
+              @mouseleave.native="Paper_Divider_Index = -1">
+                <el-col>
+                  <el-row :style="'border-top: 2px dashed ' + (Paper_Divider_Index == Item_Index ? 'red' : '#ccc') + '; width: 100%;'"></el-row>
+                </el-col>
+            </el-row>
+            <el-row 
+              v-if="Item != 'DIVIDER_LINES' && Item_Index != Paper_Content.length - 1 && Paper_Content[Item_Index + 1] != 'DIVIDER_LINES'" 
+              style="height: 14px; width: 100%; padding-top: 6px; cursor: pointer;" 
+              @click.native="Add_Divider(Item_Index)"
+              @mouseenter.native="Paper_Divider_Index = Item_Index"
+              @mouseleave.native="Paper_Divider_Index = -1">
+              <el-col>
+                <el-row v-show="Paper_Divider_Index == Item_Index" style="border-top: 2px dashed #409EFF; width: 100%;"></el-row>
+              </el-col>
+            </el-row>
+          </el-col>
+      </el-row>
+      </div>
+      <el-row type="flex" justify="end" style="padding-right: 30px; margin-top: 30px; margin-bottom: 30px;">
+        <el-button type="primary" icon="el-icon-refresh" @click="Paper_Data_Reset()" style="margin-right: 20px">重置试卷数据</el-button>
+        <el-button type="primary" icon="el-icon-delete" @click="Paper_Data_Clear()" style="margin-right: 20px">清空当前数据</el-button>
+        <el-button type="primary" icon="el-icon-check" @click="Divider_Final_Check()">切分确认</el-button>
       </el-row>
     </div>
   </div>
@@ -1902,32 +1935,200 @@ export default {
       File_Name: "",
       // 用于存放拿来显示的变量
       Paper_Content: [],
+      // 用来进行初始结果的备份
+      Paper_Content_BackUp: [],
       // 存放拿来进行显示的图片
       Paper_Image_Dict: {
 
-      }
+      },
+      // 标记切分点的变量
+      Paper_Divider_Index: -1,
+      // 是否正在等待文件切分完成
+      File_Uploading: false
     };
   },
   mounted(){
-      if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
-        this.$message.error("您尚未登录，请登录后使用录入功能。")
-        this.$router.push("/")
-        return 
-      }
+      // if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
+      //   this.$message.error("您尚未登录，请登录后使用录入功能。")
+      //   this.$router.push("/")
+      //   return 
+      // }
       this.Get_User_UUID();
       this.Init_File_Selector();
   },
   methods:{
+    // 清空试卷数据
+    Paper_Data_Clear(){
+      this.$confirm('您点击了清空当前试卷切分内容的按钮，当前的切分结果将被清空，您将需要重新导入其他试卷，确定要清空吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+      }).then(()=>{
+        this.File_Name = ""
+        this.File_Uploading = false
+        this.Paper_Content = []
+        this.Paper_Image_Dict = {}
+        this.Paper_Divider_Index = -1;
+      }).catch(()=>{
+          this.$message.info("已取消")
+      })
+    },
+    // 重置
+    Paper_Data_Reset(){
+      this.$confirm('您点击了重置当前试卷切分内容的按钮，当前的切分结果将被重置为当前试卷最开始的切分结果，确定要重置吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+      }).then(()=>{
+        this.Paper_Content = JSON.parse(JSON.stringify(this.Paper_Content_BackUp));
+        this.Paper_Divider_Index = -1;
+      }).catch(()=>{
+          this.$message.info("已取消")
+      })
+    },
+    // 调整功能选择
+    Change_Using_Part(Part){
+      if(Part != 'Fileinput'){
+        if(this.Paper_Content.length == 0){
+          this.Using_Part = Part
+        }else{
+          this.$message.warning("您正在使用文件导入功能，确认完成或清空内容后才可切换当前操作模块。")
+        }
+      }else{
+        if(this.Question_Bundle.length == 0){
+          this.Using_Part = Part
+        }else{
+          this.$message.warning("您正在使用试卷手动输入功能，确认完成或清空内容后才可切换当前操作模块。")
+        }
+      }
+    },
+      // 将切分后的内容整理成导出格式
+      Divider_Final_Check(){
+
+        let Reg_C = new RegExp('&#xa0;', 'g')
+
+        let Out_JSON = []
+        let ID = 0
+        let Item = {
+          id: ID,
+          subject: this.Subject,
+          period: this.Period,
+          content: []
+        }
+        for(let i = 0; i < this.Paper_Content.length; i++){
+          if(this.Paper_Content[i] == "DIVIDER_LINES"){
+            // 每次遇到切分线，就把当前累积的内容推进去，然后将内容重置一下，再给序号加一
+            Out_JSON.push(JSON.parse(JSON.stringify(Item)))
+            ID = ID + 1;
+            Item = {
+              id: ID,
+              subject: this.Subject,
+              period: this.Period,
+              content: []
+            }
+          }else{
+            // 0 代表文字和图片内容
+            // 1 代表试卷中的表格内容（不太清楚要怎么办，但总之应该是这么返回才对……吧？）
+            if(this.Paper_Content[i].para_type == '0'){
+              let Content = ""
+              for(let j = 0; j < this.Paper_Content[i].runs.length; j++){
+                if(this.Paper_Content[i].runs[j].run_type == '0'){
+                  Content = Content + this.Paper_Content[i].runs[j].run_text
+                }else if(this.Paper_Content[i].runs[j].run_type == '1'){
+                  Content = Content 
+                    + "<img src='" + this.Paper_Image_Dict[this.Paper_Content[i].runs[j].image.src] + "' " 
+                    + " width='" + this.Paper_Content[i].runs[j].image.width + "' " 
+                    + " height='" + this.Paper_Content[i].runs[j].image.height + "' " 
+                    + " style='" + this.Paper_Content[i].runs[j].image.style + "' " 
+                    + " alt='" + this.Paper_Content[i].runs[j].image.alt + "' " 
+                    + ">"
+                }
+              }
+              Content = Content.replace(Reg_C, "")
+              Item.content.push(Content)
+            }else{
+              Item.content.push(this.Table_Img_Get(this.Paper_Content[i].table_raw_html))
+            }
+          }
+        }
+        // 把累积到的最后一组也压进去
+        Out_JSON.push(JSON.parse(JSON.stringify(Item)))
+        this.Title = this.File_Name.split(".")[0]
+        let file = new File(
+          [JSON.stringify(Out_JSON, null, 4)],
+          "切分线划分结果.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
+        let Param = {
+          'Paper_Cut_Result': JSON.stringify(Out_JSON, null, 4)
+        }
+
+        commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param).then((res)=>{
+          let file = new File(
+            [JSON.stringify(res.data, null, 4)],
+            "切分线识别结果.json",
+            { type: "text/plain;charset=utf-8" }
+          );
+          FileSaver.saveAs(file);
+        }).catch(
+          ()=>{
+            this.$message.error("解析出现异常，请重试。")
+          }
+        )
+      },
+      // 尝试添加和删除切分线
+      Delete_Divider(Item_Index){
+        this.Paper_Content.splice(Item_Index, 1)
+        this.Paper_Divider_Index = -1;
+      },
+      Add_Divider(Item_Index){
+        this.Paper_Content.splice(Item_Index + 1, 0, 'DIVIDER_LINES')
+        this.Paper_Divider_Index = -1;
+      },
       // 初始化选择器
       Init_File_Selector(){
         this.File_Selector = document.getElementById("fileSelect");
         this.File_Selector.addEventListener("change", (e)=>{
-          this.File_Upload(e.target.files[0])
-          this.File_Selector.value = ""
+          if(e.target.files[0]){
+            this.File_Uploading = true
+            this.File_Upload(e.target.files[0])
+            this.File_Selector.value = ""
+          }
         })
+      },
+      // 清空所有手动录入的试题数据
+      Clear_All_Questions_Info(){
+        this.Question_Bundle = []
+        this.Draging_Questions_Rect = [];
+        this.Draging_Questions_Index = -1;
+        this.Draging_Questions_Position = {
+          x: 0,
+          y: 0
+        }
+        this.Focusing_Questions_Position = {
+          x: 0,
+          y: 0
+        }
+        this.Focusing_Index = -1
+        this.Editing_Position = ""
+
+        this.Multi_Type_Insert = false;
+        this.Multi_Info = [];
+        this.Waiting_Question = {}
+
+        this.Jumping = ""
+
+        this.Refresh = true
+        this.Refresh = false
       },
       // 上传文件
       File_Upload(file){
+
+        this.Paper_Content = []
+        this.Paper_Image_Dict = {}
+        this.Paper_Divider_Index = -1;
+
         this.Using_Part = "Fileinput"
         this.File_Name = file.name
 
@@ -1955,7 +2156,11 @@ export default {
       },
       // 触发上传事件
       File_Import(){
-        this.File_Selector.click();
+        if(this.Subject == "语文"){
+          this.File_Selector.click();
+        }else{
+          this.$message.info("其他学科的格式仍在统一过程中，请选择语文科目作为测试项。")
+        }
       },
       // 选择上传
       uploadFile(formData, config) {
@@ -1963,31 +2168,25 @@ export default {
         this.$http
           .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
           .then(function(data) {
-            console.log(data)
-            if(this.Subject != "数学"){
-              this.Paper_Content = data.data.paper
-              
-              this.Paper_Image_Dict = data.data.image_dict
-              let file = new File(
-                [JSON.stringify(this.Paper_Content, null, 4), JSON.stringify(this.Paper_Image_Dict, null, 4)],
-                "Other.json",
-                { type: "text/plain;charset=utf-8" }
-              );
-              FileSaver.saveAs(file);
-            }else{
-              this.Paper_Content = data.data.Paper.doc
-              this.Paper_Image_Dict = data.data.Paper.img
-              let file = new File(
-                [JSON.stringify(this.Paper_Content, null, 4), JSON.stringify(this.Paper_Image_Dict, null, 4)],
-                "Math.json",
-                { type: "text/plain;charset=utf-8" }
-              );
-              FileSaver.saveAs(file);
+            this.Paper_Content = data.data.paper
+            this.Paper_Image_Dict = data.data.image_dict
+            let Lists = []
+            for(let i = 0; i < data.data.paper.length; i++){
+              let Para = data.data.paper[i].sub_para[0]
+              for(let j = 0; j < Para.length; j++){
+                Lists.push(Para[j])
+              }
+              if(i != data.data.paper.length - 1){
+                Lists.push("DIVIDER_LINES")
+              }
             }
+            this.Paper_Content = Lists
+            this.Paper_Content_BackUp = Lists
+            this.File_Uploading = false;
           }).catch(() => {
-            this.$alert("切分过程出现错误，这可能是由于您拖拽的文件格式不正确，或服务器超载导致目前暂时无法提供服务，请重新提交文件或稍后再试。", "提示")
+            this.$alert("切分过程出现错误，这可能是由于服务器原因导致目前暂时无法提供服务，请重新提交文件或稍后再试。", "提示")
+            this.File_Uploading = false;
           });
-
       },
       // 获取UUID
       Get_User_UUID(){
@@ -3503,7 +3702,18 @@ export default {
           }
         }
       this.Multi_Type_Insert = true;
-    }
+    },
+    // 替换表格中的图片内容
+    // 更新表格中的图片文件
+    Table_Img_Get(Table_Html){
+      for(var key in this.Paper_Image_Dict){
+        var Img_Name_Catcher = new RegExp('<img src="' + key + '"')
+        if(Img_Name_Catcher.exec(Table_Html) != null){
+          Table_Html = Table_Html.replace(Img_Name_Catcher,'<img src="' + this.json_content.img[key] + '"')
+        }
+      }
+      return Table_Html
+    },
   }
 };
 </script>

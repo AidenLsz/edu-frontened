@@ -1,7 +1,22 @@
 <template>
   <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; margin-top: 50px;">
+    <!-- 尝试用latex输出表格 -->
+    <el-row type="flex" justify="center">
+      <!-- <el-col :span="12">
+        <el-row type="flex" justify="center">
+          <Mathdown :content="Content" :name="'Search123'"></Mathdown>
+        </el-row>
+      </el-col>
+      <el-col :span="12">
+        <el-row type="flex" justify="center">
+          <el-input type="textarea" v-model="Content"></el-input>
+        </el-row>
+      </el-col> -->
+      <el-button type="" @click="Reg_Check()"></el-button>
+      {{Content}}
+    </el-row>
     <!-- 测试获取输入框的焦点 -->
-    <el-row>
+    <el-row style="display: none">
       <el-col>
         <el-input @focus="Show_Blur" id="1" v-model="Content"></el-input>
         <el-input @focus="Show_Blur" id="2"></el-input>
@@ -12,7 +27,7 @@
         <input type="file" accept=".jpg, .jpeg, .png" id="fileButton" style="display: none"/>
         <el-button type="primary" @click="Upload_File()"><i class="el-icon-picture-outline"></i></el-button>
         <el-row v-html="Content"></el-row>
-        <Mathdown :content="Content" :name="'Search123'"></Mathdown>
+        
       </el-col>
     </el-row>
     <el-row>
@@ -128,20 +143,20 @@
 
 // import FileSaver from "file-saver";
 
-import Mathdown from '@/common/components/Mathdown'
+// import Mathdown from '@/common/components/Mathdown'
 
 export default {
   name: 'ScreenShot',
   props: {
   },
   components:{
-    Mathdown
+    // Mathdown
   },
   data() {
     return {
       // 绑定一个图片录入组件
       Img_File_Upload_Button: "",
-      Content: "",
+      Content: "1&#xa0;2&#xa0;&#xa0;&#xa0;",
       // 开始尝试获取选中的对象
       Focusing_ID: "",
       // 起点和重点
@@ -243,6 +258,10 @@ export default {
     this.Get_Reg_Test()
   },
   methods: {
+    Reg_Check(){
+      let Reg_C = new RegExp('&#xa0;', 'g')
+      this.Content = this.Content.replace(Reg_C, "")
+    },
     Init_Img_Button(){
       this.Img_File_Upload_Button = document.getElementById("fileButton");
       this.Img_File_Upload_Button.addEventListener("change", (e)=>{

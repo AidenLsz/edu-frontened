@@ -269,6 +269,9 @@
             <el-row>
                 <div id="Paper_Total_Bar" class="Paper_Total_Bar"></div>
             </el-row>
+            <el-row>
+                <div id="Total_Type_Pie_Chart" class="Total_Type_Pie_Chart"></div>
+            </el-row>
         </el-row>
         <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse(0)" style="margin-top: -10px; margin-bottom: 30px">
             <el-button v-on:click.native="Expand_Or_Collapse(0)" round size="small" plain>收起</el-button>
@@ -574,6 +577,8 @@ export default {
     name: "PaperAnalyse",
     data(){
         return {
+            // 试题类型分析用的列表
+            Question_Type_List: [],
             loading: false,
             // 计时器，用Remaining做计时
             Timer: "",
@@ -2241,6 +2246,58 @@ export default {
                 return '#CCC'
             }
         },
+        // 塞进来，一张饼图
+        Init_Paper_Question_Type_Pie_Chart(){
+            let Type_Pie_Chart = echarts.init(document.getElementById("Total_Type_Pie_Chart"));
+            let Type_Pie_Chart_Option = {
+                title: {
+                    text: "各题型所占数量与比例",
+                    x: "center",
+                    y: "top",
+                    textStyle: { 
+                        fontSize: 16,
+                        fontStyle: 'normal',
+                        fontWeight: 'bold',
+                    },
+                    padding: [5,5,40,25]
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                legend: {
+                    orient: 'vertical',
+                    right: 'right',
+                },
+                series: [
+                {
+                    name: '题目类型',
+                    type: 'pie',
+                    radius: '65%',
+                    label: {
+                        formatter: '{b}: {@2012} ({d}%)'
+                    },
+                    data: []
+                }
+                ]
+            }
+            for(let i = 0; i < this.Question_Type_List.length; i++){
+                Type_Pie_Chart_Option.series[0].data.push({
+                    name: this.Question_Type_List[i].type,
+                    value: this.Question_Type_List[i].num
+                })
+            }
+            Type_Pie_Chart.setOption(Type_Pie_Chart_Option);
+            window.addEventListener('resize',function() {Type_Pie_Chart.resize()});
+        },
         // 偷偷摸摸塞进来，这里是添加一级知识点覆盖情况的旭日图
         Init_Paper_Knowledge_Cover_Sunburst(){
             let Line_Chart_1 = echarts.init(document.getElementById("Paper_Knowledge_Cover"));
@@ -2337,6 +2394,7 @@ export default {
         Get_Cover_Ratio(){
 
             let Temp_List = this.Paper_Json.all_level_one_knowledge_point;
+            console.log(Temp_List)
             let Check_List = [];
 
             for(let i = 0 ; i < Temp_List.length; i++){
@@ -2405,6 +2463,7 @@ export default {
             }
 
             this.Double_Analyse = [];
+            this.Question_Type_List = []
 
             for(let i = 0; i < this.Paper_Json.sub_question.length; i++){
                 let Double_Item = {
@@ -2412,6 +2471,22 @@ export default {
                     items: []
                 };
                 for(let j = 0; j < this.Paper_Json.sub_question[i].sub_question.length; j++){
+
+                    let Type_Flag = false
+                    for(let k = 0; k < this.Question_Type_List.length; k++){
+                        if(this.Question_Type_List[k].type == this.Paper_Json.sub_question[i].sub_question[j].type){
+                            this.Question_Type_List[k].num = this.Question_Type_List[k].num + 1
+                            Type_Flag = true;
+                            break
+                        }
+                    }
+                    if(!Type_Flag){
+                        this.Question_Type_List.push({
+                            type: this.Paper_Json.sub_question[i].sub_question[j].type,
+                            num: 1
+                        })
+                    }
+
                     let D = 0;
                     let Double_Element = {
                         score: this.Paper_Json.sub_question[i].sub_question[j].score,
@@ -2449,6 +2524,7 @@ export default {
 
             setTimeout(()=>{
                 this.Init_Paper_Total_Bar();
+                this.Init_Paper_Question_Type_Pie_Chart();
                 this.Init_Paper_Total_Difficult_Analyse();
                 this.Init_Paper_Total_Difficult_Analyse_Line();
                 this.Get_Max_Difficult_Gap();
@@ -2510,6 +2586,15 @@ export default {
     height:300px; 
     padding-top: 20px; 
     margin-left: calc(100vw * 0.14 * 0.8); 
+    border: 3px solid #EEF5FE; 
+    margin-bottom: 20px;
+}
+.Total_Type_Pie_Chart{
+    border-radius: 10px; 
+    width: 67vw; 
+    height:300px; 
+    padding-top: 20px; 
+    margin-left: calc(100vw * 0.165);  
     border: 3px solid #EEF5FE; 
     margin-bottom: 40px;
 }
