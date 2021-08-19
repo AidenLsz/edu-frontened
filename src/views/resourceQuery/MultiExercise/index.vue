@@ -297,12 +297,12 @@
         <el-row type="flex" justify="start" style="line-height: 40px;margin-top:20px;">
           <div class="btn_file">
             <p style="display: inline-block">
-              <i class="el-icon-files"></i>选取试卷文件(doc/docx)
+              <i class="el-icon-files"></i>选取试卷文件
             </p>
             <input
               type="file"
               @change="selectFile($event)"
-              accept=".docx, .doc"
+              accept=".docx, .doc, .pdf"
               ref="eng_input"
             />
           </div>
@@ -313,12 +313,12 @@
         <el-row type="flex" justify="start" style="line-height: 40px">
           <div class="btn_file">
             <p style="display: inline-block">
-              <i class="el-icon-files"></i>选取数学试卷文件(doc/docx)
+              <i class="el-icon-files"></i>选取数学试卷文件
             </p>
             <input
               type="file"
               @change="selectPaperFile($event)"
-              accept=".docx, .doc"
+              accept=".docx, .doc, .pdf"
               ref="math_paper_input"
             />
           </div>
@@ -329,12 +329,12 @@
         <el-row type="flex" justify="start" style="line-height: 40px">
           <div class="btn_file">
             <p style="display: inline-block">
-              <i class="el-icon-files"></i>选取数学答案文件(doc/docx)
+              <i class="el-icon-files"></i>选取数学答案文件
             </p>
             <input
               type="file"
               @change="selectAnswerFile($event)"
-              accept=".docx, .doc"
+              accept=".docx, .doc, .pdf"
               ref="math_answer_input"
             />
           </div>
@@ -346,7 +346,7 @@
       </el-col>
     </el-row>
     <database-list @databaseChange="handleDatabaseChange"/>
-    <el-row>
+    <el-row v-if="!pdfURL">
       <el-col class="separate-part" :span="12" style="background:#fffee8">
         <!-- 英语试卷内容导出 -->
         <el-row
@@ -529,7 +529,7 @@
           :class="MathSelected(Question_Index)"
           style="border: 1px dashed black;margin: 25px">
           <!-- 题型，上传用户，科目部分 -->
-          <el-row type="flex" justify="start" style="margin: 30px 50px 0px 10px">
+          <el-row type="flex" justify="start" style="position:relative;margin:15px;">
               <el-col :span="2" style="text-align: left" >
                 <el-popover
                   placement="top"
@@ -545,10 +545,7 @@
               <el-col class="center-text" :span="4">
                   {{Question_Info.question_type}}
               </el-col>
-              <el-col class="center-text" :span="8">
-                  科目：{{Question_Info.subject}}
-              </el-col>
-              <el-col :span="4" style="text-align: left;">
+              <div style="text-align: right;position:absolute;right:0px;">
                 <el-popover
                   placement="top"
                   width="170"
@@ -556,7 +553,7 @@
                   content="点击搜索该题目">
                   <el-button slot="reference" size="medium" @click="Search_Math(Question_Index)">查重</el-button>
                 </el-popover>
-              </el-col>
+              </div>
           </el-row>
           <!-- 题干部分 - 无小题 -->
           <div :ref="'MathDom_'+Question_Index">
@@ -671,6 +668,7 @@
         <search-result ref="searchRes"/>
       </el-col>
     </el-row>
+    <pdf v-else :src="pdfURL"/>
   </div>
 </template>
 <script>
@@ -687,6 +685,7 @@ import DatabaseList from "./components/DatabaseList.vue";
 
 import Mathdown from "@/common/components/Mathdown.vue";
 import ComplexInput from '@/common/components/ComplexInput.vue'
+import pdf from './components/pdf';
 
 import {commonAjax} from '@/common/utils/ajax'
 
@@ -698,10 +697,12 @@ export default {
                 SearchResult,
                 Mathdown,
                 Instruction,
-                DatabaseList
+                DatabaseList,
+                pdf
                 },
   data() {
     return {
+      pdfURL:'',
       Import_User: false,
       Import_User_Trace: "",
       Refresh: false,
@@ -767,24 +768,7 @@ export default {
       en_pun_list: [',','.','?','!',':',';','\'','"','(',')','&nbsp','_','/','|','\\','<','>'],
       ch_pun_list: ['，','。','！','？','：','；','‘','’','“','”','（','）','&nbsp','、','《','》'],
       math_pun_list: ['+', '-', "*", "/", "%", "="],
-      TestData:{
-        // "title": "2009年课标甲乙",
-        //       "subject_type": "数学",
-        //       "period_type": "高中",
-        //       "doc": [
-        //         {
-        //           "question_stem": "已知集合$A = \\{ 0,2 \\}$，$B = \\{ - 2 , - 1,0,1,2 \\}$,则$A \\cap B =$",
-        //           "question_options": [ "$\\{ 0,2 \\}$", "$\\{ 1,2 \\}$", "$\\{ 0 \\}$", "$\\{ - 2 , - 1,0,1,2 \\}$" ],
-        //           "question_type": "选择题",
-        //           "sub_questions": [],
-        //           "answer": "A",
-        //           "analysis": "",
-        //           "source": "user_input",
-        //           "subject": "user_input"
-        //         }
-        //         ]
-      },
-
+      TestData:{},
       Question_Edit_Now: -1,
       Question_Edit_Part: "",
       Question_Edit_Option_Index: -1,
@@ -955,6 +939,10 @@ export default {
         this.paper_type = newVal;
         this.downloadPaperName = "",
         this.downloadAnswerName = ""
+        this.pdfURL=""
+        if (this.$refs.searchRes) {
+          this.$refs.searchRes.handleResData({results:[]});
+        }
       }
     },
     math_input(newVal, oldVal){
@@ -1454,13 +1442,24 @@ export default {
           this.$alert("切分过程出现错误，这可能是由于您拖拽的文件格式不正确，或服务器超载导致目前暂时无法提供服务，请重新提交文件或稍后再试。", "提示")
         });
     },
+    showPdf(file){
+      if (file.type=='application/pdf') {
+        var reader = new FileReader();//文件读取器
+        reader.readAsDataURL(file);//获取文件URL,结果存至reader.result
+        reader.onload=()=>{
+          this.pdfURL=reader.result
+        }
+        return true;
+      }
+      return false;
+    },
     // 导入大多数试卷时的方法
     selectFile(e){
-
       if(e.target.files.length > 0){
-
         this.fileName = e.target.files[0].name;
-
+        if (this.showPdf(e.target.files[0]) ) {
+          return;
+        }
         let formData = new FormData();
 
         formData.append("files", e.target.files[0]);
@@ -1500,7 +1499,9 @@ export default {
         this.mathPaperName = e.target.files[0].name;
         this.downloadPaperName = e.target.files[0].name.split(".")[0];
         this.downloadAnswerName = e.target.files[0].name.split(".")[0];
-
+        if (this.showPdf(e.target.files[0]) ) {
+          return;
+        }
         if(this.math_input != 'combine'){
 
           formData.append("paper", e.target.files[0])
@@ -1574,7 +1575,9 @@ export default {
         let formData = new FormData();
 
         this.mathAnswerName = e.target.files[0].name;
-
+        if (this.showPdf(e.target.files[0]) ) {
+          return;
+        } 
         if(this.math_standby == "0"){
 
           formData.append("answer", e.target.files[0]);
