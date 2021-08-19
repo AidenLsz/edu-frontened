@@ -78,7 +78,7 @@
     </el-row>
     <el-row v-if="question_list.length != 0">
       <el-pagination
-        @current-change="BackToTop"
+        @current-change="FlipPage"
         :current-page.sync="Page_Index"
         :page-size="Page_Length"
         layout="total, prev, pager, next"
@@ -197,8 +197,6 @@ export default {
   },
   mounted(){
     this.ToTop()
-
-    // this.search(this.imgUrl,['public']);
   },
   methods: {
     search(imgUrl,databaselist,subject,period){
@@ -225,7 +223,7 @@ export default {
     ToTop(){
       window.scrollTo(0,0);
     },
-    BackToTop(){
+    FlipPage(){
       this.submit(1, this.Cache_Pic[0]);
     },
     // 修改翻页内容
@@ -283,7 +281,8 @@ export default {
       // 更新最近一次进行搜索的参数
       this.lastParam=param;
       //检查缓存中是否存在搜索结果
-      let encodedKey=md5(Pic+this.Page_Index);
+      // let encodedKey=md5(JSON.stringify(Pic+this.Page_Index));
+      let encodedKey=md5(JSON.stringify(param));
       if(this.Cache_Result[encodedKey]){
         this.handleResData(this.Cache_Result[encodedKey])
         return;
