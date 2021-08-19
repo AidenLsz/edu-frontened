@@ -2090,17 +2090,19 @@ export default {
 
         commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param).then((res)=>{
           
-          for(let i = 0; i < res.length; i++){
-            if(['单选题', '多选题', '判断题'].indexOf(res[i].type) != -1){
+          let Result = res.data
+
+          for(let i = 0; i < Result.length; i++){
+            if(['单选题', '多选题', '判断题'].indexOf(Result[i].type) != -1){
               let Item = {
-                score: res[i].score == 0 ? 5 : res[i].score,
-                stem: res[i].stem,
+                score: Result[i].score == 0 ? 5 : Result[i].score,
+                stem: Result[i].stem,
                 stem_image: [],
                 options: [],
                 options_image: [],
-                answer: res[i].answer,
+                answer: Result[i].answer,
                 answer_image: [],
-                analysis: res[i].analysis,
+                analysis: Result[i].analysis,
                 analysis_image: [],
                 // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
                 sub_questions: [],
@@ -2108,21 +2110,21 @@ export default {
                 sub_questions_score: [],
                 answer_list: []
               }
-              for(let j = 0; j < res[i].options.length; j++){
-                Item.options.push(res[i].options[j])
+              for(let j = 0; j < Result[i].options.length; j++){
+                Item.options.push(Result[i].options[j])
                 Item.options_image.push([])
               }
-              Temp_Result_Dict[res[i].type].list.push(Item)
-            }else if(res[i].type == '填空题'){
+              Temp_Result_Dict[Result[i].type].list.push(Item)
+            }else if(Result[i].type == '填空题'){
               let Item = {
-                score: res[i].score == 0 ? 5 : res[i].score,
-                stem: res[i].stem,
+                score: Result[i].score == 0 ? 5 : Result[i].score,
+                stem: Result[i].stem,
                 stem_image: [],
                 options: [],
                 options_image: [],
-                answer: res[i].answer,
+                answer: Result[i].answer,
                 answer_image: [],
-                analysis: res[i].analysis,
+                analysis: Result[i].analysis,
                 analysis_image: [],
                 // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
                 sub_questions: [],
@@ -2130,17 +2132,17 @@ export default {
                 sub_questions_score: [],
                 answer_list: []
               }
-              Temp_Result_Dict[res[i].type].list.push(Item)
-            }else if(['简答题', '计算题'].indexOf(res[i].type) != -1){
+              Temp_Result_Dict[Result[i].type].list.push(Item)
+            }else if(['简答题', '计算题'].indexOf(Result[i].type) != -1){
                 let Item = {
-                  score: 5 * res[i].subquestions.length,
-                  stem: res[i].stem,
+                  score: 5 * Result[i].subquestions.length,
+                  stem: Result[i].stem,
                   stem_image: [],
                   options: [],
                   options_image: [],
-                  answer: res[i].answer,
+                  answer: Result[i].answer,
                   answer_image: [],
-                  analysis: res[i].analysis,
+                  analysis: Result[i].analysis,
                   analysis_image: [],
                   // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
                   sub_questions: [],
@@ -2148,8 +2150,8 @@ export default {
                   sub_questions_score: [],
                   answer_list: []
               }
-              for(let j = 0; j < res[i].subquestions.length; j++){
-                Item.sub_questions.push(res[i].subquestions[j])
+              for(let j = 0; j < Result[i].subquestions.length; j++){
+                Item.sub_questions.push(Result[i].subquestions[j])
                 Item.sub_questions_image.push([])
                 Item.sub_questions_score.push(5)
               }
