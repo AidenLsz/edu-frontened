@@ -313,7 +313,7 @@
         <el-row type="flex" justify="start" style="line-height: 40px">
           <div class="btn_file">
             <p style="display: inline-block">
-              <i class="el-icon-files"></i>选取数学试卷文件
+              <i class="el-icon-files"></i>选取试卷文件
             </p>
             <input
               type="file"
@@ -347,24 +347,24 @@
     </el-row>
     <database-list @databaseChange="handleDatabaseChange"/>
     <el-row v-if="!pdfURL">
-      <el-col class="separate-part" :span="12" style="background:#fffee8">
+      <el-col class="separate-part" :span="12" style="background:#c4d7d6">
         <!-- 英语试卷内容导出 -->
-        <el-row
+        <!-- <el-row
           v-if="Type_Visible() && paper_type != '1'"
-          style="padding-top: 15px">
+          style="padding-top: 5px;margin-bottom:-15px;">
           <el-col :span="8">
             <el-row type="flex" justify="center">
-              <el-button v-if="!Hand_Cut_Mode" @click="Hand_Cut_Mode = true" type="text" style="color: #409EFD; font-weight: bold">开启自定义切分</el-button>
+              <el-button v-if="!Hand_Cut_Mode" @click="Hand_Cut_Mode = true" type="text" style="color: #8076a3; font-weight: bold">开启自定义切分</el-button>
               <el-button v-if="Hand_Cut_Mode" @click="Hand_Cut_Mode = false" type="text" style="color: #FF7F50; font-weight: bold">关闭自定义切分</el-button>
             </el-row>
           </el-col>
-        </el-row>
+        </el-row> -->
         <!-- 英语的手动切分过程 -->
         <el-row v-if="paper_type == '0'">
           <el-row
             v-for="(item, index_out) in file_item"
             :key="index_out"
-            style="margin:15px; border: 1px dashed black;">
+            style="margin:25px; border: 1px dashed black;">
             <div :ref="'EnglishDom_'+index_out">
               <div :class="EnglishSelected(index_out)" style="position:relative">
                 <el-row type="flex" justify="center" v-if="Hand_Cut_Mode">
@@ -401,18 +401,20 @@
                                 @mouseleave.native="Hand_Cut_Clear()"
                                 @mouseenter.native="Hand_Cut_Change(index_out, index_in)"
                                 @click.native="English_Hand_Cut(index_out, index_in)">
-                    <span style="line-height: 30px; height: 30px;">-------------------------------</span>
-                    <i class="el-icon-scissors" style="font-size: 20px; padding-top: 5px"></i>
-                    <span style="line-height: 30px; height: 30px;">-------------------------------</span>
+                    <div class="dashed">
+                      <span><i class="el-icon-scissors" style="font-size: 20px; "></i></span>
+                    </div>
                   </el-row>
                   <el-row
                     v-if="index_in < item.length - 1
                           && Hand_Cut_Mode
                           && (index_out != Hand_Cut_Now[0] || index_in != Hand_Cut_Now[1])"
-                    style="height: 10px; padding: 0px; margin: 4px 0px; border: 2px dashed #ccc"
+                    style="height: 20px"
                     @mouseenter.native="Hand_Cut_Change(index_out, index_in)"
                     @mouseleave.native="Hand_Cut_Clear()">
                     <span>&nbsp;</span>
+                    <div class="dashed">
+                    </div>
                   </el-row>
                 </el-row>
                 <el-row type="flex" justify="center" v-if="Hand_Cut_Mode">
@@ -435,7 +437,7 @@
           <el-row
             v-for="(Para, Para_Index) in json_content"
             :key="'LS_Para_' + Para_Index"
-            style="margin:15px; border: 1px dashed black;">
+            style="margin:25px; border: 1px dashed black;">
             <div :class="ChineseMixSelected(Para_Index)" :ref="'ChineseMixDom_'+Para_Index">
               <div style="position:relative" >
                 <el-row type="flex" justify="center" v-if="Hand_Cut_Mode">
@@ -490,18 +492,21 @@
                                   @mouseleave.native="Hand_Cut_Clear()"
                                   @mouseenter.native="Hand_Cut_Change(Para_Index, Item_Index)"
                                   @click.native="Hand_Cut(Para_Index, Item_Index)">
-                      <span style="line-height: 30px; height: 30px;">-------------------------------</span>
-                      <i class="el-icon-scissors" style="font-size: 20px; padding-top: 5px"></i>
-                      <span style="line-height: 30px; height: 30px;">-------------------------------</span>
+                          <div class="dashed">
+                            <span><i class="el-icon-scissors" style="font-size: 20px; "></i></span>
+                          </div>
                       </el-row>
                       <el-row
-                      v-if="Item_Index != Para.sub_para[0].length - 1
-                            && Hand_Cut_Mode
-                            && (Para_Index != Hand_Cut_Now[0] || Item_Index != Hand_Cut_Now[1])"
-                      style="height: 10px; padding: 0px; margin: 4px 0px; border: 2px dashed #ccc"
-                      @mouseenter.native="Hand_Cut_Change(Para_Index, Item_Index)"
-                      @mouseleave.native="Hand_Cut_Clear()">
-                      <span>&nbsp;</span>
+                        v-if="Item_Index != Para.sub_para[0].length - 1
+                              && Hand_Cut_Mode
+                              && (Para_Index != Hand_Cut_Now[0] || Item_Index != Hand_Cut_Now[1])"
+                        style="height:20px;"
+                        @mouseenter.native="Hand_Cut_Change(Para_Index, Item_Index)"
+                        @mouseleave.native="Hand_Cut_Clear()">
+                        <span>&nbsp;</span>
+                        <div class="dashed">
+                          <span><i class="el-icon-scissors" style="font-size: 20px; "></i></span>
+                        </div>
                     </el-row>
                   </div>
                 </el-row>
@@ -1451,6 +1456,7 @@ export default {
         }
         return true;
       }
+      this.pdfURL=""
       return false;
     },
     // 导入大多数试卷时的方法
@@ -1577,7 +1583,7 @@ export default {
         this.mathAnswerName = e.target.files[0].name;
         if (this.showPdf(e.target.files[0]) ) {
           return;
-        } 
+        }
         if(this.math_standby == "0"){
 
           formData.append("answer", e.target.files[0]);
@@ -3244,6 +3250,22 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+
+.dashed {
+  width: 100%;
+  border-bottom: 1px dashed #b2bbbe;
+  text-align: center;
+  height: 10px;
+  margin-bottom: 10px;
+}
+
+.dashed span {
+    padding: 0 5px;
+}
+.el-icon-scissors{
+  background-color: #F8FBFF;
+  color:#b2bbbe;
+}
 .separate-part{
   margin-top:20px;
   height: 100vh;
