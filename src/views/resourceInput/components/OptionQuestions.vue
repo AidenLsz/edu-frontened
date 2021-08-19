@@ -261,7 +261,7 @@
                 </el-col>
             </el-row>
             <!-- 第四行，答案，选择题的答案我们只给选择的方式来确定，单选或判断只有单选，多选有checkbox -->
-            <el-row type="flex" justify="start" style="margin-top: 10px;" v-if="detailType != '多选题'">
+            <el-row type="flex" justify="start" style="margin-top: 10px;" v-if="detailType == '单选题'">
                 <el-col :span="2">
                     <el-row type="flex" justify="end" style="font-weight: bold; height: 40px; line-height: 40px">
                         <span>答案：</span>
@@ -281,7 +281,7 @@
                 </el-col>
             </el-row>
             <!-- 题目是多选题的情况 -->
-            <el-row type="flex" justify="start" style="margin-top: 10px;" v-else>
+            <el-row type="flex" justify="start" style="margin-top: 10px;" v-else-if="detailType == '多选题'">
                 <el-col :span="2">
                     <el-row type="flex" justify="end" style="font-weight: bold; height: 40px; line-height: 40px">
                         <span>答案：</span>
@@ -299,6 +299,22 @@
                                 {{Get_Option_Label(answer_Index - 1)}}
                             </el-checkbox>
                         </el-checkbox-group>
+                    </el-row>
+                </el-col>
+            </el-row>
+            <!-- 题目是多选题的情况 -->
+            <el-row type="flex" justify="start" style="margin-top: 10px;" v-else-if="detailType == '判断题'">
+                <el-col :span="2">
+                    <el-row type="flex" justify="end" style="font-weight: bold; height: 40px; line-height: 40px">
+                        <span>答案：</span>
+                    </el-row>
+                </el-col>
+                <el-col :span="21" :offset="1">
+                    <el-row type="flex" justify="start" style="height: 40px; line-height: 40px">
+                        <el-radio-group v-model="Question.answer">
+                          <el-radio label="正确" style="height: 40px; line-height: 40px"></el-radio>
+                          <el-radio label="错误" style="height: 40px; line-height: 40px"></el-radio>
+                        </el-radio-group>
                     </el-row>
                 </el-col>
             </el-row>
@@ -627,7 +643,7 @@ export default {
     watch: {
         detailType(newVal, oldVal){
             if(newVal != oldVal){
-                this.Type_Reset();
+                this.Type_Reset(newVal, oldVal);
             }
         },
         Paste_Analysis(newVal){
@@ -991,15 +1007,16 @@ export default {
 
             // 把选项信息塞回去
             if(this.detailType == "判断题"){
-                this.Question.options = ["", ""]
-                this.Question.options_image = [[], []]
+                this.Question.options = []
+                this.Question.options_image = []
+                this.Question.answer = "正确"
             }else{
                 this.Question.options = ["", "", "", ""]
                 this.Question.options_image = [[], [], [], []]
             }
         },
         // 重置数据变量
-        Type_Reset(){
+        Type_Reset(newVal, oldVal){
             // 用于标记注意点的信息，可以重置
             this.Focusing_Input = ""
             this.Focusing_Dom = ""
@@ -1014,6 +1031,15 @@ export default {
             this.Question.answer = ""
             this.Question.answer_image = []
             this.Question.answer_list = []
+
+            if(oldVal == "判断题"){
+                this.Question.options = ["", "", "", ""];
+                this.Question.options_image = [[], [], [], []];
+            }else if(newVal == "判断题"){
+                this.Question.options = [];
+                this.Question.options_image = [];
+                this.Question.answer = "正确"
+            }
         },
         // 自动切分
         // 用于给试题文本自动切分，现在先只做选择吧，以后功能补齐了再说后面的
