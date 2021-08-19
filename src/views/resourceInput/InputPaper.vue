@@ -1991,11 +1991,7 @@ export default {
           this.$message.warning("您正在使用文件导入功能，确认完成或清空内容后才可切换当前操作模块。")
         }
       }else{
-        if(this.Question_Bundle.length == 0){
-          this.Using_Part = Part
-        }else{
-          this.$message.warning("您正在使用试卷手动输入功能，确认完成或清空内容后才可切换当前操作模块。")
-        }
+        this.Using_Part = Part
       }
     },
       // 将切分后的内容整理成导出格式
