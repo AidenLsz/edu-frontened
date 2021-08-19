@@ -168,13 +168,13 @@
         <el-row type="flex" justify="start" style="margin-top: 7vh; margin-bottom: -1vh">
           <el-col :span="4">
             <el-row type="flex" justify="start">  
-              <el-button type="primary" style="width: 100px;" @click="Submit()">开始入库</el-button>
+              <el-button type="primary" style="width: 100px;" @click="Submit()">入库按钮</el-button>
             </el-row>
           </el-col>
           <el-col :span="4">
             <el-row type="flex" justify="start">  
               <input type="file" accept=".doc, .docx" id="fileSelect" :multiple="false" style="display: none">
-              <el-button type="primary" style="width: 100px;" @click="File_Import()">文件导入</el-button>
+              <el-button type="primary" style="width: 100px;" :disabled="Subject!='语文'" @click="File_Import()">文件导入</el-button>
             </el-row>
           </el-col>
           <el-col :span="15" v-show="File_Name != ''" style="margin-bottom: 10px">
@@ -1587,19 +1587,21 @@
   </div>
 </template>
 
+
+
 <script>
 
-import OptionQuestions from '@/views/resourceInput/components/OptionQuestions.vue'
-import FillQuestions from '@/views/resourceInput/components/FillQuestions.vue'
-import AnswerQuestions from '@/views/resourceInput/components/AnswerQuestions.vue'
-import MixQuestions from '@/views/resourceInput/components/MixQuestions.vue'
+import OptionQuestions from '@/views/testPage/Remaking_Input_Component/components/OptionQuestions.vue'
+import FillQuestions from '@/views/testPage/Remaking_Input_Component/components/FillQuestions.vue'
+import AnswerQuestions from '@/views/testPage/Remaking_Input_Component/components/AnswerQuestions.vue'
+import MixQuestions from '@/views/testPage/Remaking_Input_Component/components/MixQuestions.vue'
 
 import Mathdown from '@/common/components/Mathdown'
 
 import {commonAjax} from '@/common/utils/ajax'
 
 export default {
-  name: "inputPaper",
+  name: "RemakingInputSingle",
   components: {
     Mathdown, OptionQuestions, FillQuestions, AnswerQuestions, MixQuestions
   },
@@ -1944,11 +1946,11 @@ export default {
     };
   },
   mounted(){
-      if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
-        this.$message.error("您尚未登录，请登录后使用录入功能。")
-        this.$router.push("/")
-        return 
-      }
+      // if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
+      //   this.$message.error("您尚未登录，请登录后使用录入功能。")
+      //   this.$router.push("/")
+      //   return 
+      // }
       this.Get_User_UUID();
       this.Init_File_Selector();
   },
@@ -1991,7 +1993,11 @@ export default {
           this.$message.warning("您正在使用文件导入功能，确认完成或清空内容后才可切换当前操作模块。")
         }
       }else{
-        this.Using_Part = Part
+        if(this.Question_Bundle.length == 0){
+          this.Using_Part = Part
+        }else{
+          this.$message.warning("您正在使用试卷手动输入功能，确认完成或清空内容后才可切换当前操作模块。")
+        }
       }
     },
       // 将切分后的内容整理成导出格式
@@ -2090,19 +2096,17 @@ export default {
 
         commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param).then((res)=>{
           
-          let Result = res.data
-
-          for(let i = 0; i < Result.length; i++){
-            if(['单选题', '多选题', '判断题'].indexOf(Result[i].type) != -1){
+          for(let i = 0; i < res.length; i++){
+            if(['单选题', '多选题', '判断题'].indexOf(res[i].type) != -1){
               let Item = {
-                score: Result[i].score == 0 ? 5 : Result[i].score,
-                stem: Result[i].stem,
+                score: res[i].score == 0 ? 5 : res[i].score,
+                stem: res[i].stem,
                 stem_image: [],
                 options: [],
                 options_image: [],
-                answer: Result[i].answer,
+                answer: res[i].answer,
                 answer_image: [],
-                analysis: Result[i].analysis,
+                analysis: res[i].analysis,
                 analysis_image: [],
                 // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
                 sub_questions: [],
@@ -2110,21 +2114,21 @@ export default {
                 sub_questions_score: [],
                 answer_list: []
               }
-              for(let j = 0; j < Result[i].options.length; j++){
-                Item.options.push(Result[i].options[j])
+              for(let j = 0; j < res[i].options.length; j++){
+                Item.options.push(res[i].options[j])
                 Item.options_image.push([])
               }
-              Temp_Result_Dict[Result[i].type].list.push(Item)
-            }else if(Result[i].type == '填空题'){
+              Temp_Result_Dict[res[i].type].list.push(Item)
+            }else if(res[i].type == '填空题'){
               let Item = {
-                score: Result[i].score == 0 ? 5 : Result[i].score,
-                stem: Result[i].stem,
+                score: res[i].score == 0 ? 5 : res[i].score,
+                stem: res[i].stem,
                 stem_image: [],
                 options: [],
                 options_image: [],
-                answer: Result[i].answer,
+                answer: res[i].answer,
                 answer_image: [],
-                analysis: Result[i].analysis,
+                analysis: res[i].analysis,
                 analysis_image: [],
                 // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
                 sub_questions: [],
@@ -2132,17 +2136,17 @@ export default {
                 sub_questions_score: [],
                 answer_list: []
               }
-              Temp_Result_Dict[Result[i].type].list.push(Item)
-            }else if(['简答题', '计算题'].indexOf(Result[i].type) != -1){
+              Temp_Result_Dict[res[i].type].list.push(Item)
+            }else if(['简答题', '计算题'].indexOf(res[i].type) != -1){
                 let Item = {
-                  score: 5 * Result[i].subquestions.length,
-                  stem: Result[i].stem,
+                  score: 5 * res[i].subquestions.length,
+                  stem: res[i].stem,
                   stem_image: [],
                   options: [],
                   options_image: [],
-                  answer: Result[i].answer,
+                  answer: res[i].answer,
                   answer_image: [],
-                  analysis: Result[i].analysis,
+                  analysis: res[i].analysis,
                   analysis_image: [],
                   // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
                   sub_questions: [],
@@ -2150,8 +2154,8 @@ export default {
                   sub_questions_score: [],
                   answer_list: []
               }
-              for(let j = 0; j < Result[i].subquestions.length; j++){
-                Item.sub_questions.push(Result[i].subquestions[j])
+              for(let j = 0; j < res[i].subquestions.length; j++){
+                Item.sub_questions.push(res[i].subquestions[j])
                 Item.sub_questions_image.push([])
                 Item.sub_questions_score.push(5)
               }
@@ -2307,7 +2311,7 @@ export default {
       },
       // 单题录入
       toSingle(){
-        this.$router.push({path: "/inputMarked"})
+        this.$router.push({path: "/remakeInputSingle"})
       },
       // 展示题目大类标题的方法
       Get_Bundle_Label(Type, Bundle_Index){

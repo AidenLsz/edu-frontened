@@ -1,5 +1,9 @@
 <template>
-  <div style="background: #F5FEFF">
+  <div 
+    style="background: #F5FEFF"
+    v-loading="waiting"
+    element-loading-text="正在准备答题卡，请稍后..."
+    element-loading-spinner="el-icon-loading">
     <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; padding-top: 50px; margin-bottom: 30px;">
       <el-dialog 
         :visible.sync="Edit_Part_Dialog"
@@ -789,15 +793,16 @@
 </template>
 <script>
 
-import FileSaver from "file-saver";
-
 export default {
   name: 'AnswerCard',
   props: {
-    
+
   },
   data() {
     return {
+      // 学科
+      Subject: "",
+      // 试题属性
       Question_Lists: [],
       Cautions_Editor_Dialog: false,
       // 纸页大小与纸页样式
@@ -844,7 +849,9 @@ export default {
       Editing_Index: -1,
       // 编辑用的对话框
       Edit_Part_Dialog: false,
-      TotalScore: 0
+      TotalScore: 0,
+      // 等待变量
+      waiting: false
     }
   },
   watch: {
@@ -875,6 +882,7 @@ export default {
   mounted() {
     this.Question_Lists = JSON.parse(sessionStorage.getItem('CombinePaper_AnswerCard'));
     this.Init_Bundle_Options();
+    this.Subject = sessionStorage.getItem('AnswerCardSubject');
   },
   methods: {
     // 下载答题卡
@@ -891,11 +899,13 @@ export default {
       let Card_Form = {
         sheetSize: this.PaperType,
         columnNum: this.FillType == "双栏" ? 2 : this.FillType == "三栏" ? 3 : 1,
-        fileType: this.IDCodeType == "考号填涂" ? "paint" : "barCode",
+        fillType: this.IDCodeType == "考号填涂" ? "paint" : "barCode",
         examNumberDigits: this.IDCodeType == "考号填涂" ? this.PaperInfo.StudentCodeLength + "" : "",
         sheetFormat: [],
         fillPart: this.UserFillInfo,
         title: this.PaperInfo.title,
+        cautions: this.PaperInfo.Cautions,
+        subject: this.Subject,
         questions: []
       }
 
@@ -915,23 +925,48 @@ export default {
             AnswerLength: ['单选题', '多选题', '判断题'].indexOf(this.Question_Lists[j].type) != -1 ?
                             [] : ['填空题'].indexOf(this.Question_Lists[j].type) != -1 ?
                               this.Bundle_Card_Option_List[j].List : ['简答题', '计算题'].indexOf(this.Question_Lists[j].type) != -1 ?
-                                this.Bundle_Card_Option_List[j]: []
+                                this.Bundle_Card_Option_List[j]: [],
+            score: []
+        }
+        for(let i = 0; i < this.Question_Lists[j].list.length; i++){
+          Item_Form.score.push(this.Question_Lists[j].list[i].score)
         }
         Card_Form.questions.push(Item_Form)
       }
-      
-      this.$message.warning("答题卡下载仍在准备中，请期待后续更新。")
 
-      let Flag = true;
-      if(Flag){
-        return
+      let config = {
+          headers: {
+              "Content-Type": "multipart/form-data"
+          },
+          responseType: 'arraybuffer',
+          emulateJSON: true
       }
 
-      let file = new File([JSON.stringify(Card_Form)],
-        "AnswerCardJson.json",
-        { type: "text/plain;charset=utf-8" }
-      );
-      FileSaver.saveAs(file);
+      let param = new FormData();
+
+      param.append('Paper_Data', JSON.stringify(Card_Form, null, 4));
+
+      this.$http
+          .post(this.backendIP + "/api/answerSheetDownload", param, config)
+          .then(function(data) {
+          if(data.data){
+              this.waiting = false;
+              const link = document.createElement('a')
+              let blob = new Blob([data.data],
+                  {type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"})
+              let objectUrl = URL.createObjectURL(blob)
+              link.href = objectUrl
+              link.download = this.PaperInfo.title + '答题卡.docx'
+              link.click()
+              URL.revokeObjectURL(objectUrl);
+              this.waiting_text = ""
+          }
+          }).catch(() => {
+              this.$message.error("服务器忙碌，请稍后再试...");
+              this.waiting = false;
+              this.waiting_text = "";
+              return
+          });
     },
     // 切换分数显示
     Part_Score_Show(Bundle_Index){

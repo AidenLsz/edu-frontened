@@ -1,1882 +1,814 @@
 <template>
-  <div style="margin-top: 5vh">
-    <!-- 查看分析报告 -->
+  <div style="margin-top: 5vh; padding-left: 5vw; padding-right: 5vw">
     <el-dialog
-        :visible.sync="analyseReport"
-        width="90%"
-        :modal-append-to-body="false"
-        :close-on-click-modal="true">
-        <template slot="title"></template>
-        <QuestionAnalyse :Ques.sync="analyseData"></QuestionAnalyse>
-    </el-dialog>
-    <!-- 试题分析路径跳转 -->
-    <el-dialog :visible.sync="QuestionAnalyseSwitchFlag" width="70%">
-      <el-row>
-        <el-col :span="12">
-          <el-row>
-            <el-button @click="QAS(0)" circle style="height: 200px; width: 200px;"><img src="../../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-          </el-row>
-          <el-row>
-            <el-button type="text" @click="QAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
-              录入试题进行分析
-            </el-button>
-          </el-row>
-        </el-col>
-        <el-col :span="12">
-          <el-row>
-            <el-button @click="QAS(1)" circle style="height: 200px; width: 200px"><img src="../../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-          </el-row>
-          <el-row>
-            <el-button type="text" @click="QAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
-              搜索试题进行分析
-            </el-button>
-          </el-row>
-        </el-col>
-      </el-row>
-    </el-dialog>
-    <!-- 提供给非法输入格式的提示对话框 -->
-    <el-dialog
-        :visible.sync="showHint" 
-        title="非法输入格式提示" 
-        width="65%" 
-        @close="Editor_Dialog_Close()"
+        :visible.sync="Wrong_Char_Dialog"
+        title="格式错误提示"
+        width="40%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
-      <el-row style="margin: 20px 0px 0px 0px">
-        <el-col :span="4" style="text-align: left">
-          合法的英文符号有：
-        </el-col>
-        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in en_pun_list" :key="'EN' + SymIndex.toString()" v-html="Sym">
-        </el-col>
-      </el-row>
-      <el-row style="margin: 50px 0px">
-        <el-col :span="4" style="text-align: left">
-          合法的中文符号有：
-        </el-col>
-        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in ch_pun_list" :key="'CH' + SymIndex.toString()" v-html="Sym">
-        </el-col>
-      </el-row>
-      <el-row style="margin: 50px 0px">
-        <el-col :span="4" style="text-align: left">
-          合法的简单数学符号有：
-        </el-col>
-        <el-col :span="1" style="border: 1px dashed black; margin: 2px; font-size: 16px" v-for="(Sym, SymIndex) in math_pun_list" :key="'MATH' + SymIndex.toString()" v-html="Sym">
-        </el-col>
-      </el-row>
-      <el-row type="flex" justify="center" style="font-size: 20px; color: red; font-weight: bold">
-        请勿输入其他符号，如需输入，请使用题目录入上方的LUNA输入助手进行辅助
-      </el-row>
+        <div v-html="Wrong_Char_Info"></div>
+        <el-button 
+            type="danger" 
+            @click="Wrong_Char_Dialog = false"
+            style="margin-top: 30px;"
+            >确认</el-button>
     </el-dialog>
-    <!-- 提供给选择题的编辑器 -->
-    <el-dialog 
-        :visible.sync="showDialog" 
-        title="请编辑想要插入/修改的选择题内容" 
-        width="65%" 
-        @close="Editor_Dialog_Close()"
-        :modal-append-to-body="false"
-        :close-on-click-modal="false"
-        :key="'Option_Dia_' + refresh"
-    >
-        <el-row>
-            <el-col v-if="complex_Input">
-                <el-row>
-                    <label>LUNA输入助手，请在需要时自行复制至目标输入框</label>
-                </el-row>
-                <ComplexInput :Mathdown_Special="'questionAnalyseInput_Option'"></ComplexInput>
-                <el-row>
-                    <el-button @click="complex_Input = false"><label>隐藏并清空</label></el-button>
-                </el-row>
-            </el-col>
-            <el-col v-if="!complex_Input">
-                <el-row>
-                    <el-button @click="complex_Input = true"><label>显示LUNA输入助手</label></el-button>
-                </el-row>
-            </el-col>
+    <el-row justify="start" type="flex">
+      <el-col :span="6">
+        <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; padding-top: 13px">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item>资源分析</el-breadcrumb-item>
+                <el-breadcrumb-item>试题资源</el-breadcrumb-item>
+            </el-breadcrumb>
         </el-row>
-        <el-divider></el-divider>
-        <OptionQuestions 
-            @EditFinish="New_Questions" 
-            @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch"
-            ref="OptionQuestionsEditor">
-        </OptionQuestions>
-    </el-dialog>
-    <!-- 提供给填空题的编辑器 -->
-    <el-dialog 
-        :visible.sync="showDialog_Fill" 
-        title="请编辑想要插入/修改的填空题内容" 
-        width="65%" 
-        @close="Editor_Dialog_Close()"
-        :modal-append-to-body="false"
-        :close-on-click-modal="false"
-        :key="'Fill_Dia_' + refresh"
-    >
-        <el-row>
-            <el-col v-if="complex_Input">
-                <el-row>
-                    <label>LUNA输入助手，请在需要时自行复制至目标输入框</label>
-                </el-row>
-                <ComplexInput :Mathdown_Special="'questionAnalyseInput_Fill'"></ComplexInput>
-                <el-row>
-                    <el-button @click="complex_Input = false"><label>隐藏并清空</label></el-button>
-                </el-row>
-            </el-col>
-            <el-col v-if="!complex_Input">
-                <el-row>
-                    <el-button @click="complex_Input = true"><label>显示LUNA输入助手</label></el-button>
-                </el-row>
-            </el-col>
+      </el-col>
+      <el-col :span="6">
+        <el-row type="flex" justify="center" @click.native="toPaper()" class="toPaper">
+            <span>切换至整卷页面</span>
         </el-row>
-        <el-divider></el-divider>
-        <FillQuestions
-            @EditFinish="New_Questions" 
-            @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch"
-        ></FillQuestions>
-    </el-dialog>
-    <!-- 提供给解答题的编辑器 -->
-    <el-dialog 
-        :visible.sync="showDialog_Answer" 
-        title="请编辑想要插入/修改的解答题内容" 
-        width="65%" 
-        @close="Editor_Dialog_Close()"
-        :modal-append-to-body="false"
-        :close-on-click-modal="false"
-        :key="'Answer_Dia_' + refresh"
-    >
-        <el-row>
-            <el-col v-if="complex_Input">
-                <el-row>
-                    <label>LUNA输入助手，请在需要时自行复制至目标输入框</label>
-                </el-row>
-                <ComplexInput :Mathdown_Special="'questionAnalyseInput_Answer'"></ComplexInput>
-                <el-row>
-                    <el-button @click="complex_Input = false"><label>隐藏并清空</label></el-button>
-                </el-row>
-            </el-col>
-            <el-col v-if="!complex_Input">
-                <el-row>
-                    <el-button @click="complex_Input = true"><label>显示LUNA输入助手</label></el-button>
-                </el-row>
-            </el-col>
-        </el-row>
-        <el-divider></el-divider>
-        <AnswerQuestions
-            @EditFinish="New_Questions" 
-            @ReEditFinish="ReEdit_Questions" 
-            :RE.sync="ReEditSwitch"
-        ></AnswerQuestions>
-    </el-dialog>
-    <!-- 提供给非选择题的编辑器 -->
-    <el-dialog 
-        :visible.sync="showDialog_Mix" 
-        title="请编辑想要插入/修改的非选择题内容" 
-        width="80%"
-        :modal-append-to-body="false"
-        :close-on-click-modal="false"
-        :key="'Mix_Dia_' + refresh">
-        <el-row>
-            <el-col v-if="complex_Input">
-                <el-row>
-                    <label>LUNA输入助手，请在需要时自行复制至目标输入框</label>
-                </el-row>
-                <ComplexInput :Mathdown_Special="'questionAnalyseInput_Mix'"></ComplexInput>
-                <el-row>
-                    <el-button @click="complex_Input = false"><label>隐藏并清空</label></el-button>
-                </el-row>
-            </el-col>
-            <el-col v-if="!complex_Input">
-                <el-row>
-                    <el-button @click="complex_Input = true"><label>显示LUNA输入助手</label></el-button>
-                </el-row>
-            </el-col>
-        </el-row>
-        <el-divider></el-divider>
-        <MixQuestions
-            @EditFinish_Mix="New_Questions" 
-            @ReEditFinish_Mix="ReEdit_Questions"
-            :RE.sync="ReEditSwitch"
-        ></MixQuestions>
-    </el-dialog>
-    <!-- 完成单题显示的编辑器 -->
-    <el-dialog
-        :visible.sync="showDialog_Result"
-        title="确认导入的题目内容" 
-        width="90%"
-        :modal-append-to-body="false"
-        :close-on-click-modal="false">
-        <el-row style="margin: 30px 50px 0px 50px">
-            {{TestData.title}}
-        </el-row>
-        <el-row style="margin: 30px 50px" v-if="Submit_Show">
-            <el-button @click="Ensure()" type="success">确认无误</el-button>
-        </el-row>
-        <el-row v-for="(Question_Info, Question_Index) in TestData.doc" :key="Question_Index" style="border: 3px dashed black; background: #F8FBFF; margin: 30px">
-            <!-- 题型，上传用户，科目部分 -->
-            <el-row type="flex" justify="start" style="margin: 30px 50px 0px 50px">
-                <el-col :span="1" style="text-align: left">
-                  <el-popover
-                    placement="top"
-                    width="170"
-                    trigger="hover"
-                    v-if="Question_Check[Question_Index] == false"
-                    content="点击完成该题目确认">
-                    <el-button 
-                      slot="reference" 
-                      circle size="medium" 
-                      @click="Question_Check.splice(Question_Index, 1, true)"
-                      type="success"
-                      ><i class="el-icon-check"></i></el-button>
-                  </el-popover>
-                  <el-popover
-                    placement="top"
-                    width="170"
-                    trigger="hover"
-                    v-if="Question_Check[Question_Index] == true"
-                    content="点击取消确认该题目">
-                    <el-button
-                      slot="reference" 
-                      circle size="medium" 
-                      @click="Question_Check.splice(Question_Index, 1, false)"
-                      type="danger"><i class="el-icon-edit"></i></el-button>
-                  </el-popover>
-                </el-col>
-                <el-col :span="2" style="text-align: left; padding-top: 1.2vh">
-                    {{Question_Info.question_type}}
-                </el-col>
-                <el-col :span="3" style="text-align: left; padding-top: 1.2vh">
-                    提交者：{{Question_Info.source}}
-                </el-col>
-                <el-col :span="3" style="text-align: left; padding-top: 1.2vh">
-                    科目：{{Question_Info.subject}}
-                </el-col>
-            </el-row>
-            <!-- 题干部分 - 无小题 -->
-            <el-row type="flex" justify="start" style="margin: 30px 50px;">
-                <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.question_stem, 'stem')"></p> -->
-              <el-col :span="1" v-if="Question_Check[Question_Index] == false">
-                <el-row type="flex" justify="start">
-                    <el-button @click="Show_Part(Question_Index, 'stem')" size="small">{{Get_Button_Label(Question_Index, 'stem')}}</el-button>
-                </el-row>
-              </el-col>
-              <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
-                <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Question_Show(Question_Info.question_stem, 'stem', Question_Index)" style="width: 84vw;" :name="Get_Name(Question_Index, 'stem')"/>
-                </el-row>
-                <el-row type="flex" justify="start">
-                  <ComplexInput 
-                    v-if="Show_ComplexInput(Question_Index, 'stem')"
-                    @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Show(Question_Info.question_stem, 'stem', Question_Index).substring(5)"></ComplexInput>
-                </el-row>
-              </el-col>
-            </el-row>
-            <!-- 题干部分 - 有小题 -->
-            <el-row type="flex" justify="start" style="margin: 30px 50px;" 
-              v-for="(Sub_Question, Sub_Question_Index) in Question_Info.sub_questions" :key="Sub_Question_Index">
-                <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.question_stem, 'stem')"></p> -->
-              <el-col :span="1" v-if="Question_Check[Question_Index] == false">
-                <el-row type="flex" justify="start">
-                    <el-button @click="Show_Part(Question_Index, 'sub_question', Sub_Question_Index)" size="small">{{Get_Button_Label(Question_Index, 'sub_question', Sub_Question_Index)}}</el-button>
-                </el-row>
-              </el-col>
-              <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
-                <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Sub_Question(Sub_Question, Question_Index, Sub_Question_Index)" style="width: 84vw;" :name="Get_Name(Question_Index, 'sub_question', Sub_Question_Index)"/>
-                </el-row>
-                <el-row type="flex" justify="start">
-                  <ComplexInput 
-                    v-if="Show_ComplexInput(Question_Index, 'sub_question', Sub_Question_Index)"
-                    @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Sub_Question(Sub_Question, Question_Index, Sub_Question_Index)"></ComplexInput>
-                </el-row>
-              </el-col>
-            </el-row>
-            <!-- 选项部分 -->
-            <el-row type="flex" justify="start" style="margin: 20px 50px" 
-                    v-for="(Question_Option, Option_Index) in Question_Info.question_options" 
-                    :key="Option_Index" >
-              <!-- <p style="text-align: left" v-html="Get_Question_Options(Question_Option, Option_Index)"></p>
-                -->
-              <el-col :span="1" v-if="Question_Check[Question_Index] == false">
-                <el-row type="flex" justify="start">
-                    <el-button @click="Show_Part(Question_Index, 'option', Option_Index)" size="small">{{Get_Button_Label(Question_Index, 'option', Option_Index)}}</el-button>
-                </el-row>
-              </el-col>
-              <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
-                <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Question_Options(Question_Option, Option_Index, Question_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'option', Option_Index)"/>
-                </el-row>
-                <el-row type="flex" justify="start">
-                  <ComplexInput 
-                    v-if="Show_ComplexInput(Question_Index, 'option', Option_Index)"
-                    @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Options(Question_Option, Option_Index, Question_Index).substring(4)"></ComplexInput>
-                </el-row>
-              </el-col>
-              <!-- <el-row type="flex" justify="start" style="margin: 30px 50px; background: red" v-if="Show_ComplexInput(Question_Index, 'option', Option_Index)">
-                <ComplexInput 
-                    @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Options(Question_Option, Option_Index)"></ComplexInput>
-              </el-row> -->
-            </el-row>
-            <!-- 答案部分 -->
-            <el-row type="flex" justify="start" style="margin: 20px 50px" v-for="(Answer, Answer_Index) in Question_Info.answer" :key="Question_Index + 'Answer_' + Answer_Index">
-               <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.answer, 'answer')"></p> -->
-               <el-col :span="1" v-if="Question_Check[Question_Index] == false">
-                 <el-row type="flex" justify="start">
-                    <el-button @click="Show_Part(Question_Index, 'answer', Answer_Index)" size="small">{{Get_Button_Label(Question_Index, 'answer', Answer_Index)}}</el-button>
-                 </el-row>
-               </el-col>
-               <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
-                 <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Question_Show(Answer, 'answer', Question_Index, Answer_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'answer', Answer_Index)"/>
-                 </el-row>
-                 <el-row type="flex" justify="start">
-                  <ComplexInput 
-                    v-if="Show_ComplexInput(Question_Index, 'answer', Answer_Index)"
-                    @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Show(Answer, 'answer', Question_Index, Answer_Index).substring(6)"></ComplexInput>
-                 </el-row>
-               </el-col>
-            </el-row>
-            <!-- 解析部分 -->
-            <el-row type="flex" justify="start" style="margin: 30px 50px">
-                <!-- <p style="text-align: left" v-html="Get_Question_Show(Question_Info.analysis, 'analyse')"></p> -->
-              <el-col :span="1" v-if="Question_Check[Question_Index] == false">
-                <el-row type="flex" justify="start">
-                    <el-button @click="Show_Part(Question_Index, 'analyse')" size="small">{{Get_Button_Label(Question_Index, 'analyse')}}</el-button>
-                </el-row>
-              </el-col>
-              <el-col :span="21" style="padding-top: 7px; padding-left: 1vw">
-                <el-row type="flex" justify="start">
-                  <Mathdown :content="Get_Question_Show(Question_Info.analysis, 'analyse', Question_Index)" style="width: 80vw;"  :name="Get_Name(Question_Index, 'analyse')"/>
-                </el-row>
-                <el-row type="flex" justify="start">
-                  <ComplexInput 
-                    v-if="Show_ComplexInput(Question_Index, 'analyse')"
-                    @Update_CI="Update_ComplexInput" 
-                    :Get_Out_Content="Get_Question_Show(Question_Info.analysis, 'analyse', Question_Index).substring(5)"></ComplexInput>
-                </el-row>
-              </el-col>
-            </el-row>
-        </el-row>
-        <el-row style="margin: 30px 50px" v-if="Submit_Show">
-            <el-button @click="Ensure()" type="success">确认无误</el-button>
-        </el-row>
-    </el-dialog>
-    <el-row justify="start" type="flex" style="margin-left: 5vw">
-      <el-col>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>分析</el-breadcrumb-item>
-          <el-breadcrumb-item><span @click="QuestionAnalyseSwitch()" style="cursor: pointer">试题资源</span></el-breadcrumb-item>
-        </el-breadcrumb>
       </el-col>
     </el-row>
-    <el-row style="margin-left: 5vw; margin-right: 5vw">
-      <el-col :span="4" style="padding-bottom: 50px; padding-top: 30px">
-        <!-- 不同题型 -->
-        <el-row>
-          <el-row type="flex" justify="start">
-            <p style="text-align: left;">确认科目：</p>
-          </el-row>
-          <el-row type="flex" justify="start">
-            <el-select v-model="SubjectType" placeholder="请选择科目" style="width: 12.5vw">
-              <el-option
-                v-for="item in Subject_List"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-row>
-          <el-row style="margin: 20px 0px 0px 0px" type="flex" justify="start">
-            <p style="text-align: left;">确认学段：</p>
-          </el-row>
-          <el-row type="flex" justify="start">
-            <el-select v-model="PeriodType" placeholder="请选择学段" style="width: 12.5vw">
-              <el-option
-                v-for="item in Period_List"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-row>
-          <el-row style="margin-top: 2vh">
-            <el-col :span="4" style="font-size: 20px; text-align: left">
-              <i v-if="Expand" @click="Expand_Type_Change()" class="el-icon-arrow-down"></i>
-              <i v-if="!Expand" @click="Expand_Type_Change()" class="el-icon-arrow-right"></i>
-            </el-col>
-            <el-col :span="5" style="text-align: left; font-size: 20px">
-              题型
-            </el-col>
-            <el-col :span="12" style="display: none">
-              <el-button @click="showHint = true" size="small" type="danger" plain>非法格式提示</el-button>
-            </el-col>
-          </el-row>
-          <!-- Option -->
-          <el-row style="margin-top: 10px" v-if="Expand">
-            <el-col :span="18" :offset="4" style="text-align: left; font-size: 20px">
-              <i class="el-icon-circle-check"></i>
-              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Change_Type('option')">选择题</el-button>
-            </el-col>
-          </el-row>
-          <!-- Fill -->
-          <el-row v-if="Expand">
-            <el-col :span="18" :offset="4" style="text-align: left; font-size: 20px">
-              <i class="el-icon-full-screen"></i>
-              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Change_Type('fill')">填空题</el-button>
-            </el-col>
-          </el-row>
-          <!-- Answer -->
-          <el-row v-if="Expand">
-            <el-col :span="18" :offset="4" style="text-align: left; font-size: 20px">
-              <i class="el-icon-edit-outline"></i>
-              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Change_Type('answer')">解答题</el-button>
-            </el-col>
-          </el-row>
-          <!-- Mix -->
-          <el-row v-if="Expand">
-            <el-col :span="18" :offset="4" style="text-align: left; font-size: 20px">
-              <i class="el-icon-reading"></i>
-              <el-button type="text" style="font-size: 20px; color: black; padding-left: 15px" @click="Change_Type('mix')">综合题</el-button>
-            </el-col>
-          </el-row>
-        </el-row>
-        <!-- <el-row type="flex" justify="center" style="padding-top: 30px">
-          <el-button type="primary" plain style="width: 200px; font-size: 16px" @click="ImportFile()">
-            <label>文件导入</label>
-          </el-button>
-        </el-row> -->
-        <el-row 
-          type="flex" 
-          justify="start" 
-          style="padding-top: 30px">
-          <el-button 
-            type="success" 
-            plain 
-            style="width: 200px; font-size: 16px" 
-            @click="PaperUpload('upload')" 
-            :disabled="Type_Now == '-1'"    
-            v-loading="Question_Analysing"
-            element-loading-text="加载中，请等待"
-            element-loading-spinner="el-icon-loading">
-            <label>题目分析</label>
-          </el-button>
-        </el-row>
-      </el-col>
-      <el-col :span="20" style="background: #F8FBFF; margin-top: 30px; min-height: 65vh; padding-top: 40px; border-right: 30px solid white">
-        <el-row style="background: #F8FBFF; min-height: 50vh">
-          <OptionDisplay v-if="Type_Now == 'option'" :QI="Temp_OptionQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></OptionDisplay>
-          <FillDisplay v-else-if="Type_Now == 'fill'" :QI="Temp_FillQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></FillDisplay>
-          <AnswerDisplay v-else-if="Type_Now == 'answer'" :QI="Temp_AnswerQuestionInfo" :Bundle_Index="'Bundle_0'" :Sub_Index="'Sub_0'"></AnswerDisplay>
-          <MixDisplay v-else-if="Type_Now == 'mix'" :QI="Temp_MixQuestionInfo" :BI="'Bundle_0'"></MixDisplay>  
-        </el-row>
-        <el-row v-if="Type_Now != '-1'">
-          <el-col :span="8">
-            <el-button type="primary" plain @click="Edit_Question()">重新编辑</el-button>
-          </el-col>
-          <el-col :span="8">
-            <el-button type="warning" v-if="Authority_Check()" plain @click="PaperUpload('export')">题目导出</el-button> 
-            <p v-else>&nbsp;</p>
-          </el-col>  
-          <el-col :span="8">
-            <el-button type="danger" plain @click="Type_Now = '-1'; Reset_Params()">清空数据</el-button> 
-          </el-col> 
-        </el-row>  
-      </el-col>
+    <!-- 学科选择 -->
+    <el-row type="flex" justify="start" style="margin-top: 6vh; margin-bottom: -1vh">
+        <el-col :span="2">
+            <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; font-size: 18px">
+                <label>科目</label>
+            </el-row>
+        </el-col>
+        <el-col :span="21">
+            <el-row type="flex" justify="start">
+                <el-select v-model="Subject" placeholder="请选择科目">
+                <el-option
+                    v-for="item in Subject_List"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+                </el-select>
+            </el-row>
+        </el-col>
+    </el-row>
+    <el-divider></el-divider>
+    <!-- 学段选择 -->
+    <el-row type="flex" justify="start" style="margin-top: -1vh; margin-bottom: -1vh">
+        <el-col :span="2">
+            <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; font-size: 18px">
+                <label>学段</label>
+            </el-row>
+        </el-col>
+        <el-col :span="21">
+            <el-row type="flex" justify="start">
+                <el-select v-model="Period" placeholder="请选择学段">
+                <el-option
+                    v-for="item in Period_List"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+                </el-select>
+            </el-row>
+        </el-col>
+    </el-row>
+    <el-divider></el-divider>
+    <el-row type="flex" justify="start" style="margin-top: -1vh;">
+        <el-col :span="2">
+            <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; font-size: 18px">
+                <label>题型</label>
+            </el-row>
+        </el-col>
+        <el-col :span="13">
+            <el-row type="flex" justify="start" style="height: 40px; line-height: 40px;">
+                <el-col v-for="Type in Type_List" :key="'Ques_Type_' + Type.label" :span="24/8">
+                    <el-row 
+                        type="flex" 
+                        justify="center" 
+                        :class="Get_Type_Button_Class(Type)"
+                        @click.native="Type_Change(Type.value)">
+                        {{Type.label}}
+                    </el-row>
+                </el-col>
+            </el-row>
+        </el-col>
+    </el-row>
+    <el-row type="flex" justify="center" style="border: 3px solid #409EFF; min-height: 30vh; border-radius: 15px; margin-top: 30px; margin-bottom: 30px;">
+        <OptionQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['单选题', '多选题', '判断题'].indexOf(Type) != -1" :detailType.sync="Type"></OptionQuestions>
+        <FillQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['填空题'].indexOf(Type) != -1" :detailType.sync="Type"></FillQuestions>
+        <AnswerQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['简答题', '计算题'].indexOf(Type) != -1" :detailType.sync="Type"></AnswerQuestions>
+        <MixQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['综合题'].indexOf(Type) != -1" :detailType.sync="Type"></MixQuestions>
     </el-row>
   </div>
 </template>
+
 <script>
+
+import OptionQuestions from '@/views/resourceInput/components/OptionQuestions'
+import FillQuestions from '@/views/resourceInput/components/FillQuestions.vue'
+import AnswerQuestions from '@/views/resourceInput/components/AnswerQuestions.vue'
+import MixQuestions from '@/views/resourceInput/components/MixQuestions.vue'
 
 import {commonAjax} from '@/common/utils/ajax'
 
-import FileSaver from "file-saver";
-
-import ComplexInput from '../../common/components/ComplexInput.vue'
-
-import OptionDisplay from './../resourceInput/components/OptionDisplay.vue'
-import OptionQuestions from './../resourceInput/components/OptionQuestions.vue'
-import FillQuestions from "./../resourceInput/components/FillQuestions.vue"
-import FillDisplay from "./../resourceInput/components/FillDisplay.vue";
-import AnswerQuestions from "./../resourceInput/components/AnswerQuestions.vue";
-import AnswerDisplay from "./../resourceInput/components/AnswerDisplay.vue";
-import MixQuestions from "./../resourceInput/components/MixQuestions.vue";
-import MixDisplay from "./../resourceInput/components/MixDisplay.vue";
-
-import Mathdown from "../../common/components/Mathdown.vue";
-import QuestionAnalyse from "./QuestionAnalyse.vue"
-
-// import Vue from "vue";
 export default {
-  components: { ComplexInput, 
-                OptionDisplay, OptionQuestions, 
-                FillQuestions, FillDisplay, 
-                AnswerQuestions, AnswerDisplay,
-                MixQuestions, MixDisplay,
-                Mathdown, QuestionAnalyse},
+  name: "inputMarked",
+  components: {
+      OptionQuestions, FillQuestions, AnswerQuestions, MixQuestions
+  },
   data() {
     return {
-      // 保存UUID
-      UUID: "",
-      refresh: false,
-      // 是否展开题型
-      Expand: true,
-      // 待选科目
-      Subject_List: [{
-        value: "语文",
-        label: "语文"
-      },{
-        value: "数学",
-        label: "数学"
-      },{
-        value: "英语",
-        label: "英语"
-      },{
-        value: "历史",
-        label: "历史"
-      },{
-        value: "政治",
-        label: "政治"
-      },{
-        value: "地理",
-        label: "地理"
-      },{
-        value: "物理",
-        label: "物理"
-      },{
-        value: "化学",
-        label: "化学"
-      },{
-        value: "生物",
-        label: "生物"
-      },{
-        value: "其他",
-        label: "其他"
-      }],
-      // 待选学段
-      Period_List: [{
-        value: "小学",
-        label: "小学"
-      },{
-        value: "初中",
-        label: "初中"
-      },{
-        value: "高中",
-        label: "高中"
-      },{
-        value: "大学",
-        label: "大学"
-      },{
-        value: "成人",
-        label: "成人"
-      },{
-        value: "其他",
-        label: "其他"
-      }],
-      // 用于选择科目和学段
-      SubjectType: "数学",
-      PeriodType: "高中",
-      // 试卷标题
-      PaperTitle: "散题入库",
-      // 用于标记是否有非法字符
-      Symbol_Error: false,
-      // 用于输入符号提示的部分
-      en_pun_list: [',','.','?','!',':',';','\'','"','(',')','&nbsp','_','/','|','\\','<','>'],
-      ch_pun_list: ['，','。','！','？','：','；','‘','’','“','”','（','）','&nbsp','、','《','》'],
-      math_pun_list: ['+', '-', "*", "/", "%", "="],
-      // 用于给显示和展示Json格式数据的内容
-      TestData: {
-        "title": "2009年课标甲乙",
-        "doc": [
-          {
-            "question_stem": "已知集合$A = \\{ 0,2 \\}$，$B = \\{ - 2 , - 1,0,1,2 \\}$,则$A \\cap B =$",
-            "question_options": [ "$\\{ 0,2 \\}$", "$\\{ 1,2 \\}$", "$\\{ 0 \\}$", "$\\{ - 2 , - 1,0,1,2 \\}$" ],
-            "question_type": "选择题",
-            "sub_questions": [],
-            "answer": "A<img src='123'>::答案2",
-            "analysis": "",
-            "source": "user_input",
-            "subject": "user_input"
-          }
+        // 用于显示最终录入科目的变量
+        Subject: "数学",
+        // 用于显示最终录入学段的变量
+        Period: "高中",
+        // 用于确定当前显示的题目类型的变量
+        Type: "单选题",
+        // 待选科目
+        Subject_List: [
+            { value: "语文", label: "语文" },
+            { value: "数学", label: "数学" },
+            { value: "英语", label: "英语" },
+            { value: "历史", label: "历史" },
+            { value: "政治", label: "政治" },
+            { value: "地理", label: "地理" },
+            { value: "物理", label: "物理" },
+            { value: "化学", label: "化学" },
+            { value: "生物", label: "生物" },
+            { value: "其他", label: "其他" }],
+        // 待选学段
+        Period_List: [
+            { value: "小学", label: "小学" },
+            { value: "初中", label: "初中" },
+            { value: "高中", label: "高中" },
+            { value: "大学", label: "大学" },
+            { value: "成人", label: "成人" },
+            { value: "其他", label: "其他" }
         ],
-        "img": {}
-      },
-      Question_Edit_Now: -1,
-      Question_Edit_Part: "",
-      Question_Edit_Option_Index: -1,
-      Question_Edit_Sub_Ques_Index: -1,
-      Question_Edit_Answer_Index: -1,
-      Question_Check: [],
-      Submit_Show: false,
-      // ------------------- 以下是原来的单题内容，以上是新加的编辑 -------------------
-      // 当前题目类型
-      Type_Now: "-1",
-      // 缓存题目类型
-      Type_Cache: "-1",
-      // 选择题编辑器,填空题编辑器和解答题编辑器的显示控制
-      showDialog: false,
-      showDialog_Fill: false,
-      showDialog_Answer: false,
-      showDialog_Mix: false,
-      // 最终结果的显示对话框控制
-      showDialog_Result: false,
-      // 非法输入格式提示
-      showHint: false,
-      // 打开LUNA输入助手的控制
-      complex_Input: false,
-      // 重写编辑标记
-      ReEditSwitch: false,
-      // 两个临时存放用的Json变量
-      Temp_OptionQuestionInfo: {
-
-          type: "option",
-          // 分值
-          score: 5,
-          // 题目内容，题目内容图片，是否显示图片
-          content: "",
-          content_images: [],
-          // 选项的部分
-          options: ["", "", "", ""],
-          options_images: ["", "", "", ""],
-          // 答案的部分
-          answer: "",
-          answer_images: [],
-          // 解析的部分
-          analyse: "",
-          analyse_images: [],
-          detail_type: "单选题"
-
-      },
-      Temp_MixQuestionInfo: {
-          type: "mix",
-          score: 0,
-          content: "",
-          content_images: [],
-          answer: "",
-          answer_images: [],
-          sub_questions: [],
-          sub_questions_collapse: [],
-          analyse: "",
-          analyse_images: [],
-      },
-      Temp_FillQuestionInfo: {
-
-          type: "fill",
-          // 分值
-          score: 5,
-          // 题目内容，题目内容图片，是否显示图片
-          content: "",
-          content_images: [],
-          // 答案的部分
-          answer: "",
-          answer_images: [],
-          // 解析的部分
-          analyse: "",
-          analyse_images: [],
-          detail_type: "填空题"
-
-      },
-      Temp_AnswerQuestionInfo: {
-
-          type: "answer",
-          // 分值
-          score: 5,
-          // 题目内容，题目内容图片，是否显示图片
-          content: "",
-          content_images: [],
-          // 小题的部分
-          sub_questions: [""],
-          sub_questions_images: [[]],
-          sub_questions_scores: [5],
-          // 答案的部分
-          answer: "",
-          answer_images: [],
-          // 解析的部分
-          analyse: "",
-          analyse_images: [],
-          detail_type: "简答题"
-
-      },
-      QuestionAnalyseSwitchFlag: false,
-      // 分析报告的显示
-      analyseReport: false,
-      Question_Analysing: false,
-      // 分析报告用的数据
-      analyseData: {
-        "id": "0b1b75ac-3053-45b5-9244-65b0dbb9d9f1",
-        "type": "Question",
-        "level": 2,
-        "stem": "从$\\LUNALaTexPictureID{59dae23f-c8cd-4771-8711-d6a20d1c0118}$名男生和$3$名女生中选出$3$人，分别从事三项不同的工作，若这$3$人中至少有$1$名女生，则选派方案共有(  )种",
-        "options": "['$108$种', '$186$种', '$216$种', '$270$种']",
-        "answer": "$B$",
-        "analysis": "",
-        "difficulty": 0.4020228981971741,
-        "score": 1,
-        "knowledge_points_frontend": {
-          "kp": [
-              "排列、组合与二项式定理",
-              "代数",
-              "计数原理"
-          ],
-          "kp_layer": [
-              {
-                  "label": "代数",
-                  "children": [
-                      {
-                          "label": "不等式",
-                          "children": []
-                      },
-                      {
-                          "label": "计数原理",
-                          "children": [
-                              {
-                                  "label": "排列、组合与二项式定理",
-                                  "children": [
-                                      {
-                                          "label": "排列与组合的简单应用",
-                                          "children": []
-                                      }
-                                  ]
-                              }
-                          ]
-                      }
-                  ]
-              }
-          ],
-          "kp_priority": [
-              "代数",
-              "不等式",
-              "计数原理",
-              "排列、组合与二项式定理",
-              "排列与组合的简单应用"
-          ]
-        }
-      }    
+        // 待选试题类型
+        Type_List: [
+            { value: "单选题", label: "单选题" },
+            { value: "多选题", label: "多选题" },
+            { value: "判断题", label: "判断题" },
+            { value: "填空题", label: "填空题" },
+            { value: "简答题", label: "简答题" },
+            { value: "计算题", label: "计算题" },
+            { value: "综合题", label: "综合题" }
+        ],
+        // 老东西，Check_Do用到的过滤列表
+        // 用于输入符号提示的部分
+        en_pun_list: [',','.','?','!',':',';','\'','"','(',')','&nbsp','_','/','|','\\','<','>'],
+        ch_pun_list: ['，','。','！','？','：','；','‘','’','“','”','（','）','&nbsp','、','《','》'],
+        math_pun_list: ['+', '-', "*", "/", "%", "="],
+        // 用于展示哪些字符需要修改的对话框
+        Wrong_Char_Dialog: false,
+        // 用于展示错误数据的信息栏
+        Wrong_Char_Info: "",
+        // 保存用户的UUID信息
+        UUID: ""
     };
   },
-
-  watch: {
-
-    default_subject: function() {
-      this.deleteAllCard();
-    },
-
-    Question_Check(val){
-        
-        var Flag = true
-        
-        for(var c = 0; c < val.length; c++){
-          if(!val[c]){
-            Flag = false
-            this.Submit_Show = false;
-          }
-        }
-
-        if(Flag){
-          this.Ensure();
-        }
-
-        Flag = true
-      },
-  },
   mounted(){
-    if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
-      this.$message.error("您尚未登录，请登录后使用录入功能。")
-      this.$router.push("/")
-      return 
-    }
-    this.Init_Question_Check()
-    this.ToTop();
-    this.Get_User_UUID();
+      if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
+        this.$message.error("您尚未登录，请登录后使用录入式资源分析功能。")
+        this.$router.push("/")
+        return 
+      }
+      this.Get_User_UUID();
+      this.To_Top();
   },
-  methods: {
-    Get_User_UUID(){
-      commonAjax(this.backendIP + '/api/getUserUUID', {}).then((res)=>{
-        this.UUID = res.UUID
-      }).catch(
-        (err)=>{
-          console.log(err)
-          console.log("Failed.")
-        }
-      )
-    },
-    QAS(index){
-      if(index == 0){
-        this.$router.push({ path: "/QuestionAnalyseInput" });
-        this.QuestionAnalyseSwitchFlag = false;
-      }else{
-        this.$router.push({ path: "/exercise" });
-        this.QuestionAnalyseSwitchFlag = false;
-      }
-    },
-    // 跳转至试题分析的不同位置的对话框
-    QuestionAnalyseSwitch(){
-      this.QuestionAnalyseSwitchFlag = true;
-    },
-    
-    Authority_Check(){
-      var username = sessionStorage.getItem("user");
-      if(username === "advanced" || username === "admin"){
-        return true
-      }else{
-        return false
-      }
-    },
-
-    Change_Type(Type){
-      
-      this.Type_Cache = Type;
-
-      if(Type == 'option'){
-          this.showDialog = true;
-      }else if(Type == 'fill'){
-          this.showDialog_Fill = true;
-      }else if(Type == 'answer'){
-          this.showDialog_Answer = true;
-      }else if(Type == 'mix'){
-          this.showDialog_Mix = true;
-      }
-
-    },
-    ToTop(){
-      window.scrollTo(0,0);
-    },
-    // 展开题型
-    Expand_Type_Change(){
-      this.Expand = !this.Expand;
-    },
-    preview() {
-      this.isview = true;
-    },
-    Router_Trans(route){
-      this.$router.push({ path: route });
-    },
-    New_Questions(val){
-
-      this.Type_Now = this.Type_Cache;
-
-        this.Temp_OptionQuestionInfo = {
-
-            type: "option",
-            // 分值
-            score: 5,
-            // 题目内容，题目内容图片，是否显示图片
-            content: "",
-            content_images: [],
-            // 选项的部分
-            options: ["", "", "", ""],
-            options_images: ["", "", "", ""],
-            // 答案的部分
-            answer: "",
-            answer_images: [],
-            // 解析的部分
-            analyse: "",
-            analyse_images: [],
-            detail_type: "单选题"
-
-        }
-
-        this.Temp_FillQuestionInfo = {
-
-            type: "fill",
-            // 分值
-            score: 5,
-            // 题目内容，题目内容图片，是否显示图片
-            content: "",
-            content_images: [],
-            // 答案的部分
-            answer: "",
-            answer_images: [],
-            // 解析的部分
-            analyse: "",
-            analyse_images: [],
-            detail_type: "填空题"
-
-        }
-
-        this.Temp_AnswerQuestionInfo = {
-
-            type: "answer",
-            // 分值
-            score: 5,
-            // 题目内容，题目内容图片，是否显示图片
-            content: "",
-            content_images: [],
-            // 小题的部分
-            sub_questions: [""],
-            sub_questions_images: [[]],
-            sub_questions_scores: [5],
-            // 答案的部分
-            answer: "",
-            answer_images: [],
-            // 解析的部分
-            analyse: "",
-            analyse_images: [],
-            detail_type: "简答题"
-
-        }
-
-        this.Temp_MixQuestionInfo = {
-          // 题目类型，分值，题干内容，题干图片，答案内容，答案图片
-          // 小题内容，小题是否折叠，解析内容，解析图片
-            type: "mix",
-            score: 0,
-            content: "",
-            content_images: [],
-            answer: "",
-            answer_images: [],
-            sub_questions: [],
-            sub_questions_collapse: [],
-            analyse: "",
-            analyse_images: [],
-        }
-
-        let temp_val = ""
-
-        if(this.Type_Now == 'option'){
-            temp_val = this.Normal_Char_Check(val);
-          if(temp_val != false){
-            this.Temp_OptionQuestionInfo = temp_val;
+  methods:{
+        // 卷动至最上方
+        To_Top(){
+            window.scrollTo(0,0);
+        },
+        // 获取UUID
+        Get_User_UUID(){
+            commonAjax(this.backendIP + '/api/getUserUUID', {}).then((res)=>{
+                this.UUID = res.UUID
+            }).catch(
+                (err)=>{
+                console.log(err)
+                console.log("Failed.")
+                }
+            )
+        },
+      // 跳转至整卷录入页面
+      toPaper(){
+        this.$router.push({path: "/PaperAnalyseInput"})
+      },
+      // 返回按钮样式
+      Get_Type_Button_Class(Type){
+          if(Type.value == this.Type){
+              return "typeButton focusType"
           }else{
-            this.Temp_OptionQuestionInfo = val;
+              return "typeButton unFocusType"
           }
-        }else if(this.Type_Now == 'fill'){
-            temp_val = this.Normal_Char_Check(val);
-            if(temp_val != false){
-              this.Temp_FillQuestionInfo = temp_val;
-            }else{
-              this.Temp_FillQuestionInfo = val;
+      },
+      // 切换当前想录入的题目类型
+      Type_Change(Type_value){
+          this.Type = Type_value
+      },
+    Prepare_For_Submit(Ques){
+
+        this.Wrong_Char_Info = ""
+        this.Wrong_Char_Dialog = false
+
+        if(this.Type != '综合题'){
+
+            // 名称格式修正一下
+            let Question = JSON.parse(Ques);
+
+            // 必填项检测
+            if(Question.stem.length == 0){
+                this.Wrong_Char_Info = "题干项尚未填写。"
+                this.Wrong_Char_Dialog = true
+                return
             }
-        }else if(this.Type_Now == 'answer'){
-            temp_val = this.Normal_Char_Check(val);
-            if(temp_val != false){
-              this.Temp_AnswerQuestionInfo = temp_val;
-            }else{
-              this.Temp_AnswerQuestionInfo = val;
+
+            if(['单选题', '多选题', '判断题'].indexOf(this.Type) != -1){
+                let Str = Question.stem
+                let Quote_Reg = new RegExp("(\\(|\\（)(\\s*)(\\)|\\）)", "g")
+                let res = Quote_Reg.exec(Str)
+                while(res != null){
+                    Str = Str.replace(Quote_Reg, "$\\SIFChoice$")
+                    res = Quote_Reg.exec(Str)
+                }
+                Question.stem = Str
+            }else if(this.Type == '填空题'){
+                let Str = Question.stem
+                let Space_Reg = new RegExp("____+", 'g')
+                let res = Space_Reg.exec(Str)
+                while(res != null){
+                    Str = Str.replace(Space_Reg, "$\\SIFBlank$")
+                    res = Space_Reg.exec(Str)
+                }
+                Question.stem = Str
             }
-        }else if(this.Type_Now == 'mix'){
-            temp_val = this.Mix_Char_Check(val);
-            if(temp_val != false){
-              this.Temp_MixQuestionInfo = temp_val;
+
+            // 开始检测题干项是否正确
+            let C_Stem = this.Check_Do(Question.stem);
+            if(C_Stem[2]){
+                this.Wrong_Char_Info = "题干部分存在包裹不完全的 Latex 公式，请修正后重试"
+                this.Wrong_Char_Dialog = true
+                return
+            }else if(C_Stem[1].length == 0){
+                Question.stem = C_Stem[0]
             }else{
-              this.Temp_MixQuestionInfo = val;
+                this.Wrong_Char_Info = "题干部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                for(let i = 0; i < C_Stem[1].length; i++){
+                    this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
+                }
+                this.Wrong_Char_Dialog = true
+                return 
             }
-        }
-
-        this.Close_Editor();
-
-    },
-    // 处理想要修改题目内容时的方法
-    // 核心思路是把题目内容的部分丢给编辑器，让编辑器来读取内容
-    // 然后等待编辑器内部的处理
-    // 在这里，是否发送重写信号由ReEditSwitch来决定
-    // Index_Edit_Record用于记录编辑的编号
-    // Temp名称用于临时交换让编辑器处理的数据内容
-    // showDialog代表显示的是哪个编辑器
-    Edit_Question(){
-
-        if(this.Type_Now == 'option'){
-          sessionStorage.setItem("InputMarkedEditQuestion", JSON.stringify(this.Temp_OptionQuestionInfo));
-          this.refresh = !this.refresh;
-          this.showDialog = true;
-        }else if(this.Type_Now == 'fill'){
-          sessionStorage.setItem("InputMarkedEditQuestion", JSON.stringify(this.Temp_FillQuestionInfo));
-          this.refresh = !this.refresh;
-          this.showDialog_Fill = true;
-        }else if(this.Type_Now == 'answer'){
-          sessionStorage.setItem("InputMarkedEditQuestion", JSON.stringify(this.Temp_AnswerQuestionInfo));
-          this.refresh = !this.refresh;
-          this.showDialog_Answer = true;
-        }else if(this.Type_Now == 'mix'){
-          sessionStorage.setItem("InputMarkedEditQuestion", JSON.stringify(this.Temp_MixQuestionInfo));
-          this.refresh = !this.refresh;
-          this.showDialog_Mix = true;
-        }
-        this.ReEditSwitch = true;
-
-    },
-    // 重写编辑后，把新数据直接覆盖上去
-    ReEdit_Questions(val){
-
-        let temp_val = ""
-
-        if(this.Type_Now == 'option'){
-            temp_val = this.Normal_Char_Check(val);
-          if(temp_val != false){
-            this.Temp_OptionQuestionInfo = temp_val;
-          }else{
-            this.Temp_OptionQuestionInfo = val;
-          }
-        }else if(this.Type_Now == 'fill'){
-            temp_val = this.Normal_Char_Check(val);
-            if(temp_val != false){
-              this.Temp_FillQuestionInfo = temp_val;
-            }else{
-              this.Temp_FillQuestionInfo = val;
-            }
-        }else if(this.Type_Now == 'answer'){
-            temp_val = this.Normal_Char_Check(val);
-            if(temp_val != false){
-              this.Temp_AnswerQuestionInfo = temp_val;
-            }else{
-              this.Temp_AnswerQuestionInfo = val;
-            }
-        }else if(this.Type_Now == 'mix'){
-            temp_val = this.Mix_Char_Check(val);
-            if(temp_val != false){
-              this.Temp_MixQuestionInfo = temp_val;
-            }else{
-              this.Temp_MixQuestionInfo = val;
-            }
-        }
-
-        this.Close_Editor();
-        this.ReEditSwitch = false;
-        
-    },
-    // 检测是否有非法字符 - 综合
-    Mix_Char_Check(val){
-
-      var Check_Now = val.content;
-      var result = this.ChecK_Do(Check_Now);
-      if(Check_Now!= "" && result[1]){
-        this.$alert("请将题干内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
-          confirmButtonText: '确定'
-        });
-        return false
-      }else if(Check_Now!= "" && !result[1]){
-        val.content = result[0];
-      }
-
-      var Check_Now_List = val.answer;
-      Check_Now_List = Check_Now_List.split("::");
-      for(var j = 0; j < Check_Now_List.length; j++){
-        var item = Check_Now_List[j]
-        result = this.ChecK_Do(item);
-        if(item != "" && result[1]){
-          this.$alert("请将答案内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
-            confirmButtonText: '确定'
-          });
-          return false
-        }else if(item != "" && !result[1]){
-          Check_Now_List.splice(j, 1, result[0])
-        }
-      }
-      val.answer = Check_Now_List.join("\n");
-
-      Check_Now = val.analyse;
-      if(Check_Now!= "" && result[1]){
-        this.$alert("请将解析内容中自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
-          confirmButtonText: '确定'
-        });
-        return false
-      }else if(Check_Now!= "" && !result[1]){
-        val.analyse = result[0];
-      }
-
-      Check_Now_List = val.sub_questions;
-      for(var len = 0; len < Check_Now_List.length; len++){
-        item = Check_Now_List[len]
-        result = this.Normal_Char_Check(item)
-        val.sub_questions.splice(len, 1, result)
-      }
-
-      this.Symbol_Error = false;
-
-      return val;
-
-    },
-    // 检测是否有非法字符 - 选择-填空-解答
-    Normal_Char_Check(val){
-
-      var Check_Now = val.content;
-      var result = this.ChecK_Do(Check_Now);
-      if(Check_Now!= "" && result[1]){
-        this.$alert("请将题干内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
-          confirmButtonText: '确定'
-        });
-        return false
-      }else if(Check_Now!= "" && !result[1]){
-        val.content = result[0];
-      }
-
-      Check_Now = val.answer;
-      result = this.ChecK_Do(Check_Now);
-      if(Check_Now!= "" && result[1]){
-        this.$alert("请将题干内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
-          confirmButtonText: '确定'
-        });
-        return false
-      }else if(Check_Now!= "" && !result[1]){
-        val.answer = result[0];
-      }
-
-      Check_Now = val.analyse;
-      result = this.ChecK_Do(Check_Now);
-      if(Check_Now!= "" && result[1]){
-        this.$alert("请将解析内容中自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
-          confirmButtonText: '确定'
-        });
-        return false
-      }else if(Check_Now!= "" && !result[1]){
-        val.analyse = result[0];
-      }
-
-      if(val.type == 'option'){
-        let Check_Now_List = val.options;
-        for(let opi = 0; opi < Check_Now_List.length; opi++){
-          let item = Check_Now_List[opi]
-          result = this.ChecK_Do(item);
-          if(item != "" && result[1]){
-            this.$alert("请将选项内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
-              confirmButtonText: '确定'
-            });
-            return false
-          }
-        }
-        val.options = Check_Now_List;
-      }else if(val.type == 'answer'){
-        let Check_Now_List = val.sub_questions;
-        for(let opi = 0; opi < Check_Now_List.length; opi++){
-          let item = Check_Now_List[opi]
-          result = this.ChecK_Do(item);
-          if(item != "" && result[1]){
-            this.$alert("请将选项内自己输入的Latex公式完整包裹在$$符号之内！", "提示", {
-              confirmButtonText: '确定'
-            });
-            return false
-          }
-        }
-        val.sub_questions = Check_Now_List;
-      }
-
-      this.Symbol_Error = false;
-
-      return val;
-    },
-    // 负责实际检查的部分
-    ChecK_Do(content){
-
-      let remakeContent = "";
-
-      var latexFlag = false;
-      let symbolError = false;
-      let Regx = /[A-Za-z0-9]/;
-
-      var Img_Catcher = new RegExp('<img src="(.*?)">', 'g')
-      var Result_List = Img_Catcher.exec(content);
-
-      var Img_SE = [];
-      var Start = 0;
-
-      while(Result_List != null){
-          var Temp_Catcher = '<img src="' + Result_List[1] + '">';
-          if(Img_SE.length > 0){
-              Start = content.indexOf(Temp_Catcher, Img_SE[Img_SE.length - 1][1]);
-          }
-          else{
-              Start = content.indexOf(Temp_Catcher);
-          }
-          Img_SE.push([Start, Start + Temp_Catcher.length - 1])
-          Result_List = Img_Catcher.exec(content);
-      }
-      
-      var Img_Index = 0;
-
-      for(var i = 0; i < content.length; i++){
-        
-        if(content[i] == '$' && !latexFlag){
-            latexFlag = true;
-        }else if(content[i] == '$' && latexFlag){
-            latexFlag = false;
-        }
-
-        if(Img_SE.length > 0 && i >= Img_SE[Img_Index][0] && i <= Img_SE[Img_Index][1]){
-          remakeContent = remakeContent + content[i];
-          continue;
-        }else if(Img_SE.length > 0 && i > Img_SE[Img_Index][1] && Img_Index < Img_SE.length - 1){
-          Img_Index = Img_Index + 1
-        }
-
-        if(!latexFlag){
-            if (Regx.test(content[i]) || this.math_pun_list.indexOf(content[i]) != -1) {
-                if(remakeContent[remakeContent.length - 1] == '$'){
-                    remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
-                }else{
-                    remakeContent = remakeContent + "$" + content[i] + "$";
+            
+            // 开始检测选项部分
+            this.Wrong_Char_Info = ""
+            for(let i = 0; i < Question.options.length; i++){
+                // 必填项检测
+                if(Question.options[i].length == 0){
+                    this.Wrong_Char_Info = this.Wrong_Char_Info + "选项 " + String.fromCharCode( 65 + i ) + " 尚未填写。请注意所有选项都是必填项。<br>"
                 }
             }
-            // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
-            else if(!(content.charCodeAt(i) > 255 || 
-                      this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
-                      content[i] == ' ' || content[i] == '$' || 
-                      content.charCodeAt(i) == 10) 
-                    && !symbolError){
-              symbolError = true;
-              this.$message.error({message: "请修正位于 " + ( i + 1 ) + " 处的非法字符，或将其包裹于$$符号之内" + content[i] + " ！", offset: 40});
-              remakeContent = remakeContent + content[i];
+            if(this.Wrong_Char_Info != ""){
+                this.Wrong_Char_Dialog = true;
+                return
             }
-            else {
-              remakeContent = remakeContent + content[i];
+            
+            // 内容检测
+            for(let i = 0; i < Question.options.length; i++){
+                
+                let C_Option_Item = this.Check_Do(Question.options[i])
+                if(C_Option_Item[2]){
+                    this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Option_Item[1].length == 0){
+                    Question.options.splice(i, 1, C_Option_Item[0])
+                }else{
+                    this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    for(let j = 0; j < C_Option_Item[1].length; j++){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Option_Item[1][j].position + " 处的 " + C_Option_Item[1][j].char + " 字符。<br>"
+                    }
+                    this.Wrong_Char_Dialog = true
+                    return 
+                }
             }
-        }else{
-            remakeContent = remakeContent + content[i];
+            // this.$message.success("选项内容格式检测已通过。")
+
+            if(Question.answer.length != 0){
+                let C_Answer = this.Check_Do(Question.answer);
+                if(C_Answer[2]){
+                    this.Wrong_Char_Info = "你的答案部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Answer[1].length == 0){
+                    Question.answer = C_Answer[0]
+                }else{
+                    this.Wrong_Char_Info = "你的答案部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    for(let i = 0; i < C_Answer[1].length; i++){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
+                    }
+                    this.Wrong_Char_Dialog = true
+                    return 
+                }
+            } 
+            // this.$message.success("答案内容格式检测已通过。")
+
+            if(Question.analysis.length != 0){
+                let C_Analysis = this.Check_Do(Question.analysis);
+                if(C_Analysis[2]){
+                    this.Wrong_Char_Info = "解析部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Analysis[1].length == 0){
+                    Question.analysis = C_Analysis[0]
+                }else{
+                    this.Wrong_Char_Info = "解析部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    for(let i = 0; i < C_Analysis[1].length; i++){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
+                    }
+                    this.Wrong_Char_Dialog = true
+                    return 
+                }
+            }
+            
+            // 小题内容检测 - 必填检测
+            this.Wrong_Char_Info = ""
+            for(let i = 0; i < Question.sub_questions.length; i++){
+                if(Question.sub_questions[i].length == 0){
+                    this.Wrong_Char_Info = this.Wrong_Char_Info + "第 " + (i+1) + " 小题尚未填写。<br>"
+                }
+            }
+            if(this.Wrong_Char_Info != ""){
+                this.Wrong_Char_Dialog = true;
+                return
+            }
+            // 内容检测
+            for(let i = 0; i < Question.sub_questions.length; i++){
+                let C_Sub_Ques_Item = this.Check_Do(Question.sub_questions[i])
+                if(C_Sub_Ques_Item[2]){
+                    this.Wrong_Char_Info = "第" + ( i + 1 ) + "小题的部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Sub_Ques_Item[1].length == 0){
+                    Question.sub_questions.splice(i, 1, C_Sub_Ques_Item[0])
+                }else{
+                    this.Wrong_Char_Info = "第" + ( i + 1 ) + "小题的部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    for(let j = 0; j < C_Sub_Ques_Item[1].length; j++){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Sub_Ques_Item[1][j].position + " 处的 " + C_Sub_Ques_Item[1][j].char + " 字符。<br>"
+                    }
+                    this.Wrong_Char_Dialog = true
+                    return 
+                }
+            }
+
+            this.Submit_Normal_Ques(Question);
         }
-      }
-      return [remakeContent, latexFlag]
+        // 开始检测综合题部分
+        else{
+
+            // 名称规范化
+            let Question = JSON.parse(Ques);
+
+            // 必填项检测
+            if(Question.stem.length == 0){
+                this.Wrong_Char_Info = "题干项尚未填写。"
+                this.Wrong_Char_Dialog = true
+                return
+            }
+
+            // 开始检测题干项是否正确
+            let C_Stem = this.Check_Do(Question.stem);
+            if(C_Stem[2]){
+                this.Wrong_Char_Info = "题干部分存在包裹不完全的 Latex 公式，请修正后重试"
+                this.Wrong_Char_Dialog = true
+                return
+            }else if(C_Stem[1].length == 0){
+                Question.stem = C_Stem[0]
+            }else{
+                this.Wrong_Char_Info = "题干部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                for(let i = 0; i < C_Stem[1].length; i++){
+                    this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
+                }
+                this.Wrong_Char_Dialog = true
+                return 
+            }
+
+            // 检测答案项部分，由于是非必填项，不填也没事
+            if(Question.answer.length != 0){
+                let C_Answer = this.Check_Do(Question.answer);
+                if(C_Answer[2]){
+                    this.Wrong_Char_Info = "你的答案部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Answer[1].length == 0){
+                    Question.answer = C_Answer[0]
+                }else{
+                    this.Wrong_Char_Info = "你的答案部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    for(let i = 0; i < C_Answer[1].length; i++){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
+                    }
+                    this.Wrong_Char_Dialog = true
+                    return 
+                }
+            } 
+
+            // 检测解析字段 - 不填也没事
+            if(Question.analysis.length != 0){
+                let C_Analysis = this.Check_Do(Question.analysis);
+                if(C_Analysis[2]){
+                    this.Wrong_Char_Info = "解析部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Analysis[1].length == 0){
+                    Question.analysis = C_Analysis[0]
+                }else{
+                    this.Wrong_Char_Info = "解析部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    for(let i = 0; i < C_Analysis[1].length; i++){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
+                    }
+                    this.Wrong_Char_Dialog = true
+                    return 
+                }
+            }
+
+            for(let j = 0; j < Question.sub_questions.length; j++){
+
+                let Item = Question.sub_questions[j]
+                // 重置提示信息
+                this.Wrong_Char_Info = ""
+
+                // 必填项检测
+                if(Item.stem.length == 0){
+                    this.$message.error("题干项尚未填写。")
+                    return
+                }
+
+                if(['单选题', '多选题', '判断题'].indexOf(Question.sub_questions[j].type) != -1){
+                    let Str = Question.sub_questions[j].stem
+                    let Quote_Reg = new RegExp("(\\(|\\（)(\\s*)(\\)|\\）)", "g")
+                    let res = Quote_Reg.exec(Str)
+                    while(res != null){
+                        Str = Str.replace(Quote_Reg, "$\\SIFChoice$")
+                        res = Quote_Reg.exec(Str)
+                    }
+                    Question.sub_questions[j].stem = Str
+                }else if(Question.sub_questions[j].type == '填空题'){
+                    let Str = Question.sub_questions[j].stem
+                    let Space_Reg = new RegExp("____+", 'g')
+                    let res = Space_Reg.exec(Str)
+                    while(res != null){
+                        Str = Str.replace(Space_Reg, "$\\SIFBlank$")
+                        res = Space_Reg.exec(Str)
+                    }
+                    Question.sub_questions[j].stem = Str
+                }
+
+                // 开始检测题干项是否正确
+                let C_Stem = this.Check_Do(Item.stem);
+                if(C_Stem[2]){
+                    this.Wrong_Char_Info = "题干部分存在包裹不完全的 Latex 公式，请修正后重试"
+                    this.Wrong_Char_Dialog = true
+                    return
+                }else if(C_Stem[1].length == 0){
+                    Item.stem = C_Stem[0]
+                }else{
+                    this.Wrong_Char_Info = "题干部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                    for(let i = 0; i < C_Stem[1].length; i++){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
+                    }
+                    this.Wrong_Char_Dialog = true
+                    return 
+                }
+                
+                // 开始检测选项部分
+                this.Wrong_Char_Info = ""
+                for(let i = 0; i < Item.options.length; i++){
+                    // 必填项检测
+                    if(Item.options[i].length == 0){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "选项 " + String.fromCharCode( 65 + i ) + " 尚未填写。请注意所有选项都是必填项。<br>"
+                    }
+                }
+                if(this.Wrong_Char_Info != ""){
+                    this.Wrong_Char_Dialog = true;
+                    return
+                }
+                
+                // 内容检测
+                for(let i = 0; i < Item.options.length; i++){
+                    
+                    let C_Option_Item = this.Check_Do(Item.options[i])
+                    if(C_Option_Item[2]){
+                        this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在包裹不完全的 Latex 公式，请修正后重试"
+                        this.Wrong_Char_Dialog = true
+                        return
+                    }else if(C_Option_Item[1].length == 0){
+                        Item.options.splice(i, 1, C_Option_Item[0])
+                    }else{
+                        this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                        for(let j = 0; j < C_Option_Item[1].length; j++){
+                            this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Option_Item[1][j].position + " 处的 " + C_Option_Item[1][j].char + " 字符。<br>"
+                        }
+                        this.Wrong_Char_Dialog = true
+                        return 
+                    }
+                }
+
+                if(Item.answer.length != 0){
+                    let C_Answer = this.Check_Do(Item.answer);
+                    if(C_Answer[2]){
+                        this.Wrong_Char_Info = "你的答案部分存在包裹不完全的 Latex 公式，请修正后重试"
+                        this.Wrong_Char_Dialog = true
+                        return
+                    }else if(C_Answer[1].length == 0){
+                        Item.answer = C_Answer[0]
+                    }else{
+                        this.Wrong_Char_Info = "你的答案部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                        for(let i = 0; i < C_Answer[1].length; i++){
+                            this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
+                        }
+                        this.Wrong_Char_Dialog = true
+                        return 
+                    }
+                } 
+
+                if(Item.analysis.length != 0){
+                    let C_Analysis = this.Check_Do(Item.analysis);
+                    if(C_Analysis[2]){
+                        this.Wrong_Char_Info = "解析部分存在包裹不完全的 Latex 公式，请修正后重试"
+                        this.Wrong_Char_Dialog = true
+                        return
+                    }else if(C_Analysis[1].length == 0){
+                        Item.analysis = C_Analysis[0]
+                    }else{
+                        this.Wrong_Char_Info = "解析部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                        for(let i = 0; i < C_Analysis[1].length; i++){
+                            this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
+                        }
+                        this.Wrong_Char_Dialog = true
+                        return 
+                    }
+                }
+                
+                // 小题内容检测 - 必填检测
+                this.Wrong_Char_Info = ""
+                for(let i = 0; i < Item.sub_questions.length; i++){
+                    if(Item.sub_questions[i].length == 0){
+                        this.Wrong_Char_Info = this.Wrong_Char_Info + "第 " + (i+1) + " 小题尚未填写。<br>"
+                    }
+                }
+                if(this.Wrong_Char_Info != ""){
+                    this.Wrong_Char_Dialog = true;
+                    return
+                }
+                // 内容检测
+                for(let i = 0; i < Item.sub_questions.length; i++){
+                    let C_Sub_Ques_Item = this.Check_Do(Item.sub_questions[i])
+                    if(C_Sub_Ques_Item[2]){
+                        this.Wrong_Char_Info = "第" + ( i + 1 ) + "小题的部分存在包裹不完全的 Latex 公式，请修正后重试"
+                        this.Wrong_Char_Dialog = true
+                        return
+                    }else if(C_Sub_Ques_Item[1].length == 0){
+                        Item.sub_questions.splice(i, 1, C_Sub_Ques_Item[0])
+                    }else{
+                        this.Wrong_Char_Info = "第" + ( i + 1 ) + "小题的部分存在不合适的字符，请修改、删除或将其包裹于 $ 字符内后再次尝试上传，以下是详细信息：<br><br>"
+                        for(let j = 0; j < C_Sub_Ques_Item[1].length; j++){
+                            this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Sub_Ques_Item[1][j].position + " 处的 " + C_Sub_Ques_Item[1][j].char + " 字符。<br>"
+                        }
+                        this.Wrong_Char_Dialog = true
+                        return 
+                    }
+                }
+            }
+            this.Submit_Mix_Ques(Question)
+        }
     },
-    // 一起关掉
-    Close_Editor(){
+    // 将基础题转化为可以入库的格式的部分
+    Submit_Normal_Ques(Ques){
 
-        this.showDialog = false;
-        this.showDialog_Fill = false;
-        this.showDialog_Answer = false;
-        this.showDialog_Mix = false;
-        this.showDialog_Result = false;
-        this.showHint = false;
+        var Temp_Result = ""
 
-    },  
-    Editor_Dialog_Close(){
+        if(['单选题', '多选题', '判断题', '填空题'].indexOf(this.Type) != -1){
 
-        this.Close_Editor();
+            let Temp_Doc = {
+                type: this.Type,
+                stem: Ques.stem,
+                stem_image: Ques.stem_image,
+                score: parseFloat(Ques.score + ""),
+                options: Ques.options,
+                options_image: Ques.options_image,
+                answer: Ques.answer,
+                answer_image: Ques.answer_image,
+                analysis: Ques.analysis,
+                analysis_image: Ques.analysis_image
+            }
 
+            Temp_Result = Temp_Doc
+
+        }else if(['简答题', '计算题'].indexOf(this.Type) != -1){
+
+
+            let Temp_Doc = {
+                desc: Ques.stem,
+                desc_image: Ques.stem_image,
+                type: "大题",
+                score: parseFloat(Ques.score + ""),
+                subquestions: [],
+                answer: Ques.answer,
+                answer_image: Ques.answer_image,
+                analysis: Ques.analysis,
+                analysis_image: Ques.analysis_image
+            }
+
+
+            for(let i = 0; i < Ques.sub_questions.length; i++){
+                let Item = {
+                    type: this.Type,
+                    score: parseFloat(Ques.sub_questions_score[i] + ""),
+                    stem: Ques.sub_questions[i],
+                    stem_image: Ques.sub_questions_image[i],
+                    options: [],
+                    options_image: [],
+                    answer: "",
+                    answer_image: [],
+                    analysis: "",
+                    analysis_image: []
+                }
+                Temp_Doc.subquestions.push(Item)
+            }
+            Temp_Result = Temp_Doc
+        }
+        this.Submit_Do(Temp_Result)
     },
-    // 处理完题目的录入之后要重置这些临时使用的变量
-    Reset_Params(){
-
-      this.ReEditSwitch = false;
-      this.Type_Now = "-1";
-      this.complex_Input = false;
-      this.refresh = false;
-
-      this.Temp_OptionQuestionInfo = {
-
-          type: "option",
-          // 分值
-          score: 5,
-          // 题目内容，题目内容图片，是否显示图片
-          content: "",
-          content_images: [],
-          // 选项的部分
-          options: ["", "", "", ""],
-          options_images: ["", "", "", ""],
-          // 答案的部分
-          answer: "",
-          answer_images: [],
-          // 解析的部分
-          analyse: "",
-          analyse_images: [],
-          detail_type: "单选题"
-
-      }
-
-      this.Temp_FillQuestionInfo = {
-
-          type: "fill",
-          // 分值
-          score: 5,
-          // 题目内容，题目内容图片，是否显示图片
-          content: "",
-          content_images: [],
-          // 答案的部分
-          answer: "",
-          answer_images: [],
-          // 解析的部分
-          analyse: "",
-          analyse_images: [],
-          detail_type: "填空题"
-
-      }
-
-      this.Temp_AnswerQuestionInfo = {
-
-          type: "answer",
-          // 分值
-          score: 5,
-          // 题目内容，题目内容图片，是否显示图片
-          content: "",
-          content_images: [],
-          // 小题的部分
-          sub_questions: [""],
-          sub_questions_images: [[]],
-          sub_questions_scores: [5],
-          // 答案的部分
-          answer: "",
-          answer_images: [],
-          // 解析的部分
-          analyse: "",
-          analyse_images: [],
-          detail_type: "简答题"
-
-      }
-
-      this.Temp_MixQuestionInfo = {
-        // 题目类型，分值，题干内容，题干图片，答案内容，答案图片
-        // 小题内容，小题是否折叠，解析内容，解析图片
-          type: "mix",
-          score: 0,
-          content: "",
-          content_images: [],
-          answer: "",
-          answer_images: [],
-          sub_questions: [],
-          sub_questions_collapse: [],
-          analyse: "",
-          analyse_images: [],
-      }
-
-    },
-    // 尝试进行导出
-    PaperUpload(Control){
-
-      // this.Question_Analysing = true;
-
-      if(this.Symbol_Error){
-        this.$message.error("仍有非法字符存在，请修改后重新尝试。")
-        return null;
-      }
-
-      var Ques = "";
-      let Temp_Result = "";
-
-      if(this.Type_Now == 'option'){
-
+    // 将综合题转化为可以入库的格式的部分
+    Submit_Mix_Ques(Ques){
         let Temp_Doc = {
-          type: "",
-          stem: "",
-          stem_image: [],
-          score: 0,
-          options: [],
-          options_image: [],
-          answer: "",
-          answer_image: [],
-          analysis: "",
-          analysis_image: []
-        }
-
-        Ques = JSON.parse(JSON.stringify(this.Temp_OptionQuestionInfo));
-
-        Temp_Doc.type = Ques.detail_type;
-
-        Temp_Doc.stem = Ques.content;
-        Temp_Doc.stem_image = Ques.content_images;
-
-        Temp_Doc.score = parseFloat(Ques.score + "");
-
-        Temp_Doc.options = Ques.options
-        for(let i = 0; i < Ques.options_images.length; i++){
-          let Item = Ques.options_images[i]
-          if(Item != null && Item.length > 0){
-            Temp_Doc.options_image.push([Item]);
-          }else{
-            Temp_Doc.options_image.push([])
-          }
-        }
-
-        Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_image = Ques.answer_images;
-
-        Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_image = Ques.analyse_images;
-
-        Temp_Result = Temp_Doc
-
-      }else if(this.Type_Now == 'fill'){
-
-        let Temp_Doc = {
-          type: "",
-          stem: "",
-          stem_image: [],
-          score: 0,
-          options: [],
-          options_image: [],
-          answer: "",
-          answer_image: [],
-          analysis: "",
-          analysis_image: []
-        }
-        
-        Ques = JSON.parse(JSON.stringify(this.Temp_FillQuestionInfo))
-
-        Temp_Doc.type = Ques.detail_type;
-
-        Temp_Doc.stem = Ques.content;
-        Temp_Doc.stem_image = Ques.content_images;
-
-        Temp_Doc.score = parseFloat(Ques.score + "");
-
-        Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_image = Ques.answer_images;
-
-        Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_image = Ques.analyse_images;
-
-        Temp_Result = Temp_Doc
-
-      }else if(this.Type_Now == 'answer'){
-
-        Ques = JSON.parse(JSON.stringify(this.Temp_AnswerQuestionInfo))
-
-        let Temp_Doc = {
-          desc: "",
-          desc_image: [],
-          type: "大题",
-          score: 0,
-          subquestions: [],
-          answer: "",
-          answer_image: [],
-          analysis: "",
-          analysis_image: []
-        }
-
-        Temp_Doc.desc = Ques.content;
-        Temp_Doc.desc_image = Ques.content_images;
-
-        Temp_Doc.score = parseFloat(Ques.score + "");
-
-        for(let i = 0; i < Ques.sub_questions.length; i++){
-          let Item = {
-            type: Ques.detail_type,
-            score: parseFloat(Ques.sub_questions_scores[i] + ""),
-            stem: Ques.sub_questions[i],
-            stem_image: Ques.sub_questions_images[i],
-            options: [],
-            options_image: [],
+            desc: "",
+            desc_image: [],
+            type: "大题",
+            score: 0,
+            subquestions: [],
             answer: "",
             answer_image: [],
             analysis: "",
             analysis_image: []
-          }
-          Temp_Doc.subquestions.push(Item)
         }
 
-        Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_image = Ques.answer_images;
-
-        Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_image = Ques.analyse_images;
-
-        Temp_Result = Temp_Doc
-
-      }else if(this.Type_Now == 'mix'){
-
-        Ques = JSON.parse(JSON.stringify(this.Temp_MixQuestionInfo))
-
-        let Temp_Doc = {
-          desc: "",
-          desc_image: [],
-          type: "大题",
-          score: 0,
-          subquestions: [],
-          answer: "",
-          answer_image: [],
-          analysis: "",
-          analysis_image: []
-        }
-
-        Temp_Doc.desc = Ques.content;
-        Temp_Doc.desc_image = Ques.content_images;
+        Temp_Doc.desc = Ques.stem;
+        Temp_Doc.desc_image = Ques.stem_image;
 
         Temp_Doc.score = parseFloat(Ques.score + "");
 
         for(let i = 0; i < Ques.sub_questions.length; i++){
-          let Item = {
-            type: Ques.sub_questions[i].detail_type,
-            score: parseFloat(Ques.sub_questions[i].score + ""),
-            stem: Ques.sub_questions[i].content,
-            stem_image: Ques.sub_questions[i].content_images,
-            options: [],
-            options_image: [],
-            answer: Ques.sub_questions[i].answer,
-            answer_image: Ques.sub_questions[i].answer_images,
-            analysis: Ques.sub_questions[i].analyse,
-            analysis_image: Ques.sub_questions[i].analyse_images
-          }
-
-          if(Ques.sub_questions[i].type == 'option'){
-            for(let k = 0; k < Ques.sub_questions[i].options.length; k++){
-              let opt = Ques.sub_questions[i].options[k]
-              Item.options.push(opt);
-              if(Ques.sub_questions[i].options_images[k] != null && Ques.sub_questions[i].options_images[k].length > 0)
-                Item.options_image.push([Ques.sub_questions[i].options_images[k]])
-              else{
-                Item.options_image.push([])
-              }
+            let Item = {
+                type: Ques.sub_questions[i].type,
+                score: parseFloat(Ques.sub_questions[i].score + ""),
+                stem: Ques.sub_questions[i].stem,
+                stem_image: Ques.sub_questions[i].stem_image,
+                options: Ques.options,
+                options_image: Ques.options_image,
+                answer: Ques.sub_questions[i].answer,
+                answer_image: Ques.sub_questions[i].answer_image,
+                analysis: Ques.sub_questions[i].analysis,
+                analysis_image: Ques.sub_questions[i].analysis_image
             }
-          }
 
           Temp_Doc.subquestions.push(Item)
         }
 
         Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_image = Ques.answer_images;
+        Temp_Doc.answer_image = Ques.answer_image;
 
-        Temp_Doc.analysis = Ques.analyse;
-        Temp_Doc.analysis_image = Ques.analyse_images;
+        Temp_Doc.analysis = Ques.analysis;
+        Temp_Doc.analysis_image = Ques.analysis_image;
 
-        Temp_Result = Temp_Doc
+        this.Submit_Do(Temp_Doc)
 
-      }
+    },
+    Submit_Do(Submit_JSON){
+      Submit_JSON
+        this.$message.info("单题录入的直接分析模块还在筹备当中，敬请期待。")
+    },
+    // 负责实际检查的部分
+    Check_Do(content){
 
-      if(Control == 'upload'){
+        let remakeContent = "";
 
-        let Param = {
-          'Input_Data': JSON.stringify({
-                          "post_type": 0,
-                          "user_id": this.UUID,
-                          "subject": this.SubjectType,
-                          "period": this.PeriodType,
-                          "questions": JSON.stringify(Temp_Result),
-                        }, null, 4),
-          'questionInput': true
+        var latexFlag = false;
+        let Regx = /[A-Za-z0-9]/;
+
+        var Img_Catcher = new RegExp('<img src="(.*?)">', 'g')
+        var Result_List = Img_Catcher.exec(content);
+
+        var Img_SE = [];
+        var Start = 0;
+
+        let Wrong_Char = [];
+
+        while(Result_List != null){
+            var Temp_Catcher = '<img src="' + Result_List[1] + '">';
+            if(Img_SE.length > 0){
+                Start = content.indexOf(Temp_Catcher, Img_SE[Img_SE.length - 1][1]);
+            }
+            else{
+                Start = content.indexOf(Temp_Catcher);
+            }
+            Img_SE.push([Start, Start + Temp_Catcher.length - 1])
+            Result_List = Img_Catcher.exec(content);
         }
 
-        commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
-          this.$message.success("入库完成")
-          this.Uploading = false;
-        }).catch(
-          ()=>{
-            this.$message.error("入库失败")
-            this.Uploading = false;
-          }
-        )
+        var Img_Index = 0;
 
-        // var Question_ID = "";
+        for(var i = 0; i < content.length; i++){
 
-        // let config = {
-        //     headers: { "Content-Type": "multipart/form-data" }
-        // };
-        // let param = new FormData();
+            if(content[i] == '$' && !latexFlag){
+                latexFlag = true;
+            }else if(content[i] == '$' && latexFlag){
+                latexFlag = false;
+            }
 
-        // param.append('result_json', 
-        //                 JSON.stringify({
-        //                   "post_type": 0,
-        //                   "title": this.PaperTitle,
-        //                   "subject_type": this.SubjectType,
-        //                   "period_type": this.PeriodType,
-        //                   "questions": Ques,
-        //                 }, null, 4));
-        // param.append('questionInput', true)
+            if(Img_SE.length > 0 && i >= Img_SE[Img_Index][0] && i <= Img_SE[Img_Index][1]){
+                remakeContent = remakeContent + content[i];
+                continue;
+            }else if(Img_SE.length > 0 && i > Img_SE[Img_Index][1] && Img_Index < Img_SE.length - 1){
+                Img_Index = Img_Index + 1
+            }
 
-        // this.$http
-        // .post(this.backendIP + "/api/mathUpload", param, config, {
-        //   emulateJSON: true
-        // })
-        // .then(function(data) {
-        //   if(data.data){
-
-        //     Question_ID = data.data.Question_ID
-
-        //     config = {
-        //         headers: { "Content-Type": "multipart/form-data" }
-        //     };
-
-        //     param = new FormData();
-        //     param.append("ID", Question_ID);
-        //     param.append("databasename", "test")
-
-        //     this.$http
-        //     .post(this.backendIP + "/api/questionAnalyse", param, config, {
-        //       emulateJSON: true
-        //     })
-        //     .then(function(data) {
-        //       this.Question_Analysing = false;
-        //       this.analyseData = data.data.que_dic
-        //       this.analyseReport = true;
-        //     });
-        //   }
-        // });
-
-        
-
-      }else if(Control == 'export'){
-
-        var file = new File(
-          [JSON.stringify({
-                          "title": this.PaperTitle,
-                          "subject_type": this.SubjectType,
-                          "period_type": this.PeriodType,
-                          "questions": Ques,
-                        }, null, 4)],
-          "Question_" + this.SubjectType + "_" + this.PeriodType + ".json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
-
-      }
-
-    },
-    // 以下是单题显示配套用的方法
-    // Ensure(){
-    //   this.$confirm("您已经锁定了所有题目，确认审核完毕请点击确认提交，仍有更改请点击取消。").then( () => {
-    //     this.$message.success("已提交");
-    //     this.Submit_Show = true;
-    //     this.Submit();
-    //   }).catch(() => {
-    //     this.$message.info("已取消");
-    //     this.Submit_Show = true;
-    //   })
-    // },
-    // Submit(){
-
-    //   var Docs = this.TestData.doc;
-
-    //   for(var i = 0; i < Docs.length; i++){
-
-    //     var Ques = Docs[i]
-
-    //     var stem = Ques.question_stem;
-    //     if(!this.ChecK_Do(stem)){
-    //       this.$message.error("第"+ (i+1).toString() + "题题干内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
-    //       return false;
-    //     }
-
-    //     var answer = Ques.answer;
-    //     for(var j = 0; j < answer.length; j++){
-
-    //       var item = answer[j]
-            
-    //       if(item != "" && !this.ChecK_Do(item)){
-    //         this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "部分答案内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
-    //         return false
-    //       }
-
-    //     }
-
-    //     var analyse = Ques.analysis;
-    //     if(!this.ChecK_Do(analyse)){
-    //       this.$message.error("第"+ (i+1).toString() + "题解析内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
-    //       return false;
-    //     }
-      
-    //     var options = Ques.question_options;
-    //     for(j = 0; j < options.length; j++){
-    //       if(!this.ChecK_Do(options[j])){
-    //         this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "选项内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
-    //         return false;
-    //       }
-    //     }
-
-    //     var sub_Ques = Ques.sub_questions;
-    //     for(j = 0; j < sub_Ques.length; j++){
-    //       if(!this.ChecK_Do(sub_Ques[j])){
-    //         this.$message.error("第"+ (i+1).toString() + "题第" + (j+1).toString() + "小题内容存在非法字符，请更正，或将字母，罗马符号及数字包裹在$$之间进行输入");
-    //         return false;
-    //       }
-    //     }
-
-    //   }
-
-    //   console.log(this.TestData);
-    //   console.log("Ready To Upload. Waiting for database design.")
-    // },
-    Init_Question_Check(){
-
-      this.Question_Check = [];
-
-      for(var i = 0; i < this.TestData.doc.length; i++){
-        this.Question_Check.push(false);
-        this.TestData.doc[i].answer = this.TestData.doc[i].answer.split("::");
-      }
-
-    },
-    Get_Question_Show(Stem, Type, Question_Index, Answer_Index = null){
-
-        for(var key in this.TestData.img){
-            var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
-            if(Img_Name_Catcher.exec(Stem) != null){
-                Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
+            if(!latexFlag){
+                if (Regx.test(content[i]) || this.math_pun_list.indexOf(content[i]) != -1) {
+                    if(remakeContent[remakeContent.length - 1] == '$'){
+                        remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
+                    }else if(['i', 'b'].indexOf(content[i]) != -1 && 
+                        (
+                            (content[i - 1] == '/' && content[i - 2] == '<' && content[i + 1] == '>') ||
+                            (content[i - 1] == '<' && content[i + 1] == '>')
+                        )
+                    ){
+                        remakeContent = remakeContent + content[i]
+                    }else if(content[i] == '/' && ['i', 'b'].indexOf(content[i+1]) != -1 && content[i-1] == '<' && content[i+2] == '>'){
+                        remakeContent = remakeContent + content[i]
+                    }else{
+                        remakeContent = remakeContent + "$" + content[i] + "$";
+                    }
+                }
+                // 中文字符，中英文允许的符号，空格或Latex结尾的$符号，换行符
+                else if(!(content.charCodeAt(i) > 255 ||
+                        this.ch_pun_list.indexOf(content[i]) != -1 || this.en_pun_list.indexOf(content[i]) != -1 ||
+                        content[i] == ' ' || content[i] == '$' ||
+                        content.charCodeAt(i) == 10)
+                        ){
+                    Wrong_Char.push({
+                        position: i+1,
+                        char: content[i]
+                    })
+                    remakeContent = remakeContent + content[i];
+                }
+                else {
+                    remakeContent = remakeContent + content[i];
+                }
+            }else{
+                remakeContent = remakeContent + content[i];
             }
         }
-        if(Type == 'stem'){
-            if(this.TestData.doc[Question_Index].question_stem != Stem)
-              this.TestData.doc[Question_Index].question_stem = Stem;
-            return "题干$：$" + Stem
-        }else if(Type == 'answer'){
-            
-            if(this.TestData.doc[Question_Index].answer[Answer_Index] != Stem)
-              this.TestData.doc[Question_Index].answer.splice(Answer_Index, 1, Stem)
-            return "答案$" + (Answer_Index + 1).toString() + "$：" + Stem
-        }else if(Type == 'analyse'){
-            if(this.TestData.doc[Question_Index].analysis != Stem)
-              this.TestData.doc[Question_Index].analysis = Stem;
-            return "解析$：$" + Stem
-        }
+        return [remakeContent, Wrong_Char, latexFlag]
     },
-    Get_Question_Options(Stem, Index, Question_Index){
-        for(var key in this.TestData.img){
-            var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
-            if(Img_Name_Catcher.exec(Stem) != null){
-                Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
-            }
-        }
-        if(this.TestData.doc[Question_Index].question_options[Index] != Stem)
-          this.TestData.doc[Question_Index].question_options.splice(Index, 1, Stem)
-        return String.fromCharCode(Index + 65) + "$：$" + Stem
-    },
-    Get_Sub_Question(Stem, Question_Index, Sub_Question_Index){
-        for(var key in this.TestData.img){
-            var Img_Name_Catcher = new RegExp('<IMG: ' + key + '>')
-            if(Img_Name_Catcher.exec(Stem) != null){
-                Stem = Stem.replace(Img_Name_Catcher,'<img src="' + this.TestData.img[key] + '">')
-            }
-        }
-        if(this.TestData.doc[Question_Index].sub_questions[Sub_Question_Index] != Stem)
-          this.TestData.doc[Question_Index].sub_questions.splice(Sub_Question_Index, 1, Stem);
-        return Stem
-    },
-    Show_ComplexInput(Question_Index, Part, Index = null){
-      if(this.Question_Edit_Option_Index == -1 && this.Question_Edit_Sub_Ques_Index == -1 && this.Question_Edit_Answer_Index == -1){
-        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part){
-          return true
-        }else{
-          return false
-        }
-      }else if(this.Question_Edit_Option_Index != -1){
-        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Option_Index){
-          return true
-        }else{
-          return false
-        }
-      }else if(this.Question_Edit_Sub_Ques_Index != -1){
-        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Sub_Ques_Index){
-          return true
-        }else{
-          return false
-        }
-      }else if(this.Question_Edit_Answer_Index != -1){
-        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Answer_Index){
-          return true
-        }else{
-          return false
-        }
-
-      }
-    },
-    Update_ComplexInput(val){
-      if(this.Question_Edit_Part == 'answer'){
-        this.TestData.doc[this.Question_Edit_Now].answer.splice(this.Question_Edit_Answer_Index, 1, val);
-      }else if(this.Question_Edit_Part == 'stem'){
-        this.TestData.doc[this.Question_Edit_Now].question_stem = val;
-      }else if(this.Question_Edit_Part == 'analyse'){
-        this.TestData.doc[this.Question_Edit_Now].analysis = val;
-      }else if(this.Question_Edit_Part == 'option'){
-        this.TestData.doc[this.Question_Edit_Now].question_options.splice(this.Question_Edit_Option_Index, 1, val);
-      }else if(this.Question_Edit_Part == 'sub_question'){
-        this.TestData.doc[this.Question_Edit_Now].sub_questions.splice(this.Question_Edit_Sub_Ques_Index, 1, val);
-      }
-    },
-    Show_Part(Question_Index, Part, Index = null){
-
-      if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part){
-        this.Question_Edit_Now = -1;
-        this.Question_Edit_Part = "";
-      }else{
-        this.Question_Edit_Now = Question_Index; 
-        this.Question_Edit_Part = Part;
-      }
-
-      if(this.Question_Edit_Part == 'option' && Index != null && Index != this.Question_Edit_Option_Index){
-        this.Question_Edit_Option_Index = Index;
-      }else{
-        this.Question_Edit_Option_Index = -1;
-      }  
-      
-      if(this.Question_Edit_Part == 'sub_question' && Index != null && Index != this.Question_Edit_Sub_Ques_Index){
-        this.Question_Edit_Sub_Ques_Index = Index;
-      }else{
-        this.Question_Edit_Sub_Ques_Index = -1;
-      }
-
-      if(this.Question_Edit_Part == 'answer' && Index != null && Index != this.Question_Edit_Answer_Index){
-        this.Question_Edit_Answer_Index = Index;
-      }else{
-        this.Question_Edit_Answer_Index = -1;
-      }
-    },
-    Get_Button_Label(Question_Index, Part, Index = null){
-      if(Index == null){
-        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part){
-          return "收起"
-        }else {
-          return "编辑"
-        }
-      }else if(Part == 'option'){
-        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Option_Index){
-          return "收起"
-        }else{
-          return "编辑"
-        }
-      }
-      else if(Part == 'answer'){
-        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Answer_Index){
-          return "收起"
-        }else{
-          return "编辑"
-        }
-      }else if(Part == 'sub_question'){
-        if(Question_Index == this.Question_Edit_Now && Part == this.Question_Edit_Part && Index == this.Question_Edit_Sub_Ques_Index){
-          return "收起"
-        }else{
-          return "编辑"
-        }
-      }
-    },
-    Get_Name(Question_Index, Type, Index = null){
-      if(Index == null){
-        return "Mathdown" + Question_Index.toString() + "_" + Type
-      }else{
-        return "Mathdown" + Question_Index.toString() + "_" + Type + "_" + Index.toString()
-      }
-    },
-    // 打开数据展示
-    ImportFile(){
-      this.$confirm("确认题目无误后请点击左上角锁定此题，所有题目锁定后可以确认审核完毕。").then( () => {
-      }).catch(() => {
-      })
-      this.showDialog_Result = true;
-    }
   }
 };
 </script>
-<style lang="less" scoped>
-#import_paper {
-  background: url("./../../assets/sub_bg.png");
-  background-size: 100%;
-  padding: 20px 20px 0px 20px;
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="scss">
+.toPaper{
+    height: 40px; 
+    line-height: 40px;
+    width: 10vw; 
+    background: #FFE37F;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
 }
-.panel {
-  background-color: #fff;
-  border: 1px solid #fff;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  padding-left: 2%;
-  padding-right: 2%;
-  padding-top: 3%;
-  height: 850px;
+.toPaper:hover{ 
+    background: #FFF0A0;
+    color: #888;
 }
-/deep/ .el-short_input__inner .el-input__inner {
-  height: 33px;
-  width: 80px;
-  text-align: left;
+.typeButton{
+    border-radius: 20px;
+    margin-right: 10px;
+    font-weight: bold;
+    box-shadow: 2px 4px 4px 0 rgba(0, 0, 0, 0.3);
+    cursor: pointer;
 }
-/deep/ .el-form-item {
-  margin-bottom: 0;
+.typeButton.focusType{
+    background: #409EFF;
+    border: 1px solid #409EFF;
+    color: white;
 }
-h6 {
-  font-size: 14px;
+.typeButton.unFocusType{
+    background: white;
+    border: 1px solid whitesmoke;
 }
-.tb-edit .el-input {
-  display: none;
-}
-.tb-edit .current-row .el-input {
-  display: block;
-}
-.tb-edit .current-row .el-input + span {
-  display: none;
+.typeButton.unFocusType:hover{
+    background: #E5EEFF;
+    border: 1px solid #F5FEFF;
 }
 </style>

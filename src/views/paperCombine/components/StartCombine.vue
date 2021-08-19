@@ -842,6 +842,7 @@ export default {
     // 打开答题卡页面
     Check_Answer_Card(){
       sessionStorage.setItem("CombinePaper_AnswerCard", JSON.stringify(this.Question_List));
+      sessionStorage.setItem("AnswerCardSubject", this.Subject)
       let routeData = this.$router.resolve({ path: '/answerCard' });
       window.open(routeData.href, '_blank');
     },

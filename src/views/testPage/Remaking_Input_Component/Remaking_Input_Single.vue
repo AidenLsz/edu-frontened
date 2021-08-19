@@ -102,15 +102,15 @@
 
 <script>
 
-import OptionQuestions from '@/views/resourceInput/components/OptionQuestions'
-import FillQuestions from '@/views/resourceInput/components/FillQuestions.vue'
-import AnswerQuestions from '@/views/resourceInput/components/AnswerQuestions.vue'
-import MixQuestions from '@/views/resourceInput/components/MixQuestions.vue'
+import OptionQuestions from '@/views/testPage/Remaking_Input_Component/components/OptionQuestions.vue'
+import FillQuestions from '@/views/testPage/Remaking_Input_Component/components/FillQuestions.vue'
+import AnswerQuestions from '@/views/testPage/Remaking_Input_Component/components/AnswerQuestions.vue'
+import MixQuestions from '@/views/testPage/Remaking_Input_Component/components/MixQuestions.vue'
 
 import {commonAjax} from '@/common/utils/ajax'
 
 export default {
-  name: "inputMarked",
+  name: "inp",
   components: {
       OptionQuestions, FillQuestions, AnswerQuestions, MixQuestions
   },
@@ -193,7 +193,7 @@ export default {
         },
       // 跳转至整卷录入页面
       toPaper(){
-        this.$router.push({path: "/inputPaper"})
+        this.$router.push({path: "/remakeInputPaper"})
       },
       // 返回按钮样式
       Get_Type_Button_Class(Type){
@@ -615,7 +615,7 @@ export default {
                 score: parseFloat(Ques.score + ""),
                 subquestions: [],
                 answer: Ques.answer,
-                answer_image: Ques.answer_image,
+                answer_image: Ques.answer_images,
                 analysis: Ques.analysis,
                 analysis_image: Ques.analysis_image
             }
@@ -677,7 +677,7 @@ export default {
         }
 
         Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_image = Ques.answer_image;
+        Temp_Doc.answer_image = Ques.answer_images;
 
         Temp_Doc.analysis = Ques.analysis;
         Temp_Doc.analysis_image = Ques.analysis_image;

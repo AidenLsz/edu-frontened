@@ -22,6 +22,8 @@ import InputPaper from "@/views/resourceInput/InputPaper";
 // 测试类页面，用于测试新功能的导入
 import TestPage from "@/views/testPage/TestPage";
 import TestPageList from "@/views/testPage/TestPageList";
+import Remaking_Input_Single from '@/views/testPage/Remaking_Input_Component/Remaking_Input_Single'
+import Remaking_Input_Paper from '@/views/testPage/Remaking_Input_Component/Remaking_Input_Paper'
 
 // 资源分析类页面
 import PaperAnalyse from "@/views/resourceAnalyse/PaperAnalyse";
@@ -104,6 +106,16 @@ const visitorRouter=[
     path: "/testPageList",
     name: "TestPageList",
     component: TestPageList
+  },
+  {
+    path: "/remakeInputSingle",
+    name: "RemakeInputSingle",
+    component: Remaking_Input_Single
+  },
+  {
+    path: "/remakeInputPaper",
+    name: "RemakeInputPaper",
+    component: Remaking_Input_Paper
   },
   {
     path: "/members",
