@@ -402,7 +402,7 @@
                                 @mouseenter.native="Hand_Cut_Change(index_out, index_in)"
                                 @click.native="English_Hand_Cut(index_out, index_in)">
                     <div class="dashed">
-                      <span><i class="el-icon-scissors" style="font-size: 20px; "></i></span>
+                      <span><i :class="'el-icon-scissors '+EnglishSelected(index_out)"></i></span>
                     </div>
                   </el-row>
                   <el-row
@@ -493,7 +493,8 @@
                                   @mouseenter.native="Hand_Cut_Change(Para_Index, Item_Index)"
                                   @click.native="Hand_Cut(Para_Index, Item_Index)">
                           <div class="dashed">
-                            <span><i class="el-icon-scissors" style="font-size: 20px; "></i></span>
+                            <span><i :class="'el-icon-scissors '+ChineseMixSelected(Para_Index)"></i></span>
+
                           </div>
                       </el-row>
                       <el-row
@@ -505,7 +506,7 @@
                         @mouseleave.native="Hand_Cut_Clear()">
                         <span>&nbsp;</span>
                         <div class="dashed">
-                          <span><i class="el-icon-scissors" style="font-size: 20px; "></i></span>
+                          <span></span>
                         </div>
                     </el-row>
                   </div>
@@ -3263,7 +3264,8 @@ export default {
     padding: 0 5px;
 }
 .el-icon-scissors{
-  background-color: #F8FBFF;
+  font-size: 20px;
+  // background-color: #F8FBFF;
   color:#b2bbbe;
 }
 .separate-part{
