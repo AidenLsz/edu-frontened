@@ -78,7 +78,7 @@
     </el-row>
     <el-row v-if="question_list.length != 0">
       <el-pagination
-        @current-change="BackToTop"
+        @current-change="FlipPage"
         :current-page.sync="Page_Index"
         :page-size="Page_Length"
         layout="total, prev, pager, next"
@@ -93,6 +93,7 @@
 import Mathdown from "@/common/components/Mathdown.vue";
 import QuestionAnalyse from "../../../resourceAnalyse/QuestionAnalyse.vue"
 import {commonAjax} from '@/common/utils/ajax'
+import md5 from 'js-md5';
 
 export default {
   components: { Mathdown, QuestionAnalyse },
@@ -133,6 +134,8 @@ export default {
       // 暂存的图片内容
       Cache_Pic: [""],
       lastParam:null,
+      //用于缓存图片检索后的查询结果
+      Cache_Result:{},
       // 用于分析显示的题目数据
       analyseData: {
                 "analysis": "\u5982\u56fe\uff0c\u505a\u51fa\u7ea6\u675f\u6761\u4ef6$\\left\\{\\begin{array}{c}2 x+y-2 \\leq 0 \\ x-y-1 \\geq 0 \\ y+1 \\geq 0\\end{array}\\right.$\u6240\u8868\u793a\u7684\u53ef\u884c\u57df\u3002\u6613\u5f97A\u7684\u5750\u6807\u4e3a$A(1,0)$\u3002\u5f53\u76ee\u6807\u51fd\u6570\u7ecf\u8fc7A\u70b9\u65f6\uff0cz\u53d6\u5f97\u6700\u5927\u503c\uff0c\u53ef\u5f97$z=x+7 y$\u7684\u6700\u5927\u503c\u4e3a$1+7 \\times 0=1$",
@@ -194,11 +197,10 @@ export default {
   },
   mounted(){
     this.ToTop()
-
-    // this.search(this.imgUrl,['public']);
   },
   methods: {
     search(imgUrl,databaselist,subject,period){
+      this.Page_Index=1
       this.submit(1, imgUrl,databaselist,subject,period);
     },
     // 查看单题分析报告
@@ -221,10 +223,8 @@ export default {
     ToTop(){
       window.scrollTo(0,0);
     },
-    BackToTop(){
+    FlipPage(){
       this.submit(1, this.Cache_Pic[0]);
-      // this.search(imgUrl,databaselist,subject,period){
-      window.scrollTo(0,0);
     },
     // 修改翻页内容
     Get_Question_Bundle(Page_Index){
@@ -254,11 +254,14 @@ export default {
       return true
     },
     submit(type, Pic = "",database_list,subject,period) {
+      window.scrollTo(0,0);
       let param={}
       if(!Pic){
         //仅翻页 参数不变
         param=this.lastParam
         let data=JSON.parse(param.data)
+        Pic=param.pic
+        console.log('Pic',this.pic);
         data.page_count=this.Page_Index;
         param.data=JSON.stringify(data)
       }else{
@@ -275,22 +278,34 @@ export default {
         })
         param.data=data
       }
+      // 更新最近一次进行搜索的参数
       this.lastParam=param;
+      //检查缓存中是否存在搜索结果
+      // let encodedKey=md5(JSON.stringify(Pic+this.Page_Index));
+      let encodedKey=md5(JSON.stringify(param));
+      if(this.Cache_Result[encodedKey]){
+        this.handleResData(this.Cache_Result[encodedKey])
+        return;
+      }
 
       this.loading = true;
       this.question_list = [];
       commonAjax(this.backendIP+'/api/search',param)
       .then((data)=>{
-        this.loading = false;
-        this.Expand_List = [];
-        this.question_list = [];
-        var quess = data.results;
-        for(var i = 0; i < quess.length; i++){
-          this.question_list.push(quess[i])
-          this.Expand_List.push(false);
-        }
-        this.Total_Count = data.totalLength
+        this.Cache_Result[encodedKey]=data
+        this.handleResData(data)
       })
+    },
+    handleResData(data){
+      this.loading = false;
+      this.Expand_List = [];
+      this.question_list = [];
+      var quess = data.results;
+      for(var i = 0; i < quess.length; i++){
+        this.question_list.push(quess[i])
+        this.Expand_List.push(false);
+      }
+      this.Total_Count = data.totalLength
     },
     // 修改学科，学段时的配套显示
     Get_Subject(){

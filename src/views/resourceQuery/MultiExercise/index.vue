@@ -297,12 +297,12 @@
         <el-row type="flex" justify="start" style="line-height: 40px;margin-top:20px;">
           <div class="btn_file">
             <p style="display: inline-block">
-              <i class="el-icon-files"></i>选取试卷文件(doc/docx)
+              <i class="el-icon-files"></i>选取试卷文件
             </p>
             <input
               type="file"
               @change="selectFile($event)"
-              accept=".docx, .doc"
+              accept=".docx, .doc, .pdf"
               ref="eng_input"
             />
           </div>
@@ -313,12 +313,12 @@
         <el-row type="flex" justify="start" style="line-height: 40px">
           <div class="btn_file">
             <p style="display: inline-block">
-              <i class="el-icon-files"></i>选取数学试卷文件(doc/docx)
+              <i class="el-icon-files"></i>选取试卷文件
             </p>
             <input
               type="file"
               @change="selectPaperFile($event)"
-              accept=".docx, .doc"
+              accept=".docx, .doc, .pdf"
               ref="math_paper_input"
             />
           </div>
@@ -329,12 +329,12 @@
         <el-row type="flex" justify="start" style="line-height: 40px">
           <div class="btn_file">
             <p style="display: inline-block">
-              <i class="el-icon-files"></i>选取数学答案文件(doc/docx)
+              <i class="el-icon-files"></i>选取数学答案文件
             </p>
             <input
               type="file"
               @change="selectAnswerFile($event)"
-              accept=".docx, .doc"
+              accept=".docx, .doc, .pdf"
               ref="math_answer_input"
             />
           </div>
@@ -346,130 +346,90 @@
       </el-col>
     </el-row>
     <database-list @databaseChange="handleDatabaseChange"/>
-    <el-row>
-      <el-col class="separate-part" :span="12" style="background:#fffee8">
+    <el-row v-if="!pdfURL">
+      <el-col class="separate-part" :span="12" style="background:#c4d7d6">
         <!-- 英语试卷内容导出 -->
-        <el-row
+        <!-- <el-row
           v-if="Type_Visible() && paper_type != '1'"
-          style="padding-top: 15px">
+          style="padding-top: 5px;margin-bottom:-15px;">
           <el-col :span="8">
             <el-row type="flex" justify="center">
-              <el-button v-if="!Hand_Cut_Mode" @click="Hand_Cut_Mode = true" type="text" style="color: #409EFD; font-weight: bold">开启自定义切分</el-button>
+              <el-button v-if="!Hand_Cut_Mode" @click="Hand_Cut_Mode = true" type="text" style="color: #8076a3; font-weight: bold">开启自定义切分</el-button>
               <el-button v-if="Hand_Cut_Mode" @click="Hand_Cut_Mode = false" type="text" style="color: #FF7F50; font-weight: bold">关闭自定义切分</el-button>
             </el-row>
           </el-col>
-        </el-row>
+        </el-row> -->
         <!-- 英语的手动切分过程 -->
         <el-row v-if="paper_type == '0'">
-          <el-col
+          <el-row
             v-for="(item, index_out) in file_item"
             :key="index_out"
-            class="area_border"
-          >
-            <el-row type="flex" justify="center" v-if="Hand_Cut_Mode">
-              <el-button
-                type="text"
-                size="medium"
-                @click="Del(index_out, 'front')"
-                :disabled="index_out == 0"
-                >向前合并</el-button
-              >
-            </el-row>
-            <el-row
-              v-for="(i, index_in) in item"
-              :key="index_in"
-              :span="24"
-              style="padding: 10px; margin: 1px;"
-            >
-              <el-row v-if="index_in == 0">
-                <el-col
-                  :span="22"
-                  v-if="file_item_label[index_out] < 0"
-                >
-                  <label>--------------------题干分界线--------------------</label>
-                </el-col>
-                <el-col
-                  :span="22"
-                  v-if="file_item_label[index_out] > 0"
-                >
-                  <label>--------------------题目分界线--------------------</label>
-                </el-col>
-                <el-col :span="2" style="line-height: 30px">
-                  <el-row type="flex" justify="center" style="padding-left: 30px">
-                    <el-button type="text" @click="Transfer(index_out)"
-                      >修改类型为{{
-                        file_item_label[index_out] == -1 ? "题目" : "题干"
-                      }}</el-button
-                    >
+            style="margin:25px; border: 1px dashed black;">
+            <div :ref="'EnglishDom_'+index_out">
+              <div :class="EnglishSelected(index_out)" style="position:relative">
+                <el-row type="flex" justify="center" v-if="Hand_Cut_Mode">
+                  <el-button
+                    type="text"
+                    size="medium"
+                    @click="Del(index_out, 'front')"
+                    :disabled="index_out == 0"
+                    >向前合并</el-button
+                  >
+                </el-row>
+                <div style="position:absolute;top:5px;right:10px">
+                  <el-popover
+                    placement="top"
+                    width="170"
+                    trigger="hover"
+                    content="点击搜索该题目">
+                    <el-button slot="reference" size="medium" @click="Search_English(index_out)">查重</el-button>
+                  </el-popover>
+                </div>
+                <el-row
+                  v-for="(i, index_in) in item"
+                  :key="index_in"
+                  style="padding: 10px;">
+                    <p class="title_message">
+                      {{ i }}
+                    </p>
+                  <el-row v-if="index_in < item.length - 1
+                                && Hand_Cut_Mode
+                                && index_out == Hand_Cut_Now[0]
+                                && index_in == Hand_Cut_Now[1]"
+                                type="flex" justify="center"
+                                style="cursor: pointer"
+                                @mouseleave.native="Hand_Cut_Clear()"
+                                @mouseenter.native="Hand_Cut_Change(index_out, index_in)"
+                                @click.native="English_Hand_Cut(index_out, index_in)">
+                    <div class="dashed">
+                      <span><i :class="'el-icon-scissors '+EnglishSelected(index_out)"></i></span>
+                    </div>
                   </el-row>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="22">
-                  <p class="title_message">
-                    {{ i }}
-                  </p>
-                </el-col>
-              </el-row>
-              <!-- 1：不在末尾，2，是在手动切分状态下，3，段标签和行标签与当前相等 -->
-              <el-row v-if="index_in < item.length - 1
-                            && Hand_Cut_Mode
-                            && index_out == Hand_Cut_Now[0]
-                            && index_in == Hand_Cut_Now[1]"
-                            type="flex" justify="center"
-                            style="cursor: pointer"
-                            @mouseleave.native="Hand_Cut_Clear()"
-                            @mouseenter.native="Hand_Cut_Change(index_out, index_in)"
-                            @click.native="English_Hand_Cut(index_out, index_in)">
-                <span style="line-height: 30px; height: 30px;">-------------------------------</span>
-                <i class="el-icon-scissors" style="font-size: 20px; padding-top: 5px"></i>
-                <span style="line-height: 30px; height: 30px;">-------------------------------</span>
-              </el-row>
-              <el-row
-                v-if="index_in < item.length - 1
-                      && Hand_Cut_Mode
-                      && (index_out != Hand_Cut_Now[0] || index_in != Hand_Cut_Now[1])"
-                style="height: 10px; padding: 0px; margin: 4px 0px; border: 2px dashed #ccc"
-                @mouseenter.native="Hand_Cut_Change(index_out, index_in)"
-                @mouseleave.native="Hand_Cut_Clear()">
-                <span>&nbsp;</span>
-              </el-row>
-              <el-row v-if="index_in == item.length - 1">
-                <el-col
-                  style="line-height: 30px"
-                  :span="22"
-                  v-if="file_item_label[index_out] < 0"
-                >
-                  <label>--------------------题干分界线--------------------</label>
-                </el-col>
-                <el-col
-                  style="line-height: 30px"
-                  :span="22"
-                  v-if="file_item_label[index_out] > 0"
-                >
-                  <label>--------------------题目分界线--------------------</label>
-                </el-col>
-                <el-col :span="2" style="line-height: 30px">
-                  <el-row type="flex" justify="center" style="padding-left: 30px">
-                    <el-button type="text" @click="Transfer(index_out)"
-                      >修改类型为{{
-                        file_item_label[index_out] == -1 ? "题目" : "题干"
-                      }}</el-button
-                    >
+                  <el-row
+                    v-if="index_in < item.length - 1
+                          && Hand_Cut_Mode
+                          && (index_out != Hand_Cut_Now[0] || index_in != Hand_Cut_Now[1])"
+                    style="height: 20px"
+                    @mouseenter.native="Hand_Cut_Change(index_out, index_in)"
+                    @mouseleave.native="Hand_Cut_Clear()">
+                    <span>&nbsp;</span>
+                    <div class="dashed">
+                    </div>
                   </el-row>
-                </el-col>
-              </el-row>
-            </el-row>
-            <el-row type="flex" justify="center" v-if="Hand_Cut_Mode">
-              <el-button
-                type="text"
-                size="medium"
-                @click="Del(index_out, 'back')"
-                :disabled="index_out == file_item.length - 1"
-                >向后合并</el-button
-              >
-            </el-row>
-          </el-col>
+                </el-row>
+                <el-row type="flex" justify="center" v-if="Hand_Cut_Mode">
+                  <el-button
+                    type="text"
+                    size="medium"
+                    @click="Del(index_out, 'back')"
+                    :disabled="index_out == file_item.length - 1"
+                    >向后合并</el-button
+                  >
+                </el-row>
+              </div>
+            </div>
+
+          </el-row>
         </el-row>
         <!-- 文综，理综，语文的手动切分过程 -->
         <!-- LS原本指的是Liberal & Science，但是还要有新内容加进来的话缩写改起来没完了，就先不动了 -->
@@ -477,120 +437,88 @@
           <el-row
             v-for="(Para, Para_Index) in json_content"
             :key="'LS_Para_' + Para_Index"
-            style="; margin-left: 1vw; margin-top: 30px; border: 2px dashed black; margin-bottom: 30px; background: rgba(0, 255, 255, 0.04);">
-            <el-col :span="24">
-              <el-row type="flex" justify="center" v-if="Hand_Cut_Mode">
-                <el-button type="text" size="medium" :disabled="Para_Index == 0" @click="Merge_LS_To_Front(Para_Index)">
-                  向前合并
-                </el-button>
-              </el-row>
-              <el-row style="padding-left: 4vw; padding-right: 4vw; padding-top: 10px; padding-bottom: 5px">
-                <el-col :span="22">
-                  <label v-if="Para.is_question == 1" style="line-height: 30px">
-                    --------------------题目分界线--------------------
-                  </label>
-                  <label v-if="Para.is_question == 0" style="line-height: 30px">
-                    --------------------题干分界线--------------------
-                  </label>
-                </el-col>
-                <el-col :span="2" style="line-height: 30px;">
-                  <el-row
-                    type="flex"
-                    justify="center"
-                  >
-                    <el-button
-                      type="text"
-                      size="medium"
-                      @click="LS_Para_Type_Change(Para_Index)"
-                    >
-                      修改类型为{{ Para.is_question == 1 ? "题干" : "题目" }}
-                    </el-button>
-                  </el-row>
-                </el-col>
-              </el-row>
-              <el-row v-for="(Item, Item_Index) in Para.sub_para[0]" :key="'LS_P_SP_' + Item_Index" style="padding-left: 4vw; padding-right: 4vw">
-                <el-col :span="22">
-                  <el-row v-if="Item.para_type == '0'" :style="Item.para_style">
-                    <span
-                      v-for="(message, index_i) in Item.runs"
-                      :key="index_i + 'run'"
-                      :style="message.run_style"
-                    >
+            style="margin:25px; border: 1px dashed black;">
+            <div :class="ChineseMixSelected(Para_Index)" :ref="'ChineseMixDom_'+Para_Index">
+              <div style="position:relative" >
+                <el-row type="flex" justify="center" v-if="Hand_Cut_Mode">
+                  <el-button type="text" size="medium" :disabled="Para_Index == 0" @click="Merge_LS_To_Front(Para_Index)">
+                    向前合并
+                  </el-button>
+                </el-row>
+                <div style="position:absolute;top:5px;right:10px">
+                  <el-popover
+                    placement="top"
+                    width="170"
+                    trigger="hover"
+                    content="点击搜索该题目">
+                    <el-button slot="reference" size="medium" @click="Search_ChineseMix(Para_Index)">查重</el-button>
+                  </el-popover>
+                </div>
+                <el-row v-for="(Item, Item_Index) in Para.sub_para[0]" :key="'LS_P_SP_' + Item_Index"
+                  style="padding:20px">
+                  <div>
+                    <el-row v-if="Item.para_type == '0'" :style="Item.para_style">
                       <span
-                        v-if="message.run_type == '0'"
-                        v-html="message.run_text"
-                      ></span>
-                      <img
-                        v-else-if="message.run_type == '1'"
-                        :src="json_image_dict[message.image.src]"
-                        :width="message.image.width"
-                        :height="message.image.height"
-                        :style="message.image.style"
-                        :alt="message.image.alt"
-                      />
-                    </span>
-                  </el-row>
-                  <el-row v-if="Item.para_type == '1'">
-                    <div :style="Item.para_style">
-                      <span v-html="Table_Img_Get(Item.table_raw_html)"></span>
-                    </div>
-                  </el-row>
-                  <!-- 1：不在末尾，2，是在手动切分状态下，3，段标签和行标签与当前相等 -->
-                  <el-row v-if="Item_Index != Para.sub_para[0].length - 1
-                                && Hand_Cut_Mode
-                                && Para_Index == Hand_Cut_Now[0]
-                                && Item_Index == Hand_Cut_Now[1]"
-                                type="flex" justify="center"
-                                style="cursor: pointer"
-                                @mouseleave.native="Hand_Cut_Clear()"
-                                @mouseenter.native="Hand_Cut_Change(Para_Index, Item_Index)"
-                                @click.native="Hand_Cut(Para_Index, Item_Index)">
-                    <span style="line-height: 30px; height: 30px;">-------------------------------</span>
-                    <i class="el-icon-scissors" style="font-size: 20px; padding-top: 5px"></i>
-                    <span style="line-height: 30px; height: 30px;">-------------------------------</span>
-                  </el-row>
-                  <el-row
-                    v-if="Item_Index != Para.sub_para[0].length - 1
-                          && Hand_Cut_Mode
-                          && (Para_Index != Hand_Cut_Now[0] || Item_Index != Hand_Cut_Now[1])"
-                    style="height: 10px; padding: 0px; margin: 4px 0px; border: 2px dashed #ccc"
-                    @mouseenter.native="Hand_Cut_Change(Para_Index, Item_Index)"
-                    @mouseleave.native="Hand_Cut_Clear()">
-                    <span>&nbsp;</span>
-                  </el-row>
-                </el-col>
-              </el-row>
-              <el-row style="padding-left: 4vw; padding-right: 4vw; padding-bottom: 10px; padding-top: 5px">
-                <el-col :span="22">
-                  <label v-if="Para.is_question == 1" style="line-height: 30px">
-                    --------------------题目分界线--------------------
-                  </label>
-                  <label v-if="Para.is_question == 0" style="line-height: 30px">
-                    --------------------题干分界线--------------------
-                  </label>
-                </el-col>
-                <el-col :span="2" style="line-height: 30px">
-                  <el-row
-                    type="flex"
-                    justify="center"
-                  >
-                    <el-button
-                      type="text"
-                      size="medium"
-                      @click="LS_Para_Type_Change(Para_Index)"
-                    >
-                      修改类型为{{ Para.is_question == 1 ? "题干" : "题目" }}
-                    </el-button>
-                  </el-row>
-                </el-col>
-              </el-row>
-              <el-row type="flex" justify="center" v-if="Hand_Cut_Mode">
-                <el-button type="text" size="medium" :disabled="Para_Index == json_content.length - 1" @click="Merge_LS_To_Back(Para_Index)">
-                  向后合并
-                </el-button>
-              </el-row>
-            </el-col>
-          </el-row>
+                        v-for="(message, index_i) in Item.runs"
+                        :key="index_i + 'run'"
+                        :style="message.run_style"
+                      >
+                        <span
+                          v-if="message.run_type == '0'"
+                          v-html="message.run_text"
+                        ></span>
+                        <img
+                          v-else-if="message.run_type == '1'"
+                          :src="json_image_dict[message.image.src]"
+                          :width="message.image.width"
+                          :height="message.image.height"
+                          :alt="message.image.alt"
+                          :style="message.image.style"
+                        />
+                      </span>
+                    </el-row>
+                    <el-row v-if="Item.para_type == '1'">
+                      <div :style="Item.para_style">
+                        <span v-html="Table_Img_Get(Item.table_raw_html)"></span>
+                      </div>
+                    </el-row>
+                    <!-- 1：不在末尾，2，是在手动切分状态下，3，段标签和行标签与当前相等 -->
+                    <el-row v-if="Item_Index != Para.sub_para[0].length - 1
+                                  && Hand_Cut_Mode
+                                  && Para_Index == Hand_Cut_Now[0]
+                                  && Item_Index == Hand_Cut_Now[1]"
+                                  type="flex" justify="center"
+                                  style="cursor: pointer"
+                                  @mouseleave.native="Hand_Cut_Clear()"
+                                  @mouseenter.native="Hand_Cut_Change(Para_Index, Item_Index)"
+                                  @click.native="Hand_Cut(Para_Index, Item_Index)">
+                          <div class="dashed">
+                            <span><i :class="'el-icon-scissors '+ChineseMixSelected(Para_Index)"></i></span>
+
+                          </div>
+                      </el-row>
+                      <el-row
+                        v-if="Item_Index != Para.sub_para[0].length - 1
+                              && Hand_Cut_Mode
+                              && (Para_Index != Hand_Cut_Now[0] || Item_Index != Hand_Cut_Now[1])"
+                        style="height:20px;"
+                        @mouseenter.native="Hand_Cut_Change(Para_Index, Item_Index)"
+                        @mouseleave.native="Hand_Cut_Clear()">
+                        <span>&nbsp;</span>
+                        <div class="dashed">
+                          <span></span>
+                        </div>
+                    </el-row>
+                  </div>
+                </el-row>
+                <el-row type="flex" justify="center" v-if="Hand_Cut_Mode">
+                  <el-button type="text" size="medium" :disabled="Para_Index == json_content.length - 1" @click="Merge_LS_To_Back(Para_Index)">
+                    向后合并
+                  </el-button>
+                </el-row>
+              </div>
+            </div>
+            </el-row>
         </el-row>
         <!-- 转换过程的加载区域 -->
         <el-row
@@ -604,10 +532,10 @@
 
         <!-- 数学，内容确认区域 -->
         <el-row v-for="(Question_Info, Question_Index) in TestData.doc" :key="Question_Index"
-          :class="selected(Question_Index)"
+          :class="MathSelected(Question_Index)"
           style="border: 1px dashed black;margin: 25px">
           <!-- 题型，上传用户，科目部分 -->
-          <el-row type="flex" justify="start" style="margin: 30px 50px 0px 10px">
+          <el-row type="flex" justify="start" style="position:relative;margin:15px;">
               <el-col :span="2" style="text-align: left" >
                 <el-popover
                   placement="top"
@@ -623,21 +551,18 @@
               <el-col class="center-text" :span="4">
                   {{Question_Info.question_type}}
               </el-col>
-              <el-col class="center-text" :span="8">
-                  科目：{{Question_Info.subject}}
-              </el-col>
-              <el-col :span="4" style="text-align: left;">
+              <div style="text-align: right;position:absolute;right:0px;">
                 <el-popover
                   placement="top"
                   width="170"
                   trigger="hover"
                   content="点击搜索该题目">
-                  <el-button slot="reference" size="medium" @click="search(Question_Index)">查重</el-button>
+                  <el-button slot="reference" size="medium" @click="Search_Math(Question_Index)">查重</el-button>
                 </el-popover>
-              </el-col>
+              </div>
           </el-row>
           <!-- 题干部分 - 无小题 -->
-          <div :ref="'imageDom_'+Question_Index">
+          <div :ref="'MathDom_'+Question_Index">
               <el-row type="flex" justify="start" style="margin: 20px 5px;" >
                 <div v-if="Question_Check[Question_Index] == false">
                   <el-row type="flex" justify="start">
@@ -749,6 +674,7 @@
         <search-result ref="searchRes"/>
       </el-col>
     </el-row>
+    <pdf v-else :src="pdfURL"/>
   </div>
 </template>
 <script>
@@ -765,6 +691,7 @@ import DatabaseList from "./components/DatabaseList.vue";
 
 import Mathdown from "@/common/components/Mathdown.vue";
 import ComplexInput from '@/common/components/ComplexInput.vue'
+import pdf from './components/pdf';
 
 import {commonAjax} from '@/common/utils/ajax'
 
@@ -776,10 +703,12 @@ export default {
                 SearchResult,
                 Mathdown,
                 Instruction,
-                DatabaseList
+                DatabaseList,
+                pdf
                 },
   data() {
     return {
+      pdfURL:'',
       Import_User: false,
       Import_User_Trace: "",
       Refresh: false,
@@ -845,24 +774,7 @@ export default {
       en_pun_list: [',','.','?','!',':',';','\'','"','(',')','&nbsp','_','/','|','\\','<','>'],
       ch_pun_list: ['，','。','！','？','：','；','‘','’','“','”','（','）','&nbsp','、','《','》'],
       math_pun_list: ['+', '-', "*", "/", "%", "="],
-      TestData:{
-        // "title": "2009年课标甲乙",
-        //       "subject_type": "数学",
-        //       "period_type": "高中",
-        //       "doc": [
-        //         {
-        //           "question_stem": "已知集合$A = \\{ 0,2 \\}$，$B = \\{ - 2 , - 1,0,1,2 \\}$,则$A \\cap B =$",
-        //           "question_options": [ "$\\{ 0,2 \\}$", "$\\{ 1,2 \\}$", "$\\{ 0 \\}$", "$\\{ - 2 , - 1,0,1,2 \\}$" ],
-        //           "question_type": "选择题",
-        //           "sub_questions": [],
-        //           "answer": "A",
-        //           "analysis": "",
-        //           "source": "user_input",
-        //           "subject": "user_input"
-        //         }
-        //         ]
-      },
-
+      TestData:{},
       Question_Edit_Now: -1,
       Question_Edit_Part: "",
       Question_Edit_Option_Index: -1,
@@ -870,6 +782,8 @@ export default {
       Question_Edit_Answer_Index: -1,
       Question_Check: [],
       Question_Highlight: [],
+      Para_Highlight: [],
+      English_Para_Highlight: [],
       Submit_Show: false,
 
       Sequence_Questions: "1",
@@ -1031,6 +945,10 @@ export default {
         this.paper_type = newVal;
         this.downloadPaperName = "",
         this.downloadAnswerName = ""
+        this.pdfURL=""
+        if (this.$refs.searchRes) {
+          this.$refs.searchRes.handleResData({results:[]});
+        }
       }
     },
     math_input(newVal, oldVal){
@@ -1065,21 +983,76 @@ export default {
     handleDatabaseChange(data){
       this.database_list=data
     },
-    selected(Question_Index){
+    MathSelected(Question_Index){
       if(this.Question_Highlight[Question_Index])
         return "selected"
       return 'unselected'
     },
-    search(Question_Index){
+    ChineseMixSelected(Para_Index){
+      if(this.Para_Highlight[Para_Index])
+        return "selected"
+      return 'unselected'
+    },
+    EnglishSelected(idx){
+      if(this.English_Para_Highlight[idx])
+        return "selected"
+      return 'unselected'
+    },
+    Search_Math(Question_Index){
       this.Question_Check.splice(Question_Index, 1, true)
-      this.highlight(Question_Index)
+      this.Math_Highlight(Question_Index)
       this.$nextTick(()=>{
-        html2canvas(this.$refs['imageDom_'+Question_Index][0]).then(canvas => {
+        html2canvas(this.$refs['MathDom_'+Question_Index][0]).then(canvas => {
           // 转成图片，生成图片地址
           let subject = this.Subject_List.filter((item)=>item.val==this.paper_type)
           this.$refs.searchRes.search(canvas.toDataURL("image/png"),this.database_list,subject[0].list,[this.PeriodType])
         });
       })
+    },
+    Search_English(idx){
+      this.English_Highlight(idx);
+      if (!this.Hand_Cut_Mode) {
+        this.$nextTick(()=>{
+          html2canvas(this.$refs['EnglishDom_'+idx][0]).then(canvas => {
+            // 转成图片，生成图片地址
+            let subject = this.Subject_List.filter((item)=>item.val==this.paper_type)
+            this.$refs.searchRes.search(canvas.toDataURL("image/png"),this.database_list,subject[0].list,[this.PeriodType])
+          });
+        })
+      }else {
+        this.Hand_Cut_Mode=false
+        this.$nextTick(()=>{
+          html2canvas(this.$refs['EnglishDom_'+idx][0]).then(canvas => {
+            // 转成图片，生成图片地址
+            let subject = this.Subject_List.filter((item)=>item.val==this.paper_type)
+            this.$refs.searchRes.search(canvas.toDataURL("image/png"),this.database_list,subject[0].list,[this.PeriodType])
+            this.Hand_Cut_Mode=true
+          });
+        })
+
+      }
+    },
+    Search_ChineseMix(Para_Index){
+      this.ChineseMix_Highlight(Para_Index)
+      if (!this.Hand_Cut_Mode) {
+        this.$nextTick(()=>{
+          html2canvas(this.$refs['ChineseMixDom_'+Para_Index][0]).then(canvas => {
+            // 转成图片，生成图片地址
+            let subject = this.Subject_List.filter((item)=>item.val==this.paper_type)
+            this.$refs.searchRes.search(canvas.toDataURL("image/png"),this.database_list,subject[0].list,[this.PeriodType])
+          });
+        })
+      }else {
+        this.Hand_Cut_Mode=false;
+        this.$nextTick(()=>{
+          html2canvas(this.$refs['ChineseMixDom_'+Para_Index][0]).then(canvas => {
+            // 转成图片，生成图片地址
+            let subject = this.Subject_List.filter((item)=>item.val==this.paper_type)
+            this.$refs.searchRes.search(canvas.toDataURL("image/png"),this.database_list,subject[0].list,[this.PeriodType])
+          });
+          this.Hand_Cut_Mode=true;
+        })
+      }
     },
     Add_To_Import_User_Trach(Sym){
       this.Import_User_Trace += Sym;
@@ -1126,19 +1099,6 @@ export default {
       this.json_content[Para_Index].sub_para[0].splice(0, Item_Index + 1);
       this.json_content.splice(Para_Index, 0, Temp_Item);
     },
-    // // 文综，理综，前切后切
-    // LS_Cut_Front(Para_Index, Item_Index){
-    //   var Temp_Item = JSON.parse(JSON.stringify(this.json_content[Para_Index]));
-    //   Temp_Item.sub_para[0].splice(Item_Index, Temp_Item.sub_para[0].length);
-    //   this.json_content[Para_Index].sub_para[0].splice(0, Item_Index);
-    //   this.json_content.splice(Para_Index, 0, Temp_Item);
-    // },
-    // LS_Cut_Back(Para_Index, Item_Index){
-    //   var Temp_Item = JSON.parse(JSON.stringify(this.json_content[Para_Index]));
-    //   Temp_Item.sub_para[0].splice(Item_Index + 1, Temp_Item.sub_para[0].length);
-    //   this.json_content[Para_Index].sub_para[0].splice(0, Item_Index + 1);
-    //   this.json_content.splice(Para_Index, 0, Temp_Item);
-    // },
     // 修改文综，理综的段落类型
     LS_Para_Type_Change(Para_Index){
       if(this.json_content[Para_Index].is_question == 0){
@@ -1161,28 +1121,9 @@ export default {
     },
     // 向前合并文理综试题
     Merge_LS_To_Front(Para_Index){
-
-      if(this.json_content[Para_Index].is_question != this.json_content[Para_Index - 1].is_question){
-        this.$confirm("你想合并的两部分类型不一致，请选择合并后的类型", "提示", {
-          distinguishCancelAndClose: true,
-          confirmButtonText: '题干',
-          cancelButtonText: '题目',
-          type: "info",
-          confirmButtonClass: "confirmButton",
-          cancelButtonClass: "confirmButton"
-        }).then(() => {
-          this.json_content[Para_Index].is_question = 0
-          this.json_content[Para_Index - 1].is_question = 0
-        })
-        .catch((action) => {
-          if(action == "cancel"){
-            this.json_content[Para_Index].is_question = 1
-            this.json_content[Para_Index - 1].is_question = 1
-          }else{
-            return
-          }
-        })
-      }
+      // 总是合并为题目
+      this.json_content[Para_Index].is_question = 1
+      this.json_content[Para_Index - 1].is_question = 1
 
       for(let i = 0; i < this.json_content[Para_Index].sub_para[0].length; i++){
         this.json_content[Para_Index - 1].sub_para[0].push(this.json_content[Para_Index].sub_para[0][i])
@@ -1190,29 +1131,8 @@ export default {
       this.json_content.splice(Para_Index, 1)
     },
     Merge_LS_To_Back(Para_Index){
-
-      if(this.json_content[Para_Index].is_question != this.json_content[Para_Index + 1].is_question){
-        this.$confirm("你想合并的两部分类型不一致，请选择合并后的类型", "提示", {
-          distinguishCancelAndClose: true,
-          confirmButtonText: '题干',
-          cancelButtonText: '题目',
-          type: "info",
-          confirmButtonClass: "confirmButton",
-          cancelButtonClass: "confirmButton"
-        }).then(() => {
-          this.json_content[Para_Index].is_question = 0
-          this.json_content[Para_Index + 1].is_question = 0
-        })
-        .catch((action) => {
-          if(action == "cancel"){
-            this.json_content[Para_Index].is_question = 1
-            this.json_content[Para_Index + 1].is_question = 1
-          }else{
-            return
-          }
-        })
-      }
-
+      this.json_content[Para_Index].is_question = 1
+      this.json_content[Para_Index + 1].is_question = 1
       for(let i = 0; i < this.json_content[Para_Index + 1].sub_para[0].length; i++){
         this.json_content[Para_Index].sub_para[0].push(this.json_content[Para_Index + 1].sub_para[0][i])
       }
@@ -1498,7 +1418,7 @@ export default {
             this.downloadPaper = data.body.Download_Paper;
             this.TestData = data.body.TestData;
             this.Init_Question_Check();
-            this.Init_Question_Highlight();
+            // this.Init_Question_Highlight();
             this.loading = false;
 
             if(this.math_input == 'combine'){
@@ -1528,13 +1448,25 @@ export default {
           this.$alert("切分过程出现错误，这可能是由于您拖拽的文件格式不正确，或服务器超载导致目前暂时无法提供服务，请重新提交文件或稍后再试。", "提示")
         });
     },
+    showPdf(file){
+      if (file.type=='application/pdf') {
+        var reader = new FileReader();//文件读取器
+        reader.readAsDataURL(file);//获取文件URL,结果存至reader.result
+        reader.onload=()=>{
+          this.pdfURL=reader.result
+        }
+        return true;
+      }
+      this.pdfURL=""
+      return false;
+    },
     // 导入大多数试卷时的方法
     selectFile(e){
-
       if(e.target.files.length > 0){
-
         this.fileName = e.target.files[0].name;
-
+        if (this.showPdf(e.target.files[0]) ) {
+          return;
+        }
         let formData = new FormData();
 
         formData.append("files", e.target.files[0]);
@@ -1574,7 +1506,9 @@ export default {
         this.mathPaperName = e.target.files[0].name;
         this.downloadPaperName = e.target.files[0].name.split(".")[0];
         this.downloadAnswerName = e.target.files[0].name.split(".")[0];
-
+        if (this.showPdf(e.target.files[0]) ) {
+          return;
+        }
         if(this.math_input != 'combine'){
 
           formData.append("paper", e.target.files[0])
@@ -1648,7 +1582,9 @@ export default {
         let formData = new FormData();
 
         this.mathAnswerName = e.target.files[0].name;
-
+        if (this.showPdf(e.target.files[0]) ) {
+          return;
+        }
         if(this.math_standby == "0"){
 
           formData.append("answer", e.target.files[0]);
@@ -2713,13 +2649,19 @@ export default {
         return
       })
     },
-    Init_Question_Highlight(){
-      this.Question_Check = [];
-      for(var i = 0; i < this.TestData.doc.length; i++){
-        this.Question_Check.push(true);
+    English_Highlight(idx){
+      for (var i = 0; i < this.English_Para_Highlight.length; i++) {
+        this.English_Para_Highlight[i]=false
       }
+      this.English_Para_Highlight[idx]=true
     },
-    highlight(Question_Index){
+    ChineseMix_Highlight(Para_Index){
+      for (var i = 0; i < this.Para_Highlight.length; i++) {
+        this.Para_Highlight[i]=false
+      }
+      this.Para_Highlight[Para_Index]=true
+    },
+    Math_Highlight(Question_Index){
       for (var i = 0; i < this.Question_Highlight.length; i++) {
         this.Question_Highlight[i]=false
       }
@@ -3309,6 +3251,23 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+
+.dashed {
+  width: 100%;
+  border-bottom: 1px dashed #b2bbbe;
+  text-align: center;
+  height: 10px;
+  margin-bottom: 10px;
+}
+
+.dashed span {
+    padding: 0 5px;
+}
+.el-icon-scissors{
+  font-size: 20px;
+  // background-color: #F8FBFF;
+  color:#b2bbbe;
+}
 .separate-part{
   margin-top:20px;
   height: 100vh;
@@ -3379,12 +3338,6 @@ input {
   overflow: hidden;
   cursor: pointer;
   opacity: 0;
-}
-.area_border{
-  background-color: rgba(0,255,255,0.04);
-  border: 2px dashed black;
-  padding: 20px;
-  margin: 18px 0px 18px 0px;
 }
 .btn_merge{
   margin-left: 30px;
