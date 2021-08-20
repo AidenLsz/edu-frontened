@@ -718,9 +718,9 @@ export default {
       // 待选科目
       Subject_List: [
         {
-          val:0,
-          label:'英语',
-          list:['英语']
+          val:4,
+          label:'语文',
+          list:['语文']
         },
         {
           val:1,
@@ -728,9 +728,9 @@ export default {
           list:['数学']
         },
         {
-          val:4,
-          label:'语文',
-          list:['语文']
+          val:0,
+          label:'英语',
+          list:['英语']
         },
         {
           val:2,
@@ -741,6 +741,36 @@ export default {
           val:3,
           label:'理综',
           list:['物理','化学','生物']
+        },
+        {
+          val:2,
+          label:'政治',
+          list:['政治'],
+        },
+        {
+          val:2,
+          label:'历史',
+          list:['历史'],
+        },
+        {
+          val:2,
+          label:'地理',
+          list:['地理'],
+        },
+        {
+          val:3,
+          label:'物理',
+          list:['物理'],
+        },
+        {
+          val:3,
+          label:'化学',
+          list:['化学'],
+        },
+        {
+          val:3,
+          label:'生物',
+          list:['生物'],
         },
       ],
       // 待选学段
