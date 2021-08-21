@@ -274,6 +274,22 @@ export default {
            else if(this.Count_Type == 'KU')              option.series[ind].data = this.KU_Data_Per[ind];
          }
          option.legend.data = storeName;
+         option.series[ind] = {
+                type:'bar',
+                name:'总量',
+                barWidth: '30%',
+                stack:'total',
+                barGap: '-100%', 
+                itemStyle: {         
+                  color: 'rgba(128, 128, 128, 0)'  // 设置背景颜色为透明            
+                }      //此块目的为在堆叠柱形图中显示总量，采用的方法为新加一个总量的bar，与现有的堆叠柱重叠摆放并调整其颜色为透明
+         }
+        if(this.Count_Type == 'Question' )
+          option.series[ind].data = this.Question_Data_Sub
+        else if(this.Count_Type == 'Paper')
+          option.series[ind].data = this.Paper_Data_Sub
+        else if(this.Count_Type == 'KU')
+          option.series[ind].data = this.KU_Data_Sub         
       }
       // console.log(option.series)
       BarChart.setOption(option);
