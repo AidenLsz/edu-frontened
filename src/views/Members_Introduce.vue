@@ -595,11 +595,6 @@
 							"intro": "干啥啥不行，吃啥啥不剩，\n学啥啥不会，写啥啥bug。"
 						},
 						{
-							"name": "马爽",
-							"mail": "mashuang2@mail.ustc.edu.cn",
-							"intro": "脊索动物门、哺乳纲、灵长目、类人猿超科、人属、人种的一个个体。"
-						},
-						{
 							"name": "高海涵",
 							"mail": "kd193104@mail.ustc.edu.cn",
 							"intro": "中科大18级本科，现从事数据挖掘、机器学习和NLP方面的科研"
@@ -684,7 +679,6 @@
 						// 实习生
 						"邬靖宇": "/members/邬靖宇.jpg",
 						"赵辰阳": "/members/赵辰阳.jpeg",
-						"马爽": "/members/马爽.jpeg",
 						"高海涵": "/members/高海涵.jpeg",
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
