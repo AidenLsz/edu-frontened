@@ -577,6 +577,11 @@
 							"name": "肖桐",
 							"mail": "xt20020109@mail.ustc.edu.cn",
 							"intro": "遇到困难睡大觉"
+						},
+						{
+							"name": "杨星月",
+							"mail": "xyyang_selene@mail.ustc.edu. cn",
+							"intro": "生命在于新建文件夹"
 						}
 					],
 					// 特邀工程师
@@ -674,6 +679,7 @@
 						"申一凯": "/members/申一凯.jpg",
 						"黄炜喆": "/members/黄炜喆.png",
 						"肖桐": "/members/肖桐.png",
+						"杨星月": "/members/杨星月.jpg",
 						// 特邀工程师
 
 						// 实习生
