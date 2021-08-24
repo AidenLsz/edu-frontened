@@ -15,7 +15,7 @@
           <el-row
             v-if="Paper_Content.length!=0"
             style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer;position:relative">
-              <div style="position:absolute;top:25px;right:-5px;z-index:2003">
+              <div style="position:absolute;top:25px;right:5px;z-index:2003">
                 <i class="el-icon-search"
                   @click="search(-1)"
                   style="color:#5e616d;font-size:22px;font-weight:700"></i>
@@ -24,11 +24,11 @@
           <el-row
             v-for="(Item, Item_Index) in Paper_Content"
             :key="'Line_' + Item_Index">
-              <el-col>
+              <el-col style="padding-right:30px;">
                 <el-row
                   v-if="Item == 'DIVIDER_LINES'"
                   style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer;position:relative">
-                  <div style="position:absolute;top:35px;right:-5px;z-index:2003">
+                  <div style="position:absolute;top:25px;right:-25px;z-index:2003">
                     <i class="el-icon-search"
                       @click="search(Item_Index)"
                       style="color:#5e616d;font-size:22px;font-weight:700"></i>
@@ -87,21 +87,8 @@
 
 <script>
 import $ from 'jquery'
-// import FileSaver from "file-saver";
 import html2canvas from "html2canvas"
 
-// import OptionQuestions from '../../resourceInput/components/OptionQuestions.vue'
-// import FillQuestions from "../../resourceInput/components/FillQuestions.vue"
-// import AnswerQuestions from "../../resourceInput/components/AnswerQuestions.vue";
-// import Instruction from '../../resourceInput/components/InstructionPaper.vue'
-// import SearchResult from "./components/SearchResult.vue";
-// import DatabaseList from "./components/DatabaseList.vue";
-
-// import Mathdown from "@/common/components/Mathdown.vue";
-// import ComplexInput from '@/common/components/ComplexInput.vue'
-// import pdf from './components/pdf';
-
-// import {commonAjax} from '@/common/utils/ajax'
 export default {
   data() {
     return {
@@ -183,50 +170,8 @@ export default {
     };
   },
   components:{
-    // ComplexInput,
-                // OptionQuestions,
-                // FillQuestions,
-                // AnswerQuestions,
-                // SearchResult,
-                // Mathdown,
-                // Instruction,
-                // DatabaseList,
-                // pdf
   },
-  watch: {
-    default_subject: function() {
-      this.deleteAllCard();
-    },
-    paper_type(newVal, oldVal){
-      if(newVal != oldVal){
-        this.Clear();
-        this.fileName = "";
-        this.mathPaperName = "";
-        this.mathAnswerName = "";
-        this.paper_type = newVal;
-        this.downloadPaperName = "",
-        this.downloadAnswerName = ""
-        this.pdfURL=""
-        if (this.$refs.searchRes) {
-          this.$refs.searchRes.handleResData({results:[]});
-        }
-      }
-    },
-    math_input(newVal, oldVal){
-      if(newVal != oldVal){
-        this.Clear();
-        this.fileName = "";
-        this.mathPaperName = "";
-        this.mathAnswerName = "";
-        this.math_input = newVal;
-        this.downloadPaperName = "",
-        this.downloadAnswerName = ""
-      }
-    },
-  },
-  mounted(){
-    // this.ToTop();
-  },
+
   methods:{
     // 外面点一下重置题目聚焦
     openPanel() {
