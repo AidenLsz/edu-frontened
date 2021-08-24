@@ -614,6 +614,8 @@ export default {
         this.Subject_Type=[]
         this.Cache_Pic[0]=''
         this.question_list=[]
+        this.formData="";
+        this.config=""
       }
     }
   },

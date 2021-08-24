@@ -192,65 +192,6 @@ export default {
                 // Instruction,
                 // DatabaseList,
                 // pdf
-              },
-  computed: {
-    total_score: {
-      get: function() {
-        let totalScore = 0;
-        const reg = /[\d|.]+/g;
-        for (const option of this.option_content) {
-          const regResult = option.optionQuestion.score.match(reg);
-          if (regResult != null) {
-            totalScore += parseInt(regResult[0]);
-          }
-        }
-        for (const fill of this.fill_content) {
-          const regResult = fill.fillQuestion.score.match(reg);
-          if (regResult != null) {
-            totalScore += parseInt(regResult[0]);
-          }
-        }
-        for (const answer of this.answer_content) {
-          const regResult = answer.answerQuestion.score.match(reg);
-          if (regResult != null) {
-            totalScore += parseInt(regResult[0]);
-          } else if (answer.answerQuestion.sub_score.length > 0) {
-            for (const score of answer.answerQuestion.sub_score) {
-              const regSubResult = score.match(reg);
-              if (regSubResult != null) {
-                totalScore += parseInt(regSubResult[0]);
-              }
-            }
-          }
-        }
-        for (const mix of this.mix_content) {
-          const regResult = mix.mixQuestion.score.match(reg);
-          if (regResult != null) {
-            totalScore += parseInt(regResult[0]);
-          } else if (mix.mixQuestion.sub_score.length > 0) {
-            for (const score of mix.mixQuestion.sub_score) {
-              const regSubResult = score.match(reg);
-              if (regSubResult != null) {
-                totalScore += parseInt(regSubResult[0]);
-              }
-            }
-          }
-        }
-        return totalScore;
-      },
-      set: function(value) {
-        this.total_score = value;
-      }
-    },
-    total_question: function() {
-      let total = 0;
-      total +=
-        this.option_content.length +
-        this.fill_content.length +
-        this.answer_content.length +
-        this.mix_content.length;
-      return total;
-    }
   },
   watch: {
     default_subject: function() {
@@ -306,6 +247,7 @@ export default {
     },
     uploadAndCut(formData, config) {
       this.openPanel()
+      this.Paper_Content=[]
       this.File_Uploading=true;
       this.$http
         .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
