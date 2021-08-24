@@ -12,6 +12,8 @@
       />
     </div>
     <p class="file-name">名称：{{fileName}}</p>
+
+    <el-button type="text" v-if="fileName" @click="clearFile" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
   </el-row>
 </template>
 
@@ -45,6 +47,10 @@ export default {
       this.$emit('upload',formData, config, e)
       // this.uploadFile();
     },
+    clearFile(){
+      this.fileName=""
+      this.$emit('clearFile')
+    }
   }
 }
 </script>
