@@ -261,7 +261,7 @@ export default {
         param=this.lastParam
         let data=JSON.parse(param.data)
         Pic=param.pic
-        console.log('Pic',this.pic);
+        // console.log('Pic',this.pic);
         data.page_count=this.Page_Index;
         param.data=JSON.stringify(data)
       }else{

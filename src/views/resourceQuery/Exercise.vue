@@ -1,7 +1,7 @@
 <template>
   <div
     class="exercise"
-    style="margin-bottom: 40px; margin-top: 5vh"
+    style="margin-bottom: 40px; margin-top: 5vh;margin-left:5vw"
     v-loading="Question_Analysing"
     element-loading-text="正在加载分析报告..."
     element-loading-spinner="el-icon-loading"
@@ -133,7 +133,7 @@
     </el-dialog>
     <!-- 地址框 -->
     <el-row justify="start" type="flex">
-      <el-col :span="7" style="margin-left: 5vw;">
+      <el-col :span="7">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>
@@ -149,17 +149,17 @@
       ref="instruction"
     />
     <!-- 题库选择 -->
-    <el-row style="padding-top: 8px; height: 40px;">
-      <el-col :span="4" style="text-align: left; line-height: 30px; margin-left: 5vw;">
+    <el-row type="flex" justify="start" style="padding-top: 8px; height: 40px;">
+      <el-col :span="4" style="text-align: left; line-height: 30px;">
         请选择要查询的数据库：
       </el-col>
       <!-- 0 - public, 1 - neea, 2 - iflytek -->
       <template v-for="(item,i) in database_list">
-        <el-col :key="i" :span="2">
+        <div :key="i" style="margin-right:10px;">
           <div :class="Check_Focus_Database(i)" @click="Database_Aim(i)">
             {{item.nick || item.name}}
           </div>
-        </el-col>
+        </div>
       </template>
       <!-- <el-col :span="2">
         <div :class="Check_Focus_Database(0)" @click="Database_Aim(0)">
@@ -178,57 +178,77 @@
       </el-col>-->
     </el-row>
     <!-- 搜索框行 -->
-    <el-row type="flex" justify="start" class="SearchArea">
-      <!-- enter.native才能监听到组件化的事件，要注意一下 -->
-        <el-col :span="19" v-if="Cache_Pic[0] == ''">
-          <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit(0, '')">
+    <el-row type="flex" justify="start" >
+      <div v-if="!$store.getters.isLuna" class="select-multi">
+        <el-select v-model="isMulti" placeholder="请选择">
+          <el-option label="单题" :value="false">
+          </el-option>
+          <el-option label="多题" :value="true">
+          </el-option>
+        </el-select>
+      </div>
+      <!-- 单题查询 -->
+      <el-col v-if="$store.getters.isLuna||!isMulti" :span="22">
+        <el-row type="flex" justify="start" class="SearchArea">
+          <!-- enter.native才能监听到组件化的事件，要注意一下 -->
+            <el-col :span="19" v-if="Cache_Pic[0] == ''">
+              <el-input class="SearchInput" v-model="content" type="text" @keyup.enter.native="submit(0, '')">
 
-          </el-input>
-        </el-col>
-        <el-col :span="1" v-if="Cache_Pic[0] == ''">
-          <el-button type="text" style="font-size: 20px; color: black;" size="small" v-if="content != ''" @click="content = ''">
-            <i class="el-icon-close"></i>
-          </el-button>
-        </el-col>
-        <el-col :span="4" v-if="Cache_Pic[0] != ''">
-          <el-row type="flex" justify="start" style="border: 1px solid red; border-radius: 15px; height: 36px; margin: 3px">
-            <el-image :src="Cache_Pic[0]" style="height: 30px; width: 60px; margin-top: 3px; margin-left: 30px;" :preview-src-list="Cache_Pic"></el-image>
-            <el-button type="text"
-              style="font-size: 20px; color: rgba( 0, 0, 0, 0.4); margin-left: 10px; width: 40px; display: block"
-              size="small"
-              @click="Clear_Pic">
-              <i class="el-icon-close"></i>
-            </el-button>
-          </el-row>
-        </el-col>
-        <el-col :span="1" v-if="Cache_Pic[0] == ''">
-          <el-divider direction="vertical"></el-divider>
-        </el-col>
-        <el-col :span="1" :offset="16" v-if="Cache_Pic[0] != ''">
-          <el-divider direction="vertical"></el-divider>
-        </el-col>
-        <el-col :span="1">
-          <el-button type="text" style="font-size: 22px; color: #409EFF; display: block; margin-left: -6px;"  size="small" @click="simpleInput = true">
-            &Sigma;
-          </el-button>
-        </el-col>
-        <el-col :span="1">
-          <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="Open_Pic_Search()">
-            <i class="el-icon-camera-solid"></i>
-          </el-button>
-        </el-col>
-        <el-col :span="1">
-          <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit(0, '')">
-            <i class="el-icon-search"></i>
-          </el-button>
-        </el-col>
+              </el-input>
+            </el-col>
+            <el-col :span="1" v-if="Cache_Pic[0] == ''">
+              <el-button type="text" style="font-size: 20px; color: black;" size="small" v-if="content != ''" @click="content = ''">
+                <i class="el-icon-close"></i>
+              </el-button>
+            </el-col>
+            <el-col :span="4" v-if="Cache_Pic[0] != ''">
+              <el-row type="flex" justify="start" style="border: 1px solid red; border-radius: 15px; height: 36px; margin: 3px">
+                <el-image :src="Cache_Pic[0]" style="height: 30px; width: 60px; margin-top: 3px; margin-left: 30px;" :preview-src-list="Cache_Pic"></el-image>
+                <el-button type="text"
+                  style="font-size: 20px; color: rgba( 0, 0, 0, 0.4); margin-left: 10px; width: 40px; display: block"
+                  size="small"
+                  @click="Clear_Pic">
+                  <i class="el-icon-close"></i>
+                </el-button>
+              </el-row>
+            </el-col>
+            <el-col :span="1" v-if="Cache_Pic[0] == ''">
+              <el-divider direction="vertical"></el-divider>
+            </el-col>
+            <el-col :span="1" :offset="16" v-if="Cache_Pic[0] != ''">
+              <el-divider direction="vertical"></el-divider>
+            </el-col>
+            <el-col :span="1">
+              <el-button type="text" style="font-size: 22px; color: #409EFF; display: block; margin-left: -6px;"  size="small" @click="simpleInput = true">
+                &Sigma;
+              </el-button>
+            </el-col>
+            <el-col :span="1">
+              <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="Open_Pic_Search()">
+                <i class="el-icon-camera-solid"></i>
+              </el-button>
+            </el-col>
+            <el-col :span="1">
+              <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit(0, '')">
+                <i class="el-icon-search"></i>
+              </el-button>
+            </el-col>
+        </el-row>
+      </el-col>
+      <!-- 上传文件查询 -->
+      <el-col v-else>
+        <select-file @upload="uploadFile"/>
+        <cut-file ref='cutFile' @search="handleSearch"/>
+      </el-col>
     </el-row>
+
+
     <!-- 筛选条件行 -->
-    <el-row type="flex" justify="start" style="margin-left: 5vw; margin-right: 5vw; border-top: 1px solid Silver; border-bottom: 1px solid Silver;">
+    <el-row type="flex" justify="start" style="margin-right: 5vw; border-top: 1px solid Silver; border-bottom: 1px solid Silver;">
       <el-col :span="2">
         <span style="line-height: 40px; font-weight: bold">筛选条件：</span>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="3" v-if="!isMulti">
         <el-popover
           placement="bottom-start"
           width="850"
@@ -247,6 +267,28 @@
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Subject()}}</el-button>
           <el-button slot="reference" type="text" v-if="Subject_Type.length > 0" @click="Subject_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+        </el-popover>
+      </el-col>
+      <el-col :span="3" v-else>
+        <!-- 多题查重 -->
+        <el-popover
+          placement="bottom-start"
+          width="850"
+          trigger="hover">
+          <el-radio-group v-model="paper_type">
+            <el-radio label="语文">语文</el-radio>
+            <el-radio label="数学" disabled>数学</el-radio>
+            <el-radio label="英语" disabled>英语</el-radio>
+            <el-radio label="文综">文综</el-radio>
+            <el-radio label="理综" disabled>理综</el-radio>
+            <el-radio label="政治">政治</el-radio>
+            <el-radio label="历史">历史</el-radio>
+            <el-radio label="地理">地理</el-radio>
+            <el-radio label="物理" disabled>物理</el-radio>
+            <el-radio label="化学" disabled>化学</el-radio>
+            <el-radio label="生物" disabled>生物</el-radio>
+          </el-radio-group>
+          <el-button slot="reference" class="FilterButton" type="text">{{Get_Subject()}}</el-button>
         </el-popover>
       </el-col>
       <el-col :span="3">
@@ -358,14 +400,18 @@ import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
 import Instruction from './components/InstructionExercise.vue'
-
+import SelectFile from './components/SelectFile.vue'
+import CutFile from './components/CutFile.vue'
 import {commonAjax} from '@/common/utils/ajax'
 
 export default {
-  components: { Mathdown, ComplexInput, QuestionAnalyse ,Instruction},
+  components: { Mathdown, ComplexInput, QuestionAnalyse ,Instruction,SelectFile,CutFile},
   name: "exercise",
   data() {
     return {
+      // 查重：是否为单题查重
+      isMulti:false,
+      paper_type:'',
       // 用于之后进行图片搜索类型筛选的变量
       Img_Search_Type: 1,
       Refresh: false,
@@ -491,13 +537,88 @@ export default {
                             "\u4e8c\u5143\u4e00\u6b21\u4e0d\u7b49\u5f0f\uff08\u7ec4\uff09\u8868\u793a\u7684\u5e73\u9762\u533a\u57df"
                     ]
                     },
-                }
+                },
+      multiExerciseMap:[
+        {
+          val:4,
+          label:'语文',
+          list:['语文']
+        },
+        {
+          val:1,
+          label:'数学',
+          list:['数学']
+        },
+        {
+          val:0,
+          label:'英语',
+          list:['英语']
+        },
+        {
+          val:2,
+          label:'文综',
+          list:['政治','历史','地理'],
+        },
+        {
+          val:3,
+          label:'理综',
+          list:['物理','化学','生物']
+        },
+        {
+          val:2,
+          label:'政治',
+          list:['政治'],
+        },
+        {
+          val:2,
+          label:'历史',
+          list:['历史'],
+        },
+        {
+          val:2,
+          label:'地理',
+          list:['地理'],
+        },
+        {
+          val:3,
+          label:'物理',
+          list:['物理'],
+        },
+        {
+          val:3,
+          label:'化学',
+          list:['化学'],
+        },
+        {
+          val:3,
+          label:'生物',
+          list:['生物'],
+        },
+      ],
+      formData:'',
+      config:''
     };
   },
   watch:{
     sour(val) {
       this.submit();
     },
+    paper_type(val){
+      let res = this.multiExerciseMap.filter((item)=>item.label==this.paper_type)
+      this.Subject_Type=res[0].list
+      if(this.formData&&this.config)
+        this.uploadFile(this.formData,this.config)
+    },
+    isMulti(val){
+      if (!val) {
+        this.Subject_Type=[]
+        this.Cache_Pic[0]=''
+        this.question_list=[]
+        this.Period_Type=[]
+        this.formData="";
+        this.config=""
+      }
+    }
   },
   destroyed(){
     sessionStorage.removeItem("PicPaste");
@@ -513,6 +634,20 @@ export default {
     upload.addEventListener('drop', this.onDrop, false);
   },
   methods: {
+    uploadFile(formData, config){
+      this.formData=formData;
+      this.config=config
+      if (!this.paper_type) {
+        alert("请选择上传文件对应的学科。")
+        return;
+      }
+      let res = this.multiExerciseMap.filter((item)=>item.label==this.paper_type)
+      formData.append("paper_type", res[0].val);
+      this.$refs.cutFile.uploadAndCut(formData, config)
+    },
+    handleSearch(pic){
+      this.submit(1, pic)
+    },
     // 给筛选器的提交做个检测
     submit_prepare(){
       if(this.Cache_Pic[0] != ""){
@@ -908,6 +1043,9 @@ export default {
     },
     // 修改学科，学段时的配套显示
     Get_Subject(){
+      if (this.isMulti) {
+        return this.paper_type||"选择学科"
+      }
       if(this.Subject_Type.length == 0){
         return "选择学科"
       }else if(this.Subject_Type.length == 1){
@@ -939,6 +1077,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.select-multi{
+    width: 120px;
+    margin-top:3px;
+    margin-right: 20px;
+    /deep/ .el-select{
+      border-radius: 18px;
+    }
+}
 .exercise {
   // background: url("../assets/sub_bg.png") repeat;
   background-size: 100%;
@@ -961,7 +1107,7 @@ export default {
   // border: 3px dashed black;
   background: #F8FBFF;
   border: 1px dashed black;
-  margin-left: 5vw;
+  // margin-left: 5vw;
 }
 /deep/.dev-md-content{
   img{
@@ -1121,7 +1267,7 @@ export default {
   padding-top: 12px;
 }
 .SearchArea{
-  margin-left: 5vw;
+  // margin-left: 5vw;
   border: 1px solid Silver;
   width: 60%;
   border-radius: 18px;
