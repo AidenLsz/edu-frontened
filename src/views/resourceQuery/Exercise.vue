@@ -333,7 +333,7 @@
       :key="Question_Index"
       style="margin-bottom: 50px"
       >
-      <el-col :span="17" class="quesCard">
+      <el-col :span="$store.getters.isLuna||!isMulti?17:14" class="quesCard">
         <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
           <el-col style="padding-bottom: 15px" >
             <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
