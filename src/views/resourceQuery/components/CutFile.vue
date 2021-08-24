@@ -15,7 +15,7 @@
           <el-row
             v-if="Paper_Content.length!=0"
             style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer;position:relative">
-              <div style="position:absolute;top:25px;right:0px;z-index:2003">
+              <div style="position:absolute;top:25px;right:-5px;z-index:2003">
                 <i class="el-icon-search"
                   @click="search(-1)"
                   style="color:#5e616d;font-size:22px;font-weight:700"></i>
@@ -28,7 +28,7 @@
                 <el-row
                   v-if="Item == 'DIVIDER_LINES'"
                   style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer;position:relative">
-                  <div style="position:absolute;top:35px;right:0px;z-index:2003">
+                  <div style="position:absolute;top:35px;right:-5px;z-index:2003">
                     <i class="el-icon-search"
                       @click="search(Item_Index)"
                       style="color:#5e616d;font-size:22px;font-weight:700"></i>
@@ -303,19 +303,12 @@ export default {
       }
 
       html+="</div>"
-      // console.log('html',html);
       $('#searchQues').html(html)
-      // this.Question_Check.splice(Question_Index, 1, true)
-      // this.Math_Highlight(Question_Index)
       this.$nextTick(()=>{
-        // console.log('searchQues',this.$refs.searchQues);
         html2canvas(this.$refs.searchQues).then(canvas => {
           // 转成图片，生成图片地址
-          // console.log(canvas.toDataURL("image/png"));
           $('#searchQues').html("")
           this.$emit('search',canvas.toDataURL("image/png"))
-          // let subject = this.Subject_List.filter((item)=>item.val==this.paper_type)
-          // this.$refs.searchRes.search(canvas.toDataURL("image/png"),this.database_list,subject[0].list,[this.PeriodType])
         });
       })
     },
