@@ -237,7 +237,7 @@
       </el-col>
       <!-- 上传文件查询 -->
       <el-col v-else>
-        <select-file @upload="uploadFile"/>
+        <select-file @upload="uploadFile" @clearFile="handleClearFile"/>
         <cut-file ref='cutFile' @search="handleSearch"/>
       </el-col>
     </el-row>
@@ -333,7 +333,7 @@
       :key="Question_Index"
       style="margin-bottom: 50px"
       >
-      <el-col :span="17" class="quesCard">
+      <el-col :span="$store.getters.isLuna||!isMulti?17:14" class="quesCard">
         <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
           <el-col style="padding-bottom: 15px" >
             <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
@@ -396,6 +396,7 @@
 
 <script>
 /* eslint-disable */
+import {Message } from 'element-ui'
 import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
@@ -403,6 +404,7 @@ import Instruction from './components/InstructionExercise.vue'
 import SelectFile from './components/SelectFile.vue'
 import CutFile from './components/CutFile.vue'
 import {commonAjax} from '@/common/utils/ajax'
+import md5 from 'js-md5';
 
 export default {
   components: { Mathdown, ComplexInput, QuestionAnalyse ,Instruction,SelectFile,CutFile},
@@ -412,6 +414,7 @@ export default {
       // 查重：是否为单题查重
       isMulti:false,
       paper_type:'',
+      Cache_Result:{},
       // 用于之后进行图片搜索类型筛选的变量
       Img_Search_Type: 1,
       Refresh: false,
@@ -612,6 +615,7 @@ export default {
     isMulti(val){
       if (!val) {
         this.Subject_Type=[]
+        this.paper_type=""
         this.Cache_Pic[0]=''
         this.question_list=[]
         this.Period_Type=[]
@@ -638,7 +642,11 @@ export default {
       this.formData=formData;
       this.config=config
       if (!this.paper_type) {
-        alert("请选择上传文件对应的学科。")
+        Message({
+          message: '请选择上传文件对应的学科。',
+          type: 'warning',
+          duration: 5 * 1000
+        })
         return;
       }
       let res = this.multiExerciseMap.filter((item)=>item.label==this.paper_type)
@@ -647,6 +655,12 @@ export default {
     },
     handleSearch(pic){
       this.submit(1, pic)
+    },
+    handleClearFile(){
+      this.isMulti=false;
+      this.$nextTick(()=>{
+        this.isMulti=true
+      })
     },
     // 给筛选器的提交做个检测
     submit_prepare(){
@@ -1020,18 +1034,30 @@ export default {
       //   this.Total_Count = data.data.totalLength
       //
       // });
+      let encodedKey=md5(JSON.stringify(param));
+      if(!this.$store.getters.isLuna&&this.isMulti&&this.Cache_Result[encodedKey]){
+        this.handleResData(this.Cache_Result[encodedKey])
+        return;
+      }
       commonAjax(this.backendIP+'/api/search',param)
       .then((data)=>{
-        this.loading = false;
-        this.Expand_List = [];
-        this.question_list = [];
-        var quess = data.results;
-        for(var i = 0; i < quess.length; i++){
-          this.question_list.push(quess[i])
-          this.Expand_List.push(false);
+        if(!this.$store.getters.isLuna&&this.isMulti){
+          this.Cache_Result[encodedKey]=data
         }
-        this.Total_Count = data.totalLength
+        this.handleResData(data)
+
       })
+    },
+    handleResData(data){
+      this.loading = false;
+      this.Expand_List = [];
+      this.question_list = [];
+      var quess = data.results;
+      for(var i = 0; i < quess.length; i++){
+        this.question_list.push(quess[i])
+        this.Expand_List.push(false);
+      }
+      this.Total_Count = data.totalLength
     },
     Check_Focus_Database(Index){
       if(this.database_aim[Index]){
