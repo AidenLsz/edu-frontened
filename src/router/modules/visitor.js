@@ -21,6 +21,7 @@ import InputPaper from "@/views/resourceInput/InputPaper";
 
 // 测试类页面，用于测试新功能的导入
 import TestPage from "@/views/testPage/TestPage";
+import vditorTest from '@/views/testPage/vditorTest'
 import TestPageList from "@/views/testPage/TestPageList";
 import Remaking_Input_Single from '@/views/testPage/Remaking_Input_Component/Remaking_Input_Single'
 import Remaking_Input_Paper from '@/views/testPage/Remaking_Input_Component/Remaking_Input_Paper'
@@ -106,6 +107,11 @@ const visitorRouter=[
     path: "/testPageList",
     name: "TestPageList",
     component: TestPageList
+  },
+  {
+    path: "/vditorTest",
+    name: "vditorTest",
+    component: vditorTest
   },
   {
     path: "/remakeInputSingle",
