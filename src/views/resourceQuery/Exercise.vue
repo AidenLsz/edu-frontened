@@ -229,7 +229,7 @@
               </el-button>
             </el-col>
             <el-col :span="1">
-              <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit(0, '')">
+              <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit_prepare()">
                 <i class="el-icon-search"></i>
               </el-button>
             </el-col>
@@ -266,7 +266,7 @@
             <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Subject()}}</el-button>
-          <el-button slot="reference" type="text" v-if="Subject_Type.length > 0" @click="Subject_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+          <el-button slot="reference" type="text" v-if="Subject_Type.length > 0" @click="Subject_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
       <el-col :span="3" v-else>
@@ -305,7 +305,7 @@
             <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Period()}}</el-button>
-          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
       <el-col :span="3">
@@ -324,7 +324,46 @@
             <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Search_Ques_Type()}}</el-button>
-          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+        </el-popover>
+      </el-col>
+      <el-col :span="3">
+        <el-popover
+          placement="bottom-start"
+          width="900"
+          trigger="hover">
+          <el-row type="flex" justify="start">
+            <el-col>
+              <el-row type="flex" justify="start">
+                <el-radio-group v-model="Difficulty_Filter_Type" style="padding-top: 13px;">
+                  <el-radio label="0">默认</el-radio>
+                  <el-radio label="1">容易</el-radio>
+                  <el-radio label="2">较易</el-radio>
+                  <el-radio label="3">中等</el-radio>
+                  <el-radio label="4">较难</el-radio>
+                  <el-radio label="5">困难</el-radio>
+                  <el-radio label="6">自定义</el-radio>
+                </el-radio-group>
+                <el-button v-show="Difficulty_Filter_Type != '6'" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+              </el-row>
+              <el-row type="flex" justify="start" v-if="Difficulty_Filter_Type == '6'">
+                <label style="padding-top: 13px; margin-right: 10px">最低难度：</label>
+                <el-input-number 
+                  style="margin: 0px"
+                  :precision="1" :step="0.1" :max="Difficulty_Filter_Result.max" :min="0.0"
+                  v-model="Difficulty_Filter_Result.min"
+                  ></el-input-number>  
+                <label style="padding-top: 13px; margin-left: 30px; margin-right: 10px">最高难度：</label>
+                <el-input-number 
+                style="margin: 0px"
+                  :precision="1" :step="0.1" :max="1.0" :min="Difficulty_Filter_Result.min"
+                  v-model="Difficulty_Filter_Result.max"></el-input-number>
+                <el-button plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+              </el-row>
+            </el-col>
+          </el-row>
+          <el-button slot="reference" class="FilterButton" type="text">{{Get_Difficulty_Gap()}}</el-button>
+          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
     </el-row>
@@ -482,6 +521,14 @@ export default {
       analyseReport: false,
       // 是否正在返回分析报告
       Question_Analysing: false,
+      // 判断当前用户筛选的难度以及是否需要自定义
+      // 0 - 6 默认，容易，较易，中等，困难，极难，自定义
+      Difficulty_Filter_Type: "0",
+      Difficulty_Filter_Result: {
+        min: 0.0,
+        max: 1.0
+      },
+      // 存储用户自定义的难度
       // 暂存的图片内容
       Cache_Pic: [""],
       // 用于分析显示的题目数据
@@ -621,6 +668,16 @@ export default {
         this.Period_Type=[]
         this.formData="";
         this.config=""
+      }
+    },
+    Difficulty_Filter_Type(newVal){
+      let Index = parseInt(newVal)
+      if(Index == 0){
+        this.Difficulty_Filter_Result.min = 0.0
+        this.Difficulty_Filter_Result.max = 1.0
+      }else if(Index != 6){
+        this.Difficulty_Filter_Result.min = (Index - 1) * 0.2
+        this.Difficulty_Filter_Result.max = Index * 0.2
       }
     }
   },
@@ -1096,6 +1153,20 @@ export default {
         return this.Search_Ques_Type[0]
       }else{
         return this.Search_Ques_Type[0] + "（等" + this.Search_Ques_Type.length + "项）"
+      }
+    },
+    Get_Difficulty_Gap(){
+
+      let Str = "难度："
+
+      if(this.Difficulty_Filter_Type == "0"){
+        return  Str + "全范围"
+      }else if(this.Difficulty_Filter_Type == "6"){
+        return Str + this.Difficulty_Filter_Result.min + " ~ " + this.Difficulty_Filter_Result.max
+      }
+      else{
+        let Result = ['容易', '较易', '中等', '较难', '困难']
+        return Str + Result[parseInt(this.Difficulty_Filter_Type) - 1]
       }
     }
   }

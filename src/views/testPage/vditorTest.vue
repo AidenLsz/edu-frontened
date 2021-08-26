@@ -19,7 +19,9 @@ export default {
     data(){
         return{
             contentEditor: {},
-            Symbol_Switch: true
+            Symbol_Switch: true,
+            // echarts如何实现插入
+            defaultString: '{"title": {"text": "某站点用户访问来源","subtext": "纯属虚构","left": "center"},"tooltip": {"trigger": "item"}, "series": [{"name": "访问来源","type": "pie", "radius": "50%", "data": [{"value": 1048, "name": "搜索引擎"},{ "value": 2000, "name": "谁知道呢"}]}]}'
         }
     },
     mounted(){
@@ -108,8 +110,12 @@ export default {
               "icon": "<img src='favicon.ico' width='20' height='20'>",
               click(){
                 _this.Symbol_Switch = !_this.Symbol_Switch
+                console.log(_this.contentEditor.getValue())
               }
             }],
+          after(){
+            _this.contentEditor.setValue(_this.defaultString)
+          }
         })
     }  
 }
