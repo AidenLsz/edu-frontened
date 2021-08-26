@@ -263,7 +263,7 @@
             <el-checkbox label="物理">物理</el-checkbox>
             <el-checkbox label="化学">化学</el-checkbox>
             <el-checkbox label="生物">生物</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">检索</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Subject()}}</el-button>
           <el-button slot="reference" type="text" v-if="Subject_Type.length > 0" @click="Subject_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
@@ -302,7 +302,7 @@
             <el-checkbox label="高中">高中</el-checkbox>
             <el-checkbox label="大学">大学</el-checkbox>
             <el-checkbox label="成人">成人</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">检索</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Period()}}</el-button>
           <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
@@ -321,7 +321,7 @@
             <el-checkbox label="简答题">简答题</el-checkbox>
             <el-checkbox label="计算题">计算题</el-checkbox>
             <el-checkbox label="其他">其他</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">检索</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Search_Ques_Type()}}</el-button>
           <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
@@ -330,7 +330,7 @@
       <el-col :span="3">
         <el-popover
           placement="bottom-start"
-          width="900"
+          width="700"
           trigger="hover">
           <el-row type="flex" justify="start">
             <el-col>
@@ -344,21 +344,44 @@
                   <el-radio label="5">困难</el-radio>
                   <el-radio label="6">自定义</el-radio>
                 </el-radio-group>
-                <el-button v-show="Difficulty_Filter_Type != '6'" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
               </el-row>
-              <el-row type="flex" justify="start" v-if="Difficulty_Filter_Type == '6'">
-                <label style="padding-top: 13px; margin-right: 10px">最低难度：</label>
-                <el-input-number 
-                  style="margin: 0px"
-                  :precision="1" :step="0.1" :max="Difficulty_Filter_Result.max" :min="0.0"
-                  v-model="Difficulty_Filter_Result.min"
-                  ></el-input-number>  
-                <label style="padding-top: 13px; margin-left: 30px; margin-right: 10px">最高难度：</label>
-                <el-input-number 
-                style="margin: 0px"
-                  :precision="1" :step="0.1" :max="1.0" :min="Difficulty_Filter_Result.min"
-                  v-model="Difficulty_Filter_Result.max"></el-input-number>
-                <el-button plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+              <el-row type="flex" justify="start">
+                <el-col :span="3">
+                  <el-row type="flex" justify="start">
+                    <label style="padding-top: 10px;">最低难度：</label>
+                  </el-row>
+                </el-col>
+                <el-col :span="Difficulty_Filter_Type != '6' ? 2 : 7">
+                  <el-row type="flex" justify="start">
+                    <el-input-number 
+                      v-show="Difficulty_Filter_Type == '6'"
+                      style="margin: 0px"
+                      :precision="1" :step="0.1" :max="Difficulty_Filter_Result.max" :min="0.0"
+                      v-model="Difficulty_Filter_Result.min"
+                      ></el-input-number> 
+                    <label v-show="Difficulty_Filter_Type != '6'" style="padding-top: 10px;">{{Difficulty_Filter_Result.min}}</label> 
+                  </el-row>
+                </el-col>
+                <el-col :span="3">
+                  <el-row type="flex" justify="start">
+                    <label style="padding-top: 10px;">最高难度：</label>
+                  </el-row>
+                </el-col>
+                <el-col :span="Difficulty_Filter_Type != '6' ? 2 : 7">
+                  <el-row type="flex" justify="start">
+                    <el-input-number 
+                      v-show="Difficulty_Filter_Type == '6'"
+                      style="margin: 0px"
+                      :precision="1" :step="0.1" :max="1.0" :min="Difficulty_Filter_Result.min"
+                      v-model="Difficulty_Filter_Result.max"></el-input-number>
+                    <label v-show="Difficulty_Filter_Type != '6'" style="padding-top: 10px;">{{Difficulty_Filter_Result.max}}</label>
+                  </el-row>
+                </el-col>
+                <el-col :span="3">
+                  <el-row type="flex" justify="end">
+                    <el-button plain type="primary" @click="submit_prepare()" style="font-size: 14px">检索</el-button>
+                  </el-row>
+                </el-col>
               </el-row>
             </el-col>
           </el-row>
