@@ -148,6 +148,9 @@
     <instruction
       ref="instruction"
     />
+    <multi-instruction
+      ref="multiInstruction"
+    />
     <!-- 题库选择 -->
     <el-row type="flex" justify="start" style="padding-top: 8px; height: 40px;">
       <el-col :span="4" style="text-align: left; line-height: 30px;">
@@ -401,13 +404,14 @@ import Mathdown from "../../common/components/Mathdown.vue";
 import ComplexInput from "../../common/components/ComplexInput.vue";
 import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
 import Instruction from './components/InstructionExercise.vue'
+import MultiInstruction from './components/InstructionMultiExercise.vue'
 import SelectFile from './components/SelectFile.vue'
 import CutFile from './components/CutFile.vue'
 import {commonAjax} from '@/common/utils/ajax'
 import md5 from 'js-md5';
 
 export default {
-  components: { Mathdown, ComplexInput, QuestionAnalyse ,Instruction,SelectFile,CutFile},
+  components: { Mathdown, ComplexInput, QuestionAnalyse ,Instruction,SelectFile,CutFile,MultiInstruction},
   name: "exercise",
   data() {
     return {
@@ -714,7 +718,11 @@ export default {
         })
       },
         openInstructionDialog(){
-          this.$refs.instruction.openDialog();
+          if (this.isMulti) {
+            this.$refs.multiInstruction.openDialog();
+          }else{
+            this.$refs.instruction.openDialog();
+          }
         },
         clearData(){
           sessionStorage.setItem("PicPaste", "");
@@ -810,8 +818,9 @@ export default {
         for (var i = 0; i < data.length; i++) {
           this.database_list.push({name:data[i], nick: data[i]})
           this.database_aim.push(false)
+          // break;
         }
-        // this.database_list[1].nick='私有题库'
+        // this.database_list[1].nick='个人题库'
       })
     },
     // 清除图片
