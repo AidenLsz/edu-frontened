@@ -2,11 +2,12 @@
 
 // Views主目录
 import Admin from "@/views/Admin";
-import Estimate from "@/views/Estimate";
+import Estimate from "@/views/publicPlatform/Estimate.vue";
 import Home from "@/views/Home";
 import Members from "@/views/Members_Introduce";
-import Similarity from "@/views/Similarity";
-import ImageTranscription from "@/views/ImageTranscription"
+import Similarity from "@/views/publicPlatform/Similarity.vue";
+import ImageTranscription from "@/views/publicPlatform/ImageTranscription.vue"
+import PublicPlatform from "@/views/PublicPlatform"
 
 // 资源查询类页面
 import KU from "@/views/resourceQuery/KU.vue";
@@ -122,11 +123,16 @@ const visitorRouter=[
     name: "Members",
     component: Members
   },
-	{
-		path: "/ImageTranscription",
-		name: "ImageTranscription",
-		component: ImageTranscription
-	},
+  {
+    path: "/PublicPlatform",
+    name: "PublicPlatform",
+    component: PublicPlatform
+  },
+  {
+    path: "/ImageTranscription",
+    name: "ImageTranscription",
+    component: ImageTranscription
+  },
   {
     path: "/paperAnalyse",
     name: "PaperAnalyse",
