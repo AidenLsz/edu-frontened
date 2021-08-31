@@ -153,11 +153,7 @@
                         ><span style="color: black">资源录入</span></template
                       >
                       <el-menu-item index="1-1"
-<<<<<<< HEAD
                         ><span style="color: Gainsboro">学习资源</span>
-=======
-                        ><span style="color: Gainsboro">教材教辅资源</span>
->>>>>>> 2ac3ac6 (add instruction)
                       </el-menu-item>
                       <router-link
                         to="/inputMarked"
@@ -222,11 +218,7 @@
                         @click.native="ToTop"
                       >
                         <el-menu-item index="2-4">
-<<<<<<< HEAD
                           <span style="color: black">学习资源检索</span>
-=======
-                          <span style="color: black">教材教辅检索</span>
->>>>>>> 2ac3ac6 (add instruction)
                         </el-menu-item>
                       </router-link>
                     </el-submenu>
@@ -235,11 +227,7 @@
                         ><span style="color: black">分析</span></template
                       >
                       <el-menu-item index="3-1"
-<<<<<<< HEAD
                         ><span style="color: Gainsboro">学习资源</span>
-=======
-                        ><span style="color: Gainsboro">教材教辅资源</span>
->>>>>>> 2ac3ac6 (add instruction)
                       </el-menu-item>
                       <el-menu-item
                         index="3-2"
@@ -272,10 +260,6 @@
                         </el-menu-item>
                       </router-link>
                     </el-submenu>
-<<<<<<< HEAD
-=======
-
->>>>>>> 2ac3ac6 (add instruction)
                     <el-menu-item index="5">
                       <router-link
                         to="/paperCombine"
@@ -285,34 +269,16 @@
                         <span style="color: black"> 组卷系统 </span>
                       </router-link>
                     </el-menu-item>
-<<<<<<< HEAD
                     <el-menu-item index="6">
                       <!-- <router-link to="/manage/dashboard" v-if="$store.state.user.name" -->
-=======
-
-                    <el-menu-item index="6">
->>>>>>> 2ac3ac6 (add instruction)
                       <router-link
                         to="/manage/dashboard"
                         :underline="false"
                         @click.native="ToTop"
                       >
-<<<<<<< HEAD
                         <span style="color: black"> 资源管理 </span>
                       </router-link>
                     </el-menu-item>
-=======
-                        <span
-                          v-if="$store.state.user.name"
-                          style="color: #409eff; font-weight: bold"
-                        >
-                          资源管理
-                        </span>
-                        <span v-else style="color: silver"> 资源管理 </span>
-                      </router-link>
-                    </el-menu-item>
-
->>>>>>> 2ac3ac6 (add instruction)
                     <router-link
                       to="/estimate"
                       :underline="false"
@@ -323,10 +289,6 @@
                         <span style="color: black">试题属性预估</span>
                       </el-menu-item>
                     </router-link>
-<<<<<<< HEAD
-=======
-
->>>>>>> 2ac3ac6 (add instruction)
                     <router-link
                       to="/similarity"
                       :underline="false"
@@ -337,10 +299,6 @@
                         <span style="color: black">相似题预估</span>
                       </el-menu-item>
                     </router-link>
-<<<<<<< HEAD
-=======
-
->>>>>>> 2ac3ac6 (add instruction)
                     <router-link
                       to="/admin"
                       v-if="Get_Priority()"
@@ -412,13 +370,9 @@
     </el-header>
     <!-- <basic-header/> -->
     <el-main>
-<<<<<<< HEAD
       <div style="min-height: 100vh">
         <router-view :key="$route.fullPath"></router-view>
       </div>
-=======
-      <router-view :key="$route.fullPath"></router-view>
->>>>>>> 2ac3ac6 (add instruction)
       <basic-footer />
     </el-main>
   </el-container>
@@ -429,12 +383,7 @@
 import BasicFooter from "@/layout/components/footer.vue";
 import login from "@/layout/components/login.vue";
 import register from "@/layout/components/register.vue";
-<<<<<<< HEAD
-import {
-  commonAjax
-} from '@/common/utils/ajax'
-=======
->>>>>>> 2ac3ac6 (add instruction)
+import { commonAjax } from "@/common/utils/ajax";
 // import BasicHeader from '@/layout/header.vue'
 // import vueImgVerify from "@/common/components/vue-img-verify.vue";
 export default {
@@ -457,10 +406,7 @@ export default {
       // 跳转至试卷/试题分析的不同地点用的
       PaperAnalyseSwitchFlag: false,
       QuestionAnalyseSwitchFlag: false,
-<<<<<<< HEAD
-      isGroup: false
-=======
->>>>>>> 2ac3ac6 (add instruction)
+      isGroup: false,
     };
   },
   mounted() {
@@ -484,10 +430,7 @@ export default {
     //     $("#header-sticky").addClass("sticky-menu");
     //   }
     // });
-<<<<<<< HEAD
-    this.getGroups()
-=======
->>>>>>> 2ac3ac6 (add instruction)
+    this.getGroups();
   },
   updated() {
     var user = sessionStorage.getItem("user");
@@ -509,16 +452,13 @@ export default {
         path: "/user/userGroup",
       });
     },
-<<<<<<< HEAD
     getGroups() {
-      commonAjax(this.backendIP + '/api/get_user_groups', {}).then((res) => {
-        if (res.data.length > 0 && res.data.some((data)=>data.is_admin)) {
-          this.isGroup = true
+      commonAjax(this.backendIP + "/api/get_user_groups", {}).then((res) => {
+        if (res.data.length > 0 && res.data.some((data) => data.is_admin)) {
+          this.isGroup = true;
         }
-      })
+      });
     },
-=======
->>>>>>> 2ac3ac6 (add instruction)
     QAS(index) {
       if (index == 0) {
         this.$router.push({
@@ -586,15 +526,12 @@ export default {
       });
       this.ToTop();
     },
-<<<<<<< HEAD
-=======
     PublicPlatform() {
       this.$router.push({
         path: "/PublicPlatform",
       });
       this.ToTop();
     },
->>>>>>> 2ac3ac6 (add instruction)
     goToImageTranscription() {
       this.$router.push({
         path: "/ImageTranscription",
@@ -646,203 +583,6 @@ export default {
     // },
   },
 };
-<<<<<<< HEAD
-	// import $ from "jquery";
-	import BasicFooter from "@/layout/components/footer.vue";
-	import login from "@/layout/components/login.vue";
-	import register from "@/layout/components/register.vue";
-	// import BasicHeader from '@/layout/header.vue'
-	// import vueImgVerify from "@/common/components/vue-img-verify.vue";
-	export default {
-		name: "App",
-		components: {
-			// vueImgVerify,
-			BasicFooter,
-			login,
-			register,
-			// BasicHeader,
-		},
-		data() {
-			return {
-				root: false, // root用户
-				isAdmin: false,
-				isUser: false,
-				username: "",
-				// activeIndex: 下拉菜单用的
-				activeIndex: "",
-				// 跳转至试卷/试题分析的不同地点用的
-				PaperAnalyseSwitchFlag: false,
-				QuestionAnalyseSwitchFlag: false,
-			};
-		},
-		mounted() {
-			// if(this.$route.name=='user'){
-			//     this.isUser=true
-			// }
-			// var user = sessionStorage.getItem("user");
-			// if (user) {
-			//   this.username = user;
-			// }
-			// if (this.username === "advanced" || this.username === "admin") {
-			//   this.isAdmin = true;
-			// }
-			// this.root = this.username === "root";
-			// console.log(this.root);
-			// $(window).on("scroll", function () {
-			//   var scroll = $(window).scrollTop();
-			//   if (scroll < 700) {
-			//     $("#header-sticky").removeClass("sticky-menu");
-			//   } else {
-			//     $("#header-sticky").addClass("sticky-menu");
-			//   }
-			// });
-		},
-		updated() {
-			var user = sessionStorage.getItem("user");
-			if (user) {
-				this.username = user;
-			} else {
-				this.username = "";
-			}
-		},
-		methods: {
-			// 查看用户个人信息及组织架构
-			checkUserInfo() {
-				this.$router.push({
-					path: "/user/userInfo",
-				});
-			},
-			checkUserGroup() {
-				this.$router.push({
-					path: "/user/userGroup",
-				});
-			},
-			QAS(index) {
-				if (index == 0) {
-					this.$router.push({
-						path: "/QuestionAnalyseInput",
-					});
-					this.QuestionAnalyseSwitchFlag = false;
-				} else {
-					this.$router.push({
-						path: "/exercise",
-					});
-					this.QuestionAnalyseSwitchFlag = false;
-				}
-			},
-			// 跳转至试题分析的不同位置的对话框
-			QuestionAnalyseSwitch() {
-				this.QuestionAnalyseSwitchFlag = true;
-			},
-			PAS(index) {
-				if (index == 0) {
-					this.$router.push({
-						path: "/paperAnalyseInput",
-					});
-					this.PaperAnalyseSwitchFlag = false;
-				} else {
-					this.$router.push({
-						path: "/searchPaper",
-					});
-					this.PaperAnalyseSwitchFlag = false;
-				}
-			},
-			// 跳转至试卷分析的不同位置的对话框
-			PaperAnalyseSwitch() {
-				this.PaperAnalyseSwitchFlag = true;
-			},
-			Get_Priority() {
-				if (sessionStorage.isAdmin) {
-					return true;
-				} else {
-					return false;
-				}
-			},
-			Title_Pos() {
-				return {
-					"font-size": "18px",
-					color: "black",
-					"margin-left": "0px",
-				};
-			},
-			Calculate_Title_Margin() {
-				var Width = window.screen.width;
-				var CWidth = document.body.clientWidth;
-				// console.log(Width, CWidth)
-				if (Width - CWidth < 300) {
-					return "0px";
-				} else {
-					return 0 - (CWidth / Width) * (CWidth / Width) * 40 + "px";
-				}
-			},
-			ToTop() {
-				window.scrollTo(0, 0);
-			},
-			goToMainPage() {
-				this.$router.push({
-					path: "/",
-				});
-				this.ToTop();
-			},
-			PublicPlatform() {
-				this.$router.push({
-					path: "/PublicPlatform"
-				});
-				this.ToTop();
-			},
-			goToImageTranscription() {
-				this.$router.push({
-					path: "/ImageTranscription",
-				});
-				this.ToTop();
-			},
-			show_members() {
-				this.$router.push({
-					path: "/members",
-				});
-				this.ToTop();
-			},
-			login_show() {
-				this.$refs.login.show();
-				this.$refs.register.hide();
-			},
-			register_show() {
-				this.$refs.login.hide();
-				this.$refs.register.show();
-			},
-			login_admin() {
-				this.$router.push({
-					path: "/admin",
-				});
-				this.ToTop();
-			},
-			// 测试退出函数
-			async logout() {
-				await this.$store.dispatch("user/logout");
-				this.$router.push("/");
-				location.reload();
-			},
-			goToUserPage() {
-				this.$router.push("/dashboard");
-			},
-			// logout() {
-			//   var _this = this;
-			//   this.$confirm("确认退出吗？", "提示", {
-			//     // type:'warning'
-			//   })
-			//     .then(() => {
-			//       sessionStorage.removeItem("user");
-			//       sessionStorage.removeItem("isAdmin");
-			//       this.username = "";
-			//       this.isAdmin = false;
-			//       _this.$router.push("/");
-			//     })
-			//     .catch(() => {});
-			// },
-		},
-	};
-=======
->>>>>>> 2ac3ac6 (add instruction)
 </script>
 <style scoped lang="scss">
 .el-header
