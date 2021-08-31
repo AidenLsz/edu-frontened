@@ -606,7 +606,7 @@ export default {
 					if (this.subject_id == "英语") param_beta.append("estimate_subject", "english");
 					*/
 
-      if (this.checkList.length === 2) {
+      if (this.checkList.length === 5) {
         this.checkList[0] = "难度";
         this.checkList[1] = "知识点";
         this.checkList[2] = "区分度";
