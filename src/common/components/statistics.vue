@@ -69,7 +69,7 @@
 
 <script>
 import $ from "jquery";
-// import {commonAjax} from '@/common/utils/ajax'
+import {commonAjax} from '@/common/utils/ajax'
 import * as echarts from 'echarts';
 var BarChart;
 
@@ -279,9 +279,9 @@ export default {
                 name:'总量',
                 barWidth: '30%',
                 stack:'total',
-                barGap: '-100%', 
-                itemStyle: {         
-                  color: 'rgba(128, 128, 128, 0)'  // 设置背景颜色为透明            
+                barGap: '-100%',
+                itemStyle: {
+                  color: 'rgba(128, 128, 128, 0)'  // 设置背景颜色为透明
                 }      //此块目的为在堆叠柱形图中显示总量，采用的方法为新加一个总量的bar，与现有的堆叠柱重叠摆放并调整其颜色为透明
          }
         if(this.Count_Type == 'Question' )
@@ -289,7 +289,7 @@ export default {
         else if(this.Count_Type == 'Paper')
           option.series[ind].data = this.Paper_Data_Sub
         else if(this.Count_Type == 'KU')
-          option.series[ind].data = this.KU_Data_Sub         
+          option.series[ind].data = this.KU_Data_Sub
       }
       // console.log(option.series)
       BarChart.setOption(option);
@@ -304,51 +304,61 @@ export default {
           headers: { "Content-Type": "multipart/form-data" }
       };
       let param = new FormData();
+      let isManage=this.$router.currentRoute.path.includes('/manage/')
+      if (isManage) {
+        // 资源管理页面
+        commonAjax(this.backendIP + "/api/count_by_user",{}).then((data)=>{
+          this.handleResData(data)
+        })
+      }else{
+        // 首页
+        this.$http
+        .post(this.backendIP + "/api/count", param, config, {
+          emulateJSON: true
+        })
+        .then(function(data) {
+          this.handleResData(data.data)
+        });
+      }
+    },
+    handleResData(data){
+      this.Chart_Data = {};
 
-      this.$http
-      .post(this.backendIP + "/api/count", param, config, {
-        emulateJSON: true
-      })
-      .then(function(data) {
+      this.Paper_Data_Sub = [];
+      this.Question_Data_Sub = [];
+      this.KU_Data_Sub = [];
+      this.Paper_Data_Per = [];
+      this.Question_Data_Per = [];
+      this.KU_Data_Per = [];
 
-        this.Chart_Data = {};
+      this.Chart_Data = data;
 
-        this.Paper_Data_Sub = [];
-        this.Question_Data_Sub = [];
-        this.KU_Data_Sub = [];
-        this.Paper_Data_Per = [];
-        this.Question_Data_Per = [];
-        this.KU_Data_Per = [];
+      this.Num_Paper = this.Chart_Data.num_paper;
+      this.Num_Question = this.Chart_Data.num_question;
+      this.Num_KU = this.Chart_Data.num_knowledge;
+      this.List = this.Chart_Data.list_per;
 
-        this.Chart_Data = data.data;
+      for(var ind = 0; ind < this.Chart_Data.list_per.length; ind++){
+          this.Paper_Data_Per[ind] = new Array();
+          this.Question_Data_Per[ind] = new Array();
+          this.KU_Data_Per[ind] = new Array();
+      }
 
-        this.Num_Paper = this.Chart_Data.num_paper;
-        this.Num_Question = this.Chart_Data.num_question;
-        this.Num_KU = this.Chart_Data.num_knowledge;
-        this.List = this.Chart_Data.list_per;
+      for(var index = 0; index < this.Chart_Data.list_sub.length; index ++){
+          this.Paper_Data_Sub.push(this.Chart_Data.num_sub[index].Paper);
+          this.Question_Data_Sub.push(this.Chart_Data.num_sub[index].Question);
+          this.KU_Data_Sub.push(this.Chart_Data.num_sub[index].Knowledge);//后端PQK数据名已调整为大写！
 
-        for(var ind = 0; ind < this.Chart_Data.list_per.length; ind++){
-            this.Paper_Data_Per[ind] = new Array();
-            this.Question_Data_Per[ind] = new Array();
-            this.KU_Data_Per[ind] = new Array();
-        }
-
-        for(var index = 0; index < this.Chart_Data.list_sub.length; index ++){
-            this.Paper_Data_Sub.push(this.Chart_Data.num_sub[index].Paper);
-            this.Question_Data_Sub.push(this.Chart_Data.num_sub[index].Question);
-            this.KU_Data_Sub.push(this.Chart_Data.num_sub[index].Knowledge);//后端PQK数据名已调整为大写！
-
-            for(var index2 = 0; index2 < this.Chart_Data.list_per.length; index2 ++){
-              this.Paper_Data_Per[index2].push(this.Chart_Data.num_per[index].Paper[index2]);
-              this.Question_Data_Per[index2].push(this.Chart_Data.num_per[index].Question[index2]);
-              this.KU_Data_Per[index2].push(this.Chart_Data.num_per[index].Knowledge[index2]);
-            }
-        }
-        console.log(this.Question_Data_Per);
+          for(var index2 = 0; index2 < this.Chart_Data.list_per.length; index2 ++){
+            this.Paper_Data_Per[index2].push(this.Chart_Data.num_per[index].Paper[index2]);
+            this.Question_Data_Per[index2].push(this.Chart_Data.num_per[index].Question[index2]);
+            this.KU_Data_Per[index2].push(this.Chart_Data.num_per[index].Knowledge[index2]);
+          }
+      }
+      console.log(this.Question_Data_Per);
 
 
-        this.Redraw_Bar();
-      });
+      this.Redraw_Bar();
     }
   }
 };
