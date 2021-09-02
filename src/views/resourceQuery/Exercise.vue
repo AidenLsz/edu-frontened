@@ -1107,7 +1107,7 @@ export default {
         "period": this.Period_Type,
         "type": this.Search_Ques_Type,
         "difficulty": [0.0, 1.0],
-        "semantic": this.Semantic ? 0 : 1
+        "semantic": this.Semantic ? 1 : 0
       })
 
       // param.append("data", data);
