@@ -392,6 +392,9 @@
           <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
+      <el-col :span="3">
+        <el-button class="FilterButton" type="text" @click="Semantic = !Semantic">匹配：{{Semantic == false ? '精准匹配' : '语义匹配'}}</el-button>
+      </el-col>
     </el-row>
     <el-row
       v-for="(Question, Question_Index) in question_list"
@@ -555,6 +558,8 @@ export default {
         min: 0.0,
         max: 1.0
       },
+      // 用于判断是否采用语义搜索模式
+      Semantic: false,
       // 存储用户自定义的难度
       // 暂存的图片内容
       Cache_Pic: [""],
@@ -1101,7 +1106,8 @@ export default {
         "subject": this.Subject_Type,
         "period": this.Period_Type,
         "type": this.Search_Ques_Type,
-        "difficulty": [0.0, 1.0]
+        "difficulty": [0.0, 1.0],
+        "semantic": this.Semantic ? 0 : 1
       })
 
       // param.append("data", data);
