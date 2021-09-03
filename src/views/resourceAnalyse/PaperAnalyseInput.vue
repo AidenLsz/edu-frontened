@@ -2142,7 +2142,7 @@ export default {
               Temp_Result_Dict[Result[i].type].list.push(Item)
             }else if(['简答题', '计算题'].indexOf(Result[i].type) != -1){
                 let Item = {
-                  score: 5 * Result[i].subquestions.length,
+                  score: Result[i].subquestions.length > 0 ? Result[i].subquestions.length * 5 : 0,
                   stem: Result[i].stem,
                   stem_image: [],
                   options: [],
