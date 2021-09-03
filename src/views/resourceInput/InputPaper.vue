@@ -2092,7 +2092,12 @@ export default {
           
           let Result = res.data
 
+          console.log(Result)
+
           for(let i = 0; i < Result.length; i++){
+            if(Result[i].type=='选择题'){
+              Result[i].type = '单选题'
+            }
             if(['单选题', '多选题', '判断题'].indexOf(Result[i].type) != -1){
               let Item = {
                 score: Result[i].score == 0 ? 5 : Result[i].score,
@@ -2135,7 +2140,7 @@ export default {
               Temp_Result_Dict[Result[i].type].list.push(Item)
             }else if(['简答题', '计算题'].indexOf(Result[i].type) != -1){
                 let Item = {
-                  score: 5 * Result[i].subquestions.length,
+                  score: Result[i].subquestions.length > 0 ? Result[i].subquestions.length * 5 : 0,
                   stem: Result[i].stem,
                   stem_image: [],
                   options: [],
@@ -2155,6 +2160,7 @@ export default {
                 Item.sub_questions_image.push([])
                 Item.sub_questions_score.push(5)
               }
+              Temp_Result_Dict[Result[i].type].list.push(Item)
             }
           }
 
