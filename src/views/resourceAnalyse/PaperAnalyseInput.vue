@@ -2093,8 +2093,13 @@ export default {
         commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param).then((res)=>{
 
           let Result = res.data
+          
+          console.log(Result)
 
           for(let i = 0; i < Result.length; i++){
+            if(Result[i].type=='选择题'){
+              Result[i].type = '单选题'
+            }
             if(['单选题', '多选题', '判断题'].indexOf(Result[i].type) != -1){
               let Item = {
                 score: Result[i].score == 0 ? 5 : Result[i].score,
@@ -2157,6 +2162,7 @@ export default {
                 Item.sub_questions_image.push([])
                 Item.sub_questions_score.push(5)
               }
+              Temp_Result_Dict[Result[i].type].list.push(Item)
             }
           }
 
