@@ -1631,7 +1631,8 @@ export default {
         { value: "物理", label: "物理" },
         { value: "化学", label: "化学" },
         { value: "生物", label: "生物" },
-        { value: "其他", label: "其他" }
+        { value: "文综", label: "文综" },
+        { value: "理综", label: "理综" }
       ],
       // 待选学段
       Period_List: [
@@ -2248,17 +2249,26 @@ export default {
 
         let formData = new FormData();
 
+        // 对应的切分编号，是约定好的，别动就好
         let Num_Dict = {
           英语: "0",
-          数学: "1_simple",
+          数学: "1",
           文综: "2",
+          政治: "2",
+          历史: "2",
+          地理: "2",
           理综: "3",
+          物理: "3",
+          化学: "3",
+          生物: "3",
           语文: "4",
         }
 
         formData.append("files", file);
         formData.append("paper_type", Num_Dict[this.Subject]);
-        formData.append("data_format", '0')
+        formData.append("data_format", '0');
+        // 为了防止需要老版本的地方崩溃，先加了这个，以后用不到了再说
+        formData.append("paper_Cut_New", true);
 
         let config = {
           headers: {
@@ -2270,11 +2280,7 @@ export default {
       },
       // 触发上传事件
       File_Import(){
-        if(this.Subject == "语文"){
-          this.File_Selector.click();
-        }else{
-          this.$message.info("其他学科的格式仍在统一过程中，请选择语文科目作为测试项。")
-        }
+        this.File_Selector.click();
       },
       // 选择上传
       uploadFile(formData, config) {
@@ -3881,7 +3887,7 @@ export default {
       for(var key in this.Paper_Image_Dict){
         var Img_Name_Catcher = new RegExp('<img src="' + key + '"')
         if(Img_Name_Catcher.exec(Table_Html) != null){
-          Table_Html = Table_Html.replace(Img_Name_Catcher,'<img src="' + this.json_content.img[key] + '"')
+          Table_Html = Table_Html.replace(Img_Name_Catcher,'<img src="' + this.Paper_Image_Dict[key] + '"')
         }
       }
       return Table_Html

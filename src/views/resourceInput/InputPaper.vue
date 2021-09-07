@@ -1521,6 +1521,7 @@
         </el-col>
       </el-row>
     </div>
+    <!-- 试卷切分的显示部分 -->
     <div 
       v-show="Using_Part == 'Fileinput'" 
       @click="Reset_Focus()" 
@@ -1529,7 +1530,10 @@
       <el-row
         v-for="(Item, Item_Index) in Paper_Content"
         :key="'Line_' + Item_Index">
+          <!-- 所有切分结果呈一列 -->
           <el-col>
+            <!-- Item != 'DIVIDER_LINES' 这代表这部分内容是切分出来的结果的部分 -->
+            <!-- 所有显示基本上就是把切分出来的内容按照配套的html格式显示出来 -->
             <el-row v-if="Item != 'DIVIDER_LINES'&& Item.para_type == '0'" :style="Item.para_style">
               <span
                 v-for="(message, index_i) in Item.runs"
@@ -1555,6 +1559,8 @@
                 <span v-html="Table_Img_Get(Item.table_raw_html)"></span>
               </div>
             </el-row>
+            <!-- Item == 'DIVIDER_LINES' 这代表这个元素是原试卷内容里面的某一部分的分界线 -->
+            <!-- mouse事件的作用是判断当前鼠标悬浮在哪个线上，用来操作的，用不到可以删 -->
             <el-row 
               v-if="Item == 'DIVIDER_LINES'" 
               style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer"
@@ -1565,6 +1571,7 @@
                   <el-row :style="'border-top: 2px dashed ' + (Paper_Divider_Index == Item_Index ? 'red' : '#ccc') + '; width: 100%;'"></el-row>
                 </el-col>
             </el-row>
+            <!-- Item != 'DIVIDER_LINES' 即添加新切分线的部分是在试卷元素的后面出现的、其下一个内容不能是切分线、也不能是试卷的最后一个部分 -->
             <el-row 
               v-if="Item != 'DIVIDER_LINES' && Item_Index != Paper_Content.length - 1 && Paper_Content[Item_Index + 1] != 'DIVIDER_LINES'" 
               style="height: 14px; width: 100%; padding-top: 6px; cursor: pointer;" 
@@ -1629,7 +1636,8 @@ export default {
         { value: "物理", label: "物理" },
         { value: "化学", label: "化学" },
         { value: "生物", label: "生物" },
-        { value: "其他", label: "其他" }
+        { value: "文综", label: "文综" },
+        { value: "理综", label: "理综" }
       ],
       // 待选学段
       Period_List: [
@@ -2246,17 +2254,26 @@ export default {
 
         let formData = new FormData();
 
+        // 对应的切分编号，是约定好的，别动就好
         let Num_Dict = {
           英语: "0",
-          数学: "1_simple",
+          数学: "1",
           文综: "2",
+          政治: "2",
+          历史: "2",
+          地理: "2",
           理综: "3",
+          物理: "3",
+          化学: "3",
+          生物: "3",
           语文: "4",
         }
 
         formData.append("files", file);
         formData.append("paper_type", Num_Dict[this.Subject]);
-        formData.append("data_format", '0')
+        formData.append("data_format", '0');
+        // 为了防止需要老版本的地方崩溃，先加了这个，以后用不到了再说
+        formData.append("paper_Cut_New", true);
 
         let config = {
           headers: {
@@ -2268,30 +2285,34 @@ export default {
       },
       // 触发上传事件
       File_Import(){
-        if(this.Subject == "语文"){
-          this.File_Selector.click();
-        }else{
-          this.$message.info("其他学科的格式仍在统一过程中，请选择语文科目作为测试项。")
-        }
+        this.File_Selector.click();
       },
       // 选择上传
       uploadFile(formData, config) {
 
         this.$http
-          .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
+          .post("https://file-upload-backend-88-review-issue26-nxvarg.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
           .then(function(data) {
+            console.log(data.data)
+            // 切分出来的文字部分
             this.Paper_Content = data.data.paper
+            // 切分出来的图片部分，注意在显然的时候，需要从这里找到对应的图片内容
             this.Paper_Image_Dict = data.data.image_dict
+            // 空列表，用来存放元素
             let Lists = []
             for(let i = 0; i < data.data.paper.length; i++){
+              // 这是切分格式的结果，我也不知道为什么sub_para会是一个数组，但是这样读取就没问题
               let Para = data.data.paper[i].sub_para[0]
+              // 把每个大段里面的每个小内容抽出来，单独塞到List里面
               for(let j = 0; j < Para.length; j++){
                 Lists.push(Para[j])
               }
+              // 只要不是最后一个大段，那么就往里面塞一个“切分线”元素
               if(i != data.data.paper.length - 1){
                 Lists.push("DIVIDER_LINES")
               }
             }
+            // 把转化结果丢给显示区域，同时留一个备份
             this.Paper_Content = Lists
             this.Paper_Content_BackUp = Lists
             this.File_Uploading = false;
@@ -3824,7 +3845,7 @@ export default {
       for(var key in this.Paper_Image_Dict){
         var Img_Name_Catcher = new RegExp('<img src="' + key + '"')
         if(Img_Name_Catcher.exec(Table_Html) != null){
-          Table_Html = Table_Html.replace(Img_Name_Catcher,'<img src="' + this.json_content.img[key] + '"')
+          Table_Html = Table_Html.replace(Img_Name_Catcher,'<img src="' + this.Paper_Image_Dict[key] + '"')
         }
       }
       return Table_Html
