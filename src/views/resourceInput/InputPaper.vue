@@ -2291,7 +2291,7 @@ export default {
       uploadFile(formData, config) {
 
         this.$http
-          .post("https://file-upload-backend-88-review-issue26-nxvarg.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
+          .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
           .then(function(data) {
             console.log(data.data)
             // 切分出来的文字部分
