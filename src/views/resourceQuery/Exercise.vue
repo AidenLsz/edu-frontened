@@ -330,7 +330,7 @@
           <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="3" v-if="$store.getters.isLuna">
         <el-popover
           placement="bottom-start"
           width="700"
@@ -356,13 +356,13 @@
                 </el-col>
                 <el-col :span="Difficulty_Filter_Type != '6' ? 2 : 7">
                   <el-row type="flex" justify="start">
-                    <el-input-number 
+                    <el-input-number
                       v-show="Difficulty_Filter_Type == '6'"
                       style="margin: 0px"
                       :precision="1" :step="0.1" :max="Difficulty_Filter_Result.max" :min="0.0"
                       v-model="Difficulty_Filter_Result.min"
-                      ></el-input-number> 
-                    <label v-show="Difficulty_Filter_Type != '6'" style="padding-top: 10px;">{{Difficulty_Filter_Result.min}}</label> 
+                      ></el-input-number>
+                    <label v-show="Difficulty_Filter_Type != '6'" style="padding-top: 10px;">{{Difficulty_Filter_Result.min}}</label>
                   </el-row>
                 </el-col>
                 <el-col :span="3">
@@ -372,7 +372,7 @@
                 </el-col>
                 <el-col :span="Difficulty_Filter_Type != '6' ? 2 : 7">
                   <el-row type="flex" justify="start">
-                    <el-input-number 
+                    <el-input-number
                       v-show="Difficulty_Filter_Type == '6'"
                       style="margin: 0px"
                       :precision="1" :step="0.1" :max="1.0" :min="Difficulty_Filter_Result.min"
