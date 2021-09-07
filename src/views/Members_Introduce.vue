@@ -582,19 +582,7 @@
 							"name": "杨星月",
 							"mail": "xyyang_selene@mail.ustc.edu. cn",
 							"intro": "生命在于新建文件夹"
-						}
-					],
-					// 特邀工程师
-					"invitedEngineer": [
-
-					],
-					// 实习生
-					"trainee": [{
-							"name": "赵辰阳",
-							"mail": "zcy888@mail.ustc.edu.cn",
-							"intro": "小小少年 不会烦恼 快乐多多 BUG少少"
-						},
-						{
+						},{
 							"name": "邬靖宇",
 							"mail": "wujingyu@mail.ustc.edu.cn",
 							"intro": "干啥啥不行，吃啥啥不剩，\n学啥啥不会，写啥啥bug。"
@@ -603,6 +591,18 @@
 							"name": "高海涵",
 							"mail": "kd193104@mail.ustc.edu.cn",
 							"intro": "中科大18级本科，现从事数据挖掘、机器学习和NLP方面的科研"
+						}
+					],
+					// 特邀工程师
+					"invitedEngineer": [
+
+					],
+					// 实习生
+					"trainee": [
+						{
+							"name": "沈蜀媛",
+							"mail": "st562218@icloud.com",
+							"intro": "还在不断学习（摸鱼）的菜包"
 						}
 					],
 					// 技术顾问
@@ -680,12 +680,12 @@
 						"黄炜喆": "/members/黄炜喆.png",
 						"肖桐": "/members/肖桐.png",
 						"杨星月": "/members/杨星月.jpg",
+						"邬靖宇": "/members/邬靖宇.jpg",
+						"高海涵": "/members/高海涵.jpeg",
 						// 特邀工程师
 
 						// 实习生
-						"邬靖宇": "/members/邬靖宇.jpg",
-						"赵辰阳": "/members/赵辰阳.jpeg",
-						"高海涵": "/members/高海涵.jpeg",
+						"沈蜀媛": "/members/沈蜀媛.jpg",
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
 						"高维博": "/members/高维博.jpeg",
