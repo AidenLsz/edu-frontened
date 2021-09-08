@@ -73,7 +73,7 @@
                 细目表挑题
             </el-row>
         </el-col>
-        <el-col :span="2" :class="Menu_Now('autoCombine')" @click.native="Jump_To('autoCombine')" style="display: none">
+        <el-col :span="2" :class="Menu_Now('autoCombine')" @click.native="Jump_To('autoCombine')">
             <el-row type="flex" justify="center">
                 智能组卷
             </el-row>
