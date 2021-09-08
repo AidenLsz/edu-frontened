@@ -446,7 +446,7 @@
       v-if="question_list.length == 0"
       style="margin: 50px 60px; height: 44vh; font-size: 30px"
       v-loading="loading"
-      element-loading-text="加载中，请等待"
+      element-loading-text="查询中，请等待"
       element-loading-spinner="el-icon-loading">
 
     </el-row>
