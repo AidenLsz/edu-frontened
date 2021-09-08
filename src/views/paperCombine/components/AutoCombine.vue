@@ -52,6 +52,7 @@
               :key="'KU_Row' + Row_Index"
               >
               <el-col :span="4" v-for="Col_Index in 6" :key="'KU_COL_' + Row_Index + '_' + Col_Index">
+<<<<<<< HEAD
                 <el-tooltip 
                   class="item" 
                   effect="dark" 
@@ -64,6 +65,14 @@
                     v-show="KU_Show((Row_Index-1) * 6 + Col_Index - 1)"
                     class="KU_Button"
                     :style="Get_Different_Level_Color(KnowledgeUnitLevelList[(Row_Index-1) * 6 + Col_Index - 1])"
+=======
+                <el-tooltip class="item" effect="dark" :content="KnowledgeUnitList[(Row_Index-1) * 6 + Col_Index - 1]" placement="top">
+                    <el-row 
+                    type="flex" 
+                    justify="center" 
+                    v-if="KU_Show((Row_Index-1) * 6 + Col_Index - 1)"
+                    class="KU_Button"
+>>>>>>> 3e6f999... Auto-Combine-Paper - Ver1
                     @click.native="Delete_KU((Row_Index-1) * 6 + Col_Index - 1)">
                         {{Get_Show(KnowledgeUnitList[(Row_Index-1) * 6 + Col_Index - 1])}}
                         <i class="el-icon-delete" style="line-height: 20px; margin-left: 10px"></i>
@@ -160,8 +169,11 @@
 
 import {commonAjax} from '@/common/utils/ajax'
 
+<<<<<<< HEAD
 // import FileSaver from "file-saver";
 
+=======
+>>>>>>> 3e6f999... Auto-Combine-Paper - Ver1
 export default {
   name: 'KnowledgePoint',
   props: {
@@ -289,6 +301,7 @@ export default {
       this.Init();
   },
   methods: {
+<<<<<<< HEAD
     // 根据层级不同，进行一点简单的颜色区分
     Get_Different_Level_Color(level){
       
@@ -310,6 +323,8 @@ export default {
 
       }
     },
+=======
+>>>>>>> 3e6f999... Auto-Combine-Paper - Ver1
     // 尚未完成
     Unfinish(){
       this.$message.error("这部分还没做完")
@@ -321,7 +336,11 @@ export default {
             difficulty: this.filterRecord.difficulty,
             numbers: this.filterRecord.numbers,
             database: [],
+<<<<<<< HEAD
             knowledgePoint: [[0], [1], [2]]
+=======
+            knowledgePoint: this.KnowledgeUnitList
+>>>>>>> 3e6f999... Auto-Combine-Paper - Ver1
         }
 
         if(this.filterRecord.database.indexOf(true) != -1){
@@ -336,6 +355,7 @@ export default {
             }
         }
 
+<<<<<<< HEAD
         for(let i = 0; i < this.KnowledgeUnitLevelList.length; i++){
           data.knowledgePoint[this.KnowledgeUnitLevelList[i]].push(this.KnowledgeUnitList[i])
         }
@@ -359,6 +379,9 @@ export default {
           return
         }
         
+=======
+        console.log(data)
+>>>>>>> 3e6f999... Auto-Combine-Paper - Ver1
     },
     // 调整一下知识点的位置对应的边距
     ExistFilter(){
@@ -378,27 +401,42 @@ export default {
     // 移除某个选中的知识点
     Delete_KU(index){
 
+<<<<<<< HEAD
         let Temp_List = [
           {
             label: this.KnowledgeUnitList[index],
             level: this.KnowledgeUnitLevelList[index]
           }
         ]
+=======
+        let Temp_List = [this.KnowledgeUnitList[index]]
+>>>>>>> 3e6f999... Auto-Combine-Paper - Ver1
 
         let Result_List = []
 
         while(Temp_List.length > 0){
+<<<<<<< HEAD
             let Key_Item = Temp_List.shift()
             for(let i = 0; i < this.TreeData.length; i++){
                 let Layer_0 = this.TreeData[i]
                 if(Layer_0.label == Key_Item.label && Layer_0.level == Key_Item.level){
+=======
+            let Key_Item = Temp_List.pop(0)
+            for(let i = 0; i < this.TreeData.length; i++){
+                let Layer_0 = this.TreeData[i]
+                if(Layer_0.label == Key_Item && Result_List.indexOf(Layer_0.id) == -1){
+>>>>>>> 3e6f999... Auto-Combine-Paper - Ver1
                     if(Result_List.indexOf(Layer_0.id) == -1){
                         Result_List.push(Layer_0.id)
                     }
                     for(let j = 0; j < Layer_0.children.length; j++){
+<<<<<<< HEAD
                         Temp_List.push({
                           label: Layer_0.children[j].label, 
                           level: Layer_0.children[j].level})
+=======
+                        Temp_List.push(Layer_0.children[j].label)
+>>>>>>> 3e6f999... Auto-Combine-Paper - Ver1
                         if(Result_List.indexOf(Layer_0.children[j].id) == -1){
                             Result_List.push(Layer_0.children[j].id)
                         }
@@ -406,19 +444,31 @@ export default {
                 }else{
                     for(let j = 0; j < Layer_0.children.length; j++){
                         let Layer_1 = Layer_0.children[j]
+<<<<<<< HEAD
                         if(Layer_1.label == Key_Item.label && Layer_1.level == Key_Item.level){
+=======
+                        if(Layer_1.label == Key_Item && Result_List.indexOf(Layer_1.id) == -1){
+>>>>>>> 3e6f999... Auto-Combine-Paper - Ver1
                             if(Result_List.indexOf(Layer_1.id) == -1){
                                 Result_List.push(Layer_1.id)
                             }
                             for(let k = 0; k < Layer_1.children.length; k++){
+<<<<<<< HEAD
                               Temp_List.push({
                                 label: Layer_1.children[k].label, 
                                 level: Layer_1.children[k].level})
+=======
+                                Temp_List.push(Layer_1.children[k].label)
+>>>>>>> 3e6f999... Auto-Combine-Paper - Ver1
                             }
                         }else{
                             for(let k = 0; k < Layer_1.children.length; k++){
                                 let Layer_2 = Layer_1.children[k]
+<<<<<<< HEAD
                                 if(Layer_2.label == Key_Item.label && Layer_2.level == Key_Item.level){
+=======
+                                if(Layer_2.label == Key_Item && Result_List.indexOf(Layer_2.id) == -1){
+>>>>>>> 3e6f999... Auto-Combine-Paper - Ver1
                                     if(Result_List.indexOf(Layer_2.id) == -1){
                                         Result_List.push(Layer_2.id)
                                     }
@@ -444,7 +494,11 @@ export default {
         }
     },
     // 获取知识点显示内容
+<<<<<<< HEAD
     Get_Show(label = ""){
+=======
+    Get_Show(label){
+>>>>>>> 3e6f999... Auto-Combine-Paper - Ver1
       if(label.length > 6){
         return label.substring(0, 5) + "..."
       }else{
