@@ -230,6 +230,21 @@
                                     </el-row>
                                 </el-col>
                             </el-row>
+                            <!-- 第十一行 -->
+                            <el-row style="width: 66.7%" class="Table_Unit_1">
+                                <!-- 左列 -->
+                                <el-col :span="6" style="padding-top: 8px;">
+                                    <el-row type="flex" justify="start">
+                                        <label style="text-align: left">考察章节</label>
+                                    </el-row>
+                                </el-col>
+                                <!-- 右列 -->
+                                <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
+                                    <el-row type="flex" justify="start">
+                                        <span style="text-align: left">{{Question.chapter}}</span>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
                         </el-row>
                         <!-- 树状结构 -->
                         <el-row type="flex" justify="start" style="margin: 25px 0px 10px 0px">

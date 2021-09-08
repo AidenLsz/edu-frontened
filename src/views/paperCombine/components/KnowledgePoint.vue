@@ -81,15 +81,17 @@
               :key="'KU_Row' + Row_Index"
               >
               <el-col :span="4" v-for="Col_Index in 6" :key="'KU_COL_' + Row_Index + '_' + Col_Index">
-                <el-row 
-                  type="flex" 
-                  justify="center" 
-                  v-if="KU_Show((Row_Index-1) * 6 + Col_Index - 1)"
-                  class="KU_Button"
-                  @click.native="Delete_KU((Row_Index-1) * 6 + Col_Index - 1)">
-                  {{Get_Show(KnowledgeUnitList[(Row_Index-1) * 6 + Col_Index - 1])}}
-                  <i class="el-icon-delete" style="line-height: 20px; margin-left: 10px"></i>
-                </el-row>
+                <el-tooltip class="item" effect="dark" :content="KnowledgeUnitList[(Row_Index-1) * 6 + Col_Index - 1]" placement="top">
+                    <el-row 
+                    type="flex" 
+                    justify="center" 
+                    v-if="KU_Show((Row_Index-1) * 6 + Col_Index - 1)"
+                    class="KU_Button"
+                    @click.native="Delete_KU((Row_Index-1) * 6 + Col_Index - 1)">
+                        {{Get_Show(KnowledgeUnitList[(Row_Index-1) * 6 + Col_Index - 1])}}
+                        <i class="el-icon-delete" style="line-height: 20px; margin-left: 10px"></i>
+                    </el-row>
+                </el-tooltip>
               </el-col>
             </el-row>
           </el-col>
@@ -872,10 +874,11 @@ export default {
 .KU_Button{
   border: 1px solid #409EFF;
   background: #F8FBFF;
-  margin: 5px 20px;
-  padding: 6px;
+  margin: 4px 20px 4px 0px;
+  padding: 4px;
   color: #409EFF;
   border-radius: 10px;
   cursor: pointer;
+  font-size: 1.5rem;
 }
 </style>
