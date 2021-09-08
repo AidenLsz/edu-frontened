@@ -232,7 +232,7 @@
               </el-button>
             </el-col>
             <el-col :span="1">
-              <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit(0, '')">
+              <el-button type="text" style="font-size: 22px; display: block; margin-left: -8px" size="small" @click="submit_prepare()">
                 <i class="el-icon-search"></i>
               </el-button>
             </el-col>
@@ -266,10 +266,10 @@
             <el-checkbox label="物理">物理</el-checkbox>
             <el-checkbox label="化学">化学</el-checkbox>
             <el-checkbox label="生物">生物</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">检索</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Subject()}}</el-button>
-          <el-button slot="reference" type="text" v-if="Subject_Type.length > 0" @click="Subject_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+          <el-button slot="reference" type="text" v-if="Subject_Type.length > 0" @click="Subject_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
       <el-col :span="3" v-else>
@@ -305,10 +305,10 @@
             <el-checkbox label="高中">高中</el-checkbox>
             <el-checkbox label="大学">大学</el-checkbox>
             <el-checkbox label="成人">成人</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">检索</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Period()}}</el-button>
-          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
       <el-col :span="3">
@@ -324,11 +324,76 @@
             <el-checkbox label="简答题">简答题</el-checkbox>
             <el-checkbox label="计算题">计算题</el-checkbox>
             <el-checkbox label="其他">其他</el-checkbox>
-            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">确认</el-button>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">检索</el-button>
           </el-checkbox-group>
           <el-button slot="reference" class="FilterButton" type="text">{{Get_Search_Ques_Type()}}</el-button>
-          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
+      </el-col>
+      <el-col :span="3">
+        <el-popover
+          placement="bottom-start"
+          width="700"
+          trigger="hover">
+          <el-row type="flex" justify="start">
+            <el-col>
+              <el-row type="flex" justify="start">
+                <el-radio-group v-model="Difficulty_Filter_Type" style="padding-top: 13px;">
+                  <el-radio label="0">默认</el-radio>
+                  <el-radio label="1">容易</el-radio>
+                  <el-radio label="2">较易</el-radio>
+                  <el-radio label="3">中等</el-radio>
+                  <el-radio label="4">较难</el-radio>
+                  <el-radio label="5">困难</el-radio>
+                  <el-radio label="6">自定义</el-radio>
+                </el-radio-group>
+              </el-row>
+              <el-row type="flex" justify="start">
+                <el-col :span="3">
+                  <el-row type="flex" justify="start">
+                    <label style="padding-top: 10px;">最低难度：</label>
+                  </el-row>
+                </el-col>
+                <el-col :span="Difficulty_Filter_Type != '6' ? 2 : 7">
+                  <el-row type="flex" justify="start">
+                    <el-input-number 
+                      v-show="Difficulty_Filter_Type == '6'"
+                      style="margin: 0px"
+                      :precision="1" :step="0.1" :max="Difficulty_Filter_Result.max" :min="0.0"
+                      v-model="Difficulty_Filter_Result.min"
+                      ></el-input-number> 
+                    <label v-show="Difficulty_Filter_Type != '6'" style="padding-top: 10px;">{{Difficulty_Filter_Result.min}}</label> 
+                  </el-row>
+                </el-col>
+                <el-col :span="3">
+                  <el-row type="flex" justify="start">
+                    <label style="padding-top: 10px;">最高难度：</label>
+                  </el-row>
+                </el-col>
+                <el-col :span="Difficulty_Filter_Type != '6' ? 2 : 7">
+                  <el-row type="flex" justify="start">
+                    <el-input-number 
+                      v-show="Difficulty_Filter_Type == '6'"
+                      style="margin: 0px"
+                      :precision="1" :step="0.1" :max="1.0" :min="Difficulty_Filter_Result.min"
+                      v-model="Difficulty_Filter_Result.max"></el-input-number>
+                    <label v-show="Difficulty_Filter_Type != '6'" style="padding-top: 10px;">{{Difficulty_Filter_Result.max}}</label>
+                  </el-row>
+                </el-col>
+                <el-col :span="3">
+                  <el-row type="flex" justify="end">
+                    <el-button plain type="primary" @click="submit_prepare()" style="font-size: 14px">检索</el-button>
+                  </el-row>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-row>
+          <el-button slot="reference" class="FilterButton" type="text">{{Get_Difficulty_Gap()}}</el-button>
+          <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
+        </el-popover>
+      </el-col>
+      <el-col :span="3">
+        <el-button class="FilterButton" type="text" @click="Semantic = !Semantic">匹配：{{Semantic == false ? '精准匹配' : '语义匹配'}}</el-button>
       </el-col>
     </el-row>
     <el-row
@@ -486,6 +551,16 @@ export default {
       analyseReport: false,
       // 是否正在返回分析报告
       Question_Analysing: false,
+      // 判断当前用户筛选的难度以及是否需要自定义
+      // 0 - 6 默认，容易，较易，中等，困难，极难，自定义
+      Difficulty_Filter_Type: "0",
+      Difficulty_Filter_Result: {
+        min: 0.0,
+        max: 1.0
+      },
+      // 用于判断是否采用语义搜索模式
+      Semantic: false,
+      // 存储用户自定义的难度
       // 暂存的图片内容
       Cache_Pic: [""],
       // 用于分析显示的题目数据
@@ -625,6 +700,16 @@ export default {
         this.Period_Type=[]
         this.formData="";
         this.config=""
+      }
+    },
+    Difficulty_Filter_Type(newVal){
+      let Index = parseInt(newVal)
+      if(Index == 0){
+        this.Difficulty_Filter_Result.min = 0.0
+        this.Difficulty_Filter_Result.max = 1.0
+      }else if(Index != 6){
+        this.Difficulty_Filter_Result.min = (Index - 1) * 0.2
+        this.Difficulty_Filter_Result.max = Index * 0.2
       }
     }
   },
@@ -1021,7 +1106,8 @@ export default {
         "subject": this.Subject_Type,
         "period": this.Period_Type,
         "type": this.Search_Ques_Type,
-        "difficulty": [0.0, 1.0]
+        "difficulty": [0.0, 1.0],
+        "semantic": this.Semantic ? 1 : 0
       })
 
       // param.append("data", data);
@@ -1105,6 +1191,20 @@ export default {
         return this.Search_Ques_Type[0]
       }else{
         return this.Search_Ques_Type[0] + "（等" + this.Search_Ques_Type.length + "项）"
+      }
+    },
+    Get_Difficulty_Gap(){
+
+      let Str = "难度："
+
+      if(this.Difficulty_Filter_Type == "0"){
+        return  Str + "全范围"
+      }else if(this.Difficulty_Filter_Type == "6"){
+        return Str + this.Difficulty_Filter_Result.min + " ~ " + this.Difficulty_Filter_Result.max
+      }
+      else{
+        let Result = ['容易', '较易', '中等', '较难', '困难']
+        return Str + Result[parseInt(this.Difficulty_Filter_Type) - 1]
       }
     }
   }
