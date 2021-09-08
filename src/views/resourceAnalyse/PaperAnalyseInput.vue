@@ -2292,9 +2292,13 @@ export default {
             this.Paper_Image_Dict = data.data.image_dict
             let Lists = []
             for(let i = 0; i < data.data.paper.length; i++){
-              let Para = data.data.paper[i].sub_para[0]
-              for(let j = 0; j < Para.length; j++){
-                Lists.push(Para[j])
+              for(let j = 0; j < data.data.paper[i].sub_para.length; j++){
+                // 这是切分格式的结果，我也不知道为什么sub_para会是一个数组，但是这样读取就没问题
+                let Para = data.data.paper[i].sub_para[j]
+                // 把每个大段里面的每个小内容抽出来，单独塞到List里面
+                for(let k = 0; k < Para.length; k++){
+                  Lists.push(Para[k])
+                }
               }
               if(i != data.data.paper.length - 1){
                 Lists.push("DIVIDER_LINES")
