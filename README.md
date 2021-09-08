@@ -114,7 +114,6 @@ src     文件夹部分
 + views - 功能模块，存放所有功能性页面
 
     - admin - 管理员功能模块，目前存放了之前编写的管理员功能的模板（属于暂时用不到的部分，也许以后有用得到的地方）
-
     - labelManage - 标注管理平台部分
 
     - manage - 用户个人信息操作和管理
@@ -158,7 +157,6 @@ src     文件夹部分
         - QuestionAnalyseInput.vue  用户录入试题，用于分析的页面
 
     - resourceQuery - 资源查询部分，目前存放了知识点查询，试题搜索，试卷搜索，教材教辅搜索四部分内容
-
         + components - 专属于resourceQuery的组件
         + Exercise     根据导航栏路径是否为eems显示为试题搜索或试题查重
           + components - 专属于试题检索（查重）的组件
