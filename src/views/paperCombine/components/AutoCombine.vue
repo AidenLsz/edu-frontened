@@ -52,12 +52,18 @@
               :key="'KU_Row' + Row_Index"
               >
               <el-col :span="4" v-for="Col_Index in 6" :key="'KU_COL_' + Row_Index + '_' + Col_Index">
-                <el-tooltip class="item" effect="dark" :content="KnowledgeUnitList[(Row_Index-1) * 6 + Col_Index - 1]" placement="top">
+                <el-tooltip 
+                  class="item" 
+                  effect="dark" 
+                  :content="KnowledgeUnitList[(Row_Index-1) * 6 + Col_Index - 1] 
+                    + ' - ' + (KnowledgeUnitLevelList[(Row_Index-1) * 6 + Col_Index - 1] + 1) + '级知识点'" 
+                    placement="top">
                     <el-row 
                     type="flex" 
                     justify="center" 
-                    v-if="KU_Show((Row_Index-1) * 6 + Col_Index - 1)"
+                    v-show="KU_Show((Row_Index-1) * 6 + Col_Index - 1)"
                     class="KU_Button"
+                    :style="Get_Different_Level_Color(KnowledgeUnitLevelList[(Row_Index-1) * 6 + Col_Index - 1])"
                     @click.native="Delete_KU((Row_Index-1) * 6 + Col_Index - 1)">
                         {{Get_Show(KnowledgeUnitList[(Row_Index-1) * 6 + Col_Index - 1])}}
                         <i class="el-icon-delete" style="line-height: 20px; margin-left: 10px"></i>
@@ -281,6 +287,27 @@ export default {
       this.Init();
   },
   methods: {
+    // 根据层级不同，进行一点简单的颜色区分
+    Get_Different_Level_Color(level){
+      
+      if(level == 0){
+
+        return {
+          'color': "#E6A23C",
+          'background': "rgba(230, 162, 60, 0.1)",
+          'border': "1px solid #E6A23C"
+        }
+
+      }else if(level == 1){
+
+        return {
+          'color': "#67C23A",
+          'background': "rgba(103, 194, 58, 0.1)",
+          'border': "1px solid #67C23A"
+        }
+
+      }
+    },
     // 尚未完成
     Unfinish(){
       this.$message.error("这部分还没做完")
@@ -327,20 +354,27 @@ export default {
     // 移除某个选中的知识点
     Delete_KU(index){
 
-        let Temp_List = [this.KnowledgeUnitList[index]]
+        let Temp_List = [
+          {
+            label: this.KnowledgeUnitList[index],
+            level: this.KnowledgeUnitLevelList[index]
+          }
+        ]
 
         let Result_List = []
 
         while(Temp_List.length > 0){
-            let Key_Item = Temp_List.pop(0)
+            let Key_Item = Temp_List.shift()
             for(let i = 0; i < this.TreeData.length; i++){
                 let Layer_0 = this.TreeData[i]
-                if(Layer_0.label == Key_Item && Result_List.indexOf(Layer_0.id) == -1){
+                if(Layer_0.label == Key_Item.label && Layer_0.level == Key_Item.level){
                     if(Result_List.indexOf(Layer_0.id) == -1){
                         Result_List.push(Layer_0.id)
                     }
                     for(let j = 0; j < Layer_0.children.length; j++){
-                        Temp_List.push(Layer_0.children[j].label)
+                        Temp_List.push({
+                          label: Layer_0.children[j].label, 
+                          level: Layer_0.children[j].level})
                         if(Result_List.indexOf(Layer_0.children[j].id) == -1){
                             Result_List.push(Layer_0.children[j].id)
                         }
@@ -348,17 +382,19 @@ export default {
                 }else{
                     for(let j = 0; j < Layer_0.children.length; j++){
                         let Layer_1 = Layer_0.children[j]
-                        if(Layer_1.label == Key_Item && Result_List.indexOf(Layer_1.id) == -1){
+                        if(Layer_1.label == Key_Item.label && Layer_1.level == Key_Item.level){
                             if(Result_List.indexOf(Layer_1.id) == -1){
                                 Result_List.push(Layer_1.id)
                             }
                             for(let k = 0; k < Layer_1.children.length; k++){
-                                Temp_List.push(Layer_1.children[k].label)
+                              Temp_List.push({
+                                label: Layer_1.children[k].label, 
+                                level: Layer_1.children[k].level})
                             }
                         }else{
                             for(let k = 0; k < Layer_1.children.length; k++){
                                 let Layer_2 = Layer_1.children[k]
-                                if(Layer_2.label == Key_Item && Result_List.indexOf(Layer_2.id) == -1){
+                                if(Layer_2.label == Key_Item.label && Layer_2.level == Key_Item.level){
                                     if(Result_List.indexOf(Layer_2.id) == -1){
                                         Result_List.push(Layer_2.id)
                                     }
@@ -384,7 +420,7 @@ export default {
         }
     },
     // 获取知识点显示内容
-    Get_Show(label){
+    Get_Show(label = ""){
       if(label.length > 6){
         return label.substring(0, 5) + "..."
       }else{
