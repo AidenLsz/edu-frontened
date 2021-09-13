@@ -154,6 +154,8 @@
 
 import {commonAjax} from '@/common/utils/ajax'
 
+// import FileSaver from "file-saver";
+
 export default {
   name: 'KnowledgePoint',
   props: {
