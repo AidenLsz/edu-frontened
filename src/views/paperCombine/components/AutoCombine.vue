@@ -160,6 +160,8 @@
 
 import {commonAjax} from '@/common/utils/ajax'
 
+import FileSaver from "file-saver";
+
 export default {
   name: 'KnowledgePoint',
   props: {
@@ -319,7 +321,7 @@ export default {
             difficulty: this.filterRecord.difficulty,
             numbers: this.filterRecord.numbers,
             database: [],
-            knowledgePoint: this.KnowledgeUnitList
+            knowledgePoint: [[0], [1], [2]]
         }
 
         if(this.filterRecord.database.indexOf(true) != -1){
@@ -334,7 +336,29 @@ export default {
             }
         }
 
-        console.log(data)
+        for(let i = 0; i < this.KnowledgeUnitLevelList.length; i++){
+          data.knowledgePoint[this.KnowledgeUnitLevelList[i]].push(this.KnowledgeUnitList[i])
+        }
+
+        for(let i = 2; i >= 0; i--){
+          if(data.knowledgePoint[i].length == 1){
+            data.knowledgePoint.splice(i, 1)
+          }
+        }
+
+        let file = new File(
+          [JSON.stringify(data, null, 4)],
+          "Auto_Combine.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
+
+        let Flag = true
+        if(Flag){
+          return
+        }
+
+        this.$message.info("后续服务仍在开发过程中，敬请期待...")
     },
     // 调整一下知识点的位置对应的边距
     ExistFilter(){
