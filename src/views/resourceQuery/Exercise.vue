@@ -392,8 +392,22 @@
           <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
-      <el-col :span="3">
+      <!-- <el-col :span="3">
         <el-button class="FilterButton" type="text" @click="Semantic = !Semantic">匹配：{{Semantic == false ? '精准匹配' : '语义匹配'}}</el-button>
+      </el-col> -->
+      <el-col :span="3" >
+        <!-- 多题查重 -->
+        <el-popover
+          placement="bottom-start"
+          width="350"
+          trigger="hover">
+          <el-radio-group v-model="Semantic">
+            <el-radio :label="false">精准匹配</el-radio>
+            <el-radio :label="true">语义匹配</el-radio>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">检索</el-button>
+          </el-radio-group>
+          <el-button slot="reference" class="FilterButton" type="text">{{Get_Pattern()}}</el-button>
+        </el-popover>
       </el-col>
     </el-row>
     <el-row
@@ -1206,6 +1220,13 @@ export default {
         let Result = ['容易', '较易', '中等', '较难', '困难']
         return Str + Result[parseInt(this.Difficulty_Filter_Type) - 1]
       }
+    },
+    Get_Pattern(){
+      let Str = '模式：'
+      if(this.Semantic){
+        return  Str + "语义匹配"
+      }
+      return Str + "精准匹配"
     }
   }
 };
