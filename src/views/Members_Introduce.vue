@@ -592,6 +592,11 @@
 							"mail": "kd193104@mail.ustc.edu.cn",
 							"intro": "中科大18级本科，现从事数据挖掘、机器学习和NLP方面的科研"
 						}
+						,{
+							"name": "王季璐",
+							"mail": "wjl2001@mail.ustc.edu.cn",
+							"intro": "中国科学技术大学18级金融本科生\n不断尝试的人生体验家"
+						}
 					],
 					// 特邀工程师
 					"invitedEngineer": [
@@ -682,6 +687,7 @@
 						"杨星月": "/members/杨星月.jpg",
 						"邬靖宇": "/members/邬靖宇.jpg",
 						"高海涵": "/members/高海涵.jpeg",
+						"王季璐": "/members/王季璐.jpg",
 						// 特邀工程师
 
 						// 实习生
