@@ -160,7 +160,7 @@
 
 import {commonAjax} from '@/common/utils/ajax'
 
-import FileSaver from "file-saver";
+// import FileSaver from "file-saver";
 
 export default {
   name: 'KnowledgePoint',
@@ -346,19 +346,19 @@ export default {
           }
         }
 
-        let file = new File(
-          [JSON.stringify(data, null, 4)],
-          "Auto_Combine.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
+        // let file = new File(
+        //   [JSON.stringify(data, null, 4)],
+        //   "Auto_Combine.json",
+        //   { type: "text/plain;charset=utf-8" }
+        // );
+        // FileSaver.saveAs(file);
 
         let Flag = true
         if(Flag){
+          this.$message.info("后续服务仍在开发过程中，敬请期待...")
           return
         }
-
-        this.$message.info("后续服务仍在开发过程中，敬请期待...")
+        
     },
     // 调整一下知识点的位置对应的边距
     ExistFilter(){
