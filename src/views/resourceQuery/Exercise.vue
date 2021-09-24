@@ -484,8 +484,8 @@ import ComplexInput from "../../common/components/ComplexInput.vue";
 import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
 import Instruction from './components/InstructionExercise.vue'
 import MultiInstruction from './components/InstructionMultiExercise.vue'
-import SelectFile from './components/SelectFile.vue'
-import CutFile from './components/CutFile.vue'
+import SelectFile from './MultiExercise/components/SelectFile.vue'
+import CutFile from './MultiExercise/components/CutFile.vue'
 import {commonAjax} from '@/common/utils/ajax'
 import md5 from 'js-md5';
 
