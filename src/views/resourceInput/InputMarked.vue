@@ -695,9 +695,8 @@ export default {
                             "questions": JSON.stringify(Submit_JSON),
                             }, null, 4),
             'questionInput': true,
-            // 'ig_name':'hyt题库3'
-            'ig_ID':'febe704b-e243-49ee-bc0a-c4382aaa4835'
-            // 'ig_ID':'09ca4ed8-747e-42a4-adf7-f3e68daf3470'
+            'ig_name':'hyt题库4'
+            // 'ig_ID':'febe704b-e243-49ee-bc0a-c4382aaa4835'
         }
 
         commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
