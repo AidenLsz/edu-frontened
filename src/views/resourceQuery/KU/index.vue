@@ -164,11 +164,11 @@ import PreSuc from "./components/PreSuc.vue";
 import CoStudy from "./components/CoStudy.vue";
 import Hierarchy from "./components/Hierarchy.vue";
 import Graph from "./components/Graph.vue";
-import ComplexInput from "../../common/components/ComplexInput.vue";
+import ComplexInput from "@/common/components/ComplexInput.vue";
 import screenfull from 'screenfull'
 import {dataDict} from './components/utils.js'
 import {Message } from 'element-ui'
-import Instruction from './components/InstructionKU.vue'
+import Instruction from '../components/InstructionKU.vue'
 
 export default {
   components: {
