@@ -6,10 +6,10 @@
 </template>
 
 <script>
-import ip1 from '@/assets/IP1.png';
-import ip2 from '@/assets/IP2.png';
-import ip3 from '@/assets/IP3.png';
-import ip4 from '@/assets/IP4.png';
+import ip1 from '@/assets/InstIP/IP1.png';
+import ip2 from '@/assets/InstIP/IP2.png';
+import ip3 from '@/assets/InstIP/IP3.png';
+import ip4 from '@/assets/InstIP/IP4.png';
 import Instruction from '@/common/components/Instruction.vue'
 export default {
   components:{

@@ -11,7 +11,7 @@ import PublicPlatform from "@/views/PublicPlatform"
 
 // 资源查询类页面
 import KU from "@/views/resourceQuery/KU/index.vue";
-import Exercise from "@/views/resourceQuery/Exercise";
+import Exercise from "@/views/resourceQuery/Exercise/index.vue";
 import SearchPaper from "@/views/resourceQuery/SearchPaper"
 import PaperDetailShow from "@/views/resourceQuery/components/PaperDetailShow"
 import Resources from "@/views/resourceQuery/Resources";

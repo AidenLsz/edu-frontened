@@ -6,12 +6,12 @@
 </template>
 
 <script>
-import sp1 from '@/assets/SP1.png';
-import me1 from '@/assets/ME1.png';
-import me2 from '@/assets/ME2.png';
-import me3 from '@/assets/ME3.png';
-import me4 from '@/assets/ME4.png';
-import me5 from '@/assets/ME5.png';
+import sp1 from '@/assets/InstSP/SP1.png';
+import me1 from '@/assets/InstME/ME1.png';
+import me2 from '@/assets/InstME/ME2.png';
+import me3 from '@/assets/InstME/ME3.png';
+import me4 from '@/assets/InstME/ME4.png';
+import me5 from '@/assets/InstME/ME5.png';
 import Instruction from '@/common/components/Instruction.vue'
 export default {
   components:{

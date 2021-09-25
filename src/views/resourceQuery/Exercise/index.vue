@@ -479,13 +479,13 @@
 <script>
 /* eslint-disable */
 import {Message } from 'element-ui'
-import Mathdown from "../../common/components/Mathdown.vue";
-import ComplexInput from "../../common/components/ComplexInput.vue";
-import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
-import Instruction from './components/InstructionExercise.vue'
+import Mathdown from "@/common/components/Mathdown.vue";
+import ComplexInput from "@/common/components/ComplexInput.vue";
+import QuestionAnalyse from "../../resourceAnalyse/QuestionAnalyse.vue"
+import Instruction from '../components/InstructionExercise.vue'
 import MultiInstruction from './components/InstructionMultiExercise.vue'
-import SelectFile from './MultiExercise/components/SelectFile.vue'
-import CutFile from './MultiExercise/components/CutFile.vue'
+import SelectFile from './components/SelectFile.vue'
+import CutFile from './components/CutFile.vue'
 import {commonAjax} from '@/common/utils/ajax'
 import md5 from 'js-md5';
 
@@ -1359,7 +1359,7 @@ export default {
   height: 20px;
   display: inline-block;
   background: rgba(0, 0, 0, 0.1);
-  background-image: url(./../../assets/delete.jpeg);
+  background-image: url(../../../assets/delete.jpeg);
   background-size: 10px;
   background-repeat: no-repeat;
   background-position: 50%;
