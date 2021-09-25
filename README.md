@@ -87,13 +87,10 @@ src     文件夹部分
 
     - utils - 工具类的JS函数存放
         - ajax.js       现在通用的服务访问时的调用模块，由于添加了用户token在里面，如果涉及到用户内容的话建议使用此模块返回的服务访问方法
-<<<<<<< HEAD
         - auth.js       用于将值（通常是store中的token,username等值）存放cookie中
         - index.js      暂未使用 包括时间转换，参数转换等工具
         - validate.js   暂未使用 用于权限认证
         - variable.js   用于存放全局的字典
-=======
->>>>>>> 21474af... README - Temp-Update
         - extraction.js 文字粘贴识别的JS文件，目前是初代版本，功能很弱
         - request.js    调整请求头部的JS文件，用于辅助ajax.js控制访问请求
 
