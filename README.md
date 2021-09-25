@@ -29,7 +29,11 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 格式说明：
     + 符号：此文件夹下的第一级文件夹，用于进行大块的区分
     - 符号：第一级文件夹下的子文件夹或文件，若为文件夹，则需要在后面添加此文件夹的简单说明，若为文件，则用制表符隔开几格后简单说明此文件
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 639ed57... README Update
     完成新需求页面后，应当记得更新此页面的内容，并且在新页面内添加足够的注释说明内容以便于理解和维护
 
 ------------------------------------------------------------------------------------
@@ -58,6 +62,13 @@ src     文件夹部分
 此文件夹下的内容是项目开发过程中的页面内容部分
 
 + assets - 资源模块 - 用于存放项目中使用到的背景图片，符号图片等
+    + InstIM InputMarked   试题输入页面的使用说明图片
+    + InstIP InputPaper    试卷输入
+    + InstKU KnowledgeUnit 知识点搜索
+    + InstME MultiExercise 多试题查重页面
+    + InstSP SearchPaper   试题检索与试卷检索共用
+    + InstSR SearchResources   资源检索
+    + InstUG UserGroup     用户管理
 
 + common - 通用模块 - 用于存放多处多次复用的组件
 
@@ -73,6 +84,13 @@ src     文件夹部分
 
     - utils - 工具类的JS函数存放
         - ajax.js       现在通用的服务访问时的调用模块，由于添加了用户token在里面，如果涉及到用户内容的话建议使用此模块返回的服务访问方法
+<<<<<<< HEAD
+=======
+        - auth.js       用于将值（通常是store中的token,username等值）存放cookie中
+        - index.js      暂未使用 包括时间转换，参数转换等工具
+        - validate.js   暂未使用 用于权限认证
+        - variable.js   用于存放全局的字典
+>>>>>>> 639ed57... README Update
         - extraction.js 文字粘贴识别的JS文件，目前是初代版本，功能很弱
         - request.js    调整请求头部的JS文件，用于辅助ajax.js控制访问请求
 
@@ -104,7 +122,11 @@ src     文件夹部分
 + views - 功能模块，存放所有功能性页面
 
     - admin - 管理员功能模块，目前存放了之前编写的管理员功能的模板（属于暂时用不到的部分，也许以后有用得到的地方）
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 639ed57... README Update
     - labelManage - 标注管理平台部分
 
     - manage - 用户个人信息操作和管理
@@ -148,6 +170,7 @@ src     文件夹部分
         - QuestionAnalyseInput.vue  用户录入试题，用于分析的页面
 
     - resourceQuery - 资源查询部分，目前存放了知识点查询，试题搜索，试卷搜索，教材教辅搜索四部分内容
+<<<<<<< HEAD
         - components - 专属于resourceQuery的组件
         - MultiExercise - 多题查重部分
             - components - 多题查重部分专门用到的组件
@@ -157,6 +180,24 @@ src     文件夹部分
             - index.vue     多题查重部分的主页面
         - Exercise.vue      试题搜索
         - KU.vue            知识点搜索
+=======
+        + components - 专属于resourceQuery的组件
+        + Exercise     根据导航栏路径是否为eems显示为试题搜索或试题查重
+          + components - 专属于试题检索（查重）的组件
+            - InstructionMultiExercise.vue 多题查重使用说明  
+            - SelectFile.vue               上传文件
+            - CutFile.vue                  切分文件
+          - index.vue                    入口文件
+        + KU           知识点搜索
+          + components - 专属于知识点检索的组件
+            - CoStudy.vue         共同学习
+            - Graph.vue           右侧大图
+            - Hierarchy.vue       层级结构
+            - InstructionKU.vue   使用说明
+            - PreSuc.vue          前驱后继
+            - utils.js            
+          - index.vue        入口文件
+>>>>>>> 639ed57... README Update
         - Resources.vue     教材教辅搜索
         - SearchPaper.vue   试卷搜索
 
