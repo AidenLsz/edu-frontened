@@ -6,11 +6,11 @@
 </template>
 
 <script>
-import ku1 from '@/assets/KU1.png';
-import ku2 from '@/assets/KU2.png';
-import ku3 from '@/assets/KU3.png';
-import ku4 from '@/assets/KU4.png';
-import ku5 from '@/assets/KU5.png';
+import ku1 from '@/assets/InstKU/KU1.png';
+import ku2 from '@/assets/InstKU/KU2.png';
+import ku3 from '@/assets/InstKU/KU3.png';
+import ku4 from '@/assets/InstKU/KU4.png';
+import ku5 from '@/assets/InstKU/KU5.png';
 import Instruction from '@/common/components/Instruction.vue'
 export default {
   components:{

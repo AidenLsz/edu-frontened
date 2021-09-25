@@ -330,7 +330,7 @@
           <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="3" v-if="$store.getters.isLuna">
         <el-popover
           placement="bottom-start"
           width="700"
@@ -356,13 +356,13 @@
                 </el-col>
                 <el-col :span="Difficulty_Filter_Type != '6' ? 2 : 7">
                   <el-row type="flex" justify="start">
-                    <el-input-number 
+                    <el-input-number
                       v-show="Difficulty_Filter_Type == '6'"
                       style="margin: 0px"
                       :precision="1" :step="0.1" :max="Difficulty_Filter_Result.max" :min="0.0"
                       v-model="Difficulty_Filter_Result.min"
-                      ></el-input-number> 
-                    <label v-show="Difficulty_Filter_Type != '6'" style="padding-top: 10px;">{{Difficulty_Filter_Result.min}}</label> 
+                      ></el-input-number>
+                    <label v-show="Difficulty_Filter_Type != '6'" style="padding-top: 10px;">{{Difficulty_Filter_Result.min}}</label>
                   </el-row>
                 </el-col>
                 <el-col :span="3">
@@ -372,7 +372,7 @@
                 </el-col>
                 <el-col :span="Difficulty_Filter_Type != '6' ? 2 : 7">
                   <el-row type="flex" justify="start">
-                    <el-input-number 
+                    <el-input-number
                       v-show="Difficulty_Filter_Type == '6'"
                       style="margin: 0px"
                       :precision="1" :step="0.1" :max="1.0" :min="Difficulty_Filter_Result.min"
@@ -392,8 +392,22 @@
           <el-button slot="reference" type="text" v-if="Period_Type.length > 0" @click="Period_Type = []; submit_prepare()" style="color: LightGrey"><i class="el-icon-close"></i></el-button>
         </el-popover>
       </el-col>
-      <el-col :span="3">
+      <!-- <el-col :span="3">
         <el-button class="FilterButton" type="text" @click="Semantic = !Semantic">匹配：{{Semantic == false ? '精准匹配' : '语义匹配'}}</el-button>
+      </el-col> -->
+      <el-col :span="3" >
+        <!-- 多题查重 -->
+        <el-popover
+          placement="bottom-start"
+          width="350"
+          trigger="hover">
+          <el-radio-group v-model="Semantic">
+            <el-radio :label="false">精准匹配</el-radio>
+            <el-radio :label="true">语义匹配</el-radio>
+            <el-button size="small" plain type="primary" @click="submit_prepare()" style="margin-left: 40px; font-size: 14px">检索</el-button>
+          </el-radio-group>
+          <el-button slot="reference" class="FilterButton" type="text">{{Get_Pattern()}}</el-button>
+        </el-popover>
       </el-col>
     </el-row>
     <el-row
@@ -446,7 +460,7 @@
       v-if="question_list.length == 0"
       style="margin: 50px 60px; height: 44vh; font-size: 30px"
       v-loading="loading"
-      element-loading-text="加载中，请等待"
+      element-loading-text="查询中，请等待"
       element-loading-spinner="el-icon-loading">
 
     </el-row>
@@ -465,10 +479,10 @@
 <script>
 /* eslint-disable */
 import {Message } from 'element-ui'
-import Mathdown from "../../common/components/Mathdown.vue";
-import ComplexInput from "../../common/components/ComplexInput.vue";
-import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
-import Instruction from './components/InstructionExercise.vue'
+import Mathdown from "@/common/components/Mathdown.vue";
+import ComplexInput from "@/common/components/ComplexInput.vue";
+import QuestionAnalyse from "../../resourceAnalyse/QuestionAnalyse.vue"
+import Instruction from '../components/InstructionExercise.vue'
 import MultiInstruction from './components/InstructionMultiExercise.vue'
 import SelectFile from './components/SelectFile.vue'
 import CutFile from './components/CutFile.vue'
@@ -1206,6 +1220,13 @@ export default {
         let Result = ['容易', '较易', '中等', '较难', '困难']
         return Str + Result[parseInt(this.Difficulty_Filter_Type) - 1]
       }
+    },
+    Get_Pattern(){
+      let Str = '模式：'
+      if(this.Semantic){
+        return  Str + "语义匹配"
+      }
+      return Str + "精准匹配"
     }
   }
 };
@@ -1338,7 +1359,7 @@ export default {
   height: 20px;
   display: inline-block;
   background: rgba(0, 0, 0, 0.1);
-  background-image: url(./../../assets/delete.jpeg);
+  background-image: url(../../../assets/delete.jpeg);
   background-size: 10px;
   background-repeat: no-repeat;
   background-position: 50%;

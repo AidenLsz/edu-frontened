@@ -38,11 +38,11 @@
     <el-row v-for="(Bundle, Bundle_Index) in SearchingPaper" :key="'Paper_Bundle_' + Bundle_Index">
       <el-col>
         <el-row type="flex" justify="start" style="padding-left: 3vw; font-size: 20px;">
-          <label>{{Get_Label_Show(Bundle, Bundle_Index)}}</label>  
+          <label>{{Get_Label_Show(Bundle, Bundle_Index)}}</label>
         </el-row>
-        <el-row 
-          v-for="(Question, Question_Index) in Bundle.sub_question" 
-          :key="'Paper_Bundle_' + Bundle_Index + '_' + Question_Index" 
+        <el-row
+          v-for="(Question, Question_Index) in Bundle.sub_question"
+          :key="'Paper_Bundle_' + Bundle_Index + '_' + Question_Index"
           style="width: 100%" type="flex" justify="center">
           <!-- {{Ques.id}}<br>{{Ques.stem}}<br>{{Ques.options}}<br>{{Ques.answer}}<br>{{Ques.analysis}} -->
           <el-col :span="20" class="quesCard" style="margin-left: 0">
@@ -85,7 +85,7 @@
               </el-col>
             </el-row>
           </el-col>
-        </el-row>  
+        </el-row>
       </el-col>
     </el-row>
     <el-row type="flex" justify="center" style="margin-top: 20px; margin-bottom: 30px">
@@ -152,7 +152,7 @@
       >
       <el-row>
         <el-col :span="17" class="quesCard">
-          <el-row 
+          <el-row
             style="text-align: left; padding-left: 30px; font-size: 16px; padding-top: 15px; background: white; padding-bottom: 15px;">
             <label style="height: 60px; line-height: 60px">{{Paper_Title_List[Paper_Index]}}</label>
           </el-row>
@@ -339,7 +339,7 @@ export default {
       Question_Show_Infos.stem = Aim.stem;
       Question_Show_Infos.answer = Aim.answer;
       Question_Show_Infos.analyse = Aim.analysis;
-      
+
       this.$emit("Add_To_Cart", JSON.stringify(Question_Show_Infos));
     },
     // 查看单题分析报告
@@ -386,7 +386,7 @@ export default {
     initDatabaseList(){
       this.filterRecord.database = [true]
       this.databaseAim = [
-        {name: '全部', nick: '全部'}, 
+        {name: '全部', nick: '全部'},
         {name: 'public', nick: '公开题库'}]
       //未登录时，不调用获取题库的端口
       if(!this.$store.state.user.token){
@@ -807,7 +807,7 @@ export default {
     border: 1px solid #409EFF;
     color: #409EFF;
     border-radius: 30px;
-    margin-left: 8px; 
+    margin-left: 8px;
     margin-right: 8px;
     box-sizing: border-box;
     cursor: pointer;
@@ -818,7 +818,7 @@ export default {
     border: 1px solid #409EFF;
     color: white;
     border-radius: 30px;
-    margin-left: 8px; 
+    margin-left: 8px;
     margin-right: 8px;
     box-sizing: border-box;
     background: #409EFF;
