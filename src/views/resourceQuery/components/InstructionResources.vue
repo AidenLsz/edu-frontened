@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import sr1 from '@/assets/SR1.png';
-import sr2 from '@/assets/SR2.png';
+import sr1 from '@/assets/InstSR/SR1.png';
+import sr2 from '@/assets/InstSR/SR2.png';
 
 import Instruction from '@/common/components/Instruction.vue'
 export default {

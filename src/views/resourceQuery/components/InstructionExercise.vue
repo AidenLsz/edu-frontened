@@ -6,15 +6,15 @@
 </template>
 
 <script>
-import sp1 from '@/assets/SP1.png';
-import sp2 from '@/assets/SP2.png';
-import sp3 from '@/assets/SP3.png';
-import sp4 from '@/assets/SP4.png';
-import sp5 from '@/assets/SP5.png';
-import sp6 from '@/assets/SP6.png';
-import sp7 from '@/assets/SP7.png';
-import sp8 from '@/assets/SP8.png';
-import sp9 from '@/assets/SP9.png';
+import sp1 from '@/assets/InstSP/SP1.png';
+import sp2 from '@/assets/InstSP/SP2.png';
+import sp3 from '@/assets/InstSP/SP3.png';
+import sp4 from '@/assets/InstSP/SP4.png';
+import sp5 from '@/assets/InstSP/SP5.png';
+import sp6 from '@/assets/InstSP/SP6.png';
+import sp7 from '@/assets/InstSP/SP7.png';
+import sp8 from '@/assets/InstSP/SP8.png';
+import sp9 from '@/assets/InstSP/SP9.png';
 import Instruction from '@/common/components/Instruction.vue'
 export default {
   components:{

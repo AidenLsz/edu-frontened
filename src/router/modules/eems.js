@@ -6,13 +6,13 @@ const router=[
   {
     path: "exercise",
     name: "Exercise",
-    component:()=> import("@/views/resourceQuery/Exercise"),
+    component:()=> import("@/views/resourceQuery/Exercise/index"),
   },
-  {
-    path: "multiexercise",
-    name: "Exercise",
-    component:()=> import("@/views/resourceQuery/MultiExercise/index.vue"),
-  },
+  // {
+  //   path: "multiexercise",
+  //   name: "Exercise",
+  //   component:()=> import("@/views/resourceQuery/MultiExercise/index.vue"),
+  // },
   {
     path: "searchPaper",
     name: "SearchPaper",

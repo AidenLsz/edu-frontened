@@ -6,10 +6,10 @@
 </template>
 
 <script>
-import im1 from '@/assets/IM1.png';
-import im2 from '@/assets/IM2.png';
-import im3 from '@/assets/IM3.png';
-import im4 from '@/assets/IM4.png';
+import im1 from '@/assets/InstIM/IM1.png';
+import im2 from '@/assets/InstIM/IM2.png';
+import im3 from '@/assets/InstIM/IM3.png';
+import im4 from '@/assets/InstIM/IM4.png';
 import Instruction from '@/common/components/Instruction.vue'
 export default {
   components:{
