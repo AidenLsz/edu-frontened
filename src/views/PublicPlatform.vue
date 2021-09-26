@@ -27,7 +27,7 @@
 			</el-row>
 
 			<el-row style="padding-top: 30px; padding-bottom: 30px">
-				<el-col :span="8">
+				<el-col :span="6">
 					<el-row>
 						<el-button @click="ToImageTranscription()" circle style="height: 200px; width: 200px;"><img
 								src="../assets/icon9.png" width="50%" />
@@ -42,7 +42,7 @@
 						<span>识别图片中的文字、公式与图例，并将其中的公式转化为统一标准的排版语言（如latex）</span>
 					</el-row>
 				</el-col>
-				<el-col :span="8">
+				<el-col :span="6">
 					<el-row>
 						<el-button @click="ToEstimate()" circle style="height: 200px; width: 200px"><img
 								src="../assets/icon10.png" width="50%" />
@@ -57,7 +57,7 @@
 						<span>自动预测试题的难度、信效度和知识点等属性，提高学生的做题效率和提升组卷的质量</span>
 					</el-row>
 				</el-col>
-				<el-col :span="8">
+				<el-col :span="6">
 					<el-row>
 						<el-button @click="ToSimilarity()" circle style="height: 200px; width: 200px"><img
 								src="../assets/icon11.png" width="50%" />
@@ -70,6 +70,21 @@
 					</el-row>
 					<el-row class="description">
 						<span>基于人工智能算法，判断两个题目之间的相似程度</span>
+					</el-row>
+				</el-col>
+				<el-col :span="6">
+					<el-row>
+						<el-button @click="ToSegmentation()" circle style="height: 200px; width: 200px"><img
+								src="../assets/icon14.png" width="50%" />
+						</el-button>
+					</el-row>
+					<el-row>
+						<label @click="ToSegmentation()" class="name">
+							试卷打散入库
+						</label>
+					</el-row>
+					<el-row class="description">
+						<span>将试卷切分为题目、答案、解析等部分，提取其中的试题并入数据库</span>
 					</el-row>
 				</el-col>
 			</el-row>
@@ -150,6 +165,12 @@
 			ToSimilarity() {
 				this.$router.push({
 					path: "/Similarity"
+				});
+				this.ToTop();
+			},
+			ToSegmentation() {
+				this.$router.push({
+					path: "/segmentation"
 				});
 				this.ToTop();
 			},

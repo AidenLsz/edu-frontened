@@ -3,6 +3,7 @@
 // Views主目录
 import Admin from "@/views/Admin";
 import Estimate from "@/views/publicPlatform/Estimate.vue";
+import Segmentation from "@/views/publicPlatform/Segmentation.vue";
 import Home from "@/views/Home";
 import Members from "@/views/Members_Introduce";
 import Similarity from "@/views/publicPlatform/Similarity.vue";
@@ -88,6 +89,11 @@ const visitorRouter=[
     path: "/estimate",
     name: "Estimate",
     component: Estimate,
+  },
+  {
+    path: "/segmentation",
+    name: "Segmentation",
+    component: Segmentation,
   },
   {
     path: "/similarity",
