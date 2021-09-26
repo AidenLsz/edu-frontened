@@ -1,0 +1,3291 @@
+{
+    "paper_title": "None",
+    "type": 0,
+    "paper": [
+        {
+            "raw_text": "绝密★启用前\n一、选择题：本题共12小题，每小题4分，共48分。在每小题给出的四个选项中，只有一项是符合题目要求的。\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:12pt",
+                        "para_text": "绝密★启用前",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "height:0pt; display:block; position:absolute; z-index:0",
+                                "run_type": "1",
+                                "run_text": "",
+                                "image": {
+                                    "src": "tmpk3jyygep-HTML.001.png",
+                                    "width": "36",
+                                    "height": "51",
+                                    "alt": "",
+                                    "style": "margin-top:913pt; margin-left:787pt; -aw-left-pos:877pt; -aw-rel-hpos:page; -aw-rel-vpos:page; -aw-top-pos:985pt; -aw-wrap-type:none; position:absolute"
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体; font-weight:bold",
+                                "run_type": "0",
+                                "run_text": "绝密★启用前",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:12pt",
+                        "para_text": "一、选择题：本题共12小题，每小题4分，共48分。在每小题给出的四个选项中，只有一项是符合题目要求的。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体; font-weight:bold",
+                                "run_type": "0",
+                                "run_text": "一、选择题：本题共12小题，每小题4分，共48分。在每小题给出的四个选项中，只有一项是符合题目要求的。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "1.某家国有企业集团进行混合所有制改革，向上下游知名民营企业出让29．8%的股权和部分董事席位，吸纳资金33．6亿元。这有利于该企业\n①改善治理结构，提高企业管理水平\n②控制上下游企业，实现一体化经营\n③调整资本结构，降低企业经营风险\n④激发企业活力，促进资本保值增值\nA. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "1.某家国有企业集团进行混合所有制改革，向上下游知名民营企业出让29．8%的股权和部分董事席位，吸纳资金33．6亿元。这有利于该企业",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "1.",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "某家国有企业集团进行混合所有制改革，向上下游知名民营企业出让29．8%的股权和部分董事席位，吸纳资金33．6亿元。这有利于该企业",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "①改善治理结构，提高企业管理水平",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "①改善治理结构，提高企业管理水平",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "②控制上下游企业，实现一体化经营",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "②控制上下游企业，实现一体化经营",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "③调整资本结构，降低企业经营风险",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③调整资本结构，降低企业经营风险",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "④激发企业活力，促进资本保值增值",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "④激发企业活力，促进资本保值增值",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "A. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "A. ",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "①②",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:100pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:121.9pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "B. ",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "①④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.86pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:243.8pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "C. ",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "②③",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.55pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:365.7pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "D. ",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "2.2012～2018年间甲国对乙国服务贸易出口变化如图所示。促成这一变化经济现象有\n\n①乙国吸引甲国的游客数量逐年增长\n②乙国在甲国的留学生人数不断增加\n③乙国出口到甲国的文化产品日趋丰富\n④乙国向甲国支付的知识产权费用持续上升\nA. ①②&#xa0;B. ①③&#xa0;C. ②④&#xa0;D. ③④\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "2.2012～2018年间甲国对乙国服务贸易出口变化如图所示。促成这一变化经济现象有",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "2.",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "2012～2018年间",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "甲国对乙国服务贸易出口变化如图所示。促成这一变化",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "text-align:left",
+                                "run_type": "1",
+                                "run_text": "",
+                                "image": {
+                                    "src": "tmpk3jyygep-HTML.002.png",
+                                    "width": "18",
+                                    "height": "20",
+                                    "alt": "",
+                                    "style": "-aw-left-pos:0pt; -aw-rel-hpos:page; -aw-rel-vpos:page; -aw-top-pos:0pt; -aw-wrap-type:inline"
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "经济现象有",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "text-align:left",
+                                "run_type": "1",
+                                "run_text": "",
+                                "image": {
+                                    "src": "tmpk3jyygep-HTML.003.png",
+                                    "width": "261",
+                                    "height": "137",
+                                    "alt": "",
+                                    "style": "-aw-left-pos:0pt; -aw-rel-hpos:page; -aw-rel-vpos:page; -aw-top-pos:0pt; -aw-wrap-type:inline"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "①乙国吸引甲国的游客数量逐年增长",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "①乙国吸引甲国的游客数量逐年增长",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "②乙国在甲国的留学生人数不断增加",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "②乙国在甲国的留学生人数不断增加",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "③乙国出口到甲国的文化产品日趋丰富",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③乙国出口到甲国的文化产品日趋丰富",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "④乙国向甲国支付的知识产权费用持续上升",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "④乙国向甲国支付的知识产权费用持续上升",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "A. ①②&#xa0;B. ①③&#xa0;C. ②④&#xa0;D. ③④",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "A. ①②",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:100.02pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:121.9pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "B. ①③",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.89pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:243.8pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "C. ②④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.57pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:365.7pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "D. ③④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "3.2019年2月，中共中央、国务院印发《粤港澳大湾区发展规划纲要》，对推动粤港澳大湾区发展，建设世界级城市群做出重大战略部署。粤港澳大湾区位于“一带一路”的交汇点，具有“一个国家、两种制度、三个关区”的特点。从产业结构看，港澳地区以金融、信息技术等现代服务业为主，广东九个城市以生产制造为主。关于打造粤港澳大湾区的重大意义，下列判断中不恰当的是\nA. 促进产业转型升级，实现中国东中西区域协调发展\nB. 丰富“一国两制”实践内涵，进一步密切内地与港澳交流合作\nC. 推进供给侧结构性改革，加快培育发展新动能、实现创新驱动发展\nD. 建立与国际接轨的开放型经济新体制，建设高水平参与国际经济合作新平台\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "3.2019年2月，中共中央、国务院印发《粤港澳大湾区发展规划纲要》，对推动粤港澳大湾区发展，建设世界级城市群做出重大战略部署。粤港澳大湾区位于“一带一路”的交汇点，具有“一个国家、两种制度、三个关区”的特点。从产业结构看，港澳地区以金融、信息技术等现代服务业为主，广东九个城市以生产制造为主。关于打造粤港澳大湾区的重大意义，下列判断中不恰当的是",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "3.",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "2019年2月，中共中央、国务院印发《粤港澳大湾区发展规划纲要》，对推动粤港澳大湾区发展，建设世界级城市群做出重大战略部署。粤港澳大湾区位于“一带一路”的交汇点，具有“一个国家、两种制度、三个关区”的特点。从产业结构看，港澳地区以金融、信息技术等现代",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "服务业为主，广东九个城市以生产制造为主。关于打造粤港澳大湾区的重大意义，下列判断中不恰当",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "的是",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "A. 促进产业转型升级，实现中国东中西区域协调发展",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "A. 促进产业转型升级，实现中国东中西区域协调发展",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "B. 丰富“一国两制”实践内涵，进一步密切内地与港澳交流合作",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "B. 丰富“一国两制”实践内涵，进一步密切内地与港澳交流合作",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "C. 推进供给侧结构性改革，加快培育发展新动能、实现创新驱动发展",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "C. 推进供给侧结构性改革，加快培育发展新动能、实现创新驱动发展",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "D. 建立与国际接轨的开放型经济新体制，建设高水平参与国际经济合作新平台",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "D. 建立与国际接轨的开放型经济新体制，建设高水平参与国际经济合作新平台",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "4.某国是铁矿石、石油等大宗商品（以美元计价）的进口国。当美元指数持续上涨时，该国面临通货膨胀的压力。不考虑其他因素的影响，这一传导过程是\n①进口原材料成本上升&#xa0; &#xa0; \n②居民消费价格上涨\n③生产者出厂价格上涨&#xa0;&#xa0;&#xa0; \n④生产者购进价格上涨\nA. ①→④→③→②&#xa0;B. ①→④→②→③&#xa0;C. ④→①→③→②&#xa0;D. ④→①→②→③\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "4.某国是铁矿石、石油等大宗商品（以美元计价）的进口国。当美元指数持续上涨时，该国面临通货膨胀的压力。不考虑其他因素的影响，这一传导过程是",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "4.",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "某国是铁矿石、石油等大宗商品（以美元计价）的进口国。当美元指数持续上涨时，该国面临通货膨胀的压力。不考虑其他因素的影响，这一传导过程是",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "①进口原材料成本上升&#xa0; &#xa0; ",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "①进口原材料成本上升",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体; -aw-import:spaces",
+                                "run_type": "0",
+                                "run_text": "&#xa0; ",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体; -aw-import:spaces",
+                                "run_type": "0",
+                                "run_text": "&#xa0; ",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "②居民消费价格上涨",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "②居民消费价格上涨",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "③生产者出厂价格上涨&#xa0;&#xa0;&#xa0; ",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③生产者出厂价格上涨",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体; -aw-import:spaces",
+                                "run_type": "0",
+                                "run_text": "&#xa0;&#xa0;&#xa0; ",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "④生产者购进价格上涨",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "④生产者购进价格上涨",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "A. ①→④→③→②&#xa0;B. ①→④→②→③&#xa0;C. ④→①→③→②&#xa0;D. ④→①→②→③",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "A. ①→④→③→②",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:61.13pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:121.9pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "B. ①→④→②→③",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:61pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:243.8pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "C. ④→①→③→②",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:60.67pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:365.7pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "D. ④→①→②→③",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "5.2018年，西藏自治区开始实施以“神圣国土守护者、幸福家园建设者”为主题的乡村振兴工程，将边民脱贫致富和守边固边相结合，补齐基础设施和公共服务的短板，加快边境地区发展。边疆民族地区实施乡村振兴工程\n①是充分发挥民族地区资源优势的要求\n②保障了自治区少数民族人民的自治权\n③是保证边防安全、维护国家统一的重要举措\n④有利于实现共同富裕，激发各族人民的爱国热情\nA. ①②&#xa0;B. ①③&#xa0;C. ②④&#xa0;D. ③④\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "5.2018年，西藏自治区开始实施以“神圣国土守护者、幸福家园建设者”为主题的乡村振兴工程，将边民脱贫致富和守边固边相结合，补齐基础设施和公共服务的短板，加快边境地区发展。边疆民族地区实施乡村振兴工程",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "5.",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "2018年，西藏自治区开始实施以“神圣国土守护者、幸福家园建设者”为主题的乡村振兴工程，将边民脱贫致富和守边固边相结合，补齐基础设施和公共服务的短板，加快边境地区发展。边疆民族地区实施乡村振兴工程",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "①是充分发挥民族地区资源优势的要求",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "①是充分发挥民族地区资源优势的要求",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "②保障了自治区少数民族人民的自治权",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "②保障了自治区少数民族人民的自治权",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "③是保证边防安全、维护国家统一的重要举措",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③是保证边防安全、维护国家统一的重要举措",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "④有利于实现共同富裕，激发各族人民的爱国热情",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "④有利于实现共同富裕，激发各族",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "人民的爱国热情",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "A. ①②&#xa0;B. ①③&#xa0;C. ②④&#xa0;D. ③④",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "A. ①②",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:100.02pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:121.9pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "B. ①③",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.89pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:243.8pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "C. ②④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.57pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:365.7pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "D. ③④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "6.目前，上海合作组织共有8个成员国、4个观察员国、6个对话伙伴，同联合国等国际和地区组织建立了广泛的合作关系；其成员国的经济和人口总量分别约占全球的20%和40%。在2018年青岛峰会上，上海合作组织共通过23份安全、经济、人文等领域合作文件。上海合作组织是\n①横跨欧亚大陆的地区性国家联盟\n②推动经济全球化深入发展的主导力量\n③维护地区及全球安全稳定的重要因素\n④坚持开放包容、促进互利合作的多边机制\nA. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "6.目前，上海合作组织共有8个成员国、4个观察员国、6个对话伙伴，同联合国等国际和地区组织建立了广泛的合作关系；其成员国的经济和人口总量分别约占全球的20%和40%。在2018年青岛峰会上，上海合作组织共通过23份安全、经济、人文等领域合作文件。上海合作组织是",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "6.",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "目前，上海合作组织共有8个成员国、4个观察员国、6个对话伙伴，同联合国等国际和地区组织建立了广泛的合作关系；其成员国的经济和人口总量分别约占全球的20%和40%。在2018年青岛峰会上，上海合作组织共通过23份安全、经济、人文等领域合作文件。上海合作组织是",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "①横跨欧亚大陆的地区性国家联盟",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "①横跨欧亚大陆的地区性国家联盟",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "②推动经济全球化深入发展的主导力量",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "②推动经济全球化深入发展的主导力量",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "③维护地区及全球安全稳定的重要因素",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③维护地区及全球安全稳定的重要因素",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "④坚持开放包容、促进互利合作的多边机制",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "④坚持开放包容、促进互利合作的多边机制",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "A. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "A. ①②",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:100.02pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:121.9pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "B. ①④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.89pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:243.8pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "C. ②③",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.57pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:365.7pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "D. ",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "我国已成为全球生态文明建设的重要参与者、贡献者、引领者。据此完成下面小题。\n",
+            "is_question": 0,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; text-indent:21pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "我国已成为全球生态文明建设的重要参与者、贡献者、引领者。据此完成下面小题。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:楷体",
+                                "run_type": "0",
+                                "run_text": "我国已成为全球生态文明建设的重要参与者、贡献者、引领者。据此完成下面小题。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "7. 2018年5月，习近平在全国生态环境保护大会上发表重要讲话强调，新时代推进生态文明建设，必须坚持共谋全球生态文明建设，深度参与全球环境治理，形成世界环境保护和可持续发展解决方案，引导应对气候变化国际合作。这一论述\n①表明全球环境治理的价值共识已经形成\n②反映中国拥有全球环境治理的话语主导权\n③彰显中国在全球环境治理中的文化自觉和文化自信\n④表达中国为全球环境治理贡献智慧和力量的责任担当\nA ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "7. 2018年5月，习近平在全国生态环境保护大会上发表重要讲话强调，新时代推进生态文明建设，必须坚持共谋全球生态文明建设，深度参与全球环境治理，形成世界环境保护和可持续发展解决方案，引导应对气候变化国际合作。这一论述",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "7. 2018年5月，习近平在全国生态环境保护大会上发表重要讲话强调，新时代推进生态文明建设，必须坚持共谋全球生态文明建设，深度参与全球环境治理，形成世界环境保护和可持续发展",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "text-align:left",
+                                "run_type": "1",
+                                "run_text": "",
+                                "image": {
+                                    "src": "tmpk3jyygep-HTML.002.png",
+                                    "width": "18",
+                                    "height": "20",
+                                    "alt": "",
+                                    "style": "-aw-left-pos:0pt; -aw-rel-hpos:page; -aw-rel-vpos:page; -aw-top-pos:0pt; -aw-wrap-type:inline"
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "解决方案，引导应对气候变化国际合作。这一论述",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "①表明全球环境治理的价值共识已经形成",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "①表明全球环境治理的价值共识已经形成",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "②反映中国拥有全球环境治理的话语主导权",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "②反映中国拥有全球环境治理的话语主导权",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "③彰显中国在全球环境治理中的文化自觉和文化自信",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③彰显中国在全球环境治理中的文化自觉和文化自信",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "④表达中国为全球环境治理贡献智慧和力量的责任担当",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "④表达中国为全球环境治理贡献智慧和力量的责任担当",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "A ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "A",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "text-align:left",
+                                "run_type": "1",
+                                "run_text": "",
+                                "image": {
+                                    "src": "tmpk3jyygep-HTML.004.png",
+                                    "width": "7",
+                                    "height": "8",
+                                    "alt": "",
+                                    "style": "-aw-left-pos:0pt; -aw-rel-hpos:page; -aw-rel-vpos:page; -aw-top-pos:0pt; -aw-wrap-type:inline"
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": " ①②",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:103.35pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:121.9pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "B. ①④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.89pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:243.8pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "C. ②",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.57pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:365.7pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "D. ③④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "8. 2018年，某省人大环境与资源保护委员会建立环境资源保护监督系统。通过该系统，人大代表能够在线查阅政府部门对所反映问题的受理、处置和反馈情况，还可查阅国家法律和本省地方性法规。建立环境资源保护监督系统，能够\n①强化人大环境监督机构的职能\n②畅通人大代表监督环境问题的渠道\n③提高人大代表处置环境问题的能力\n④增强人大代表监督环境问题的时效性\nA. ①②&#xa0;B. ①③&#xa0;C. ②④&#xa0;D. ③④\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "8. 2018年，某省人大环境与资源保护委员会建立环境资源保护监督系统。通过该系统，人大代表能够在线查阅政府部门对所反映问题的受理、处置和反馈情况，还可查阅国家法律和本省地方性法规。建立环境资源保护监督系统，能够",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "8. 2018年，某省人大环境与资源保护委员会建立环境资",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "源保护监督系统。通过该系统，人大代表能够在线查阅政府部门对所反映问题的受理、处置和反馈情况，还可查阅国家法律和本省地方性法规。建立环境资源保护监督系统，能够",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "①强化人大环境监督机构的职能",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "①强化人大环境监督机构的职能",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "②畅通人大代表监督环境问题的渠道",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "②畅通人大代表监督环境问题的渠道",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "③提高人大代表处置环境问题的能力",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③提高人大代表处置环境问题的能力",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "④增强人大代表监督环境问题的时效性",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "④增强人大代表监督环境问题的时效性",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "A. ①②&#xa0;B. ①③&#xa0;C. ②④&#xa0;D. ③④",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "A. ①②",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:100.02pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:121.9pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "B. ①③",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.89pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:243.8pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "C. ②④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.57pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:365.7pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "D. ③④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "《中共中央国务院关于开展质量提升行动的指导意见》提出，实施中国精品培育工程，加强对中华老字号、地理标志等品牌培育和保护，培育更多百年老店和民族品牌。据此完成下面小题。\n",
+            "is_question": 0,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; text-indent:21pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "《中共中央国务院关于开展质量提升行动的指导意见》提出，实施中国精品培育工程，加强对中华老字号、地理标志等品牌培育和保护，培育更多百年老店和民族品牌。据此完成下面小题。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:楷体",
+                                "run_type": "0",
+                                "run_text": "《中共中央国务院关于开展质量提升行动的指导意见》提出，实施中国精品培育工程，加强对中华老字号、地理标",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:楷体",
+                                "run_type": "0",
+                                "run_text": "志等品牌培育和保护，培育更多百年老店和民族品牌。据此完成下面小题。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "9. 商务部先后认定两批中华老字号共1128家，平均有160多年历史。北京全聚德、上海老凤祥、天津狗不理……这些品牌耳熟能详，在老百姓中间有良好口碑和广泛影响力。这表明\n①中华老字号具有明显的地域文化特征\n②中华老字号的文化传承取决于品牌的认定\n③中华老字号的文化价值不受社会历史变迁影响\n④中华老字号的影响力得益于其包含的民族文化基因\nA. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "9. 商务部先后认定两批中华老字号共1128家，平均有160多年历史。北京全聚德、上海老凤祥、天津狗不理……这些品牌耳熟能详，在老百姓中间有良好口碑和广泛影响力。这表明",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "9. 商务部先后认定两批中华老字号共1128家，平均有160多年",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "text-align:left",
+                                "run_type": "1",
+                                "run_text": "",
+                                "image": {
+                                    "src": "tmpk3jyygep-HTML.002.png",
+                                    "width": "18",
+                                    "height": "20",
+                                    "alt": "",
+                                    "style": "-aw-left-pos:0pt; -aw-rel-hpos:page; -aw-rel-vpos:page; -aw-top-pos:0pt; -aw-wrap-type:inline"
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "历史。北京全聚德、上海老凤祥、天津狗不理……这些品牌耳熟能详，在老百姓中间有良好口碑和广泛影响力。这表明",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "①中华老字号具有明显的地域文化特征",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "①中华老字号具有明显的地域文化特征",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "②中华老字号的文化传承取决于品牌的认定",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "②中华老字号的文化传承取决于品牌的认定",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "③中华老字号的文化价值不受社会历史变迁影响",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③中华老字号的文化价值不受社会历史变迁影响",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "④中华老字号的影响力得益于其包含的民族文化基因",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "④中华老字号的影响力得益于其包含的民族文化基因",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "A. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "A. ①②",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:100.02pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:121.9pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "B. ①④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.89pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:243.8pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "C. ②③",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.57pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:365.7pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "D. ③④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "10. 中华老字号要成为“常青树”，需要不断创新。从哲学上看，这是因为\n①只有不断吐故纳新，事物才能保持旺盛的生命力\n②事物的优势和劣势相互转化依赖于人的主观能动性\n③只要不断批判和否定，新事物就能保持质的稳定性\n④事物只有通过自我否定、自我超越才能得到不断发展\nA. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "10. 中华老字号要成为“常青树”，需要不断创新。从哲学上看，这是因为",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "10. 中华老字号要成为“常青树”，需要不断创新。从哲学",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "上看，这是因为",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "①只有不断吐故纳新，事物才能保持旺盛的生命力",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "①只有不断吐故纳新，事物才能保持旺盛的生命力",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "②事物的优势和劣势相互转化依赖于人的主观能动性",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "②事物的优势和劣势相互转化依赖于人的主观能动性",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "③只要不断批判和否定，新事物就能保持质的稳定性",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③只要不断批判和否定，新事物就能保持质的稳定性",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "④事物只有通过自我否定、自我超越才能得到不断发展",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "④事物只有通过自我否定、自我超越才能得到不断发展",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "A. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "A. ①②",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:100.02pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:121.9pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "B. ①④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.89pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:243.8pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "C. ②③",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.57pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:365.7pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "D. ③④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "11.毛泽东说：“战争历史中有在连战皆捷之后吃了一个败仗以至全功尽弃的，有在吃了许多败仗之后打了一个胜仗因而开展了新局面的。”其中蕴含的哲学道理是\nA. 处于非支配地位的部分及其变化不影响整体的功能\nB. 在一些事物的存在和发展中，整体服从和服务于部分\nC. 关键部分的功能及其变化甚至对整体功能起决定作用\nD. 只要充分发挥部分的作用，就能实现整体的最优目标\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "11.毛泽东说：“战争历史中有在连战皆捷之后吃了一个败仗以至全功尽弃的，有在吃了许多败仗之后打了一个胜仗因而开展了新局面的。”其中蕴含的哲学道理是",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "11.",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "毛泽东说：“战争历史中有在连战皆捷之后吃了一个败仗以至全功尽弃的，有在吃了许多败仗之后打了一个胜仗因而开展了新局面的。”其中蕴含的哲学道理是",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "A. 处于非支配地位的部分及其变化不影响整体的功能",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "A. 处于非支配地位的部分及其变化不影响整体的功能",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "B. 在一些事物的存在和发展中，整体服从和服务于部分",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "B. 在一些事物的存在和发展中，整体服从和服务于部分",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "C. 关键部分的功能及其变化甚至对整体功能起决定作用",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "C",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": ". 关键部分的功能及其变化甚至对整体功能起决定作用",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "D. 只要充分发挥部分的作用，就能实现整体的最优目标",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "D. 只要充分发挥部分的作用，就能实现整体的最优目标",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "12.废旧塑料的回收利用一直受到污水排放问题的困扰。一位“草根发明家”转变思路，经过反复试验，研制成无水清洗的废旧塑料自动化生产线，脏兮兮的废旧塑料进入生产线，变成了“新鲜、干净”的塑料颗粒。这表明\n①实践的需要推动人的创新能力不断发展\n②批判性思维能够促进认识发展和实践创新\n③观念创新决定着创新思维活动的内容和性质\n④能否应用于实践是衡量创新成功与否的唯一标准\nA. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "12.废旧塑料的回收利用一直受到污水排放问题的困扰。一位“草根发明家”转变思路，经过反复试验，研制成无水清洗的废旧塑料自动化生产线，脏兮兮的废旧塑料进入生产线，变成了“新鲜、干净”的塑料颗粒。这表明",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "12.",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "废旧塑料的回收利用一直受到污水排放问题的困扰。一位“草根发明家”转变思路，经过反复试验，研制成无水清洗的废旧塑料自动化生产线，脏兮兮的废旧塑料进入生产线，变成了“新鲜、干净”的塑料颗粒。这表明",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "①实践的需要推动人的创新能力不断发展",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "①实践的需要推动人的创新能力不断发展",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "②批判性思维能够促进认识发展和实践创新",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "②批判性思维能够促进认识发展和实践创新",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "③观念创新决定着创新思维活动的内容和性质",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "③观念创新决定着创新思维活动的内容和性质",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "④能否应用于实践是衡量创新成功与否的唯一标准",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "④能否应用于实践是衡量创新成功与否的唯一标准",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "A. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "A. ①②",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:100.02pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:121.9pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "B. ①④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.89pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:243.8pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "C. ②③",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "width:99.57pt; display:inline-block; -aw-tabstop-align:left; -aw-tabstop-pos:365.7pt",
+                                "run_type": "0",
+                                "run_text": "&#xa0;",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "D.",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": " ③④",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "13.阅读材料，完成下列要求。\n推动形成全面开放新格局是党中央的决策部署。\n材料一党的十九大要求实行高水平的贸易和投资自由化便利化政策，保护外商投资合法权益。制定外资基础性法律列入《全国人大常委会2018年立法工作计划》。商务部、国家发展改革委、司法部经征求中央财办、外交部、财政部、人民银行等72个中央有关单位以及地方人民政府等方面的意见，起草形成了《中华人民共和国外商投资法（草案）》。2018年12月，全国人大常委会初次审议这一草案并在中国人大网公布，向社会征求意见。2019年3月，十三届全国人大二次会议审议通过《中华人民共和国外商投资法》。\n材料二近几年中国新能源汽车发展迅速，生产企业已达200多家，产业集群优势明显。2018年，中国取消新能源汽车外资股比限制，允许该领域实行外资独资经营。新通过的《外商投资法》对外商投资实行准入前的国民待遇加负面清单管理制度。某公司是国外一家具有全球影响力的新能源汽车企业，其设计与生产理念同当前全球先进制造、绿色能源、智能制造高度契合，2018年该公司入选世界品牌500强。2019年1月，该公司决定在上海投资70亿美元开工建设集新能源汽车的研发、制造、销售等功能于一体的超级工厂，预计年生产纯电动汽车50万辆。2018年，中国新能源汽车产销分别完成127万辆和125．6万辆，比上年分别增长59．9%和61．7%。市场预测，到2028年新能源汽车在中国的销量将超过1100万辆。\n（1）结合材料一，运用政治生活知识说明外商投资法的制定是如何体现依法治国方略的。\n（2）结合材料二，运用经济生活知识分析该公司为何在中国投资建设新能源汽车工厂。\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "13.阅读材料，完成下列要求。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "13.",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "阅读材料，完成下列要求。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; text-indent:21pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "推动形成全面开放新格局是党中央的决策部署。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:楷体",
+                                "run_type": "0",
+                                "run_text": "推动形成全面开放新格局是党中央的决策部署。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; text-indent:21pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "材料一党的十九大要求实行高水平的贸易和投资自由化便利化政策，保护外商投资合法权益。制定外资基础性法律列入《全国人大常委会2018年立法工作计划》。商务部、国家发展改革委、司法部经征求中央财办、外交部、财政部、人民银行等72个中央有关单位以及地方人民政府等方面的意见，起草形成了《中华人民共和国外商投资法（草案）》。2018年12月，全国人大常委会初次审议这一草案并在中国人大网公布，向社会征求意见。2019年3月，十三届全国人大二次会议审议通过《中华人民共和国外商投资法》。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:楷体",
+                                "run_type": "0",
+                                "run_text": "材料一党的十九大要求实行高水平的贸易和投资自由化便利化政策，保护外商投资合法权益。制定外资基础性法律列入《全国人大常委会2018年立法工作计划》。商务部、国家发展改革委、司法部经征求中央财办、外交部、财政部、人民银行等72个中央有关单位以及地方人民政府等方面的意见，起草形成了《中华人民共和国外商投资法（草案）》。2018年12月，全国人大常委会初次审议这一草案并在中国人大网公布，向社会征求意见。2019年3月，十三届全国人大",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:楷体",
+                                "run_type": "0",
+                                "run_text": "二次会议审议通过《中华人民共和国外商投资法》。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; text-indent:21pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "材料二近几年中国新能源汽车发展迅速，生产企业已达200多家，产业集群优势明显。2018年，中国取消新能源汽车外资股比限制，允许该领域实行外资独资经营。新通过的《外商投资法》对外商投资实行准入前的国民待遇加负面清单管理制度。某公司是国外一家具有全球影响力的新能源汽车企业，其设计与生产理念同当前全球先进制造、绿色能源、智能制造高度契合，2018年该公司入选世界品牌500强。2019年1月，该公司决定在上海投资70亿美元开工建设集新能源汽车的研发、制造、销售等功能于一体的超级工厂，预计年生产纯电动汽车50万辆。2018年，中国新能源汽车产销分别完成127万辆和125．6万辆，比上年分别增长59．9%和61．7%。市场预测，到2028年新能源汽车在中国的销量将超过1100万辆。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:楷体",
+                                "run_type": "0",
+                                "run_text": "材料二近几年中国新能源汽车发展迅速，生产企业已达200多家，产业集群优势明显。2018年，中国取消新能源汽车外资股比限制，允许该领域实行外资独资经营。新通过的《外商投资法》对外商投资实行准入前的国民待遇加负面清单管理制度。某公司是国外一家具有全球影响力的新能源汽车企业，其设计与生产理念同当前全球先进制造、绿色能源、智能制造高度契合，2018年该公司入选世界品牌500强。2019年1月，该公司决定在上海投资70亿美元开工建设集新能源汽车的研发、制造、销售等功能于",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:楷体",
+                                "run_type": "0",
+                                "run_text": "一体的超级工厂，预计年生产纯电动汽车50万辆。2018年，中国新能源汽车产销分别完成127万辆和125．6万辆，比上年分别增长59．9%和61．7%。市场预测，到2028年新能源汽车在中国的销量将超过1100万辆。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "（1）结合材料一，运用政治生活知识说明外商投资法的制定是如何体现依法治国方略的。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "（1）结合材料一，运用政治生活知识说明外商投资法的制定是如何体现依法治国方略的。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "（2）结合材料二，运用经济生活知识分析该公司为何在中国投资建设新能源汽车工厂。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "（2）结合材料二，运用经济生活知识分析该公司为何在中国投资建设新能源汽车工厂。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "raw_text": "14.阅读材料，完成下列要求。\n历史上，风沙、盐碱、内涝肆虐，兰考民生艰难、百姓贫苦。上世纪六十年代，“县委书记的好榜样”——焦裕禄依靠群众，开启治理“三害”的征程，改善了兰考自然环境，形成了“亲民爱民、艰苦奋斗、科学求实、迎难而上、无私奉献”的焦裕禄精神。2014年，在党的群众路线教育实践活动中，习近平总书记选择兰考作为联系点，叮嘱当地干部要切实关心贫困群众，带领群众艰苦奋斗，早日脱贫致富。“改变兰考贫困的面貌，让百姓过上好日子。”兰考县委牢记总书记嘱托，把脱贫作为第一民生工程，提出了“三年脱贫，七年小康”的奋斗目标。兰考广大党员干部密切联系群众，深入调查研究，找到了制约经济发展的瓶颈，制定了切实可行的脱贫措施。在焦裕禄精神的鼓舞下，兰考人民团结奋斗，因地制宜，创造性地建立“公司+贫困户”“经营大户+贫困户”等模式，发展温室大棚种植、畜牧业、民族乐器制作等产业，打赢了艰苦卓绝的脱贫攻坚战。2017年，兰考在河南省率先摘掉贫困县的帽子。2018年，兰考入选中国“幸福百县榜”。\n（1）结合材料并运用唯物史观知识，说明在脱贫致富实践中兰考县委是如何贯彻群众路线。\n（2）弘扬焦裕禄精神对于打赢脱贫攻坚战具有重要意义，运用中华民族精神的知识并结合材料加以分析。\n（3）班级学习园地“如何学习焦裕禄艰苦奋斗精神”栏目征稿，请列举两个写作要点。\n",
+            "is_question": 1,
+            "sub_para": [
+                [
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "14.阅读材料，完成下列要求。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:'Time New Romans'",
+                                "run_type": "0",
+                                "run_text": "14.",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "阅读材料，完成下列要求。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; text-indent:21pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "历史上，风沙、盐碱、内涝肆虐，兰考民生艰难、百姓贫苦。上世纪六十年代，“县委书记的好榜样”——焦裕禄依靠群众，开启治理“三害”的征程，改善了兰考自然环境，形成了“亲民爱民、艰苦奋斗、科学求实、迎难而上、无私奉献”的焦裕禄精神。2014年，在党的群众路线教育实践活动中，习近平总书记选择兰考作为联系点，叮嘱当地干部要切实关心贫困群众，带领群众艰苦奋斗，早日脱贫致富。“改变兰考贫困的面貌，让百姓过上好日子。”兰考县委牢记总书记嘱托，把脱贫作为第一民生工程，提出了“三年脱贫，七年小康”的奋斗目标。兰考广大党员干部密切联系群众，深入调查研究，找到了制约经济发展的瓶颈，制定了切实可行的脱贫措施。在焦裕禄精神的鼓舞下，兰考人民团结奋斗，因地制宜，创造性地建立“公司+贫困户”“经营大户+贫困户”等模式，发展温室大棚种植、畜牧业、民族乐器制作等产业，打赢了艰苦卓绝的脱贫攻坚战。2017年，兰考在河南省率先摘掉贫困县的帽子。2018年，兰考入选中国“幸福百县榜”。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:楷体",
+                                "run_type": "0",
+                                "run_text": "历史上，风沙、盐碱、内涝肆虐，兰考民生艰难、百姓贫苦。上世纪六十年代，“县委书记的好榜样”——焦裕禄依",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:楷体",
+                                "run_type": "0",
+                                "run_text": "靠群众，开启治理“三害”的征程，改善了兰考自然环境，形成了“亲民爱民、艰苦奋斗、科学求实、迎难而上、无私奉献”的焦裕禄精神。2014年，在党的群众路线教育实践活动中，习近平总书记选择兰考作为联系点，叮嘱当地干部要切实关心贫困群众，带领群众艰苦奋斗，早日脱贫致富。“改变兰考贫困的面貌，让百姓过上好日子。”兰考县委牢记总书记嘱托，把脱贫作为第一民生工程，提出了“三年脱贫，七年小康”的奋斗目标。兰考广大党员干部密切联系群众，深入调查研究，找到了制约经济发展的瓶颈，制定了切实可行的脱贫措施。在焦裕禄精神的鼓舞下，兰",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "font-family:楷体",
+                                "run_type": "0",
+                                "run_text": "考人民团结奋斗，因地制宜，创造性地建立“公司+贫困户”“经营大户+贫困户”等模式，发展温室大棚种植、畜牧业、民族乐器制作等产业，打赢了艰苦卓绝的脱贫攻坚战。2017年，兰考在河南省率先摘掉贫困县的帽子。2018年，兰考入选中国“幸福百县榜”。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "（1）结合材料并运用唯物史观知识，说明在脱贫致富实践中兰考县委是如何贯彻群众路线。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "（1）结合材料并运用唯物史观知识，说明在脱贫致富实践中兰考县委是如何贯彻群众路线",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            },
+                            {
+                                "run_style": "text-align:left",
+                                "run_type": "1",
+                                "run_text": "",
+                                "image": {
+                                    "src": "tmpk3jyygep-HTML.002.png",
+                                    "width": "18",
+                                    "height": "20",
+                                    "alt": "",
+                                    "style": "-aw-left-pos:0pt; -aw-rel-hpos:page; -aw-rel-vpos:page; -aw-top-pos:0pt; -aw-wrap-type:inline"
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "（2）弘扬焦裕禄精神对于打赢脱贫攻坚战具有重要意义，运用中华民族精神的知识并结合材料加以分析。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "（2）弘扬焦裕禄精神对于打赢脱贫攻坚战具有重要意义，运用中华民族精神的知识并结合材料加以分析。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "para_style": "margin-top:0pt; margin-bottom:0pt; line-height:150%; widows:0; orphans:0; font-size:10.5pt",
+                        "para_text": "（3）班级学习园地“如何学习焦裕禄艰苦奋斗精神”栏目征稿，请列举两个写作要点。",
+                        "para_type": "0",
+                        "table_raw_html": "",
+                        "is_split": 0,
+                        "is_sub_question": 0,
+                        "runs": [
+                            {
+                                "run_style": "height:0pt; display:block; position:absolute; z-index:1",
+                                "run_type": "1",
+                                "run_text": "",
+                                "image": {
+                                    "src": "tmpk3jyygep-HTML.005.png",
+                                    "width": "52",
+                                    "height": "34",
+                                    "alt": "",
+                                    "style": "margin-top:211.6pt; margin-left:908pt; -aw-left-pos:998pt; -aw-rel-hpos:page; -aw-rel-vpos:page; -aw-top-pos:856pt; -aw-wrap-type:none; position:absolute"
+                                }
+                            },
+                            {
+                                "run_style": "font-family:宋体",
+                                "run_type": "0",
+                                "run_text": "（3）班级学习园地“如何学习焦裕禄艰苦奋斗精神”栏目征稿，请列举两个写作要点。",
+                                "image": {
+                                    "src": "",
+                                    "width": "",
+                                    "height": "",
+                                    "alt": "",
+                                    "style": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            ]
+        }
+    ],
+    "text": "绝密★启用前\n一、选择题：本题共12小题，每小题4分，共48分。在每小题给出的四个选项中，只有一项是符合题目要求的。\n==============================\n1.某家国有企业集团进行混合所有制改革，向上下游知名民营企业出让29．8%的股权和部分董事席位，吸纳资金33．6亿元。这有利于该企业\n①改善治理结构，提高企业管理水平\n②控制上下游企业，实现一体化经营\n③调整资本结构，降低企业经营风险\n④激发企业活力，促进资本保值增值\nA. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④\n==============================\n2.2012～2018年间甲国对乙国服务贸易出口变化如图所示。促成这一变化经济现象有\n\n①乙国吸引甲国的游客数量逐年增长\n②乙国在甲国的留学生人数不断增加\n③乙国出口到甲国的文化产品日趋丰富\n④乙国向甲国支付的知识产权费用持续上升\nA. ①②&#xa0;B. ①③&#xa0;C. ②④&#xa0;D. ③④\n==============================\n3.2019年2月，中共中央、国务院印发《粤港澳大湾区发展规划纲要》，对推动粤港澳大湾区发展，建设世界级城市群做出重大战略部署。粤港澳大湾区位于“一带一路”的交汇点，具有“一个国家、两种制度、三个关区”的特点。从产业结构看，港澳地区以金融、信息技术等现代服务业为主，广东九个城市以生产制造为主。关于打造粤港澳大湾区的重大意义，下列判断中不恰当的是\nA. 促进产业转型升级，实现中国东中西区域协调发展\nB. 丰富“一国两制”实践内涵，进一步密切内地与港澳交流合作\nC. 推进供给侧结构性改革，加快培育发展新动能、实现创新驱动发展\nD. 建立与国际接轨的开放型经济新体制，建设高水平参与国际经济合作新平台\n==============================\n4.某国是铁矿石、石油等大宗商品（以美元计价）的进口国。当美元指数持续上涨时，该国面临通货膨胀的压力。不考虑其他因素的影响，这一传导过程是\n①进口原材料成本上升&#xa0; &#xa0; \n②居民消费价格上涨\n③生产者出厂价格上涨&#xa0;&#xa0;&#xa0; \n④生产者购进价格上涨\nA. ①→④→③→②&#xa0;B. ①→④→②→③&#xa0;C. ④→①→③→②&#xa0;D. ④→①→②→③\n==============================\n5.2018年，西藏自治区开始实施以“神圣国土守护者、幸福家园建设者”为主题的乡村振兴工程，将边民脱贫致富和守边固边相结合，补齐基础设施和公共服务的短板，加快边境地区发展。边疆民族地区实施乡村振兴工程\n①是充分发挥民族地区资源优势的要求\n②保障了自治区少数民族人民的自治权\n③是保证边防安全、维护国家统一的重要举措\n④有利于实现共同富裕，激发各族人民的爱国热情\nA. ①②&#xa0;B. ①③&#xa0;C. ②④&#xa0;D. ③④\n==============================\n6.目前，上海合作组织共有8个成员国、4个观察员国、6个对话伙伴，同联合国等国际和地区组织建立了广泛的合作关系；其成员国的经济和人口总量分别约占全球的20%和40%。在2018年青岛峰会上，上海合作组织共通过23份安全、经济、人文等领域合作文件。上海合作组织是\n①横跨欧亚大陆的地区性国家联盟\n②推动经济全球化深入发展的主导力量\n③维护地区及全球安全稳定的重要因素\n④坚持开放包容、促进互利合作的多边机制\nA. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④\n==============================\n我国已成为全球生态文明建设的重要参与者、贡献者、引领者。据此完成下面小题。\n==============================\n7. 2018年5月，习近平在全国生态环境保护大会上发表重要讲话强调，新时代推进生态文明建设，必须坚持共谋全球生态文明建设，深度参与全球环境治理，形成世界环境保护和可持续发展解决方案，引导应对气候变化国际合作。这一论述\n①表明全球环境治理的价值共识已经形成\n②反映中国拥有全球环境治理的话语主导权\n③彰显中国在全球环境治理中的文化自觉和文化自信\n④表达中国为全球环境治理贡献智慧和力量的责任担当\nA ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④\n==============================\n8. 2018年，某省人大环境与资源保护委员会建立环境资源保护监督系统。通过该系统，人大代表能够在线查阅政府部门对所反映问题的受理、处置和反馈情况，还可查阅国家法律和本省地方性法规。建立环境资源保护监督系统，能够\n①强化人大环境监督机构的职能\n②畅通人大代表监督环境问题的渠道\n③提高人大代表处置环境问题的能力\n④增强人大代表监督环境问题的时效性\nA. ①②&#xa0;B. ①③&#xa0;C. ②④&#xa0;D. ③④\n==============================\n《中共中央国务院关于开展质量提升行动的指导意见》提出，实施中国精品培育工程，加强对中华老字号、地理标志等品牌培育和保护，培育更多百年老店和民族品牌。据此完成下面小题。\n==============================\n9. 商务部先后认定两批中华老字号共1128家，平均有160多年历史。北京全聚德、上海老凤祥、天津狗不理……这些品牌耳熟能详，在老百姓中间有良好口碑和广泛影响力。这表明\n①中华老字号具有明显的地域文化特征\n②中华老字号的文化传承取决于品牌的认定\n③中华老字号的文化价值不受社会历史变迁影响\n④中华老字号的影响力得益于其包含的民族文化基因\nA. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④\n==============================\n10. 中华老字号要成为“常青树”，需要不断创新。从哲学上看，这是因为\n①只有不断吐故纳新，事物才能保持旺盛的生命力\n②事物的优势和劣势相互转化依赖于人的主观能动性\n③只要不断批判和否定，新事物就能保持质的稳定性\n④事物只有通过自我否定、自我超越才能得到不断发展\nA. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④\n==============================\n11.毛泽东说：“战争历史中有在连战皆捷之后吃了一个败仗以至全功尽弃的，有在吃了许多败仗之后打了一个胜仗因而开展了新局面的。”其中蕴含的哲学道理是\nA. 处于非支配地位的部分及其变化不影响整体的功能\nB. 在一些事物的存在和发展中，整体服从和服务于部分\nC. 关键部分的功能及其变化甚至对整体功能起决定作用\nD. 只要充分发挥部分的作用，就能实现整体的最优目标\n==============================\n12.废旧塑料的回收利用一直受到污水排放问题的困扰。一位“草根发明家”转变思路，经过反复试验，研制成无水清洗的废旧塑料自动化生产线，脏兮兮的废旧塑料进入生产线，变成了“新鲜、干净”的塑料颗粒。这表明\n①实践的需要推动人的创新能力不断发展\n②批判性思维能够促进认识发展和实践创新\n③观念创新决定着创新思维活动的内容和性质\n④能否应用于实践是衡量创新成功与否的唯一标准\nA. ①②&#xa0;B. ①④&#xa0;C. ②③&#xa0;D. ③④\n==============================\n13.阅读材料，完成下列要求。\n推动形成全面开放新格局是党中央的决策部署。\n材料一党的十九大要求实行高水平的贸易和投资自由化便利化政策，保护外商投资合法权益。制定外资基础性法律列入《全国人大常委会2018年立法工作计划》。商务部、国家发展改革委、司法部经征求中央财办、外交部、财政部、人民银行等72个中央有关单位以及地方人民政府等方面的意见，起草形成了《中华人民共和国外商投资法（草案）》。2018年12月，全国人大常委会初次审议这一草案并在中国人大网公布，向社会征求意见。2019年3月，十三届全国人大二次会议审议通过《中华人民共和国外商投资法》。\n材料二近几年中国新能源汽车发展迅速，生产企业已达200多家，产业集群优势明显。2018年，中国取消新能源汽车外资股比限制，允许该领域实行外资独资经营。新通过的《外商投资法》对外商投资实行准入前的国民待遇加负面清单管理制度。某公司是国外一家具有全球影响力的新能源汽车企业，其设计与生产理念同当前全球先进制造、绿色能源、智能制造高度契合，2018年该公司入选世界品牌500强。2019年1月，该公司决定在上海投资70亿美元开工建设集新能源汽车的研发、制造、销售等功能于一体的超级工厂，预计年生产纯电动汽车50万辆。2018年，中国新能源汽车产销分别完成127万辆和125．6万辆，比上年分别增长59．9%和61．7%。市场预测，到2028年新能源汽车在中国的销量将超过1100万辆。\n（1）结合材料一，运用政治生活知识说明外商投资法的制定是如何体现依法治国方略的。\n（2）结合材料二，运用经济生活知识分析该公司为何在中国投资建设新能源汽车工厂。\n==============================\n14.阅读材料，完成下列要求。\n历史上，风沙、盐碱、内涝肆虐，兰考民生艰难、百姓贫苦。上世纪六十年代，“县委书记的好榜样”——焦裕禄依靠群众，开启治理“三害”的征程，改善了兰考自然环境，形成了“亲民爱民、艰苦奋斗、科学求实、迎难而上、无私奉献”的焦裕禄精神。2014年，在党的群众路线教育实践活动中，习近平总书记选择兰考作为联系点，叮嘱当地干部要切实关心贫困群众，带领群众艰苦奋斗，早日脱贫致富。“改变兰考贫困的面貌，让百姓过上好日子。”兰考县委牢记总书记嘱托，把脱贫作为第一民生工程，提出了“三年脱贫，七年小康”的奋斗目标。兰考广大党员干部密切联系群众，深入调查研究，找到了制约经济发展的瓶颈，制定了切实可行的脱贫措施。在焦裕禄精神的鼓舞下，兰考人民团结奋斗，因地制宜，创造性地建立“公司+贫困户”“经营大户+贫困户”等模式，发展温室大棚种植、畜牧业、民族乐器制作等产业，打赢了艰苦卓绝的脱贫攻坚战。2017年，兰考在河南省率先摘掉贫困县的帽子。2018年，兰考入选中国“幸福百县榜”。\n（1）结合材料并运用唯物史观知识，说明在脱贫致富实践中兰考县委是如何贯彻群众路线。\n（2）弘扬焦裕禄精神对于打赢脱贫攻坚战具有重要意义，运用中华民族精神的知识并结合材料加以分析。\n（3）班级学习园地“如何学习焦裕禄艰苦奋斗精神”栏目征稿，请列举两个写作要点。\n==============================\n",
+    "image_dict": {
+        "image_src": "base64_of_image",
+        "tmpk3jyygep-HTML.001.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAzCAYAAAD/06q7AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABAklEQVR4nO2W7Q7CIAxFef+HHiZGzSD3g4L+MfckxjC69pQxtPUn1+vTb98djO8xc1yf5uacLH6kLUVRQTSuCcz8g5BiFlGPD19reI/sCiARNx7rNzyBkiBhdk+FsQ4R4h1wIdbYkVD9NcUyqiGV99rd1Go1Vlda7iGX8ES29gR+KIQE2a/BIOSSngqyvPg6WKGVpKqQakAdLZ+DkSWeb1BSq5vXr3BByHVekVoWeidQQpXicz5P8RxSUkya5egwZlNISeFCugm6qVFRNseKqGb8Y246GAmenEOeL/9BOydCjgg5IuSIkCNCjgg5IuSIkCNCjgg5IuSIkCNCjgg5IuR4ABRFk/QbvQZXAAAAAElFTkSuQmCC",
+        "tmpk3jyygep-HTML.002.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAUCAYAAACAl21KAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAIUlEQVR4nGNgGAWkgP8EMEkGkSM3atCoQSPIIKrktWEGACNMJdvSvKLAAAAAAElFTkSuQmCC",
+        "tmpk3jyygep-HTML.003.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQUAAACJCAYAAAAlky2GAAAACXBIWXMAAA7DAAAOwwHHb6hkAAA0AUlEQVR4nO3d57MtRdUG8Pdf0Cq++QHhggoiEkQFCQYEzIpZETEHVMyKCTGhgiCgYMRAMGDCCOYcMWEAE2DOOad56zdV69Tccc+5s3r22Wefc/up2rXTxJ7up1fu/2sqKioqOvi/9b6AiuXB73//++af//znel9GxTqjkkJFiz//+c/NN7/5zeY3v/nNel9KxTqjkkLFCv7xj380//rXv9b7MirWGZUUKioqtkIlhYqKiq1QSaGiomIrVFKoqKjYCpUUKioqtkIlhYqKiq1QSaGiomIrVFKoqKjYCpUUKioqtsJoUhDt5gV///vfm7/97W//s81f/vKX5t///nf7XgoRdXGeIYjP/89//tN+nnUds/Df//63+JoqKrYnjCaFr371q81ZZ53V/OpXv2pe+cpXtp//9Kc/rfxvoN73vvdtvvOd7zSnn35689Of/rTogt75znc2r371q9vBjmDE5HdJBmF85jOfaS666KLmD3/4Q/PMZz6zueqqq5q//vWvW12L5B6/2f63v/1tc/nll291vRUVFbMxihQMTIPs8Y9/fHPxxRc3L3/5y5szzjij+eMf/7iyzU9+8pPmZje7WTv43v3udzcPfvCDm9/97nfNj370o9Qs7RyPe9zjmu9973vNlVde2dzrXvdqnve85638/5GPfKT5+Mc/3hx55JHN2972tubhD39484Y3vKF5/etf315nXMtJJ53UvOMd72g+/elPN+eff37z3Oc+t/nxj388+joqKrZXjCKFCy64oHn+85/fDtQnPOEJzcc+9rF2sH7wgx9c2eYxj3lMc+6557a/eZntDdZTTz21nfHH4Oqrr24e9rCHNW984xvb71/60peaW93qVs1b3vKWlW2+9a1vNV/72teaH/zgB82hhx7aDvq3v/3tzRVXXNGSD7UCgf3yl79sfvGLX7TERbpx7O9+97uZtqmo2C4xihQM9kc/+tHNZZdd1tzmNrdpPvCBD7QDkggPbAz77LNPO0C//OUvt6K/QbvHHns0P/vZz9pt2ApIDmEL6MP/J598cnP961+/+exnP9se4+ijj25OOeWUlcw9+5IePvGJT7TvtqXW+G4fpIAATjvttObCCy9s7nKXuzTvec97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",
+        "tmpk3jyygep-HTML.004.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAICAYAAAA1BOUGAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAE0lEQVR4nGNgoBb4D8WkS9IDAAA00AP9V0cDAgAAAABJRU5ErkJggg==",
+        "tmpk3jyygep-HTML.005.png": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAAiCAYAAAAQ9/ptAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAA90lEQVR4nO2WgQrEIAxD/f+PngfHwbaa1FTvjjIaGEPUNM+prPW3js/TL+8O2tcxdlw3fczvt2p+9yyMhWWLcYCH+XmeaP7ddwPIfoV/A2FvADQzQABeULRlI/LyjDUnXwgZsWKorfqyWiw8X2gRiBW3/cr42JnQap8KANkwylgG5G1V5axxNVxcWV1FaIXXw44ZRvjmr4i6jWYBLBDrV84UynEDYqbeAdyF8sKu+J7tBaCVALPztLP9BqDILaNen98MHZPwpxCFRR6z+aimegPe5wev7fwqoOwqoOwqoOwqoOwqoOwqoOwqoOwqoOwqoOx6HtDT9AKFbLW+QxNsKgAAAABJRU5ErkJggg=="
+    }
+}
