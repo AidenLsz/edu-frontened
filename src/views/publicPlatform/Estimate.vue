@@ -617,7 +617,7 @@ export default {
         // 请求难度属性接口
         this.$http
           .post(
-            "https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/difficulty",
+            this.backendIP + "/api/difficulty",
             param,
             config,
             {
@@ -633,7 +633,7 @@ export default {
         // 请求区分度属性接口
         this.$http
           .post(
-            "https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/disc",
+            this.backendIP + "/api/disc",
             param,
             config,
             {
@@ -649,7 +649,7 @@ export default {
         // 请求信度属性接口
         this.$http
           .post(
-            "https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/rel",
+            this.backendIP + "/api/rel",
             param,
             config,
             {
@@ -680,7 +680,7 @@ export default {
         // 请求知识点属性接口
         this.$http
           .post(
-            "https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/lp",
+            this.backendIP + "/api/lp",
             param,
             config,
             {
