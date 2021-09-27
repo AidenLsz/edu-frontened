@@ -617,7 +617,7 @@ export default {
         // 请求难度属性接口
         this.$http
           .post(
-            this.backendIP + "api/difficulty",
+            this.backendIP + "/api/difficulty",
             param,
             config,
             {
@@ -633,7 +633,7 @@ export default {
         // 请求区分度属性接口
         this.$http
           .post(
-            this.backendIP + "api/disc",
+            this.backendIP + "/api/disc",
             param,
             config,
             {
@@ -649,7 +649,7 @@ export default {
         // 请求信度属性接口
         this.$http
           .post(
-            this.backendIP + "api/rel",
+            this.backendIP + "/api/rel",
             param,
             config,
             {
