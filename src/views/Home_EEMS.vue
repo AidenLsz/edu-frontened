@@ -6,8 +6,6 @@
         <img src="@/assets/bdaa.png" alt="Logo"  />
         <span class="text">
           智慧考试管理系统
-          <br>
-          （DEMO）
         </span>
       </div>
     </section>
