@@ -210,6 +210,7 @@ export default {
           label: '极限'
         }]
       }],
+      Status: [],
       // 这里用于定义哪些内容是用于生成树的，这里定义了字数的关键字为children，标签的标签值为label
       defaultProps: {
         children: 'children',
@@ -338,14 +339,14 @@ export default {
     },
     Init(){
 
-      let Flag = true
-      if(Flag){
-        return
-      }
+      // let Flag = true
+      // if(Flag){
+      //   return
+      // }
 
-      this.waiting = true;
+      // this.waiting = true;
 
-      let T_URL = "https://kg-edu-backend-44-review-latex-mw1s2b.env.bdaa.pro/v1"
+      let T_URL = "https://kg-edu-backend-44-production.env.bdaa.pro/v1"
 
       let config = {
           headers: {
@@ -358,19 +359,34 @@ export default {
 
       param.append('system', 'tiku');
       param.append('subject', '数学');
+      param.append('period', '高中');
 
-      this.$http
-          .post(T_URL + "/api/getKnowledgeSystem", param, config)
-          .then(function(data) {
-            this.TreeData = data.body.knowledge_system
-            this.waiting = false;
-            // let file = new File(
-            //   [JSON.stringify(this.TreeData, null, 4)],
-            //   "Tree.json",
-            //   { type: "text/plain;charset=utf-8" }
-            // );
-            // FileSaver.saveAs(file);
-          })
+      setInterval(() => {
+        if(this.Status.length > 0 && this.Status.indexOf(false) == -1){
+          console.log("All Finish!")
+          this.Status = []
+        }
+      }, 500)
+
+      for(let i = 0; i < 3; i++){
+        console.log("Sending " + (i+1))
+        this.Status.push(false)
+        this.$http
+            .post(T_URL + "/api/getKnowledgeSystem", param, config)
+            .then(function(data) {
+              data
+              // this.TreeData = data.body.knowledge_system
+              // this.waiting = false;
+              // let file = new File(
+              //   [JSON.stringify(this.TreeData, null, 4)],
+              //   "Tree.json",
+              //   { type: "text/plain;charset=utf-8" }
+              // );
+              // FileSaver.saveAs(file);
+              console.log("Getting " + (i+1))
+              this.Status.splice(i, 1, true)
+            })
+      }
     },
     // 点击节点后的方法
     handleCheckChange(data, checked) {
