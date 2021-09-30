@@ -597,6 +597,11 @@
 							"mail": "wjl2001@mail.ustc.edu.cn",
 							"intro": "中国科学技术大学18级金融本科生\n不断尝试的人生体验家"
 						}
+						,{
+							"name": "林嘉滢",
+							"mail": "crystall@mail.ustc.edu.cn",
+							"intro": "什么都想去尝试的好奇鬼\n喜欢笑，喜欢大笑，喜欢捧腹大笑，只是不会微笑"
+						}
 					],
 					// 特邀工程师
 					"invitedEngineer": [
@@ -688,6 +693,7 @@
 						"邬靖宇": "/members/邬靖宇.jpg",
 						"高海涵": "/members/高海涵.jpeg",
 						"王季璐": "/members/王季璐.jpg",
+						"林嘉滢": "/members/林嘉滢.jpg",
 						// 特邀工程师
 
 						// 实习生
