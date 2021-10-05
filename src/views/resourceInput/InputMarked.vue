@@ -71,6 +71,26 @@
         </el-col>
     </el-row>
     <el-divider></el-divider>
+    <el-row type="flex" justify="start" style="margin-top: -1vh; margin-bottom: -1vh">
+        <el-col :span="2">
+            <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; font-size: 18px">
+                <label>题库</label>
+            </el-row>
+        </el-col>
+        <el-col :span="21">
+            <el-row type="flex" justify="start">
+                <el-select v-model="Item_Group" placeholder="请选择题库">
+                <el-option
+                    v-for="(item,idx) in Item_Group_List"
+                    :key="idx"
+                    :label="item"
+                    :value="idx">
+                </el-option>
+                </el-select>
+            </el-row>
+        </el-col>
+    </el-row>
+    <el-divider></el-divider>
     <el-row type="flex" justify="start" style="margin-top: -1vh;">
         <el-col :span="2">
             <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; font-size: 18px">
@@ -153,6 +173,8 @@ export default {
             { value: "计算题", label: "计算题" },
             { value: "综合题", label: "综合题" }
         ],
+        Item_Group:0,
+        Item_Group_List:[],
         // 老东西，Check_Do用到的过滤列表
         // 用于输入符号提示的部分
         en_pun_list: [',','.','?','!',':',';','\'','"','(',')','&nbsp','_','/','|','\\','<','>'],
@@ -174,6 +196,7 @@ export default {
       }
       this.Get_User_UUID();
       this.To_Top();
+      this.Get_Item_Group_List();
   },
   methods:{
         // 卷动至最上方
@@ -190,6 +213,16 @@ export default {
                 console.log("Failed.")
                 }
             )
+        },
+        Get_Item_Group_List(){
+          commonAjax(this.backendIP+'/api/get_user_ig_name',
+            {
+              type:'Question',
+              action:'W',
+            }
+          ).then((res)=>{
+            this.Item_Group_List=res.ig_name;
+          })
         },
       // 跳转至整卷录入页面
       toPaper(){
@@ -686,28 +719,30 @@ export default {
 
     },
     Submit_Do(Submit_JSON){
-        let Param = {
-            'Input_Data': JSON.stringify({
-                            "post_type": 0,
-                            "user_id": this.UUID,
-                            "subject": this.Subject,
-                            "period": this.Period,
-                            "questions": JSON.stringify(Submit_JSON),
-                            }, null, 4),
-            'questionInput': true,
-            'ig_name':'hyt题库4'
-            // 'ig_ID':'febe704b-e243-49ee-bc0a-c4382aaa4835'
-        }
-
-        commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
-            this.$message.success("入库完成")
-            this.Uploading = false;
-        }).catch(
-            ()=>{
-                this.$message.error("入库失败")
-                this.Uploading = false;
-            }
-        )
+      console.log('入库...',Submit_JSON);
+      return;
+        // let Param = {
+        //     'Input_Data': JSON.stringify({
+        //                     "post_type": 0,
+        //                     "user_id": this.UUID,
+        //                     "subject": this.Subject,
+        //                     "period": this.Period,
+        //                     "questions": JSON.stringify(Submit_JSON),
+        //                     }, null, 4),
+        //     'questionInput': true,
+        //     'ig_name':'hyt题库4'
+        //     // 'ig_ID':'febe704b-e243-49ee-bc0a-c4382aaa4835'
+        // }
+        //
+        // commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
+        //     this.$message.success("入库完成")
+        //     this.Uploading = false;
+        // }).catch(
+        //     ()=>{
+        //         this.$message.error("入库失败")
+        //         this.Uploading = false;
+        //     }
+        // )
     },
     // 负责实际检查的部分
     Check_Do(content){
