@@ -613,6 +613,14 @@
 							"name": "沈蜀媛",
 							"mail": "st562218@icloud.com",
 							"intro": "还在不断学习（摸鱼）的菜包"
+						}, {
+							"name": "桂栋南",
+							"mail": "gdn2001@mail.ustc.edu.cn",
+							"intro": "中科大19级带数据人\n摸鱼时想学习，学习时想摸鱼的渴望成为学术巨巨的菜鸟"
+						}, {
+							"name": "关浩祥",
+							"mail": "ggxx936099147@mail.ustc.edu.cn",
+							"intro": "中科大 20 级本科生\nCS / 摄影 / 游泳 / ……"
 						}
 					],
 					// 技术顾问
@@ -698,6 +706,8 @@
 
 						// 实习生
 						"沈蜀媛": "/members/沈蜀媛.jpg",
+						"桂栋南": "/members/桂栋南.jpg",
+						"关浩祥": "/members/关浩祥.jpg",
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
 						"高维博": "/members/高维博.jpeg",
