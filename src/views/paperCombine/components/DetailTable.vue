@@ -438,7 +438,7 @@
 
 import {commonAjax} from '@/common/utils/ajax'
 
-import FileSaver from 'file-saver'
+// import FileSaver from 'file-saver'
 
 import * as echarts from 'echarts';
 
@@ -619,7 +619,8 @@ export default {
           "score": Info.score,
           "subject": [this.Subject],
           "period": [this.Period],
-          "difficulty": [parseFloat(Info.difficulty[0]), parseFloat(Info.difficulty[1])],
+          // "difficulty": [parseFloat(Info.difficulty[0]), parseFloat(Info.difficulty[1])],
+          "difficulty": [0, 1],
           "type": type,
           "knowledge": knowledge_Dict
         }
@@ -628,33 +629,21 @@ export default {
 
     },
     // 尝试添加试题
-    Add_New_Ques_To_Cart(Ques_Info, Score){
+    Add_New_Ques_To_Cart(Ques_Info){
 
         let Aim = Ques_Info
 
         let Question_Show_Infos = {
-          id: "",
-          type: "",
-          score: Score,
-          stem: "",
-          options: [],
-          answer: "",
-          analyse: ""
+          id: Aim.id,
+          type: Aim.type,
+          score: Aim.score,
+          stem: Aim.stem,
+          options: Aim.options,
+          answer: Aim.answer,
+          analyse: Aim.analysis
         }
-        
-        Question_Show_Infos.type = Aim.type;
-        Question_Show_Infos.id = Aim.id;
-        Question_Show_Infos.options = Aim.options;
-        Question_Show_Infos.stem = Aim.stem;
-        Question_Show_Infos.answer = Aim.answer;
-        Question_Show_Infos.analyse = Aim.analysis;
         
         this.Ques_List.push(Question_Show_Infos)
-
-        if(this.Ques_List.length == this.Total){
-          this.Loading = false;
-          this.Emit_All();
-        }
         
     },
     Emit_All(){
@@ -668,12 +657,14 @@ export default {
     },
     // 开始生成试卷
     Use_Table_Info(){
+
       this.$confirm("使用细目表组卷将清空已存入试题篮的试题，确定要继续吗？", "提示", {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
       .then(() => {
+        this.Loading = true;
         sessionStorage.setItem('Table_Info', JSON.stringify(this.Table_Info))
         this.$emit("Clear_Cart", true)
         for(let i = 0; i < this.Table_Info.length; i++){
@@ -686,12 +677,23 @@ export default {
           }
         }
 
-        let file = new File(
-          [JSON.stringify(this.Searching_Question_Info, null, 4)],
-          "DetailTable.json",
-          { type: "text/plain;charset=utf-8" }
-        );
-        FileSaver.saveAs(file);
+        commonAjax(this.backendIP+'/api/detail_table_generate', {
+          'detail_table': JSON.stringify(this.Searching_Question_Info, null, 4)
+        })
+        .then((data)=>{
+          for(let i = 0; i < data.length; i++){
+            this.Add_New_Ques_To_Cart(data[i])
+          }
+          this.Emit_All();
+          this.Loading = false
+        })
+
+        // let file = new File(
+        //   [JSON.stringify(this.Searching_Question_Info, null, 4)],
+        //   "DetailTable.json",
+        //   { type: "text/plain;charset=utf-8" }
+        // );
+        // FileSaver.saveAs(file);
       })
       .catch(() => {
         this.$message.warning("已取消。")
