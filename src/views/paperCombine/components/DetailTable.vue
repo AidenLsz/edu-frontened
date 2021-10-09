@@ -438,6 +438,8 @@
 
 import {commonAjax} from '@/common/utils/ajax'
 
+import FileSaver from 'file-saver'
+
 import * as echarts from 'echarts';
 
 var Type_Pie_Chart = "";
@@ -511,7 +513,9 @@ export default {
       // 用于统计一共应当有多少道题
       Total: 0,
       // 用于暂存要发送到主页面的试题
-      Ques_List: []
+      Ques_List: [],
+      // 用于进行检索的信息保存
+      Searching_Question_Info: []
     }
   },
   watch:{
@@ -572,9 +576,19 @@ export default {
     // 
     Search_KP(Info, Type){
 
-      let param={}
+      let database = []
 
-      let database = Info.DatabaseAim == "default" ? this.DatabaseAim : [Info.DatabaseAim];
+      if(Info.source == '全部'){
+        for(let i = 1; i < this.DatabaseAim.length; i++){
+          database.push(this.DatabaseAim[i].name)
+        }
+      }else{
+        for(let i = 1; i < this.DatabaseAim.length; i++){
+          if(this.DatabaseAim[i].nick == Info.source){
+            database.push(this.DatabaseAim[i].name)
+          }
+        }
+      }
 
       let type = [Type];
 
@@ -590,43 +604,33 @@ export default {
         }
       }
 
-      var data = JSON.stringify({
-          "size": 5,
+      let knowledge_Dict = {}
+
+      if(kl.length > 0){
+        knowledge_Dict = {
+          "knowledge_list": kl,
+          "select_way": Info.select,
+          "filter_way": Info.filter
+        }
+      }
+
+      var data = {
           "database": database,
-          "page_count": Math.ceil(this.Dup_Index/5),
+          "score": Info.score,
           "subject": [this.Subject],
           "period": [this.Period],
-          "difficulty": Info.difficulty,
+          "difficulty": [parseFloat(Info.difficulty[0]), parseFloat(Info.difficulty[1])],
           "type": type,
-          "knowledge": {
-            "knowledge_list": kl,
-            "select_way": Info.select,
-            "filter_way": Info.filter
-          }
-        })
+          "knowledge": knowledge_Dict
+        }
 
-        param.data=data
+        this.Searching_Question_Info.push(data)
 
-        commonAjax(this.backendIP+'/api/search', param)
-        .then((data)=>{
-            this.Add_New_Ques_To_Cart(data.results[(this.Dup_Index - 1) % 5], Info.score, Info, Type);
-        }).catch(() => {
-            this.$message.error("服务器过忙，请稍后再试。")
-        })
     },
     // 尝试添加试题
-    Add_New_Ques_To_Cart(Ques_Info, Score, Info, Type){
+    Add_New_Ques_To_Cart(Ques_Info, Score){
 
         let Aim = Ques_Info
-
-        if(this.Cart_IDS.indexOf(Aim.id) != -1){
-          this.Dup_Index = this.Dup_Index + 1;
-          this.Search_KP(Info, Type);
-          return
-        }else{
-          this.Cart_IDS.push(Aim.id);
-          this.Dup_Index = 1;
-        }
 
         let Question_Show_Infos = {
           id: "",
@@ -637,14 +641,8 @@ export default {
           answer: "",
           analyse: ""
         }
-        if(['单选题', '多选题', '判断题'].indexOf(Aim.type) != -1){
-          Question_Show_Infos.type = Aim.type;
-        }else if(['简答题', '计算题'].indexOf(Aim.type) != -1){
-          Question_Show_Infos.type = Aim.type
-        }else if(Aim.type == '填空题'){
-          Question_Show_Infos.type = Aim.type
-        }
-
+        
+        Question_Show_Infos.type = Aim.type;
         Question_Show_Infos.id = Aim.id;
         Question_Show_Infos.options = Aim.options;
         Question_Show_Infos.stem = Aim.stem;
@@ -661,14 +659,12 @@ export default {
     },
     Emit_All(){
       for(let i = 0; i < this.Ques_List.length; i++){
-        console.log("Add.")
         this.$emit("Add_To_Cart", JSON.stringify(this.Ques_List[i]));
       }
       this.$emit("Jump_To_SC", true)
-      this.Dup_Index = 1
-      this.Cart_IDS = []
       this.Total = 0
       this.Ques_List = []
+      this.Searching_Question_Info = []
     },
     // 开始生成试卷
     Use_Table_Info(){
@@ -683,16 +679,25 @@ export default {
         for(let i = 0; i < this.Table_Info.length; i++){
           this.Total = this.Total + this.Table_Info[i].List.length;
         }
-        this.Loading = true;
         for(let i = 0; i < this.Table_Info.length; i++){
           let Bundle = this.Table_Info[i];
           for(let j = 0; j < Bundle.List.length; j++){
             this.Search_KP(Bundle.List[j], Bundle.Type)
           }
         }
+
+        let file = new File(
+          [JSON.stringify(this.Searching_Question_Info, null, 4)],
+          "DetailTable.json",
+          { type: "text/plain;charset=utf-8" }
+        );
+        FileSaver.saveAs(file);
       })
       .catch(() => {
         this.$message.warning("已取消。")
+      })
+      .finally(() => {
+        this.Searching_Question_Info = []
       })
       
     },
