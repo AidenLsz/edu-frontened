@@ -239,67 +239,84 @@ describe('试题检索测试', function() {
         });
       })
 
-    // 同时在这个过程中，我们也要检测题目的返回关键字段格式是否与我们想要的一致，或者说是否有变动。
+      // 同时在这个过程中，我们也要检测题目的返回关键字段格式是否与我们想要的一致，或者说是否有变动。
     it("试题检索测试 - Part5 - 返回值关键字比对", function(){
-        let P =  new Promise(function(resolve) {
-          AXIOS({
-            url: 'https://kg-edu-backend-44-production.env.bdaa.pro/v1/api/search',
-            method: 'post',
-            data: {
-              "data": JSON.stringify({
-                "content": "三角形",
-                "size": 5,
-                "database": ['public'],
-                "page_count": 1,
-                "subject": [],
-                "period": [],
-                "type": [],
-                "difficulty": [0.0, 1.0],
-                "semantic": 0
-              })
-            },
-            transformRequest: [function (data) {
-              var oMyForm = new FormData();
-              let List = Object.keys(data);
-              for(let i = 0; i < List.length; i++){
-                oMyForm.append(List[i], data[List[i]])
+      let P =  new Promise(function(resolve) {
+        AXIOS({
+          url: 'https://kg-edu-backend-44-production.env.bdaa.pro/v1/api/search',
+          method: 'post',
+          data: {
+            "data": JSON.stringify({
+              "content": "三角形",
+              "size": 5,
+              "database": ['public'],
+              "page_count": 1,
+              "subject": [],
+              "period": [],
+              "type": [],
+              "difficulty": [0.0, 1.0],
+              "semantic": 0
+            })
+          },
+          transformRequest: [function (data) {
+            var oMyForm = new FormData();
+            let List = Object.keys(data);
+            for(let i = 0; i < List.length; i++){
+              oMyForm.append(List[i], data[List[i]])
+            }
+            return oMyForm;
+          }],
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        })
+        .then(function (response) {
+          let Data = response.data
+          let Error_Msg = ""
+          let Key_Hope = {
+            "analysis": "string", 
+            "answer": "string", 
+            "database": "string", 
+            "id": "string", 
+            "options": "object", 
+            "period": "string", 
+            "stem": "string", 
+            "subject": "string", 
+            "type": "string"
+          }
+          if(typeof(Data.totalLength) != 'number'){
+            resolve("返回值关键字比对 - 返回的试题总量数据异常")
+          }
+
+          let Key_Wait = Object.keys(Data.results[0])
+
+          if(Key_Wait.length !=  Object.keys(Key_Hope).length){
+            resolve("返回值关键字比对 - 题目的关键字数量不一致")
+          }else{
+              let Check_Flag = true
+              for(let i = 0; i < Key_Wait.length; i++){
+                  if(Object.keys(Key_Hope).indexOf(Key_Wait[i]) != -1 && Key_Hope[Key_Wait[i]] == typeof(Data.results[0][Key_Wait[i]])){
+                      continue
+                  }else{
+                      Error_Msg = Error_Msg + Key_Wait[i] + "的格式不正确或者这是一个新返回的关键字\n"
+                      Check_Flag = false
+                  }
               }
-              return oMyForm;
-            }],
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          })
-          .then(function (response) {
-            let Data = response.data
-            let Key_Hope = ["analysis", "answer", "database", "id", "options", "period", "stem", "subject", "type"]
-            let Key_Wait = Object.keys(Data.results[0])
-            if(Key_Wait.length != Key_Hope.length){
-                resolve("返回值关键字比对 - 关键字数量不一致")
-            }else{
-                let Check_Flag = true
-                for(let i = 0; i < Key_Wait.length; i++){
-                    if(Key_Hope.indexOf(Key_Wait[i]) != -1){
-                        continue
-                    }else{
-                        Check_Flag = false
-                    }
-                }
-                if(Check_Flag){
-                    resolve("返回值关键字比对 - 成功")
-                }else{
-                    resolve("返回值关键字比对 - 出现与期望不一样的关键字")
-                }
-            }
-          })
-          .catch(function () {
-            resolve("返回值关键字比对 - 返回值出现问题，需要单独检查");
-          });
+              if(Check_Flag){
+                  resolve("返回值关键字比对 - 成功")
+              }else{
+                  resolve("返回值关键字比对 - 题目中出现与期望名称或返回格式不一致的关键字，请检查以下字段：\n" + Error_Msg)
+              }
+          }
+        })
+        .catch(function () {
+          resolve("返回值关键字比对 - 返回值出现问题，需要单独检查");
         });
-        return P.then(function(code) {
-          expect(code).toBe("返回值关键字比对 - 成功");
-        });
-      })
+      });
+      return P.then(function(code) {
+        expect(code).toBe("返回值关键字比对 - 成功");
+      });
+    })
   
   });
 
@@ -470,7 +487,7 @@ describe('试卷检索测试', function() {
         });
       })
 
-    // 同时在这个过程中，我们也要检测题目的返回关键字段格式是否与我们想要的一致，或者说是否有变动。
+    // 同时在这个过程中，我们也要检测搜索试卷的返回关键字段格式是否与我们想要的一致，或者说是否有变动。
     it("试题检索测试 - Part4 - 返回值关键字比对", function(){
         let P =  new Promise(function(resolve) {
           AXIOS({
@@ -483,7 +500,7 @@ describe('试卷检索测试', function() {
                     "database": ['public'],
                     "page_count": 1,
                     "subject": [],
-                    "period": ["高中"]
+                    "period": []
                     })
             },
             transformRequest: [function (data) {
@@ -500,23 +517,29 @@ describe('试卷检索测试', function() {
           })
           .then(function (response) {
             let Data = response.data
-            let Key_Hope = ["paper_id_list", "paper_title_list", "question_list", "totalLength"]
+            let Error_Msg = ""
+            let Key_Hope = {
+              "paper_id_list": "object", 
+              "paper_title_list": "object", 
+              "question_list": "object", 
+              "totalLength": "number"}
             let Key_Wait = Object.keys(Data)
-            if(Key_Wait.length != Key_Hope.length){
+            if(Key_Wait.length != Object.keys(Key_Hope).length){
                 resolve("返回值关键字比对 - 关键字数量不一致")
             }else{
                 let Check_Flag = true
                 for(let i = 0; i < Key_Wait.length; i++){
-                    if(Key_Hope.indexOf(Key_Wait[i]) != -1){
+                    if(Object.keys(Key_Hope).indexOf(Key_Wait[i]) != -1 && Key_Hope[Key_Wait[i]] == typeof(Data[Key_Wait[i]])){
                         continue
                     }else{
-                        Check_Flag = false
+                      Error_Msg = Error_Msg + Key_Wait[i] + "的格式不正确或者这是一个新返回的关键字\n"
+                      Check_Flag = false
                     }
                 }
                 if(Check_Flag){
                     resolve("返回值关键字比对 - 成功")
                 }else{
-                    resolve("返回值关键字比对 - 出现与期望不一样的关键字")
+                    resolve("返回值关键字比对 - 题目中出现与期望名称或返回格式不一致的关键字，请检查以下字段：\n" + Error_Msg)
                 }
             }
           })
