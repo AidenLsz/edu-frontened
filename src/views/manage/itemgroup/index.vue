@@ -21,8 +21,8 @@
     <el-row type="flex" justify="start">
       <el-col :span="6">
         <el-row type="flex" justify="start" style="">
-            <label style="font-size: 14px;line-height: 35px;">题库类型:</label>
-            <el-select v-model="currentItemType" placeholder="请选择">
+            <label style="font-size: 14px;line-height: 35px;">题库：</label>
+            <el-select v-model="itemType" placeholder="请选择">
               <el-option
                 v-for="(item,i) in itemTypeList"
                 :key="i"
@@ -33,15 +33,28 @@
         </el-row>
       </el-col>
       <el-col :span="12">
+        <el-row type="flex" justify="start" style="">
+            <label style="font-size: 14px;line-height: 35px;">权限：</label>
+            <el-select v-model="actionType" placeholder="请选择">
+              <el-option
+                v-for="(item,i) in actionList"
+                :key="i"
+                :label="item.val"
+                :value="item.key">
+              </el-option>
+            </el-select>
+        </el-row>
+      </el-col>
+      <!-- <el-col :span="6">
           <el-row type="flex" justify="start" style="margin-left: 10px">
               <label style="height: 35px; line-height: 35px; margin-right: 15px">查询：</label>
               <el-input v-model="searchData" placeholder="请输入查询信息"
                 style="width: 12vw; height: 35px; line-height: 35px; margin-right: 30px"></el-input>
           </el-row>
-      </el-col>
+      </el-col> -->
       <el-col :span="6">
           <el-row type="flex" justify="end" style="margin-right: 40px">
-              <el-button type="primary" style="height: 40px" @click="openAddDialog()">添加题库</el-button>
+              <el-button type="primary" style="height: 40px" @click="openCreateDialog()">创建题库</el-button>
           </el-row>
       </el-col>
     </el-row>
@@ -92,22 +105,25 @@
       ref="instruction"
     />
     <addDialog ref="AddDialog" :groupid="groupid" :tableData="currentGroupData" :groupname="groupname" @userAdded="GET_IG_INFO()"/>
+    <createDialog ref="CreateDialog" :itemType="itemType" @igCreated="GET_IG_INFO()"/>
     <deleteDialog ref="DeleteDialog" :userData="userData" @userDeleted="GET_IG_INFO()"/>
     <editDialog ref="EditDialog" :userData="userData" @userUpdated="GET_IG_INFO()"/>
   </div>
 </template>
 <script>
 import {commonAjax} from '@/common/utils/ajax'
-import deleteDialog from '@/views/manage/userMessage/components/deleteDialog'
-import addDialog from '@/views/manage/userMessage/components/addDialog'
-import editDialog from '@/views/manage/userMessage/components/editDialog'
 import * as variable from '@/common/utils/variable'
-import Instruction from '@/views/manage/userMessage/components/InstructionGroup.vue'
+import deleteDialog from './components/deleteDialog'
+import addDialog from './components/addDialog'
+import createDialog from './components/createDialog'
+import editDialog from './components/editDialog'
+import Instruction from './components/InstructionItemGroup.vue'
 
 export default {
   name: '',
   components:{
     addDialog,
+    createDialog,
     deleteDialog,
     editDialog,
     Instruction
@@ -117,9 +133,11 @@ export default {
         // 这个是用于检索的关键字，如果要显示用户信息的话之后手写一个方法放上去就好
         searchData:"",
         itemTypeList:[],
-        currentItemType:'',
+        itemType:'',
         itemGroupData:[],
         userData:{},
+        actionList:[],
+        actionType:'',
         groupnameArray:[],
         pagenation:{
           page: 1,
@@ -134,10 +152,10 @@ export default {
   },
   computed:{
     CurrentItemGroupData(){
-      console.log('CurrentItemGroupData:',this.itemGroupData[this.currentItemType]);
-      if(!this.itemGroupData[this.currentItemType])
+      if(!this.itemGroupData[this.itemType])
         return []
-      return this.itemGroupData[this.currentItemType]
+      let resData  = this.itemGroupData[this.itemType]
+      return resData.filter((item)=>item.action==this.actionType)
     },
     tableData(){
       // let tableColumns=['username','legal_name','groupname','email','phone','is_admin_ch','status_ch']
@@ -197,15 +215,22 @@ export default {
           this.itemTypeList.push({'key':key,'val':variable.itemType[key]})
           // console.log(variable.itemType[key]);
           for (var i = 0; i < this.itemGroupData[key].length; i++) {
+            if (!this.actionList.some((item)=>item.key==this.itemGroupData[key][i].action)) {
+              this.actionList.push({'key':this.itemGroupData[key][i].action,'val':variable.actionType[this.itemGroupData[key][i].action]})
+            }
             this.itemGroupData[key][i].itemtype_ch=variable.itemType[this.itemGroupData[key][i].itemtype]
             this.itemGroupData[key][i].source_type_ch=variable.sourceType[this.itemGroupData[key][i].source_type]
             this.itemGroupData[key][i].action_ch=variable.actionType[this.itemGroupData[key][i].action]
             // console.log(this.itemGroupData[key][i]);
           }
         }
-        console.log(this.itemGroupData);
+        // console.log(this.actionList);
+        // console.log(this.itemGroupData);
         if (this.itemTypeList.length>0) {
-          this.currentItemType=this.itemTypeList[0].key
+          this.itemType=this.itemTypeList[0].key
+        }
+        if (this.actionList.length>0) {
+          this.actionType=this.actionList[0].key
         }
         // console.log(this.itemTypeList)
         // console.log(data,variable.itemType);
