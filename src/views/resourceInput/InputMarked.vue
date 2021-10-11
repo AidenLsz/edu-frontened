@@ -81,10 +81,10 @@
             <el-row type="flex" justify="start">
                 <el-select v-model="Item_Group" placeholder="请选择题库">
                 <el-option
-                    v-for="(item,idx) in Item_Group_List"
-                    :key="idx"
-                    :label="item"
-                    :value="idx">
+                    v-for="(item,i) in Item_Group_List"
+                    :key="i"
+                    :label="item.val"
+                    :value="item.key">
                 </el-option>
                 </el-select>
             </el-row>
@@ -173,7 +173,7 @@ export default {
             { value: "计算题", label: "计算题" },
             { value: "综合题", label: "综合题" }
         ],
-        Item_Group:0,
+        Item_Group:'',
         Item_Group_List:[],
         // 老东西，Check_Do用到的过滤列表
         // 用于输入符号提示的部分
@@ -219,9 +219,15 @@ export default {
             {
               type:'Question',
               action:'W',
+              ig_ID_required:true,
             }
           ).then((res)=>{
-            this.Item_Group_List=res.ig_name;
+            for (var name in res.ig_name) {
+              this.Item_Group_List.push({key:res.ig_name[name].ig_ID,val:name})
+            }
+            if (this.Item_Group_List.length>0) {
+              this.Item_Group=this.Item_Group_List[0].key
+            }
           })
         },
       // 跳转至整卷录入页面
@@ -719,30 +725,27 @@ export default {
 
     },
     Submit_Do(Submit_JSON){
-      console.log('入库...',Submit_JSON);
-      return;
-        // let Param = {
-        //     'Input_Data': JSON.stringify({
-        //                     "post_type": 0,
-        //                     "user_id": this.UUID,
-        //                     "subject": this.Subject,
-        //                     "period": this.Period,
-        //                     "questions": JSON.stringify(Submit_JSON),
-        //                     }, null, 4),
-        //     'questionInput': true,
-        //     'ig_name':'hyt题库4'
-        //     // 'ig_ID':'febe704b-e243-49ee-bc0a-c4382aaa4835'
-        // }
-        //
-        // commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
-        //     this.$message.success("入库完成")
-        //     this.Uploading = false;
-        // }).catch(
-        //     ()=>{
-        //         this.$message.error("入库失败")
-        //         this.Uploading = false;
-        //     }
-        // )
+        let Param = {
+            'Input_Data': JSON.stringify({
+                            "post_type": 0,
+                            "user_id": this.UUID,
+                            "subject": this.Subject,
+                            "period": this.Period,
+                            "questions": JSON.stringify(Submit_JSON),
+                            }, null, 4),
+            'questionInput': true,
+            'ig_ID':this.Item_Group
+        }
+
+        commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
+            this.$message.success("入库完成")
+            this.Uploading = false;
+        }).catch(
+            ()=>{
+                this.$message.error("入库失败")
+                this.Uploading = false;
+            }
+        )
     },
     // 负责实际检查的部分
     Check_Do(content){
