@@ -104,10 +104,15 @@ const UserRouter=[
       //   ]
       // },
       {
-        path: 'manage',
+        path: 'resources',
         meta: { title: '资源管理', icon: 'el-icon-s-management' },
         component: ContainerLayout,
         children: [
+          {
+            path: 'itemgroup',
+            meta: { title: '题库资源', icon: '' },
+            component: () => import('@/views/manage/itemgroup/index'),
+          },
           {
             path: 'study',
             meta: { title: '学习资源', icon: '' },
