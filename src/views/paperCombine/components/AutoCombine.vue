@@ -52,13 +52,19 @@
               :key="'KU_Row' + Row_Index"
               >
               <el-col :span="4" v-for="Col_Index in 6" :key="'KU_COL_' + Row_Index + '_' + Col_Index">
-                <el-tooltip class="item" effect="dark" :content="KnowledgeUnitList[(Row_Index-1) * 6 + Col_Index - 1]" placement="top">
+                <el-tooltip 
+                  class="item" 
+                  effect="dark" 
+                  :content="KnowledgeUnitList[(Row_Index-1) * 6 + Col_Index - 1] 
+                  + ' - ' + (KnowledgeUnitLevelList[(Row_Index-1) * 6 + Col_Index - 1] + 1) + '级知识点'" 
+                  placement="top">
                     <el-row 
-                    type="flex" 
-                    justify="center" 
-                    v-if="KU_Show((Row_Index-1) * 6 + Col_Index - 1)"
-                    class="KU_Button"
-                    @click.native="Delete_KU((Row_Index-1) * 6 + Col_Index - 1)">
+                      type="flex" 
+                      justify="center" 
+                      v-show="KU_Show((Row_Index-1) * 6 + Col_Index - 1)"
+                      class="KU_Button"
+                      :style="Get_Different_Level_Color(KnowledgeUnitLevelList[(Row_Index-1) * 6 + Col_Index - 1])"
+                      @click.native="Delete_KU((Row_Index-1) * 6 + Col_Index - 1)">
                         {{Get_Show(KnowledgeUnitList[(Row_Index-1) * 6 + Col_Index - 1])}}
                         <i class="el-icon-delete" style="line-height: 20px; margin-left: 10px"></i>
                     </el-row>
@@ -153,6 +159,7 @@
 <script>
 
 import {commonAjax} from '@/common/utils/ajax'
+// import FileSaver from 'file-saver'
 
 // import FileSaver from "file-saver";
 
@@ -309,6 +316,9 @@ export default {
       this.$message.error("这部分还没做完")
     },
     Auto_Combine(){
+
+        this.$message.success("正在组卷")
+
         let data = {
             subject: this.Subject,
             period: this.Period,
@@ -349,9 +359,19 @@ export default {
 
         let Flag = true
         if(Flag){
-          this.$message.info("后续服务仍在开发过程中，敬请期待...")
+          this.$message.info("后续服务由于服务调用出现问题，所以仍在开发过程中，敬请期待...")
           return
         }
+
+        // commonAjax(this.backendIP+'/api/paperAutoGenerate', {
+        //   'Paper_Data': JSON.stringify(data, null, 4)
+        // })
+        // .then((data)=>{
+        //   console.log(data)
+        //   this.$message.success("组卷结束")
+        // }).catch(()=>{
+        //   this.$message.error("出现故障")
+        // })
         
     },
     // 调整一下知识点的位置对应的边距
