@@ -27,4 +27,5 @@ export const sourceType ={
 export const actionType ={
   "R":"读",
   "W":"写",
+  "M":"管理",
 }

@@ -99,6 +99,7 @@ src     文件夹部分
     - Basic.vue     路由嵌套 - 基本布局包括固定的头部，尾部   
     - Container.vue 路由嵌套 - 仅为一个容器，不对布局产生影响     
     - SideBar.vue   路由嵌套 - 左侧菜单栏  
+    - EEMS.vue      考试系统页面布局（包含考试系统相关组件）
 
 + plugins - 插件导入管理
     - element.js    引入elementUI的JS文件
@@ -106,6 +107,7 @@ src     文件夹部分
 + router - 路由控制
     - index.js   路由总入口
     - modules - 路由模块
+        - eems.js    考试系统的路由
         - user.js    用户登录后的路由
         - visitor.js 未登录时的路由
 
