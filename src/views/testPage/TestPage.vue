@@ -1,149 +1,30 @@
 <template>
-  <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; margin-top: 50px;">
-    <!-- 尝试用latex输出表格 -->
-    <el-row type="flex" justify="center">
-      <!-- <el-col :span="12">
-        <el-row type="flex" justify="center">
-          <Mathdown :content="Content" :name="'Search123'"></Mathdown>
-        </el-row>
-      </el-col>
-      <el-col :span="12">
-        <el-row type="flex" justify="center">
-          <el-input type="textarea" v-model="Content"></el-input>
-        </el-row>
-      </el-col> -->
-      <el-button type="" @click="Reg_Check()"></el-button>
-      {{Content}}
-    </el-row>
-    <!-- 测试获取输入框的焦点 -->
-    <el-row style="display: none">
-      <el-col>
-        <el-input @focus="Show_Blur" id="1" v-model="Content"></el-input>
-        <el-input @focus="Show_Blur" id="2"></el-input>
-        <el-input @focus="Show_Blur" id="3"></el-input>
-        <el-button type="primary" @click="Bold()">B</el-button>
-        <el-button type="primary" @click="Italic()">I</el-button>
-        <el-button type="primary" @click="Underline()">U</el-button>
-        <input type="file" accept=".jpg, .jpeg, .png" id="fileButton" style="display: none"/>
-        <el-button type="primary" @click="Upload_File()"><i class="el-icon-picture-outline"></i></el-button>
-        <el-row v-html="Content"></el-row>
-        
-      </el-col>
+  <div style="margin-top: 2vh">
+    <el-row>
+        <div v-for="i in 4" :id="'container' + i" :key="'Word_Cloud_' + i" style="height: 405px; width: 405px; border: 1px solid black; display: inline-block"></div>
     </el-row>
     <el-row>
-      <div
-        style="width: 34px; height: 34px; line-height: 34px; font-size: 22px; border: 1px solid black; cursor: pointer; border-radius: 5px"
-        @click="Upload_File()"
-        ><i class="el-icon-picture-outline"></i></div>
-    </el-row>
-    <!-- <el-row>
-      <el-input 
-        type="textarea" 
-        v-model="TextLine" 
-        ref="InputArea">
-      </el-input>
-    </el-row>
-    <el-row style="margin-top: 20px; margin-bottom: 20px">
-      <el-button @click="Get_Area_Class()">格式信息</el-button>
-    </el-row>
-    <el-row>
-      <div v-html="Get_TextLine()">
+      <div id="Multi-Y" style="height: 600px">
 
       </div>
-    </el-row> -->
-    <!-- 知识点内容过滤的而部分，隐藏日期：20210808 -->
-    <el-row style="display: none">
-      <el-input
-        placeholder="输入关键字进行过滤"
-        v-model="filterText">
-      </el-input>
-      <el-row type="flex" justify="start" style="margin-top: 30px; margin-bottom: 30px;">
-        <label style="margin-top: -3px; margin-right: 10px;">
-          选择方式：
-        </label>
-        <el-radio-group v-model="KnowledgeSelectType">
-          <el-radio label="Single">单选</el-radio>
-          <el-radio label="Multiple">多选</el-radio>
-        </el-radio-group>
-      </el-row>
-      <el-row type="flex" justify="start" style="height: 60vh; overflow: scroll; width: 18vw">
-        <!-- 关于el-tree的单选多选测试 -->
-        <el-tree 
-          :data="TreeData"
-          check-strictly
-          node-key="id"
-          show-checkbox
-          :props="defaultProps"
-          default-expand-all
-          check-on-click-node
-          :filter-node-method="filterNode"
-          @check-change="handleCheckChange"
-          style="font-size: 10px;"
-          ref="tree"
-          v-loading="waiting"
-          element-loading-text="正在获取知识树..."
-          element-loading-spinner="el-icon-loading">
-        </el-tree>
-      </el-row>
-    </el-row>
-    <!-- 以下内容是20210719之前的测试内容，可能以后还会有用到的地方，先不删了 -->
-    <el-row type="flex" justify="center" style="display: none; padding: 40px; padding-bottom: 40px; width: 90%; margin-left: 5%; border: 1px solid black">
-      <el-image :src="Paste_Info"></el-image>
-    </el-row>
-    <el-row style="display: none;">
-      <el-button @click="Send_Message()">123</el-button>
-    </el-row>
-    <el-row type="flex" justify="center" style="display: none; margin-top: 40px">
-      鼠标移入移除测试
-    </el-row>
-    <el-row type="flex" justify="center" style="display: none; margin: 20px 0px">
-      <el-button v-if="!Self_Cut" @click="Self_Cut = true" type="text" style="color: blue">开启自定义切分</el-button>
-      <el-button v-if="Self_Cut" @click="Self_Cut = false" type="text" style="color: pink">关闭自定义切分</el-button>
-    </el-row>
-    <el-row v-for="(I, Index) in [0, 1, 2]" :key="Index" style="display: none;">
-      <el-row type="flex" justify="start" style="font-size: 14px">
-        待切分的第{{Index + 1}}部分
-      </el-row>
-      <el-row 
-        v-if="Index != 2 && Self_Cut && !expand[Index]"
-        style="height: 8px; padding: 0px; margin: 0px; border: 2px solid #ccc"
-        @mouseenter.native="Expand_Change(Index)" 
-        @mouseleave.native="Expand_Change(Index)">
-        <span>&nbsp;</span>
-      </el-row>
-      <el-row
-        v-if="Index != 2 && Self_Cut && expand[Index]" 
-        type="flex" justify="center" 
-        style="cursor: pointer" 
-        @mouseleave.native="Expand_Change(Index)" 
-        @mouseenter.native="Expand_Change(Index)"
-        @click.native="Cut_Show(Index)">
-          <span style="line-height: 30px; height: 30px;">-------------------------------</span>
-          <i class="el-icon-scissors" style="font-size: 20px; padding-top: 5px"></i>
-          <span style="line-height: 30px; height: 30px;">-------------------------------</span>
-      </el-row>
-    </el-row>
-    <el-row style="display: none; margin-bottom: 30px; margin-top: 30px">
-      题目题干合并测试
-    </el-row>
-    <el-row v-for="(Item, Item_Index) in TestList" :key="'TL' + Item_Index" style="display: none;">
-      <el-row>
-        <el-button type="text" v-if="Item_Index != 0" @click="Merge(Item_Index)">合并</el-button>
-      </el-row>
-      <el-row v-if="Item.is_Q == 0">
-        题干
-      </el-row>
-      <el-row v-if="Item.is_Q == 1">
-        题目
-      </el-row>
     </el-row>
   </div>
 </template>
 <script>
 
-// import FileSaver from "file-saver";
+// 关于如何创建词云图
 
-// import Mathdown from '@/common/components/Mathdown'
+// 第一步 cnpm install js2wordcloud --save 安装js2wordcloud包
+// 第二步 按照下面的方式引入这个包
+// 第三步 按照Init_Word_Cloud方法来在你需要的时候需要的位置生成词云
+// 其原理和echarts区别不大，你自己调整一下数据即可
+// 注：其宽度和高度最小值是400px（div不带border的情况下），小于这个值会导致词云图可能显示不完全
+
+import Js2WordCloud from 'js2wordcloud'
+
+// 关于如何创建三Y轴图
+
+import * as echarts from 'echarts';
 
 export default {
   name: 'ScreenShot',
@@ -154,326 +35,157 @@ export default {
   },
   data() {
     return {
-      // 绑定一个图片录入组件
-      Img_File_Upload_Button: "",
-      Content: "1&#xa0;2&#xa0;&#xa0;&#xa0;",
-      // 开始尝试获取选中的对象
-      Focusing_ID: "",
-      // 起点和重点
-      Start: 0,
-      End: 0,
-      Select_Watcher: "",
-      // 开始尝试做一个输入框组件
-      // 文本内容
-      TextLine: "",
-      // 等待变量
-      waiting: false,
-      // 知识体系单选或多选
-      KnowledgeSelectType: "Single",
-      // 要展示的知识点槽
-      KnowledgeUnitList: [],
-      // 输入框过滤
-      filterText: '',
-      // 测试树组件选择的数据
-      TreeData: [{
-        id: 1,
-        label: '几何',
-        children: [{
-          id: 4,
-          label: '圆',
-          children: [{
-            id: 9,
-            label: '半径'
-          }, {
-            id: 10,
-            label: '直径'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: '四则运算',
-        children: [{
-          id: 5,
-          label: '加法'
-        }, {
-          id: 6,
-          label: '减法'
-        }]
-      }, {
-        id: 3,
-        label: '积分',
-        children: [{
-          id: 7,
-          label: '导数'
-        }, {
-          id: 8,
-          label: '极限'
-        }]
-      }],
-      Status: [],
-      // 这里用于定义哪些内容是用于生成树的，这里定义了字数的关键字为children，标签的标签值为label
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      },
-      Paste_Info: "测试粘贴文件内容2",
-      Paste_Catcher: "",
-      Self_Cut: false,
-      expand: [false, false],
-      TestList: [
-        {
-          "is_Q": 0
-        },
-        {
-          "is_Q": 0
-        },
-        {
-          "is_Q": 1
-        },
-        {
-          "is_Q": 1
-        }
-      ]
+
     }
   },
   watch: {
-    filterText(val) {
-      this.$refs.tree.filter(val);
-    },
-    KnowledgeSelectType(newVal, oldVal){
-      if(newVal != oldVal){
-        this.$refs.tree.setCheckedKeys([])
-      }
-    }
+
   },
   mounted() {
-    this.Init();
-    this.Paste_Catcher = setInterval(()=>{
-      if(sessionStorage.getItem("PicPaste")){
-        this.Paste_Info = sessionStorage.getItem("PicPaste")
-      }
-    }
-    , 20)
-    this.Init_Select_Watcher();
-    this.Init_Img_Button();
-    this.Get_Reg_Test()
+    this.Init_Word_Cloud();
+    this.Init_MultiY_Charts();
   },
   methods: {
-    Reg_Check(){
-      let Reg_C = new RegExp('&#xa0;', 'g')
-      this.Content = this.Content.replace(Reg_C, "")
-    },
-    Init_Img_Button(){
-      this.Img_File_Upload_Button = document.getElementById("fileButton");
-      this.Img_File_Upload_Button.addEventListener("change", (e)=>{
-        console.log(e.target.files[0])
-      })
-    },
-    
-    // 尝试自定义按钮
-    Upload_File(){
-      this.Img_File_Upload_Button.click();
-    },
-    // 尝试加粗
-    Bold(){
-      if(Math.abs(this.Start - this.End) > 0){
-        this.Content = this.Content.substring(0, this.Start) + "<b>" + this.Content.substring(this.Start, this.End) + "</b>" + this.Content.substring(this.End, this.Content.length)
-      }
-    },
-    Italic(){
-      if(Math.abs(this.Start - this.End) > 0){
-        this.Content = this.Content.substring(0, this.Start) + "<i>" + this.Content.substring(this.Start, this.End) + "</i>" + this.Content.substring(this.End, this.Content.length)
-      }
-    },
-    Underline(){
-      if(Math.abs(this.Start - this.End) > 0){
-        this.Content = this.Content.substring(0, this.Start) + "<u>" + this.Content.substring(this.Start, this.End) + "</u>" + this.Content.substring(this.End, this.Content.length)
-      }
-    },
-    // 尝试看能不能获取到input框的元素
-    Show_Blur(e){
-      this.Focusing_ID = e.target.id;
-    },
-    Init_Select_Watcher(){
-      this.Select_Watcher = setInterval(()=>{
-        let Obj = document.getElementById(this.Focusing_ID);
-        if(Obj){
-          this.Start = Obj.selectionStart
-          this.End = Obj.selectionEnd
-        }
-      }, 50)
-    },
-    // 尝试看Re的判别式对不对
-    Get_Reg_Test(){
-      let Count = 0
-      let Str = " (    )  （   ）  （  )   (    ）______ _________ _ __ ___ ____"
-      let Space_Reg = new RegExp("____+", 'g')
-      let Quote_Reg = new RegExp("(\\(|\\（)(\\s*)(\\)|\\）)", "g")
-      let res = Quote_Reg.exec(Str)
-      while(res != null){
-        Str = Str.replace(Quote_Reg, " $\\SIFChoice$")
-        res = Quote_Reg.exec(Str)
-      }
-      console.log(Str)
-      res = Space_Reg.exec(Str)
-      while(res != null){
-        console.log(res[0])
-        res = Space_Reg.exec(Str)
-        Count = Count + 1
-      }
-      console.log(Count)
-      return Count
-    },
-    // 点击按钮后获取文本框的样式
-    Get_Area_Class(){
-      console.log(this.$refs.InputArea.$el.clientHeight)
-    },
-    // 随时盯着文本内容转化的方法
-    Get_TextLine(){
-      let TextList = this.TextLine.split("\n")
-      let Result = ""
-      for(let i = 0; i < TextList.length; i++){
-        Result = Result + "<p>" + TextList[i] + "</p>"
-      }
-      return Result
-    },
-    Init(){
-
-      // let Flag = true
-      // if(Flag){
-      //   return
-      // }
-
-      // this.waiting = true;
-
-      let T_URL = "https://kg-edu-backend-44-production.env.bdaa.pro/v1"
-
-      let config = {
-          headers: {
-              "Content-Type": "multipart/form-data"
-          },
-          emulateJSON: true
-      }
-
-      let param = new FormData();
-
-      param.append('system', 'tiku');
-      param.append('subject', '数学');
-      param.append('period', '高中');
-
-      setInterval(() => {
-        if(this.Status.length > 0 && this.Status.indexOf(false) == -1){
-          console.log("All Finish!")
-          this.Status = []
-        }
-      }, 500)
-
-      for(let i = 0; i < 3; i++){
-        console.log("Sending " + (i+1))
-        this.Status.push(false)
-        this.$http
-            .post(T_URL + "/api/getKnowledgeSystem", param, config)
-            .then(function(data) {
-              data
-              // this.TreeData = data.body.knowledge_system
-              // this.waiting = false;
-              // let file = new File(
-              //   [JSON.stringify(this.TreeData, null, 4)],
-              //   "Tree.json",
-              //   { type: "text/plain;charset=utf-8" }
-              // );
-              // FileSaver.saveAs(file);
-              console.log("Getting " + (i+1))
-              this.Status.splice(i, 1, true)
-            })
-      }
-    },
-    // 点击节点后的方法
-    handleCheckChange(data, checked) {
-      console.log(checked)
-      if (checked && this.KnowledgeSelectType == "Single") {
-        this.$refs.tree.setCheckedKeys([data.id])
-        this.KnowledgeUnitList = [data.label]
-      }
-      else if(checked){
-        this.KnowledgeUnitList.push(data.label)
-      }else{
-        this.KnowledgeUnitList.splice(this.KnowledgeUnitList.indexOf(data.label), 1)
-      }
-      console.log(this.KnowledgeUnitList)
-    },
-    // 这里是输入过滤用的方法
-    filterNode(value, data) {
-      if (!value) return true;
-      return data.label.indexOf(value) !== -1;
-    },
-    Init_Img_Paster(){
-      window.addEventListener('paste', function(e){
-        let Pic = e.clipboardData.items[0].getAsFile();
-        // 保存读取内容用的临时变量
-        var Picresult = "";
-        // Promise方法避免异步操作
-        var promise = new Promise(function(resolve){
-          // 用文件读取来读取图片的base64格式代码
-          var reader = new FileReader();
-          reader.readAsDataURL(Pic);
-          reader.onloadend = function (e) {
-            Picresult = e.target.result;
-            resolve('1');
-          };
-        });
-        promise.then(function(){
-          // 用捕捉到的this对象来进行搜索
-          sessionStorage.setItem("PicPaste", Picresult)
-          alert("已粘贴")
-        }).catch(function(err){
-          // 报错了就打印错误
-          console.log(err)
-          alert("您最新的粘贴对象不是图片内容。")
+    Init_Word_Cloud(){
+      for(let i = 1; i < 5; i++){
+        // 获取div对象，和echarts是一个道理，获取完数据后重新捕捉这些对象即可
+        // 建议创建若干个预置对象，和echarts一样，然后用户点击左右切换的时候根据数据清空已有数据然后导入新的数据进行渲染
+        // 具体方式可以参照statistics.vue那个BarChart变量，意思是一样的
+        var wc = new Js2WordCloud(document.getElementById('container' + i))
+        wc.setOption({
+            tooltip: {
+                show: true
+            },
+            // 把数据放在这儿就行了
+            list: [['谈笑风生', 80], ['谈笑风生', 80], ['谈笑风生', 70], ['谈笑风生', 70], ['谈笑风生', 60], ['谈笑风生', 60]],
+            // 这是字体颜色，你可以自己生成
+            color: '#15a4fa'
         })
-      })
+      }
     },
-    Send_Message(){
-      console.log(this.Paste_Info)
-    },
-    Expand_Change(Index){
-      this.expand.splice(Index, 1, !this.expand[Index]);
-    },
-    Cut_Show(Index){
-      alert("从第" + (Index+1) + "处切分")
-    },
-    Merge(Item_Index){
-      if(this.TestList[Item_Index-1].is_Q != this.TestList[Item_Index].is_Q){
-        this.$confirm("类型不一致，请选择合并后的类型", "提示", {
-          distinguishCancelAndClose: true,
-          confirmButtonText: '题干',
-          cancelButtonText: '题目',
-          type: "info",
-          confirmButtonClass: "confirmButton",
-          cancelButtonClass: "confirmButton"
-        }).then(() => {
-          this.TestList.splice(Item_Index, 1)
-          this.TestList[Item_Index - 1].is_Q = 0;
-        })
-        .catch((action) => {
-          if(action == "cancel"){
-            this.TestList.splice(Item_Index, 1)
-            this.TestList[Item_Index - 1].is_Q = 1;
+    Init_MultiY_Charts(){
+      var Chart = echarts.init(document.getElementById('Multi-Y'));
+      const colors = ['#5470C6', '#91CC75', '#EE6666'];
+      let options = {
+        // 调整多Y轴的颜色，具体什么颜色你自己按照需求来
+        color: colors,
+        // 这个是示例的触发位置，这个是移动到轴上的时候
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
           }
-        })
-        }
-        else{
-          this.TestList.splice(Item_Index, 1)
-        }
+        },
+        // 这个是Y轴的位置
+        grid: {
+          right: '10%'
+        },
+        // 有几根Y轴写几个变量，这代表了想表示的变量
+        legend: {
+          data: ['Evaporation', 'Precipitation', 'Temperature']
+        },
+        // 这里是X轴的数据，比如卷1，卷2之类的，你自己组织怎么写
+        xAxis: [
+          {
+            type: 'category',
+            axisTick: {
+              alignWithLabel: true
+            },
+            // prettier-ignore
+            data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+          }
+        ],
+        // 有几根Y轴就有几个字典，name要和legend的data项向对应，min和max你自己定
+        // position指坐标轴位置
+        // axisLine是轴线，show是显示，lineStyle是线的样式，color控制颜色，自己按需求调整
+        // formatter是内容的显示标签，不带axisLabel这一项的话就是单纯显示数据，具体怎么弄你要自己查echarts，不同的图的格式不一样
+        // offset是偏移量，主要是为了Y轴不要重叠到一起
+        yAxis: [
+          {
+            type: 'value',
+            name: 'Evaporation',
+            min: 0,
+            max: 250,
+            position: 'right',
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: colors[0]
+              }
+            },
+            axisLabel: {
+              formatter: '{value} ml'
+            }
+          },
+          {
+            type: 'value',
+            name: 'Precipitation',
+            min: 0,
+            max: 250,
+            position: 'right',
+            offset: 80,
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: colors[1]
+              }
+            },
+            axisLabel: {
+              formatter: '{value} ml'
+            }
+          },
+          {
+            type: 'value',
+            name: '温度',
+            min: 0,
+            max: 25,
+            position: 'left',
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: colors[2]
+              }
+            },
+            axisLabel: {
+              formatter: '{value} °C'
+            }
+          }
+        ],
+        // 数据项，name需要和legend的数据一一对应
+        // type是指这个图的类型，bar是柱状，line是折线图
+        // yAxisIndex是指这个东西的优先级，你按照先后顺序写一下，别互相覆盖了就可以
+        // data是指数据，把对应这个变量的数据写进去就可以了
+        series: [
+          {
+            name: 'Evaporation',
+            type: 'bar',
+            data: [
+              2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3
+            ]
+          },
+          {
+            name: 'Precipitation',
+            type: 'bar',
+            yAxisIndex: 1,
+            data: [
+              2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3
+            ]
+          },
+          {
+            name: 'Temperature',
+            type: 'line',
+            yAxisIndex: 2,
+            data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+          }
+        ]
+      };
+      Chart.setOption(options)
+      //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+      window.addEventListener('resize', function() {Chart.resize()});
     }
   },
 }
 </script>
 <style >
-.confirmButton{
-  font-size: 14px !important;
-  color: #409EFD !important;
-  background: transparent !important;
-  border: 1px solid #409EFD !important;
-}
+
 </style>

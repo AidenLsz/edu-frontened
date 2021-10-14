@@ -45,6 +45,8 @@ import AnswerCard from '@/views/paperCombine/AnswerCard'
 import UserAgreement from "@/layout/components/UserAgreement";
 import PrivacyPolicy from "@/layout/components/PrivacyPolicy";
 
+import NewSearchQues from '@/views/testPage/New_SearchQues'
+
 const visitorRouter=[
   {
     path: '/',
@@ -189,6 +191,11 @@ const visitorRouter=[
     path: "/privacyPolicy",
     name: "PrivacyPolicy",
     component: PrivacyPolicy,
+  },
+  {
+    path: "/newSearchQues",
+    name: "NewSearchQues",
+    component: NewSearchQues,
   },
   // {
   //   path: "/inputMarkedPreview",
