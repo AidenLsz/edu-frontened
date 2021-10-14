@@ -1,6 +1,10 @@
 <template>
   <div style="border-radius: 10px; background: white">
+<<<<<<< HEAD
     <el-row style="text-align: left; padding-left: 30px; background: white; padding-top: 15px; border-radius: 10px">
+=======
+    <el-row style="text-align: left; padding-left: 30px; background: white; margin-top: 15px">
+>>>>>>> c47e15a... Temp_Save
         <el-col style="padding-bottom: 8px" >
             <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
         </el-col>
@@ -30,6 +34,7 @@
         </el-col>
     </el-row>
     <el-row class="Detail_Line">
+<<<<<<< HEAD
         <div
             class="Detail_Line_Left" 
             style="line-height: 44px; padding: 0px 16px 0px 16px; border-radius: 10px; background: #F8F8F8">
@@ -68,6 +73,41 @@
                 查看分析报告
             </el-button>
         </div>
+=======
+        <el-col :span="21" style="line-height: 40px; padding: 0px 20px 0px 10px; border-radius: 5px">
+            <el-row type="flex" justify="start">
+                <el-col :span="3">
+                    <el-row type="flex" justify="start">
+                        <el-button type="text" @click="Expand = !Expand">
+                            <i :class=" Expand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" style="margin-right: 10px"></i>
+                            {{Expand ? '收起' : '展开'}}
+                        </el-button>
+                    </el-row>
+                </el-col>
+                <el-col :span="21">
+                    <el-row type="flex" justify="end">
+                        <span class="Extra_Info_Item">
+                            真题情况：未知
+                        </span>
+                        <span class="Extra_Info_Item">
+                            所属题库：{{Question.database}}
+                        </span>
+                        <span class="Extra_Info_Item">
+                            学科：{{Question.subject}}
+                        </span>
+                        <span class="Extra_Info_Item">
+                            学段：{{Question.period}}
+                        </span>
+                    </el-row>
+                </el-col>
+            </el-row>
+        </el-col>
+        <el-col :span="3" style="line-height: 40px">
+            <el-button size="medium" plain type="primary" @click="Check_Analyse(Question.id, Question.database)">
+                查看分析报告
+            </el-button>
+        </el-col>
+>>>>>>> c47e15a... Temp_Save
     </el-row>
   </div>
 </template>
@@ -117,6 +157,7 @@ export default {
       },
       Get_Option_Label(Option_Index){
           return String.fromCharCode(Option_Index + 65)
+<<<<<<< HEAD
       },
       Expand_Aim(){
         if(this.Expand == true){
@@ -124,6 +165,8 @@ export default {
                 Aim: "Question_" + this.Question_Index
             }))
         }
+=======
+>>>>>>> c47e15a... Temp_Save
       }
   }
 };
@@ -132,6 +175,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .Detail_Line{
+<<<<<<< HEAD
     padding: 6px 16px 16px 16px;
 }
 .Detail_Line_Left{
@@ -143,10 +187,14 @@ export default {
     width: 132px;
     height: 44px;
     display: inline-block;
+=======
+    padding: 7px 30px 7px 20px;
+>>>>>>> c47e15a... Temp_Save
 }
 .Extra_Info_Item{
     margin-left: 15px;
 }
+<<<<<<< HEAD
 .Detail_Line_Expand{
     display: inline-block;
     width: 60px;
@@ -166,4 +214,6 @@ export default {
 .Search_Button:hover{
     background: #4484B8;
 }
+=======
+>>>>>>> c47e15a... Temp_Save
 </style>

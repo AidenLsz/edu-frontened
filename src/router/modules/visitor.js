@@ -47,6 +47,8 @@
 
 // import NewSearchQues from '@/views/testPage/New_SearchQues'
 
+import NewSearchQues from '@/views/testPage/New_SearchQues'
+
 const visitorRouter=[
   {
     path: '/',
@@ -186,6 +188,11 @@ const visitorRouter=[
     path: "/privacyPolicy",
     name: "PrivacyPolicy",
     component: () => import("@/layout/components/PrivacyPolicy"),
+  },
+  {
+    path: "/newSearchQues",
+    name: "NewSearchQues",
+    component: NewSearchQues,
   },
   // {
   //   path: "/newSearchQues",

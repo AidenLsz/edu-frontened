@@ -866,7 +866,6 @@ export default {
         },
         // 更新富文本输入框内容
         Update_Complex_Input(val){
-            console.log(val)
             this.Complex_Input_Dialog = false;
             this.Search_Content = val
         },
