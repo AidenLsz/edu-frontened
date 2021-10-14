@@ -602,6 +602,16 @@
 							"mail": "crystall@mail.ustc.edu.cn",
 							"intro": "什么都想去尝试的好奇鬼\n喜欢笑，喜欢大笑，喜欢捧腹大笑，只是不会微笑"
 						}
+						,{
+							"name": "李佳桐",
+							"mail": "satosasara@mail.ustc.edu.cn",
+							"intro": "一条仍然怀有梦想的咸鱼，一个喜欢炼丹的厨师"
+						}
+						,{
+							"name": "胡子睿",
+							"mail": "1300985820@qq.com",
+							"intro": "人类高质量研究生\n喜欢听广东话的湖南人∩喜欢吃湖南菜的广东人"
+						}
 					],
 					// 特邀工程师
 					"invitedEngineer": [
@@ -702,6 +712,8 @@
 						"高海涵": "/members/高海涵.jpeg",
 						"王季璐": "/members/王季璐.jpg",
 						"林嘉滢": "/members/林嘉滢.jpg",
+						"李佳桐": "/members/李佳桐.jpg",
+						"胡子睿": "/members/胡子睿.jpg",
 						// 特邀工程师
 
 						// 实习生
