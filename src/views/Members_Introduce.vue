@@ -631,6 +631,10 @@
 							"name": "关浩祥",
 							"mail": "ggxx936099147@mail.ustc.edu.cn",
 							"intro": "中科大 20 级本科生\nCS / 摄影 / 游泳 / ……"
+						}, {
+							"name": "李平治",
+							"mail": "pingzhili@mail.ustc.edu.cn",
+							"intro": "什么都想尝试的beginner"
 						}
 					],
 					// 技术顾问
@@ -720,6 +724,7 @@
 						"沈蜀媛": "/members/沈蜀媛.jpg",
 						"桂栋南": "/members/桂栋南.jpg",
 						"关浩祥": "/members/关浩祥.jpg",
+						"李平治": "/members/李平治.jpg",
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
 						"高维博": "/members/高维博.jpeg",
