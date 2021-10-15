@@ -25,8 +25,7 @@
       width="65%"
       :modal-append-to-body="false"
       :close-on-click-modal="false">
-    <ComplexInput @Update_CI="UCI" :Get_Out_Content="content"></ComplexInput>
-    <el-button type="success" plain @click="simpleInput = false">完成输入</el-button>
+    <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="content"></ComplexInput>
   </el-dialog>
   <el-dialog
       :visible.sync="PaperDetailDialog"
@@ -379,9 +378,10 @@ export default {
     openInstructionDialog(){
       this.$refs.instruction.openDialog();
     },
-    // Update_Complex_Input
-    UCI(val){
-      this.content = val;
+    // 更新富文本输入框内容
+    Update_Complex_Input(val){
+        this.simpleInput = false;
+        this.content = val
     },
     initDatabaseList(){
       this.filterRecord.database = [true]

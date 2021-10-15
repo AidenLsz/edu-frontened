@@ -115,8 +115,7 @@
         width="65%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
-      <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="content"></ComplexInput>
-      <el-button type="success" plain @click="simpleInput = false">完成输入</el-button>
+      <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="content"></ComplexInput>
     </el-dialog>
     <!-- 查看分析报告 -->
     <el-dialog
@@ -1008,8 +1007,9 @@ export default {
       }
     },
     // Update_Complex_Input
-    UCI(val){
-      this.content = val;
+    Update_Complex_Input(val){
+      this.simpleInput = false
+      this.content = val
     },
     // UCI_Images
     UCII(val){

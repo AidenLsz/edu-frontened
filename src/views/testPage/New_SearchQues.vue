@@ -1,11 +1,11 @@
 <template>
     <div 
-        style="padding-left: 10vw; padding-right: 10vw; padding-top: 5vh; overflow: hidden" 
+        style="padding-left: 10vw; padding-right: 10vw; padding-top: 5vh;" 
         id="Page"
         v-loading="Waiting_Param"
         :element-loading-text="Waiting_Text"
         element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(211, 211, 211, 0.1)">
+        element-loading-background="rgba(211, 211, 211, 0.2)">
         <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
         <div class="Jump_Bar">
             <el-row 
@@ -27,6 +27,14 @@
                 页
             </el-row>
         </div>
+        <el-dialog
+            :visible.sync="Complex_Input_Dialog"
+            title="LUNA输入助手"
+            width="65%"
+            :modal-append-to-body="false"
+            :close-on-click-modal="false">
+            <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="Search_Content"></ComplexInput>
+        </el-dialog>
         <!-- 按照设计稿写一个超巨大圆当背景用 -->
         <div class="Background_Round_Position">
             <div class="Background_Round">
@@ -238,7 +246,10 @@
                         <i class="el-icon-search" style="margin-right: 10px"></i>开始检索
                     </el-button>
                     <!-- 打开输入助手的按钮 -->
-                    <el-button type="primary" style="margin-right: 16px">
+                    <el-button 
+                        type="primary" 
+                        style="margin-right: 16px"
+                        @click="Complex_Input_Dialog = true">
                         <span style="margin-right: 10px">&Sigma;</span>输入助手
                     </el-button>
                     <!-- 切换知识点过滤检索或者文件检索的按钮 -->
@@ -267,7 +278,7 @@
                     <el-row style="margin-top: 40%">
                         <i class="el-icon-upload" style="font-size: 60px"></i><br/>
                         <span style="font-size: 18px; margin-top: 5px; margin-bottom: 5px; display: inline-block">点击或拖拽以上传</span><br/>
-                        <span>支持文件与图片</span>
+                        <span>支持图片检索</span>
                     </el-row>
                 </div>
                 <div
@@ -293,6 +304,11 @@
                     <el-button type="danger"><i class="el-icon-close" style="margin-right: 10px"></i>清空知识点</el-button>
                 </el-row>
             </el-col>
+        </el-row>
+        <el-row 
+            v-if="Question_List.length == 0"
+            style="height: 300px; width: 100%">
+
         </el-row>
         <el-row 
             style="width: 100%;"
@@ -326,11 +342,12 @@
 import {commonAjax} from '@/common/utils/ajax'
 import NewSearchQuesItem from '@/views/testPage/New_SearchQues_Item'
 import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
+import ComplexInput from '@/common/components/ComplexInput'
 
 export default {
   name: "",
   components:{
-      NewSearchQuesItem, QuestionAnalyse
+      NewSearchQuesItem, QuestionAnalyse, ComplexInput
   },
   data() {
     return {
@@ -427,7 +444,9 @@ export default {
         // 用于表示正在等待的变量
         Waiting_Param: false,
         // 用于写文字来表示正在等待什么内容的变量
-        Waiting_Text: ""
+        Waiting_Text: "",
+        // 输入助手的对话框
+        Complex_Input_Dialog: false
     };
   },
   mounted(){
@@ -765,6 +784,12 @@ export default {
                 this.Waiting_Param = false;
                 this.Waiting_Text = ""
             })
+        },
+        // 更新富文本输入框内容
+        Update_Complex_Input(val){
+            console.log(val)
+            this.Complex_Input_Dialog = false;
+            this.Search_Content = val
         }
     }
 };

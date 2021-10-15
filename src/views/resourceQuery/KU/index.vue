@@ -7,8 +7,7 @@
         width="65%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
-      <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="content"></ComplexInput>
-      <el-button type="success" plain @click="simpleInput = false">完成输入</el-button>
+      <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="content"></ComplexInput>
     </el-dialog>
 
     <el-row justify="start" type="flex">
@@ -662,8 +661,9 @@ export default {
       return [nodeCount,edgeCount]
     },
     // Update Complex Input，将组合输入的内容复制到当前搜索框应该具有的内容里
-    UCI(val){
+    Update_Complex_Input(val){
       this.ku_name = val;
+      this.simpleInput = false;
     },
     // Update Complex Input Image，将组合输入的内容的图片部分复制到当前页面的内容里，如果后续又要用到则进行调用
     UCII(val){

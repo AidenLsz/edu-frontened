@@ -69,8 +69,7 @@
         @close="Reset_Interval()"
       >
         <ComplexInput
-          @Update_CI="UCI"
-          @Update_Image="UCII"
+          @New_Content="UCI"
           :Get_Out_Content="content"
         ></ComplexInput>
         <el-button
