@@ -673,6 +673,18 @@
 							"name": "翟佳伦",
 							"mail": "jlzhai@ustc.edu",
 							"intro": "头铁"
+						},{
+							"name": "包美凯",
+							"mail": "baomeikai@163.com",
+							"intro": "^V^"
+						},{
+							"name": "金鑫",
+							"mail": "kingx8128@gmail.com",
+							"intro": "游戏天赋点满型选手"
+						},{
+							"name": "高海涵",
+							"mail": "kd193104@mail.ustc.edu.cn",
+							"intro": "中科大18级本科，现从事数据挖掘、机器学习和NLP方面的科研"
 						}
 					],
 					"img_path": {
@@ -682,7 +694,6 @@
 						"黄振亚": "/members/黄振亚.jpeg",
 						// 团队成员
 						"何理扬": "/members/何理扬.jpg",
-						"包美凯": "/members/包美凯.jpg",
 						"吕瑞": "/members/吕瑞.jpg",
 						"宁雨亭": "/members/宁雨亭.jpg",
 						"张鑫": "/members/张鑫.jpg",
@@ -692,7 +703,6 @@
 						"洪玉婷": "/members/洪玉婷.jpg",
 						"童世炜": "/members/童世炜.jpg",
 						"覃龙虎": "/members/覃龙虎.jpg",
-						"金鑫": "/members/金鑫.jpg",
 						"雷思琦": "/members/雷思琦.jpg",
 						"韩子勤": "/members/韩子勤.jpg",
 						"项子扬": "/members/项子扬.jpg",
@@ -713,7 +723,6 @@
 						"肖桐": "/members/肖桐.png",
 						"杨星月": "/members/杨星月.jpg",
 						"邬靖宇": "/members/邬靖宇.jpg",
-						"高海涵": "/members/高海涵.jpeg",
 						"王季璐": "/members/王季璐.jpg",
 						"林嘉滢": "/members/林嘉滢.jpg",
 						"李佳桐": "/members/李佳桐.jpg",
@@ -735,6 +744,9 @@
 						"韩浩宇": "/members/韩浩宇.jpeg",
 						"唐华楹": "/members/唐华楹.jpeg",
 						"翟佳伦": "/members/翟佳伦.jpg",
+						"包美凯": "/members/包美凯.jpg",
+						"金鑫": "/members/金鑫.jpg",
+						"高海涵": "/members/高海涵.jpeg",
 					}
 				}
 			}
