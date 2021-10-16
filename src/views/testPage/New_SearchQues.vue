@@ -339,7 +339,7 @@
 
 import {commonAjax} from '@/common/utils/ajax'
 import NewSearchQuesItem from '@/views/testPage/New_SearchQues_Item'
-import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
+import QuestionAnalyse from '@/views/testPage/New_QuestionAnalyse'
 import ComplexInput from '@/common/components/ComplexInput'
 
 export default {
@@ -798,6 +798,7 @@ export default {
 <style scoped lang="scss">
 .Filter_Line{
     margin: 24px 0;
+    min-width: 720px;
 }
 
 .Filter_Label{
