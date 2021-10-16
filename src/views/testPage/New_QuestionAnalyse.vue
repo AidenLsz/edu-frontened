@@ -1,12 +1,12 @@
 <!-- 作为递归自身的节点 -->
 <template>
     <div 
-        style="margin: 0px 10vw 10px 10vw" 
+        style="margin: 0px 6vw 10px 6vw" 
         ref="QuestionInfo"
         v-loading="loading"
         element-loading-text="正在加载分析报告..."
         element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(211, 211, 211, 0.6)"
+        element-loading-background="rgba(211, 211, 211, 0.24)"
         >
         <el-row style="padding-top: 15px">
             <label style="font-size: 2rem">试题分析报告</label>
@@ -300,8 +300,7 @@
                 </el-row>
                 <el-row 
                     v-for="(Question, Question_Index) in Similar_Question_List" 
-                    :key="Question_Index" 
-                    style="margin-bottom: 50px"
+                    :key="Question_Index"
                     :class="Get_Expand_Or_Collapse(1) + ' Question_Card'"
                     >
                     <NewSearchQuesItem 
@@ -317,13 +316,10 @@
                     element-loading-spinner="el-icon-loading">
                     
                 </el-row>
-                <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse(1)" style="margin-top: -10px; margin-bottom: 30px">
+                <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse(1)" style="margin-top: -36px; margin-bottom: 10px">
                     <el-button v-on:click.native="Expand_Or_Collapse(1)" round size="small" plain>收起</el-button>
                 </el-row>
             </el-row>
-            <el-row type="flex" justify="center" style="margin-bottom: 50px; display: none">
-                <el-button type="success" plain @click="PDF_Switch()">保存当前页面为PDF文档</el-button>
-            </el-row> 
         </el-row>
     </div>
 </template>

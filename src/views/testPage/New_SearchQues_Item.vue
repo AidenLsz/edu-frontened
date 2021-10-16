@@ -1,6 +1,6 @@
 <template>
   <div style="border-radius: 10px; background: white">
-    <el-row style="text-align: left; padding-left: 30px; background: white; margin-top: 15px">
+    <el-row style="text-align: left; padding-left: 30px; background: white; padding-top: 15px; border-radius: 10px">
         <el-col style="padding-bottom: 8px" >
             <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
         </el-col>
@@ -30,11 +30,11 @@
         </el-col>
     </el-row>
     <el-row class="Detail_Line">
-        <el-col :span="21" style="line-height: 40px; padding: 0px 20px 0px 10px; border-radius: 5px">
+        <el-col :span="21" style="line-height: 44px; padding: 0px 16px 0px 16px; border-radius: 10px; background: #F8F8F8">
             <el-row type="flex" justify="start">
                 <el-col :span="3">
                     <el-row type="flex" justify="start">
-                        <el-button type="text" @click="Expand = !Expand">
+                        <el-button type="text" @click="Expand = !Expand" style="height: 44px;">
                             <i :class=" Expand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" style="margin-right: 10px"></i>
                             {{Expand ? '收起' : '展开'}}
                         </el-button>
@@ -58,10 +58,12 @@
                 </el-col>
             </el-row>
         </el-col>
-        <el-col :span="3" style="line-height: 40px">
-            <el-button size="medium" plain type="primary" @click="Check_Analyse(Question.id, Question.database)">
-                查看分析报告
-            </el-button>
+        <el-col :span="3" style="line-height: 44px; height: 44px">
+            <el-row type="flex" justify="end">
+                <el-button size="medium" type="primary" style="height: 44px; border-radius: 10px" @click="Check_Analyse(Question.id, Question.database)">
+                    查看分析报告
+                </el-button>
+            </el-row>
         </el-col>
     </el-row>
   </div>
@@ -120,7 +122,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .Detail_Line{
-    padding: 7px 30px 7px 20px;
+    padding: 6px 12px 12px 12px;
 }
 .Extra_Info_Item{
     margin-left: 15px;
