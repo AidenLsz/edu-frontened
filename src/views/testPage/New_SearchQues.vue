@@ -5,7 +5,7 @@
         v-loading="Waiting_Param"
         :element-loading-text="Waiting_Text"
         element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(211, 211, 211, 0.2)">
+        element-loading-background="rgba(211, 211, 211, 0.6)">
         <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
         <div class="Jump_Bar">
             <el-row 
@@ -246,22 +246,20 @@
                         <i class="el-icon-search" style="margin-right: 10px"></i>开始检索
                     </el-button>
                     <!-- 打开输入助手的按钮 -->
-                    <el-button 
-                        type="primary" 
+                    <el-button  
                         style="margin-right: 16px"
                         @click="Complex_Input_Dialog = true">
                         <span style="margin-right: 10px">&Sigma;</span>输入助手
                     </el-button>
                     <!-- 切换知识点过滤检索或者文件检索的按钮 -->
                     <el-button 
-                        type="primary" 
                         @click="Change_Search_Extra()">
                         <i class="el-icon-location" style="margin-right: 10px"></i>
                         {{Search_Extra == 'ImgSearch' ? '文件搜题' : '知识点过滤'}}模式
                     </el-button>
                 </el-row>
             </el-col>
-            <el-col :span="7" :offset="1" style="height: 430px;" v-show="Search_Extra == 'ImgSearch'">
+            <el-col :span="7" :offset="1" style="height: 512px" v-show="Search_Extra == 'ImgSearch'">
                 <input 
                     type='file' 
                     id="ImgInput" 
@@ -274,7 +272,8 @@
                     id="ImgSearchArea" 
                     v-show="Img_All == ''"
                     @click="Img_Upload()"
-                    style="width: 100%; height: 370px; border: 1px solid #ccc; border-radius: 15px; text-align: center; cursor: pointer; background: white">
+                    class="ImgSearchArea"
+                    style="cursor: pointer;">
                     <el-row style="margin-top: 40%">
                         <i class="el-icon-upload" style="font-size: 60px"></i><br/>
                         <span style="font-size: 18px; margin-top: 5px; margin-bottom: 5px; display: inline-block">点击或拖拽以上传</span><br/>
@@ -283,7 +282,7 @@
                 </div>
                 <div
                     v-show="Img_All != ''"
-                    style="width: 100%; height: 370px; border: 1px solid #ccc; border-radius: 15px; text-align: center; background: white">
+                    style="">
                     <el-image
                         style="width: 100%; height: 100%"
                         :src="Img_Cut"
@@ -295,7 +294,7 @@
                 </el-row>
             </el-col>
             <el-col :span="7" :offset="1" style="height: 430px;" v-show="Search_Extra == 'KnowledgePoint'">
-                <div style="width: 100%; height: 370px; border: 1px solid #ccc; border-radius: 15px; text-align: center; background: white">
+                <div class="ImgSearchArea">
                     <el-row style="margin-top: 40%">
                         知识树的处理方案仍在商讨中...
                     </el-row>
@@ -326,7 +325,6 @@
             id="Page_Seg"
             style="margin-top: 20px; margin-bottom: 20px">
             <el-pagination 
-                id="Try"
                 @current-change="Page_Index_Change"
                 :current-page.sync="Page_Index"
                 :page-size="Page_Length"
@@ -799,7 +797,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .Filter_Line{
-    margin: 12px 0px;
+    margin: 24px 0;
 }
 
 .Filter_Label{
@@ -815,6 +813,7 @@ export default {
     color: #333;
     border: 1px solid #ccc;
     box-sizing: border-box;
+    box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
 }
 
 .Unchosen_Option:hover{
@@ -825,8 +824,9 @@ export default {
 
 .Chosen_Option{
     color: #409EFF;
-    border: 2px solid #409EFF;
+    border: 1px solid #409EFF;
     box-sizing: border-box;
+    box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
 }
 
 .Search_Input ::v-deep .el-input__inner{
@@ -876,10 +876,20 @@ export default {
 }
 
 .Question_Card{
-    border: 1px solid #ccc;
     background: white;
-    box-shadow: 2px 3px 2px 2px rgba($color: #AAAAAA, $alpha: 0.3);
-    margin-bottom: 64px;
+    box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
+    margin: 64px 0;
     border-radius: 10px;
+    opacity: 0.95;
+}
+
+.ImgSearchArea{
+    width: 100%; 
+    height: 452px; 
+    border: 1px solid #ccc; 
+    border-radius: 15px; 
+    text-align: center; 
+    background: white;
+    box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
 }
 </style>
