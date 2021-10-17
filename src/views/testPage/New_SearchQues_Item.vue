@@ -60,7 +60,7 @@
         </el-col>
         <el-col :span="3" style="line-height: 44px; height: 44px">
             <el-row type="flex" justify="end">
-                <el-button size="medium" type="primary" style="height: 44px; border-radius: 10px" @click="Check_Analyse(Question.id, Question.database)">
+                <el-button size="medium" type="primary" style="height: 44px; border-radius: 10px; background: #539DD9" @click="Check_Analyse(Question.id, Question.database)">
                     查看分析报告
                 </el-button>
             </el-row>

@@ -1,11 +1,10 @@
 <template>
-    <div 
-        style="padding-top: 5vh;" 
+    <div
         id="Page"
         v-loading="Waiting_Param"
         :element-loading-text="Waiting_Text"
         element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(211, 211, 211, 0.24)">
+        element-loading-background="rgba(0, 0, 0, 0.28)">
         <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
         <div class="Jump_Bar">
             <el-row 
@@ -35,7 +34,15 @@
             :close-on-click-modal="false">
             <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="Search_Content"></ComplexInput>
         </el-dialog>
-        
+        <!-- 按照设计稿写一个超巨大圆当背景用
+        <el-row
+            ref="Background_Round_Position"
+            style="top: -380px"
+            class="Background_Round_Position">
+            <div class="Background_Round">
+
+            </div>
+        </el-row> -->
         <!-- 查看分析报告 -->
         <el-dialog
             :visible.sync="Question_Analyse_Dialog"
@@ -52,7 +59,7 @@
         <!-- 图片检索的对话框 -->
         <el-dialog
             :visible.sync="Cropper_Dialog"
-            title="图片检索"
+            title="图片编辑"
             width="80%"
             :modal-append-to-body="false"
             :close-on-click-modal="false">
@@ -128,212 +135,219 @@
                 </el-row>
 
             </el-dialog>
-        <!-- 面包屑行 -->
-        <el-row 
-            class="Padding_Width"
-            type="flex" 
-            justify="start">
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item>
-                    首页
-                </el-breadcrumb-item>
-                <el-breadcrumb-item>
-                    试题检索
-                </el-breadcrumb-item>
-            </el-breadcrumb>
-            <!-- 按照设计稿写一个超巨大圆当背景用 -->
-            <div
-                id="Background_Round_Position" 
-                class="Background_Round_Position">
-                <div class="Background_Round">
+        <el-row type="flex" justify="center" style="padding-top: 5vh;" class="Main_Background">
+            <el-col>
+                <!-- 面包屑行 -->
+                <el-row 
+                    class="Padding_Width"
+                    type="flex" 
+                    ref="BreadCrumb_Line"
+                    justify="start">
+                    <el-breadcrumb separator-class="el-icon-arrow-right">
+                        <el-breadcrumb-item>
+                            首页
+                        </el-breadcrumb-item>
+                        <el-breadcrumb-item>
+                            试题检索
+                        </el-breadcrumb-item>
+                    </el-breadcrumb>
+                    
+                </el-row>
+                <!-- 页面标题行 -->
+                <el-row 
+                    class="Padding_Width"
+                    type="flex" 
+                    justify="start" 
+                    style="margin-top: 2vh;">
+                    <span style="font-size: 4rem">试题检索</span>
+                </el-row>
+                <!-- 功能区 -->
+                <el-row 
+                    class="Padding_Width"
+                    id="Filter" 
+                    style="margin-bottom: 20px">
+                    <el-col :span="16" style="min-height: 400px;">
+                        <!-- 不同功能 -->
+                        <!-- 学段检索 -->
+                        <el-row type="flex" justify="start" class="Filter_Line">
+                            <span class="Filter_Label">学段</span>
+                            <div class="Filter_Item_Shadow">
+                                <span 
+                                    v-for="(Period_Item, Period_Item_Index) in All_Options.Period" :key="'Filter_Period_' + Period_Item_Index"
+                                    :class="Focus_Filter('Period', Period_Item)"
+                                    :style="Filter_Item('Period', Period_Item_Index)"
+                                    @click="Filter_Change('Period', Period_Item)">
+                                    {{Period_Item}}
+                                </span>
+                            </div>
+                        </el-row>
+                        <el-row type="flex" justify="start" class="Filter_Line">
+                            <span class="Filter_Label">学科</span>
+                            <div class="Filter_Item_Shadow">
+                                <span 
+                                    v-for="(Subject_Item, Subject_Item_Index) in All_Options.Subject" :key="'Filter_Subject_' + Subject_Item_Index"
+                                    :class="Focus_Filter('Subject', Subject_Item)"
+                                    :style="Filter_Item('Subject', Subject_Item_Index)"
+                                    @click="Filter_Change('Subject', Subject_Item)">
+                                    {{Subject_Item}}
+                                </span>
+                            </div>
+                        </el-row>
+                        <el-row type="flex" justify="start" class="Filter_Line">
+                            <span class="Filter_Label">题型</span>
+                            <div class="Filter_Item_Shadow">
+                                <span 
+                                    v-for="(Type_Item, Type_Item_Index) in All_Options.Type" :key="'Filter_Type_' + Type_Item_Index"
+                                    :class="Focus_Filter('Type', Type_Item)"
+                                    :style="Filter_Item('Type', Type_Item_Index)"
+                                    @click="Filter_Change('Type', Type_Item)">
+                                    {{Type_Item}}
+                                </span>
+                            </div>
+                        </el-row>
+                        <el-row type="flex" justify="start" class="Filter_Line">
+                            <span class="Filter_Label">难度</span>
+                            <div class="Filter_Item_Shadow">
+                                <span 
+                                    v-for="(Difficulty_Item, Difficulty_Item_Index) in All_Options.Difficulty" :key="'Filter_Difficulty_' + Difficulty_Item_Index"
+                                    :class="Focus_Filter('Difficulty', Difficulty_Item)"
+                                    :style="Filter_Item('Difficulty', Difficulty_Item_Index)"
+                                    @click="Filter_Change('Difficulty', Difficulty_Item)">
+                                    {{Difficulty_Item_Index != All_Options.Difficulty.length - 1 ? Difficulty_Item : Chosen_Options.Difficulty == '自定义' ? Difficulty_Value[0] + '~' + Difficulty_Value[1] : '自定义'}}
+                                </span>
+                            </div>
+                            <el-slider
+                                v-show="Chosen_Options.Difficulty == '自定义'"
+                                v-model="Difficulty_Value"
+                                range
+                                style="background: white; width: 170px; border: 1px solid #ccc; padding: 0px 15px 0px 17px; border-radius: 10px; margin-left: 40px"
+                                :step="0.01"
+                                :max="1"
+                                :min="0">
+                            </el-slider>
+                        </el-row>
+                        <el-row type="flex" justify="start" class="Filter_Line">
+                            <span class="Filter_Label">题库</span>
+                            <div class="Filter_Item_Shadow">
+                                <span 
+                                    v-for="(Database_Item, Database_Item_Index) in All_Options.Database" :key="'Filter_Database_' + Database_Item_Index"
+                                    :class="Focus_Filter('Database', Database_Item.nick)"
+                                    :style="Filter_Item('Database', Database_Item_Index)"
+                                    @click="Filter_Change('Database', Database_Item.nick)">
+                                    {{Database_Item.nick}}
+                                </span>
+                            </div>
+                        </el-row>
+                        <el-row type="flex" justify="start" class="Filter_Line">
+                            <span class="Filter_Label">匹配方式</span>
+                            <div class="Filter_Item_Shadow">
+                                <span 
+                                    v-for="(Semantic_Item, Semantic_Item_Index) in All_Options.Semantic" :key="'Filter_Semantic_' + Semantic_Item_Index"
+                                    :class="Focus_Filter('Semantic', Semantic_Item)"
+                                    :style="Filter_Item('Semantic', Semantic_Item_Index)"
+                                    @click="Filter_Change('Semantic', Semantic_Item)">
+                                    {{Semantic_Item}}
+                                </span>
+                            </div>
+                        </el-row>
+                        <el-row type="flex" justify="start" class="Filter_Line">
+                            <span class="Filter_Label">检索框</span>
+                            <el-input 
+                                v-model="Search_Content" 
+                                :disabled="Search_Extra == 'ImgSearch'"
+                                @keyup.enter.native="Search_Do()"
+                                placeholder="请输入想要检索的试题文字内容"
+                                style="width: 630px;"
+                                class="Search_Input"></el-input>
+                        </el-row>
+                        <el-row type="flex" justify="start" class="Filter_Line" style="margin-top: 3vh">
+                            <span class="Filter_Label"></span>
+                            <!-- 开始检索的按钮 -->
+                            <el-button 
+                                type="primary" 
+                                style="margin-right: 16px; border-radius: 10px; background: #539DD9"
+                                @click="Search_Do()">
+                                <i class="el-icon-search" style="margin-right: 4px"></i>开始检索
+                            </el-button>
+                            <!-- 打开输入助手的按钮 -->
+                            <el-button  
+                                style="margin-right: 16px; border-radius: 10px;"
+                                @click="Complex_Input_Dialog = true">
+                                <span style="margin-right: 4px">&Sigma;</span>输入助手
+                            </el-button>
+                            <!-- 切换知识点过滤检索或者文件检索的按钮 -->
+                            <el-button 
+                                style="border-radius: 10px;"
+                                @click="Change_Search_Extra()">
+                                <i class="el-icon-location" style="margin-right: 4px"></i>
+                                {{Search_Extra == 'ImgSearch' ? '文件搜题' : '知识点过滤'}}模式
+                            </el-button>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="7" :offset="1" style="height: 512px" v-show="Search_Extra == 'ImgSearch'">
+                        <input 
+                            type='file' 
+                            id="ImgInput" 
+                            ref="ImgInput"
+                            :multiple="false"
+                            @change="Img_Upload_Input($event)"
+                            accept='.jpg, .jpeg, .png.'
+                            style="display: none"/>
+                        <div 
+                            id="ImgSearchArea"
+                            v-show="Img_All == ''"
+                            @click="Img_Upload()"
+                            class="ImgSearchArea"
+                            style="cursor: pointer;">
+                            <el-row style="margin-top: 40%">
+                                <i class="el-icon-upload" style="font-size: 60px"></i><br/>
+                                <span style="font-size: 18px; margin-top: 5px; margin-bottom: 5px; display: inline-block">点击或粘贴以上传</span><br/>
+                                <span>支持图片检索</span>
+                            </el-row>
+                        </div>
+                        <div
+                            v-show="Img_All != ''"
+                            class="ImgSearchArea"
+                            style="">
+                            <el-image
+                                style="width: 100%; height: 100%"
+                                :src="Img_Cut"
+                                fit="contain"></el-image>
+                        </div>
+                        <el-row type="flex" justify="center" style="margin-top: 20px">
+                            <el-button type="danger" style="margin-right: 25px; border-radius: 10px" @click="Img_Clear()"><i class="el-icon-close" style="margin-right: 4px"></i>清空内容</el-button>
+                            <el-button type="primary" style="border-radius: 10px; background: #539DD9" @click="Img_Reset()"><i class="el-icon-refresh" style="margin-right: 4px"></i>重新编辑</el-button>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="7" :offset="1" style="height: 430px;" v-show="Search_Extra == 'KnowledgePoint'">
+                        <div class="ImgSearchArea">
+                            <el-row style="margin-top: 40%">
+                                知识树的处理方案仍在商讨中...
+                            </el-row>
+                        </div>
+                        <el-row type="flex" justify="center" style="margin-top: 20px">
+                            <el-button type="danger" style="border-radius: 10px;"><i class="el-icon-close" style="margin-right: 10px;"></i>清空知识点</el-button>
+                        </el-row>
+                    </el-col>
+                </el-row>
+                <el-row 
+                    v-if="Question_List.length == 0"
+                    style="height: 60px; width: 100%">
 
-                </div>
-            </div>
-        </el-row>
-        <!-- 页面标题行 -->
-        <el-row 
-            class="Padding_Width"
-            type="flex" 
-            justify="start" 
-            style="margin-top: 2vh;">
-            <span style="font-size: 4rem">试题检索</span>
-        </el-row>
-        <!-- 功能区 -->
-        <el-row 
-            class="Padding_Width"
-            id="Filter" 
-            style="margin-bottom: 20px">
-            <el-col :span="16" style="min-height: 400px;">
-                <!-- 不同功能 -->
-                <!-- 学段检索 -->
-                <el-row type="flex" justify="start" class="Filter_Line">
-                    <span class="Filter_Label">学段</span>
-                    <div class="Filter_Item_Shadow">
-                        <span 
-                            v-for="(Period_Item, Period_Item_Index) in All_Options.Period" :key="'Filter_Period_' + Period_Item_Index"
-                            :class="Focus_Filter('Period', Period_Item)"
-                            :style="Filter_Item('Period', Period_Item_Index)"
-                            @click="Filter_Change('Period', Period_Item)">
-                            {{Period_Item}}
-                        </span>
-                    </div>
                 </el-row>
-                <el-row type="flex" justify="start" class="Filter_Line">
-                    <span class="Filter_Label">学科</span>
-                    <div class="Filter_Item_Shadow">
-                        <span 
-                            v-for="(Subject_Item, Subject_Item_Index) in All_Options.Subject" :key="'Filter_Subject_' + Subject_Item_Index"
-                            :class="Focus_Filter('Subject', Subject_Item)"
-                            :style="Filter_Item('Subject', Subject_Item_Index)"
-                            @click="Filter_Change('Subject', Subject_Item)">
-                            {{Subject_Item}}
-                        </span>
-                    </div>
-                </el-row>
-                <el-row type="flex" justify="start" class="Filter_Line">
-                    <span class="Filter_Label">题型</span>
-                    <div class="Filter_Item_Shadow">
-                        <span 
-                            v-for="(Type_Item, Type_Item_Index) in All_Options.Type" :key="'Filter_Type_' + Type_Item_Index"
-                            :class="Focus_Filter('Type', Type_Item)"
-                            :style="Filter_Item('Type', Type_Item_Index)"
-                            @click="Filter_Change('Type', Type_Item)">
-                            {{Type_Item}}
-                        </span>
-                    </div>
-                </el-row>
-                <el-row type="flex" justify="start" class="Filter_Line">
-                    <span class="Filter_Label">难度</span>
-                    <div class="Filter_Item_Shadow">
-                        <span 
-                            v-for="(Difficulty_Item, Difficulty_Item_Index) in All_Options.Difficulty" :key="'Filter_Difficulty_' + Difficulty_Item_Index"
-                            :class="Focus_Filter('Difficulty', Difficulty_Item)"
-                            :style="Filter_Item('Difficulty', Difficulty_Item_Index)"
-                            @click="Filter_Change('Difficulty', Difficulty_Item)">
-                            {{Difficulty_Item_Index != All_Options.Difficulty.length - 1 ? Difficulty_Item : Chosen_Options.Difficulty == '自定义' ? Difficulty_Value[0] + '~' + Difficulty_Value[1] : '自定义'}}
-                        </span>
-                    </div>
-                    <el-slider
-                        v-show="Chosen_Options.Difficulty == '自定义'"
-                        v-model="Difficulty_Value"
-                        range
-                        style="background: white; width: 170px; border: 1px solid #ccc; padding: 0px 15px 0px 17px; border-radius: 10px; margin-left: 40px"
-                        :step="0.01"
-                        :max="1"
-                        :min="0">
-                    </el-slider>
-                </el-row>
-                <el-row type="flex" justify="start" class="Filter_Line">
-                    <span class="Filter_Label">题库</span>
-                    <div class="Filter_Item_Shadow">
-                        <span 
-                            v-for="(Database_Item, Database_Item_Index) in All_Options.Database" :key="'Filter_Database_' + Database_Item_Index"
-                            :class="Focus_Filter('Database', Database_Item.nick)"
-                            :style="Filter_Item('Database', Database_Item_Index)"
-                            @click="Filter_Change('Database', Database_Item.nick)">
-                            {{Database_Item.nick}}
-                        </span>
-                    </div>
-                </el-row>
-                <el-row type="flex" justify="start" class="Filter_Line">
-                    <span class="Filter_Label">匹配方式</span>
-                    <div class="Filter_Item_Shadow">
-                        <span 
-                            v-for="(Semantic_Item, Semantic_Item_Index) in All_Options.Semantic" :key="'Filter_Semantic_' + Semantic_Item_Index"
-                            :class="Focus_Filter('Semantic', Semantic_Item)"
-                            :style="Filter_Item('Semantic', Semantic_Item_Index)"
-                            @click="Filter_Change('Semantic', Semantic_Item)">
-                            {{Semantic_Item}}
-                        </span>
-                    </div>
-                </el-row>
-                <el-row type="flex" justify="start" class="Filter_Line">
-                    <span class="Filter_Label">检索框</span>
-                    <el-input 
-                        v-model="Search_Content" 
-                        :disabled="Search_Extra == 'ImgSearch'"
-                        placeholder="请输入想要检索的试题文字内容"
-                        style="width: 630px;"
-                        class="Search_Input"></el-input>
-                </el-row>
-                <el-row type="flex" justify="start" class="Filter_Line" style="margin-top: 3vh">
-                    <span class="Filter_Label"></span>
-                    <!-- 开始检索的按钮 -->
-                    <el-button 
-                        type="primary" 
-                        style="margin-right: 16px; border-radius: 10px;"
-                        @click="Search_Do()">
-                        <i class="el-icon-search" style="margin-right: 4px"></i>开始检索
-                    </el-button>
-                    <!-- 打开输入助手的按钮 -->
-                    <el-button  
-                        style="margin-right: 16px; border-radius: 10px;"
-                        @click="Complex_Input_Dialog = true">
-                        <span style="margin-right: 4px">&Sigma;</span>输入助手
-                    </el-button>
-                    <!-- 切换知识点过滤检索或者文件检索的按钮 -->
-                    <el-button 
-                        style="border-radius: 10px;"
-                        @click="Change_Search_Extra()">
-                        <i class="el-icon-location" style="margin-right: 4px"></i>
-                        {{Search_Extra == 'ImgSearch' ? '文件搜题' : '知识点过滤'}}模式
-                    </el-button>
+                <el-row 
+                    v-else
+                    style="height: 60px; line-height: 40px; width: 100%; padding-bottom: 20px; cursor: pointer"
+                    @click.native="Jump_To('Question_0')"
+                    type="flex"
+                    justify="center">
+                    <i class="el-icon-d-arrow-left" style="font-size: 40px; transform: rotate(270deg);"></i>
                 </el-row>
             </el-col>
-            <el-col :span="7" :offset="1" style="height: 512px" v-show="Search_Extra == 'ImgSearch'">
-                <input 
-                    type='file' 
-                    id="ImgInput" 
-                    ref="ImgInput"
-                    :multiple="false"
-                    @change="Img_Upload_Input($event)"
-                    accept='.jpg, .jpeg, .png.'
-                    style="display: none"/>
-                <div 
-                    id="ImgSearchArea" 
-                    v-show="Img_All == ''"
-                    @click="Img_Upload()"
-                    class="ImgSearchArea"
-                    style="cursor: pointer;">
-                    <el-row style="margin-top: 40%">
-                        <i class="el-icon-upload" style="font-size: 60px"></i><br/>
-                        <span style="font-size: 18px; margin-top: 5px; margin-bottom: 5px; display: inline-block">点击或拖拽以上传</span><br/>
-                        <span>支持图片检索</span>
-                    </el-row>
-                </div>
-                <div
-                    v-show="Img_All != ''"
-                    class="ImgSearchArea"
-                    style="">
-                    <el-image
-                        style="width: 100%; height: 100%"
-                        :src="Img_Cut"
-                        fit="contain"></el-image>
-                </div>
-                <el-row type="flex" justify="center" style="margin-top: 20px">
-                    <el-button type="danger" style="margin-right: 25px; border-radius: 10px" @click="Img_Clear()"><i class="el-icon-close" style="margin-right: 4px"></i>清空内容</el-button>
-                    <el-button type="primary" style="border-radius: 10px" @click="Img_Reset()"><i class="el-icon-refresh" style="margin-right: 4px"></i>重新编辑</el-button>
-                </el-row>
-            </el-col>
-            <el-col :span="7" :offset="1" style="height: 430px;" v-show="Search_Extra == 'KnowledgePoint'">
-                <div class="ImgSearchArea">
-                    <el-row style="margin-top: 40%">
-                        知识树的处理方案仍在商讨中...
-                    </el-row>
-                </div>
-                <el-row type="flex" justify="center" style="margin-top: 20px">
-                    <el-button type="danger" style="border-radius: 10px;"><i class="el-icon-close" style="margin-right: 10px;"></i>清空知识点</el-button>
-                </el-row>
-            </el-col>
-        </el-row>
-        <el-row 
-            v-if="Question_List.length == 0"
-            style="height: 300px; width: 100%">
-
         </el-row>
         <el-row 
             v-for="(Question, Question_Index) in Question_List"
-            :style="Question_Index % 2 == 0 ? 'background: #D9E9FE' : 'background: white'" 
+            :style="Question_Index % 2 == 0 ? 'background: #F0F5FB' : 'background: white'" 
             :key="'Question_' + Question_Index" 
             :id="'Question_' + Question_Index">
             <div class="Question_Card">
@@ -468,24 +482,49 @@ export default {
         Waiting_Text: "",
         // 输入助手的对话框
         Complex_Input_Dialog: false,
-        // 背景的那个大圆
-        Background_Round: "",
-        i: 0
     };
   },
+  destroyed(){
+    let ImgSearchArea = document.getElementById('ImgSearchArea');
+    ImgSearchArea.removeEventListener('dragenter', this.onDragIn, true);
+    ImgSearchArea.removeEventListener('dragleave', this.onDragOut, true);
+    ImgSearchArea.removeEventListener('drop', this.onDrop, true);
+    window.removeEventListener('paste', this.Paste_Function)
+  },
   mounted(){
-    window.addEventListener('scroll', this.Round_Position_Scroll, true)
     this.InitDatabaseList()
     this.ImgInput = document.getElementById("ImgInput")
-    let ImgSearchArea = document.querySelector('#ImgSearchArea');
-    this.Background_Round = document.getElementById("Background_Round_Position")
+    let ImgSearchArea = document.getElementById('ImgSearchArea');
     ImgSearchArea.addEventListener('dragenter', this.onDragIn, true);
     ImgSearchArea.addEventListener('dragleave', this.onDragOut, true);
-    ImgSearchArea.addEventListener('drop', this.onDrop, false);
+    ImgSearchArea.addEventListener('drop', this.onDrop, true);
+    window.addEventListener('paste', this.Paste_Function)
   },
   methods: {
-        Round_Position_Scroll(){
-            this.Background_Round.style.top = -380 + window.scrollY
+        // 粘贴事件
+        Paste_Function(e){
+            if(this.Search_Extra == 'ImgSearch'){
+                const _this = this;
+                let Pic = e.clipboardData.items[0].getAsFile();
+                // Promise方法避免异步操作
+                var promise = new Promise(function(resolve){
+                    // 用文件读取来读取图片的base64格式代码
+                    var reader = new FileReader();
+                    reader.readAsDataURL(Pic);
+                    reader.onloadend = function (e) {
+                        resolve(e.target.result);
+                    };
+                });
+                promise.then(function(ImgData){
+                    _this.Img_All = ImgData
+                    _this.Cropper_Option.img = ImgData;
+                    _this.Img_Cut = ImgData
+                    _this.Cropper_Dialog = true;
+                }).catch(function(){
+                    // 报错了就打印错误
+                    alert("您最新的粘贴对象不是图片内容。")
+                })
+            }
         },
         // 控制筛选项的样式显示
         // 参数分别是筛选项所属的属性，筛选项对应的索引值
@@ -604,15 +643,12 @@ export default {
         },
         // 拖拽文件的多个相关方法，和以前的意思一样，只是换了变量的几个名字罢了
         onDragIn (e) {
-          e.stopPropagation();
           e.preventDefault();
         },
         onDragOut (e) {
-          e.stopPropagation();
           e.preventDefault();
         },
         onDrop (e) {
-          e.stopPropagation();
           e.preventDefault();
           this.imgPreview(e.dataTransfer.files);
           this.$refs.ImgInput.value = "";
@@ -888,26 +924,26 @@ export default {
     font-size: 16px;
 }
 
-.Background_Round{
-    position: relative;
-    width: 1000px;
-    height: 1000px;
-    right: -24px;
-    top: -24px;
-    border-radius: 50%;
-    background: linear-gradient( 180deg, rgba(#D9E9FE, 0%), rgba(#C8E0FF, 100%));
-    box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.06);
-}
+// .Background_Round{
+//     position: relative;
+//     width: 1000px;
+//     height: 1000px;
+//     right: -24px;
+//     top: -24px;
+//     border-radius: 50%;
+//     background: linear-gradient( 180deg, rgba(#D9E9FE, 0%), rgba(#C8E0FF, 100%));
+//     box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.06);
+//     z-index: -1;
+// }
 
-.Background_Round_Position{
-    position: fixed;
-    right: 0px;
-    top: -380px;
-    width: 850px;
-    background: transparent;
-    overflow: hidden;
-    z-index: -1;
-}
+// .Background_Round_Position{
+//     position: absolute;
+//     right: 0px;
+//     width: 850px;
+//     background: transparent;
+//     overflow: hidden;
+//     z-index: -1;
+// }
 
 .Question_Card{
     background: white;
@@ -935,5 +971,12 @@ export default {
 .Padding_Width{
     padding-right: 10vw;
     padding-left: 10vw;
+}
+
+.Main_Background{
+    background: url('./NewSearchQues_Background.jpg');
+    background-size: auto 100%;
+    background-position: right;
+    background-repeat: no-repeat;
 }
 </style>

@@ -6,7 +6,7 @@
         v-loading="loading"
         element-loading-text="正在加载分析报告..."
         element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(211, 211, 211, 0.24)"
+        element-loading-background="rgba(0, 0, 0, 0.28)"
         >
         <el-row style="padding-top: 15px">
             <label style="font-size: 2rem">试题分析报告</label>
