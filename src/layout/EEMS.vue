@@ -211,11 +211,13 @@ export default {
       }
     },
     getGroups() {
-      commonAjax(this.backendIP + '/api/get_user_groups', {}).then((res) => {
-        if (res.data.length > 0 && res.data.some((data)=>data.is_admin)) {
-          this.isGroup = true
+      commonAjax(this.backendIP + "/api/get_users_by_admin", {}).then((res) => {
+        if (res.data.length > 0 && res.data.some((data) => data.is_admin)) {
+          this.isGroup = true;
+        }else {
+          this.isGroup=false
         }
-      })
+      });
     },
     // 跳转至试题分析的不同位置的对话框
     QuestionAnalyseSwitch() {
