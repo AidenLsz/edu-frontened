@@ -509,11 +509,6 @@
 							"intro": "纯音乐爱好者\n愿世人都能睡到自然醒"
 						},
 						{
-							"name": "金鑫",
-							"mail": "kingx8128@gmail.com",
-							"intro": "游戏天赋点满型选手"
-						},
-						{
 							"name": "洪玉婷",
 							"mail": "1044653353@qq.com",
 							"intro": "大闸蟹爱好者"
@@ -527,11 +522,6 @@
 							"name": "曹智",
 							"mail": "2667505886@qq.com",
 							"intro": "exile in the coney island"
-						},
-						{
-							"name": "包美凯",
-							"mail": "baomeikai@163.com",
-							"intro": "^V^"
 						},
 						{
 							"name": "单明晖",
@@ -586,11 +576,6 @@
 							"name": "邬靖宇",
 							"mail": "wujingyu@mail.ustc.edu.cn",
 							"intro": "干啥啥不行，吃啥啥不剩，\n学啥啥不会，写啥啥bug。"
-						},
-						{
-							"name": "高海涵",
-							"mail": "kd193104@mail.ustc.edu.cn",
-							"intro": "中科大18级本科，现从事数据挖掘、机器学习和NLP方面的科研"
 						}
 						,{
 							"name": "王季璐",
