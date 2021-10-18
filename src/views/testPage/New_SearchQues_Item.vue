@@ -36,7 +36,7 @@
                 <div 
                     align="left"
                     class="Detail_Line_Expand">
-                    <el-button type="text" @click="Expand = !Expand" style="height: 44px;">
+                    <el-button type="text" @click="Expand = !Expand; Expand_Aim()" style="height: 44px;">
                         <i :class=" Expand ? 'el-icon-d-arrow-right' : 'el-icon-d-arrow-left'" style="margin-right: 2px; transform: rotate(270deg);"></i>
                         {{Expand ? '收起' : '展开'}}
                     </el-button>
@@ -60,7 +60,11 @@
         </div>
         <div
             class="Detail_Line_Right">
-            <el-button size="medium" type="primary" style="height: 44px; border-radius: 10px; background: #539DD9" @click="Check_Analyse(Question.id, Question.database)">
+            <el-button 
+                size="medium"
+                type="primary"
+                class="Search_Button"
+                style="height: 44px; border-radius: 10px; width: 132px" @click="Check_Analyse(Question.id, Question.database)">
                 查看分析报告
             </el-button>
         </div>
@@ -113,6 +117,13 @@ export default {
       },
       Get_Option_Label(Option_Index){
           return String.fromCharCode(Option_Index + 65)
+      },
+      Expand_Aim(){
+        if(this.Expand == true){
+            this.$emit('Expand_Aim', JSON.stringify({
+                Aim: "Question_" + this.Question_Index
+            }))
+        }
       }
   }
 };
@@ -145,5 +156,14 @@ export default {
     display: inline-block;
     right: 0px;
     width: calc(100% - 60px);
+}
+
+.Search_Button{
+    background: #539DD9;
+    transition-duration: 300ms;
+}
+
+.Search_Button:hover{
+    background: #4484B8;
 }
 </style>

@@ -355,12 +355,19 @@
             >
             <div
                 :style="Get_Card_Margin(Question_Index)"
-                class="Question_Card">
-                <NewSearchQuesItem 
+                >
+                <el-row 
                     :id="'Question_' + Question_Index"
-                    :Question="Question" 
-                    :Question_Index="Question_Index"
-                    @Check_Question_Analysis="Check_Question_Analysis"></NewSearchQuesItem>
+                    style="width: 100%; height: 64px; background: transparent; opacity: 0">
+
+                </el-row>
+                <el-row class="Question_Card" style="background: white">
+                    <NewSearchQuesItem 
+                        :Question="Question" 
+                        :Question_Index="Question_Index"
+                        @Check_Question_Analysis="Check_Question_Analysis"
+                        @Expand_Aim="Expand_Aim"></NewSearchQuesItem>
+                </el-row>
             </div>
         </el-row>
         <el-row 
@@ -871,12 +878,18 @@ export default {
             return Style
         },
         Get_Card_Margin(Question_Index){
-            let Style_Row_0 = '-64px 10vw 64px 10vw'
-            let Style_Row_1 = '-64px 10vw 128px 10vw'
+            let Style_Row_0 = '-128px 10vw 64px 10vw'
+            let Style_Row_1 = '-128px 10vw 128px 10vw'
             let Style = {
                 'margin': Question_Index == this.Question_List.length - 1 ? Style_Row_0 : Style_Row_1,
             }
             return Style
+        },
+        // 展开后回到此题的初始位置
+        Expand_Aim(val){
+            console.log(val)
+            let Aim = JSON.parse(val).Aim;
+            this.Jump_To(Aim)
         }
     }
 };
@@ -967,10 +980,8 @@ export default {
 // }
 
 .Question_Card{
-    background: white;
     box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
     border-radius: 10px;
-    margin: -64px 10vw 64px 10vw;
     opacity: 0.95;
 }
 
