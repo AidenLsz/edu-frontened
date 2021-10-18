@@ -344,7 +344,7 @@
                     <i 
                         class="el-icon-d-arrow-left" 
                         @click="Jump_To('Question_0')" 
-                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer"></i>
+                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer; z-index: 3"></i>
                 </el-row>
             </el-col>
         </el-row>
@@ -358,7 +358,7 @@
                 >
                 <el-row 
                     :id="'Question_' + Question_Index"
-                    style="width: 100%; height: 64px; background: transparent; opacity: 0">
+                    style="width: 100%; height: 64px; background: transparent; opacity: 0; z-index: -1">
 
                 </el-row>
                 <el-row class="Question_Card" style="background: white">
@@ -1010,6 +1010,7 @@ export default {
     background-size: auto 100%;
     background-position: right;
     background-repeat: no-repeat;
+    padding-bottom: 64px;
     margin-bottom: 64px;
 }
 
