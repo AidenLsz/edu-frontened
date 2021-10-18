@@ -187,11 +187,11 @@ const visitorRouter=[
     name: "PrivacyPolicy",
     component: () => import("@/layout/components/PrivacyPolicy"),
   },
-  {
-    path: "/newSearchQues",
-    name: "NewSearchQues",
-    component: () => import("@/views/testPage/New_SearchQues"),
-  },
+  // {
+  //   path: "/newSearchQues",
+  //   name: "NewSearchQues",
+  //   component: () => import("@/views/testPage/New_SearchQues"),
+  // },
   // {
   //   path: "/inputMarkedPreview",
   //   name: "inputMarkedPreview",
