@@ -47,7 +47,7 @@
 
 // import NewSearchQues from '@/views/testPage/New_SearchQues'
 
-import NewSearchQues from '@/views/testPage/New_SearchQues'
+// import NewSearchQues from '@/views/testPage/New_SearchQues'
 
 const visitorRouter=[
   {
@@ -124,16 +124,6 @@ const visitorRouter=[
     name: "vditorTest",
     component: () => import("@/views/testPage/vditorTest"),
   },
-  // {
-  //   path: "/remakeInputSingle",
-  //   name: "RemakeInputSingle",
-  //   component: Remaking_Input_Single
-  // },
-  // {
-  //   path: "/remakeInputPaper",
-  //   name: "RemakeInputPaper",
-  //   component: Remaking_Input_Paper
-  // },
   {
     path: "/members",
     name: "Members",
@@ -192,13 +182,8 @@ const visitorRouter=[
   {
     path: "/newSearchQues",
     name: "NewSearchQues",
-    component: NewSearchQues,
+    component: () => import("@/views/testPage/New_SearchQues"),
   },
-  // {
-  //   path: "/newSearchQues",
-  //   name: "NewSearchQues",
-  //   component: () => import("@/views/testPage/New_SearchQues"),
-  // },
   // {
   //   path: "/inputMarkedPreview",
   //   name: "inputMarkedPreview",
