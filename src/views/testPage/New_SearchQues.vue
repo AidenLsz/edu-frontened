@@ -352,11 +352,12 @@
             v-for="(Question, Question_Index) in Question_List"
             :style="Get_Card_Background(Question_Index)"
             :key="'Question_' + Question_Index" 
-            :id="'Question_' + Question_Index">
+            >
             <div
                 :style="Get_Card_Margin(Question_Index)"
                 class="Question_Card">
                 <NewSearchQuesItem 
+                    :id="'Question_' + Question_Index"
                     :Question="Question" 
                     :Question_Index="Question_Index"
                     @Check_Question_Analysis="Check_Question_Analysis"></NewSearchQuesItem>
