@@ -30,41 +30,40 @@
         </el-col>
     </el-row>
     <el-row class="Detail_Line">
-        <el-col :span="21" style="line-height: 44px; padding: 0px 16px 0px 16px; border-radius: 10px; background: #F8F8F8">
-            <el-row type="flex" justify="start">
-                <el-col :span="3">
-                    <el-row type="flex" justify="start">
-                        <el-button type="text" @click="Expand = !Expand" style="height: 44px;">
-                            <i :class=" Expand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" style="margin-right: 10px"></i>
-                            {{Expand ? '收起' : '展开'}}
-                        </el-button>
-                    </el-row>
-                </el-col>
-                <el-col :span="21">
-                    <el-row type="flex" justify="end">
-                        <span class="Extra_Info_Item">
-                            真题情况：未知
-                        </span>
-                        <span class="Extra_Info_Item">
-                            所属题库：{{Question.database}}
-                        </span>
-                        <span class="Extra_Info_Item">
-                            学科：{{Question.subject}}
-                        </span>
-                        <span class="Extra_Info_Item">
-                            学段：{{Question.period}}
-                        </span>
-                    </el-row>
-                </el-col>
-            </el-row>
-        </el-col>
-        <el-col :span="3" style="line-height: 44px; height: 44px">
-            <el-row type="flex" justify="end">
-                <el-button size="medium" type="primary" style="height: 44px; border-radius: 10px; background: #539DD9" @click="Check_Analyse(Question.id, Question.database)">
-                    查看分析报告
-                </el-button>
-            </el-row>
-        </el-col>
+        <div
+            class="Detail_Line_Left" 
+            style="line-height: 44px; padding: 0px 16px 0px 16px; border-radius: 10px; background: #F8F8F8">
+                <div 
+                    align="left"
+                    class="Detail_Line_Expand">
+                    <el-button type="text" @click="Expand = !Expand" style="height: 44px;">
+                        <i :class=" Expand ? 'el-icon-d-arrow-right' : 'el-icon-d-arrow-left'" style="margin-right: 2px; transform: rotate(270deg);"></i>
+                        {{Expand ? '收起' : '展开'}}
+                    </el-button>
+                </div>
+                <div
+                    align="right" 
+                    class="Detail_Line_Infos">
+                    <span class="Extra_Info_Item">
+                        真题情况：未知
+                    </span>
+                    <span class="Extra_Info_Item">
+                        所属题库：{{Question.database}}
+                    </span>
+                    <span class="Extra_Info_Item">
+                        学科：{{Question.subject}}
+                    </span>
+                    <span class="Extra_Info_Item">
+                        学段：{{Question.period}}
+                    </span>
+                </div>
+        </div>
+        <div
+            class="Detail_Line_Right">
+            <el-button size="medium" type="primary" style="height: 44px; border-radius: 10px; background: #539DD9" @click="Check_Analyse(Question.id, Question.database)">
+                查看分析报告
+            </el-button>
+        </div>
     </el-row>
   </div>
 </template>
@@ -122,9 +121,29 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .Detail_Line{
-    padding: 6px 12px 12px 12px;
+    padding: 6px 16px 16px 16px;
+}
+.Detail_Line_Left{
+    display: inline-block;
+    width: calc(100% - 148px);
+    margin-right: 16px;
+}
+.Detail_Line_Right{
+    width: 132px;
+    height: 44px;
+    display: inline-block;
 }
 .Extra_Info_Item{
     margin-left: 15px;
+}
+.Detail_Line_Expand{
+    display: inline-block;
+    width: 60px;
+}
+.Detail_Line_Infos{
+    position: relative;
+    display: inline-block;
+    right: 0px;
+    width: calc(100% - 60px);
 }
 </style>

@@ -265,7 +265,8 @@
                             <!-- 开始检索的按钮 -->
                             <el-button 
                                 type="primary" 
-                                style="margin-right: 16px; border-radius: 10px; background: #539DD9"
+                                style="margin-right: 16px; border-radius: 10px;"
+                                class="Search_Button"
                                 @click="Search_Do()">
                                 <i class="el-icon-search" style="margin-right: 4px"></i>开始检索
                             </el-button>
@@ -337,20 +338,24 @@
                 </el-row>
                 <el-row 
                     v-else
-                    style="height: 60px; line-height: 40px; width: 100%; padding-bottom: 20px; cursor: pointer"
-                    @click.native="Jump_To('Question_0')"
+                    style="height: 60px; line-height: 40px; width: 100%; padding-bottom: 20px"
                     type="flex"
                     justify="center">
-                    <i class="el-icon-d-arrow-left" style="font-size: 40px; transform: rotate(270deg);"></i>
+                    <i 
+                        class="el-icon-d-arrow-left" 
+                        @click="Jump_To('Question_0')" 
+                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer"></i>
                 </el-row>
             </el-col>
         </el-row>
         <el-row 
             v-for="(Question, Question_Index) in Question_List"
-            :style="Question_Index % 2 == 0 ? 'background: #F0F5FB' : 'background: white'" 
+            :style="Get_Card_Background(Question_Index)"
             :key="'Question_' + Question_Index" 
             :id="'Question_' + Question_Index">
-            <div class="Question_Card">
+            <div
+                :style="Get_Card_Margin(Question_Index)"
+                class="Question_Card">
                 <NewSearchQuesItem 
                     :Question="Question" 
                     :Question_Index="Question_Index"
@@ -360,7 +365,7 @@
         <el-row 
             v-if="Question_List.length != 0" 
             id="Page_Seg"
-            style="padding-top: 20px; padding-bottom: 20px; background: white">
+            style="padding-top: 20px; padding-bottom: 20px; background: transparent">
             <el-pagination 
                 @current-change="Page_Index_Change"
                 :current-page.sync="Page_Index"
@@ -856,6 +861,21 @@ export default {
             console.log(val)
             this.Complex_Input_Dialog = false;
             this.Search_Content = val
+        },
+        Get_Card_Background(Question_Index){
+            let Style = {
+                'background': Question_Index % 2 == 0 ? '#F0F5FB' : 'white',
+
+            }
+            return Style
+        },
+        Get_Card_Margin(Question_Index){
+            let Style_Row_0 = '-64px 10vw 64px 10vw'
+            let Style_Row_1 = '-64px 10vw 128px 10vw'
+            let Style = {
+                'margin': Question_Index == this.Question_List.length - 1 ? Style_Row_0 : Style_Row_1,
+            }
+            return Style
         }
     }
 };
@@ -915,7 +935,7 @@ export default {
     height: 36px;
     line-height: 36px; 
     margin-bottom: 12px;
-    border-radius: 5px;
+    border-radius: 7px;
     background: white;
     cursor: pointer;
     border: 1px solid #aaa;
@@ -949,7 +969,7 @@ export default {
     background: white;
     box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
     border-radius: 10px;
-    margin: 32px 10vw;
+    margin: -64px 10vw 64px 10vw;
     opacity: 0.95;
 }
 
@@ -978,5 +998,15 @@ export default {
     background-size: auto 100%;
     background-position: right;
     background-repeat: no-repeat;
+    margin-bottom: 64px;
+}
+
+.Search_Button{
+    background: #539DD9;
+    transition-duration: 300ms;
+}
+
+.Search_Button:hover{
+    background: #4484B8;
 }
 </style>
