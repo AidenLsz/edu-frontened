@@ -122,9 +122,9 @@
                 </el-submenu>
               </el-menu>
             </el-col>
-            <el-col :span="4" style="padding-top: 15px;">
+            <!-- <el-col :span="4" style="padding-top: 15px;">
               <el-button type="text" @click="show_members" class="navbar">成员</el-button>
-            </el-col>
+            </el-col> -->
             <el-col :span="5" style="padding-top: 15px;" v-if="$store.state.user.name">
               <el-row>
                 <el-dropdown trigger="hover" style="padding-top: 8px" class="navbar">

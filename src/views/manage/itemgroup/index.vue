@@ -21,7 +21,7 @@
   <el-row type="flex" justify="start">
     <el-col :span="6">
       <el-row type="flex" justify="start" style="">
-        <label style="font-size: 14px;line-height: 35px;">题库：</label>
+        <label style="font-size: 14px;line-height: 35px;min-width:60px;">题库：</label>
         <el-select v-model="itemType" placeholder="请选择">
           <el-option v-for="(item,i) in itemTypeList" :key="i" :label="item.val" :value="item.key">
           </el-option>
@@ -30,9 +30,9 @@
     </el-col>
     <el-col :span="12">
       <el-row type="flex" justify="start" style="">
-        <label style="font-size: 14px;line-height: 35px;">权限：</label>
+        <label style="font-size: 14px;line-height: 35px;min-width:60px;">权限：</label>
         <el-select v-model="actionType" placeholder="请选择">
-          <el-option v-for="(item,i) in actionList" :key="i" :label="item.val" :value="item.key">
+          <el-option v-for="(item,i) in actionList" :key="i" :label="item" :value="i">
           </el-option>
         </el-select>
       </el-row>
@@ -76,8 +76,8 @@
   </el-row>
   <instruction ref="instruction" />
   <createDialog ref="CreateDialog" :itemType="itemType" @igCreated="GET_IG_INFO()" />
-  <deleteDialog ref="DeleteDialog" :userData="userData" @userDeleted="GET_IG_INFO()" />
-  <editDialog ref="EditDialog" :userData="userData" @userUpdated="GET_IG_INFO()" />
+  <deleteDialog ref="DeleteDialog" :igData="igData" @igDeleted="GET_IG_INFO()" />
+  <editDialog ref="EditDialog" :igData="igData" @userUpdated="GET_IG_INFO()" />
 </div>
 </template>
 <script>
@@ -105,9 +105,9 @@ export default {
       itemTypeList: [],
       itemType: '',
       itemGroupData: [],
-      userData: {},
-      actionList: [],
-      actionType: '',
+      igData: {},
+      actionList: variable.actionType,
+      actionType: 'R',
       groupnameArray: [],
       pagenation: {
         page: 1,
@@ -127,22 +127,10 @@ export default {
       if (!this.itemGroupData[this.itemType])
         return []
       let resData = this.itemGroupData[this.itemType]
-      return resData.filter((item) => item.action == this.actionType)
+      return resData.filter((item) => item.action_ch.includes(variable.actionType[this.actionType]))
     },
     tableData() {
-      // let tableColumns=['username','legal_name','groupname','email','phone','is_admin_ch','status_ch']
       let resData = this.CurrentItemGroupData;
-      // if(this.searchData){
-      //   resData = resData.filter(data => {
-      //     for (let key in data) {
-      //       if(data[key] && tableColumns.includes(key) && data[key].includes(this.searchData)){
-      //         return true
-      //       }
-      //     }
-      //     return false
-      //   })
-      //   this.handleCurrentChange(1)
-      // }
       return resData
     },
     groupname() {
@@ -164,11 +152,11 @@ export default {
       this.$refs.AddDialog.openDialog();
     },
     openDeleteDialog(data) {
-      this.userData = data
+      this.igData = data
       this.$refs.DeleteDialog.openDialog();
     },
     openEditDialog(data) {
-      this.userData = data
+      this.igData = data
       this.$refs.EditDialog.openDialog();
     },
     handleCurrentChange(val) {
@@ -192,31 +180,7 @@ export default {
             'key': key,
             'val': variable.itemType[key]
           })
-          let ig_map = {}
-          for (let i = 0; i < this.itemGroupData[key].length; i++) {
-            let item = this.itemGroupData[key][i]
-            if (!ig_map[item.ig_ID]) {
-              if (item.source == this.UUID) {
-                ig_map[item.ig_ID] = ['M']
-              } else {
-                ig_map[item.ig_ID] = []
-              }
-            }
-            ig_map[item.ig_ID].push(item.action)
-          }
-          for (let i = 0; i < this.itemGroupData[key].length; i++) {
-            let item = this.itemGroupData[key][i]
-            if (!this.actionList.some((item) => item.key == this.itemGroupData[key][i].action)) {
-              this.actionList.push({
-                'key': this.itemGroupData[key][i].action,
-                'val': variable.actionType[this.itemGroupData[key][i].action]
-              })
-            }
-            item.itemtype_ch = variable.itemType[item.itemtype]
-            item.source_type_ch = variable.sourceType[item.source_type]
-            item.action_ch = ig_map[item.ig_ID].map(item => variable.actionType[item]).join('、')
-            item.action_list = ig_map[item.ig_ID]
-          }
+          this.itemGroupData[key] = this.obj2arr(this.groupData(this.itemGroupData[key]));
         }
         if (this.itemTypeList.length > 0) {
           this.itemType = this.itemTypeList[0].key
@@ -224,11 +188,37 @@ export default {
         if (this.actionList.length > 0) {
           this.actionType = this.actionList[0].key
         }
-        // console.log(this.itemTypeList)
-        // console.log(data,variable.itemType);
-        // this.Item_Group_List=res.ig_name;
       })
     },
+    obj2arr(data){
+      let res=[]
+      for (var key in data) {
+        res.push(data[key])
+      }
+      return res
+    },
+    groupData(data){
+      let igObj = {}
+      for (let i = 0; i < data.length; i++) {
+        let item = data[i]
+        if (!igObj[item.ig_ID]) {
+          item.itemtype_ch = variable.itemType[item.itemtype]
+          item.source_type_ch = variable.sourceType[item.source_type]
+          igObj[item.ig_ID]=item
+          if (item.source == this.UUID) {
+            igObj[item.ig_ID].action_list = ['M']
+          } else {
+            igObj[item.ig_ID].action_list = []
+          }
+        }
+        igObj[item.ig_ID].action_list.push(item.action)
+      }
+      for (var key in igObj) {
+        let item = igObj[key]
+        item.action_ch = igObj[item.ig_ID].action_list.map(item => variable.actionType[item]).join('、')
+      }
+      return igObj
+    }
   }
 }
 </script>

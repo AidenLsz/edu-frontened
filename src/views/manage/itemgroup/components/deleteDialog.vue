@@ -6,8 +6,8 @@
     width="800px"
     center>
     <div class="tip">
+      删除功能开发中
       <!-- 确定删除题库吗？该操作不可撤销。 -->
-      删除题库功能开发中
     </div>
     <div slot="footer" class="dialog-footer" style="text-align:right">
       <el-button @click="visible = false">取 消</el-button>
@@ -17,16 +17,16 @@
 </template>
 
 <script>
-// import {
-//   Message
-// } from 'element-ui'
-// import {
-//   commonAjax
-// } from '@/common/utils/ajax'
+import {
+  Message
+} from 'element-ui'
+import {
+  commonAjax
+} from '@/common/utils/ajax'
 
 export default {
   props: {
-    userData: {
+    igData: {
       type: Object
     },
   },
@@ -42,29 +42,25 @@ export default {
       this.visible = true
     },
     Delete_User(){
-      // let fd={
-      //   user_ID:this.userData.user_ID,
-      //   ug_ID:this.userData.ug_ID
-      // }
-      // commonAjax(this.backendIP+'/api/delete_user_from_group',fd).then((res)=>{
-      //   if(res.status){
-      //     Message({
-      //       message: '删除用户成功！',
-      //       type: 'success',
-      //       duration: 5 * 1000
-      //     })
-      //     this.$emit('userDeleted')
-      //     this.visible=false
-      //   }else{
-      //     throw Error()
-      //   }
-      // }).catch(()=>{
-      //   Message({
-      //     message: '删除用户失败！',
-      //     type: 'err',
-      //     duration: 5 * 1000
-      //   })
-      // })
+      commonAjax(this.backendIP+'/api/delete_ig_group',{ig_ID:this.igData.ig_ID}).then((res)=>{
+        if(res.status){
+          Message({
+            message: '删除题库成功！',
+            type: 'success',
+            duration: 5 * 1000
+          })
+          this.$emit('igDeleted')
+          this.visible=false
+        }else{
+          throw Error()
+        }
+      }).catch((err)=>{
+        Message({
+          message: err,
+          type: 'err',
+          duration: 5 * 1000
+        })
+      })
     },
   }
 }
