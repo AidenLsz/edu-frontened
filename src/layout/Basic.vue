@@ -343,7 +343,7 @@
                       <el-dropdown-item @click.native="checkUserInfo"
                         >个人设置</el-dropdown-item
                       >
-                      <el-dropdown-item @click.native="checkUserGroup"
+                      <el-dropdown-item v-if="isGroup" @click.native="checkUserGroup"
                         >组织架构</el-dropdown-item
                       >
                       <el-dropdown-item @click.native="logout"
@@ -453,9 +453,11 @@ export default {
       });
     },
     getGroups() {
-      commonAjax(this.backendIP + "/api/get_user_groups", {}).then((res) => {
+      commonAjax(this.backendIP + "/api/get_users_by_admin", {}).then((res) => {
         if (res.data.length > 0 && res.data.some((data) => data.is_admin)) {
           this.isGroup = true;
+        }else {
+          this.isGroup=false
         }
       });
     },

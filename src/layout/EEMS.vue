@@ -122,9 +122,9 @@
                 </el-submenu>
               </el-menu>
             </el-col>
-            <el-col :span="4" style="padding-top: 15px;">
+            <!-- <el-col :span="4" style="padding-top: 15px;">
               <el-button type="text" @click="show_members" class="navbar">成员</el-button>
-            </el-col>
+            </el-col> -->
             <el-col :span="5" style="padding-top: 15px;" v-if="$store.state.user.name">
               <el-row>
                 <el-dropdown trigger="hover" style="padding-top: 8px" class="navbar">
@@ -211,11 +211,13 @@ export default {
       }
     },
     getGroups() {
-      commonAjax(this.backendIP + '/api/get_user_groups', {}).then((res) => {
-        if (res.data.length > 0 && res.data.some((data)=>data.is_admin)) {
-          this.isGroup = true
+      commonAjax(this.backendIP + "/api/get_users_by_admin", {}).then((res) => {
+        if (res.data.length > 0 && res.data.some((data) => data.is_admin)) {
+          this.isGroup = true;
+        }else {
+          this.isGroup=false
         }
-      })
+      });
     },
     // 跳转至试题分析的不同位置的对话框
     QuestionAnalyseSwitch() {
