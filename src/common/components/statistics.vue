@@ -307,7 +307,7 @@ export default {
       let isManage=this.$router.currentRoute.path.includes('/manage/')
       if (isManage) {
         // 资源管理页面
-        commonAjax(this.backendIP + "/api/count_by_user",{}).then((data)=>{
+        commonAjax(this.backendIP + "/api/count",{}).then((data)=>{
           this.handleResData(data)
         })
       }else{
