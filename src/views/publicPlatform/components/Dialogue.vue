@@ -69,17 +69,9 @@
         @close="Reset_Interval()"
       >
         <ComplexInput
-          @Update_CI="UCI"
-          @Update_Image="UCII"
+          @New_Content="UCI"
           :Get_Out_Content="content"
         ></ComplexInput>
-        <el-button
-          type="primary"
-          style="position: relative; left: 500px"
-          @click="confirm()"
-        >
-          确定
-        </el-button>
       </el-dialog>
 
       <div id="option">
@@ -539,6 +531,7 @@ export default {
     // Update Complex Input，将组合输入的内容复制到当前搜索框应该具有的内容里
     UCI(val) {
       this.content = val;
+      this.confirm()
     },
     // Update Complex Input Image，将组合输入的内容的图片部分复制到当前页面的内容里，如果后续又要用到则进行调用
     UCII(val) {

@@ -10,8 +10,7 @@
             width="65%"
             :modal-append-to-body="false"
             :close-on-click-modal="false">
-            <ComplexInput @Update_CI="Update_Complex_Input" :Get_Out_Content="Complex_Content"></ComplexInput>
-            <el-button type="success" plain @click="Complex_Input_Dialog = false">完成输入</el-button>
+            <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="Complex_Content"></ComplexInput>
         </el-dialog>
         <!-- 顶部行 -->
         <el-row type="flex" justify="start" class="topBar">
@@ -538,6 +537,7 @@ export default {
         },
         // 将公式编辑器编辑完的内容弄回来
         Update_Complex_Input(val){
+            this.Complex_Input_Dialog = false
             let Aim = this.Focusing_Input.split(" ")
             this.Question[Aim[0]] = val;
         },

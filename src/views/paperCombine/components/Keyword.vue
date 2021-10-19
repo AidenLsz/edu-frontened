@@ -7,8 +7,7 @@
         width="65%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
-      <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="searchKeyword"></ComplexInput>
-      <el-button type="success" plain @click="complexInput = false">完成输入</el-button>
+      <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="searchKeyword"></ComplexInput>
     </el-dialog>
     <!-- 查看分析报告 -->
     <el-dialog
@@ -292,9 +291,10 @@ export default {
       this.submit();
       window.scrollTo(0,0);
     },
-    // Update_Complex_Input
-    UCI(val){
-      this.searchKeyword = val;
+    // 更新富文本输入框内容
+    Update_Complex_Input(val){
+        this.complexInput = false;
+        this.searchKeyword = val
     },
     // UCI_Images
     UCII(val){

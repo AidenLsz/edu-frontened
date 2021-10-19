@@ -48,32 +48,37 @@
                 </el-row>
             </el-popover>
         </el-col>
-        <el-col :span="2" :class="Menu_Now(0)" @click.native="Jump_To(0)">
+        <el-col :span="2" :class="Menu_Now('keyword')" @click.native="Jump_To('keyword')">
             <el-row type="flex" justify="center">
                 关键词挑题
             </el-row>
         </el-col>
-        <el-col :span="2" :class="Menu_Now(1)" @click.native="Jump_To(1)">
+        <el-col :span="2" :class="Menu_Now('knowledgePoint')" @click.native="Jump_To('knowledgePoint')">
             <el-row type="flex" justify="center">
                 知识点挑题
             </el-row>
         </el-col>
-        <el-col :span="2" :class="Menu_Now(2)" @click.native="Jump_To(2)">
+        <el-col :span="2" :class="Menu_Now('import')" @click.native="Jump_To('import')">
             <el-row type="flex" justify="center">
                 录入题目
             </el-row>
         </el-col>
-        <el-col :span="2" :class="Menu_Now(4)" @click.native="Jump_To(4)">
+        <el-col :span="2" :class="Menu_Now('databasePaper')" @click.native="Jump_To('databasePaper')">
             <el-row type="flex" justify="center">
                 试卷挑题
             </el-row>
         </el-col>
-        <el-col :span="2" :class="Menu_Now(3)" @click.native="Jump_To(3)">
+        <el-col :span="2" :class="Menu_Now('detailTable')" @click.native="Jump_To('detailTable')">
             <el-row type="flex" justify="center">
                 细目表挑题
             </el-row>
         </el-col>
-        <el-col :span="3" :offset="6" class="Question_Shopping_Card">
+        <el-col :span="2" :class="Menu_Now('autoCombine')" @click.native="Jump_To('autoCombine')" style="display: none">
+            <el-row type="flex" justify="center">
+                智能组卷
+            </el-row>
+        </el-col>
+        <el-col :span="3" :offset="4" class="Question_Shopping_Card">
             <el-popover
                 trigger="click"
                 width="400"
@@ -111,26 +116,29 @@
             </el-popover>
         </el-col>
     </el-row>
-    <el-row v-if="Using_Menu_Index == 0">
+    <el-row v-if="Using_Menu_Index == 'keyword'">
         <Keyword @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></Keyword>
     </el-row>
-    <el-row v-if="Using_Menu_Index == 1">
+    <el-row v-if="Using_Menu_Index == 'knowledgePoint'">
         <KnowledgePoint @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></KnowledgePoint>
     </el-row>
-    <el-row v-if="Using_Menu_Index == 2">
+    <el-row v-if="Using_Menu_Index == 'import'">
         <InputQuestion @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></InputQuestion>
     </el-row>
-    <el-row v-if="Using_Menu_Index == 3">
+    <el-row v-if="Using_Menu_Index == 'detailTable'">
         <DetailTable 
             @Jump_To_SC="Jump_To_SC"
             @Add_To_Cart="Add_To_Question_Cart" 
             @Clear_Cart="Clear_Cart" 
             :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></DetailTable>
     </el-row>
-    <el-row v-if="Using_Menu_Index == 4">
+    <el-row v-if="Using_Menu_Index == 'databasePaper'">
         <FromDatabasePaper @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></FromDatabasePaper>
     </el-row>
-    <el-row v-if="Using_Menu_Index == 5">
+    <el-row v-if="Using_Menu_Index == 'autoCombine'">
+        <AutoCombine @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></AutoCombine>
+    </el-row>
+    <el-row v-if="Using_Menu_Index == 'startCombine'">
         <StartCombine 
             @Update_Question_List="Update_Question_List"
             :Question_List.sync="Question_List"
@@ -147,6 +155,7 @@ import InputQuestion from '@/views/paperCombine/components/InputQuestion'
 import DetailTable from '@/views/paperCombine/components/DetailTable'
 import StartCombine from '@/views/paperCombine/components/StartCombine'
 import FromDatabasePaper from '@/views/paperCombine/components/FromDatabasePaper'
+import AutoCombine from '@/views/paperCombine/components/AutoCombine'
 
 import * as echarts from 'echarts';
 
@@ -160,12 +169,12 @@ export default {
   components: {
         Keyword, KnowledgePoint,
         InputQuestion, DetailTable, StartCombine,
-        FromDatabasePaper
+        FromDatabasePaper, AutoCombine
   },
   data() {
     return {
         // 存放当前正在使用第几个菜单项
-        Using_Menu_Index: 0,
+        Using_Menu_Index: 'keyword',
         // 题目列表信息
         Question_List: [],
         // 用于设定学科 / 学段选择位置的数据字段
@@ -188,11 +197,11 @@ export default {
       
   },
   mounted() {
-      if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
-        this.$message.error("您尚未登录，请登录后使用组卷功能。")
-        this.$router.push("/")
-        return 
-      }
+    //   if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
+    //     this.$message.error("您尚未登录，请登录后使用组卷功能。")
+    //     this.$router.push("/")
+    //     return 
+    //   }
       this.Init_Question_Type_Chart();
   },
   methods: {
@@ -210,7 +219,7 @@ export default {
         this.Question_List = JSON.parse(val);
         if(this.Question_List.length == 0){
             this.$message.warning("您的试题篮内已清空，已返回至关键词挑题页面。");
-            this.Using_Menu_Index = 0;
+            this.Using_Menu_Index = 'keyword';
         }
       },
       // 获取题目总数
@@ -423,17 +432,17 @@ export default {
             this.$message.error("你的试题篮里目前没有题目，无法组卷。");
             return
         }else{
-            this.Jump_To(5);
+            this.Jump_To('startCombine');
             this.$refs['Question_Cart'].doClose();
         }
     },
     Jump_To(Aim){
-        if(Aim != 0 || Aim != 5){
-            if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
-                this.$message.error("您尚未登录，请登录后使用此功能。")
-                return 
-            }
-        }
+        // if(Aim != 'keyword' || Aim != 'startCombine'){
+        //     if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
+        //         this.$message.error("您尚未登录，请登录后使用此功能。")
+        //         return 
+        //     }
+        // }
         this.Using_Menu_Index = Aim;
     }
   },

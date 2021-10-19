@@ -1020,6 +1020,9 @@ The line of README
         </div>        
       </mavon-editor>
     </el-row>
+    <el-row type="flex" justify="center">
+      <el-button type="success" plain @click="Emit_Content()">完成输入</el-button>
+    </el-row>
   </div>
 </template>
 
@@ -1245,14 +1248,18 @@ export default {
     Get_Out_Content(val){
       this.content = val;
     },
-    content(newVal){
-      setTimeout(()=>{this.$emit("Update_CI", newVal)}, 10);
-    },
-    image_infos(newVal){
-      setTimeout(()=>{this.$emit("Update_Image", newVal)}, 10);
-    }
+    // content(newVal){
+    //   setTimeout(()=>{this.$emit("Update_CI", newVal)}, 10);
+    // },
+    // image_infos(newVal){
+    //   setTimeout(()=>{this.$emit("Update_Image", newVal)}, 10);
+    // }
   },
   methods: {
+    // 发送内容
+    Emit_Content(){
+      this.$emit('New_Content', this.content)
+    },
     Change_Cursor_Pos_Index(pos){
       this.Cursor_Pos_Index = pos;
     },
