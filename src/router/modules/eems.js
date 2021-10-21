@@ -39,11 +39,11 @@ const router=[
     name: "inputMarked",
     component:()=> import("@/views/resourceInput/InputMarked"),
   },
-  {
-    path: "members",
-    name: "Members",
-    component:()=> import("@/views/Members_Introduce")
-  },
+  // {
+  //   path: "members",
+  //   name: "Members",
+  //   component:()=> import("@/views/Members_Introduce")
+  // },
 	// {
 	// 	path: "/ImageTranscription",
 	// 	name: "ImageTranscription",
