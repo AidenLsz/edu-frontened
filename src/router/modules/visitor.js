@@ -53,6 +53,11 @@ const visitorRouter=[
     component: () => import("@/views/Home"),
   },
   {
+    path:'/paperdivide',
+    name: "Paperdivide",
+    component: () => import("@/views/labelManage/Paperdivide")
+  },
+  {
     path: "/ku",
     name: "Knowledge Unit",
     component: () => import("@/views/resourceQuery/KU/index.vue"),

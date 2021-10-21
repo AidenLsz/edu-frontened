@@ -259,6 +259,15 @@
                           <span style="color: black">试题信息修改</span>
                         </el-menu-item>
                       </router-link>
+                      <router-link
+                          to="/paperdivide"
+                          :underline="false"
+                          @click.native="ToTop"
+                      >
+                        <el-menu-item index="4-1">
+                          <span style="color: black">试卷切分</span>
+                        </el-menu-item>
+                      </router-link>
                     </el-submenu>
                     <el-menu-item index="5">
                       <router-link
