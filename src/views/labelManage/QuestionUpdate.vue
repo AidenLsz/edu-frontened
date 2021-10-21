@@ -1,12 +1,12 @@
 <template>
   <div class="main-container">
     <el-row
-      style="
+        style="
         padding: 40px 10% 30px;
         text-shadow: 2px 6px 10px rgba(67, 92, 130, 0.14);
       "
-      justify="start"
-      type="flex"
+        justify="start"
+        type="flex"
     >
       <el-col>
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -17,42 +17,59 @@
       </el-col>
     </el-row>
 
-    <transition name="el-fade-in">
-      <p id="title" class="title">试题信息修改</p>
+
+
+
+
+
+
+    <transition name="el-fade-in" v-show="show_tag">
+      <p id="title" class="title" v-show="show_tag">试题信息修改</p>
     </transition>
 
-    <div class="search-bar">
-      <el-input
-          class="search-input"
-          id="search-input"
-          placeholder="输入题目文本或者ID"
-          v-model="searchText"
-          @keyup.enter.native="search"
-      >
-        <!--        <el-tooltip class="item" effect="light" content="hhh" placement="top">-->
-        <el-tooltip slot="suffix" class="item" effect="dark" :content="testDB?'测试库':'正式库'" placement="top">
-          <i v-if="testDB"
-             @click="toggleTestDB"
-             class="el-input__icon el-icon-open search-btn"
-          />
-          <i v-else
-             @click="toggleTestDB"
-             class="el-input__icon el-icon-turn-off search-btn"
-          />
-        </el-tooltip>
-        <!--        </el-tooltip>-->
-        <i v-if="searching"
-           class="el-input__icon el-icon-loading search-btn"
-           slot="suffix"
-        />
-        <i v-else
-           @click="search"
-           slot="suffix"
-           class="el-input__icon el-icon-search search-btn"
-        />
-      </el-input>
+    <div class="search-bar" v-show="show_tag">
+            <el-input
+                class="search-input"
+                id="search-input"
+                placeholder="输入题目文本或者ID"
+                v-model="searchText"
+                @keyup.enter.native="search">
+                      <i v-if="searching"
+                         class="el-input__icon el-icon-loading search-btn"
+                         slot="suffix"
+                      />
+                      <i v-else
+                         @click="search"
+                         slot="suffix"
+                         class="el-input__icon el-icon-search search-btn"
+                      />
+            </el-input>
     </div>
+    <div class="select" v-show="show_tag">
+      <div class="select_way">
+        搜索方式：
+      </div>
+      <div>
+        <el-radio-group v-model="searchtype" min="1" max="2">
+<!--          <el-checkbox-button v-for="type in select_type" :label="type" :key="type">{{type}}</el-checkbox-button>-->
+          <el-radio-button label="单题搜索" ></el-radio-button>
+          <el-radio-button label="题组搜索"></el-radio-button>
+          <el-radio-button label="试卷搜索"></el-radio-button>
 
+        </el-radio-group>
+      </div>
+      <div class="select_DB">
+        搜索库：
+      </div>
+      <div>
+        <el-radio-group v-model="testDB" min="1" max="1">
+<!--          <el-checkbox-button v-for="DB in dbs" :label="DB" :key="DB">{{DB}}</el-checkbox-button>-->
+          <el-radio-button label="测试库"></el-radio-button>
+          <el-radio-button label="正式库"></el-radio-button>
+
+        </el-radio-group>
+      </div>
+    </div>
     <!--    <div style="padding: 0">-->
     <!--      <el-switch-->
     <!--          v-model="testDB"-->
@@ -83,9 +100,9 @@
 
     <transition-group name="el-fade-in">
       <div
-        v-for="(item, index) in questions"
-        v-bind:key="item.question_ID"
-        class="question-item"
+          v-for="(item, index) in questions"
+          v-bind:key="item.question_ID"
+          class="question-item"
       >
         <div style="font-size: 26px; margin-bottom: 12px; text-align: center">
           试题{{ index + 1 }}
@@ -161,7 +178,7 @@
               </el-select>
               <el-select v-model="item.period" placeholder="学段">
                 <el-option
-                  v-for="(item, id) in [
+                    v-for="(item, id) in [
                     '其他',
                     '初中',
                     '高中',
@@ -169,14 +186,14 @@
                     '成人',
                     '小学',
                   ]"
-                  :label="'学段：' + item"
-                  :key="id"
-                  :value="id"
+                    :label="'学段：' + item"
+                    :key="id"
+                    :value="id"
                 ></el-option>
               </el-select>
               <el-select v-model="item.system" placeholder="来源">
                 <el-option
-                  v-for="(item, id) in [
+                    v-for="(item, id) in [
                     '其他',
                     '',
                     '',
@@ -193,29 +210,29 @@
                     'LUNA',
                     '题库中国',
                   ]"
-                  :v-if="item !== ''"
-                  :label="'来源：' + item"
-                  :key="id"
-                  :value="id"
+                    :v-if="item !== ''"
+                    :label="'来源：' + item"
+                    :key="id"
+                    :value="id"
                 ></el-option>
               </el-select>
               <el-select v-model="item.pastpaper" placeholder="真题">
                 <el-option
-                  v-for="(item, id) in [
+                    v-for="(item, id) in [
                     '未处理',
                     '非真题',
                     '真卷',
                     '高考真卷',
                     '中考真卷',
                   ]"
-                  :label="'真题：' + item"
-                  :key="id"
-                  :value="id"
+                    :label="'真题：' + item"
+                    :key="id"
+                    :value="id"
                 ></el-option>
               </el-select>
               <el-select v-model="item.type" placeholder="题型">
                 <el-option
-                  v-for="(item, id) in [
+                    v-for="(item, id) in [
                     '其他',
                     '多选题',
                     '填空题',
@@ -224,25 +241,25 @@
                     '计算题',
                     '单选题',
                   ]"
-                  :label="'题型：' + item"
-                  :key="id"
-                  :value="id"
+                    :label="'题型：' + item"
+                    :key="id"
+                    :value="id"
                 ></el-option>
               </el-select>
               <el-date-picker
-                style="width: 100%"
-                v-model="item.date"
-                type="date"
-                placeholder="选择日期"
+                  style="width: 100%"
+                  v-model="item.date"
+                  type="date"
+                  placeholder="选择日期"
               >
               </el-date-picker>
             </div>
           </el-form-item>
           <el-form-item label="题干">
             <el-input
-              type="textarea"
-              :autosize="{ minRows: 5, maxRows: 10 }"
-              v-model="item.stem"
+                type="textarea"
+                :autosize="{ minRows: 5, maxRows: 10 }"
+                v-model="item.stem"
             ></el-input>
           </el-form-item>
           <el-form-item label="选项">
@@ -299,8 +316,12 @@ export default {
       searchText: "",
       questions: [],
       edit: [],
+      dbs: ['测试库','正式库'],
+      select_type: ['单题搜索','题组搜索','试卷搜索'],
       unfold: [],
-      testDB: true,
+      testDB: "try",
+      searchtype: 1,
+      show_tag:true,
       loading: false,
       searching: false,
       mockData: [
@@ -317,7 +338,7 @@ export default {
           pastpaper: 3,
           answer: "A",
           stem:
-            "西汉文帝时，申公、韩婴皆以传《诗》被任命为博士；景帝时，胡母生、董仲舒以传《公羊春秋》被任命博士。由此可以推知汉初",
+              "西汉文帝时，申公、韩婴皆以传《诗》被任命为博士；景帝时，胡母生、董仲舒以传《公羊春秋》被任命博士。由此可以推知汉初",
           options: [
             "经学地位上升成为入仕之途",
             "品行成为选官的主要标准",
@@ -325,7 +346,7 @@ export default {
             "儒学逐步取得了独尊地位",
           ],
           analysis:
-            "【详解】依据材料可知，汉初《诗》、《公羊春秋》等儒家经典被作为皇帝任命官职的依据，由此可见儒学地位上升成为入仕途径，因此A选项正确。B选项错误，材料并未体现品行作为选官的主要标准；C选项错误，材料并未涉及黄老之学；D选项错误，汉武帝时期，采取董仲舒的建议，罢黜百家，独尊儒术，设立太学，传授五经，使儒学获得了独尊地位。故正确答案为A选项。",
+              "【详解】依据材料可知，汉初《诗》、《公羊春秋》等儒家经典被作为皇帝任命官职的依据，由此可见儒学地位上升成为入仕途径，因此A选项正确。B选项错误，材料并未体现品行作为选官的主要标准；C选项错误，材料并未涉及黄老之学；D选项错误，汉武帝时期，采取董仲舒的建议，罢黜百家，独尊儒术，设立太学，传授五经，使儒学获得了独尊地位。故正确答案为A选项。",
           date: "2021-05-29 13:07:49",
           edit: false,
         },
@@ -338,7 +359,7 @@ export default {
           pastpaper: 0,
           source_type: 1,
           stem:
-            "<p>一同学在开展研究性学习，他阅读了《战争与和平》《人间喜剧》《双城记》《红与黑》等一系列相关的作品。依据你的判断，他研究的课题可能与哪一文学流派有关（   ）</p>",
+              "<p>一同学在开展研究性学习，他阅读了《战争与和平》《人间喜剧》《双城记》《红与黑》等一系列相关的作品。依据你的判断，他研究的课题可能与哪一文学流派有关（   ）</p>",
           options: ["批判现实主义", "古典主义", "现代主义", "浪漫主义"],
           answer: "A",
           date: "2021-05-29 13:07:49",
@@ -352,11 +373,25 @@ export default {
     // this.questions = this.mockData;
   },
   methods: {
-    toggleTestDB(){
-      this.testDB = this.testDB !== true;
-    },
+
     search() {
+
       // const idReg = new RegExp("[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}")
+      if(this.searchtype=='单题搜索')
+        this.searchstatus=1;
+      else if(this.searchtype=='题组搜索')
+        this.searchstatus=2;
+      else
+        this.searchstatus=3;
+      if(this.testDB=='测试库')
+        this.testDB=true;
+      else
+        this.testDB=false;
+      // alert(this.searchtype);
+      // alert("End");
+      this.searchtype=this.searchstatus;
+
+      // alert(this.searchtype);
 
       this.searching = true;
       let test = this.testDB;
@@ -375,28 +410,30 @@ export default {
 
       //Post传参形式
       let formData = {
-        query: this.searchText,
-        test: test,
+        'query': this.searchText,
+        'test': test,
+        'search_type': this.searchtype,
       }
-
       // if (idReg.test(this.searchText)) {
       //
       // }
-
       this.$http
-        .post(backendURL + "/api/query_question", formData, { emulateJSON: true })
-        .then(function (res) {
-          let data = res.data;
-          console.log('获得结果')
-          //判断错误
-          if(data.error !== "" || data.questions.length === 0) {
-            this.searching = false
-            this.$notify.error({
-              title: '检索失败',
-            });
-            console.log(data)
-          }
+          .post(backendURL + "/api/search_question", formData, { emulateJSON: true })
+          .then(function (res) {
 
+            let data = res.data;
+
+            console.log('获得结果')
+            //判断错误
+
+            if(data.error !== "" || data.questions.length === 0) {
+              this.searching = false
+              this.$notify.error({
+                title: '检索失败',
+              });
+              console.log(data)
+            }
+            this.show_tag=false;
             let edit = this.questions.length === 1;
             console.log(edit)
             this.questions = data.questions;
@@ -415,6 +452,7 @@ export default {
           })
           .catch((e) => {
             this.searching = false
+
             this.$notify.error({
               title: '检索失败',
             });
@@ -481,37 +519,37 @@ export default {
       }
 
       this.$http
-        .put(backendURL + "/api/update_question", formData, { emulateJSON: true })
-        .then(function (res) {
-          let data = res.data;
-          if (data.error) {
+          .put(backendURL + "/api/update_question", formData, { emulateJSON: true })
+          .then(function (res) {
+            let data = res.data;
+            if (data.error) {
+              this.loading = false
+              this.$notify.error({
+                title: '修改提交失败',
+
+              });
+              console.log("提交修改出错");
+              console.log(data.error);
+            } else {
+              this.$notify({
+                title: '修改提交成功',
+                type: 'success'
+              });
+              console.log("提交成功");
+              setTimeout(() => {
+                this.loading = false
+              }, 300)
+            }
+          })
+          .catch((e)=>{
             this.loading = false
             this.$notify.error({
               title: '修改提交失败',
 
             });
             console.log("提交修改出错");
-            console.log(data.error);
-          } else {
-            this.$notify({
-              title: '修改提交成功',
-              type: 'success'
-            });
-            console.log("提交成功");
-            setTimeout(() => {
-              this.loading = false
-            }, 300)
-          }
-        })
-        .catch((e)=>{
-          this.loading = false
-          this.$notify.error({
-            title: '修改提交失败',
-
+            console.log(e);
           });
-          console.log("提交修改出错");
-          console.log(e);
-        });
     },
     copyQuestionID(e, text) {
       const clipboard = new Clipboard(e.target, { text: () => text })
@@ -576,8 +614,13 @@ body .el-scrollbar__wrap {
 .main-container {
   /*width: 100%;*/
   /*height: 100%;*/
-  margin: 0 0 0 !important;
+  /*margin: 0 0 0 !important;*/
   /*background-color: #fefefe;*/
+  position: relative;
+  width: 1440px;
+  height: 1438px;
+
+  background: #FDFDFD;
 }
 
 /*.nav {*/
@@ -606,28 +649,153 @@ body .el-scrollbar__wrap {
 /*}*/
 
 .title {
-  text-align: center;
-  font-size: 36px;
-  margin-top: 120px;
-  transition: all;
-  transition-duration: 300ms;
+  /*text-align: center;*/
+  /*font-size: 36px;*/
+  /*margin-top: 120px;*/
+  /*transition: all;*/
+  /*transition-duration: 300ms;*/
+  /*position: absolute;*/
+  /*width: 238px;*/
+  /*height: 46px;*/
+  /*left: 601px;*/
+  /*top: 309px;*/
+
+  /*font-family: Sarasa Gothic SC;*/
+  /*font-style: normal;*/
+  /*font-weight: normal;*/
+  /*font-size: 37px;*/
+  /*line-height: 46px;*/
+  position: absolute;
+  width: 268px;
+  height: 46px;
+  left: 601px;
+  top: 309px;
+
+  font-family: Sarasa Gothic SC;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 38px;
+  line-height: 46px;
+  /* identical to box height */
+
+  letter-spacing: 0.05em;
+
+  color: rgba(5, 5, 5, 0.9);
+  /* identical to box height */
+
+  letter-spacing: 0.05em;
+
+  color: rgba(5, 5, 5, 0.9);
 }
 
 .search-bar {
   /*width: 50%;*/
-  margin: 30px auto 46px;
-  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.08));
-  transition: all;
-  transition-duration: 300ms;
+  /*margin: 30px auto 46px;*/
+  /*filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.08));*/
+  /*transition: all;*/
+  /*transition-duration: 300ms;*/
+  position: absolute;
+  width: 726px;
+  height: 34px;
+  left: 456px;
+  top: 399px;
+
+  background: #FFFFFF;
+  border: 1px solid #D9D9D9;
+  box-sizing: border-box;
+  border-radius: 10px;
   /*display: inline*/
 }
 
-.search-bar:hover {
-  /*transform: scale(1.02);*/
-  filter: drop-shadow(0px 4px 10px rgba(0, 0, 24, 0.12));
-  border-color: #1E88C7;
+/*.search-bar:hover {*/
+/*  !*transform: scale(1.02);*!*/
+/*  !*filter: drop-shadow(0px 4px 10px rgba(0, 0, 24, 0.12));*!*/
+/*  !*border-color: #1E88C7;*!*/
+/*  position: absolute;*/
+/*  width: 726px;*/
+/*  height: 34px;*/
+/*  left: 356px;*/
+/*  top: 399px;*/
+
+/*  background: #FFFFFF;*/
+/*  border: 1px solid #D9D9D9;*/
+/*  box-sizing: border-box;*/
+/*  border-radius: 10px;*/
+/*}*/
+.select_way {
+  position: static;
+  width: 88px;
+  height: 30px;
+  left: 0px;
+  top: 5px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 30px;
+  /* identical to box height, or 187% */
+
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  color: rgba(0, 0, 0, 0.85);
+
+
+  /* Inside Auto Layout */
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  margin: 0px 12px;
+}
+.select_DB {
+  position: static;
+  width: 72px;
+  height: 30px;
+  left: 0px;
+  top: 5px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 30px;
+  /* identical to box height, or 187% */
+
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  color: rgba(0, 0, 0, 0.85);
+
+
+  /* Inside Auto Layout */
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  margin: 0px 12px;
 }
 
+.select {
+  /* Frame 28 */
+
+
+  /* Auto Layout */
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0px;
+
+  position: absolute;
+  width: 668px;
+  height: 40px;
+  left: 408px;
+  top: 474px;
+}
 .sidebar {
   position: fixed;
   float: right;
@@ -655,12 +823,17 @@ body .el-scrollbar__wrap {
   border-color: #d0d0d0;
   transition: all;
   transition-duration: 300ms;
+
+
 }
 
 /deep/ .search-bar .search-input .el-input__inner:hover {
-  /*border-radius: 14px;*/
-  /*border-color: rgba(64,158,255, .7);*/
-  border-color: #bababa;
+  border-radius: 14px;
+  border-color: rgba(64,158,255, .7);
+  border-radius: 12px;
+  border-color: #d0d0d0;
+  transition: all;
+  transition-duration: 300ms;
 }
 
 .question-item {
