@@ -132,11 +132,11 @@ const visitorRouter=[
   //   name: "RemakeInputPaper",
   //   component: Remaking_Input_Paper
   // },
-  // {
-  //   path: "/members",
-  //   name: "Members",
-  //   component: () => import("@/views/Members_Introduce"),
-  // },
+  {
+    path: "/members",
+    name: "Members",
+    component: () => import("@/views/Members_Introduce"),
+  },
   {
     path: "/PublicPlatform",
     name: "PublicPlatform",
