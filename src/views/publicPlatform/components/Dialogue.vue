@@ -817,5 +817,4 @@ export default {
 #image :hover {
   cursor: pointer;
 }
-
 </style>

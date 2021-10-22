@@ -1031,7 +1031,7 @@ input[type="file"] {
   background-color: #fff !important;
 }
 
-#checkbox ::v-deep .el-checkbox__input.is-checked + .el-checkbox__label {
+#checkbox /deep/ .el-checkbox__input.is-checked + .el-checkbox__label {
   color: #1a2930;
 }
 
