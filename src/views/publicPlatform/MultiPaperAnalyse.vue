@@ -1,0 +1,920 @@
+<template>
+  <div
+    class="MultiPaperAnalyse"
+    style="min-height: 100vh; padding-left: 10%; padding-right: 10%"
+    v-loading="Question_Analysing"
+    :element-loading-text=" progress + '/' + chosen_paper_List.length + '分析中，请等待...'"
+    element-loading-spinner="el-icon-loading"
+  >
+    <!-- <div class="panel"> -->
+    <el-row justify="start" type="flex" style="margin-top: 43px">
+      <el-col>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item>AI实验室</el-breadcrumb-item>
+          <el-breadcrumb-item>多卷分析</el-breadcrumb-item>
+        </el-breadcrumb>
+      </el-col>
+    </el-row>
+
+    <el-row type="flex" justify="start" style="margin-top: 30px">
+      <el-col :span="2.5">
+        <span>分析属性勾选：</span>
+      </el-col>
+      <el-col :span="10">
+        <el-checkbox-group v-model="checkList" id="checkbox">
+          <el-checkbox label="数字属性"></el-checkbox>
+          <el-checkbox label="关键词"></el-checkbox>
+          <el-checkbox label="知识点分值"></el-checkbox>
+          <el-checkbox label="难度变化"></el-checkbox>
+        </el-checkbox-group>
+      </el-col>
+    </el-row>
+
+    <el-row type="flex" justify="start" style="margin-top: 30px">
+      <el-button type="primary" @click="Open_Paper_Base()"
+        >从试卷库中选择</el-button
+      >
+      <el-button disabled type="primary" @click="Update()">本地上传</el-button>
+    </el-row>
+
+    <el-dialog
+      :visible.sync="show_paper_base"
+      title="试卷选择"
+      width="80%"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false"
+    >
+      <SearchPaper @Close_Paper_Base="CPB"></SearchPaper>
+    </el-dialog>
+
+    <el-row
+      v-show="show_word_cnt_Bar"
+      type="flex"
+      justify="center"
+      style="margin-bottom: 100px"
+    >
+      <div id="word_cnt_Bar" class="word_cnt_Bar"></div>
+    </el-row>
+
+    <el-row v-show="show_Word_Cloud" type="flex" justify="center">
+      <p
+        style="
+          font-size: 16px;
+          font-family: Microsoft YaHei, sans-serif;
+          font-weight: 900;
+        "
+      >
+        关键词比较
+      </p>
+    </el-row>
+    <el-row v-show="checkList.indexOf('关键词') > -1" justify="center">
+      <!-- <el-row v-show="show_Word_Cloud" justify="center"> -->
+      <div
+        v-for="i in chosen_paper_List.length"
+        :key="'Word_Cloud_' + i"
+        style="display: inline-block; margin: 10px 30px 20px 30px"
+      >
+        <div :id="'container' + i" style="height: 400px; width: 400px"></div>
+        <p v-show="show_Word_Cloud">{{ chosen_paper_List[i - 1].title }}</p>
+      </div>
+    </el-row>
+
+    <!-- <el-row
+      v-show="show_Radar && checkList.indexOf('知识点') > -1"
+      type="flex"
+      justify="center"
+    >
+      <div id="Radar" class="word_cnt_Bar"></div>
+    </el-row> -->
+    <!-- for test -->
+    <el-row v-show="show_knowledge2score" type="flex" justify="center">
+      <div id="Radar" class="word_cnt_Bar"></div>
+    </el-row>
+
+    <el-row v-show="show_difficulty_change" type="flex" justify="center">
+      <div
+        id="diffi_change"
+        class="diffi_change"
+        :style="'height:' + (160 * chosen_paper_List.length + 150) + 'px'"
+      ></div>
+    </el-row>
+    <!-- <el-row type="flex" justify="center">
+      <div id="test" class="word_cnt_Bar"></div>
+    </el-row> -->
+
+    <!-- <el-row v-show="show_word_cnt_Bar && checkList.indexOf('字数与图片数') > -1" type="flex" justify="center">
+      <div id="word_cnt_Bar" class="word_cnt_Bar"></div>
+    </el-row>
+
+    <el-row v-show="show_word_cnt_Bar && checkList.indexOf('字数') > -1" type="flex" justify="center">
+      <div id="word_cnt_Bar" class="word_cnt_Bar"></div>
+    </el-row> -->
+  </div>
+</template>
+
+<script>
+/* eslint-disable */
+import SearchPaper from "./components/SearchPaper";
+import Js2WordCloud from "js2wordcloud";
+import * as echarts from "echarts";
+// import "echarts-wordcloud";
+import { commonAjax } from "@/common/utils/ajax";
+
+export default {
+  components: { SearchPaper },
+  name: "MultiPaperAnalyse",
+  data() {
+    return {
+      // 是否打开试卷库
+      show_paper_base: false,
+      // 是否显示试卷字数柱状图
+      show_word_cnt_Bar: false,
+      // 是否显示关键词词云
+      show_Word_Cloud: false,
+      // 是否显示知识点分值雷达图
+      show_knowledge2score: false,
+      // 是否显示难度变化
+      show_difficulty_change: false,
+      // 比较属性
+      checkList: ["数字属性", "关键词", "知识点分值", "难度变化"],
+      // 选中的试卷的ID
+      chosen_paper_List: [
+        // {
+        //   试卷ID
+        //   ID:
+        //   试卷所属试题库
+        //   database:
+        //   试卷标题
+        //   title:
+        // }
+      ],
+      // 是否正在加载分析报告
+      Question_Analysing: false,
+      // 每张试卷返回的结果
+      analyse_result: [
+        // {
+        //   "id": "43482c08-8c71-4166-8490-2d991ba5be0a",
+        //   "type": "PackedQues",
+        //   "score": 4,
+        //   "difficulty_statistics": {
+        //     "mean": 0.4028695672750473,
+        //     "min": 0.29554620385169983,
+        //     "max": 0.5101929306983948,
+        //     "std": 0.10732336342334747
+        //   },
+        //   "knowledge_knowledge2num": {
+        //     "解析几何::代数": 1
+        //   },
+        //   "knowledge2difficulty": {
+        //     "解析几何": 0.4028695672750473,
+        //     "代数": 0.5101929306983948
+        //   },
+        //   "knowledge2score": {
+        //     "解析几何": 4,
+        //     "代数": 2
+        //   },
+        //   "sub_question": [{},{}]
+        // }
+      ],
+      // 试卷分析返回值状态监听器
+      status_Listener: "",
+      // 关键词黑名单
+      keyword_blacklist: ["已知"],
+      // 试卷分析进度
+      progress: 0,
+    };
+  },
+  mounted() {
+    this.ToTop();
+    // this.Init_test();
+    // this.Init_Radar();
+  },
+  methods: {
+    ToTop() {
+      window.scrollTo(0, 0);
+    },
+    // 打开试卷库
+    Open_Paper_Base() {
+      this.show_paper_base = true;
+    },
+    // 本地上传
+    Update() {},
+    // UPL(val) {
+    //   this.chosen_paper_List = val;
+    //   console.log(this.chosen_paper_List);
+    // },
+    CPB(val) {
+      console.log("Close paper base");
+      this.chosen_paper_List = val;
+      console.log(this.chosen_paper_List);
+      this.show_paper_base = false;
+      if (this.show_word_cnt_Bar)
+        echarts.init(document.getElementById('word_cnt_Bar')).dispose();
+      this.show_word_cnt_Bar = false;
+      
+      // if (this.show_Word_Cloud)
+      this.show_Word_Cloud = false;
+
+      if (this.show_knowledge2score)
+        echarts.init(document.getElementById("Radar")).dispose();
+      this.show_knowledge2score = false;
+
+      if (this.show_difficulty_change)
+        echarts.init(document.getElementById("diffi_change")).dispose();
+      this.show_difficulty_change = false;
+      this.Question_Analysing = true;
+      this.Analyse();
+    },
+    // 分析试卷
+    Analyse() {
+      let status = [];
+      console.log("length", this.chosen_paper_List.length);
+      this.analyse_result.length = this.chosen_paper_List.length;
+      for (let i = 0; i < this.chosen_paper_List.length; i++)
+        status.push(false);
+      console.log("status", status);
+      // return;
+      for (let i = 0; i < this.chosen_paper_List.length; i++) {
+        commonAjax(this.backendIP + "/api/paperJsonGet", {
+          Database_Name: "LUNA",
+          Paper_ID: this.chosen_paper_List[i].ID,
+        }).then((data) => {
+          if (data.Paper_Json.status == "FAIL") {
+            this.$message.error("服务器繁忙，请稍后再试。");
+            this.Question_Analysing = false;
+            return;
+          }
+          let index = this.chosen_paper_List.findIndex(
+            (x) => x.ID === data.Paper_Json.id
+          );
+          status[index] = true;
+          console.log("status[" + index + "] has been true");
+          //this.analyse_result.push(data.Paper_Json);
+          this.analyse_result[index] = data.Paper_Json;
+        });
+      }
+      this.status_Listener = setInterval(this.test_status(status), 200);
+    },
+    // 状态监听函数
+    test_status(status) {
+      //这里一定要用函数闭包，否则setinterval只会执行一次
+      return () => {
+        let flag = true;
+        this.progress = 0;
+        //console.log("flag status", flag, status);
+        for (let i = 0; i < status.length; i++) 
+        {
+          flag = flag && status[i];
+          if (status[i]) this.progress++;
+        }
+        //console.log("flag", flag);
+        if (flag) {
+          clearInterval(this.status_Listener);
+          this.Question_Analysing = false;
+          if (this.checkList.indexOf("数字属性") > -1) this.Init_word_cnt_Bar();
+          if (this.checkList.indexOf("关键词") > -1) this.Init_Word_Cloud();
+          if (this.checkList.indexOf("知识点分值") > -1) this.Init_Radar();
+          if (this.checkList.indexOf("难度变化") > -1)
+            this.Init_difficulty_change();
+        }
+      };
+    },
+    // 初始化词云
+    Init_Word_Cloud() {
+      this.show_Word_Cloud = true;
+      for (let i = 1; i <= this.chosen_paper_List.length; i++) {
+        // 获取div对象，和echarts是一个道理，获取完数据后重新捕捉这些对象即可
+        // 建议创建若干个预置对象，和echarts一样，然后用户点击左右切换的时候根据数据清空已有数据然后导入新的数据进行渲染
+        // 具体方式可以参照statistics.vue那个BarChart变量，意思是一样的
+        var wc = new Js2WordCloud(document.getElementById("container" + i));
+        let option = {
+          tooltip: {
+            show: true,
+          },
+          list: [],
+          rotateRatio: 0,
+          gridsize: 3,
+          minFontSize: 20,
+          maxFontSize: 50,
+          //shape: "circle",
+          color: "random-dark",
+        };
+        let keyword_list = this.handle_keyword(i - 1, 50);
+        console.log(keyword_list);
+        for (let item of keyword_list) {
+          option.list.push([item.word, item.cnt]);
+        }
+        wc.setOption(option);
+      }
+    },
+    // 处理试卷index的关键词，返回一个数组，包含n个关键词以及他们的频数
+    handle_keyword(index, n) {
+      let keyword_list = [];
+      for (const value1 of this.analyse_result[index].keyword_list)
+        for (const value2 of value1) {
+          // 黑名单中的关键词当作没看到
+          if (this.keyword_blacklist.indexOf(value2) != -1) continue;
+          let k = keyword_list.findIndex((x) => x.word === value2);
+          if (k == -1)
+            // 还未记录该关键字 && 该关键词不在黑名单中
+            keyword_list.push({
+              word: value2,
+              cnt: 1,
+            });
+          // 已经记录该关键字
+          else keyword_list[k].cnt++;
+        }
+      // 对cnt从大到小排序
+      var compare = function (obj1, obj2) {
+        var val1 = obj1.cnt;
+        var val2 = obj2.cnt;
+        if (val1 < val2) {
+          return 1;
+        } else if (val1 > val2) {
+          return -1;
+        } else {
+          return 0;
+        }
+      };
+      keyword_list.sort(compare);
+      return keyword_list.slice(0, n);
+    },
+    // 初始化试卷字数的柱状图的方法
+    Init_word_cnt_Bar() {
+      this.show_word_cnt_Bar = true;
+      //console.log("0 wordcnt", this.analyse_result[0].word_cnt);
+      let myChart = echarts.init(document.getElementById("word_cnt_Bar"));
+      let colors = ["#EE6666", "#5470C6", "#91CC75"];
+      let option = {
+        grid: {
+          x: 70,
+          y: 90,
+          x2: 150,
+          y2: 75,
+        },
+        title: {
+          text: "数字属性比较",
+          x: "center",
+          y: "top",
+          textStyle: {
+            fontSize: 16,
+            fontStyle: "normal",
+            fontWeight: "bold",
+          },
+          padding: [5, 5, 40, 25],
+        },
+        color: colors,
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow",
+            label: {
+              show: true,
+            },
+          },
+          textStyle: {
+            fontSize: 14,
+            fontStyle: "normal",
+            align: "left",
+          },
+        },
+        calculable: true,
+        legend: {
+          data: ["字数", "图片数", "公式数"],
+          itemGap: 20,
+          x: "right",
+          y: "top",
+          padding: [5, 30, 40, 5],
+          textStyle: {
+            fontSize: 14,
+            fontStyle: "normal",
+          },
+        },
+        xAxis: [
+          {
+            type: "category",
+            data: [],
+            axisTick: {
+              alignWithLabel: true,
+            },
+            axisLabel: {
+              show: true, //这里的show用于设置是否显示x轴下的字体 默认为true
+              interval: 0, //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
+              textStyle: {
+                //textStyle里面写x轴下的字体的样式
+                color: "black",
+                fontSize: 14,
+              },
+            },
+          },
+        ],
+        yAxis: [
+          {
+            type: "value",
+            name: "字数",
+            position: "left",
+            min: 0,
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: colors[0],
+              },
+            },
+            nameTextStyle: {
+              //color: "black",
+              fontSize: 14,
+              padding: [30, 35, 15, 10],
+            },
+          },
+          {
+            type: "value",
+            name: "图片数",
+            position: "right",
+            min: 0,
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: colors[1],
+              },
+            },
+            nameTextStyle: {
+              //color: "black",
+              fontSize: 14,
+              padding: [30, 0, 15, 40],
+            },
+          },
+          {
+            type: "value",
+            name: "公式数",
+            position: "right",
+            min: 0,
+            offset: 80,
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: colors[2],
+              },
+            },
+            nameTextStyle: {
+              //color: "black",
+              fontSize: 14,
+              padding: [30, 0, 15, 40],
+            },
+          },
+        ],
+        series: [
+          {
+            name: "字数",
+            type: "line",
+            yAxisIndex: 0,
+            data: [],
+          },
+          {
+            name: "图片数",
+            type: "bar",
+            yAxisIndex: 1,
+            barWidth: "20%",
+            data: [],
+          },
+          {
+            name: "公式数",
+            type: "bar",
+            yAxisIndex: 2,
+            barWidth: "20%",
+            data: [],
+          },
+        ],
+        dataZoom: [
+          {
+            type: "slider",
+            show: true,
+            xAxisIndex: [0],
+            start: 0, //百分比
+            end: 60, //百分比
+            bottom: 5,
+          },
+        ],
+      };
+
+      // for (
+      //   let i = 0;
+      //   i < this.Paper_Json_Question_Bundle_Info.sub_question.length;
+      //   i++
+      // ) {
+      //   option.xAxis[0].data.push("第" + (i + 1) + "小题");
+      //   if (this.Paper_Json_Question_Bundle_Info.sub_question[i].difficulty) {
+      //     option.series[0].data.push(
+      //       this.Paper_Json_Question_Bundle_Info.sub_question[i].difficulty
+      //     );
+      //   } else {
+      //     option.series[0].data.push(
+      //       this.Paper_Json_Question_Bundle_Info.sub_question[i]
+      //         .difficulty_statistics.mean
+      //     );
+      //   }
+      // }
+
+      for (let i = 0; i < this.analyse_result.length; i++) {
+        option.xAxis[0].data.push(
+          this.resize_title(this.analyse_result[i].title)
+        );
+        option.series[0].data.push(this.analyse_result[i].word_cnt);
+        option.series[1].data.push(this.analyse_result[i].figure_cnt);
+        option.series[2].data.push(this.analyse_result[i].equation_cnt);
+      }
+      myChart.setOption(option);
+
+      //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+      window.addEventListener("resize", function () {
+        myChart.resize();
+      });
+    },
+    Init_Radar() {
+      this.show_knowledge2score = true;
+      let myChart = echarts.init(document.getElementById("Radar"));
+      //let colors = ["#EE6666", "#5470C6", "#91CC75"];
+      let option = {
+        title: {
+          text: "知识点分值比较", //这里的参数是整个图标的标题 后面也可以加注释
+          left: "39%",
+          top: "top",
+          textStyle: {
+            fontSize: 16,
+            fontStyle: "normal",
+            fontWeight: "bold",
+          },
+          //padding: [5, 25, 80, 85],
+          lineHeight: 40,
+        },
+        tooltip: {
+          trigger: "item",
+        },
+        legend: {
+          show: true,
+          orient: "vertical", //这里主要是标识不同颜色代表不同的同学
+          // left: "right",
+          right: 20,
+          top: "top",
+          data: [],
+        },
+        radar: [
+          {
+            center: ["45%", "55%"],
+            splitArea: {
+              areaStyle: {
+                color: ["#FFFFFF"],
+              },
+            },
+            axisLine: {
+              lineStyle: {
+                color: "rgba(255, 255, 255, 1)",
+              },
+            },
+            splitLine: {
+              lineStyle: {
+                color: "rgba(255, 255, 255, 1)",
+              },
+            },
+            name: {
+              formatter: "{value}",
+              textStyle: {
+                fontSize: 18,
+                color: "#000000",
+              },
+            },
+            indicator: [
+              // { text: "素质必修课 ", max: 5.0 }, //这里用于设置各轴的参数以及最大值
+              // { text: "核心必修课 ", max: 5.0 },
+              // { text: "一般必修课 ", max: 5.0 },
+              // { text: "通识必修课", max: 5.0 },
+              // { text: "通识限选课", max: 5.0 },
+            ],
+          },
+        ],
+        calculable: true,
+        series: [
+          {
+            name: "知识点分值",
+            type: "radar",
+            lineStyle: {
+              type: "dashed",
+            },
+            symbol: "circle", // 拐点的样式
+            symbolSize: 10,
+            data: [
+              // {
+              //   value: [3.5, 4.8, 3.2, 4.7, 4.5],
+              //   name: "A同学 ",
+              // },
+              // {
+              //   value: [4.2, 4.1, 3.9, 3.7, 3.5],
+              //   name: "B同学 ",
+              // },
+            ],
+          },
+        ],
+      };
+
+      var knowledge_list = new Set();
+      for (let i = 0; i < this.analyse_result.length; i++)
+        for (let knowledge in this.analyse_result[i].knowledge2score) {
+          knowledge_list.add(knowledge);
+          //console.log(knowledge);
+        }
+
+      for (let i = 0; i < this.analyse_result.length; i++) {
+        let value = [];
+        for (let knowledge in this.analyse_result[i].knowledge2score) {
+          let score = this.analyse_result[i].knowledge2score[knowledge];
+          if (score == undefined) value.push(0);
+          else value.push(score);
+        }
+        option.series[0].data.push({
+          value: value,
+          name: this.analyse_result[i].title,
+        });
+        option.legend.data.push(this.analyse_result[i].title);
+        //console.log(option.series[0].data);
+      }
+      for (let knowledge of knowledge_list) {
+        //console.log(knowledge);
+        option.radar[0].indicator.push({ text: knowledge });
+      }
+
+      //console.log(option.Radar[0].indicator);
+
+      myChart.setOption(option);
+    },
+    Init_difficulty_change() {
+      this.show_difficulty_change = true;
+      //console.log("0 wordcnt", this.analyse_result[0].word_cnt);
+      let myChart = echarts.init(document.getElementById("diffi_change"));
+      let colors = [
+        "#5470c6",
+        "#91cc75",
+        "#fac858",
+        "#ee6666",
+        "#73c0de",
+        "#3ba272",
+        "#fc8452",
+        "#9a60b4",
+        "#ea7ccc",
+      ];
+      let option = {
+        grid: [],
+        title: {
+          text: "难度变化",
+          x: "center",
+          y: "top",
+          textStyle: {
+            fontSize: 16,
+            fontStyle: "normal",
+            fontWeight: "bold",
+          },
+          padding: [5, 5, 40, 25],
+        },
+        color: colors,
+        tooltip: {
+          trigger: "item",
+          axisPointer: {
+            type: "shadow",
+            label: {
+              show: true,
+            },
+          },
+          textStyle: {
+            fontSize: 14,
+            fontStyle: "normal",
+            align: "left",
+          },
+        },
+        calculable: true,
+        legend: {
+          data: [],
+          itemGap: 20,
+          top: 40,
+          left: "center",
+          padding: [5, 30, 40, 5],
+          textStyle: {
+            fontSize: 14,
+            fontStyle: "normal",
+          },
+        },
+        xAxis: [],
+        yAxis: [],
+        series: [],
+      };
+
+      for (let i = 0; i < this.analyse_result.length; i++) {
+        console.log(this.analyse_result[i].difficulty_list);
+        option.grid[i] = {
+          top: 130 + 160 * i,
+          height: 100,
+        };
+        option.xAxis[i] = {
+          type: "category",
+          gridIndex: i,
+          name: "题号",
+          data: [],
+          axisTick: {
+            alignWithLabel: true,
+          },
+          axisLabel: {
+            show: true, //这里的show用于设置是否显示x轴下的字体 默认为true
+            interval: 0, //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
+          },
+        };
+        for (let j = 0; j < this.analyse_result[i].difficulty_list.length; j++)
+          option.xAxis[i].data.push(j + 1);
+        option.yAxis[i] = {
+          type: "value",
+          gridIndex: i,
+          name: "难度",
+          position: "left",
+          //min: 0,
+          //max: 1,
+          axisLine: {
+            show: true,
+          },
+          nameTextStyle: {
+            //color: "black",
+            fontSize: 14,
+            padding: [0, 20, 0, 0],
+          },
+        };
+        let average_difficulty = 0;
+        for (let diffi of this.analyse_result[i].difficulty_list)
+          average_difficulty += diffi;
+        average_difficulty =
+          average_difficulty / this.analyse_result[i].difficulty_list.length;
+        average_difficulty = average_difficulty.toFixed(2);
+        //console.log(average_difficulty);
+        option.series.push({
+          name: this.analyse_result[i].title,
+          color: colors[i],
+          type: "line",
+          smooth: true,
+          xAxisIndex: i,
+          yAxisIndex: i,
+          data: this.analyse_result[i].difficulty_list,
+          markLine: {
+            silent: true,
+            data: [{ type: "average", name: "平均难度" }],
+            label: {
+              formatter: "平均难度" + average_difficulty,
+              position: "end",
+              color: colors[i],
+              fontSize: 14,
+            },
+            symbol: "none",
+          },
+        });
+
+        option.legend.data.push(this.analyse_result[i].title);
+      }
+      myChart.setOption(option);
+
+      //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+      window.addEventListener("resize", function () {
+        myChart.resize();
+      });
+    },
+    resize_title(title) {
+      let max_width = 13;
+      let newtitle = title.slice(0);
+      console.log(newtitle);
+      for (let i = 1; i <= title.length; i++)
+        newtitle =
+          newtitle.slice(0, max_width * i + i - 1) +
+          "\n" +
+          newtitle.slice(max_width * i + i - 1);
+      return newtitle;
+    },
+    //test
+    // 初始化试卷字数的柱状图的方法
+    Init_test() {
+      let myChart = echarts.init(document.getElementById("test"));
+      //let colors = ["#EE6666", "#5470C6", "#91CC75"];
+      let option = {
+        title: {
+          text: "知识点分值比较", //这里的参数是整个图标的标题 后面也可以加注释
+          left: "39%",
+          top: "top",
+          textStyle: {
+            fontSize: 16,
+            fontStyle: "normal",
+            fontWeight: "bold",
+          },
+          //
+        },
+        grid: {
+          y: 100,
+        },
+        tooltip: {
+          trigger: "item",
+        },
+        legend: {
+          padding: [50, 25, 10, 85],
+          show: true,
+          orient: "vertical", //这里主要是标识不同颜色代表不同的同学
+          //x: "center",
+          //y: "bottom",
+          // left: "right",
+          right: 20,
+          top: "top",
+          data: ["2020年全国统一高考数学试卷（文科）（新课标i)", "B同学"],
+        },
+        radar: [
+          {
+            center: ["45%", "55%"],
+            splitArea: {
+              areaStyle: {
+                color: ["#FFFFFF"],
+              },
+            },
+            axisLine: {
+              lineStyle: {
+                color: "rgba(255, 255, 255, 1)",
+              },
+            },
+            splitLine: {
+              lineStyle: {
+                color: "rgba(255, 255, 255, 1)",
+              },
+            },
+            name: {
+              formatter: "{value}",
+              textStyle: {
+                fontSize: 18,
+                color: "#000000",
+              },
+            },
+            indicator: [
+              { text: "素质必修课 ", max: 5.0 }, //这里用于设置各轴的参数以及最大值
+              { text: "核心必修课 ", max: 5.0 },
+              { text: "一般必修课 ", max: 5.0 },
+              { text: "通识必修课", max: 5.0 },
+              { text: "通识限选课", max: 5.0 },
+              { text: "素质必修课 ", max: 5.0 }, //这里用于设置各轴的参数以及最大值
+              { text: "核心必修课 ", max: 5.0 },
+              { text: "一般必修课 ", max: 5.0 },
+              { text: "通识必修课", max: 5.0 },
+              { text: "通识限选课", max: 5.0 },
+            ],
+          },
+        ],
+        calculable: true,
+        series: [
+          {
+            name: "知识点分值",
+            type: "radar",
+            symbol: "circle", // 拐点的样式
+            lineStyle: {
+              type: "dashed",
+            },
+            data: [
+              {
+                value: [3.5, 4.8, 3.2, 4.7, 4.5, 3.5, 4.8, 3.2, 4.7, 4.5],
+                name: "2020年全国统一高考数学试卷（文科）（新课标i)",
+              },
+              {
+                value: [4.2, 4.1, 3.9, 3.7, 3.5, 3.5, 4.8, 3.2, 4.7, 4.5],
+                name: "B同学",
+              },
+            ],
+          },
+        ],
+      };
+      myChart.setOption(option);
+    },
+  },
+};
+</script>
+
+<style scoped>
+/* 调整试卷总体条形图外框 */
+.word_cnt_Bar {
+  border-radius: 10px;
+  width: 67vw;
+  height: 450px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  /* margin: 40px auto 40px auto; */
+  margin-top: 40px;
+  margin-bottom: 40px;
+  border: 3px solid #eef5fe;
+}
+
+.diffi_change {
+  border-radius: 10px;
+  width: 67vw;
+  /* height: 900px; */
+  padding-top: 20px;
+  padding-bottom: 20px;
+  /* margin: 40px auto 40px auto; */
+  margin-top: 40px;
+  margin-bottom: 40px;
+  border: 3px solid #eef5fe;
+}
+</style>
