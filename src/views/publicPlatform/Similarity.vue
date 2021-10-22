@@ -557,18 +557,18 @@ export default {
 // }
 </style>
 <style scoped>
-#tabs ::v-deep .el-tabs__item {
+#tabs /deep/ .el-tabs__item {
   color: #0a1612;
   font-weight: 900;
 }
 
-#tabs ::v-deep .el-tabs__item.is-active {
+#tabs /deep/ .el-tabs__item.is-active {
   background-color: #0a1612;
   color: #fff;
   font-weight: 900;
 }
 
-/* #tag ::v-deep .el-tag {
+/* #tag /deep/ .el-tag {
 		background-color: #fff !important;
 		color: #000 !important;
 		border-color: #c5c1c0 !important;

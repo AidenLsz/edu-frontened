@@ -164,6 +164,8 @@
             </div>
           </el-upload> -->
           <el-row
+            id="drop_area"
+            :style="{ cursor: borderhover ? 'pointer' : 'auto' }"
             type="flex"
             justify="center"
             align="middle"
@@ -308,9 +310,21 @@
               >重置</el-button
             >
           </el-row> -->
-          <el-row type="flex" justify="start" style="margin-left: 32px">
+          <el-row
+            type="flex"
+            justify="start"
+            style="margin-bottom: 24px; margin-left: 32px"
+          >
             <el-button icon="el-icon-delete" @click="Paper_Data_Clear()"
               >清空</el-button
+            >
+          </el-row>
+          <el-row type="flex" justify="start" style="margin-left: 32px">
+            <el-button
+              type="primary"
+              icon="el-icon-download"
+              @click="Download()"
+              >下载</el-button
             >
           </el-row>
           <!-- <el-row>
@@ -341,6 +355,7 @@ import Politics from "@/assets/政治.json";
 import Biology from "@/assets/生物.json";
 import Chemistry from "@/assets/化学.json";
 import Math from "@/assets/数学.json";
+import FileSaver from "file-saver";
 //import { commonAjax } from "@/common/utils/ajax";
 //require("./../assets/background_pagenum.png");
 export default {
@@ -392,11 +407,16 @@ export default {
       Paper_Divider_Index: -1,
       // 是否显示切分结果
       Show_Result: false,
+      // 拖拽是否到区域内
+      borderhover: false,
+      // 存放处理结果
+      result: {},
     };
   },
   mounted() {
     this.ToTop();
     this.Init_File_Selector();
+    this.Init_Dropbox();
     this.default_paper(this.Subject);
   },
   methods: {
@@ -432,6 +452,29 @@ export default {
         block: "start", // 上边框与视窗顶部平齐。默认值
       });
     },
+    //下载
+    Download() {
+      let filename = this.File_Name.slice(0, this.File_Name.indexOf("."));
+      let file = new File(
+        [JSON.stringify(this.result, null, 4)],
+        filename + ".json",
+        { type: "text/plain;charset=utf-8" }
+      );
+      FileSaver.saveAs(file, filename + ".json");
+    },
+    //
+    eventDrop(e) {
+      this.borderhover = false;
+      e.stopPropagation();
+      e.preventDefault(); //必填字段
+      let file = e.dataTransfer.files[0];
+      if (file) {
+        this.File_Uploading = true;
+        console.log(file);
+        this.File_Upload(file);
+        this.File_Selector.value = "";
+      }
+    },
     // 上传文件
     File_Upload(file) {
       this.Paper_Content = [];
@@ -444,19 +487,19 @@ export default {
       let formData = new FormData();
 
       // 对应的切分编号，是约定好的，别动就好
-        let Num_Dict = {
-          英语: "0",
-          数学: "1",
-          文综: "2",
-          政治: "2",
-          历史: "2",
-          地理: "2",
-          理综: "3",
-          物理: "3",
-          化学: "3",
-          生物: "3",
-          语文: "4",
-        }
+      let Num_Dict = {
+        英语: "0",
+        数学: "1",
+        文综: "2",
+        政治: "2",
+        历史: "2",
+        地理: "2",
+        理综: "3",
+        物理: "3",
+        化学: "3",
+        生物: "3",
+        语文: "4",
+      };
 
       formData.append("files", file);
       formData.append("paper_type", Num_Dict[this.Subject]);
@@ -485,6 +528,7 @@ export default {
           config
         )
         .then(function (data) {
+          this.result = data;
           this.Paper_Content = data.data.paper;
           this.Paper_Image_Dict = data.data.image_dict;
           let Lists = [];
@@ -531,6 +575,26 @@ export default {
         }
       });
     },
+    Init_Dropbox() {
+      let _this = this;
+      var dropbox = document.getElementById("drop_area");
+      dropbox.addEventListener("drop", this.eventDrop, false);
+      dropbox.addEventListener("dragleave", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        _this.borderhover = false;
+      });
+      dropbox.addEventListener("dragenter", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        _this.borderhover = true;
+      });
+      dropbox.addEventListener("dragover", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        _this.borderhover = true;
+      });
+    },
     // 更新表格中的图片文件
     Table_Img_Get(Table_Html) {
       for (var key in this.Paper_Image_Dict) {
@@ -550,32 +614,41 @@ export default {
       switch (subject) {
         case "语文":
           data = Chinese;
+          this.File_Name = "语文.doc";
           break;
         case "英语":
           data = English;
+          this.File_Name = "英语.doc";
           break;
         case "物理":
           data = Physics;
+          this.File_Name = "物理.doc";
           break;
         case "地理":
           data = Geography;
+          this.File_Name = "地理.doc";
           break;
         case "政治":
           data = Politics;
+          this.File_Name = "政治.doc";
           break;
         case "历史":
           data = History;
+          this.File_Name = "历史.doc";
           break;
         case "生物":
           data = Biology;
+          this.File_Name = "生物.doc";
           break;
         case "化学":
           data = Chemistry;
+          this.File_Name = "化学.doc";
           break;
         case "数学":
           data = Math;
+          this.File_Name = "数学.doc";
           break;
-        default: 
+        default:
           this.Show_Result = false;
           this.File_Name = "";
           this.File_Uploading = false;
@@ -585,6 +658,7 @@ export default {
           return;
       }
 
+      this.result = data;
       this.Paper_Content = data.paper;
       this.Paper_Image_Dict = data.image_dict;
       let Lists = [];
@@ -622,7 +696,7 @@ export default {
   color: rgba(0, 0, 0, 0.45);
 }
 
-.el-input ::v-deep input::-webkit-input-placeholder {
+.el-input /deep/ input::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.6);
 }
 
