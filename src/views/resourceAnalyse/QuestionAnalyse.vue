@@ -3,7 +3,7 @@
     <div 
         style="margin: 0px 10vw 10px 10vw" 
         ref="QuestionInfo">
-        <el-row style="padding-top: 15px">
+        <el-row style="padding-top: 15px" id="Analyse_Title">
             <label style="font-size: 2rem">试题分析报告</label>
         </el-row>
         <el-row>
@@ -533,7 +533,7 @@ export default {
             return "Part_Row_Style_Collapse"
         },
     Init(){
-      window.scrollTo(0,0);
+      document.getElementById('Analyse_Title').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     },
     Get_Class(Analyse){
       if(Analyse){
