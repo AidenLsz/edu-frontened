@@ -696,7 +696,7 @@ export default {
   color: rgba(0, 0, 0, 0.45);
 }
 
-.el-input ::v-deep input::-webkit-input-placeholder {
+.el-input /deep/ input::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.6);
 }
 

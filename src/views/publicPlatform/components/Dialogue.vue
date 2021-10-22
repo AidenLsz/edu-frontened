@@ -804,7 +804,11 @@ export default {
   border-radius: 4px;
 }
 
+<<<<<<< HEAD
 .el-input ::v-deep input::-webkit-input-placeholder {
+=======
+.el-input /deep/ input::-webkit-input-placeholder {
+>>>>>>> e299e02... merge issue36 & issue39 & from master
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -817,7 +821,11 @@ export default {
 #image :hover {
   cursor: pointer;
 }
+<<<<<<< HEAD
 // #edit ::v-deep .el-button--goon {
+=======
+// #edit /deep/ .el-button--goon {
+>>>>>>> e299e02... merge issue36 & issue39 & from master
 // 	background-color: #000000;
 // }
 </style>
