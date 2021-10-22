@@ -53,12 +53,12 @@
     </el-dialog>
     <!-- 功能 - 资源录入的统一接口 -->
     <el-dialog
-      :visible.sync="functionStatus[0]"
-      title="资源录入"
-      width="65%"
-      :close="CloseFunctions"
-      :modal-append-to-body="false"
-      :close-on-click-modal="false">
+        :visible.sync="functionStatus[0]"
+        title="资源录入"
+        width="65%"
+        :close="CloseFunctions"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
       <el-row style="padding-top: 30px; background: white; padding-bottom: 30px">
         <el-col :span="6">
           <el-row>
@@ -120,12 +120,12 @@
     </el-dialog>
     <!-- 功能 - 查询的统一接口 -->
     <el-dialog
-      :visible.sync="functionStatus[1]"
-      title="查询"
-      width="65%"
-      :close="CloseFunctions"
-      :modal-append-to-body="false"
-      :close-on-click-modal="false">
+        :visible.sync="functionStatus[1]"
+        title="查询"
+        width="65%"
+        :close="CloseFunctions"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
       <el-row style="padding-top: 30px; background: white; padding-bottom: 30px">
         <el-col :span="6">
           <el-row>
@@ -189,12 +189,12 @@
     </el-dialog>
     <!-- 功能 - 分析的统一接口 -->
     <el-dialog
-      :visible.sync="functionStatus[2]"
-      title="分析"
-      width="65%"
-      :close="CloseFunctions"
-      :modal-append-to-body="false"
-      :close-on-click-modal="false">
+        :visible.sync="functionStatus[2]"
+        title="分析"
+        width="65%"
+        :close="CloseFunctions"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
       <el-row style="padding-top: 30px; background: white; padding-bottom: 30px">
         <el-col :span="6">
           <el-row>
@@ -226,12 +226,12 @@
     </el-dialog>
     <!-- 功能 - 管理的统一接口 -->
     <el-dialog
-      :visible.sync="functionStatus[3]"
-      title="管理"
-      width="65%"
-      :close="CloseFunctions"
-      :modal-append-to-body="false"
-      :close-on-click-modal="false">
+        :visible.sync="functionStatus[3]"
+        title="管理"
+        width="65%"
+        :close="CloseFunctions"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
       <el-row style="padding-top: 30px; background: white; padding-bottom: 30px">
         <el-col :span="6">
           <el-row>
@@ -290,12 +290,12 @@
 
     <!-- 资源 - 学习资源的统一接口 -->
     <el-dialog
-      :visible.sync="resourceStatus[0]"
-      title="学习资源"
-      width="65%"
-      :close="CloseFunctions"
-      :modal-append-to-body="false"
-      :close-on-click-modal="false">
+        :visible.sync="resourceStatus[0]"
+        title="学习资源"
+        width="65%"
+        :close="CloseFunctions"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
       <el-row style="padding-top: 30px; background: white; padding-bottom: 30px">
         <el-col :span="6">
           <el-row>
@@ -340,12 +340,12 @@
     </el-dialog>
     <!-- 资源 - 试题资源的统一接口 -->
     <el-dialog
-      :visible.sync="resourceStatus[1]"
-      title="试题资源"
-      width="65%"
-      :close="CloseFunctions"
-      :modal-append-to-body="false"
-      :close-on-click-modal="false">
+        :visible.sync="resourceStatus[1]"
+        title="试题资源"
+        width="65%"
+        :close="CloseFunctions"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
       <el-row style="padding-top: 30px; background: white; padding-bottom: 30px">
         <el-col :span="6">
           <el-row>
@@ -407,12 +407,12 @@
     </el-dialog>
     <!-- 资源 - 试卷资源的统一接口 -->
     <el-dialog
-      :visible.sync="resourceStatus[2]"
-      title="试卷资源"
-      width="65%"
-      :close="CloseFunctions"
-      :modal-append-to-body="false"
-      :close-on-click-modal="false">
+        :visible.sync="resourceStatus[2]"
+        title="试卷资源"
+        width="65%"
+        :close="CloseFunctions"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
       <el-row style="padding-top: 30px; background: white; padding-bottom: 30px">
         <el-col :span="6">
           <el-row>
@@ -474,12 +474,12 @@
     </el-dialog>
     <!-- 资源 - 知识体系的统一接口 -->
     <el-dialog
-      :visible.sync="resourceStatus[3]"
-      title="知识体系"
-      width="65%"
-      :close="CloseFunctions"
-      :modal-append-to-body="false"
-      :close-on-click-modal="false">
+        :visible.sync="resourceStatus[3]"
+        title="知识体系"
+        width="65%"
+        :close="CloseFunctions"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
       <el-row style="padding-top: 30px; background: white; padding-bottom: 30px">
         <el-col :span="6">
           <el-row>
@@ -529,15 +529,15 @@
       <el-row type="flex" justify="center" style="padding-top: 400px;">
         <el-col :span="10">
           <el-input
-            v-model="ku_name"
-            placeholder="三角函数"
-            class="SearchInput"
+              v-model="ku_name"
+              placeholder="三角函数"
+              class="SearchInput"
           ></el-input>
         </el-col>
         <el-col :span="2">
           <el-row type="flex" justify="start">
             <el-button type="primary" @click="submit" plain class="SearchButton"
-              ><i class="el-icon-search" style="margin-right: 15px"></i>检索</el-button
+            ><i class="el-icon-search" style="margin-right: 15px"></i>检索</el-button
             >
           </el-row>
         </el-col>
@@ -563,7 +563,7 @@
         </el-col>
         <el-col :span="9">
           <p style="font-size: 20px; line-height: 200%; padding-left: 30px; margin-top: 7vh; text-align: left">
-          智慧教育知识图谱（LUNA）致力于为广大师生提供智能且直观的知识组织、呈现、应用等多维度功能。通过对海量教材、题库、考纲等教育教学资源进行深层次的数据挖掘与建模。LUNA具有其他知识图谱所不具备的而丰富内容和多样化的智能接口。LUNA不仅提供了简单、直观、易用的知识、资源查询功能，还提供了如自动考卷分析、试题难度评估等智慧化分析、评估接口，可满足广大师生、学校管理者丰富的教育教学需求。
+            智慧教育知识图谱（LUNA）致力于为广大师生提供智能且直观的知识组织、呈现、应用等多维度功能。通过对海量教材、题库、考纲等教育教学资源进行深层次的数据挖掘与建模。LUNA具有其他知识图谱所不具备的而丰富内容和多样化的智能接口。LUNA不仅提供了简单、直观、易用的知识、资源查询功能，还提供了如自动考卷分析、试题难度评估等智慧化分析、评估接口，可满足广大师生、学校管理者丰富的教育教学需求。
           </p>
         </el-col>
       </el-row>
@@ -812,8 +812,8 @@ export default {
     // data - background
     $("[data-background]").each(function() {
       $(this).css(
-        "background-image",
-        "url(" + $(this).attr("data-background") + ")"
+          "background-image",
+          "url(" + $(this).attr("data-background") + ")"
       );
     });
     this.ToTop();

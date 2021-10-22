@@ -108,11 +108,11 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-/deep/ .latex mjx-container[jax="SVG"][display="true"] {
+::v-deep .latex mjx-container[jax="SVG"][display="true"] {
   display: block;
   margin: 0;
 }
-/deep/ .inline mjx-container[jax="SVG"][display="true"] {
+::v-deep .inline mjx-container[jax="SVG"][display="true"] {
   display: inline-block !important;
   margin: 0;
 }
