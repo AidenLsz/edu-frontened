@@ -207,7 +207,7 @@
         </el-breadcrumb>
         </el-col>
     </el-row>
-    <div ref="Paper_Title">
+    <div ref="Paper_Title" id="Analyse_Title">
         <el-row style="padding-top: 15px">
             <label style="font-size: 2rem">{{Paper_Json.title}}分析报告</label>
         </el-row>
@@ -795,7 +795,7 @@ export default {
             this.Remaining = this.Remaining - 1;
         }, 1000)
         this.Init();
-        window.scrollTo(0, 0);
+        document.getElementById('Analyse_Title').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     },
     methods: {
         // 跳转到这道题（也不知道啥意思）

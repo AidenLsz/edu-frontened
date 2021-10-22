@@ -8,7 +8,7 @@
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.28)"
         >
-        <el-row style="padding-top: 15px">
+        <el-row style="padding-top: 15px" id="Analyse_Title">
             <label style="font-size: 2rem">试题分析报告</label>
         </el-row>
         <el-row>
@@ -501,7 +501,7 @@ export default {
             return "Part_Row_Style_Collapse"
         },
     Init(){
-      window.scrollTo(0,0);
+        document.getElementById('Analyse_Title').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     },
     Get_Class(Analyse){
       if(Analyse){
@@ -547,7 +547,6 @@ export default {
 
         commonAjax(this.backendIP+'/api/search', param)
         .then((data)=>{
-            console.log(data)
             this.Similar_Question_List = [];
             var quess = data.results;
             for(var i = 1; i < quess.length; i++){
