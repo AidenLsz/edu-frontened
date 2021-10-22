@@ -1450,7 +1450,7 @@ export default {
   line-height: 34px;
   height: 34px
 }
-.ScoreInput /deep/ .el-input__inner {
+.ScoreInput ::v-deep .el-input__inner {
   border: 0;
   margin-left: 15%;
   border-radius: 0px;
@@ -1462,7 +1462,7 @@ export default {
   height: 34px;
   width: 80px;
 }
-.DiffInput /deep/ .el-input__inner {
+.DiffInput ::v-deep .el-input__inner {
   background: transparent;
 }
 // 题包知识点难度分析

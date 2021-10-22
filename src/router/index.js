@@ -3,10 +3,12 @@ import Router from "vue-router";
 import VisitorRouter from '@/router/modules/visitor.js'
 import UserRouter from '@/router/modules/user.js'
 import EEMSRouter from '@/router/modules/eems.js'
+import ITASRouter from '@/router/modules/itas.js'
 import store from '@/store'
 import {Message } from 'element-ui'
 import BasicLayout from '@/layout/Basic'
 import EEMSLayout from '@/layout/EEMS'
+import ITASLayout from '@/layout/ITAS'
 
 // import  AppMain from '@/layout/components/AppMain'
 
@@ -31,6 +33,12 @@ Vue.use(mavonEditor);
 const router = new Router({
   mode: "history",
   routes: [
+    {
+      path: "/itas",
+      name: "ITAS",
+      component: ITASLayout,
+      children:UserRouter.concat(ITASRouter)
+    },
     {
       path: "/eems",
       name: "EEMS",

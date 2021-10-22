@@ -683,7 +683,7 @@ export default {
   top: 20px;
 }
 
-// #edit /deep/ .el-button--goon {
+// #edit ::v-deep .el-button--goon {
 // 	background-color: #000000;
 // }
 </style>

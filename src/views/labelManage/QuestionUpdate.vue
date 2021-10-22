@@ -818,7 +818,7 @@ body .el-scrollbar__wrap {
   transform: scale(1.25);
 }
 
-/deep/ .search-bar .search-input .el-input__inner {
+::v-deep .search-bar .search-input .el-input__inner {
   border-radius: 12px;
   border-color: #d0d0d0;
   transition: all;
@@ -827,7 +827,7 @@ body .el-scrollbar__wrap {
 
 }
 
-/deep/ .search-bar .search-input .el-input__inner:hover {
+::v-deep .search-bar .search-input .el-input__inner:hover {
   border-radius: 14px;
   border-color: rgba(64,158,255, .7);
   border-radius: 12px;

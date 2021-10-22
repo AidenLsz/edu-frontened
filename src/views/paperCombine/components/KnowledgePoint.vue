@@ -810,7 +810,7 @@ export default {
   line-height: 28px;
   height: 28px
 }
-.SearchInput /deep/ .el-input__inner {
+.SearchInput ::v-deep .el-input__inner {
   border: 0;
   border-radius: 0px;
   background: transparent;
@@ -818,7 +818,7 @@ export default {
 .selfDiffGapInput{
   font-size: 16px;
 }
-.selfDiffGapInput /deep/ .el-input__inner {
+.selfDiffGapInput ::v-deep .el-input__inner {
   height: 30px;
   line-height: 30px;
   width: 45px;

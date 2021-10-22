@@ -857,28 +857,28 @@ export default {
   border-color: #fff;
   outline: none;
 } */
-#tabs /deep/ .el-tabs__item {
+#tabs ::v-deep .el-tabs__item {
   background: #4FA5FD;;
   color: white;
   font-weight: 900;
   border-radius: 10px;
   border: 0px;
 }
-#tabs /deep/ .el-tabs__item.is-active {
+#tabs ::v-deep .el-tabs__item.is-active {
   background: #4FA5FD;;
   color: white;
   font-weight: 900;
   border-radius: 10px;
 }
 
-#tabs /deep/ .el-tabs__nav.is-top{
+#tabs ::v-deep .el-tabs__nav.is-top{
   border: none;
 }
-#tabs /deep/ .el-tabs__header.is-top{
+#tabs ::v-deep .el-tabs__header.is-top{
   border: none;
 }
 
-#checkbox /deep/ .el-checkbox__input.is-checked + .el-checkbox__label {
+#checkbox ::v-deep .el-checkbox__input.is-checked + .el-checkbox__label {
   color: #1a2930;
 }
 .el-tag {
@@ -894,7 +894,7 @@ export default {
   line-height: 28px;
   height: 28px
 }
-.SearchInput /deep/ .el-input__inner {
+.SearchInput ::v-deep .el-input__inner {
   border: 0;
   border-radius: 0px;
   background: transparent;
