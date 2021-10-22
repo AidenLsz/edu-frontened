@@ -1,5 +1,9 @@
 <template>
-  <div class="estimate" style="margin-top: 5vh">
+  <div 
+    v-loading="content=='识别中...'"
+    element-loading-text="识别中，请等待..."
+    element-loading-spinner="el-icon-loading"
+    class="estimate" style="margin-top: 5vh">
     <div class="panel">
       <el-row justify="start" type="flex">
         <el-col style="padding-left: 5vw">
@@ -617,7 +621,7 @@ export default {
         // 请求难度属性接口
         this.$http
           .post(
-            this.backendIP + "/api/difficulty",
+            "https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/difficulty",
             param,
             config,
             {
@@ -633,7 +637,7 @@ export default {
         // 请求区分度属性接口
         this.$http
           .post(
-            this.backendIP + "/api/disc",
+            "https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/disc",
             param,
             config,
             {
@@ -649,7 +653,7 @@ export default {
         // 请求信度属性接口
         this.$http
           .post(
-            this.backendIP + "/api/rel",
+            "https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/rel",
             param,
             config,
             {
@@ -680,7 +684,7 @@ export default {
         // 请求知识点属性接口
         this.$http
           .post(
-            this.backendIP + "/api/lp",
+            "https://kg-edu-backend-44-review-question-a-8g0hzl.env.bdaa.pro/v1/api/lp",
             param,
             config,
             {
@@ -725,6 +729,7 @@ export default {
     // Update Complex Input，将组合输入的内容复制到当前搜索框应该具有的内容里
     UCI(val) {
       this.content = val;
+      console.log("content", this.content);
     },
     // Update Complex Input Image，将组合输入的内容的图片部分复制到当前页面的内容里，如果后续又要用到则进行调用
     UCII(val) {
@@ -1026,7 +1031,7 @@ input[type="file"] {
   background-color: #fff !important;
 }
 
-#checkbox ::v-deep .el-checkbox__input.is-checked + .el-checkbox__label {
+#checkbox /deep/ .el-checkbox__input.is-checked + .el-checkbox__label {
   color: #1a2930;
 }
 

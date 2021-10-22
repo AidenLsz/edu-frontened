@@ -1,24 +1,71 @@
 <template>
   <el-row>
+    <el-row type="flex" justify="center" :guitter="20">
+      <el-col :span="3"></el-col>
+      <el-col :span="15">
+        <el-input v-model="url_input" placeholder="输入图片的url" clearable>
+          <el-button slot="append" icon="el-icon-upload2" @click="url_update()"
+            >上传</el-button
+          >
+        </el-input>
+      </el-col>
+      <el-col :span="3">
+        <el-button type="primary" @click="identify()" :disabled="identified"
+          >转写</el-button
+        >
+      </el-col>
+      <el-col :span="3"></el-col>
+    </el-row>
+
     <div id="main">
-      <div id="image">
+      <div
+        id="image"
+        v-loading="loading"
+        element-loading-text="上传中，请等待..."
+        element-loading-spinner="el-icon-loading"
+      >
         <!-- <i v-if="loading" class="el-icon-loading"></i> -->
-        <img v-if="error" class="error" />
-        <img
-          v-else-if="identified == false"
-          class="self_adaption"
-          :src="image"
-          alt="图片显示错误"
-        />
-        <Mathdown
-          v-else
-          :content="confirmed_content"
-          class="content"
-        ></Mathdown>
-        <el-button type="primary" id="edit" @click="Open_Edit()"
+        <!-- <img v-if="error" class="error" /> -->
+        <el-row
+          id="drop_area"
+          style="height: 100%; position: relative"
+          type="flex"
+          justify="center"
+          align="middle"
+          class="upload"
+          @click.native="Open_Pic_Search()"
+        >
+          <el-col
+            :span="24"
+            id="upload_area"
+            style="position: absolute; z-index: 10; display: block"
+          >
+            <el-row>
+              <el-col :span="24">
+                <i
+                  class="el-icon-upload"
+                  style="font-size: 160px; width: 100%"
+                ></i>
+              </el-col>
+            </el-row>
+            <el-row style="font-size: 30px"> 点我上传 </el-row>
+          </el-col>
+          <img
+            v-if="image && (identified == false || replaceable == false)"
+            class="self_adaption"
+            :src="image"
+            alt="图片显示错误"
+          />
+          <Mathdown
+            v-else
+            :content="confirmed_content"
+            class="content"
+          ></Mathdown>
+        </el-row>
+        <el-button v-show="editable" id="edit" @click="Open_Edit()"
           >编辑
         </el-button>
-        <div id="shadow">
+        <!-- <div id="shadow">
           <div class="dialog">
             <el-input
               style="position: absolute; left: 15px; top: 20px"
@@ -38,7 +85,6 @@
           >
             url上传
           </el-button>
-          <!-- <span style="position:absolute; color: #FFFFFF; font-size: 20px; top:25px; left: 450px;">或</span> -->
           <el-button
             type="primary"
             class="but"
@@ -57,7 +103,7 @@
           >
             识别
           </el-button>
-        </div>
+        </div> -->
       </div>
 
       <el-dialog
@@ -69,9 +115,17 @@
         @close="Reset_Interval()"
       >
         <ComplexInput
-          @New_Content="UCI"
+          @Update_CI="UCI"
+          @Update_Image="UCII"
           :Get_Out_Content="content"
         ></ComplexInput>
+        <el-button
+          type="primary"
+          style="position: relative; left: 500px"
+          @click="confirm()"
+        >
+          确定
+        </el-button>
       </el-dialog>
 
       <div id="option">
@@ -209,6 +263,7 @@
 import ComplexInput from "@/common/components/ComplexInput.vue";
 import Mathdown from "@/common/components/Mathdown.vue";
 import { commonAjax } from "@/common/utils/ajax";
+import $ from "jquery";
 export default {
   components: {
     ComplexInput,
@@ -267,12 +322,13 @@ export default {
             "其 中 正 确 的 命 题 的 序 号 是 _ _ _ _ _ _ _ _ _ _ _ _ 。 （ 注 ： 把 你 认 为 正 确 的 命 题 的 序 号 都 填 上 上",
         },
       ],
-      // loading: false,
+      loading: false,
       error: false,
       qid: 0,
       size: 0,
       type: "",
       base64_code: "",
+      result: {}, //存储转写返回的结果
     };
   },
   props: {
@@ -282,6 +338,16 @@ export default {
       // require("@/assets/default_image/2.png"),
       // require("@/assets/default_image/3.png")
     ],
+    //是否可编辑
+    editable: {
+      type: Boolean,
+      default: true,
+    },
+    //转写结果是否替代图片
+    replaceable: {
+      type: Boolean,
+      default: true,
+    },
   },
   watch: {
     confirmed_content(newVal) {
@@ -289,6 +355,14 @@ export default {
         this.$emit("Update_CI", newVal);
       }, 10);
     },
+    result(newVal) {
+      setTimeout(() => {
+        this.$emit("Get_Result", newVal);
+      }, 10);
+    },
+  },
+  mounted() {
+    this.Init_Upload();
   },
   methods: {
     Reset_Interval() {
@@ -321,6 +395,34 @@ export default {
     // 尝试利用截图工具的粘贴板
     Init_Img_Paster() {
       window.addEventListener("paste", this.Paste_Function);
+    },
+    Init_Upload() {
+      var uploadbox = document.getElementById("upload_area");
+      uploadbox.addEventListener("mouseenter", this.FadeIn);
+      //console.log("mouseover");
+      uploadbox.addEventListener("mouseleave", this.FadeOut);
+    },
+    //淡入效果
+    FadeIn() {
+      //console.log("mouseenter");
+      if (this.image)
+        $("#upload_area").animate(
+          {
+            opacity: 1,
+          },
+          "easeInOutExpo"
+        );
+    },
+    //淡出效果
+    FadeOut() {
+      //console.log("mouseleave");
+      if (this.image)
+        $("#upload_area").animate(
+          {
+            opacity: 0.1,
+          },
+          "easeInOutExpo"
+        );
     },
     Paste_Function(e) {
       let Pic = e.clipboardData.items[0].getAsFile();
@@ -413,17 +515,21 @@ export default {
     url_update() {
       // this.image = this.url_input;
       this.error = false;
-      this.image = require("@/assets/loading.gif");
+      this.loading = true;
+      //this.image = require("@/assets/loading.gif");
       this.identified = false;
       var newImg = new Image();
       newImg.src = this.url_input;
       newImg.onload = () => {
         // 图片加载成功后把地址给原来的img
+        this.loading = false;
         this.image = newImg.src;
       };
       newImg.onerror = () => {
         console.log("error\n");
         this.error = true;
+        this.loading = false;
+        this.$alert("上传的url或图片有误，请重新上传", "提示");
       };
       this.need_trans = 1;
     },
@@ -433,10 +539,11 @@ export default {
       this.image = default_image;
       this.need_trans = 1;
       this.identified = false;
+      this.FadeOut();
     },
 
     getBase64(url) {
-      return new Promise((resolve) => {
+      return new Promise((resolve,reject) => {
         var Img = new Image();
         var dataURL = "";
         Img.setAttribute("crossOrigin", "Anonymous");
@@ -457,6 +564,9 @@ export default {
           //console.log("size=" + this.size);
           resolve(dataURL);
         };
+        Img.onerror = (e) => {
+          reject(e);
+        }
       });
     },
 
@@ -465,11 +575,13 @@ export default {
       this.identified = true;
       this.tableData = [];
       this.content = "";
+      console.log("old", this.confirmed_content);
       this.confirmed_content = "识别中...";
-      let result, data;
+      console.log("new", this.confirmed_content);
+      let data;
       let res = "!!!";
-      console.log("执行");
-      console.log(this.image + "!!!");
+      console.log("identify");
+      //console.log(this.image + "!!!");
 
       if (this.need_trans == 1) {
         //要转
@@ -479,10 +591,10 @@ export default {
           console.log(err);
         }
         this.base64_code = res; // 将结果赋值给需要用的变量属性
-        console.log(this.base64_code); // 获取到结果
+        //console.log(this.base64_code); // 获取到结果
       } else this.base64_code = this.image;
 
-      console.log(this.base64_code.length);
+      console.log("size", this.base64_code.length);
       if (this.base64_code.length / 1024 > 1024) {
         alert("抱歉，您上传的图片过大，请重新上传");
         return;
@@ -500,24 +612,28 @@ export default {
         console.log(err);
       }
 
-      console.log(data);
-      result = data.data;
+      //console.log(data);
+      this.result = data.data;
       this.qid++;
-      console.log(result.qid);
-      console.log(result.latex.length);
-      if (result.success && result.is_formula && result.detect_formula) {
+      //console.log(this.result.qid);
+      //console.log(this.result.latex.length);
+      if (
+        this.result.success &&
+        this.result.is_formula &&
+        this.result.detect_formula
+      ) {
         console.log("success!");
-        if (typeof result.latex == "object") {
-          for (let i = 0; i < result.latex.length; i++) {
-            // console.log(i,result.latex[i])
+        if (typeof this.result.latex == "object") {
+          for (let i = 0; i < this.result.latex.length; i++) {
+            // console.log(i,this.result.latex[i])
             this.tableData.push({
-              content: result.latex[i],
+              content: this.result.latex[i],
               num: i + 1,
             });
-            this.content += "$" + result.latex[i] + "$\\";
+            this.content += "$" + this.result.latex[i] + "$\\";
           }
-        } else if (typeof result.latex == "string") {
-          this.content = "$" + result.latex + "$";
+        } else if (typeof this.result.latex == "string") {
+          this.content = "$" + this.result.latex + "$";
         }
         this.confirmed_content = this.content;
       } else {
@@ -531,7 +647,6 @@ export default {
     // Update Complex Input，将组合输入的内容复制到当前搜索框应该具有的内容里
     UCI(val) {
       this.content = val;
-      this.confirm()
     },
     // Update Complex Input Image，将组合输入的内容的图片部分复制到当前页面的内容里，如果后续又要用到则进行调用
     UCII(val) {
@@ -544,15 +659,16 @@ export default {
 <style lang="scss" scoped>
 #main {
   position: absolute;
-  margin: auto;
+  margin-top: 30px;
+  //margin: auto;
   width: 100%;
-  height: 100%;
+  height: 80%;
   //margin-bottom: 100px;
 }
 
 #image {
   position: absolute;
-  background-color: #eef5fe;
+  background-color: #ffffff;
   top: 0px;
   left: 0px;
   width: 100%;
@@ -679,11 +795,29 @@ export default {
 #edit {
   position: absolute;
   //background-color: #000000;
-  right: 20px;
+  left: 20px;
   top: 20px;
 }
 
-// #edit ::v-deep .el-button--goon {
+.el-input {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+}
+
+.el-input /deep/ input::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+#image .el-button {
+  color: black;
+  border-color: grey;
+  font-weight: 600;
+}
+
+#image :hover {
+  cursor: pointer;
+}
+// #edit /deep/ .el-button--goon {
 // 	background-color: #000000;
 // }
 </style>

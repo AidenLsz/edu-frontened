@@ -1,5 +1,10 @@
 <template>
-  <div style="margin-top: 5vh">
+  <div
+    v-loading="loading"
+    element-loading-text="识别中，请等待..."
+    element-loading-spinner="el-icon-loading"
+    style="margin-top: 5vh"
+  >
     <el-row justify="start" type="flex">
       <el-col style="padding-left: 5vw">
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -26,10 +31,20 @@
 			</p>
 		</el-row> -->
 
-    <div id="main">
-      <div id="image">
-        <!-- <i v-if="loading" class="el-icon-loading"></i> -->
-        <img v-if="error" class="error" />
+    <el-row id="main">
+      <Dialogue
+        style="height: 100%; width: 100%"
+        :optional_image="optional_image"
+        :editable="false"
+        :replaceable="false"
+        @Update_CI="UCI"
+        @Get_Result="Get_Result"
+      >
+      </Dialogue>
+    </el-row>
+    <!-- <div id="image"> -->
+    <!-- <i v-if="loading" class="el-icon-loading"></i> -->
+    <!-- <img v-if="error" class="error" />
         <img v-else class="self_adaption" :src="image" alt="图片显示错误" />
         <div id="shadow">
           <div class="dialog">
@@ -95,32 +110,29 @@
             @click="ChooseDefaultImage(img)"
           />
         </div>
-      </div>
+      </div> -->
 
-      <div id="result">
-        <div
-          style="
-            font-size: 30px;
-            font-weight: bold;
-            float: left;
-            margin: 20px 0px 20px 20px;
-          "
-        >
-          识别结果
-        </div>
-        <el-table
-          :data="tableData"
-          border
-          style="width: 100%"
-          empty-text="加载中..."
-        >
-          <!-- <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="tableData[num].content"></ComplexInput> -->
-          <el-table-column prop="num" label="序号" width="60">
-          </el-table-column>
-          <el-table-column prop="content" label="内容"> </el-table-column>
-        </el-table>
+    <el-row v-show="tableData.length != 0" id="result">
+      <div
+        style="
+          font-size: 30px;
+          font-weight: bold;
+          float: left;
+          margin: 20px 0px 20px 20px;
+        "
+      >
+        识别结果
       </div>
-    </div>
+      <el-table
+        :data="tableData"
+        border
+        style="width: 100%"
+      >
+        <!-- <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="tableData[num].content"></ComplexInput> -->
+        <el-table-column prop="num" label="序号" width="60"> </el-table-column>
+        <el-table-column prop="content" label="内容"> </el-table-column>
+      </el-table>
+    </el-row>
 
     <el-dialog
       :visible.sync="picSearchDialogShow"
@@ -390,13 +402,13 @@ if __name__ == "__main__":
 require("mathjax/es5/tex-svg");
 import $ from "jquery";
 import Instruction from "./components/InstructionImage.vue";
-import { commonAjax } from "@/common/utils/ajax";
-//import Dialogue from "./components/Dialogue.vue"
+import Dialogue from "./components/Dialogue.vue";
+//import { commonAjax } from "@/common/utils/ajax";
 
 export default {
   components: {
     Instruction,
-    //Dialogue
+    Dialogue,
     //ComplexInput
   },
   name: "ImageTranscription",
@@ -425,36 +437,37 @@ export default {
         require("@/assets/default_image/2.png"),
         require("@/assets/default_image/3.png"),
       ],
-      tableData: [
-        {
-          num: "1",
-          content:
-            "关于函数f(x)=4\\sin \\left (2x+\\frac {\\pi }{3}\\right )(x\\in R)，有下列命题：关 于 函 数 f ( x ) = 4 \\sin \\left ( 2 x + \\frac { \\pi } { 3 } \\right ) ( x \\in R ) ， 有 下 列 命 题 ：",
-        },
-        {
-          num: "2",
-          content:
-            "①y=f(x)的表达式可改写为y=4\\cos \\left (2x-\\frac {\\pi }{6}\\right )；",
-        },
-        {
-          num: "3",
-          content: "②y=f(x)是以2π为最小正周期的周期函数；",
-        },
-        {
-          num: "4",
-          content:
-            "2y=f(x)的图象关于点\\left (-\\frac {\\pi }{6},0\\right )对称；",
-        },
-        {
-          num: "5",
-          content: "④y=f(x)的图象关于直线x=-\\frac {\\pi }{6}对称。",
-        },
-        {
-          num: "6",
-          content:
-            "其中正确的命题的序号是____________。（注：把你认为正确的命题的序号都填上上",
-        },
-      ],
+      // tableData: [
+      //   {
+      //     num: "1",
+      //     content:
+      //       "关于函数f(x)=4\\sin \\left (2x+\\frac {\\pi }{3}\\right )(x\\in R)，有下列命题：关 于 函 数 f ( x ) = 4 \\sin \\left ( 2 x + \\frac { \\pi } { 3 } \\right ) ( x \\in R ) ， 有 下 列 命 题 ：",
+      //   },
+      //   {
+      //     num: "2",
+      //     content:
+      //       "①y=f(x)的表达式可改写为y=4\\cos \\left (2x-\\frac {\\pi }{6}\\right )；",
+      //   },
+      //   {
+      //     num: "3",
+      //     content: "②y=f(x)是以2π为最小正周期的周期函数；",
+      //   },
+      //   {
+      //     num: "4",
+      //     content:
+      //       "2y=f(x)的图象关于点\\left (-\\frac {\\pi }{6},0\\right )对称；",
+      //   },
+      //   {
+      //     num: "5",
+      //     content: "④y=f(x)的图象关于直线x=-\\frac {\\pi }{6}对称。",
+      //   },
+      //   {
+      //     num: "6",
+      //     content:
+      //       "其中正确的命题的序号是____________。（注：把你认为正确的命题的序号都填上上",
+      //   },
+      // ],
+      tableData: [],
       ReceivedPara: [
         {
           field: "image",
@@ -496,251 +509,253 @@ export default {
           desc: '识别出的公式转换成latex格式，若未识别出来则返回空字符串""。该参数仅在上面三个参数都为1时才有意义',
         },
       ],
-      // loading: false,
+      loading: false,
       error: false,
       qid: 0,
       size: 0,
       type: "",
       base64_code: "",
+      //存储转写结果
+      result: "",
     };
   },
   methods: {
     ToTop() {
       window.scrollTo(0, 0);
     },
-    // 清空计时器
-    Reset_Interval() {
-      clearInterval(this.Paste_Catcher);
-      this.picSearchDialogShow = false;
-      window.removeEventListener("paste", this.Paste_Function);
-    },
-    // 打开图片搜索栏
-    Open_Pic_Search() {
-      this.Init_Img_Paster();
-      this.Paste_Catcher = setInterval(() => {
-        if (sessionStorage.getItem("PicPaste")) {
-          this.option.img = sessionStorage.getItem("PicPaste");
-        }
-      }, 20);
-      this.picSearchDialogShow = true;
-      console.log("success\n");
-    },
-    // 尝试利用截图工具的粘贴板
-    Init_Img_Paster() {
-      window.addEventListener("paste", this.Paste_Function);
-    },
-    Paste_Function(e) {
-      let Pic = e.clipboardData.items[0].getAsFile();
-      // 保存读取内容用的临时变量
-      var Picresult = "";
-      // Promise方法避免异步操作
-      var promise = new Promise(function (resolve) {
-        // 用文件读取来读取图片的base64格式代码
-        var reader = new FileReader();
-        reader.readAsDataURL(Pic);
-        reader.onloadend = function (e) {
-          Picresult = e.target.result;
-          resolve("1");
-        };
-      });
-      promise
-        .then(function () {
-          // 用捕捉到的this对象来进行搜索
-          sessionStorage.setItem("PicPaste", Picresult);
-        })
-        .catch(function (err) {
-          // 报错了就打印错误
-          console.log(err);
-          alert("您最新的粘贴对象不是图片内容。");
-        });
-    },
-    // 左旋转
-    rotateLeft() {
-      this.$refs.cropper.rotateLeft();
-    },
-    // 右旋转
-    rotateRight() {
-      this.$refs.cropper.rotateRight();
-    },
-    // 生成blob图片
-    getCropData() {
-      this.$refs.cropper.getCropData((data) => {
-        this.submit(1, data);
-        this.picSearchDialogShow = false;
-      });
-    },
+    // // 清空计时器
+    // Reset_Interval() {
+    //   clearInterval(this.Paste_Catcher);
+    //   this.picSearchDialogShow = false;
+    //   window.removeEventListener("paste", this.Paste_Function);
+    // },
+    // // 打开图片搜索栏
+    // Open_Pic_Search() {
+    //   this.Init_Img_Paster();
+    //   this.Paste_Catcher = setInterval(() => {
+    //     if (sessionStorage.getItem("PicPaste")) {
+    //       this.option.img = sessionStorage.getItem("PicPaste");
+    //     }
+    //   }, 20);
+    //   this.picSearchDialogShow = true;
+    //   console.log("success\n");
+    // },
+    // // 尝试利用截图工具的粘贴板
+    // Init_Img_Paster() {
+    //   window.addEventListener("paste", this.Paste_Function);
+    // },
+    // Paste_Function(e) {
+    //   let Pic = e.clipboardData.items[0].getAsFile();
+    //   // 保存读取内容用的临时变量
+    //   var Picresult = "";
+    //   // Promise方法避免异步操作
+    //   var promise = new Promise(function (resolve) {
+    //     // 用文件读取来读取图片的base64格式代码
+    //     var reader = new FileReader();
+    //     reader.readAsDataURL(Pic);
+    //     reader.onloadend = function (e) {
+    //       Picresult = e.target.result;
+    //       resolve("1");
+    //     };
+    //   });
+    //   promise
+    //     .then(function () {
+    //       // 用捕捉到的this对象来进行搜索
+    //       sessionStorage.setItem("PicPaste", Picresult);
+    //     })
+    //     .catch(function (err) {
+    //       // 报错了就打印错误
+    //       console.log(err);
+    //       alert("您最新的粘贴对象不是图片内容。");
+    //     });
+    // },
+    // // 左旋转
+    // rotateLeft() {
+    //   this.$refs.cropper.rotateLeft();
+    // },
+    // // 右旋转
+    // rotateRight() {
+    //   this.$refs.cropper.rotateRight();
+    // },
+    // // 生成blob图片
+    // getCropData() {
+    //   this.$refs.cropper.getCropData((data) => {
+    //     this.submit(1, data);
+    //     this.picSearchDialogShow = false;
+    //   });
+    // },
     openInstructionDialog() {
       this.$refs.instruction.openDialog();
     },
-    // 照片上传
-    pictureSearch(event) {
-      if (event.target.files) {
-        // 获取图片
-        let Pic = event.target.files[0];
-        // 保存读取内容用的临时变量
-        var Picresult = "";
-        // 获取this对象
-        const _this = this;
-        // 重置input组件
-        this.$refs.picSearchInput.value = "";
-        // Promise方法避免异步操作
-        var promise = new Promise(function (resolve) {
-          // 用文件读取来读取图片的base64格式代码
-          var reader = new FileReader();
-          reader.readAsDataURL(Pic);
-          reader.onloadend = function (e) {
-            Picresult = e.target.result;
-            resolve("1");
-          };
-        });
-        promise
-          .then(function () {
-            // 用捕捉到的this对象来进行搜索
-            _this.option.img = Picresult;
-          })
-          .catch(function (error) {
-            // 报错了就打印错误
-            console.log(error);
-          });
-      } else {
-        return;
-      }
-    },
+    // // 照片上传
+    // pictureSearch(event) {
+    //   if (event.target.files) {
+    //     // 获取图片
+    //     let Pic = event.target.files[0];
+    //     // 保存读取内容用的临时变量
+    //     var Picresult = "";
+    //     // 获取this对象
+    //     const _this = this;
+    //     // 重置input组件
+    //     this.$refs.picSearchInput.value = "";
+    //     // Promise方法避免异步操作
+    //     var promise = new Promise(function (resolve) {
+    //       // 用文件读取来读取图片的base64格式代码
+    //       var reader = new FileReader();
+    //       reader.readAsDataURL(Pic);
+    //       reader.onloadend = function (e) {
+    //         Picresult = e.target.result;
+    //         resolve("1");
+    //       };
+    //     });
+    //     promise
+    //       .then(function () {
+    //         // 用捕捉到的this对象来进行搜索
+    //         _this.option.img = Picresult;
+    //       })
+    //       .catch(function (error) {
+    //         // 报错了就打印错误
+    //         console.log(error);
+    //       });
+    //   } else {
+    //     return;
+    //   }
+    // },
 
-    clearData() {
-      sessionStorage.setItem("PicPaste", "");
-      this.option.img = "";
-    },
+    // clearData() {
+    //   sessionStorage.setItem("PicPaste", "");
+    //   this.option.img = "";
+    // },
 
-    ConfirmImg() {
-      this.error = false;
-      this.image = this.option.img;
-      this.need_trans = 0;
-      this.Reset_Interval();
-    },
+    // ConfirmImg() {
+    //   this.error = false;
+    //   this.image = this.option.img;
+    //   this.need_trans = 0;
+    //   this.Reset_Interval();
+    // },
 
-    url_update() {
-      // this.image = this.url_input;
-      this.error = false;
-      this.image = require("@/assets/loading.gif");
-      var newImg = new Image();
-      newImg.src = this.url_input;
-      newImg.onload = () => {
-        // 图片加载成功后把地址给原来的img
-        this.image = newImg.src;
-      };
-      newImg.onerror = () => {
-        console.log("error\n");
-        this.error = true;
-      };
-      this.need_trans = 1;
-    },
+    // url_update() {
+    //   // this.image = this.url_input;
+    //   this.error = false;
+    //   this.image = require("@/assets/loading.gif");
+    //   var newImg = new Image();
+    //   newImg.src = this.url_input;
+    //   newImg.onload = () => {
+    //     // 图片加载成功后把地址给原来的img
+    //     this.image = newImg.src;
+    //   };
+    //   newImg.onerror = () => {
+    //     console.log("error\n");
+    //     this.error = true;
+    //   };
+    //   this.need_trans = 1;
+    // },
 
-    ChooseDefaultImage(default_image) {
-      this.error = false;
-      this.image = default_image;
-      this.need_trans = 1;
-    },
+    // ChooseDefaultImage(default_image) {
+    //   this.error = false;
+    //   this.image = default_image;
+    //   this.need_trans = 1;
+    // },
 
-    getBase64(url) {
-      return new Promise((resolve) => {
-        var Img = new Image();
-        var dataURL = "";
-        //Img.setAttribute('crossOrigin', 'Anonymous')
-        Img.src = url + "?v=" + Math.random();
-        Img.onload = function () {
-          // 要先确保图片完整获取到，这是个异步事件
-          var canvas = document.createElement("canvas"); // 创建canvas元素
-          var width = Img.width; // 确保canvas的尺寸和图片一样
-          var height = Img.height;
-          canvas.width = width;
-          canvas.height = height;
-          canvas.getContext("2d").drawImage(Img, 0, 0, width, height);
-          // canvas.toBlob(res1 => {
-          // 	console.log("size=" + res1.size); //图片真实存储大小
-          // 	console.log("type=" + res1.type);
-          // 	this.size = res1.size;
-          // 	this.type = res1.type;
-          // }, this.type, 1);
-          var ext = Img.src
-            .substring(Img.src.lastIndexOf(".") + 1)
-            .toLowerCase();
-          dataURL = canvas.toDataURL("image/" + ext); // 转换图片为dataURL
-          //this.base64_code = dataURL;
-          //console.log("size=" + this.size);
-          resolve(dataURL);
-        };
-      });
-    },
+    // getBase64(url) {
+    //   return new Promise((resolve) => {
+    //     var Img = new Image();
+    //     var dataURL = "";
+    //     //Img.setAttribute('crossOrigin', 'Anonymous')
+    //     Img.src = url + "?v=" + Math.random();
+    //     Img.onload = function () {
+    //       // 要先确保图片完整获取到，这是个异步事件
+    //       var canvas = document.createElement("canvas"); // 创建canvas元素
+    //       var width = Img.width; // 确保canvas的尺寸和图片一样
+    //       var height = Img.height;
+    //       canvas.width = width;
+    //       canvas.height = height;
+    //       canvas.getContext("2d").drawImage(Img, 0, 0, width, height);
+    //       // canvas.toBlob(res1 => {
+    //       // 	console.log("size=" + res1.size); //图片真实存储大小
+    //       // 	console.log("type=" + res1.type);
+    //       // 	this.size = res1.size;
+    //       // 	this.type = res1.type;
+    //       // }, this.type, 1);
+    //       var ext = Img.src
+    //         .substring(Img.src.lastIndexOf(".") + 1)
+    //         .toLowerCase();
+    //       dataURL = canvas.toDataURL("image/" + ext); // 转换图片为dataURL
+    //       //this.base64_code = dataURL;
+    //       //console.log("size=" + this.size);
+    //       resolve(dataURL);
+    //     };
+    //   });
+    // },
 
-    async identify() {
-      //let reader = new FileReader();
-      this.tableData = [];
-      let result, data;
-      let res = "!!!";
-      console.log("执行");
-      console.log(this.image + "!!!");
+    // async identify() {
+    //   //let reader = new FileReader();
+    //   this.tableData = [];
+    //   let result, data;
+    //   let res = "!!!";
+    //   console.log("执行");
+    //   console.log(this.image + "!!!");
 
-      if (this.need_trans == 1) {
-        //要转
-        try {
-          res = await this.getBase64(this.image);
-        } catch (err) {
-          console.log(err);
-        }
-        this.base64_code = res; // 将结果赋值给需要用的变量属性
-        // console.log(this.base64_code); // 获取到结果
-      } else this.base64_code = this.image;
+    //   if (this.need_trans == 1) {
+    //     //要转
+    //     try {
+    //       res = await this.getBase64(this.image);
+    //     } catch (err) {
+    //       console.log(err);
+    //     }
+    //     this.base64_code = res; // 将结果赋值给需要用的变量属性
+    //     // console.log(this.base64_code); // 获取到结果
+    //   } else this.base64_code = this.image;
 
-      console.log(this.base64_code.length);
-      if (this.base64_code.length / 1024 > 1024) {
-        alert("抱歉，您上传的图片过大，请重新上传");
-        return;
-      }
+    //   console.log(this.base64_code.length);
+    //   if (this.base64_code.length / 1024 > 1024) {
+    //     alert("抱歉，您上传的图片过大，请重新上传");
+    //     return;
+    //   }
 
-      try {
-        data = await commonAjax(
-          "https://formula-recognition-service-157-production.env.bdaa.pro/v1",
-          {
-            image: this.base64_code,
-            qid: this.qid,
-          }
-        );
-      } catch (err) {
-        console.log(err);
-      }
+    //   try {
+    //     data = await commonAjax(
+    //       "https://formula-recognition-service-157-production.env.bdaa.pro/v1",
+    //       {
+    //         image: this.base64_code,
+    //         qid: this.qid,
+    //       }
+    //     );
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
 
-      // commonAjax(
-      // 	"https://formula-recognition-service-157-production.env.bdaa.pro/v1", {
-      // 		image: this.base64_code,
-      // 		qid: this.qid
-      // 	}).then(data=>{
-      // 		// console.log("then qid:  "+data)
-      // 		console.log(111,JSON.parse(JSON.stringify(data)))
-      // 	})
+    //   // commonAjax(
+    //   // 	"https://formula-recognition-service-157-production.env.bdaa.pro/v1", {
+    //   // 		image: this.base64_code,
+    //   // 		qid: this.qid
+    //   // 	}).then(data=>{
+    //   // 		// console.log("then qid:  "+data)
+    //   // 		console.log(111,JSON.parse(JSON.stringify(data)))
+    //   // 	})
 
-      console.log(data);
-      result = data.data;
-      this.qid++;
-      console.log(result.qid);
-      if (result.success && result.is_formula && result.detect_formula) {
-        console.log("success!");
-        if (typeof result.latex == "object")
-          for (let i = 0; i < result.latex.length; i++) {
-            // console.log(i,result.latex[i])
-            this.tableData.push({
-              content: result.latex[i],
-              num: i + 1,
-            });
-          }
-        else if (typeof result.latex == "string") {
-          this.content = result.latex;
-        }
-      } else {
-        this.tableData.length = 0;
-      }
-      //console.log(this.tableData[0].content);
-    },
+    //   console.log(data);
+    //   result = data.data;
+    //   this.qid++;
+    //   console.log(result.qid);
+    //   if (result.success && result.is_formula && result.detect_formula) {
+    //     console.log("success!");
+    //     if (typeof result.latex == "object")
+    //       for (let i = 0; i < result.latex.length; i++) {
+    //         // console.log(i,result.latex[i])
+    //         this.tableData.push({
+    //           content: result.latex[i],
+    //           num: i + 1,
+    //         });
+    //       }
+    //     else if (typeof result.latex == "string") {
+    //       this.content = result.latex;
+    //     }
+    //   } else {
+    //     this.tableData.length = 0;
+    //   }
+    //   //console.log(this.tableData[0].content);
+    // },
 
     openPanel() {
       $(".box-card.left").animate(
@@ -765,6 +780,46 @@ export default {
       $("#openBtn").show();
       $("#closeBtn").hide();
     },
+    // Update Complex Input，将组合输入的内容复制到当前搜索框应该具有的内容里
+    UCI(val) {
+      console.log("UCI");
+      this.content = val;
+      this.loading = this.content == "识别中...";
+      console.log("loading", this.loading);
+      console.log("content", this.content);
+    },
+    // Update Complex Input Image，将组合输入的内容的图片部分复制到当前页面的内容里，如果后续又要用到则进行调用
+    UCII(val) {
+      this.filelists = val;
+    },
+    // Get_Result，将图片转写返回的的结果存入result里
+    Get_Result(val) {
+      console.log("GETRESULT!");
+      this.result = val;
+      this.tableData = [];
+      this.qid++;
+      console.log("qid", this.result.qid);
+      if (
+        this.result.success &&
+        this.result.is_formula &&
+        this.result.detect_formula
+      ) {
+        console.log("success!");
+        if (typeof this.result.latex == "object")
+          for (let i = 0; i < this.result.latex.length; i++) {
+            // console.log(i,result.latex[i])
+            this.tableData.push({
+              content: this.result.latex[i],
+              num: i + 1,
+            });
+          }
+        else if (typeof this.result.latex == "string") {
+          this.content = this.result.latex;
+        }
+      } else {
+        this.tableData.length = 0;
+      }
+    },
   },
 };
 </script>
@@ -772,12 +827,12 @@ export default {
 <style lang="scss" scoped>
 #main {
   position: relative;
-  margin-left: 5vw;
-  //margin:auto;
+  //margin-left: 5vw;
+  margin: auto;
   width: 1200px;
-  height: 650px;
+  height: 700px;
   margin-top: 50px;
-  margin-bottom: 100px;
+  //margin-bottom: 100px;
 }
 
 #image {
@@ -800,11 +855,14 @@ export default {
 }
 
 #result {
-  position: absolute;
-  top: 0px;
-  left: 800px;
-  width: 400px;
-  height: 650px;
+  //position: absolute;
+  // top: 0px;
+  // left: 800px;
+  // width: 400px;
+  // height: 650px;
+  margin: auto;
+  margin-bottom:50px;
+  width: 1200px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   border-radius: 4px;
 }
