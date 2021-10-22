@@ -3971,7 +3971,7 @@ export default {
   cursor: pointer;
   box-sizing: border-box;
 }
-.Desc_Input /deep/ .el-input__inner{
+.Desc_Input ::v-deep .el-input__inner{
   margin: 5px 0px;
   padding: 0px;
   height: 20px;

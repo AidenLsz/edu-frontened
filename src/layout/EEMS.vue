@@ -299,11 +299,11 @@ body,
 }
 </style>
 <style scoped lang="scss">
-.el-header .el-menu--horizontal /deep/ .el-submenu.is-active .el-submenu__title {
+.el-header .el-menu--horizontal ::v-deep .el-submenu.is-active .el-submenu__title {
     border-bottom: none;
 }
 
-.el-header .el-menu--horizontal /deep/ .el-submenu .el-submenu__title {
+.el-header .el-menu--horizontal ::v-deep .el-submenu .el-submenu__title {
     height: 42px;
     line-height: 18px;
     padding-top: 15px;
@@ -317,11 +317,11 @@ body,
 }
 </style>
 <style>
-.el-header .el-menu--horizontal /deep/ .el-submenu.is-active .el-submenu__title {
+.el-header .el-menu--horizontal ::v-deep .el-submenu.is-active .el-submenu__title {
   border-bottom: none;
 }
 
-.el-header .el-menu--horizontal /deep/ .el-submenu .el-submenu__title {
+.el-header .el-menu--horizontal ::v-deep .el-submenu .el-submenu__title {
   height: 42px;
   line-height: 18px;
   padding-top: 15px;

@@ -1737,16 +1737,16 @@ export default {
 }
 </style>
 <style scoped>
-#tabs /deep/ .el-tabs__item {
+#tabs ::v-deep .el-tabs__item {
   color: #0a1612;
   font-weight: 900;
 }
-#tabs /deep/ .el-tabs__item.is-active {
+#tabs ::v-deep .el-tabs__item.is-active {
   background-color: #0a1612;
   color: #fff;
   font-weight: 900;
 }
-#tag /deep/ .el-tag {
+#tag ::v-deep .el-tag {
   background-color: #fff !important;
   color: #000 !important;
   border-color: #c5c1c0 !important;

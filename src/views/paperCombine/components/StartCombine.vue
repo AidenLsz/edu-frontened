@@ -1338,7 +1338,7 @@ export default {
 .Custom_Score_Input{
   font-size: 16px;
 }
-.Custom_Score_Input /deep/ .el-input__inner {
+.Custom_Score_Input ::v-deep .el-input__inner {
   height: 30px;
   line-height: 30px;
   width: 45px;
@@ -1375,7 +1375,7 @@ export default {
 .Exam_Info_Input{
   font-size: 14px;
 }
-.Exam_Info_Input /deep/ .el-input__inner {
+.Exam_Info_Input ::v-deep .el-input__inner {
   height: 30px;
   line-height: 30px;
   width: 45px;
@@ -1388,7 +1388,7 @@ export default {
 .Bundle_Introduce_Input{
   font-size: 14px;
 }
-.Bundle_Introduce_Input /deep/ .el-input__inner {
+.Bundle_Introduce_Input ::v-deep .el-input__inner {
   height: 30px;
   line-height: 30px;
   width: 200px;
