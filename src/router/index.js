@@ -103,18 +103,18 @@ function validateLoginPermission(path){
 function validatePermission(path){
   //切换为考试版
   if(switchToEEMS(path)) {
-    store.dispatch('app/setSysState',{rootPath:'/eems/',isLuna:false})
+    store.dispatch('app/setSysState',{rootPath:'/eems/',isLuna:false,systemType:1})
     if (!store.state.user.token) {
       return false
     }
-  }else if(switchToITAS(path)) {
-    store.dispatch('app/setSysState',{rootPath:'/itas/',isLuna:false})
+  }else if(switchToITAS(path)) {true
+    store.dispatch('app/setSysState',{rootPath:'/itas/',isLuna:false,systemType:2})
     if (!store.state.user.token) {
       return false
     }
   }else{
     //切换为普通版
-    store.dispatch('app/setSysState',{rootPath:'/',isLuna:true})
+    store.dispatch('app/setSysState',{rootPath:'/',isLuna:true,systemType:0})
     store.dispatch('app/closeLoginDialog')
   }
   return true
