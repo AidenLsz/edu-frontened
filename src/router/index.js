@@ -57,10 +57,10 @@ const router = new Router({
 // 路由控制
 
 router.beforeEach((to, from, next) => {
-  if(!validateEEMSPermission(to.path)){
+  if(!validatePermission(to.path)){
     next()
     openLoginDialog()
-  }else if(!switchToEEMS(to.path)&&!validateLoginPermission(to.path)){
+  }else if((!switchToEEMS(to.path)||!switchToITAS(to.path))&&!validateLoginPermission(to.path)){
     if(from.path=='/'){
       //输入url跳转时
       next('/')
@@ -76,6 +76,9 @@ router.beforeEach((to, from, next) => {
 function switchToEEMS(path){
   return path&&(path.endsWith('/eems')||path.includes('/eems/'))
 }
+function switchToITAS(path){
+  return path&&(path.endsWith('/itas')||path.includes('/itas/'))
+}
 function openLoginDialog(){
   store.dispatch('app/openLoginDialog').then(()=>{
     Message({
@@ -90,16 +93,22 @@ function validateLoginPermission(path){
     "/user/",
     "/manage/",
     "/inputMarked",
-    "/inputPaper"
-    // "/paperCombine"
+    "/inputPaper",
+    "/paperCombine",
+    "/ku"
   ];
   let isUserRoute = ()=>route.some((r)=>path.includes(r))
   return !isUserRoute() || store.state.user.token
 }
-function validateEEMSPermission(path){
+function validatePermission(path){
   //切换为考试版
   if(switchToEEMS(path)) {
     store.dispatch('app/setSysState',{rootPath:'/eems/',isLuna:false})
+    if (!store.state.user.token) {
+      return false
+    }
+  }else if(switchToITAS(path)) {
+    store.dispatch('app/setSysState',{rootPath:'/itas/',isLuna:false})
     if (!store.state.user.token) {
       return false
     }
