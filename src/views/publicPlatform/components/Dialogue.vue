@@ -804,7 +804,7 @@ export default {
   border-radius: 4px;
 }
 
-.el-input /deep/ input::-webkit-input-placeholder {
+.el-input ::v-deep input::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -817,7 +817,7 @@ export default {
 #image :hover {
   cursor: pointer;
 }
-// #edit /deep/ .el-button--goon {
+// #edit ::v-deep .el-button--goon {
 // 	background-color: #000000;
 // }
 </style>

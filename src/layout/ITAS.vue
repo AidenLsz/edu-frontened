@@ -5,22 +5,42 @@
       <el-row>
         <el-col :span="12">
           <el-row>
-            <el-button @click="PAS(0)" circle style="height: 200px; width: 200px;"><img src="@/assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px" />
+            <el-button @click="PAS(0)" circle style="height: 200px; width: 200px"><img
+                src="@/assets/icon4.png"
+                width="150%"
+                style="margin-left: -46px; margin-top: -46px"
+            />
             </el-button>
           </el-row>
           <el-row>
-            <el-button type="text" @click="PAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
+            <el-button
+                type="text"
+                @click="PAS(0)"
+                style="margin-top: 30px; font-size: 20px; color: black"
+            >
               录入试卷进行分析
             </el-button>
           </el-row>
         </el-col>
         <el-col :span="12">
           <el-row>
-            <el-button @click="PAS(1)" circle style="height: 200px; width: 200px"><img src="@/assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px" />
+            <el-button
+                @click="PAS(1)"
+                circle
+                style="height: 200px; width: 200px"
+            ><img
+                src="@/assets/icon1.png"
+                width="150%"
+                style="margin-left: -46px; margin-top: -46px"
+            />
             </el-button>
           </el-row>
           <el-row>
-            <el-button type="text" @click="PAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
+            <el-button
+                type="text"
+                @click="PAS(1)"
+                style="margin-top: 30px; font-size: 20px; color: black"
+            >
               选择题库中试卷进行分析
             </el-button>
           </el-row>
@@ -32,123 +52,377 @@
       <el-row>
         <el-col :span="12">
           <el-row>
-            <el-button @click="QAS(0)" circle style="height: 200px; width: 200px;"><img src="@/assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px" />
+            <el-button
+                @click="QAS(0)"
+                circle
+                style="height: 200px; width: 200px"
+            ><img
+                src="@/assets/icon4.png"
+                width="150%"
+                style="margin-left: -46px; margin-top: -46px"
+            />
             </el-button>
           </el-row>
           <el-row>
-            <el-button type="text" @click="QAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
+            <el-button
+                type="text"
+                @click="QAS(0)"
+                style="margin-top: 30px; font-size: 20px; color: black"
+            >
               录入试题进行分析
             </el-button>
           </el-row>
         </el-col>
         <el-col :span="12">
           <el-row>
-            <el-button @click="QAS(1)" circle style="height: 200px; width: 200px"><img src="@/assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px" />
+            <el-button
+                @click="QAS(1)"
+                circle
+                style="height: 200px; width: 200px"
+            ><img
+                src="@/assets/icon1.png"
+                width="150%"
+                style="margin-left: -46px; margin-top: -46px"
+            />
             </el-button>
           </el-row>
           <el-row>
-            <el-button type="text" @click="QAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
+            <el-button
+                type="text"
+                @click="QAS(1)"
+                style="margin-top: 30px; font-size: 20px; color: black"
+            >
               搜索试题进行分析
             </el-button>
           </el-row>
         </el-col>
       </el-row>
     </el-dialog>
-    <login ref="login" />
-    <el-header style="height: 70px;">
+    <login ref="login" @register_show="register_show" />
+    <register ref="register" />
+    <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
+    <el-header style="height: 70px">
       <div id="header-sticky" class="sticky-menu">
         <el-row>
-          <el-col :span="4" style="padding-top: 0px; padding-left: 30px">
-            <img src="@/assets/bdaa.png" alt="Logo" height="70px" style="cursor: pointer" @click="goToMainPage" />
+          <el-col :span="4" style="padding-top: 20px; padding-left: 30px">
+            <img
+                src="@/assets/luna_icon.png"
+                alt="Logo"
+                width="150px"
+                style="cursor: pointer"
+                @click="goToMainPage"
+            />
           </el-col>
           <el-col :span="8" :offset="11">
             <el-row type="flex" justify="end">
-              <el-col :span="4" style="padding-top: 15px;">
+              <!--
+							<el-col :span="4" style="padding-top: 15px;">
+								<el-button type="text" @click="goTolalala" class="navbar">啦啦啦</el-button>
+							</el-col>
+							-->
+              <el-col
+                  :span="2"
+                  v-if="$store.state.user.name"
+                  style="padding-top: 15px"
+              >
                 <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
               </el-col>
-              <el-col :span="4" style="padding-top: 15px;">
-                <el-menu mode="horizontal" style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px">
+              <el-col :span="2" :offset="1" v-else style="padding-top: 15px">
+                <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
+              </el-col>
+              <!-- <el-col :span="4" style="padding-top: 15px">
+                <el-menu
+                    mode="horizontal"
+                    style="border-bottom: 3px solid #409eff; padding-bottom: 10px"
+                >
                   <el-submenu index="0">
                     <template slot="title">
                       <span :style="Title_Pos()">功能</span>
                     </template>
-                    <el-submenu index="1">
-                      <template slot="title"><span style="color: black;">资源录入</span></template>
-                      <router-link :to="rootPath+'inputMarked'" :underline="false" @click.native="ToTop">
-                        <el-menu-item index="1-2">
-                          <span style="color: black;">试题资源</span>
-                        </el-menu-item>
-                      </router-link>
-                      <router-link :to="rootPath+'inputPaper'" :underline="false" @click.native="ToTop">
-                        <el-menu-item index="1-3">
-                          <span style="color: black;">试卷资源</span>
-                        </el-menu-item>
-                      </router-link>
-                    </el-submenu>
+
+                    <el-menu-item index="1">
+                    <router-link
+                        to="/ku"
+                        :underline="false"
+                        @click.native="ToTop"> 
+                    <span style="color: black">知识单元检索</span>
+                    </router-link>
+                    </el-menu-item>
+
                     <el-submenu index="2">
-                      <template slot="title"><span style="color: black;">查重</span></template>
-                      <router-link :to="rootPath+'exercise'" :underline="false" @click.native="ToTop">
-                        <el-menu-item index="2-1">
-                          <span style="color: black;">试题查重</span>
-                        </el-menu-item>
+                      <template slot="title"
+                      ><span style="color: black">资源管理</span></template
+                      >
+                    <el-submenu index="2-1">
+                      <template slot="title"
+                      ><span style="color: black">资源检索</span></template
+                      >
+                      <router-link
+                          to="/exercise"
+                          :underline="false"
+                          @click.native="ToTop"> 
+                      <el-menu-item index="2-1-1"
+                      ><span style="color: black">试题检索</span>
+                      </el-menu-item>
                       </router-link>
-                      <!-- <router-link :to="rootPath+'multiexercise'" :underline="false" @click.native="ToTop">
-                        <el-menu-item index="2-1">
-                          <span style="color: black;">多试题查重</span>
-                        </el-menu-item>
-                      </router-link> -->
-                      <!-- <router-link :to="rootPath+'searchPaper'" :underline="false" @click.native="ToTop">
-                          <el-menu-item index="2-2">
-                            <span style="color: black;">试卷检索</span>
-                          </el-menu-item>
-                        </router-link> -->
+
+                      <router-link
+                          to="/searchPaper"
+                          :underline="false"
+                          @click.native="ToTop"> 
+                      <el-menu-item index="2-1-2"
+                      ><span style="color: black">试卷检索</span>
+                      </el-menu-item>
+                      </router-link>
+
                     </el-submenu>
+
+                    <el-submenu index="2-2">
+                      <template slot="title"
+                      ><span style="color: black">资源录入</span></template
+                      >
+                      <router-link
+                          to="/inputMarked"
+                          :underline="false"
+                          @click.native="ToTop"> 
+                      <el-menu-item index="2-2-1"
+                      ><span style="color: black">试题录入</span>
+                      </el-menu-item>
+                      </router-link>
+                      <router-link
+                          to="/inputPaper"
+                          :underline="false"
+                          @click.native="ToTop"> 
+                      <el-menu-item index="2-2-2"
+                      ><span style="color: black">试卷录入</span>
+                      </el-menu-item>
+                      </router-link>
+                    </el-submenu>
+                     
+                    <el-menu-item index="2-3">
+                      <router-link
+                          to="/manage/dashboard"
+                          :underline="false"
+                          @click.native="ToTop">
+                      <span style="color: black">我的资源</span>
+                      </router-link>
+                    </el-menu-item>
+                    </el-submenu>
+
                     <el-submenu index="3">
-                      <template slot="title"><span style="color: black;">分析</span></template>
-                      <el-menu-item index="3-2" @click="QuestionAnalyseSwitch()" @click.native="ToTop">
-                        <span style="color: black;">试题资源</span>
+                      <template slot="title"
+                      ><span style="color: black">资源分析</span></template
+                      >
+                      <el-menu-item
+                          index="3-1"
+                          @click="QuestionAnalyseSwitch()"
+                          @click.native="ToTop"
+                      >
+                        <span style="color: black">试题资源</span>
                       </el-menu-item>
-                      <el-menu-item index="3-3" @click="PaperAnalyseSwitch()" @click.native="ToTop">
-                        <span style="color: black;">试卷资源</span>
+                      <el-menu-item
+                          index="3-2"
+                          @click="PaperAnalyseSwitch()"
+                          @click.native="ToTop"
+                      >
+                        <span style="color: black">试卷资源</span>
                       </el-menu-item>
                     </el-submenu>
-                    <el-menu-item index="5">
-                      <router-link :to="rootPath+'manage/dashboard'" :underline="false" @click.native="ToTop">
-                      <span style="color: black">
-                        资源管理
-                      </span>
+                  
+                    <el-menu-item index="4">
+                      <router-link
+                        to="/paperCombine"
+                        :underline="false"
+                        @click.native="ToTop">
+                      <span style="color: black">组卷系统</span>
                       </router-link>
+                    </el-menu-item>
+
+                    <router-link
+                        to="/estimate"
+                        :underline="false"
+                        @click.native="ToTop"
+                        style="display: none"
+                    >
+                      <el-menu-item index="7">
+                        <span style="color: black">试题属性预估</span>
+                      </el-menu-item>
+                    </router-link>
+                    <router-link
+                        to="/similarity"
+                        :underline="false"
+                        @click.native="ToTop"
+                        style="display: none"
+                    >
+                      <el-menu-item index="8">
+                        <span style="color: black">相似题预估</span>
+                      </el-menu-item>
+                    </router-link>
+                    <router-link
+                        to="/admin"
+                        v-if="Get_Priority()"
+                        :underline="false"
+                        @click.native="ToTop"
+                    >
+                      <el-menu-item index="9">
+                        <span style="color: red">管理员页面</span>
+                      </el-menu-item>
+                    </router-link>
+                  </el-submenu>
+                </el-menu>
+              </el-col> -->
+              <!-- 功能分离处 -->
+
+
+              <el-col :span="4" style="padding-top: 15px" >
+                <el-menu
+                    mode="horizontal"
+                    style="border-bottom: 3px solid #409eff; padding-bottom: 10px"
+                >
+                <el-submenu index="2">
+                      <template slot="title"
+                      ><span style="color: black; font-weight:bold">资源管理</span></template
+                      >
+                    <el-submenu index="2-1">
+                      <template slot="title"
+                      ><span style="color: black">资源检索</span></template
+                      >
+                      <router-link
+                          :to="rootPath+'exercise'"
+                          :underline="false"
+                          @click.native="ToTop"> 
+                      <el-menu-item index="2-1-1"
+                      ><span style="color: black">试题检索</span>
+                      </el-menu-item>
+                      </router-link>
+
+                      <router-link
+                          :to="rootPath+'searchPaper'"
+                          :underline="false"
+                          @click.native="ToTop"> 
+                      <el-menu-item index="2-1-2"
+                      ><span style="color: black">试卷检索</span>
+                      </el-menu-item>
+                      </router-link>
+
+                    </el-submenu>
+
+                    <el-submenu index="2-2">
+                      <template slot="title"
+                      ><span style="color: black">资源录入</span></template
+                      >
+                      <router-link
+                          :to="rootPath+'inputMarked'"
+                          :underline="false"
+                          @click.native="ToTop"> 
+                      <el-menu-item index="2-2-1"
+                      ><span style="color: black">试题录入</span>
+                      </el-menu-item>
+                      </router-link>
+                      <router-link
+                          :to="rootPath+'inputPaper'"
+                          :underline="false"
+                          @click.native="ToTop"> 
+                      <el-menu-item index="2-2-2"
+                      ><span style="color: black">试卷录入</span>
+                      </el-menu-item>
+                      </router-link>
+                    </el-submenu>
+                     
+                    <el-menu-item index="2-3">
+                      <router-link
+                          :to="rootPath+'manage/dashboard'"
+                          :underline="false"
+                          @click.native="ToTop">
+                      <span style="color: black">我的资源</span>
+                      </router-link>
+                    </el-menu-item>
+                    </el-submenu>
+                </el-menu>
+              </el-col>  
+
+              <el-col :span="4" style="padding-top: 15px">
+                <el-menu
+                    mode="horizontal"
+                    style="border-bottom: 3px solid #409eff; padding-bottom: 10px"
+                >
+                  <el-submenu index="3">
+                    <template slot="title"
+                    ><span style="color: black; font-weight:bold">资源分析</span></template
+                    >
+                    <el-menu-item
+                        index="3-1"
+                        @click="QuestionAnalyseSwitch()"
+                        @click.native="ToTop"
+                    >
+                      <span style="color: black">试题资源</span>
+                    </el-menu-item>
+                    <el-menu-item
+                        index="3-2"
+                        @click="PaperAnalyseSwitch()"
+                        @click.native="ToTop"
+                    >
+                      <span style="color: black">试卷资源</span>
                     </el-menu-item>
                   </el-submenu>
                 </el-menu>
               </el-col>
-              <!-- <el-col :span="4" style="padding-top: 15px;">
-                <el-button type="text" @click="show_members" class="navbar">成员</el-button>
-              </el-col> -->
-              <el-col :span="5" style="padding-top: 15px;" v-if="$store.state.user.name">
+              
+              <el-col :span="4" style="padding-top: 15px">
+                <el-button type="text" @click="knowledegeUnitSearch" class="navbar"
+                >知识检索</el-button
+                >
+              </el-col>
+
+              <el-col :span="4" style="padding-top: 15px">
+                <el-button type="text" @click="composePaperSystem" class="navbar"
+                >组卷系统</el-button
+                >
+              </el-col>
+
+              <el-col :span="4" style="padding-top: 15px"  v-if="$store.state.user.name" >
                 <el-row>
-                  <el-dropdown trigger="hover" style="padding-top: 8px" class="navbar">
-                  <span class="el-dropdown-link user-inner">
-                    {{ $store.state.user.name }}<i class="el-icon-arrow-down el-icon--right"></i>
-                  </span>
+                  <el-dropdown
+                      trigger="hover"
+                      style="padding-top: 8px"
+                      class="navbar"
+                  >
+                    <span class="el-dropdown-link user-inner">
+                      {{ $store.state.user.name
+                      }}<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item @click.native="checkUserInfo">个人设置</el-dropdown-item>
-                      <el-dropdown-item v-if="isGroup" @click.native="checkUserGroup">组织架构</el-dropdown-item>
-                      <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
+                      <el-dropdown-item @click.native="checkUserInfo"
+                      >个人设置</el-dropdown-item
+                      >
+                      <el-dropdown-item v-if="isGroup" @click.native="checkUserGroup"
+                      >组织架构</el-dropdown-item
+                      >
+                      <el-dropdown-item @click.native="logout"
+                      >退出登录</el-dropdown-item
+                      >
                     </el-dropdown-menu>
                   </el-dropdown>
                 </el-row>
               </el-col>
-              <el-col :span="4" style="padding-top: 15px;" v-else>
-                <el-button type="text" @click="login_show" class="navbar">登录</el-button>
+              <el-col :span="4" style="padding-top: 15px" v-else>
+                <el-button type="text" @click="login_show" class="navbar"
+                >登录</el-button
+                >
+              </el-col>
+              <el-col :span="2" style="padding-top: 15px">
+                <el-button type="text" @click="register_show" class="navbar"
+                >注册</el-button
+                >
               </el-col>
             </el-row>
           </el-col>
         </el-row>
       </div>
     </el-header>
+    <!-- <basic-header/> -->
     <el-main>
-      <div style="min-height:100vh">
+      <div style="min-height: 100vh">
         <router-view :key="$route.fullPath"></router-view>
       </div>
       <basic-footer />
@@ -157,33 +431,50 @@
 </template>
 
 <script>
-import BasicFooter from '@/layout/components/footer.vue'
-import login from '@/layout/components/login.vue'
-import {
-  commonAjax
-} from '@/common/utils/ajax'
+// import $ from "jquery";
+import BasicFooter from "@/layout/components/footer.vue";
+import login from "@/layout/components/login.vue";
+import register from "@/layout/components/register.vue";
+import { commonAjax } from "@/common/utils/ajax";
+// import BasicHeader from '@/layout/header.vue'
+// import vueImgVerify from "@/common/components/vue-img-verify.vue";
 export default {
   name: "App",
   components: {
+    // vueImgVerify,
     BasicFooter,
     login,
+    register,
+    // BasicHeader,
   },
   data() {
     return {
+      username: "",
+      // activeIndex: 下拉菜单用的
       activeIndex: "",
       // 跳转至试卷/试题分析的不同地点用的
       PaperAnalyseSwitchFlag: false,
       QuestionAnalyseSwitchFlag: false,
-      isGroup: false
+      isGroup: false,
     };
   },
   computed: {
     rootPath() {
+      console.log("@"+this.$store.getters.rootPath)
       return this.$store.getters.rootPath;
+     
     }
   },
-  mounted(){
-    this.getGroups()
+  mounted() {
+    this.getGroups();
+  },
+  updated() {
+    var user = sessionStorage.getItem("user");
+    if (user) {
+      this.username = user;
+    } else {
+      this.username = "";
+    }
   },
   methods: {
     // 查看用户个人信息及组织架构
@@ -195,6 +486,15 @@ export default {
     checkUserGroup() {
       this.$router.push({
         path: this.rootPath + "user/userGroup"
+      });
+    },
+    getGroups() {
+      commonAjax(this.backendIP + "/api/get_users_by_admin", {}).then((res) => {
+        if (res.data.length > 0 && res.data.some((data) => data.is_admin)) {
+          this.isGroup = true;
+        }else {
+          this.isGroup=false
+        }
       });
     },
     QAS(index) {
@@ -209,15 +509,6 @@ export default {
         });
         this.QuestionAnalyseSwitchFlag = false;
       }
-    },
-    getGroups() {
-      commonAjax(this.backendIP + "/api/get_users_by_admin", {}).then((res) => {
-        if (res.data.length > 0 && res.data.some((data) => data.is_admin)) {
-          this.isGroup = true;
-        }else {
-          this.isGroup=false
-        }
-      });
     },
     // 跳转至试题分析的不同位置的对话框
     QuestionAnalyseSwitch() {
@@ -240,18 +531,21 @@ export default {
     PaperAnalyseSwitch() {
       this.PaperAnalyseSwitchFlag = true;
     },
-    Get_Priority() {
-      if (sessionStorage.isAdmin) {
-        return true
-      } else {
-        return false
-      }
-    },
     Title_Pos() {
       return {
         "font-size": "18px",
-        "color": "black",
-        "margin-left": "0px"
+        color: "black",
+        "margin-left": "0px",
+      };
+    },
+    Calculate_Title_Margin() {
+      var Width = window.screen.width;
+      var CWidth = document.body.clientWidth;
+      // console.log(Width, CWidth)
+      if (Width - CWidth < 300) {
+        return "0px";
+      } else {
+        return 0 - (CWidth / Width) * (CWidth / Width) * 40 + "px";
       }
     },
     ToTop() {
@@ -263,25 +557,41 @@ export default {
       });
       this.ToTop();
     },
-    show_members() {
+    knowledegeUnitSearch(){
       this.$router.push({
-        path: this.rootPath + "members"
+        path: this.rootPath + "ku"
+      });
+      this.ToTop();
+    },
+    composePaperSystem(){
+      this.$router.push({
+        path: this.rootPath + "paperCombine"
+      });
+      this.ToTop();
+    },
+    goToImageTranscription() {
+      this.$router.push({
+        path: this.rootPath + "ImageTranscription"
       });
       this.ToTop();
     },
     login_show() {
-      this.$refs.login.show()
-      // this.$refs.register.hide()
+      this.$refs.login.show();
+      this.$refs.register.hide();
+    },
+    register_show() {
+      this.$refs.login.hide();
+      this.$refs.register.show();
     },
     login_admin() {
       this.$router.push({
-        path: "/admin"
+        path: "/admin",
       });
       this.ToTop();
     },
     // 测试退出函数
     async logout() {
-      await this.$store.dispatch('user/logout')
+      await this.$store.dispatch("user/logout");
       this.$router.push(this.rootPath);
       location.reload();
     },
@@ -291,15 +601,12 @@ export default {
   },
 };
 </script>
-<style>
-html,
-body,
-#app {
-  min-height: 100vh;
-}
-</style>
 <style scoped lang="scss">
-.el-header .el-menu--horizontal ::v-deep .el-submenu.is-active .el-submenu__title {
+.el-header
+.el-menu--horizontal
+::v-deep
+.el-submenu.is-active
+.el-submenu__title {
   border-bottom: none;
 }
 
@@ -317,7 +624,11 @@ body,
 }
 </style>
 <style>
-.el-header .el-menu--horizontal ::v-deep .el-submenu.is-active .el-submenu__title {
+.el-header
+.el-menu--horizontal
+::v-deep
+.el-submenu.is-active
+.el-submenu__title {
   border-bottom: none;
 }
 
@@ -339,7 +650,7 @@ body,
 .menu-area {
   margin-top: -60px;
   padding-bottom: -10px;
-  margin-right: 0;
+  margin-right: 0px;
   background-color: #fff;
 }
 
@@ -416,13 +727,13 @@ body,
   max-height: 70px;
   top: 0;
   width: 100%;
-  box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.5);
   z-index: 999;
   background: #fff;
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
-  -webkit-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.5);
-  margin-top: 0;
+  -webkit-box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.5);
+  margin-top: 0px;
 }
 
 /* scrollUp */
