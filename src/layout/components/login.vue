@@ -12,11 +12,14 @@
         <el-row>
           <span style="font-weight: bold; color: #47A2FF; font-size: 24px">
             欢迎使用
-            <template v-if="isLuna">
+            <template v-if="systemType === 0">
               LUNA智慧教育知识图谱
             </template>
-            <template v-else>
+            <template v-else-if="systemType === 1">
               智慧考试管理系统
+            </template>
+            <template v-else-if="systemType === 2">
+              智能教辅系统
             </template>
           </span>
         </el-row>
@@ -89,6 +92,9 @@ export default {
     isLuna() {
       return this.$store.getters.isLuna;
     },
+    systemType(){
+      return this.$store.getters.systemType;
+    }
 
   },
   methods:{

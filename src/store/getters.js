@@ -3,6 +3,7 @@ const getters = {
   loginDialog: state => state.app.loginDialog,
   device: state => state.app.device,
   isLuna:state => state.app.isLuna,
+  systemType:state => state.app.systemType,
   // isLuna:state => {
   //   console.log('app',state.app.isLuna);
   //   return state.app.isLuna
