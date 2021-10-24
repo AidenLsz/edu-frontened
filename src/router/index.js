@@ -112,8 +112,8 @@ function validatePermission(path){
     if (!store.state.user.token) {
       return false
     }
-  }else if(switchToITAS(path)) {
-    store.dispatch('app/setSysState',{rootPath:'/itas/',isLuna:false})
+  }else if(switchToITAS(path)) {true
+    store.dispatch('app/setSysState',{rootPath:'/itas/',isLuna:false,systemType:2})
     if (!store.state.user.token) {
       return false
     }
