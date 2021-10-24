@@ -1103,7 +1103,7 @@ export default {
   border: 1px dashed black;
   margin-left: 5vw;
 }
-/deep/.dev-md-content {
+::v-deep.dev-md-content {
   img {
     max-width: 80%;
   }
@@ -1214,25 +1214,25 @@ export default {
 }
 </style>
 <style scoped>
-#tabs /deep/ .el-tabs__item {
+#tabs ::v-deep .el-tabs__item {
   color: #36a9df;
   font-weight: 900;
   border-radius: 10px;
   border-color: #36a9df;
 }
-#tabs /deep/ .el-tabs__nav.is-top {
+#tabs ::v-deep .el-tabs__nav.is-top {
   border: none;
 }
-#tabs /deep/ .el-tabs__header.is-top {
+#tabs ::v-deep .el-tabs__header.is-top {
   border: none;
 }
-#tabs /deep/ .el-tabs__item.is-active {
+#tabs ::v-deep .el-tabs__item.is-active {
   background-color: #36a9df;
   color: #fff;
   font-weight: 900;
   border-color: #36a9df;
 }
-#tag /deep/ .el-tag {
+#tag ::v-deep .el-tag {
   background-color: #fff !important;
   color: #000 !important;
   border-color: #36a9df !important;
@@ -1244,7 +1244,7 @@ export default {
   line-height: 28px;
   height: 28px;
 }
-.SearchInput /deep/ .el-input__inner {
+.SearchInput ::v-deep .el-input__inner {
   border: 0;
   border-radius: 0px;
   background: transparent;
@@ -1323,7 +1323,7 @@ export default {
   cursor: pointer;
   opacity: 0;
 }
-#choosebox /deep/ .el-checkbox__inner {
+#choosebox ::v-deep .el-checkbox__inner {
   border-color: rgb(64, 158, 255);
 }
 </style>
