@@ -113,7 +113,7 @@
                 @click="goToMainPage"
             />
           </el-col>
-          <el-col :span="8" :offset="11">
+          <el-col :span="10" :offset="10">
             <el-row type="flex" justify="end">
               <!--
 							<el-col :span="4" style="padding-top: 15px;">
@@ -127,7 +127,7 @@
               >
                 <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
               </el-col>
-              <el-col :span="2" :offset="1" v-else style="padding-top: 15px">
+              <el-col :span="4" :offset="1" v-else style="padding-top: 15px">
                 <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
               </el-col>
               <!-- <el-col :span="4" style="padding-top: 15px">
@@ -281,7 +281,7 @@
                 >
                 <el-submenu index="2">
                       <template slot="title"
-                      ><span style="color: black; font-weight:bold">资源管理</span></template
+                      ><span :style="Title_Pos()">资源管理</span></template
                       >
                     <el-submenu index="2-1">
                       <template slot="title"
@@ -348,7 +348,7 @@
                 >
                   <el-submenu index="3">
                     <template slot="title"
-                    ><span style="color: black; font-weight:bold">资源分析</span></template
+                    ><span :style="Title_Pos()">资源分析</span></template
                     >
                     <el-menu-item
                         index="3-1"
@@ -410,7 +410,7 @@
                 >登录</el-button
                 >
               </el-col>
-              <el-col :span="2" style="padding-top: 15px">
+              <el-col :span="4" style="padding-top: 15px">
                 <el-button type="text" @click="register_show" class="navbar"
                 >注册</el-button
                 >
