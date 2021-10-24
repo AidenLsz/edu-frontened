@@ -480,12 +480,12 @@ export default {
     // 查看用户个人信息及组织架构
     checkUserInfo() {
       this.$router.push({
-        path: "/user/userInfo",
+        path: this.rootPath + "user/userInfo"
       });
     },
     checkUserGroup() {
       this.$router.push({
-        path: "/user/userGroup",
+        path: this.rootPath + "user/userGroup"
       });
     },
     getGroups() {
@@ -500,12 +500,12 @@ export default {
     QAS(index) {
       if (index == 0) {
         this.$router.push({
-          path: "/QuestionAnalyseInput",
+          path: this.rootPath + "QuestionAnalyseInput"
         });
         this.QuestionAnalyseSwitchFlag = false;
       } else {
         this.$router.push({
-          path: "/exercise",
+          path: this.rootPath + "exercise"
         });
         this.QuestionAnalyseSwitchFlag = false;
       }
@@ -517,12 +517,12 @@ export default {
     PAS(index) {
       if (index == 0) {
         this.$router.push({
-          path: "/paperAnalyseInput",
+          path: this.rootPath + "paperAnalyseInput"
         });
         this.PaperAnalyseSwitchFlag = false;
       } else {
         this.$router.push({
-          path: "/searchPaper",
+          path: this.rootPath + "searchPaper"
         });
         this.PaperAnalyseSwitchFlag = false;
       }
@@ -553,13 +553,13 @@ export default {
     },
     goToMainPage() {
       this.$router.push({
-        path: "/",
+        path: this.rootPath
       });
       this.ToTop();
     },
-    PublicPlatform() {
+    knowledegeUnitSearch(){
       this.$router.push({
-        path: "/PublicPlatform",
+        path: this.rootPath + "ku"
       });
       this.ToTop();
     },
@@ -569,12 +569,6 @@ export default {
     //   });
     //   this.ToTop();
     // },
-    knowledegeUnitSearch(){
-      this.$router.push({
-        path: this.rootPath + "ku"
-      });
-      this.ToTop();
-    },
     composePaperSystem(){
       this.$router.push({
         path: this.rootPath + "paperCombine"
@@ -609,21 +603,7 @@ export default {
     },
     goToUserPage() {
       this.$router.push("/dashboard");
-    },
-    // logout() {
-    //   var _this = this;
-    //   this.$confirm("确认退出吗？", "提示", {
-    //     // type:'warning'
-    //   })
-    //     .then(() => {
-    //       sessionStorage.removeItem("user");
-    //       sessionStorage.removeItem("isAdmin");
-    //       this.username = "";
-    //       this.isAdmin = false;
-    //       _this.$router.push("/");
-    //     })
-    //     .catch(() => {});
-    // },
+    }
   },
 };
 </script>
