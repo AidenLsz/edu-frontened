@@ -11,6 +11,7 @@ const state = {
   },
   rootPath:get('rootPath')||'/',
   isLuna:get('isLuna')||true,
+  systemType:get('systemType')||0,
 }
 
 const mutations = {
@@ -41,6 +42,8 @@ const mutations = {
     state.rootPath=data.rootPath
     set('isLuna',data.isLuna)
     state.isLuna=data.isLuna
+    set('systemType',data.systemType)
+    state.systemType=data.systemType
   },
 }
 
