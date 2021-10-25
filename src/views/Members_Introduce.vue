@@ -620,6 +620,10 @@
 							"name": "李平治",
 							"mail": "pingzhili@mail.ustc.edu.cn",
 							"intro": "什么都想尝试的beginner"
+						}, {
+							"name": "靳浩然",
+							"mail": "jhr584289035@mail.ustc.edu.cn",
+							"intro": "希望能永远对生活怀揣激情和向往"
 						}
 					],
 					// 技术顾问
@@ -719,6 +723,7 @@
 						"桂栋南": "/members/桂栋南.jpg",
 						"关浩祥": "/members/关浩祥.jpg",
 						"李平治": "/members/李平治.jpg",
+						"靳浩然": "/members/靳浩然.jpg",
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
 						"高维博": "/members/高维博.jpeg",
