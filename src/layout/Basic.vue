@@ -127,41 +127,300 @@
     </el-dialog>
     <login ref="login" @register_show="register_show" />
     <register ref="register" />
+    <!-- 当屏幕过窄的时候显示的导航栏抽屉 -->
+    <el-drawer
+      :visible.sync="Narrow_Navbar_Drawer"
+      :direction="'rtl'"
+      size="240px">
+      <el-row slot="title">
+        <label style="font-size: 20px; color: black; margin-top: 5px;">LUNA水镜智能</label>
+      </el-row>
+      <div style="padding: 0px 10%;">
+        <!-- 首页 -->
+        <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+          <el-button type="text" @click="goToMainPage" class="Narrow_Navbar_Button"
+            >首页</el-button
+          >
+        </el-row>
+        <!-- 功能导航栏 -->
+        <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+          <el-menu
+            mode="horizontal"
+            style="height: 70px; margin: 0px"
+          >
+            <!-- <el-menu :default-active="activeIndex" mode="horizontal" style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px"> -->
+            <el-submenu index="0">
+              <template slot="title">
+                <span style="margin-left: -20px; color: black; font-size: 18px" class="Narrow_Navbar_Button">功能</span>
+              </template>
+              <el-submenu index="1">
+                <template slot="title"
+                  ><span style="color: black">资源录入</span></template
+                >
+                <el-menu-item index="1-1"
+                  ><span style="color: Gainsboro">学习资源</span>
+                </el-menu-item>
+                <router-link
+                  to="/inputMarked"
+                  :underline="false"
+                  @click.native="ToTop"
+                >
+                  <el-menu-item index="1-2">
+                    <span style="color: black">试题资源</span>
+                  </el-menu-item>
+                </router-link>
+                <router-link
+                  to="/inputPaper"
+                  :underline="false"
+                  @click.native="ToTop"
+                >
+                  <el-menu-item index="1-3">
+                    <span style="color: black">试卷资源</span>
+                  </el-menu-item>
+                </router-link>
+                <el-menu-item index="1-4"
+                  ><span style="color: Gainsboro">知识体系</span>
+                </el-menu-item>
+              </el-submenu>
+              <el-submenu index="2">
+                <template slot="title"
+                  ><span style="color: black">查询</span></template
+                >
+
+                <router-link
+                  to="/exercise"
+                  :underline="false"
+                  @click.native="ToTop"
+                >
+                  <el-menu-item index="2-1">
+                    <span style="color: black">试题检索</span>
+                  </el-menu-item>
+                </router-link>
+
+                <router-link
+                  to="/searchPaper"
+                  :underline="false"
+                  @click.native="ToTop"
+                >
+                  <el-menu-item index="2-2">
+                    <span style="color: black">试卷检索</span>
+                  </el-menu-item>
+                </router-link>
+
+                <router-link
+                  to="/ku"
+                  :underline="false"
+                  @click.native="ToTop"
+                >
+                  <el-menu-item index="2-3">
+                    <span style="color: black">知识单元检索</span>
+                  </el-menu-item>
+                </router-link>
+
+                <router-link
+                  to="/resources"
+                  :underline="false"
+                  @click.native="ToTop"
+                >
+                  <el-menu-item index="2-4">
+                    <span style="color: black">学习资源检索</span>
+                  </el-menu-item>
+                </router-link>
+              </el-submenu>
+              <el-submenu index="3">
+                <template slot="title"
+                  ><span style="color: black">分析</span></template
+                >
+                <el-menu-item index="3-1"
+                  ><span style="color: Gainsboro">学习资源</span>
+                </el-menu-item>
+                <el-menu-item
+                  index="3-2"
+                  @click="QuestionAnalyseSwitch()"
+                  @click.native="ToTop"
+                >
+                  <span style="color: black">试题资源</span>
+                </el-menu-item>
+                <el-menu-item
+                  index="3-3"
+                  @click="PaperAnalyseSwitch()"
+                  @click.native="ToTop"
+                >
+                  <span style="color: black">试卷资源</span>
+                </el-menu-item>
+              </el-submenu>
+              <el-submenu index="4">
+                <template slot="title"
+                  ><span style="color: black"
+                    >标注管理平台</span
+                  ></template
+                >
+                <router-link
+                  to="/questionUpdate"
+                  :underline="false"
+                  @click.native="ToTop"
+                >
+                  <el-menu-item index="4-1">
+                    <span style="color: black">试题信息修改</span>
+                  </el-menu-item>
+                </router-link>
+                <router-link
+                    to="/paperdivide"
+                    :underline="false"
+                    @click.native="ToTop"
+                >
+                  <el-menu-item index="4-1">
+                    <span style="color: black">试卷切分</span>
+                  </el-menu-item>
+                </router-link>
+              </el-submenu>
+              <el-menu-item index="5">
+                <router-link
+                  to="/paperCombine"
+                  :underline="false"
+                  @click.native="ToTop"
+                >
+                  <span style="color: black"> 组卷系统 </span>
+                </router-link>
+              </el-menu-item>
+              <el-menu-item index="6">
+                <!-- <router-link to="/manage/dashboard" v-if="$store.state.user.name" -->
+                <router-link
+                  to="/manage/dashboard"
+                  :underline="false"
+                  @click.native="ToTop"
+                >
+                  <span style="color: black"> 资源管理 </span>
+                </router-link>
+              </el-menu-item>
+              <router-link
+                to="/estimate"
+                :underline="false"
+                @click.native="ToTop"
+                style="display: none"
+              >
+                <el-menu-item index="7">
+                  <span style="color: black">试题属性预估</span>
+                </el-menu-item>
+              </router-link>
+              <router-link
+                to="/similarity"
+                :underline="false"
+                @click.native="ToTop"
+                style="display: none"
+              >
+                <el-menu-item index="8">
+                  <span style="color: black">相似题预估</span>
+                </el-menu-item>
+              </router-link>
+              <router-link
+                to="/admin"
+                v-if="Get_Priority()"
+                :underline="false"
+                @click.native="ToTop"
+              >
+                <el-menu-item index="9">
+                  <span style="color: red">管理员页面</span>
+                </el-menu-item>
+              </router-link>
+            </el-submenu>
+          </el-menu>
+        </el-row>
+        <!-- AI实验室 -->
+        <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+          <el-button type="text" @click="PublicPlatform" class="Narrow_Navbar_Button"
+            >AI实验室</el-button
+          >
+        </el-row>
+        <!-- 成员 -->
+        <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+          <el-button type="text" @click="show_members" class="Narrow_Navbar_Button"
+            >成员</el-button
+          >
+        </el-row>
+        <!-- 用户 -->
+        <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+          <div
+            v-if="$store.state.user.name"
+          >
+            <el-row>
+              <el-dropdown
+                trigger="hover"
+              >
+                <span class="el-dropdown-link user-inner">
+                  {{ $store.state.user.name
+                  }}<i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item @click.native="checkUserInfo"
+                    >个人设置</el-dropdown-item
+                  >
+                  <el-dropdown-item v-if="isGroup" @click.native="checkUserGroup"
+                    >组织架构</el-dropdown-item
+                  >
+                  <el-dropdown-item @click.native="logout"
+                    >退出登录</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </el-dropdown>
+            </el-row>
+          </div>
+          <div 
+            class="NarbarItem"
+            v-else>
+            <el-button type="text" @click="login_show" class="Narrow_Navbar_Button"
+              >登录</el-button
+            >
+          </div>
+        </el-row>
+        <!-- 注册 -->
+        <el-row type="flex" justify="start" class="Narrow_Navbar_Item" style="border-bottom: 2px solid #ccc">
+          <el-button type="text" @click="register_show" class="Narrow_Navbar_Button"
+            >注册</el-button
+          >
+        </el-row>
+      </div>
+    </el-drawer>
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <el-header style="height: 70px">
       <div id="header-sticky" class="sticky-menu">
-        <el-row>
-          <el-col :span="4" style="padding-top: 20px; padding-left: 30px">
-            <img
-              src="@/assets/luna_icon.png"
-              alt="Logo"
-              width="150px"
-              style="cursor: pointer"
-              @click="goToMainPage"
-            />
+        <el-row class="NavBarArea" :style="Get_NavBar_Width('Normal')" type="flex" justify="center">
+          <el-col :span="4" style="padding-top: 20px;">
+            <el-row type="flex" justify="start">
+              <img
+                src="@/assets/luna_icon.png"
+                alt="Logo"
+                width="150px"
+                style="cursor: pointer"
+                @click="goToMainPage"
+              />
+            </el-row>
           </el-col>
-          <el-col :span="8" :offset="11">
+          <el-col :span="20">
             <el-row type="flex" justify="end">
               <!--
 							<el-col :span="4" style="padding-top: 15px;">
 								<el-button type="text" @click="goTolalala" class="navbar">啦啦啦</el-button>
 							</el-col>
 							-->
-              <el-col
-                :span="4"
+              <div
                 v-if="$store.state.user.name"
-                style="padding-top: 15px"
+                class="NarbarItem"
               >
                 <el-button type="text" @click="goToMainPage" class="navbar"
                   >首页</el-button
                 >
-              </el-col>
-              <el-col :span="4" :offset="1" v-else style="padding-top: 15px">
+              </div>
+              <div 
+                v-else 
+                class="NarbarItem">
                 <el-button type="text" @click="goToMainPage" class="navbar"
                   >首页</el-button
                 >
-              </el-col>
-              <el-col :span="4" style="padding-top: 15px">
+              </div>
+              <div 
+                class="NarbarItem"
+                style="width: 100px;">
                 <el-menu
                   mode="horizontal"
                   style="border-bottom: 3px solid #409eff; padding-bottom: 10px"
@@ -343,22 +602,28 @@
                     </router-link>
                   </el-submenu>
                 </el-menu>
-              </el-col>
+              </div>
 
-              <el-col :span="6" style="padding-top: 15px">
+              <div 
+                style="width: 100px;"
+                class="NarbarItem">
                 <el-button type="text" @click="PublicPlatform" class="navbar"
                   >AI实验室</el-button
                 >
-              </el-col>
+              </div>
 
-              <el-col :span="4" style="padding-top: 15px">
+              <div 
+                class="NarbarItem">
                 <el-button type="text" @click="show_members" class="navbar"
                   >成员</el-button
                 >
-              </el-col>
-              <el-col
-                :span="5"
-                style="padding-top: 15px"
+              </div>
+              <div style="width: 1px; height: 18px; margin-top: 30px; border-right: 3px solid #aaa; margin-left: 5px; margin-right: 12px">
+
+              </div>
+              <div
+                class="NarbarItem"
+                style="width: 100px; padding-top: 17px"
                 v-if="$store.state.user.name"
               >
                 <el-row>
@@ -384,17 +649,40 @@
                     </el-dropdown-menu>
                   </el-dropdown>
                 </el-row>
-              </el-col>
-              <el-col :span="4" style="padding-top: 15px" v-else>
+              </div>
+              <div 
+                class="NarbarItem"
+                v-else>
                 <el-button type="text" @click="login_show" class="navbar"
                   >登录</el-button
                 >
-              </el-col>
-              <el-col :span="2" style="padding-top: 15px">
+              </div>
+              <div 
+                class="NarbarItem">
                 <el-button type="text" @click="register_show" class="navbar"
                   >注册</el-button
                 >
-              </el-col>
+              </div>
+            </el-row>
+          </el-col>
+        </el-row>
+        <el-row class="NavBarArea" :style="Get_NavBar_Width('Narrow')" type="flex" justify="center">
+          <el-col :span="4" style="padding-top: 20px;">
+            <el-row type="flex" justify="start">
+              <img
+                src="@/assets/luna_icon.png"
+                alt="Logo"
+                width="150px"
+                style="cursor: pointer"
+                @click="goToMainPage"
+              />
+            </el-row>
+          </el-col>
+          <el-col :span="20">
+            <el-row type="flex" justify="end" style="width: 100%">
+              <div class="NavBarButton" @click="Open_Narrow_Navbar_Drawer()">
+                <i class="el-icon-menu" style="font-size: 30px; height: 40px; line-height: 40px"></i>
+              </div>
             </el-row>
           </el-col>
         </el-row>
@@ -439,6 +727,8 @@ export default {
       PaperAnalyseSwitchFlag: false,
       QuestionAnalyseSwitchFlag: false,
       isGroup: false,
+      Width_Now: 0,
+      Narrow_Navbar_Drawer: false
     };
   },
   mounted() {
@@ -464,6 +754,13 @@ export default {
     // });
     this.getGroups();
   },
+  watch:{
+    Width_Now(newVal){
+      if(newVal >= 768){
+        this.Narrow_Navbar_Drawer = false;
+      }
+    }
+  },
   updated() {
     var user = sessionStorage.getItem("user");
     if (user) {
@@ -471,8 +768,48 @@ export default {
     } else {
       this.username = "";
     }
+    this.Width_Now = document.body.clientWidth
+    window.onresize = () => {
+      this.Width_Now = document.body.clientWidth
+    }
   },
   methods: {
+    // 打开过窄时的导航栏
+    Open_Narrow_Navbar_Drawer(){
+      this.Narrow_Navbar_Drawer = true;
+      console.log("123")
+    },
+    // 调整导航栏宽度
+    Get_NavBar_Width(Part){
+      let Width_Border = {min: 768, max: 1344}
+      if(Part == 'Normal'){
+        if(this.Width_Now < Width_Border.min){
+          return {
+            "display": "none"
+          }
+        }else if(this.Width_Now >= Width_Border.min && this.Width_Now < Width_Border.max){
+          return {
+            "width": this.Width_Now + 'px',
+            "padding": "0px 32px"
+          }
+        }else{
+          return {
+            "width": "1344px",
+            "margin": "0px " + ((this.Width_Now - 1344)/2) + "px"
+          }
+        }
+      }else{
+        if(this.Width_Now >= Width_Border.min){
+          return {
+            "display": "none"
+          }
+        }else{
+          return {
+            "padding": "0px 32px"
+          }
+        }
+      }
+    },
     // 查看用户个人信息及组织架构
     checkUserInfo() {
       this.$router.push({
@@ -544,8 +881,8 @@ export default {
     Title_Pos() {
       return {
         "font-size": "18px",
-        color: "black",
-        "margin-left": "0px",
+        "color": "black",
+        "margin-left": "10px",
       };
     },
     Calculate_Title_Margin() {
@@ -746,7 +1083,6 @@ export default {
 
 .sticky-menu {
   left: 0;
-  margin: auto;
   position: fixed;
   max-height: 70px;
   top: 0;
@@ -859,5 +1195,46 @@ export default {
   /*统一设置高度为100%*/
   height: 100%;
   width: 100%;
+}
+
+.NavBarArea{
+  position: relative;
+  padding: 0px;
+  min-height: 70px;
+}
+
+.NarbarItem{
+  width: 70px;
+  padding-top: 15px
+}
+
+.NavBarButton{
+  height: 40px;
+  width: 40px;
+  color: #000;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: 200ms;
+}
+.NavBarButton:hover{
+  color: #409EFF;
+}
+
+.Narrow_Navbar_Item{
+  width: 100%; 
+  border-top: 2px solid #ccc; 
+  height: 70px; 
+  line-height: 70px;
+  font-size: 18px;
+}
+
+.Narrow_Navbar_Button{
+  font-size: 18px; 
+  color: black;
+  transition: 200ms;
+}
+
+.Narrow_Navbar_Button:hover{
+  color: #409EFF;
 }
 </style>

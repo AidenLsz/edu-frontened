@@ -863,32 +863,37 @@ export default {
             let Difficulty = []
             if(this.Chosen_Options.Difficulty != '自定义'){
                 let Index = this.All_Options.Difficulty.indexOf(this.Chosen_Options.Difficulty)
-                Difficulty = [parseFloat(Index * 0.2.toFixed(2)), parseFloat((Index + 1) * 0.2.toFixed(2))]
+                let min = 0.0;
+                for(let i = 0; i < Index; i++){
+                    min = min + 0.2
+                }
+                Difficulty = [min, min + 0.2]
             }else{
                 Difficulty = [this.Difficulty_Value[0], this.Difficulty_Value[1]]
             }
 
-            let Data = {
+            let Database = []
+            for(let i = 0; i < this.Chosen_Options.Database.length; i++){
+                for(let j = 0; j < this.All_Options.Database.length; j++){
+                    if(this.Chosen_Options.Database[i] == this.All_Options.Database[j].nick){
+                        Database.push(this.All_Options.Database[j].name)
+                    }
+                }
+            }
+
+            let Data = JSON.stringify({
                 "content": this.Search_Extra == 'ImgSearch' ? "" : this.Search_Content,
                 "size": 5,
-                "database": [],
+                "database": Database,
                 "page_count": this.Page_Index,
                 "subject": this.Chosen_Options.Subject,
                 "period": this.Chosen_Options.Period,
                 "type": this.Chosen_Options.Type,
                 "difficulty": Difficulty,
                 "semantic": this.Chosen_Options.Semantic == '精准匹配' ? 0 : 1
-            }
+            }) 
 
-            for(let i = 0; i < this.Chosen_Options.Database.length; i++){
-                for(let j = 0; j < this.All_Options.Database.length; j++){
-                    if(this.Chosen_Options.Database[i] == this.All_Options.Database[j].nick){
-                        Data.database.push(this.All_Options.Database[j].name)
-                    }
-                }
-            }
-
-            Param.data = JSON.stringify(Data)
+            Param.data = Data
 
             commonAjax(this.backendIP+'/api/search', Param)
             .then((data)=>{
