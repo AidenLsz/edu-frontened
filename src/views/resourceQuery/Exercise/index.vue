@@ -1120,7 +1120,7 @@ export default {
         "subject": this.Subject_Type,
         "period": this.Period_Type,
         "type": this.Search_Ques_Type,
-        "difficulty": [0.0, 1.0],
+        "difficulty": [this.Difficulty_Filter_Result.min, this.Difficulty_Filter_Result.max],
         "semantic": this.Semantic ? 1 : 0
       })
 

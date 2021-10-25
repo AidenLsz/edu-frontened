@@ -860,6 +860,14 @@ export default {
                 Param.pic = this.Img_Cut
             }
 
+            let Difficulty = []
+            if(this.Chosen_Options.Difficulty != '自定义'){
+                let Index = this.All_Options.Difficulty.indexOf(this.Chosen_Options.Difficulty)
+                Difficulty = [parseFloat(Index * 0.2.toFixed(2)), parseFloat((Index + 1) * 0.2.toFixed(2))]
+            }else{
+                Difficulty = [this.Difficulty_Value[0], this.Difficulty_Value[1]]
+            }
+
             let Data = {
                 "content": this.Search_Extra == 'ImgSearch' ? "" : this.Search_Content,
                 "size": 5,
@@ -868,7 +876,7 @@ export default {
                 "subject": this.Chosen_Options.Subject,
                 "period": this.Chosen_Options.Period,
                 "type": this.Chosen_Options.Type,
-                "difficulty": [0.0, 1.0],
+                "difficulty": Difficulty,
                 "semantic": this.Chosen_Options.Semantic == '精准匹配' ? 0 : 1
             }
 
