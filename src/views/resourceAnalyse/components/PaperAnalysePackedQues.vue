@@ -11,6 +11,9 @@
           <el-row type="flex" justify="start" style="margin-bottom: 10px">
             <label v-if="Analyse">（ 此题{{Question.score}}分 ）</label>
             <label v-else>（ 本节{{Question.score}}分 ）</label>
+            <el-tooltip content="替换此题目" placement="top" v-if="Combine_Update_Bundle_Index != -1">
+              <i class="el-icon-refresh" style="font-size: 20px; cursor: pointer" @click="Replace_It(Combine_Update_Bundle_Index, Index)"></i>
+            </el-tooltip>
           </el-row>
           <el-row type="flex" justify="start" style="margin: 10px 0px">
             <Mathdown :content="Question.desc" :name="Name_Packed_Next[Index]"></Mathdown>
@@ -28,6 +31,10 @@
         <el-col :span="24" v-else>
           <el-row type="flex" justify="start" style="margin-bottom: 10px">
             <label>（ 小题{{Question.score}}分 ）</label>
+            <el-tooltip 
+              content="替换此题目" placement="top" v-if="Combine_Update_Bundle_Index != -1">
+              <i class="el-icon-refresh" style="font-size: 20px; cursor: pointer" @click="Replace_It(Combine_Update_Bundle_Index, Index)"></i>
+            </el-tooltip>
           </el-row>
           <el-row type="flex" justify="start" style="margin-bottom: 10px;">
             <PaperAnalyseQuestion :Question="Question" style="width: 100%" :Sub_Index_Q="Index" :Name_Q="Name_Packed_Next[Index]"></PaperAnalyseQuestion>
@@ -61,7 +68,11 @@ export default {
       type: Number,
       default: -1
     },
-    Name_P: String
+    Name_P: String,
+    Combine_Update_Bundle_Index:{
+      type: Number,
+      default: -1
+    }
   },
   components: {
       PaperAnalyseQuestion,
@@ -139,6 +150,14 @@ export default {
     }                        
   },
   methods: {
+    // 只有组卷分析报告要用到的需求，在这里尝试获取内容
+    Replace_It(Combine_Update_Bundle_Index, Index){
+      this.$emit("Replace_Aim", JSON.stringify({
+          "Bundle_Index": Combine_Update_Bundle_Index, 
+          "Question_Index": Index
+        })
+      )
+    },
     Show_Expand_Analyse(index){
       if(this.Expand_Ana[index]){
         return true

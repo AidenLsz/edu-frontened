@@ -137,7 +137,7 @@
               题型：{{Question.type}}
             </el-col>
             <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
-              难度：
+              难度：{{Question.difficulty}}
             </el-col>
             <el-col :span="4" :offset="2" style="line-height: 40px">
               <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">查看答案与解析</el-button>

@@ -364,9 +364,7 @@ export default {
         //   return
         // }
 
-        // http://kg-edu-backend-44-review-auto-combi-3vzs9o.env.bdaa.pro/v1
-        // 分支测试地址
-        commonAjax('https://kg-edu-backend-44-review-auto-combi-3vzs9o.env.bdaa.pro/v1/api/paperAutoGenerate', {
+        commonAjax(this.backendIP + '/api/paperAutoGenerate', {
           'Paper_Data': JSON.stringify(data, null, 4)
         })
         .then((data)=>{

@@ -188,6 +188,7 @@
             <el-button v-on:click.native="Expand_Or_Collapse_QB(1)" round size="small" plain>收起</el-button>
         </el-row>
     </el-dialog>
+    <!-- 单题分析报告 -->
     <el-dialog
         :visible.sync="analyseDataShow"
         width="90%"
@@ -196,6 +197,33 @@
         :key="Refresh">
         <template slot="title"></template>
         <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
+    </el-dialog>
+    <!-- 单题替换页面 -->
+    <el-dialog 
+        :visible.sync="Combine_Replace_Question"
+        title="试题替换" 
+        width="80%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="true">
+        {{Combine_Replace_Question_Info}}
+    </el-dialog>
+    <!-- 题包替换页面 -->
+    <el-dialog 
+        :visible.sync="Combine_Replace_Bundle"
+        title="题包替换" 
+        width="80%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="true">
+        {{Combine_Replace_Bundle_Info}}
+    </el-dialog>
+    <!-- 替换前后对比页面 -->
+    <el-dialog 
+        :visible.sync="Combine_Replace_Compare"
+        title="前后对比" 
+        width="80%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="true">
+        这是一个前后对比时用的页面
     </el-dialog>
     <el-row justify="start" type="flex">
         <el-col style="padding-left: 25px; margin-top: 5vh">
@@ -572,11 +600,19 @@
         <el-row :class="Get_Expand_Or_Collapse(3)">
             <el-row v-for="(Sub_Ques, Sub_Index) in Paper_Json.sub_question" :key="Sub_Ques.id" style="margin: 30px 0px">
                 <el-row type="flex" justify="start" style="margin: 0px 16.5vw 10px 16.5vw">
-                    <el-col :span="20" style="text-align: left">
+                    <el-col :span="12" style="text-align: left">
                         <label style="line-height: 28px; font-size: 1.5rem">第{{Get_Question_Bundle_Index((Sub_Index + 1) + "")}}大题 —— {{Sub_Ques.desc}}（共{{Sub_Ques.sub_question.length}}题，{{Sub_Ques.score}}分）：</label>
                     </el-col>
-                    <el-col :span="4">
+                    <el-col :span="12">
                         <el-row type="flex" justify="end">
+                            <el-button 
+                                type="primary" 
+                                size="small" 
+                                style="margin-right: 30px"
+                                v-show="Combine_Paper_Changing"
+                                @click="Get_Replace_Bundle(Sub_Index)">
+                                替换此组大题
+                            </el-button>
                             <el-button type="success" size="small" @click="Change_Dialog_Info(Sub_Index, (Sub_Index + 1) + '')">
                                 查看大题分析
                             </el-button>
@@ -584,7 +620,13 @@
                     </el-col>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin: 0px 16.5vw 10px 16.5vw">
-                    <PaperAnalysePQRoot @Report="Question_Report_Show" :PackedQues="Sub_Ques" :Index="Sub_Index" style="width: 100%"></PaperAnalysePQRoot>
+                    <PaperAnalysePQRoot 
+                        @Report="Question_Report_Show" 
+                        :PackedQues="Sub_Ques" 
+                        :Index="Sub_Index" 
+                        :Combine_Update_Bundle_Index="Combine_Paper_Changing ? Sub_Index : -1"
+                        @Replace_Aim="Get_Replace_Aim"
+                        style="width: 100%"></PaperAnalysePQRoot>
                 </el-row>
             </el-row>
         </el-row>
@@ -726,7 +768,20 @@ export default {
                 {}]
             },
             // 以下部分是专属于组卷部分的新需求要用到的变量
-            Combine_Paper_Changing: false
+            Combine_Paper_Changing: false,
+            // “修改”过程用到的数据
+            // 老数据   新数据
+            Backup_Combine_Paper: [],
+            Update_Combine_Paper: [],
+            // 单题替换、题包替换、前后对比的对话框
+            Combine_Replace_Question: false,
+            Combine_Replace_Bundle: false,
+            Combine_Replace_Compare: false,
+            // 单题替换、题包替换的信息内容
+            Combine_Replace_Question_Info: {},
+            Combine_Replace_Bundle_Info: {},
+            // 用来替换的时候的知识树状结构
+            TreeData: []
         }
     },
     destroyed(){
@@ -799,10 +854,26 @@ export default {
         this.Init();
         if(sessionStorage.getItem("ChangingCombine")){
             this.Combine_Paper_Changing = true;
+            this.Backup_Combine_Paper = JSON.parse(sessionStorage.getItem("ChangingCombineInfo"))
+            this.Update_Combine_Paper = JSON.parse(sessionStorage.getItem("ChangingCombineInfo"))
+            this.TreeData = JSON.parse(sessionStorage.getItem("ChangingKPTree"))
         }
         document.getElementById('Analyse_Title').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     },
     methods: {
+        // 检测要“修改”的题目
+        Get_Replace_Aim(Info){
+            let Replace_Info = JSON.parse(Info)
+            this.Combine_Replace_Question_Info = this.Update_Combine_Paper[Replace_Info.Bundle_Index].sub_question[Replace_Info.Question_Index]
+
+            this.Combine_Replace_Question = true;
+        },
+        // 检测要“修改”的题包
+        Get_Replace_Bundle(Index){
+            this.Combine_Replace_Bundle_Info = this.Update_Combine_Paper[Index]
+
+            this.Combine_Replace_Bundle = true;
+        },
         // 跳转到这道题（也不知道啥意思）
         Jump_To_Question(Index_Out, Index_In){
             let ID = this.Double_Analyse[Index_Out].items[Index_In].id;

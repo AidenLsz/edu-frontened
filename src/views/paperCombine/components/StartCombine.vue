@@ -952,10 +952,12 @@ export default {
             }
             Info_Item.sub_question.push(Question_Item)
           }
+          Changing_Info.push(Info_Item)
         }
         sessionStorage.setItem("PaperJson", JSON.stringify(data));
         sessionStorage.setItem("ChangingCombine", true)
         sessionStorage.setItem("ChangingCombineInfo", JSON.stringify(Changing_Info))
+        sessionStorage.setItem("ChangingKPTree", JSON.stringify(this.TreeData))
         let routeData = this.$router.resolve({ path: '/paperAnalyse' });
         window.open(routeData.href, '_blank');
         this.$message.success("试题详情内容已在新页面展开。");

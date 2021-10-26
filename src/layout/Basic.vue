@@ -752,6 +752,7 @@ export default {
     //     $("#header-sticky").addClass("sticky-menu");
     //   }
     // });
+    this.Width_Now = document.body.clientWidth
     this.getGroups();
   },
   watch:{
@@ -768,7 +769,6 @@ export default {
     } else {
       this.username = "";
     }
-    this.Width_Now = document.body.clientWidth
     window.onresize = () => {
       this.Width_Now = document.body.clientWidth
     }
