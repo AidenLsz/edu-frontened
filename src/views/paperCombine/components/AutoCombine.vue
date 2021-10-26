@@ -259,7 +259,8 @@ export default {
         // 用于筛选的数据库名
         databaseAim: [],
         // 最上面的知识点是否全部显示
-        KnowledgePoint_All_Show: false
+        KnowledgePoint_All_Show: false,
+        Ques_List: []
     }
   },
   watch:{
@@ -357,24 +358,53 @@ export default {
         // );
         // FileSaver.saveAs(file);
 
-        let Flag = true
-        if(Flag){
-          this.$message.info("后续服务由于服务调用出现问题，所以仍在开发过程中，敬请期待...")
-          return
-        }
+        // let Flag = true
+        // if(Flag){
+        //   this.$message.info("后续服务由于服务调用出现问题，所以仍在开发过程中，敬请期待...")
+        //   return
+        // }
 
         // http://kg-edu-backend-44-review-auto-combi-3vzs9o.env.bdaa.pro/v1
         // 分支测试地址
-        // commonAjax(this.backendIP+'/api/paperAutoGenerate', {
-        //   'Paper_Data': JSON.stringify(data, null, 4)
-        // })
-        // .then((data)=>{
-        //   console.log(data)
-        //   this.$message.success("组卷结束")
-        // }).catch(()=>{
-        //   this.$message.error("出现故障")
-        // })
+        commonAjax('https://kg-edu-backend-44-review-auto-combi-3vzs9o.env.bdaa.pro/v1/api/paperAutoGenerate', {
+          'Paper_Data': JSON.stringify(data, null, 4)
+        })
+        .then((data)=>{
+          for(let i = 0; i < data.length; i++){
+            this.Add_New_Ques_To_Cart(data[i])
+          }
+          this.Emit_All();
+          // this.Loading = false
+          this.$message.success("组卷结束")
+        }).catch(()=>{
+          this.$message.error("调用服务时出现故障，请稍后重试。")
+        })
         
+    },
+        // 尝试添加试题
+    Add_New_Ques_To_Cart(Ques_Info){
+
+        let Aim = Ques_Info
+
+        let Question_Show_Infos = {
+          id: Aim.id,
+          type: Aim.type,
+          score: Aim.score,
+          stem: Aim.stem,
+          options: Aim.options,
+          answer: Aim.answer,
+          analyse: Aim.analysis
+        }
+        
+        this.Ques_List.push(Question_Show_Infos)
+        
+    },
+    Emit_All(){
+      for(let i = 0; i < this.Ques_List.length; i++){
+        this.$emit("Add_To_Cart", JSON.stringify(this.Ques_List[i]));
+      }
+      this.$emit("Jump_To_SC", true)
+      this.Ques_List = []
     },
     // 调整一下知识点的位置对应的边距
     ExistFilter(){

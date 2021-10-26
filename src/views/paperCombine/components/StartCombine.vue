@@ -817,7 +817,10 @@ export default {
       Replace_Question_Bundle_Index: -1,
       Replace_Question_Index: -1,
       // 用于替换的目标题目
-      Replace_Question_List: []
+      Replace_Question_List: [],
+      // 以下内容用于在组卷分析报告页面替换题目时的一些需要的信息
+      // 1:知识点层级树
+      TreeData: {}
     }
   },
   watch:{
@@ -837,6 +840,7 @@ export default {
     this.Init_Setting_CheckBox();
     this.Init_Setting_Info();
     this.Init_User_Database_List();
+    this.Init_KP_Tree()
   },
   methods: {
     // 打开答题卡页面
@@ -882,7 +886,76 @@ export default {
           Paper_Data: JSON.stringify(Analyse_Paper_JSON)
         }
       ).then((data)=>{
+        let Changing_Info = []
+        let Bundle_Item = {}
+        for(let Bundle_Index = 0; Bundle_Index < data.sub_question.length; Bundle_Index++){
+          let Info_Item = {
+            difficulty: 0,
+            knowledgePointInfos: {
+              ID: [],
+              Label: [],
+              Layer: []
+            },
+            sub_question: []
+          }
+          Bundle_Item = data.sub_question[Bundle_Index]
+          Info_Item.difficulty = Bundle_Item.difficulty_statistics.mean
+          for(let Sub_Index = 0; Sub_Index < Bundle_Item.sub_question.length; Sub_Index++){
+            let Question = Bundle_Item.sub_question[Sub_Index]
+            let Question_Item = {
+              difficulty: Question.difficulty,
+              stem: Question.stem,
+              options: Question.options,
+              answer: Question.answer,
+              analysis: Question.analysis,
+              score: Question.score,
+              knowledgePointInfos: {
+                ID: [],
+                Label: [],
+                Layer: []
+              },
+            }
+            let KP_Layer = Question.knowledge_points_frontend.kp_layer
+            let KP_ID = ""
+            for(let Layer_0 = 0; Layer_0 < KP_Layer.length; Layer_0++){
+              Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].label)
+              Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].label)
+              Question_Item.knowledgePointInfos.Layer.push(0)
+              Info_Item.knowledgePointInfos.Layer.push(0)
+              KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].label, 0)
+              if(KP_ID != ""){
+                Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                Info_Item.knowledgePointInfos.ID.push(KP_ID)
+              }
+              for(let Layer_1 = 0; Layer_1 < KP_Layer[Layer_0].children.length; Layer_1++){
+                Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].label)
+                Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].label)
+                Question_Item.knowledgePointInfos.Layer.push(1)
+                Info_Item.knowledgePointInfos.Layer.push(1)
+                KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].children[Layer_1].label, 1)
+                if(KP_ID != ""){
+                  Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                  Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                }
+                for(let Layer_2 = 0; Layer_2 < KP_Layer[Layer_0].children[Layer_1].children.length; Layer_2++){
+                  Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label)
+                  Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label)
+                  Question_Item.knowledgePointInfos.Layer.push(2)
+                  Info_Item.knowledgePointInfos.Layer.push(2)
+                  KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label, 2)
+                  if(KP_ID != ""){
+                    Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                    Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                  } 
+                }
+              }
+            }
+            Info_Item.sub_question.push(Question_Item)
+          }
+        }
         sessionStorage.setItem("PaperJson", JSON.stringify(data));
+        sessionStorage.setItem("ChangingCombine", true)
+        sessionStorage.setItem("ChangingCombineInfo", JSON.stringify(Changing_Info))
         let routeData = this.$router.resolve({ path: '/paperAnalyse' });
         window.open(routeData.href, '_blank');
         this.$message.success("试题详情内容已在新页面展开。");
@@ -893,6 +966,46 @@ export default {
         this.waiting = false;
         this.waiting_text = ""
       })
+    },
+    Search_KP_ID(Label, Layer){
+      for(let Layer_0 = 0; Layer_0 < this.TreeData.length; Layer_0++){
+        if(Label == this.TreeData[Layer_0].label && Layer == this.TreeData[Layer_0].level){
+          return this.TreeData[Layer_0].id
+        }
+        for(let Layer_1 = 0; Layer_1 < this.TreeData[Layer_0].children.length; Layer_1++){
+          if(Label == this.TreeData[Layer_0].children[Layer_1].label && Layer == this.TreeData[Layer_0].children[Layer_1].level){
+            return this.TreeData[Layer_0].children[Layer_1].id
+          }
+          for(let Layer_2 = 0; Layer_2 < this.TreeData[Layer_0].children[Layer_1].children.length; Layer_2++){
+            if(Label == this.TreeData[Layer_0].children[Layer_1].children[Layer_2].label && 
+              Layer == this.TreeData[Layer_0].children[Layer_1].children[Layer_2].level){
+              return this.TreeData[Layer_0].children[Layer_1].children[Layer_2].id
+            }
+          }
+        }
+      }
+    },
+    // 获取知识树
+    Init_KP_Tree(){
+
+      let config = {
+          headers: {
+              "Content-Type": "multipart/form-data"
+          },
+          emulateJSON: true
+      }
+
+      let param = new FormData();
+
+      param.append('system', 'tiku');
+      param.append('subject', this.Subject);
+      param.append('period', this.Period);
+
+      this.$http
+          .post(this.backendIP + "/api/getKnowledgeSystem", param, config)
+          .then(function(data) {
+            this.TreeData = data.body.knowledge_system
+          })
     },
     // 开始导出用于下载的数据
     Download_Paper(){

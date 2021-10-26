@@ -724,7 +724,9 @@ export default {
                 },
                 "sub_question": [{},
                 {}]
-            }
+            },
+            // 以下部分是专属于组卷部分的新需求要用到的变量
+            Combine_Paper_Changing: false
         }
     },
     destroyed(){
@@ -795,6 +797,9 @@ export default {
             this.Remaining = this.Remaining - 1;
         }, 1000)
         this.Init();
+        if(sessionStorage.getItem("ChangingCombine")){
+            this.Combine_Paper_Changing = true;
+        }
         document.getElementById('Analyse_Title').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     },
     methods: {
