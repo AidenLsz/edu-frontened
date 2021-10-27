@@ -110,11 +110,7 @@ const visitorRouter=[
   {
     path: "/MultiPaperAnalyse",
     name: "MultiPaperAnalyse",
-<<<<<<< HEAD
     component: () => import("@/views/resourceAnalyse/MultiPaperAnalyse.vue"),
-=======
-    component: () => import("@/views/publicPlatform/MultiPaperAnalyse.vue"),
->>>>>>> e299e02 (merge issue36 & issue39 & from master)
   },
   {
     path: "/inputMarked",
