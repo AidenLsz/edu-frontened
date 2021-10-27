@@ -142,7 +142,7 @@
       >
     </el-dialog>
     <!-- 地址框 -->
-    <el-row justify="start" type="flex">
+    <!-- <el-row justify="start" type="flex">
       <el-col :span="7" style="margin-left: 5vw">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -153,14 +153,15 @@
           ></el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col :span="13"></el-col>
-      <el-col :span="4">
+      <el-col :span="7"></el-col>
+      <el-col :span="7">
         <el-button type="success" plain @click="confirm_choice()"
-          >确定</el-button
+          >开始多卷分析</el-button
         >
       </el-col>
+      <el-col :span="3"></el-col>
     </el-row>
-    <instruction ref="instruction" />
+    <instruction ref="instruction" /> -->
     <!-- 题库选择 -->
     <el-row style="padding-top: 8px; height: 40px">
       <el-col
@@ -177,6 +178,13 @@
           </div>
         </el-col>
       </template>
+      <el-col :span="7" style="height: 30px"></el-col>
+      <el-col :span="6" style="height: 30px">
+        <el-button type="success" plain @click="confirm_choice()"
+          >开始多卷分析</el-button
+        >
+      </el-col>
+      <el-col :span="5"></el-col>
       <!-- <el-col :span="2">
         <div :class="Check_Focus_Database(0)" @click="Database_Aim(0)">
           公共题库
@@ -193,106 +201,164 @@
         </div>
       </el-col>-->
     </el-row>
-    <!-- 搜索框行 -->
-    <el-row type="flex" justify="start" class="SearchArea">
-      <!-- enter.native才能监听到组件化的事件，要注意一下 -->
-      <el-col :span="19" v-if="Cache_Pic[0] == ''">
-        <el-input
-          class="SearchInput"
-          v-model="content"
-          type="text"
-          @keyup.enter.native="submit(0, '')"
-        >
-        </el-input>
-      </el-col>
-      <el-col :span="1" v-if="Cache_Pic[0] == ''">
-        <el-button
-          type="text"
-          style="font-size: 20px; color: black"
-          size="small"
-          v-if="content != ''"
-          @click="content = ''"
-        >
-          <i class="el-icon-close"></i>
-        </el-button>
-      </el-col>
-      <el-col :span="4" v-if="Cache_Pic[0] != ''">
-        <el-row
-          type="flex"
-          justify="start"
-          style="
-            border: 1px solid red;
-            border-radius: 15px;
-            height: 36px;
-            margin: 3px;
-          "
-        >
-          <el-image
-            :src="Cache_Pic[0]"
-            style="
-              height: 30px;
-              width: 60px;
-              margin-top: 3px;
-              margin-left: 30px;
-            "
-            :preview-src-list="Cache_Pic"
-          ></el-image>
-          <el-button
-            type="text"
-            style="
-              font-size: 20px;
-              color: rgba(0, 0, 0, 0.4);
-              margin-left: 10px;
-              width: 40px;
-              display: block;
-            "
-            size="small"
-            @click="Clear_Pic"
-          >
-            <i class="el-icon-close"></i>
-          </el-button>
+    <el-row style="width: 100%" :gutter="40">
+      <el-col :span="16">
+        <!-- 搜索框行 -->
+        <el-row type="flex" justify="start" class="SearchArea">
+          <!-- enter.native才能监听到组件化的事件，要注意一下 -->
+          <el-col :span="19" v-if="Cache_Pic[0] == ''">
+            <el-input
+              class="SearchInput"
+              v-model="content"
+              type="text"
+              @keyup.enter.native="submit(0, '')"
+            >
+            </el-input>
+          </el-col>
+          <el-col :span="1" v-if="Cache_Pic[0] == ''">
+            <el-button
+              type="text"
+              style="font-size: 20px; color: black"
+              size="small"
+              v-if="content != ''"
+              @click="content = ''"
+            >
+              <i class="el-icon-close"></i>
+            </el-button>
+          </el-col>
+          <el-col :span="4" v-if="Cache_Pic[0] != ''">
+            <el-row
+              type="flex"
+              justify="start"
+              style="
+                border: 1px solid red;
+                border-radius: 15px;
+                height: 36px;
+                margin: 3px;
+              "
+            >
+              <el-image
+                :src="Cache_Pic[0]"
+                style="
+                  height: 30px;
+                  width: 60px;
+                  margin-top: 3px;
+                  margin-left: 30px;
+                "
+                :preview-src-list="Cache_Pic"
+              ></el-image>
+              <el-button
+                type="text"
+                style="
+                  font-size: 20px;
+                  color: rgba(0, 0, 0, 0.4);
+                  margin-left: 10px;
+                  width: 40px;
+                  display: block;
+                "
+                size="small"
+                @click="Clear_Pic"
+              >
+                <i class="el-icon-close"></i>
+              </el-button>
+            </el-row>
+          </el-col>
+          <el-col :span="1" v-if="Cache_Pic[0] == ''">
+            <el-divider direction="vertical"></el-divider>
+          </el-col>
+          <el-col :span="1" :offset="16" v-if="Cache_Pic[0] != ''">
+            <el-divider direction="vertical"></el-divider>
+          </el-col>
+          <el-col :span="1">
+            <el-button
+              type="text"
+              style="
+                font-size: 22px;
+                color: #409eff;
+                display: block;
+                margin-left: -6px;
+              "
+              size="small"
+              @click="simpleInput = true"
+            >
+              &Sigma;
+            </el-button>
+          </el-col>
+          <el-col :span="1">
+            <el-button
+              type="text"
+              style="font-size: 22px; display: block; margin-left: -8px"
+              size="small"
+              @click="Open_Pic_Search()"
+            >
+              <i class="el-icon-camera-solid"></i>
+            </el-button>
+          </el-col>
+          <el-col :span="1">
+            <el-button
+              type="text"
+              style="font-size: 22px; display: block; margin-left: -8px"
+              size="small"
+              @click="submit(0, '')"
+            >
+              <i class="el-icon-search"></i>
+            </el-button>
+          </el-col>
         </el-row>
       </el-col>
-      <el-col :span="1" v-if="Cache_Pic[0] == ''">
-        <el-divider direction="vertical"></el-divider>
-      </el-col>
-      <el-col :span="1" :offset="16" v-if="Cache_Pic[0] != ''">
-        <el-divider direction="vertical"></el-divider>
-      </el-col>
-      <el-col :span="1">
-        <el-button
-          type="text"
-          style="
-            font-size: 22px;
-            color: #409eff;
-            display: block;
-            margin-left: -6px;
-          "
-          size="small"
-          @click="simpleInput = true"
-        >
-          &Sigma;
-        </el-button>
-      </el-col>
-      <el-col :span="1">
-        <el-button
-          type="text"
-          style="font-size: 22px; display: block; margin-left: -8px"
-          size="small"
-          @click="Open_Pic_Search()"
-        >
-          <i class="el-icon-camera-solid"></i>
-        </el-button>
-      </el-col>
-      <el-col :span="1">
-        <el-button
-          type="text"
-          style="font-size: 22px; display: block; margin-left: -8px"
-          size="small"
-          @click="submit(0, '')"
-        >
-          <i class="el-icon-search"></i>
-        </el-button>
+      <el-col :span="5">
+        <el-popover placement="bottom" width="500" trigger="hover">
+          <div v-if="chosen_paper_List_Cache.length > 0">
+            <p
+              v-for="i in chosen_paper_List_Cache.length"
+              :key="'paper' + i"
+              style="line-height: 20px"
+            >
+              {{ i.toString() + "." + chosen_paper_List_Cache[i - 1].title }}
+            </p>
+          </div>
+          <!-- <el-button slot="reference">
+            {{
+              chosen_paper_List_Cache.length
+            }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;试卷篮
+          </el-button> -->
+          <el-row
+            type="flex"
+            justify="center"
+            slot="reference"
+            style="background-color: #409eff;
+            height:44.4px;
+            width:150px;
+            border-radius: 15px;"
+          >
+            <i
+              class="el-icon-shopping-cart-2"
+              style="
+                color: white;
+                height: 44.4px;
+                line-height: 44.4px;
+                font-size: 20px;
+                margin-right: 10px;
+              "
+            ></i>
+            <div
+              style="
+                border-radius: 50%;
+                background: white;
+                height: 24px;
+                width: 24px;
+                margin-top: 10px;
+                line-height: 24px;
+                margin-right: 20px;
+                color: #409eff;
+                font-size: 16px;
+              "
+            >
+              <label>{{ chosen_paper_List_Cache.length }}</label>
+            </div>
+            <p style="line-height: 44.4px; color:white;">试卷篮</p>
+          </el-row>
+        </el-popover>
       </el-col>
     </el-row>
     <!-- 筛选条件行 -->
@@ -393,12 +459,12 @@
         <el-col :span="10" style="text-align: left">
           <label>{{ Paper_Title_List[Paper_Index] }}</label>
         </el-col>
-        <el-col :span="1" id="choosebox">
+        <!-- <el-col :span="1" id="choosebox">
           <el-checkbox
             @change="(checked) => choose_paper(checked, Paper_Index)"
             style="zoom: 200%"
           ></el-checkbox>
-        </el-col>
+        </el-col> -->
       </el-row>
       <el-row
         type="flex"
@@ -487,8 +553,28 @@
               >
             </el-col>
             <!-- <el-col :span="3" :offset="1" style="line-height: 40px">
-                <el-button size="medium" plain round type="primary" @click="Check_Analyse(Paper_ID_List[Paper_Index], Paper_Ques_List[Paper_Index].database)">查看分析报告</el-button>
-              </el-col> -->
+              <el-button size="medium" plain round type="primary" @click="Check_Analyse(Paper_ID_List[Paper_Index], Paper_Ques_List[Paper_Index].database)">查看分析报告</el-button>
+            </el-col> -->
+            <el-col :span="3" :offset="1" style="line-height: 40px">
+              <el-button
+                v-if="!chosen_flag[Paper_ID_List[Paper_Index]]"
+                size="medium"
+                plain
+                round
+                type="primary"
+                @click="choose_paper(true, Paper_Index)"
+                >加入试卷篮</el-button
+              >
+              <el-button
+                v-else
+                size="medium"
+                plain
+                round
+                type="success"
+                @click="choose_paper(false, Paper_Index)"
+                >已加入试卷篮</el-button
+              >
+            </el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -518,7 +604,7 @@
 /* eslint-disable */
 import Mathdown from "../../../common/components/Mathdown.vue";
 import ComplexInput from "../../../common/components/ComplexInput.vue";
-import QuestionAnalyse from "../../resourceAnalyse/QuestionAnalyse.vue";
+import QuestionAnalyse from "../QuestionAnalyse.vue";
 import Instruction from "../../resourceQuery/components/InstructionExercise.vue";
 
 import { commonAjax } from "@/common/utils/ajax";
@@ -602,6 +688,8 @@ export default {
       chosen_paper_List_Cache: [],
       // 选中的试卷的ID
       chosen_paper_List: [],
+      // 标记该试卷是否被选中
+      chosen_flag: {},
     };
   },
   watch: {
@@ -628,31 +716,38 @@ export default {
   },
   methods: {
     choose_paper(val, index) {
+      let paper = {
+        ID: this.Paper_ID_List[index],
+        database: this.Paper_Ques_List[index].database,
+        title: this.Paper_Title_List[index],
+      };
       console.log(val, index, this.Paper_ID_List[index]);
-      if (val == true)
+      //console.log(this.chosen_paper_List_Cache);
+      if (val == true) {
         // 选中
-        this.chosen_paper_List_Cache.push({
-          ID: this.Paper_ID_List[index],
-          database: this.Paper_Ques_List[index].database,
-          title: this.Paper_Title_List[index],
-        });
+        this.chosen_paper_List_Cache.push(paper);
+        this.chosen_flag[this.Paper_ID_List[index]] = true;
+      }
       // 取消选中
-      else
-        this.chosen_paper_List_Cache.splice(
-          this.chosen_paper_List_Cache.indexOf({
-            ID: this.Paper_ID_List[index],
-            database: this.Paper_Ques_List[index].datebase,
-            title: this.Paper_Title_List[index],
-          }),
-          1
+      else {
+        //let pos = this.chosen_paper_List_Cache.indexOf(paper);
+        let pos = this.chosen_paper_List_Cache.findIndex(
+          (x) => x.ID === paper.ID
         );
+        console.log(pos);
+        //console.log(paper);
+        //console.log(this.chosen_paper_List_Cache[0]);
+        //console.log(paper === this.chosen_paper_List_Cache[0]);
+        this.chosen_paper_List_Cache.splice(pos, 1);
+        this.chosen_flag[this.Paper_ID_List[index]] = false;
+      }
     },
     // 选择试卷后确认
     confirm_choice() {
       // 深拷贝
       this.chosen_paper_List = this.chosen_paper_List_Cache.slice(0);
       console.log("chosen_List", this.chosen_paper_List);
-      this.$emit("Close_Paper_Base",this.chosen_paper_List);
+      this.$emit("Close_Paper_Base", this.chosen_paper_List);
     },
     // 清空计时器
     Reset_Interval() {
@@ -1263,7 +1358,7 @@ export default {
 .SearchArea {
   margin-left: 5vw;
   border: 1px solid Silver;
-  width: 60%;
+  // width: 60%;
   border-radius: 18px;
   box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
   -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
