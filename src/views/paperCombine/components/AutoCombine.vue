@@ -375,7 +375,7 @@ export default {
           // this.Loading = false
           this.$message.success("组卷结束")
         }).catch(()=>{
-          this.$message.error("调用服务时出现故障，请稍后重试。")
+          this.$message.error("虽然找到推荐题目，但由于数据库中缺少推荐题目的某些数据，无法返回结果，请稍后重试，会为您重新推荐题目。")
         })
         
     },
@@ -422,70 +422,75 @@ export default {
     // 移除某个选中的知识点
     Delete_KU(index){
 
-        let Temp_List = [
-          {
-            label: this.KnowledgeUnitList[index],
-            level: this.KnowledgeUnitLevelList[index]
-          }
-        ]
+      this.KnowledgeUnitIDList.splice(index, 1);
+      this.KnowledgeUnitList.splice(index, 1);
+      this.KnowledgeUnitLevelList.splice(index, 1)
+      this.$refs.tree.setCheckedKeys(this.KnowledgeUnitIDList);
 
-        let Result_List = []
+        // let Temp_List = [
+        //   {
+        //     label: this.KnowledgeUnitList[index],
+        //     level: this.KnowledgeUnitLevelList[index]
+        //   }
+        // ]
 
-        while(Temp_List.length > 0){
-            let Key_Item = Temp_List.shift()
-            for(let i = 0; i < this.TreeData.length; i++){
-                let Layer_0 = this.TreeData[i]
-                if(Layer_0.label == Key_Item.label && Layer_0.level == Key_Item.level){
-                    if(Result_List.indexOf(Layer_0.id) == -1){
-                        Result_List.push(Layer_0.id)
-                    }
-                    for(let j = 0; j < Layer_0.children.length; j++){
-                        Temp_List.push({
-                          label: Layer_0.children[j].label, 
-                          level: Layer_0.children[j].level})
-                        if(Result_List.indexOf(Layer_0.children[j].id) == -1){
-                            Result_List.push(Layer_0.children[j].id)
-                        }
-                    }
-                }else{
-                    for(let j = 0; j < Layer_0.children.length; j++){
-                        let Layer_1 = Layer_0.children[j]
-                        if(Layer_1.label == Key_Item.label && Layer_1.level == Key_Item.level){
-                            if(Result_List.indexOf(Layer_1.id) == -1){
-                                Result_List.push(Layer_1.id)
-                            }
-                            for(let k = 0; k < Layer_1.children.length; k++){
-                              Temp_List.push({
-                                label: Layer_1.children[k].label, 
-                                level: Layer_1.children[k].level})
-                            }
-                        }else{
-                            for(let k = 0; k < Layer_1.children.length; k++){
-                                let Layer_2 = Layer_1.children[k]
-                                if(Layer_2.label == Key_Item.label && Layer_2.level == Key_Item.level){
-                                    if(Result_List.indexOf(Layer_2.id) == -1){
-                                        Result_List.push(Layer_2.id)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        for(let i = 0; i < Result_List.length; i++){
-            this.KnowledgeUnitIDList.splice(this.KnowledgeUnitIDList.indexOf(Result_List[i]), 1);
-        }
+        // let Result_List = []
 
-        this.$refs.tree.setCheckedKeys(this.KnowledgeUnitIDList);
+        // while(Temp_List.length > 0){
+        //     let Key_Item = Temp_List.shift()
+        //     for(let i = 0; i < this.TreeData.length; i++){
+        //         let Layer_0 = this.TreeData[i]
+        //         if(Layer_0.label == Key_Item.label && Layer_0.level == Key_Item.level){
+        //             if(Result_List.indexOf(Layer_0.id) == -1){
+        //                 Result_List.push(Layer_0.id)
+        //             }
+        //             for(let j = 0; j < Layer_0.children.length; j++){
+        //                 Temp_List.push({
+        //                   label: Layer_0.children[j].label, 
+        //                   level: Layer_0.children[j].level})
+        //                 if(Result_List.indexOf(Layer_0.children[j].id) == -1){
+        //                     Result_List.push(Layer_0.children[j].id)
+        //                 }
+        //             }
+        //         }else{
+        //             for(let j = 0; j < Layer_0.children.length; j++){
+        //                 let Layer_1 = Layer_0.children[j]
+        //                 if(Layer_1.label == Key_Item.label && Layer_1.level == Key_Item.level){
+        //                     if(Result_List.indexOf(Layer_1.id) == -1){
+        //                         Result_List.push(Layer_1.id)
+        //                     }
+        //                     for(let k = 0; k < Layer_1.children.length; k++){
+        //                       Temp_List.push({
+        //                         label: Layer_1.children[k].label, 
+        //                         level: Layer_1.children[k].level})
+        //                     }
+        //                 }else{
+        //                     for(let k = 0; k < Layer_1.children.length; k++){
+        //                         let Layer_2 = Layer_1.children[k]
+        //                         if(Layer_2.label == Key_Item.label && Layer_2.level == Key_Item.level){
+        //                             if(Result_List.indexOf(Layer_2.id) == -1){
+        //                                 Result_List.push(Layer_2.id)
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // for(let i = 0; i < Result_List.length; i++){
+        //     this.KnowledgeUnitIDList.splice(this.KnowledgeUnitIDList.indexOf(Result_List[i]), 1);
+        // }
 
-        let Items = this.$refs.tree.getCheckedNodes()
-        this.KnowledgeUnitList = [];
-        this.KnowledgeUnitLevelList = []
-        for(let i = 0; i < Items.length; i++){
-            this.KnowledgeUnitList.push(Items[i].label)
-            this.KnowledgeUnitLevelList.push(Items[i].level)
-        }
+        // this.$refs.tree.setCheckedKeys(this.KnowledgeUnitIDList);
+
+        // let Items = this.$refs.tree.getCheckedNodes()
+        // this.KnowledgeUnitList = [];
+        // this.KnowledgeUnitLevelList = []
+        // for(let i = 0; i < Items.length; i++){
+        //     this.KnowledgeUnitList.push(Items[i].label)
+        //     this.KnowledgeUnitLevelList.push(Items[i].level)
+        // }
     },
     // 获取知识点显示内容
     Get_Show(label = ""){
@@ -524,43 +529,10 @@ export default {
       // 点击节点后的方法
       handleCheckChange(data, checked) {
 
-        let Result_List = []
-
-        let Temp_List = [data.id]
-        while(Temp_List.length > 0){
-            let Key_Item = Temp_List.pop(0)
-            for(let i = 0; i < this.TreeData.length; i++){
-                let Layer_0 = this.TreeData[i]
-                if(Layer_0.id == Key_Item){
-                    for(let j = 0; j < Layer_0.children.length; j++){
-                        Temp_List.push(Layer_0.children[j].id)
-                    }
-                }else{
-                    for(let j = 0; j < Layer_0.children.length; j++){
-                        let Layer_1 = Layer_0.children[j]
-                        if(Layer_1.id == Key_Item){
-                            for(let k = 0; k < Layer_1.children.length; k++){
-                                Temp_List.push(Layer_1.children[k].id)
-                            }
-                        }
-                    }
-                }
-            }
-            Result_List.push(Key_Item)
-        }
-
-        if(checked){
-            for(let i = 0; i < Result_List.length; i++){
-                if(this.KnowledgeUnitIDList.indexOf(Result_List[i]) == -1){
-                    this.KnowledgeUnitIDList.push(Result_List[i])
-                }
-            }
-        }else{
-            for(let i = 0; i < Result_List.length; i++){
-                if(this.KnowledgeUnitIDList.indexOf(Result_List[i]) != -1){
-                    this.KnowledgeUnitIDList.splice(this.KnowledgeUnitIDList.indexOf(Result_List[i]), 1)
-                }
-            }
+        if(checked && this.KnowledgeUnitIDList.indexOf(data.label) == -1){
+          this.KnowledgeUnitIDList.push(data.id)
+        }else if(!checked &&  this.KnowledgeUnitIDList.indexOf(data.label) != -1){
+          this.KnowledgeUnitIDList.splice(this.KnowledgeUnitIDList.indexOf(data.label), 1)
         }
 
         this.$refs.tree.setCheckedKeys(this.KnowledgeUnitIDList)

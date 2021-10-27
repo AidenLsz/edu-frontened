@@ -820,7 +820,9 @@ export default {
       Replace_Question_List: [],
       // 以下内容用于在组卷分析报告页面替换题目时的一些需要的信息
       // 1:知识点层级树
-      TreeData: {}
+      TreeData: {},
+      // 题库目录
+      Database_List: []
     }
   },
   watch:{
@@ -840,7 +842,8 @@ export default {
     this.Init_Setting_CheckBox();
     this.Init_Setting_Info();
     this.Init_User_Database_List();
-    this.Init_KP_Tree()
+    this.Init_KP_Tree();
+    this.Init_Database_List();
   },
   methods: {
     // 打开答题卡页面
@@ -849,6 +852,28 @@ export default {
       sessionStorage.setItem("AnswerCardSubject", this.Subject)
       let routeData = this.$router.resolve({ path: '/answerCard' });
       window.open(routeData.href, '_blank');
+    },
+    // 获取用户所具有的题库权限
+    Init_Database_List(){
+        this.Database_List = [
+          {name: 'public', nick: '公开题库'}
+        ]
+        //未登录时，不调用获取题库的端口
+        if(!this.$store.state.user.token){
+            return ;
+        }
+        commonAjax(this.backendIP+'/api/get_user_ig_name',
+          {
+            type:'Question',
+            action:'R',
+          }
+        ).then((res)=>{
+            let data=res.ig_name;
+            for (var i = 0; i < data.length; i++) {
+                this.Database_List.push({name: data[i], nick: data[i]})
+            }
+            this.Database_List[1].nick = "个人题库"
+        })
     },
     // 开始导出用于分析报告的数据
     Analyse_Combine_Paper(){
@@ -896,10 +921,13 @@ export default {
               Label: [],
               Layer: []
             },
+            update: false,
+            type: "",
             sub_question: []
           }
           Bundle_Item = data.sub_question[Bundle_Index]
           Info_Item.difficulty = Bundle_Item.difficulty_statistics.mean
+          Info_Item.type = this.Question_List[Bundle_Index].type
           for(let Sub_Index = 0; Sub_Index < Bundle_Item.sub_question.length; Sub_Index++){
             let Question = Bundle_Item.sub_question[Sub_Index]
             let Question_Item = {
@@ -909,6 +937,8 @@ export default {
               answer: Question.answer,
               analysis: Question.analysis,
               score: Question.score,
+              update: false,
+              type: this.Question_List[Bundle_Index].type,
               knowledgePointInfos: {
                 ID: [],
                 Label: [],
@@ -918,34 +948,50 @@ export default {
             let KP_Layer = Question.knowledge_points_frontend.kp_layer
             let KP_ID = ""
             for(let Layer_0 = 0; Layer_0 < KP_Layer.length; Layer_0++){
-              Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].label)
-              Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].label)
-              Question_Item.knowledgePointInfos.Layer.push(0)
-              Info_Item.knowledgePointInfos.Layer.push(0)
               KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].label, 0)
-              if(KP_ID != ""){
+              if(KP_ID != "" && Question_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+
                 Question_Item.knowledgePointInfos.ID.push(KP_ID)
-                Info_Item.knowledgePointInfos.ID.push(KP_ID)
-              }
-              for(let Layer_1 = 0; Layer_1 < KP_Layer[Layer_0].children.length; Layer_1++){
-                Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].label)
-                Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].label)
-                Question_Item.knowledgePointInfos.Layer.push(1)
-                Info_Item.knowledgePointInfos.Layer.push(1)
-                KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].children[Layer_1].label, 1)
-                if(KP_ID != ""){
-                  Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].label)
+                Question_Item.knowledgePointInfos.Layer.push(0)
+
+                if(Info_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+                  Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].label)
+                  Info_Item.knowledgePointInfos.Layer.push(0)
                   Info_Item.knowledgePointInfos.ID.push(KP_ID)
                 }
-                for(let Layer_2 = 0; Layer_2 < KP_Layer[Layer_0].children[Layer_1].children.length; Layer_2++){
-                  Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label)
-                  Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label)
-                  Question_Item.knowledgePointInfos.Layer.push(2)
-                  Info_Item.knowledgePointInfos.Layer.push(2)
-                  KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label, 2)
-                  if(KP_ID != ""){
-                    Question_Item.knowledgePointInfos.ID.push(KP_ID)
+
+              }
+
+              for(let Layer_1 = 0; Layer_1 < KP_Layer[Layer_0].children.length; Layer_1++){
+                KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].children[Layer_1].label, 1)
+                if(KP_ID != "" && Question_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+
+                  Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].label)                 
+                  Question_Item.knowledgePointInfos.Layer.push(1)
+                  Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                  
+                  if(Info_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+                    Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].label)
+                    Info_Item.knowledgePointInfos.Layer.push(1)
                     Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                  }
+
+                }
+                for(let Layer_2 = 0; Layer_2 < KP_Layer[Layer_0].children[Layer_1].children.length; Layer_2++){
+                  KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label, 2)
+                  if(KP_ID != "" && Question_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+
+                    Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label)              
+                    Question_Item.knowledgePointInfos.Layer.push(2)
+                    Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                    
+                    if(Info_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+                      Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label)
+                      Info_Item.knowledgePointInfos.Layer.push(2)
+                      Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                    }
+
                   } 
                 }
               }
@@ -958,6 +1004,11 @@ export default {
         sessionStorage.setItem("ChangingCombine", true)
         sessionStorage.setItem("ChangingCombineInfo", JSON.stringify(Changing_Info))
         sessionStorage.setItem("ChangingKPTree", JSON.stringify(this.TreeData))
+        sessionStorage.setItem("ChangingDatabaseList", JSON.stringify(this.Database_List))
+        sessionStorage.setItem("SubjectAndPeriod", JSON.stringify({
+          Subject: this.Subject,
+          Period: this.Period
+        }))
         let routeData = this.$router.resolve({ path: '/paperAnalyse' });
         window.open(routeData.href, '_blank');
         this.$message.success("试题详情内容已在新页面展开。");
