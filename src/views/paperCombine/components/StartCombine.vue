@@ -396,6 +396,7 @@
           :span="18" 
           :offset="1" 
           class="Side_Card"
+          :key="'Preview_Area_' + refresh"
           v-loading="waiting"
           :element-loading-text="waiting_text"
           element-loading-spinner="el-icon-loading"
@@ -822,16 +823,18 @@ export default {
       // 1:知识点层级树
       TreeData: {},
       // 题库目录
-      Database_List: []
+      Database_List: [],
+      // 用来监控替换结果的监听器
+      Replacing_Interval: "",
+      // 替换后刷新一下页面
+      refresh: false
     }
   },
   watch:{
     Subject(){
-      console.log(this.Subject)
       this.Init_Setting_Info();
     },
     Period(){
-      console.log(this.Period)
       this.Init_Setting_Info();
     },
     Export_Setting_Type(){
@@ -932,6 +935,7 @@ export default {
             let Question = Bundle_Item.sub_question[Sub_Index]
             let Question_Item = {
               difficulty: Question.difficulty,
+              id: this.Question_List[Bundle_Index].list[Sub_Index].id,
               stem: Question.stem,
               options: Question.options,
               answer: Question.answer,
@@ -1009,6 +1013,13 @@ export default {
           Subject: this.Subject,
           Period: this.Period
         }))
+        window.localStorage.removeItem("Replacing_Result")
+        this.Replacing_Interval = setInterval(()=>{
+          let Result = window.localStorage.getItem("Replacing_Result")
+          if(Result){
+            this.Start_Replace_Questions(Result)
+          }
+        }, 50)
         let routeData = this.$router.resolve({ path: '/paperAnalyse' });
         window.open(routeData.href, '_blank');
         this.$message.success("试题详情内容已在新页面展开。");
@@ -1019,6 +1030,16 @@ export default {
         this.waiting = false;
         this.waiting_text = ""
       })
+    },
+    Start_Replace_Questions(Result){
+      clearInterval(this.Replacing_Interval)
+      let List = JSON.parse(Result)
+      this.$emit("Clear_Cart", true)
+      for(let i = 0; i < List.length; i++){
+        this.$emit("Add_To_Cart", JSON.stringify(List[i]));
+      }
+      this.$emit("Jump_To_SC", true)
+      this.refresh = !this.refresh
     },
     Search_KP_ID(Label, Layer){
       for(let Layer_0 = 0; Layer_0 < this.TreeData.length; Layer_0++){

@@ -141,6 +141,9 @@
     <el-row v-if="Using_Menu_Index == 'startCombine'">
         <StartCombine 
             @Update_Question_List="Update_Question_List"
+            @Jump_To_SC="Jump_To_SC"
+            @Add_To_Cart="Add_To_Question_Cart" 
+            @Clear_Cart="Clear_Cart"
             :Question_List.sync="Question_List"
             :Period.sync="Selected_Period" 
             :Subject.sync="Selected_Subject"></StartCombine>

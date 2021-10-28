@@ -5,12 +5,7 @@
         v-loading="loading"
         element-loading-text="文档生成中，请等待..."
         element-loading-spinner="el-icon-loading">
-        <!-- 加两个DIV的手搓小控件，一个拿来看是否有题目被替换过，另一个看当前的替换结果的样子 -->
-    <div class="Stable_Icon_Button" style="bottom: 100px" @click="Replacing_Temp_Result_Show()">
-        <el-badge is-dot :hidden="true">
-            <i class="el-icon-reading"></i>
-        </el-badge>
-    </div>
+    <!-- 加个DIV的手搓小控件，拿来看当前的替换结果 -->
     <div class="Stable_Icon_Button" @click="Replacing_Do()">
         <i class="el-icon-check"></i>
     </div>
@@ -376,9 +371,9 @@
                 </el-row>
             </el-col>
         </el-row>
-        {{filterKPTree_Question}}
+        <!-- {{filterKPTree_Question}}
 
-        {{Combine_Replace_Question_Info}}
+        {{Combine_Replace_Question_Info}} -->
     </el-dialog>
     <!-- 题包替换页面 -->
     <el-dialog 
@@ -456,11 +451,50 @@
     <!-- 替换前后对比页面 -->
     <el-dialog 
         :visible.sync="Combine_Replace_Compare"
-        title="前后对比" 
-        width="80%"
+        title="当前替换状况对比" 
+        width="1192px"
         :modal-append-to-body="false"
         :close-on-click-modal="true">
-        这是一个前后对比时用的页面
+        <el-row 
+            v-for="(Bundle, Bundle_Index) in Update_Combine_Paper"
+            :key="'Replacing_Result_Bundle_' + Bundle_Index"
+            style="margin-bottom: 25px">
+            <el-col>
+                <el-row type="flex" justify="start" style="margin-bottom: 10px">
+                    <label>第{{Bundle_Index + 1}}大题：{{Bundle.type}} —— 当前状态：{{Bundle_Updated_Check(Bundle)}}</label>
+                </el-row>
+                <el-row 
+                    v-for="(Question, Question_Index) in Bundle.sub_question"
+                    :key="'Replacing_Result_Bundle_' + Bundle_Index + '_Question_' + Question_Index"
+                    style="margin-bottom: 10px;">
+                    <el-col>
+                        <el-row 
+                            v-if="Question.update" 
+                            type="flex" 
+                            justify="start"
+                            class="Before_Replace_Question">
+                            <Mathdown 
+                                :content="Backup_Combine_Paper[Bundle_Index].sub_question[Question_Index].stem" 
+                                :name="'Replacing_Results_Backup_' + Bundle_Index + '_' + Question_Index"></Mathdown>
+                        </el-row>
+                        <el-row v-if="Question.update" type="flex" justify="center">
+                            <i class="el-icon-arrow-down" style="font-size: 30px; opacity: 0.7; color: #409EFF; margin: 10px; font-weight: bold"></i>
+                        </el-row>
+                        <el-row
+                            type="flex" 
+                            justify="start"
+                            :class="Question.update ? 'After_Replace_Question': 'None_Replace_Question'">
+                            <Mathdown 
+                                :content="Question.stem" 
+                                :name="'Replacing_Results_Update_' + Bundle_Index + '_' + Question_Index"></Mathdown>
+                        </el-row>
+                    </el-col>
+                </el-row>
+            </el-col>
+        </el-row>
+        <el-row type="flex" justify="center">
+            <el-button type="success" @click="Final_Check_Replace()">确认替换，关闭分析报告</el-button>
+        </el-row>
     </el-dialog>
     <el-row justify="start" type="flex">
         <el-col style="padding-left: 25px; margin-top: 5vh">
@@ -1022,11 +1056,12 @@ export default {
             // 单题替换、题包替换的信息内容
             Combine_Replace_Question_Info: {
                 difficulty: 0,
+                id: "",
                 stem: "",
                 options: [],
                 answer: "",
                 analysis: "",
-                score: "",
+                score: 0,
                 update: false,
                 type: "",
                 knowledgePointInfos: {
@@ -1088,6 +1123,13 @@ export default {
     },
     destroyed(){
         sessionStorage.removeItem('PaperJson')
+        if(sessionStorage.getItem("ChangingCombine")){
+            sessionStorage.removeItem("ChangingCombine")
+            sessionStorage.removeItem("ChangingCombineInfo")
+            sessionStorage.removeItem("ChangingKPTree")
+            sessionStorage.removeItem("ChangingDatabaseList")
+            sessionStorage.removeItem("SubjectAndPeriod")
+        }
     },
     watch: {
         Remaining(){
@@ -1170,24 +1212,65 @@ export default {
         document.getElementById('Analyse_Title').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     },
     methods: {
+        // 最终确认要替换了
+        Final_Check_Replace(){
+            let Question_List = [];
+            for(let i = 0; i < this.Update_Combine_Paper.length; i++){
+                let Bundle = this.Update_Combine_Paper[i];
+                for(let j = 0; j < Bundle.sub_question.length; j++){
+                    let Question = {
+                        id: Bundle.sub_question[j].id,
+                        type: Bundle.sub_question[j].type,
+                        score: Bundle.sub_question[j].score,
+                        stem: Bundle.sub_question[j].stem,
+                        options: Bundle.sub_question[j].options,
+                        answer: Bundle.sub_question[j].answer,
+                        analyse: Bundle.sub_question[j].analysis
+                    }
+                    Question_List.push(Question)
+                }
+            }
+            window.localStorage.setItem("Replacing_Result", JSON.stringify(Question_List))
+            this.Reset_Dialog_Params();
+            window.close();
+        },
+        // 查看修改情况
+        Bundle_Updated_Check(Bundle){
+            if(Bundle.update){
+                return "全包所有题目都已替换"
+            }else{
+                let Updated = false
+                for(let i = 0; i < Bundle.sub_question.length; i++){
+                    if(Bundle.sub_question[i].update){
+                        Updated = true;
+                    }
+                }
+                if(Updated){
+                    return "有部分题目被替换"
+                }else{
+                    return "暂无被替换的题目"
+                }
+            }
+        },
         // 展示目前题目的替换情况
         Replacing_Temp_Result_Show(){
             alert("Just Show")
         },
         // 预览替换结果，准备开始替换
         Replacing_Do(){
-            alert("Replace")
+            this.Combine_Replace_Compare = true;
         },
         // 用选中的试题内容替换当前题目
         Replace_Question_With_It(Question){
             // 单题替换、题包替换的信息内容
             let Temp_Question = {
                 difficulty: Question.difficulty ? Question.difficulty : 0.5,
+                id: Question.id,
                 stem: Question.stem,
                 options: Question.options,
                 answer: Question.answer,
                 analysis: Question.analysis,
-                score: Question.score,
+                score: this.Combine_Replace_Question_Info.score,
                 update: true,
                 type: this.Combine_Replace_Question_Info.type,
                 knowledgePointInfos: this.Combine_Replace_Question_Info.knowledgePointInfos
@@ -1196,9 +1279,16 @@ export default {
             let RA = this.Replace_Position.split(" ")
             this.Update_Combine_Paper[RA[0]].sub_question.splice(RA[1], 1, Temp_Question)
 
-            this.Combine_Replace_Question = false
+            let All_Replace = true;
+            for(let i = 0; i < this.Update_Combine_Paper[RA[0]].sub_question.length; i++){
+                if(this.Update_Combine_Paper[RA[0]].sub_question[i].update == false){
+                    All_Replace = false;
+                }
+            }
 
-            console.log(this.Update_Combine_Paper)
+            this.Update_Combine_Paper[RA[0]].update = All_Replace;
+
+            this.Combine_Replace_Question = false
 
         },
         // 检索替换题目用的题目
@@ -1428,11 +1518,12 @@ export default {
             // 单题替换、题包替换的信息内容
             this.Combine_Replace_Question_Info = {
                 difficulty: 0,
+                id: "",
                 stem: "",
                 options: [],
                 answer: "",
                 analysis: "",
-                score: "",
+                score: 0,
                 update: false,
                 type: "",
                 knowledgePointInfos: {
@@ -3577,5 +3668,25 @@ export default {
     z-index: 5;
     font-size: 20px;
     padding-top: 3px;
+}
+
+.Before_Replace_Question{
+    border: 1px dashed red;
+    background: rgba($color: red, $alpha: 0.05);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.After_Replace_Question{
+    border: 1px dashed #67C23A;
+    background: rgba($color: #67C23A, $alpha: 0.05);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.None_Replace_Question{
+    border: 1px dashed black;
+    border-radius: 10px;
+    padding: 10px;
 }
 </style>
