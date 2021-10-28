@@ -129,6 +129,7 @@
     <register ref="register" />
     <!-- 当屏幕过窄的时候显示的导航栏抽屉 -->
     <el-drawer
+      style="overflow: scroll"
       :visible.sync="Narrow_Navbar_Drawer"
       :direction="'rtl'"
       size="260px">
@@ -143,12 +144,11 @@
           >
         </el-row>
         <!-- 功能导航栏 -->
-        <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
-          <el-menu
+        <el-row type="flex" justify="start">
+          <!-- <el-menu
             mode="horizontal"
             style="margin: 0px; padding-top: 10px; border: 1px solid black"
           >
-            <!-- <el-menu :default-active="activeIndex" mode="horizontal" style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px"> -->
             <el-submenu index="0">
               <template slot="title" style="height: 100px; border: 1px solid red">
                 <span style="margin-left: -20px; color: black; font-size: 18px" class="Narrow_Navbar_Button">功能</span>
@@ -284,7 +284,6 @@
                 </router-link>
               </el-menu-item>
               <el-menu-item index="6">
-                <!-- <router-link to="/manage/dashboard" v-if="$store.state.user.name" -->
                 <router-link
                   to="/manage/dashboard"
                   :underline="false"
@@ -293,38 +292,144 @@
                   <span style="color: black"> 资源管理 </span>
                 </router-link>
               </el-menu-item>
-              <router-link
-                to="/estimate"
-                :underline="false"
-                @click.native="ToTop"
-                style="display: none"
-              >
-                <el-menu-item index="7">
-                  <span style="color: black">试题属性预估</span>
-                </el-menu-item>
-              </router-link>
-              <router-link
-                to="/similarity"
-                :underline="false"
-                @click.native="ToTop"
-                style="display: none"
-              >
-                <el-menu-item index="8">
-                  <span style="color: black">相似题预估</span>
-                </el-menu-item>
-              </router-link>
-              <router-link
-                to="/admin"
-                v-if="Get_Priority()"
-                :underline="false"
-                @click.native="ToTop"
-              >
-                <el-menu-item index="9">
-                  <span style="color: red">管理员页面</span>
-                </el-menu-item>
-              </router-link>
             </el-submenu>
-          </el-menu>
+          </el-menu> -->
+          <el-col>
+            <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+              <el-button type="text" @click="Expand_Navbar_Drawer_Part == '功能' ? Expand_Navbar_Drawer_Part = '' : Expand_Navbar_Drawer_Part = '功能'" class="Narrow_Navbar_Button"
+                >功能</el-button
+              >
+            </el-row>
+            <el-row v-if="Expand_Navbar_Drawer_Part == '功能'" style="padding-left: 20px">
+              <el-collapse accordion>
+                <el-collapse-item name="资源录入" title="资源录入">
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <span style="color: Gainsboro">学习资源</span>
+                  </div>
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <router-link
+                      to="/inputMarked"
+                      :underline="false"
+                      @click.native="ToTop"
+                    >
+                      <span style="color: black">试题资源</span>
+                    </router-link>
+                  </div>
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <router-link
+                      to="/inputPaper"
+                      :underline="false"
+                      @click.native="ToTop"
+                    >
+                      <span style="color: black">试卷资源</span>
+                    </router-link>
+                  </div>
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <span style="color: Gainsboro">知识体系</span>
+                  </div>
+                </el-collapse-item>
+                <el-collapse-item name="查询" title="查询">
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <router-link
+                      to="/exercise"
+                      :underline="false"
+                      @click.native="ToTop"
+                    >
+                      <span style="color: black">试题检索</span>
+                    </router-link>
+                  </div>
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <router-link
+                      to="/searchPaper"
+                      :underline="false"
+                      @click.native="ToTop"
+                    >
+                      <span style="color: black">试卷检索</span>
+                    </router-link>
+                  </div>
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <router-link
+                      to="/ku"
+                      :underline="false"
+                      @click.native="ToTop"
+                    >
+                      <span style="color: black">知识单元检索</span>
+                    </router-link>
+                  </div>
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <router-link
+                      to="/resources"
+                      :underline="false"
+                      @click.native="ToTop"
+                    >
+                      <span style="color: black">学习资源检索</span>
+                    </router-link>
+                  </div>
+                </el-collapse-item>
+                <el-collapse-item name="分析" title="分析">
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <span style="color: Gainsboro">学习资源</span>
+                  </div>
+                  <div 
+                    align="left" 
+                    class="Navbar_Drawer_Sub"
+                    style="cursor: pointer"
+                    @click="QuestionAnalyseSwitch()">
+                    <span style="color: black">试题资源</span>
+                  </div>
+                  <div 
+                    align="left"
+                    @click="PaperAnalyseSwitch()" 
+                    style="cursor: pointer"
+                    class="Navbar_Drawer_Sub">
+                      <span style="color: black">试卷资源</span>
+                  </div>
+                </el-collapse-item>
+                <el-collapse-item name="标注管理平台" title="标注管理平台">
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <router-link
+                      to="/questionUpdate"
+                      :underline="false"
+                      @click.native="ToTop"
+                    >
+                      <span style="color: black">试题信息修改</span>
+                    </router-link>
+                  </div>
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <router-link
+                        to="/paperdivide"
+                        :underline="false"
+                        @click.native="ToTop"
+                    >
+                      <span style="color: black">试卷切分</span>
+                    </router-link>
+                  </div>
+                </el-collapse-item>
+                <el-collapse-item name="组卷系统" title="组卷系统">
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <router-link
+                        to="/paperCombine"
+                        :underline="false"
+                        @click.native="ToTop"
+                    >
+                      <span style="color: black">组卷页面入口</span>
+                    </router-link>
+                </div>
+                </el-collapse-item>
+                <el-collapse-item name="资源管理" title="资源管理">
+                  <div align="left" class="Navbar_Drawer_Sub">
+                    <router-link
+                        to="/manage/dashboard"
+                        :underline="false"
+                        @click.native="ToTop"
+                    >
+                      <span style="color: black">资源管理入口</span>
+                    </router-link>
+                  </div>
+                </el-collapse-item>
+              </el-collapse>
+            </el-row>
+          </el-col>
         </el-row>
         <!-- AI实验室 -->
         <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
@@ -381,7 +486,7 @@
       </div>
     </el-drawer>
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
-    <el-header style="height: 70px; background: transparent">
+    <el-header style="height: 80px; background: transparent">
       <div id="header-sticky" class="sticky-menu">
         <el-row class="NavBarArea" :style="Get_NavBar_Width('Normal')" type="flex" justify="center">
           <el-col :span="4" style="padding-top: 20px;">
@@ -726,8 +831,12 @@ export default {
       PaperAnalyseSwitchFlag: false,
       QuestionAnalyseSwitchFlag: false,
       isGroup: false,
+      // 当前窗口的宽度
+      // 窄窗口用的抽屉是否显示
       Width_Now: 0,
-      Narrow_Navbar_Drawer: false
+      Narrow_Navbar_Drawer: false,
+      // 展开的菜单
+      Expand_Navbar_Drawer_Part: ""
     };
   },
   mounted() {
@@ -776,7 +885,6 @@ export default {
     // 打开过窄时的导航栏
     Open_Narrow_Navbar_Drawer(){
       this.Narrow_Navbar_Drawer = true;
-      console.log("123")
     },
     // 调整导航栏宽度
     Get_NavBar_Width(Part){
@@ -1090,12 +1198,13 @@ export default {
   top: 0;
   width: 100%;
   z-index: 999;
-  background: rgba($color: white, $alpha: 0.88);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba($color: white, $alpha: 0.70);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   margin-top: 0px;
+  box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.3);
 }
 
 /* scrollUp */
@@ -1207,7 +1316,7 @@ export default {
 }
 
 .NarbarItem{
-  width: 70px;
+  width: 80px;
   padding-top: 15px
 }
 
@@ -1226,7 +1335,7 @@ export default {
 .Narrow_Navbar_Item{
   width: 100%; 
   border-top: 1px solid #ccc; 
-  height: 80px; 
+  min-height: 80px; 
   line-height: 80px;
   font-size: 18px;
 }
@@ -1239,5 +1348,15 @@ export default {
 
 .Narrow_Navbar_Button:hover{
   color: #409EFF;
+}
+
+/* 路径的跳转点 */
+.Navbar_Drawer_Sub{
+  margin: 10px 0px 10px 20px;
+}
+
+.Not_All_Disabled_Collapse_Item .el-collapse-item.is-disabled ::v-deep  .el-collapse-item__header {
+    color: black;
+    cursor: pointer;
 }
 </style>
