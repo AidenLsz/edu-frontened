@@ -3,7 +3,7 @@
     <!-- 试卷分析路径跳转 -->
     <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-row>
             <el-button
               @click="PAS(0)"
@@ -26,7 +26,7 @@
             </el-button>
           </el-row>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-row>
             <el-button
               @click="PAS(1)"
@@ -46,6 +46,29 @@
               style="margin-top: 30px; font-size: 20px; color: black"
             >
               选择题库中试卷进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="8">
+          <el-row>
+            <el-button
+              @click="PAS(2)"
+              circle
+              style="height: 200px; width: 200px"
+              ><img
+                src="@/assets/icon15.png"
+                width="60%"
+                style="margin-left: 0px; margin-top: 0px"
+              />
+            </el-button>
+          </el-row>
+          <el-row>
+            <el-button
+              type="text"
+              @click="PAS(2)"
+              style="margin-top: 30px; font-size: 20px; color: black"
+            >
+              选择多张试卷进行分析
             </el-button>
           </el-row>
         </el-col>
@@ -493,12 +516,19 @@ export default {
           path: "/paperAnalyseInput",
         });
         this.PaperAnalyseSwitchFlag = false;
-      } else {
+      } else 
+      if (index == 1) {
         this.$router.push({
           path: "/searchPaper",
         });
         this.PaperAnalyseSwitchFlag = false;
-      }
+      } else
+      if (index == 2) {
+        this.$router.push({
+          path: "/multipaperanalyse",
+        });
+        this.PaperAnalyseSwitchFlag = false;
+      } 
     },
     // 跳转至试卷分析的不同位置的对话框
     PaperAnalyseSwitch() {

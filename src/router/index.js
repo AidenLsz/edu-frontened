@@ -112,6 +112,11 @@ function validatePermission(path){
     if (!store.state.user.token) {
       return false
     }
+  }else if(switchToITAS(path)) {true
+    store.dispatch('app/setSysState',{rootPath:'/itas/',isLuna:false,systemType:2})
+    if (!store.state.user.token) {
+      return false
+    }
   }else{
     //切换为普通版
     store.dispatch('app/setSysState',{rootPath:'/',isLuna:true,systemType:0})

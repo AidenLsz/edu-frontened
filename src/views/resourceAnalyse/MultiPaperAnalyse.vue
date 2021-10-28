@@ -3,7 +3,9 @@
     class="MultiPaperAnalyse"
     style="min-height: 100vh; padding-left: 10%; padding-right: 10%"
     v-loading="Question_Analysing"
-    :element-loading-text=" progress + '/' + chosen_paper_List.length + '分析中，请等待...'"
+    :element-loading-text="
+      progress + '/' + chosen_paper_List.length + '分析中，请等待...'
+    "
     element-loading-spinner="el-icon-loading"
   >
     <!-- <div class="panel"> -->
@@ -11,13 +13,14 @@
       <el-col>
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>AI实验室</el-breadcrumb-item>
+          <el-breadcrumb-item>分析</el-breadcrumb-item>
           <el-breadcrumb-item>多卷分析</el-breadcrumb-item>
+          <el-breadcrumb-item v-if="chosen_paper_List.length > 0">分析报告</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
 
-    <el-row type="flex" justify="start" style="margin-top: 30px">
+    <el-row v-if="chosen_paper_List.length == 0" type="flex" justify="start" style="margin-top: 30px">
       <el-col :span="2.5">
         <span>分析属性勾选：</span>
       </el-col>
@@ -31,7 +34,7 @@
       </el-col>
     </el-row>
 
-    <el-row type="flex" justify="start" style="margin-top: 30px">
+    <el-row v-if="chosen_paper_List.length == 0" type="flex" justify="start" style="margin-top: 30px">
       <el-button type="primary" @click="Open_Paper_Base()"
         >从试卷库中选择</el-button
       >
@@ -47,6 +50,20 @@
     >
       <SearchPaper @Close_Paper_Base="CPB"></SearchPaper>
     </el-dialog>
+
+    <el-row v-if="chosen_paper_List.length > 0" justify="center" style="margin-bottom:40px;">
+      <h1>多卷分析报告</h1>
+    </el-row>
+    <el-row v-if="chosen_paper_List.length > 0" justify="start">
+      <p><b>所选试卷</b></p>
+      <p
+        v-for="i in chosen_paper_List.length"
+        :key="'paper' + i"
+        style="line-height: 20px"
+      >
+        {{ i.toString() + "."}}&nbsp;&nbsp;&nbsp;&nbsp;{{chosen_paper_List[i - 1].title }}
+      </p>
+    </el-row>
 
     <el-row
       v-show="show_word_cnt_Bar"
@@ -210,9 +227,9 @@ export default {
       console.log(this.chosen_paper_List);
       this.show_paper_base = false;
       if (this.show_word_cnt_Bar)
-        echarts.init(document.getElementById('word_cnt_Bar')).dispose();
+        echarts.init(document.getElementById("word_cnt_Bar")).dispose();
       this.show_word_cnt_Bar = false;
-      
+
       // if (this.show_Word_Cloud)
       this.show_Word_Cloud = false;
 
@@ -263,8 +280,7 @@ export default {
         let flag = true;
         this.progress = 0;
         //console.log("flag status", flag, status);
-        for (let i = 0; i < status.length; i++) 
-        {
+        for (let i = 0; i < status.length; i++) {
           flag = flag && status[i];
           if (status[i]) this.progress++;
         }
