@@ -131,9 +131,9 @@
     <el-drawer
       :visible.sync="Narrow_Navbar_Drawer"
       :direction="'rtl'"
-      size="240px">
-      <el-row slot="title">
-        <label style="font-size: 20px; color: black; margin-top: 5px;">LUNA水镜智能</label>
+      size="260px">
+      <el-row slot="title" type="flex" justify="start">
+        <span style="font-size: 20px; color: black; padding-left: 5%">LUNA水镜智能</span>
       </el-row>
       <div style="padding: 0px 10%;">
         <!-- 首页 -->
@@ -146,11 +146,11 @@
         <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
           <el-menu
             mode="horizontal"
-            style="height: 70px; margin: 0px"
+            style="margin: 0px; padding-top: 10px; border: 1px solid black"
           >
             <!-- <el-menu :default-active="activeIndex" mode="horizontal" style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px"> -->
             <el-submenu index="0">
-              <template slot="title">
+              <template slot="title" style="height: 100px; border: 1px solid red">
                 <span style="margin-left: -20px; color: black; font-size: 18px" class="Narrow_Navbar_Button">功能</span>
               </template>
               <el-submenu index="1">
@@ -365,8 +365,7 @@
               </el-dropdown>
             </el-row>
           </div>
-          <div 
-            class="NarbarItem"
+          <div
             v-else>
             <el-button type="text" @click="login_show" class="Narrow_Navbar_Button"
               >登录</el-button
@@ -382,7 +381,7 @@
       </div>
     </el-drawer>
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
-    <el-header style="height: 70px">
+    <el-header style="height: 70px; background: transparent">
       <div id="header-sticky" class="sticky-menu">
         <el-row class="NavBarArea" :style="Get_NavBar_Width('Normal')" type="flex" justify="center">
           <el-col :span="4" style="padding-top: 20px;">
@@ -423,7 +422,7 @@
                 style="width: 100px;">
                 <el-menu
                   mode="horizontal"
-                  style="border-bottom: 3px solid #409eff; padding-bottom: 10px"
+                  style="padding-bottom: 20px; background: transparent;"
                 >
                   <!-- <el-menu :default-active="activeIndex" mode="horizontal" style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px"> -->
                   <el-submenu index="0">
@@ -546,7 +545,7 @@
                           :underline="false"
                           @click.native="ToTop"
                       >
-                        <el-menu-item index="4-1">
+                        <el-menu-item index="4-2">
                           <span style="color: black">试卷切分</span>
                         </el-menu-item>
                       </router-link>
@@ -618,7 +617,7 @@
                   >成员</el-button
                 >
               </div>
-              <div style="width: 1px; height: 18px; margin-top: 30px; border-right: 3px solid #aaa; margin-left: 5px; margin-right: 12px">
+              <div style="width: 1px; height: 18px; margin-top: 30px; border-right: 2px solid #aaa; margin-left: 15px; margin-right: 12px">
 
               </div>
               <div
@@ -790,11 +789,13 @@ export default {
         }else if(this.Width_Now >= Width_Border.min && this.Width_Now < Width_Border.max){
           return {
             "width": this.Width_Now + 'px',
+            "background": "transparent",
             "padding": "0px 32px"
           }
         }else{
           return {
             "width": "1344px",
+            "background": "transparent",
             "margin": "0px " + ((this.Width_Now - 1344)/2) + "px"
           }
         }
@@ -805,7 +806,8 @@ export default {
           }
         }else{
           return {
-            "padding": "0px 32px"
+            "padding": "0px 32px",
+            "background": "transparent",
           }
         }
       }
@@ -1084,15 +1086,15 @@ export default {
 .sticky-menu {
   left: 0;
   position: fixed;
-  max-height: 70px;
+  height: 80px;
   top: 0;
   width: 100%;
-  box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.5);
   z-index: 999;
-  background: #fff;
+  background: rgba($color: white, $alpha: 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
-  -webkit-box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.5);
   margin-top: 0px;
 }
 
@@ -1199,8 +1201,9 @@ export default {
 
 .NavBarArea{
   position: relative;
+  background: transparent;
   padding: 0px;
-  min-height: 70px;
+  min-height: 80px;
 }
 
 .NarbarItem{
@@ -1222,9 +1225,9 @@ export default {
 
 .Narrow_Navbar_Item{
   width: 100%; 
-  border-top: 2px solid #ccc; 
-  height: 70px; 
-  line-height: 70px;
+  border-top: 1px solid #ccc; 
+  height: 80px; 
+  line-height: 80px;
   font-size: 18px;
 }
 
