@@ -7,7 +7,9 @@
         element-loading-spinner="el-icon-loading">
     <!-- 加个DIV的手搓小控件，拿来看当前的替换结果 -->
     <div class="Stable_Icon_Button" @click="Replacing_Do()">
-        <i class="el-icon-check"></i>
+        <el-tooltip effect="dark" content="点击查看当前替换状况" placement="left">
+            <i class="el-icon-search"></i>
+        </el-tooltip>
     </div>
     <!-- 试卷分析路径跳转 -->
     <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
@@ -212,7 +214,7 @@
         :modal-append-to-body="false"
         :close-on-click-modal="true">
         <el-row type="flex" justify="start">
-            <el-col :span="6">
+            <el-col :span="5" style="height: 420px; overflow: scroll">
                 <el-row type="flex" justify="center" style="margin: 0px 1.5vw 15px 1.5vw">
                     <el-input
                         placeholder="输入关键字进行过滤"
@@ -235,9 +237,9 @@
                     </el-tree>
                 </el-row>
             </el-col>
-            <el-col :span="18">
+            <el-col :span="18" :offset="1">
                 <el-row type="flex" justify="start" style="margin-bottom: 10px">
-                    <label>题型：{{Combine_Replace_Question_Info.type}}（无法修改）</label>
+                    <label>题型：{{Combine_Replace_Question_Info.type}}（无法修改）</label><label style="margin-left: 50px">分值：{{Combine_Replace_Question_Info.score}}（无法在此处修改）</label>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-bottom: 15px; height: 30px; line-height: 30px;">
                     <el-col :span="2">
@@ -318,7 +320,8 @@
                         filterKPTree_Question.Expand ? 
                             Math.ceil(Combine_Replace_Question_Info.knowledgePointInfos.Label.length/6) : 
                             5)"
-                    :key="'Replacing_Question_KP_Row_' + KP_Row_Index">
+                    :key="'Replacing_Question_KP_Row_' + KP_Row_Index"
+                    style="margin-bottom: 10px;">
                     <el-col 
                         :span="4" 
                         v-for="Col_Index in 6" 
@@ -345,19 +348,19 @@
                         </div>
                     </el-col>
                 </el-row>
-                <el-row type="flex" justify="center">
+                <el-row type="flex" justify="center" style="margin-top: 30px;">
                     <el-button @click="Search_Replace_Question()" type="primary">根据当前条件检索替换用题目</el-button>
                 </el-row>
             </el-col>
         </el-row>
         <el-divider></el-divider>
         <el-row type="flex" justify="start">
-            <label>当前题目题干内容：</label>
+            <label>当前题目题干内容{{Combine_Replace_Question_Info.update ? "（已替换）" : "（未替换）"}}：</label>
         </el-row>
         <el-row type="flex" justify="start">
             <Mathdown :content="Combine_Replace_Question_Info.stem" :name="'Replacing_Question_Stem'"></Mathdown>
         </el-row>
-        <el-divider></el-divider>
+        <el-divider v-if="Replace_Question_List.length > 0"></el-divider>
         <el-row 
             class="Replace_Question_Aim"
             v-for="(Question, Question_Index) in Replace_Question_List"
@@ -384,7 +387,7 @@
         :modal-append-to-body="false"
         :close-on-click-modal="true">
         <el-row type="flex" justify="start">
-            <el-col :span="6">
+            <el-col :span="5" style="height: 420px; overflow: scroll">
                 <el-row type="flex" justify="center" style="margin: 0px 1.5vw 10px 1.5vw">
                     <el-input
                         placeholder="输入关键字进行过滤"
@@ -407,7 +410,80 @@
                     </el-tree>
                 </el-row>
             </el-col>
-            <el-col :span="18">
+            <el-col :span="18" :offset="1">
+                <el-row type="flex" justify="start" style="margin-bottom: 10px">
+                    <label>题型：{{Combine_Replace_Bundle_Info.type}}（无法修改）</label>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 15px; height: 30px; line-height: 30px;">
+                    <el-col :span="2">
+                        <el-row type="flex" justify="start">
+                            <label>难度：</label>
+                        </el-row>
+                    </el-col>
+                    <el-col 
+                        :span="3" 
+                        v-for="(Difficulty, Difficulty_Index) in Difficulty_List"
+                        :key="'Bundle_Difficulty_' + Difficulty_Index">
+                        <div
+                            align="center"
+                            :class="filterButtonStyle('Bundle', 'Difficulty', Difficulty)" 
+                            @click="difficulty_Change('Bundle', Difficulty)">
+                            {{Difficulty}}
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row 
+                    type="flex" 
+                    justify="start" 
+                    v-show="filterKPTree_Bundle.Difficulty == '自定义'"
+                    style="margin-bottom: 15px; height: 30px; line-height: 30px;">
+                    <el-col :span="6" style="margin-top: 5px;">
+                        <el-row type="flex" justify="start">
+                            <label>自定义难度：{{filterKPTree_Bundle.Difficulty_Range[0]}}
+                            <span style="margin-left: 10px; margin-right: 10px">至</span>
+                            {{filterKPTree_Bundle.Difficulty_Range[1]}}</label>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="18">
+                        <el-row type="flex" justify="start">
+                            <el-slider
+                                v-model="filterKPTree_Bundle.Difficulty_Range"
+                                range
+                                show-stops
+                                style="width: 560px;"
+                                :step="0.01"
+                                :min="0"
+                                :max="1">
+                            </el-slider>
+                        </el-row>
+                    </el-col>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 15px; height: 30px; line-height: 30px;">
+                    <el-col :span="2">
+                        <el-row type="flex" justify="start">
+                            <label>题库：</label>
+                        </el-row>
+                    </el-col>
+                    <el-col 
+                        :span="3" 
+                        v-for="(Database, Database_Index) in Database_List"
+                        :key="'Bundle_Database_' + Database_Index">
+                        <div
+                            align="center"
+                            :class="filterButtonStyle('Bundle', 'Database', Database.name)" 
+                            @click="database_Change('Bundle', Database.name)">
+                            {{Database.nick || Database.name}}
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 10px">
+                    <label>已选择的知识点：</label>
+                    <el-button 
+                        type="text" 
+                        v-if="Combine_Replace_Bundle_Info.knowledgePointInfos.Label.length > 30"
+                        @click="filterKPTree_Bundle.Expand = !filterKPTree_Bundle.Expand">
+                        {{filterKPTree_Bundle.Expand ? "收起过多" : "展开全部"}}知识点</el-button>
+                </el-row>
                 <el-row 
                     type="flex" 
                     justify="center"
@@ -417,7 +493,8 @@
                         filterKPTree_Bundle.Expand ? 
                             Math.ceil(Combine_Replace_Bundle_Info.knowledgePointInfos.Label.length/6) : 
                             5)"
-                    :key="'Replacing_Bundle_KP_Row_' + KP_Row_Index">
+                    :key="'Replacing_Bundle_KP_Row_' + KP_Row_Index"
+                    style="margin-bottom: 10px;">
                     <el-col 
                         :span="4" 
                         v-for="Col_Index in 6" 
@@ -432,9 +509,9 @@
                                 align="center"
                                 class="KU_Button"
                                 :style="Get_Different_Level_Color(Combine_Replace_Bundle_Info.knowledgePointInfos.Layer[(KP_Row_Index - 1) * 6 + Col_Index - 1])"
-                                @click="Delete_KP_Question((KP_Row_Index - 1) * 6 + Col_Index - 1)">
+                                @click="Delete_KP_Bundle((KP_Row_Index - 1) * 6 + Col_Index - 1)">
                                 {{Get_Show(Combine_Replace_Bundle_Info.knowledgePointInfos.Label[(KP_Row_Index - 1) * 6 + Col_Index - 1])}}
-                                <i class="el-icon-close" style="margin-left: 10px; font-size: 20px"></i>
+                                <i class="el-icon-delete" style="margin-left: 10px; font-size: 20px"></i>
                             </div>
                         </el-tooltip>
                         <div 
@@ -446,7 +523,9 @@
                 </el-row>
             </el-col>
         </el-row>
-        {{Combine_Replace_Bundle_Info}}
+        <el-row type="flex" justify="center">
+            <label>题包替换部分的服务仍处于开发过程当中，目前暂时只支持单题手动替换</label>
+        </el-row>
     </el-dialog>
     <!-- 替换前后对比页面 -->
     <el-dialog 

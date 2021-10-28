@@ -11,7 +11,7 @@
           <el-row type="flex" justify="start" style="margin-bottom: 10px">
             <label v-if="Analyse">（ 此题{{Question.score}}分 ）</label>
             <label v-else>（ 本节{{Question.score}}分 ）</label>
-            <el-tooltip content="替换此题目" placement="top" v-if="Combine_Update_Bundle_Index != -1">
+            <el-tooltip content="替换该位置的题目" placement="top" v-if="Combine_Update_Bundle_Index != -1">
               <i class="el-icon-refresh" style="font-size: 20px; cursor: pointer" @click="Replace_It(Combine_Update_Bundle_Index, Index)"></i>
             </el-tooltip>
           </el-row>
