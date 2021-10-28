@@ -147,12 +147,15 @@ src     文件夹部分
         - Similarity.vue            试题相似度预估
         - Estimate.vue              试题属性预估
         - ImageTranscription.vue    图片转写内容
+        - Segmentation.vue          打散入库内容
 
     - resourceAnalyse - 资源分析部分，目前存放了试卷分析和试题分析的内容
         - components - 专属于resourceAnalyse的组件
             - PaperAnalysePQRoot.vue        根组件
             - PaperAnalysePackedQues.vue    自递归组件
             - PaperAnalyseQuestion.vue      最终题目显示组件
+            - SearchPaper.vue               试卷检索对话框组件
+        - MultiPaperAnalyse.vue     用于同时分析多张试卷的页面
         - PaperAnalyse.vue          试卷分析报告页面
         - PaperAnalyseInput.vue     用户录入试卷，用于分析的页面
         - QuestionAnalyse.vue       试题分析报告页面
