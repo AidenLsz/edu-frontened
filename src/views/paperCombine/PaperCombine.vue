@@ -213,7 +213,6 @@ export default {
       },
       // 清空试题篮
       Clear_Cart(){
-        this.$message.warning("您的试题篮已清空。");
         this.Question_List = [];
         this.Init_Question_Type_Chart();
       },
@@ -221,7 +220,6 @@ export default {
       Update_Question_List(val){
         this.Question_List = JSON.parse(val);
         if(this.Question_List.length == 0){
-            this.$message.warning("您的试题篮内已清空，已返回至关键词挑题页面。");
             this.Using_Menu_Index = 'keyword';
         }
       },
@@ -266,7 +264,6 @@ export default {
                 list: [Question]
             })
         }
-        this.$message.success("已添加试题至试题篮。")
         this.Init_Question_Type_Chart();
     },
     // 通过当前选择的学科学段来判断筛选按钮的样式

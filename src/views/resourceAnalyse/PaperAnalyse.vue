@@ -374,9 +374,6 @@
                 </el-row>
             </el-col>
         </el-row>
-        <!-- {{filterKPTree_Question}}
-
-        {{Combine_Replace_Question_Info}} -->
     </el-dialog>
     <!-- 题包替换页面 -->
     <el-dialog 
@@ -576,7 +573,7 @@
         </el-row>
     </el-dialog>
     <el-row justify="start" type="flex">
-        <el-col style="padding-left: 25px; margin-top: 5vh">
+        <el-col style="padding-left: 25px; margin-top: 5vh; margin-left: 5vw">
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item >分析</el-breadcrumb-item>
