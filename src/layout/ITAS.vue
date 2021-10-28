@@ -497,15 +497,6 @@ export default {
         }
       });
     },
-    getGroups() {
-      commonAjax(this.backendIP + "/api/get_users_by_admin", {}).then((res) => {
-        if (res.data.length > 0 && res.data.some((data) => data.is_admin)) {
-          this.isGroup = true;
-        }else {
-          this.isGroup=false
-        }
-      });
-    },
     QAS(index) {
       if (index == 0) {
         this.$router.push({
@@ -563,18 +554,6 @@ export default {
     goToMainPage() {
       this.$router.push({
         path: this.rootPath
-      });
-      this.ToTop();
-    },
-    knowledegeUnitSearch(){
-      this.$router.push({
-        path: this.rootPath + "ku"
-      });
-      this.ToTop();
-    },
-    composePaperSystem(){
-      this.$router.push({
-        path: this.rootPath + "paperCombine"
       });
       this.ToTop();
     },
