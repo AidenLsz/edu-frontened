@@ -1,27 +1,27 @@
 <template>
     <div
         id="Page"
-        v-loading="Waiting_Param"
+        v-loading.fullscreen.lock="Waiting_Param"
         :element-loading-text="Waiting_Text"
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.28)">
         <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
         <div class="Jump_Bar">
-            <el-row 
-                class="Jump_Item" 
+            <el-row
+                class="Jump_Item"
                 @click.native="Jump_To('Filter')">
                 <i class="el-icon-download" style="transform: rotate(180deg);"></i>
             </el-row>
-            <el-row 
-                v-for="i in Question_List.length" 
-                :key="'Jump_Item_' + i" 
+            <el-row
+                v-for="i in Question_List.length"
+                :key="'Jump_Item_' + i"
                 class="Jump_Item"
                 @click.native="Jump_To('Question_' + (i-1))">
                 {{i}}
             </el-row>
-            <el-row 
-                class="Jump_Item" 
-                v-if="Question_List.length > 0" 
+            <el-row
+                class="Jump_Item"
+                v-if="Question_List.length > 0"
                 @click.native="Jump_To('Page_Seg')">
                 <i class="el-icon-download"></i>
             </el-row>
@@ -138,9 +138,9 @@
         <el-row type="flex" justify="center" style="padding-top: 5vh;" class="Main_Background">
             <el-col>
                 <!-- 面包屑行 -->
-                <el-row 
+                <el-row
                     class="Padding_Width"
-                    type="flex" 
+                    type="flex"
                     ref="BreadCrumb_Line"
                     justify="start">
                     <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -151,20 +151,20 @@
                             试题检索
                         </el-breadcrumb-item>
                     </el-breadcrumb>
-                    
+
                 </el-row>
                 <!-- 页面标题行 -->
-                <el-row 
+                <el-row
                     class="Padding_Width"
-                    type="flex" 
-                    justify="start" 
+                    type="flex"
+                    justify="start"
                     style="margin-top: 2vh;">
                     <span style="font-size: 4rem">试题检索</span>
                 </el-row>
                 <!-- 功能区 -->
-                <el-row 
+                <el-row
                     class="Padding_Width"
-                    id="Filter" 
+                    id="Filter"
                     style="margin-bottom: 20px">
                     <el-col :span="16" style="min-height: 400px;">
                         <!-- 不同功能 -->
@@ -172,7 +172,7 @@
                         <el-row type="flex" justify="start" class="Filter_Line">
                             <span class="Filter_Label">学段</span>
                             <div class="Filter_Item_Shadow">
-                                <span 
+                                <span
                                     v-for="(Period_Item, Period_Item_Index) in All_Options.Period" :key="'Filter_Period_' + Period_Item_Index"
                                     :class="Focus_Filter('Period', Period_Item)"
                                     :style="Filter_Item('Period', Period_Item_Index)"
@@ -184,7 +184,7 @@
                         <el-row type="flex" justify="start" class="Filter_Line">
                             <span class="Filter_Label">学科</span>
                             <div class="Filter_Item_Shadow">
-                                <span 
+                                <span
                                     v-for="(Subject_Item, Subject_Item_Index) in All_Options.Subject" :key="'Filter_Subject_' + Subject_Item_Index"
                                     :class="Focus_Filter('Subject', Subject_Item)"
                                     :style="Filter_Item('Subject', Subject_Item_Index)"
@@ -196,7 +196,7 @@
                         <el-row type="flex" justify="start" class="Filter_Line">
                             <span class="Filter_Label">题型</span>
                             <div class="Filter_Item_Shadow">
-                                <span 
+                                <span
                                     v-for="(Type_Item, Type_Item_Index) in All_Options.Type" :key="'Filter_Type_' + Type_Item_Index"
                                     :class="Focus_Filter('Type', Type_Item)"
                                     :style="Filter_Item('Type', Type_Item_Index)"
@@ -208,7 +208,7 @@
                         <el-row type="flex" justify="start" class="Filter_Line">
                             <span class="Filter_Label">难度</span>
                             <div class="Filter_Item_Shadow">
-                                <span 
+                                <span
                                     v-for="(Difficulty_Item, Difficulty_Item_Index) in All_Options.Difficulty" :key="'Filter_Difficulty_' + Difficulty_Item_Index"
                                     :class="Focus_Filter('Difficulty', Difficulty_Item)"
                                     :style="Filter_Item('Difficulty', Difficulty_Item_Index)"
@@ -229,7 +229,7 @@
                         <el-row type="flex" justify="start" class="Filter_Line">
                             <span class="Filter_Label">题库</span>
                             <div class="Filter_Item_Shadow">
-                                <span 
+                                <span
                                     v-for="(Database_Item, Database_Item_Index) in All_Options.Database" :key="'Filter_Database_' + Database_Item_Index"
                                     :class="Focus_Filter('Database', Database_Item.nick)"
                                     :style="Filter_Item('Database', Database_Item_Index)"
@@ -241,7 +241,7 @@
                         <el-row type="flex" justify="start" class="Filter_Line">
                             <span class="Filter_Label">匹配方式</span>
                             <div class="Filter_Item_Shadow">
-                                <span 
+                                <span
                                     v-for="(Semantic_Item, Semantic_Item_Index) in All_Options.Semantic" :key="'Filter_Semantic_' + Semantic_Item_Index"
                                     :class="Focus_Filter('Semantic', Semantic_Item)"
                                     :style="Filter_Item('Semantic', Semantic_Item_Index)"
@@ -252,8 +252,8 @@
                         </el-row>
                         <el-row type="flex" justify="start" class="Filter_Line">
                             <span class="Filter_Label">检索框</span>
-                            <el-input 
-                                v-model="Search_Content" 
+                            <el-input
+                                v-model="Search_Content"
                                 :disabled="Search_Extra == 'ImgSearch'"
                                 @keyup.enter.native="Search_Do()"
                                 placeholder="请输入想要检索的试题文字内容"
@@ -263,21 +263,21 @@
                         <el-row type="flex" justify="start" class="Filter_Line" style="margin-top: 3vh">
                             <span class="Filter_Label"></span>
                             <!-- 开始检索的按钮 -->
-                            <el-button 
-                                type="primary" 
+                            <el-button
+                                type="primary"
                                 style="margin-right: 16px; border-radius: 10px;"
                                 class="Search_Button"
                                 @click="Search_Do()">
                                 <i class="el-icon-search" style="margin-right: 4px"></i>开始检索
                             </el-button>
                             <!-- 打开输入助手的按钮 -->
-                            <el-button  
+                            <el-button
                                 style="margin-right: 16px; border-radius: 10px;"
                                 @click="Complex_Input_Dialog = true">
                                 <span style="margin-right: 4px">&Sigma;</span>输入助手
                             </el-button>
                             <!-- 切换知识点过滤检索或者文件检索的按钮 -->
-                            <el-button 
+                            <el-button
                                 style="border-radius: 10px;"
                                 @click="Change_Search_Extra()">
                                 <i class="el-icon-location" style="margin-right: 4px"></i>
@@ -286,15 +286,15 @@
                         </el-row>
                     </el-col>
                     <el-col :span="7" :offset="1" style="height: 512px" v-show="Search_Extra == 'ImgSearch'">
-                        <input 
-                            type='file' 
-                            id="ImgInput" 
+                        <input
+                            type='file'
+                            id="ImgInput"
                             ref="ImgInput"
                             :multiple="false"
-                            @change="Img_Upload_Input($event)"
-                            accept='.jpg, .jpeg, .png.'
+                            @change="File_Upload_Input($event)"
+                            accept='.jpg, .jpeg, .png, .docx, .doc'
                             style="display: none"/>
-                        <div 
+                        <div
                             id="ImgSearchArea"
                             v-show="Img_All == ''"
                             @click="Img_Upload()"
@@ -303,7 +303,7 @@
                             <el-row style="margin-top: 40%">
                                 <i class="el-icon-upload" style="font-size: 60px"></i><br/>
                                 <span style="font-size: 18px; margin-top: 5px; margin-bottom: 5px; display: inline-block">点击或粘贴以上传</span><br/>
-                                <span>支持图片检索</span>
+                                <span>支持图片和word文档</span>
                             </el-row>
                         </div>
                         <div
@@ -331,50 +331,50 @@
                         </el-row>
                     </el-col>
                 </el-row>
-                <el-row 
+                <el-row
                     v-if="Question_List.length == 0"
                     style="height: 60px; width: 100%">
 
                 </el-row>
-                <el-row 
+                <el-row
                     v-else
                     style="height: 60px; line-height: 40px; width: 100%; padding-bottom: 20px"
                     type="flex"
                     justify="center">
-                    <i 
-                        class="el-icon-d-arrow-left" 
-                        @click="Jump_To('Question_0')" 
+                    <i
+                        class="el-icon-d-arrow-left"
+                        @click="Jump_To('Question_0')"
                         style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer; z-index: 3"></i>
                 </el-row>
             </el-col>
         </el-row>
-        <el-row 
+        <el-row
             v-for="(Question, Question_Index) in Question_List"
             :style="Get_Card_Background(Question_Index)"
-            :key="'Question_' + Question_Index" 
+            :key="'Question_' + Question_Index"
             >
             <div
                 :style="Get_Card_Margin(Question_Index)"
                 >
-                <el-row 
+                <el-row
                     :id="'Question_' + Question_Index"
                     style="width: 100%; height: 64px; background: transparent; opacity: 0; z-index: -1">
 
                 </el-row>
                 <el-row class="Question_Card" style="background: white">
-                    <NewSearchQuesItem 
-                        :Question="Question" 
+                    <NewSearchQuesItem
+                        :Question="Question"
                         :Question_Index="Question_Index"
                         @Check_Question_Analysis="Check_Question_Analysis"
                         @Expand_Aim="Expand_Aim"></NewSearchQuesItem>
                 </el-row>
             </div>
         </el-row>
-        <el-row 
-            v-if="Question_List.length != 0" 
+        <el-row
+            v-if="Question_List.length != 0"
             id="Page_Seg"
             style="padding-top: 20px; padding-bottom: 20px; background: transparent">
-            <el-pagination 
+            <el-pagination
                 @current-change="Page_Index_Change"
                 :current-page.sync="Page_Index"
                 :page-size="Page_Length"
@@ -382,20 +382,52 @@
                 :total="Total_Count">
             </el-pagination>
         </el-row>
+        <cut-file ref='cutFile' @search="handleSearch"/>
+        <el-dialog
+          title="选择学科"
+          :visible.sync="confirmSubjectDialogVisible"
+          width="800px">
+          <el-row type="flex" justify="start" style="margin-bottom: -1vh">
+            <el-col style="margin-left:80px;width:280px;">
+                <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; font-size: 18px">
+                    <label>请选择文件对应的学科:</label>
+                </el-row>
+            </el-col>
+            <el-col :span="20" :offset="1">
+                <el-row type="flex" justify="start">
+                    <el-select v-model="paper_type" placeholder="请选择科目">
+                      <el-option
+                          v-for="item in multiExerciseMap"
+                          :key="item.label"
+                          :label="item.label"
+                          :value="item.label">
+                      </el-option>
+                    </el-select>
+                </el-row>
+            </el-col>
+          </el-row>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="confirmSubjectDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="Doc_Upload_Input">确 定</el-button>
+          </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 
+import * as variable from '@/common/utils/variable'
 import {commonAjax} from '@/common/utils/ajax'
 import NewSearchQuesItem from '@/views/testPage/New_SearchQues_Item'
 import QuestionAnalyse from '@/views/testPage/New_QuestionAnalyse'
 import ComplexInput from '@/common/components/ComplexInput'
+import CutFile from '@/views/testPage/CutFile.vue'
+
 
 export default {
   name: "",
   components:{
-      NewSearchQuesItem, QuestionAnalyse, ComplexInput
+      NewSearchQuesItem, QuestionAnalyse, ComplexInput,CutFile
   },
   data() {
     return {
@@ -430,7 +462,7 @@ export default {
         Search_Content: "",
         // 设定额外搜索条件，KnowledgePoint指知识点筛选模式，ImgSearch指图片检索模式
         // 可以通过点击按钮切换到另外一个模式
-        Search_Extra: "KnowledgePoint",
+        Search_Extra: "ImgSearch",
         // 用于备份整张的图片，配合用于进行切分，默认值是空
         Img_All: "",
         // 用于保存拿来检索的图片被切分后的内容
@@ -495,6 +527,11 @@ export default {
         Waiting_Text: "",
         // 输入助手的对话框
         Complex_Input_Dialog: false,
+        formData:'',
+        config:'',
+        confirmSubjectDialogVisible:false,
+        file:'',
+        paper_type:'语文'
     };
   },
   destroyed(){
@@ -503,6 +540,11 @@ export default {
     ImgSearchArea.removeEventListener('dragleave', this.onDragOut, true);
     ImgSearchArea.removeEventListener('drop', this.onDrop, true);
     window.removeEventListener('paste', this.Paste_Function)
+  },
+  computed:{
+    multiExerciseMap(){
+      return variable.multiExerciseMap
+    }
   },
   mounted(){
     this.InitDatabaseList()
@@ -621,6 +663,47 @@ export default {
         // 通过点击区域来激活图片选择用的input组件
         Img_Upload(){
             this.ImgInput.click();
+        },
+        File_Upload_Input(event){
+          if (/image\/\w+/.test(event.target.files[0].type)) {
+            this.Img_Upload_Input(event)
+          }else {
+            this.file = event.target.files[0]
+            this.confirmSubjectDialogVisible=true;
+            // this.Confirm_Paper_Type();
+            // this.Doc_Upload_Input(event)
+          }
+        },
+        // Confirm_Paper_Type(){
+        // },
+        // 上传文件的方法
+        Doc_Upload_Input(){
+          this.confirmSubjectDialogVisible=false
+          // console.log(this.paper_type);
+          this.formData = new FormData();
+
+          this.formData.append("files", this.file);
+
+          this.config = {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          };
+          let res = variable.multiExerciseMap.filter((item)=>item.label==this.paper_type)
+          this.formData.append("paper_type", res[0].val);
+          this.formData.append("data_format", '0');
+          // 为了防止需要老版本的地方崩溃，先加了这个，以后用不到了再说
+          this.formData.append("paper_Cut_New", true);
+          this.$refs.cutFile.uploadAndCut(this.formData, this.config)
+        },
+        handleSearch(ItemContent,Search_Type){
+          this.Search_Extra = Search_Type
+          if (Search_Type == 'ImgSearch') {
+            this.Img_Cut = ItemContent
+          }else{
+            this.Search_Content = ItemContent
+          }
+          this.Search_Do()
         },
         // 实际处理图片选择事件
         Img_Upload_Input(event){
@@ -762,7 +845,7 @@ export default {
             }).catch(() => {
 
             })
-            
+
         },
         // 检索用的方法
         Search_Do(){
@@ -814,7 +897,7 @@ export default {
                 }, 100)
             })
 
-            return 
+            return
         },
         // 滚动到顶部
         Page_Index_Change(){
@@ -903,11 +986,11 @@ export default {
 }
 
 .Filter_Label{
-    width: 90px; 
-    font-size: 18px; 
+    width: 90px;
+    font-size: 18px;
     font-weight: bold;
-    height: 40px; 
-    line-height: 40px; 
+    height: 40px;
+    line-height: 40px;
     text-align: left;
 }
 
@@ -944,9 +1027,9 @@ export default {
 }
 
 .Jump_Item{
-    width: 36px; 
+    width: 36px;
     height: 36px;
-    line-height: 36px; 
+    line-height: 36px;
     margin-bottom: 12px;
     border-radius: 7px;
     background: white;
@@ -985,11 +1068,11 @@ export default {
 }
 
 .ImgSearchArea{
-    width: 100%; 
-    height: 452px; 
-    border: 1px solid #ccc; 
-    border-radius: 15px; 
-    text-align: center; 
+    width: 100%;
+    height: 452px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    text-align: center;
     background: white;
     box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
 }
@@ -1021,4 +1104,5 @@ export default {
 .Search_Button:hover{
     background: #4484B8;
 }
+
 </style>
