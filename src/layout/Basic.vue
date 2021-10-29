@@ -295,10 +295,25 @@
             </el-submenu>
           </el-menu> -->
           <el-col>
-            <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
-              <el-button type="text" @click="Expand_Navbar_Drawer_Part == '功能' ? Expand_Navbar_Drawer_Part = '' : Expand_Navbar_Drawer_Part = '功能'" class="Narrow_Navbar_Button"
-                >功能</el-button
-              >
+            <el-row 
+              type="flex" 
+              justify="start" 
+              style="cursor: pointer"
+              @click.native="Expand_Navbar_Drawer_Part == '功能' ? Expand_Navbar_Drawer_Part = '' : Expand_Navbar_Drawer_Part = '功能'">
+              <el-col :span="12">
+                <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+                  <el-button type="text" @click="Expand_Navbar_Drawer_Part == '功能' ? Expand_Navbar_Drawer_Part = '' : Expand_Navbar_Drawer_Part = '功能'" class="Narrow_Navbar_Button"
+                    >功能</el-button
+                  >
+                </el-row>
+              </el-col>
+              <el-col :span="12">
+                <el-row type="flex" justify="end" class="Narrow_Navbar_Item">
+                  <i 
+                    :class="Expand_Navbar_Drawer_Part == '功能' ? 'el-icon-arrow-up' : 'el-icon-arrow-down' " 
+                    style="height: 80px; line-height: 80px; margin-top: -1px;"></i>
+                </el-row>
+              </el-col>
             </el-row>
             <el-row v-if="Expand_Navbar_Drawer_Part == '功能'" style="padding-left: 20px">
               <el-collapse accordion>
@@ -1181,9 +1196,9 @@ export default {
   top: 0;
   width: 100%;
   z-index: 999;
-  background: rgba($color: white, $alpha: 0.72);
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
+  background: rgba($color: white, $alpha: 0.76);
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   margin-top: 0px;
