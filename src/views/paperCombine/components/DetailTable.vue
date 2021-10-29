@@ -619,8 +619,8 @@ export default {
           "score": Info.score,
           "subject": [this.Subject],
           "period": [this.Period],
-          // "difficulty": [parseFloat(Info.difficulty[0]), parseFloat(Info.difficulty[1])],
-          "difficulty": [0, 1],
+          "difficulty": [parseFloat(Info.difficulty[0]), parseFloat(Info.difficulty[1])],
+          // "difficulty": [0, 1],
           "type": type,
           "knowledge": knowledge_Dict
         }

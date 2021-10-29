@@ -6,7 +6,9 @@
                 :Sub_Index="Index" 
                 :Name_P="'P_' + I" 
                 style="width: 100%"
-                @QuestionReport="ReportSend"></PaperAnalysePackedQuestion>
+                :Combine_Update_Bundle_Index="Combine_Update_Bundle_Index"
+                @QuestionReport="ReportSend"
+                @Replace_Aim="Replace_Aim"></PaperAnalysePackedQuestion>
         </el-row>
     </div>
 </template>
@@ -17,7 +19,11 @@ export default {
     name: 'PQRoot',
     props: {
         PackedQues: Object,
-        Index: Number
+        Index: Number,
+        Combine_Update_Bundle_Index:{
+            type: Number,
+            default: -1
+        }
     },
     components: {
         PaperAnalysePackedQuestion
@@ -30,6 +36,9 @@ export default {
     methods:{
         ReportSend(val){
             this.$emit("Report", val);
+        },
+        Replace_Aim(val){
+            this.$emit("Replace_Aim", val)
         }
     }
 }

@@ -1,7 +1,7 @@
 <template>
   <div
     class="exercise"
-    style="margin-bottom: 40px; margin-top: 5vh"
+    style="margin-bottom: 40px; margin-top: 10px"
     v-loading="Question_Analysing"
     element-loading-text="正在加载，请稍后..."
     element-loading-spinner="el-icon-loading"

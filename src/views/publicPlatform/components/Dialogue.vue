@@ -817,7 +817,4 @@ export default {
 #image :hover {
   cursor: pointer;
 }
-// #edit ::v-deep .el-button--goon {
-// 	background-color: #000000;
-// }
 </style>

@@ -1,8 +1,13 @@
 <!-- 作为递归自身的节点 -->
 <template>
     <div 
-        style="margin: 0px 10vw 10px 10vw" 
-        ref="QuestionInfo">
+        style="margin: 0px 6vw 10px 6vw" 
+        ref="QuestionInfo"
+        v-loading="loading"
+        element-loading-text="正在加载分析报告..."
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.28)"
+        >
         <el-row style="padding-top: 15px" id="Analyse_Title">
             <label style="font-size: 2rem">试题分析报告</label>
         </el-row>
@@ -295,50 +300,13 @@
                 </el-row>
                 <el-row 
                     v-for="(Question, Question_Index) in Similar_Question_List" 
-                    :key="Question_Index" 
-                    style="margin-bottom: 50px"
-                    :class="Get_Expand_Or_Collapse(1)"
+                    :key="Question_Index"
+                    :class="Get_Expand_Or_Collapse(1) + ' Question_Card'"
                     >
-                    <el-col :span="24" class="quesCard">
-                        <el-row style="text-align: left; padding-left: 30px; padding-top: 15px; background: white; padding-bottom: 15px">
-                            <el-col style="padding-bottom: 15px">
-                                <Mathdown :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
-                            </el-col>
-                            <el-col v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index">
-                                <el-row style="line-height: 40px" type="flex" justify="start"><span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span><Mathdown style="width:700px" :content="Option" :name="'Q_' + Question_Index + '_Option_' + Option_Index"></Mathdown></el-row>
-                            </el-col>
-                        </el-row>
-                        <el-row style="margin-bottom: 15px; padding-top: 15px">
-                            <el-col :span="4" style="line-height: 40px; color: #888; font-size: 1.5rem; padding-left: 30px; text-align: left">
-                                所属题库：{{Question.database}}
-                            </el-col>
-                            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
-                                学科：{{Question.subject}}
-                            </el-col>
-                            <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem; display: none">
-                                题型：{{Question.type}}
-                            </el-col>
-                            <el-col :span="2" style="line-height: 40px; color: #888; font-size: 1.5rem">
-                                学段：{{Question.period}}
-                            </el-col>
-                            <el-col :span="4" :offset="8" style="line-height: 40px">
-                                <el-button size="medium" plain round type="primary" @click="Expand(Question_Index)">查看答案与解析</el-button>
-                            </el-col>
-                            <el-col :span="3" style="line-height: 40px">
-                                <el-button size="medium" plain round type="primary" @click="Check_Analyse(Question.id, Question.database)">查看分析报告</el-button>
-                            </el-col>
-                        </el-row>
-                        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; line-height:30px; padding-top: 20px; border-top: 1px dashed black">
-                            <el-col>
-                                <span style="margin-bottom: 10px; display: block">答案：</span><Mathdown :content="Question.answer" :name="'Q_' + Question_Index + '_Answer'"></Mathdown>
-                            </el-col>
-                        </el-row>
-                        <el-row v-if="Expand_List[Question_Index]" style="text-align: left; padding-left: 40px; padding-bottom: 20px">
-                            <el-col>
-                                <span style="margin-bottom: 20px; display: block">解析：</span><Mathdown :content="Question.analysis" :name="'Q_' + Question_Index + '_Analysis'"></Mathdown>
-                            </el-col>
-                        </el-row>
-                    </el-col>
+                    <SearchQuestionItem 
+                        :Question="Question" 
+                        :Question_Index="Question_Index"
+                        @Check_Question_Analysis="Check_Question_Analysis"></SearchQuestionItem>
                 </el-row>
                 <el-row 
                     v-if="Similar_Question_List.length == 0" 
@@ -348,25 +316,26 @@
                     element-loading-spinner="el-icon-loading">
                     
                 </el-row>
-                <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse(1)" style="margin-top: -10px; margin-bottom: 30px">
+                <el-row type="flex" justify="center" :class="Get_Expand_Or_Collapse(1)" style="margin-top: -36px; margin-bottom: 10px">
                     <el-button v-on:click.native="Expand_Or_Collapse(1)" round size="small" plain>收起</el-button>
                 </el-row>
             </el-row>
-            <el-row type="flex" justify="center" style="margin-bottom: 50px; display: none">
-                <el-button type="success" plain @click="PDF_Switch()">保存当前页面为PDF文档</el-button>
-            </el-row> 
         </el-row>
     </div>
 </template>
  
 <script>
 
-import PaperAnalyseQuestion from "./components/PaperAnalyseQuestion.vue";
-import PaperAnalysePackedQuestion from './components/PaperAnalysePackedQues.vue'
-import Mathdown from "../../common/components/Mathdown.vue"
+import PaperAnalyseQuestion from "@/views/resourceAnalyse/components/PaperAnalyseQuestion.vue";
+import PaperAnalysePackedQuestion from '@/views/resourceAnalyse/components/PaperAnalysePackedQues'
+import Mathdown from '@/common/components/Mathdown'
+
+import SearchQuestionItem from '@/views/resourceQuery/components/SearchQuestionItem'
 
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+
+import {commonAjax} from '@/common/utils/ajax'
 
 var PDF = new jsPDF('', 'pt', 'a4');
 
@@ -450,7 +419,8 @@ export default {
   components: {
       PaperAnalyseQuestion,
       PaperAnalysePackedQuestion,
-      Mathdown
+      Mathdown,
+      SearchQuestionItem
   },
   created(){
     this.Init();
@@ -507,8 +477,6 @@ export default {
                 'label': '关键字'
             },],
         Sort_By: 'default',
-        // 是否展开这道题的详细内容
-        Expand_List: [],
         Question: this.Ques,
         Part_Expand: [true, false],
         // 这道题是不是由于默认高度过低而直接展示全部
@@ -533,7 +501,7 @@ export default {
             return "Part_Row_Style_Collapse"
         },
     Init(){
-      document.getElementById('Analyse_Title').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+        document.getElementById('Analyse_Title').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     },
     Get_Class(Analyse){
       if(Analyse){
@@ -548,21 +516,10 @@ export default {
     },
     // 搜索相近题目
     Search_Similar_Questions(){
-        
-        this.loading = true;
 
-        let config = {
-            headers: { "Content-Type": "multipart/form-data" }
-        };
+        let param = {};
 
-        let param = new FormData();
-
-        var database_list = [];
-        if(sessionStorage.isAdmin){
-            database_list = ['public', 'neea', 'iflytek']
-        }else{
-            database_list = ['public']
-        }
+        var database_list = ['public'];
 
         var content = ""
 
@@ -573,7 +530,7 @@ export default {
         }
 
         let subject_list = [this.Question.subject]
-        let period_list = []
+        let period_list = [this.Question.period]
 
         var data = JSON.stringify({
             "content": content,
@@ -581,26 +538,24 @@ export default {
             "database": database_list,
             "page_count": 1,
             "subject": subject_list,
-            "period": period_list
+            "period": period_list,
+            "difficulty": [0, 1],
+            "semantic": 0
         })
 
-        param.append("data", data);
+        param.data = data
 
-        this.$http
-        .post(this.backendIP + "/api/search", param, config, {
-            emulateJSON: true
-        })
-        .then(function(data) {
-            this.Expand_List = [];
+        commonAjax(this.backendIP+'/api/search', param)
+        .then((data)=>{
             this.Similar_Question_List = [];
-            var quess = data.data.results;
+            var quess = data.results;
             for(var i = 1; i < quess.length; i++){
                 this.Similar_Question_List.push(quess[i])
-                this.Expand_List.push(false);
             }
             this.loading = false;
             this.Init();
-        });  
+        })
+
     },
     // 判断是否显示
     Get_Display(){
@@ -610,9 +565,10 @@ export default {
             return 'Hidden'
         }
     },
-    // 修改是否展开
-    Expand(Index){
-      this.Expand_List.splice(Index, 1, !this.Expand_List[Index]);
+    // 获取点击后的信息
+    Check_Question_Analysis(val){
+        let Ques_Info = JSON.parse(val)
+        this.Check_Analyse(Ques_Info.ID, Ques_Info.DatabaseName)
     },
     // 查看单题分析报告
     Check_Analyse(ID, DatabaseName){
@@ -641,7 +597,6 @@ export default {
       .then(function(data) {
         this.Question = data.data.que_dic;
         this.Search_Similar_Questions();
-        this.loading = false;
       });    
 
       this.$nextTick(function(){
@@ -732,7 +687,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang='scss' scoped>
 .Analyse_Area{
   background: #F8FBFF;
   border-radius: 15px;
@@ -828,6 +783,15 @@ export default {
     box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.5);
     -webkit-box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.5);
 }
+
+.Question_Card{
+    background: white;
+    box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
+    margin: 64px 0;
+    border-radius: 10px;
+    opacity: 0.95;
+}
+
 /* 相似题目的卡片 */
 .quesCard{
   background: #F8FBFF; 

@@ -282,7 +282,8 @@ describe('试题检索测试', function() {
             "period": "string", 
             "stem": "string", 
             "subject": "string", 
-            "type": "string"
+            "type": "string",
+            "difficulty": "number"
           }
           if(typeof(Data.totalLength) != 'number'){
             resolve("返回值关键字比对 - 返回的试题总量数据异常")
@@ -295,9 +296,9 @@ describe('试题检索测试', function() {
           }else{
               let Check_Flag = true
               for(let i = 0; i < Key_Wait.length; i++){
-                  if(Object.keys(Key_Hope).indexOf(Key_Wait[i]) != -1 && Key_Hope[Key_Wait[i]] == typeof(Data.results[0][Key_Wait[i]])){
+                  if(Key_Wait[i] != 'difficulty' && Object.keys(Key_Hope).indexOf(Key_Wait[i]) != -1 && Key_Hope[Key_Wait[i]] == typeof(Data.results[0][Key_Wait[i]])){
                       continue
-                  }else{
+                  }else if(Key_Wait[i] != 'difficulty'){
                       Error_Msg = Error_Msg + Key_Wait[i] + "的格式不正确或者这是一个新返回的关键字\n"
                       Check_Flag = false
                   }

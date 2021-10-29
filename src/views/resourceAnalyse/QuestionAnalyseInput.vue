@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 5vh; padding-left: 5vw; padding-right: 5vw">
+  <div style="margin-top: 10px; padding-left: 5vw; padding-right: 5vw">
     <el-dialog
         :visible.sync="Wrong_Char_Dialog"
         title="格式错误提示"

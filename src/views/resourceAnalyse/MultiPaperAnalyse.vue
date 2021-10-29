@@ -1,7 +1,7 @@
 <template>
   <div
     class="MultiPaperAnalyse"
-    style="min-height: 100vh; padding-left: 10%; padding-right: 10%"
+    style="min-height: 100vh; padding-left: 10%; padding-right: 10%; padding-top: 10px"
     v-loading="Question_Analysing"
     :element-loading-text="
       progress + '/' + chosen_paper_List.length + '分析中，请等待...'
@@ -9,7 +9,7 @@
     element-loading-spinner="el-icon-loading"
   >
     <!-- <div class="panel"> -->
-    <el-row justify="start" type="flex" style="margin-top: 43px">
+    <el-row justify="start" type="flex">
       <el-col>
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>

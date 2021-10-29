@@ -61,7 +61,7 @@
                   题型：{{Bundle.desc == '选择题' ? '单选题' : Bundle.desc == '填空题' ? '填空题' : '简答题'}}
                 </el-col>
                 <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
-                  难度：{{Question.difficulty.toFixed(3)}}
+                  难度：{{Question.difficulty == null ? "暂无数据" : Question.difficulty.toFixed(3)}}
                 </el-col>
                 <el-col :span="4" :offset="2" style="line-height: 40px">
                   <el-button size="medium" plain round type="primary" @click="Expand(Bundle_Index, Question_Index)">查看答案与解析</el-button>

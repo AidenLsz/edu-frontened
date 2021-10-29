@@ -186,7 +186,7 @@
                 题型：{{Question.type}}
               </el-col>
               <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
-                难度：
+                难度：{{Question.difficulty == null ? "暂无数据" : Question.difficulty.toFixed(3)}}
               </el-col>
               <el-col :offset="9" :span="3" style="line-height: 40px;">
                 <el-button :disabled="Replacable(Question.id)" size="medium" plain round type="primary" @click="Replace_Question(Question_Index)">替换试题</el-button>
@@ -396,6 +396,7 @@
           :span="18" 
           :offset="1" 
           class="Side_Card"
+          :key="'Preview_Area_' + refresh"
           v-loading="waiting"
           :element-loading-text="waiting_text"
           element-loading-spinner="el-icon-loading"
@@ -817,16 +818,23 @@ export default {
       Replace_Question_Bundle_Index: -1,
       Replace_Question_Index: -1,
       // 用于替换的目标题目
-      Replace_Question_List: []
+      Replace_Question_List: [],
+      // 以下内容用于在组卷分析报告页面替换题目时的一些需要的信息
+      // 1:知识点层级树
+      TreeData: {},
+      // 题库目录
+      Database_List: [],
+      // 用来监控替换结果的监听器
+      Replacing_Interval: "",
+      // 替换后刷新一下页面
+      refresh: false
     }
   },
   watch:{
     Subject(){
-      console.log(this.Subject)
       this.Init_Setting_Info();
     },
     Period(){
-      console.log(this.Period)
       this.Init_Setting_Info();
     },
     Export_Setting_Type(){
@@ -837,6 +845,8 @@ export default {
     this.Init_Setting_CheckBox();
     this.Init_Setting_Info();
     this.Init_User_Database_List();
+    this.Init_KP_Tree();
+    this.Init_Database_List();
   },
   methods: {
     // 打开答题卡页面
@@ -845,6 +855,28 @@ export default {
       sessionStorage.setItem("AnswerCardSubject", this.Subject)
       let routeData = this.$router.resolve({ path: '/answerCard' });
       window.open(routeData.href, '_blank');
+    },
+    // 获取用户所具有的题库权限
+    Init_Database_List(){
+        this.Database_List = [
+          {name: 'public', nick: '公开题库'}
+        ]
+        //未登录时，不调用获取题库的端口
+        if(!this.$store.state.user.token){
+            return ;
+        }
+        commonAjax(this.backendIP+'/api/get_user_ig_name',
+          {
+            type:'Question',
+            action:'R',
+          }
+        ).then((res)=>{
+            let data=res.ig_name;
+            for (var i = 0; i < data.length; i++) {
+                this.Database_List.push({name: data[i], nick: data[i]})
+            }
+            this.Database_List[1].nick = "个人题库"
+        })
     },
     // 开始导出用于分析报告的数据
     Analyse_Combine_Paper(){
@@ -882,7 +914,112 @@ export default {
           Paper_Data: JSON.stringify(Analyse_Paper_JSON)
         }
       ).then((data)=>{
+        let Changing_Info = []
+        let Bundle_Item = {}
+        for(let Bundle_Index = 0; Bundle_Index < data.sub_question.length; Bundle_Index++){
+          let Info_Item = {
+            difficulty: 0,
+            knowledgePointInfos: {
+              ID: [],
+              Label: [],
+              Layer: []
+            },
+            update: false,
+            type: "",
+            sub_question: []
+          }
+          Bundle_Item = data.sub_question[Bundle_Index]
+          Info_Item.difficulty = Bundle_Item.difficulty_statistics.mean
+          Info_Item.type = this.Question_List[Bundle_Index].type
+          for(let Sub_Index = 0; Sub_Index < Bundle_Item.sub_question.length; Sub_Index++){
+            let Question = Bundle_Item.sub_question[Sub_Index]
+            let Question_Item = {
+              difficulty: Question.difficulty,
+              id: this.Question_List[Bundle_Index].list[Sub_Index].id,
+              stem: Question.stem,
+              options: Question.options,
+              answer: Question.answer,
+              analysis: Question.analysis,
+              score: Question.score,
+              update: false,
+              type: this.Question_List[Bundle_Index].type,
+              knowledgePointInfos: {
+                ID: [],
+                Label: [],
+                Layer: []
+              },
+            }
+            let KP_Layer = Question.knowledge_points_frontend.kp_layer
+            let KP_ID = ""
+            for(let Layer_0 = 0; Layer_0 < KP_Layer.length; Layer_0++){
+              KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].label, 0)
+              if(KP_ID != "" && Question_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+
+                Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].label)
+                Question_Item.knowledgePointInfos.Layer.push(0)
+
+                if(Info_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+                  Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].label)
+                  Info_Item.knowledgePointInfos.Layer.push(0)
+                  Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                }
+
+              }
+
+              for(let Layer_1 = 0; Layer_1 < KP_Layer[Layer_0].children.length; Layer_1++){
+                KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].children[Layer_1].label, 1)
+                if(KP_ID != "" && Question_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+
+                  Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].label)                 
+                  Question_Item.knowledgePointInfos.Layer.push(1)
+                  Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                  
+                  if(Info_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+                    Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].label)
+                    Info_Item.knowledgePointInfos.Layer.push(1)
+                    Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                  }
+
+                }
+                for(let Layer_2 = 0; Layer_2 < KP_Layer[Layer_0].children[Layer_1].children.length; Layer_2++){
+                  KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label, 2)
+                  if(KP_ID != "" && Question_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+
+                    Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label)              
+                    Question_Item.knowledgePointInfos.Layer.push(2)
+                    Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                    
+                    if(Info_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+                      Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label)
+                      Info_Item.knowledgePointInfos.Layer.push(2)
+                      Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                    }
+
+                  } 
+                }
+              }
+            }
+            Info_Item.sub_question.push(Question_Item)
+          }
+          Changing_Info.push(Info_Item)
+        }
         sessionStorage.setItem("PaperJson", JSON.stringify(data));
+        sessionStorage.setItem("ChangingCombine", true)
+        sessionStorage.setItem("ChangingCombineInfo", JSON.stringify(Changing_Info))
+        sessionStorage.setItem("ChangingKPTree", JSON.stringify(this.TreeData))
+        sessionStorage.setItem("ChangingDatabaseList", JSON.stringify(this.Database_List))
+        sessionStorage.setItem("SubjectAndPeriod", JSON.stringify({
+          Subject: this.Subject,
+          Period: this.Period
+        }))
+        window.localStorage.removeItem("Replacing_Result")
+        this.Replacing_Interval = setInterval(()=>{
+          let Result = window.localStorage.getItem("Replacing_Result")
+          if(Result){
+            this.Start_Replace_Questions(Result)
+          }
+        }, 50)
         let routeData = this.$router.resolve({ path: '/paperAnalyse' });
         window.open(routeData.href, '_blank');
         this.$message.success("试题详情内容已在新页面展开。");
@@ -893,6 +1030,56 @@ export default {
         this.waiting = false;
         this.waiting_text = ""
       })
+    },
+    Start_Replace_Questions(Result){
+      clearInterval(this.Replacing_Interval)
+      let List = JSON.parse(Result)
+      this.$emit("Clear_Cart", true)
+      for(let i = 0; i < List.length; i++){
+        this.$emit("Add_To_Cart", JSON.stringify(List[i]));
+      }
+      this.$emit("Jump_To_SC", true)
+      this.refresh = !this.refresh
+    },
+    Search_KP_ID(Label, Layer){
+      for(let Layer_0 = 0; Layer_0 < this.TreeData.length; Layer_0++){
+        if(Label == this.TreeData[Layer_0].label && Layer == this.TreeData[Layer_0].level){
+          return this.TreeData[Layer_0].id
+        }
+        for(let Layer_1 = 0; Layer_1 < this.TreeData[Layer_0].children.length; Layer_1++){
+          if(Label == this.TreeData[Layer_0].children[Layer_1].label && Layer == this.TreeData[Layer_0].children[Layer_1].level){
+            return this.TreeData[Layer_0].children[Layer_1].id
+          }
+          for(let Layer_2 = 0; Layer_2 < this.TreeData[Layer_0].children[Layer_1].children.length; Layer_2++){
+            if(Label == this.TreeData[Layer_0].children[Layer_1].children[Layer_2].label && 
+              Layer == this.TreeData[Layer_0].children[Layer_1].children[Layer_2].level){
+              return this.TreeData[Layer_0].children[Layer_1].children[Layer_2].id
+            }
+          }
+        }
+      }
+    },
+    // 获取知识树
+    Init_KP_Tree(){
+
+      let config = {
+          headers: {
+              "Content-Type": "multipart/form-data"
+          },
+          emulateJSON: true
+      }
+
+      let param = new FormData();
+
+      param.append('system', 'tiku');
+      param.append('subject', this.Subject);
+      param.append('period', this.Period);
+
+      this.$http
+          .post(this.backendIP + "/api/getKnowledgeSystem", param, config)
+          .then(function(data) {
+            this.TreeData = data.body.knowledge_system
+          })
     },
     // 开始导出用于下载的数据
     Download_Paper(){

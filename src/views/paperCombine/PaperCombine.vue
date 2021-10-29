@@ -1,7 +1,7 @@
 <template>
-  <div style=" margin-top: 5vh;">
+  <div>
     <!-- 地址框 -->
-    <el-row justify="start" type="flex" style="margin-bottom: 3vh; margin-left: 5vw; margin-right: 5vw">
+    <el-row justify="start" type="flex" style="margin-bottom: 3vh; margin-left: 5vw; margin-right: 5vw; margin-top: 10px;">
       <el-col>
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -73,7 +73,7 @@
                 细目表挑题
             </el-row>
         </el-col>
-        <el-col :span="2" :class="Menu_Now('autoCombine')" @click.native="Jump_To('autoCombine')" style="display: none">
+        <el-col :span="2" :class="Menu_Now('autoCombine')" @click.native="Jump_To('autoCombine')">
             <el-row type="flex" justify="center">
                 智能组卷
             </el-row>
@@ -141,6 +141,9 @@
     <el-row v-if="Using_Menu_Index == 'startCombine'">
         <StartCombine 
             @Update_Question_List="Update_Question_List"
+            @Jump_To_SC="Jump_To_SC"
+            @Add_To_Cart="Add_To_Question_Cart" 
+            @Clear_Cart="Clear_Cart"
             :Question_List.sync="Question_List"
             :Period.sync="Selected_Period" 
             :Subject.sync="Selected_Subject"></StartCombine>
@@ -210,7 +213,6 @@ export default {
       },
       // 清空试题篮
       Clear_Cart(){
-        this.$message.warning("您的试题篮已清空。");
         this.Question_List = [];
         this.Init_Question_Type_Chart();
       },
@@ -218,7 +220,6 @@ export default {
       Update_Question_List(val){
         this.Question_List = JSON.parse(val);
         if(this.Question_List.length == 0){
-            this.$message.warning("您的试题篮内已清空，已返回至关键词挑题页面。");
             this.Using_Menu_Index = 'keyword';
         }
       },
@@ -263,7 +264,6 @@ export default {
                 list: [Question]
             })
         }
-        this.$message.success("已添加试题至试题篮。")
         this.Init_Question_Type_Chart();
     },
     // 通过当前选择的学科学段来判断筛选按钮的样式
