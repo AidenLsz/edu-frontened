@@ -537,7 +537,8 @@
             style="margin-bottom: 25px">
             <el-col>
                 <el-row type="flex" justify="start" style="margin-bottom: 10px">
-                    <label>第{{Bundle_Index + 1}}大题：{{Bundle.type}} —— 当前状态：{{Bundle_Updated_Check(Bundle)}}</label>
+                    <label style="margin-right: 30px">第{{Bundle_Index + 1}}大题：{{Bundle.type}} —— 当前状态：{{Bundle_Updated_Check(Bundle)}}</label>
+                    <el-button type="text" :disabled="Bundle_Updated_Check(Bundle) == '暂无被替换的题目'" style="margin-top: -10px" @click="Reset_To_Origin(Bundle_Index)">将此题包重置为原题包</el-button>
                 </el-row>
                 <el-row 
                     v-for="(Question, Question_Index) in Bundle.sub_question"
@@ -554,7 +555,13 @@
                                 :name="'Replacing_Results_Backup_' + Bundle_Index + '_' + Question_Index"></Mathdown>
                         </el-row>
                         <el-row v-if="Question.update" type="flex" justify="center">
-                            <i class="el-icon-arrow-down" style="font-size: 30px; opacity: 0.7; color: #409EFF; margin: 10px; font-weight: bold"></i>
+                            <i class="el-icon-arrow-down" style="font-size: 30px; opacity: 0.7; color: #409EFF; margin: 10px; font-weight: bold; margin-right: 30px"></i>
+                            <el-tooltip content="还原为初始题目" placement="right">
+                                <i 
+                                    class="el-icon-delete" 
+                                    @click="Reset_To_Origin(Bundle_Index, Question_Index)"
+                                    style="font-size: 30px; opacity: 0.7; color: #409EFF; margin: 10px; font-weight: bold; cursor: pointer"></i>
+                            </el-tooltip>
                         </el-row>
                         <el-row
                             type="flex" 
@@ -1288,6 +1295,21 @@ export default {
         document.getElementById('Analyse_Title').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     },
     methods: {
+        // 取消某道题或某个题包的替换
+        Reset_To_Origin(Bundle_Index, Question_Index = null){
+            if(Question_Index == null){
+                this.Update_Combine_Paper.splice(Bundle_Index, 1, this.Backup_Combine_Paper[Bundle_Index])
+            }else{
+                this.Update_Combine_Paper[Bundle_Index].sub_question.splice(Question_Index, 1, this.Backup_Combine_Paper[Bundle_Index].sub_question[Question_Index])
+                let All_Replace = true;
+                for(let i = 0; i < this.Update_Combine_Paper[Bundle_Index].sub_question.length; i++){
+                    if(this.Update_Combine_Paper[Bundle_Index].sub_question[i].update == false){
+                        All_Replace = false;
+                    }
+                }
+                this.Update_Combine_Paper[Bundle_Index].update = All_Replace;
+            }
+        },
         // 最终确认要替换了
         Final_Check_Replace(){
             let Question_List = [];
