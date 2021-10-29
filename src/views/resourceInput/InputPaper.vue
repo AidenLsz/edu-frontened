@@ -1,6 +1,6 @@
 <template>
   <div 
-    style="padding-top: 5vh; padding-left: 5vw; padding-right: 5vw"
+    style="padding-top: 10px; padding-left: 5vw; padding-right: 5vw"
     v-loading="File_Uploading"
     element-loading-text="加载中，请等待..."
     element-loading-spinner="el-icon-loading">

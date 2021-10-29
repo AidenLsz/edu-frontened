@@ -5,7 +5,7 @@
     element-loading-text="加载中，请等待..."
     element-loading-spinner="el-icon-loading"
     style="
-      padding-top: 43px;
+      padding-top: 10px;
 
       min-height: 100vh;
     "

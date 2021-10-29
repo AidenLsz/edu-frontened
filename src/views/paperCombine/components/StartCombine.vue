@@ -186,7 +186,7 @@
                 题型：{{Question.type}}
               </el-col>
               <el-col :span="3" style="line-height: 40px; color: #888; font-size: 1.5rem">
-                难度：
+                难度：{{Question.difficulty == null ? "暂无数据" : Question.difficulty.toFixed(3)}}
               </el-col>
               <el-col :offset="9" :span="3" style="line-height: 40px;">
                 <el-button :disabled="Replacable(Question.id)" size="medium" plain round type="primary" @click="Replace_Question(Question_Index)">替换试题</el-button>

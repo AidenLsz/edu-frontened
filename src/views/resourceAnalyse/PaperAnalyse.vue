@@ -1340,7 +1340,7 @@ export default {
         Replace_Question_With_It(Question){
             // 单题替换、题包替换的信息内容
             let Temp_Question = {
-                difficulty: Question.difficulty ? Question.difficulty : 0.5,
+                difficulty: Question.difficulty != null ? Question.difficulty : this.Combine_Replace_Question_Info.difficulty,
                 id: Question.id,
                 stem: Question.stem,
                 options: Question.options,

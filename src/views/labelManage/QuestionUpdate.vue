@@ -2,8 +2,9 @@
   <div class="main-container">
     <el-row
         style="
-        padding: 40px 10% 30px;
+        padding: 10px 10% 30px;
         text-shadow: 2px 6px 10px rgba(67, 92, 130, 0.14);
+        border: 1px solid black
       "
         justify="start"
         type="flex"

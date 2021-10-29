@@ -4,7 +4,7 @@
     v-loading="waiting"
     element-loading-text="正在准备答题卡，请稍后..."
     element-loading-spinner="el-icon-loading">
-    <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; padding-top: 50px; margin-bottom: 30px;">
+    <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; padding-top: 22px; margin-bottom: 30px;">
       <el-dialog 
         :visible.sync="Edit_Part_Dialog"
         title="编辑题目分区信息"

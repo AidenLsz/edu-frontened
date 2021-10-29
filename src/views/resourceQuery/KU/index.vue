@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 <template>
-  <div class="ku" style="margin-top: 5vh">
+  <div class="ku" style="padding-top: 10px">
     <el-dialog
         :visible.sync="simpleInput"
         title="LUNA输入助手"

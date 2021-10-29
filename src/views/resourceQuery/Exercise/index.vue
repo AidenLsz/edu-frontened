@@ -135,7 +135,7 @@
                 </el-row>
 
             </el-dialog>
-        <el-row type="flex" justify="center" style="padding-top: 5vh;" class="Main_Background">
+        <el-row type="flex" justify="center" style="padding-top: 10px" class="Main_Background">
             <el-col>
                 <!-- 面包屑行 -->
                 <el-row

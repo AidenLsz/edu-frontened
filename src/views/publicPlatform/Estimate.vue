@@ -3,7 +3,7 @@
     v-loading="content=='识别中...'"
     element-loading-text="识别中，请等待..."
     element-loading-spinner="el-icon-loading"
-    class="estimate" style="margin-top: 5vh">
+    class="estimate" style="margin-top: 10px">
     <div class="panel">
       <el-row justify="start" type="flex">
         <el-col style="padding-left: 5vw">

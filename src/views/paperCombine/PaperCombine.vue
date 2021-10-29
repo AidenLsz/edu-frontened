@@ -1,7 +1,7 @@
 <template>
-  <div style=" margin-top: 5vh;">
+  <div>
     <!-- 地址框 -->
-    <el-row justify="start" type="flex" style="margin-bottom: 3vh; margin-left: 5vw; margin-right: 5vw">
+    <el-row justify="start" type="flex" style="margin-bottom: 3vh; margin-left: 5vw; margin-right: 5vw; margin-top: 10px;">
       <el-col>
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>

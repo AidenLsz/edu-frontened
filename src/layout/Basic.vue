@@ -486,8 +486,12 @@
       </div>
     </el-drawer>
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
-    <el-header style="height: 80px; background: transparent">
-      <div id="header-sticky" class="sticky-menu">
+    <!-- <el-header style="height: 80px; background: transparent">
+      
+    </el-header> -->
+    <!-- <basic-header/> -->
+    <el-main>
+      <div id="header-sticky" class="sticky-menu" style="height: 80px;">
         <el-row class="NavBarArea" :style="Get_NavBar_Width('Normal')" type="flex" justify="center">
           <el-col :span="4" style="padding-top: 20px;">
             <el-row type="flex" justify="start">
@@ -527,9 +531,8 @@
                 style="width: 100px;">
                 <el-menu
                   mode="horizontal"
-                  style="padding-bottom: 20px; background: transparent;"
+                  style="margin-top: -6px; background: transparent; padding-bottom: 10px;"
                 >
-                  <!-- <el-menu :default-active="activeIndex" mode="horizontal" style=" border-bottom: 3px solid #409EFF; padding-bottom: 10px"> -->
                   <el-submenu index="0">
                     <template slot="title">
                       <span :style="Title_Pos()">功能</span>
@@ -655,57 +658,27 @@
                         </el-menu-item>
                       </router-link>
                     </el-submenu>
-                    <el-menu-item index="5">
-                      <router-link
+                    <router-link
                         to="/paperCombine"
                         :underline="false"
                         @click.native="ToTop"
                       >
+                      <el-menu-item index="5">
                         <span style="color: black"> 组卷系统 </span>
-                      </router-link>
-                    </el-menu-item>
-                    <el-menu-item index="6">
-                      <!-- <router-link to="/manage/dashboard" v-if="$store.state.user.name" -->
-                      <router-link
+                      </el-menu-item>
+                    </router-link>
+                    <router-link
                         to="/manage/dashboard"
                         :underline="false"
                         @click.native="ToTop"
                       >
+                      <el-menu-item index="6">
                         <span style="color: black"> 资源管理 </span>
-                      </router-link>
-                    </el-menu-item>
-                    <router-link
-                      to="/estimate"
-                      :underline="false"
-                      @click.native="ToTop"
-                      style="display: none"
-                    >
-                      <el-menu-item index="7">
-                        <span style="color: black">试题属性预估</span>
-                      </el-menu-item>
-                    </router-link>
-                    <router-link
-                      to="/similarity"
-                      :underline="false"
-                      @click.native="ToTop"
-                      style="display: none"
-                    >
-                      <el-menu-item index="8">
-                        <span style="color: black">相似题预估</span>
-                      </el-menu-item>
-                    </router-link>
-                    <router-link
-                      to="/admin"
-                      v-if="Get_Priority()"
-                      :underline="false"
-                      @click.native="ToTop"
-                    >
-                      <el-menu-item index="9">
-                        <span style="color: red">管理员页面</span>
                       </el-menu-item>
                     </router-link>
                   </el-submenu>
                 </el-menu>
+
               </div>
 
               <div 
@@ -791,10 +764,7 @@
           </el-col>
         </el-row>
       </div>
-    </el-header>
-    <!-- <basic-header/> -->
-    <el-main>
-      <div style="min-height: 100vh">
+      <div style="min-height: 100vh; padding-top: 80px;">
         <router-view :key="$route.fullPath"></router-view>
       </div>
       <basic-footer />
@@ -1198,13 +1168,12 @@ export default {
   top: 0;
   width: 100%;
   z-index: 999;
-  background: rgba($color: white, $alpha: 0.70);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
+  background: rgba($color: white, $alpha: 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   margin-top: 0px;
-  box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.3);
 }
 
 /* scrollUp */

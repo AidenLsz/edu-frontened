@@ -1,24 +1,43 @@
 <template lang="html">
-  <div>
+  <div style="overflow: visible;">
     <div class="tab panel-btn" id="openBtn" @click="openPanel()">
-          <div>切分内容</div>
-        <div class="arrow"></div>
+      <div>
+        <div><i class="el-icon-d-arrow-right"></i></div>
+        <div>多题切分结果</div>
+      </div>
     </div>
-    <el-card class="box-card right">
-      <div class="panel-btn" id="closeBtn" @click="closePanel()">
-        <i class="el-icon-d-arrow-right"></i>
+    <el-card class="box-card" id="res" style="padding:0px">
+      <div class="tab panel-btn" id="closeBtn" @click="closePanel()">
+        <div>
+          <div><i class="el-icon-d-arrow-left"></i></div>
+          <div>多题切分结果</div>
+        </div>
       </div>
       <div class="container"
+            style=""
             v-loading="File_Uploading"
             element-loading-text="加载中，请等待..."
             element-loading-spinner="el-icon-loading">
           <el-row
             v-if="Paper_Content.length!=0"
             style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer;position:relative">
-              <div style="position:absolute;top:25px;right:5px;z-index:2003">
-                <i class="el-icon-search"
-                  @click="search(-1)"
-                  style="color:#5e616d;font-size:22px;font-weight:700"></i>
+              <div style="position:absolute;top:25px;right:30px;z-index:2003">
+                <el-button
+                    class="copy-btn"
+                    @click="copy($event,-1)"
+                    data-clipboard-text="llllll"
+                    >
+                    <div class="">
+                      <i class="el-icon-copy-document"></i>复制
+                    </div>
+                </el-button>
+                <el-button
+                    class="search-btn"
+                    @click="search(-1)">
+                    <div class="">
+                      <i class="el-icon-search"></i>搜索
+                    </div>
+                </el-button>
               </div>
           </el-row>
           <el-row
@@ -28,10 +47,17 @@
                 <el-row
                   v-if="Item == 'DIVIDER_LINES'"
                   style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer;position:relative">
-                  <div style="position:absolute;top:25px;right:-25px;z-index:2003">
-                    <i class="el-icon-search"
-                      @click="search(Item_Index)"
-                      style="color:#5e616d;font-size:22px;font-weight:700"></i>
+                  <div style="position:absolute;top:25px;right:0px;z-index:2003">
+                    <el-button
+                        class="copy-btn"
+                        @click="copy($event,Item_Index)">
+                        <i class="el-icon-copy-document"></i>复制
+                    </el-button>
+                    <el-button
+                        class="search-btn"
+                        @click="search(Item_Index)">
+                        <i class="el-icon-search"></i>搜索
+                    </el-button>
                   </div>
                   <el-col>
                     <el-row
@@ -87,73 +113,12 @@
 
 <script>
 import $ from 'jquery'
+import Clipboard from 'clipboard'
 import html2canvas from "html2canvas"
 
 export default {
   data() {
     return {
-      // 将要添加的题包类型
-      Add_Bundle_Type: "单选题",
-      // 正在使用的组件
-      Using_Part: "Input",
-      // 试卷标题
-      Title: "",
-      // 用于显示最终录入科目的变量
-      Subject: "数学",
-      // 用于显示最终录入学段的变量
-      Period: "高中",
-      // 用于确定当前显示的题目类型的变量
-      // 之后会用来给录入或编辑做定位
-      Type: "单选题",
-
-      Question_Bundle: [],
-      // 拖拽的题包坐标列表
-      Draging_Questions_Rect: [],
-      // 拖拽的题包题目类型
-      Draging_Questions_Index: -1,
-      // 拖拽的题目坐标
-      Draging_Questions_Position: {
-        x: 0,
-        y: 0
-      },
-      // 正在聚焦的题目坐标，实际上准备靠这个认题目
-      Focusing_Questions_Position: {
-        x: 0,
-        y: 0
-      },
-      // 正在聚焦的题包序号
-      Focusing_Index: -1,
-      // 如果点击导入，那么默认进入的是编辑模式
-      // 此时Editing_Position 的 格式是【题包序号 题目在题包中的序号】
-      // 如果类型改变，那么这个值将被还原成空字符串
-      // 如果类型不改变，则询问是替换还是新加，如果是新加，那么将其重置为空字符串
-      // 如果是替换，则切分并读取信息，进行替换工作
-      Editing_Position: "",
-      // 老东西，Check_Do用到的过滤列表
-      // 用于输入符号提示的部分
-      en_pun_list: [',','.','?','!',':',';','\'','"','(',')','&nbsp','_','/','|','\\','<','>'],
-      ch_pun_list: ['，','。','！','？','：','；','‘','’','“','”','（','）','&nbsp','、','《','》'],
-      math_pun_list: ['+', '-', "*", "/", "%", "="],
-      // 用于展示哪些字符需要修改的对话框
-      Wrong_Char_Dialog: false,
-      // 用于展示错误数据的信息栏
-      Wrong_Char_Info: "",
-      // 保存用户的UUID信息
-      UUID: "",
-      // 刷新变量
-      Refresh: false,
-      // 第二次尝试，定位不同题包
-      Multi_Type_Insert: false,
-      // 选择用的列表
-      Multi_Info: [],
-      // 用于给多题包定位时进行等待
-      Waiting_Question: {},
-      // 跳跃变量
-      Jumping: "",
-      // 获取文件的组件
-      File_Selector: "",
-      // 文件名称
-      File_Name: "",
       // 用于存放拿来显示的变量
       Paper_Content: [],
       // 用来进行初始结果的备份
@@ -165,30 +130,30 @@ export default {
       // 标记切分点的变量
       Paper_Divider_Index: -1,
       // 是否正在等待文件切分完成
-      File_Uploading: false
-      // File_Uploading: true
+      File_Uploading: false,
+      // File_Uploading: true,
     };
   },
   components:{
   },
-
   methods:{
     // 外面点一下重置题目聚焦
     openPanel() {
-      $('.box-card.right').animate({
-        right: '0%',
+      $('.box-card').animate({
+        left: '120px',
         opacity: 1
       },'easeInOutExpo')
       $('#openBtn').hide()
       $('#closeBtn').show()
     },
     closePanel(){
-      $('.box-card.right').animate({
-        right: '-50%',
+      $('.box-card').animate({
+        left: '-100%',
         opacity: 0,
       }, 'easeInOutExpo')
       $('#openBtn').show()
       $('#closeBtn').hide()
+
     },
     uploadAndCut(formData, config) {
       this.openPanel()
@@ -237,7 +202,67 @@ export default {
       this.Paper_Content.splice(Item_Index, 1)
       this.Paper_Divider_Index = -1;
     },
+    copy(e,text){
+      const clipboard = new Clipboard(e.target, { text: () => this.Get_Content_By_Id(text).join(' ')})
+      clipboard.on('success', () => {
+        this.$message({
+          message: '复制qustion_ID成功',
+          type: 'success'
+        });
+        // 释放内存
+        clipboard.off('error')
+        clipboard.off('success')
+        clipboard.destroy()
+      })
+      clipboard.on('error', () => {
+        // 不支持复制
+        this.$message({ type: 'warning', message: '该浏览器不支持自动复制' })
+        // 释放内存
+        clipboard.off('error')
+        clipboard.off('success')
+        clipboard.destroy()
+      })
+      clipboard.onClick(e)
+    },
+    Get_Content_By_Id(Item_Index){
+      let Reg_C = new RegExp('&#xa0;', 'g')
+      let ItemContent=[]
+      for (var i = Item_Index+1; i < this.Paper_Content.length; i++) {
+        if (this.Paper_Content[i]=='DIVIDER_LINES') {
+          break;
+        }
+        // 0 代表文字和图片内容
+        // 1 代表试卷中的表格内容（不太清楚要怎么办，但总之应该是这么返回才对……吧？）
+        if(this.Paper_Content[i].para_type == '0'){
+          let Content = ""
+          for(let j = 0; j < this.Paper_Content[i].runs.length; j++){
+            if(this.Paper_Content[i].runs[j].run_type == '0'){
+              Content = Content + this.Paper_Content[i].runs[j].run_text
+            }else if(this.Paper_Content[i].runs[j].run_type == '1'){
+              Content = Content
+                + "<img src='" + this.Paper_Image_Dict[this.Paper_Content[i].runs[j].image.src] + "' "
+                + " width='" + this.Paper_Content[i].runs[j].image.width + "' "
+                + " height='" + this.Paper_Content[i].runs[j].image.height + "' "
+                + " style='" + this.Paper_Content[i].runs[j].image.style + "' "
+                + " alt='" + this.Paper_Content[i].runs[j].image.alt + "' "
+                + ">"
+            }
+          }
+          Content = Content.replace(Reg_C, "")
+          ItemContent.push(Content)
+        }else{
+          ItemContent.push(this.Table_Img_Get(this.Paper_Content[i].table_raw_html))
+        }
+      }
+      return ItemContent
+    },
     search(Item_Index){
+      this.closePanel();
+      let ItemContent = this.Get_Content_By_Id(Item_Index).join(' ')
+      if(!ItemContent.includes('data:image/png;')){
+        this.$emit('search',ItemContent,'文字检索')
+        return
+      }
       let html="<div>"
       for (var i = Item_Index+1; i < this.Paper_Content.length; i++) {
         if (this.Paper_Content[i]=='DIVIDER_LINES') {
@@ -251,9 +276,10 @@ export default {
       $('#searchQues').html(html)
       this.$nextTick(()=>{
         html2canvas(this.$refs.searchQues).then(canvas => {
+          // console.log(canvas);
           // 转成图片，生成图片地址
           $('#searchQues').html("")
-          this.$emit('search',canvas.toDataURL("image/png"))
+          this.$emit('search',canvas.toDataURL("image/png"),'ImgSearch')
         });
       })
     },
@@ -262,26 +288,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#res ::v-deep.el-card__body {
+  padding: 0px;
+}
 .container {
   display: flex;
   width:100%;
+  padding:55px 37px;
+  height: 77vh;
   flex-flow: column;
   overflow-y: scroll;
-  height: 80vh;
-  // padding-top: 20px;
-  // padding-right: 2vw;
-  // border: 3px solid #409EFF;
   border-radius: 15px;
 }
 .box-card {
-    position: fixed;
-    top:90px;
-    background: rgba(248,251, 255, .9);
-    width: 37.5%;
-    height: 85vh;
-    right: -3%;
-    z-index: 2001;
-    opacity:0;
+  position: fixed;
+  overflow: visible;
+  top:90px;
+  // background: rgba(248,251, 255, .9);
+  background: rgba(255, 255, 255, 0.95);
+  width: 792px;
+  height: 80vh;
+  left: -100%;
+  // z-index: 2001;
+  opacity:0;
 }
 .panel-btn{
   font-size: 30px;
@@ -293,36 +322,55 @@ export default {
   top:90px;
 }
 #closeBtn{
+  // z-index:2002;
   position: absolute;
   top:0;
-  left:0;
+  // position: fixed;
+  right:-48px;
 }
 .tab
 {
-    position: fixed;
-    right:0;
-    top:90px;
-    width: 30px;
-    height: 95px;
-    border-radius: 10px 0px 0px 10px;
+    position: absolute;
+    // left:0;
+    // top:90px;
+    width: 48px;
+    height: 182px;
+    border-radius: 0px 10px 10px 0px;
     background-color: #eef1f7;
     cursor:default;
-    div{
+    >div{
       width: 16px;
       margin: 8px auto;
-      line-height: 21px;
-      font-size: 16px;
-      color: #909194;
+      color:#000000;
+      font-family: "Sarasa Gothic SC";
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 22px;
+      align-items: center;
+      text-align: center;
     }
-    .arrow
-    {
-      border-color: #eef1f7 #eef1f7 transparent transparent;
-      border-style: solid;
-      border-width: 15px 15px 15px 15px;
-      height:0;
-      width:0;
-      position:absolute;
-      bottom:-23px;
-    }
+}
+.search-btn,.copy-btn{
+  margin-right:5px;
+  padding:0px 15px;
+  width: 80px;
+  height: 40px;
+  font-family: "Sarasa Gothic SC";
+  font-size: 16px;
+  line-height: 19px;
+  border-radius: 8px;
+  // display: flex;
+  // align-items: center;
+  // text-align: center;
+}
+.search-btn{
+  background-color:#539DD9;
+  color: #FFFFFF;
+}
+.copy-btn{
+  background-color: #fff;
+  color: #082135;
+  border: 1px solid rgba(0, 0, 0, 0.14)
 }
 </style>
