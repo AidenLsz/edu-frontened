@@ -92,6 +92,11 @@
                         <span style="color: black;">试题查重</span>
                       </el-menu-item>
                     </router-link>
+                    <router-link :to="rootPath+'multiSourceSearch'" :underline="false" @click.native="ToTop">
+                      <el-menu-item index="2-2">
+                        <span style="color: black;">多源检索</span>
+                      </el-menu-item>
+                    </router-link>
                     <!-- <router-link :to="rootPath+'multiexercise'" :underline="false" @click.native="ToTop">
                       <el-menu-item index="2-1">
                         <span style="color: black;">多试题查重</span>
