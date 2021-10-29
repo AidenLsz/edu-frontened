@@ -531,7 +531,7 @@
                 style="width: 100px;">
                 <el-menu
                   mode="horizontal"
-                  style="margin-top: -6px; background: transparent; padding-bottom: 10px; border-bottom: none"
+                  style="margin-top: -6px; background: transparent; border-bottom: none"
                 >
                   <el-submenu index="0">
                     <template slot="title">
@@ -867,14 +867,14 @@ export default {
         }else if(this.Width_Now >= Width_Border.min && this.Width_Now < Width_Border.max){
           return {
             "width": this.Width_Now + 'px',
-            "background": "transparent",
-            "padding": "0px 32px"
+            "padding": "0px 32px",
+            "background": "rgba($color: white, $alpha: 0.88)"
           }
         }else{
           return {
             "width": "1344px",
-            "background": "transparent",
-            "margin": "0px " + ((this.Width_Now - 1344)/2) + "px"
+            "margin": "0px " + ((this.Width_Now - 1344)/2) + "px",
+            "background": "rgba($color: white, $alpha: 0.88)"
           }
         }
       }else{
@@ -885,7 +885,7 @@ export default {
         }else{
           return {
             "padding": "0px 32px",
-            "background": "transparent",
+            "background": "rgba($color: white, $alpha: 0.88)"
           }
         }
       }
@@ -1072,7 +1072,7 @@ export default {
   .el-submenu__title {
   border-bottom: none;
   text-decoration: none;
-  background: transparent;
+  background: transparent !important;
 }
 
 .el-main .el-menu--horizontal ::v-deep .el-submenu .el-submenu__title {
@@ -1080,7 +1080,7 @@ export default {
   line-height: 18px;
   padding-top: 15px;
   border-bottom: 2px solid transparent;
-  background: transparent;
+  background: transparent !important;
   width: 50%;
   z-index: 999;
 }
@@ -1088,13 +1088,17 @@ export default {
 .el-main .el-menu .el-menu--horizontal {
   border-bottom: none;
   text-decoration: none;
-  background: transparent;
+  background: transparent !important;
 }
 
 .el-menu .el-menu--horizontal > .el-menu-item.is-active {
   border-bottom: none;
   text-decoration: none;
-  background: transparent;
+  background: transparent !important;
+}
+
+.el-drawer__body {
+   overflow: auto;
 }
 
 </style>
@@ -1180,9 +1184,9 @@ export default {
   top: 0;
   width: 100%;
   z-index: 999;
-  background: rgba($color: white, $alpha: 0.88);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba($color: white, $alpha: 0.72);
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   margin-top: 0px;
@@ -1291,14 +1295,21 @@ export default {
 
 .NavBarArea{
   position: relative;
-  background: transparent;
+  background: rgba(white, 0.88);
   padding: 0px;
   min-height: 80px;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
 }
 
 .NarbarItem{
   width: 80px;
-  padding-top: 15px
+  height: 80px;
+  padding-top: 15px;
+  box-sizing: border-box;
+  background: rgba(white, 0.88);
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
 }
 
 .NavBarButton{
