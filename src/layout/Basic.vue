@@ -531,7 +531,7 @@
                 style="width: 100px;">
                 <el-menu
                   mode="horizontal"
-                  style="margin-top: -6px; background: transparent; padding-bottom: 10px;"
+                  style="margin-top: -6px; background: transparent; padding-bottom: 10px; border-bottom: none"
                 >
                   <el-submenu index="0">
                     <template slot="title">
@@ -1043,7 +1043,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.el-header
+.el-main
   .el-menu--horizontal
   ::v-deep
   .el-submenu.is-active
@@ -1065,26 +1065,38 @@ export default {
 }
 </style>
 <style>
-.el-header
+.el-main
   .el-menu--horizontal
   ::v-deep
   .el-submenu.is-active
   .el-submenu__title {
   border-bottom: none;
+  text-decoration: none;
+  background: transparent;
 }
 
-.el-header .el-menu--horizontal ::v-deep .el-submenu .el-submenu__title {
+.el-main .el-menu--horizontal ::v-deep .el-submenu .el-submenu__title {
   height: 42px;
   line-height: 18px;
   padding-top: 15px;
   border-bottom: 2px solid transparent;
+  background: transparent;
   width: 50%;
   z-index: 999;
 }
 
-.el-header .el-menu .el-menu--horizontal {
+.el-main .el-menu .el-menu--horizontal {
   border-bottom: none;
+  text-decoration: none;
+  background: transparent;
 }
+
+.el-menu .el-menu--horizontal > .el-menu-item.is-active {
+  border-bottom: none;
+  text-decoration: none;
+  background: transparent;
+}
+
 </style>
 
 <style scoped lang="scss">
@@ -1324,8 +1336,4 @@ export default {
   margin: 10px 0px 10px 20px;
 }
 
-.Not_All_Disabled_Collapse_Item .el-collapse-item.is-disabled ::v-deep  .el-collapse-item__header {
-    color: black;
-    cursor: pointer;
-}
 </style>
