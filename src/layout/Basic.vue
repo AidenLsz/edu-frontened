@@ -868,13 +868,11 @@ export default {
           return {
             "width": this.Width_Now + 'px',
             "padding": "0px 32px",
-            "background": "rgba($color: white, $alpha: 0.88)"
           }
         }else{
           return {
             "width": "1344px",
             "margin": "0px " + ((this.Width_Now - 1344)/2) + "px",
-            "background": "rgba($color: white, $alpha: 0.88)"
           }
         }
       }else{
@@ -885,7 +883,6 @@ export default {
         }else{
           return {
             "padding": "0px 32px",
-            "background": "rgba($color: white, $alpha: 0.88)"
           }
         }
       }
@@ -1295,11 +1292,9 @@ export default {
 
 .NavBarArea{
   position: relative;
-  background: rgba(white, 0.88);
+  background: transparent;
   padding: 0px;
   min-height: 80px;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
 }
 
 .NarbarItem{
@@ -1307,9 +1302,7 @@ export default {
   height: 80px;
   padding-top: 15px;
   box-sizing: border-box;
-  background: rgba(white, 0.88);
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
+  background: transparent;
 }
 
 .NavBarButton{
