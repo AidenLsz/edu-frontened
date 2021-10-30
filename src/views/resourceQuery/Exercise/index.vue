@@ -135,7 +135,7 @@
                 </el-row>
 
             </el-dialog>
-        <el-row type="flex" justify="center" style="padding-top: 10px" class="Main_Background">
+        <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
             <el-col>
                 <!-- 面包屑行 -->
                 <el-row
@@ -281,7 +281,7 @@
                                 style="border-radius: 10px;"
                                 @click="Change_Search_Extra()">
                                 <i class="el-icon-location" style="margin-right: 4px"></i>
-                                {{Search_Extra == 'ImgSearch' ? '文件搜题' : '知识点过滤'}}模式
+                                {{Search_Extra == 'ImgSearch' ? '文件搜题' : '纯文字检索'}}模式
                             </el-button>
                         </el-row>
                     </el-col>
@@ -320,7 +320,7 @@
                             <el-button type="primary" style="border-radius: 10px; background: #539DD9" @click="Img_Reset()"><i class="el-icon-refresh" style="margin-right: 4px"></i>重新编辑</el-button>
                         </el-row>
                     </el-col>
-                    <el-col :span="7" :offset="1" style="height: 430px;" v-show="Search_Extra == 'KnowledgePoint'">
+                    <el-col :span="7" :offset="1" style="height: 430px; display: none" v-show="Search_Extra == 'KnowledgePoint'">
                         <div class="ImgSearchArea">
                             <el-row style="margin-top: 40%">
                                 知识树的处理方案仍在商讨中...
@@ -462,7 +462,7 @@ export default {
         Search_Content: "",
         // 设定额外搜索条件，KnowledgePoint指知识点筛选模式，ImgSearch指图片检索模式
         // 可以通过点击按钮切换到另外一个模式
-        Search_Extra: "ImgSearch",
+        Search_Extra: "KnowledgePoint",
         // 用于备份整张的图片，配合用于进行切分，默认值是空
         Img_All: "",
         // 用于保存拿来检索的图片被切分后的内容
@@ -531,7 +531,9 @@ export default {
         config:'',
         confirmSubjectDialogVisible:false,
         file:'',
-        paper_type:'语文'
+        paper_type:'语文',
+        // 窄窗口用的抽屉是否显示
+        Width_Now: 0,
     };
   },
   destroyed(){
@@ -554,6 +556,12 @@ export default {
     ImgSearchArea.addEventListener('dragleave', this.onDragOut, true);
     ImgSearchArea.addEventListener('drop', this.onDrop, true);
     window.addEventListener('paste', this.Paste_Function)
+    this.Width_Now = document.body.clientWidth
+  },
+  updated() {
+    window.onresize = () => {
+      this.Width_Now = document.body.clientWidth
+    }
   },
   methods: {
         // 粘贴事件
@@ -1105,6 +1113,7 @@ export default {
     background-size: auto 100%;
     background-position: right;
     background-repeat: no-repeat;
+    margin-top: -80px;
     padding-bottom: 64px;
     margin-bottom: 64px;
 }
