@@ -1,6 +1,7 @@
 <template>
     <div 
-        style="margin-left: 10vw; margin-right: 10vw"
+        :style="Get_Div_Width()"
+        align="center"
         v-loading="waiting"
         :element-loading-text="waiting_text"
         element-loading-spinner="el-icon-loading">
@@ -19,7 +20,11 @@
             </el-breadcrumb>
         </el-row>
         <el-row type="flex" justify="center" style="margin-top: 30px;">
-            <el-input v-model="MultiSearchContent" placeholder="在此输入检索关键字" style="width: 90%; margin-right: 40px; height: 40px"></el-input>
+            <el-input 
+                v-model="MultiSearchContent" 
+                @keyup.enter.native="Multi_Source_Search()"
+                placeholder="在此输入检索关键字" 
+                style="width: 90%; margin-right: 40px; height: 40px"></el-input>
             <div @click="Multi_Source_Search()" class="Search_Button" align="center">
                 <i class="el-icon-search" style="margin-right: 16px"></i>检索
             </div>
@@ -37,7 +42,9 @@
         <div v-show="Multi_Source_Search_Result.length == 0" align="center" style="width: 100%; height: 300px; line-height: 300px">
             <span style="font-size: 30px; color: #ddd">暂无检索信息</span>
         </div>
-        <div v-show="Multi_Source_Search_Result.length > 0">
+        <div 
+            id="Multi_Source_Search_Result_List"
+            v-show="Multi_Source_Search_Result.length > 0">
             <el-row 
                 v-for="(Item, Item_Index) in Multi_Source_Search_Result"
                 :key="'Multi_Source_Search_Result_' + Item_Index">
@@ -71,11 +78,11 @@
                                 <label>文件类型：</label>
                             </div>
                             <div align="left" class="Download_Row" style="width: 80px;">
-                                <span style="text-align: left">{{Item.type}}</span>
+                                <span style="text-align: left">{{Item.type.toUpperCase()}}</span>
                             </div>
                         </div>
                         <div style="width: 100%;" align="right">
-                            <el-button type="primary" @click="MultiSourceSearch(Item)">下载此文件</el-button>
+                            <el-button type="primary" @click="Multi_Source_Resource_Download(Item)">下载此文件</el-button>
                         </div>
                     </el-row>
                 </div>
@@ -95,6 +102,8 @@
 
 <script>
 
+import {commonAjax} from '@/common/utils/ajax'
+
 export default {
     name: "",
     components:{
@@ -106,12 +115,7 @@ export default {
             Subject_All_List: ["语文", "数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理"],
             Subject_Chosen_List: [],
             Multi_Source_Search_Result: [
-                {
-                    name: "某某高中某某年级某学科教案.pdf",
-                    stem: "xxxxxxxxxxxxxxxxxxxxx李白xxxxxxx",
-                    type: "pdf",
-                    subject: "语文"
-                }
+
             ],
             Total_Count: 1,
             Page_Index: 1,
@@ -125,21 +129,96 @@ export default {
                 'jpg': 'image/jpeg',
                 'jpeg': "image/jpeg"
             },
-            waiting: false
+            waiting: false,
+            waiting_text: "",
+            History_Backup: {
+                History_Content: "",
+                History_Subject_List: []
+            },
+            Width_Now: 0
         }
     },
     destroyed(){
 
     },
+    updated() {
+        window.onresize = () => {
+            this.Width_Now = document.body.clientWidth
+        }
+    },
     computed:{
         
     },
     mounted(){
-
+        this.Width_Now = document.body.clientWidth
     },
     methods: {
+        Get_Div_Width(){
+            let Width_Border = 1344
+            if(this.Width_Now < Width_Border){
+                return {
+                    "width": this.Width_Now + 'px',
+                    "padding": "0px 88px",
+                }
+            }else{
+                return {
+                    "width": "1192px",
+                    "margin": "0px " + ((this.Width_Now - 1192)/2) + "px",
+                }
+            }
+        },
+        // 跳转到某个组件的位置
+        Jump_Up(){
+            document.getElementById("Multi_Source_Search_Result_List").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+        },
+        // 检测当前是否应该重置Page_Index
+        Page_Index_Reset_Check(){
+            if(this.History_Backup.History_Content != this.MultiSearchContent){
+                this.Page_Index = 1;
+                this.History_Backup.History_Content = JSON.parse(JSON.stringify(this.MultiSearchContent));
+            }
+            if(this.History_Backup.History_Subject_List.length != this.Subject_Chosen_List.length){
+                this.Page_Index = 1;
+                this.History_Backup.History_Subject_List = JSON.parse(JSON.stringify(this.Subject_Chosen_List));
+                return
+            }
+            for(let i = 0; i < this.History_Backup.History_Subject_List.length; i++){
+                if(this.Subject_Chosen_List.indexOf(this.History_Backup.History_Subject_List[i]) == -1){
+                    this.Page_Index = 1;
+                    this.History_Backup.History_Subject_List = JSON.parse(JSON.stringify(this.Subject_Chosen_List));
+                    return
+                }
+            }
+        },
+        // 多源内容检索
         Multi_Source_Search(){
-            this.$message.success("检索中...")
+
+            this.Page_Index_Reset_Check();
+
+            this.waiting = true;
+            this.waiting_text = "资源检索中，请稍后..."
+            let Param = {}
+     
+            let Data = {
+                content: this.MultiSearchContent,
+                size: 5,
+                page_count: this.Page_Index,
+                subject: this.Subject_Chosen_List
+            }
+
+            Param.data = JSON.stringify(Data)
+
+            commonAjax(this.backendIP+'/api/multi_source_search', Param)
+            .then((data)=>{
+                this.Multi_Source_Search_Result = data.results;
+                this.Total_Count = data.totalLength;
+            }).catch(() => {
+                this.$message.error("请稍后重试。")
+            }).finally(()=>{
+                this.Jump_Up()
+                this.waiting = false;
+                this.waiting_text = ""
+            })
         },
         // 主要用于hover样式，来做成按钮的效果
         Focus_Filter(Item){
@@ -183,6 +262,8 @@ export default {
                 subject: Item.subject,
             }
 
+            this.$message.info("正在准备下载类型为 " + Resource_Info.type + " 的文件 " + Resource_Info.name)
+
             let config = {
                 headers: {
                     "Content-Type": "multipart/form-data"
@@ -191,32 +272,32 @@ export default {
                 emulateJSON: true
             }
 
-        let param = new FormData();
+            let param = new FormData();
 
-        param.append('Resource_Info', JSON.stringify(Resource_Info, null, 4));
+            param.append('Resource_Info', JSON.stringify(Resource_Info, null, 4));
 
-        let Flag = true;
-        if(Flag){
-            return
-        }
-
-        this.$http
-            .post(this.backendIP + "/api/等一下接口名", param, config)
-            .then(function(data) {
-            if(data.data){
-                const link = document.createElement('a')
-                let blob = new Blob([data.data],
-                    {type: this.File_Type_Blob[Resource_Info.type.toLowerCase()]})
-                let objectUrl = URL.createObjectURL(blob)
-                link.href = objectUrl
-                link.download = Resource_Info.name 
-                link.click()
-                URL.revokeObjectURL(objectUrl);
-            }
-            }).catch(() => {
-                this.$message.error("服务器忙碌，请稍后再试...");
+            let Flag = true;
+            if(Flag){
                 return
-            });
+            }
+
+            this.$http
+                .post(this.backendIP + "/api/等一下服务地址", param, config)
+                .then(function(data) {
+                    if(data.data){
+                        const link = document.createElement('a')
+                        let blob = new Blob([data.data],
+                            {type: this.File_Type_Blob[Resource_Info.type.toLowerCase()]})
+                        let objectUrl = URL.createObjectURL(blob)
+                        link.href = objectUrl
+                        link.download = Resource_Info.name 
+                        link.click()
+                        URL.revokeObjectURL(objectUrl);
+                    }
+                }).catch(() => {
+                    this.$message.error("服务器忙碌，请稍后再试...");
+                    return
+                });
         },
     }
 };
@@ -275,6 +356,7 @@ export default {
 .Item_Info{
     word-break:break-all; 
     overflow:auto;
+    width: calc(100% - 80px);
 }
 
 .Download_Row{
