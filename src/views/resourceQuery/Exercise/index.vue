@@ -285,7 +285,7 @@
                             </el-button>
                         </el-row>
                     </el-col>
-                    <el-col :span="7" :offset="1" style="height: 512px" v-show="Search_Extra == 'ImgSearch'">
+                    <el-col :span="7" :offset="1" style="height: 512px;" v-show="Search_Extra == 'ImgSearch'">
                         <input
                             type='file'
                             id="ImgInput"
@@ -1104,13 +1104,13 @@ export default {
 }
 
 .Padding_Width{
-    padding-right: 10vw;
-    padding-left: 10vw;
+    padding-right: 88px;
+    padding-left: 88px;
 }
 
 .Main_Background{
     background: url('./NewSearchQues_Background.jpg');
-    background-size: auto 100%;
+    background-size: 100% auto;
     background-position: right;
     background-repeat: no-repeat;
     margin-top: -80px;

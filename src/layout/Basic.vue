@@ -779,7 +779,7 @@
           </el-col>
         </el-row>
       </div>
-      <div style="min-height: 100vh; padding-top: 80px;">
+      <div :style="Get_Main_Width()">
         <router-view :key="$route.fullPath"></router-view>
       </div>
       <basic-footer />
@@ -867,6 +867,22 @@ export default {
     }
   },
   methods: {
+    // 调整主区域的宽度
+    Get_Main_Width(){
+      let Width_Border = 1344
+      if(this.Width_Now < Width_Border){
+          return {
+              "width": this.Width_Now + 'px',
+              "padding": "0px 88px",
+          }
+      }else{
+          return {
+              "width": "1344px",
+              "padding-top": "80px",
+              "margin": "0px " + ((this.Width_Now - 1344)/2) + "px",
+          }
+      }
+    },
     // 打开过窄时的导航栏
     Open_Narrow_Navbar_Drawer(){
       this.Narrow_Navbar_Drawer = true;
