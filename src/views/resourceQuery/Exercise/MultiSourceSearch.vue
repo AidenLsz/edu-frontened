@@ -157,13 +157,13 @@ export default {
             let Width_Border = 1344
             if(this.Width_Now < Width_Border){
                 return {
-                    "width": this.Width_Now + 'px',
+                    "width": '1168px',
                     "padding": "0px 88px",
                 }
             }else{
                 return {
-                    "width": "1192px",
-                    "margin": "0px " + ((this.Width_Now - 1192)/2) + "px",
+                    "width": "1168px",
+                    "margin": "0px auto",
                 }
             }
         },
