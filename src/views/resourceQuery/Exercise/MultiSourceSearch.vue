@@ -256,13 +256,16 @@ export default {
             this.Multi_Source_Search();
         },
         Multi_Source_Resource_Download(Item){
+
+            this.waiting = true;
+            this.waiting_text = "资源准备下载中，请稍后..."
+
+            let TYPE = Item.type
+
             let Resource_Info = {
                 name: Item.name,
-                type: Item.type,
-                subject: Item.subject,
+                subject: Item.subject
             }
-
-            this.$message.info("正在准备下载类型为 " + Resource_Info.type + " 的文件 " + Resource_Info.name)
 
             let config = {
                 headers: {
@@ -274,20 +277,15 @@ export default {
 
             let param = new FormData();
 
-            param.append('Resource_Info', JSON.stringify(Resource_Info, null, 4));
-
-            let Flag = true;
-            if(Flag){
-                return
-            }
+            param.append('data', JSON.stringify(Resource_Info, null, 4));
 
             this.$http
-                .post(this.backendIP + "/api/等一下服务地址", param, config)
+                .post(this.backendIP + "/api/multi_source_download", param, config)
                 .then(function(data) {
                     if(data.data){
                         const link = document.createElement('a')
                         let blob = new Blob([data.data],
-                            {type: this.File_Type_Blob[Resource_Info.type.toLowerCase()]})
+                            {type: this.File_Type_Blob[TYPE.toLowerCase()]})
                         let objectUrl = URL.createObjectURL(blob)
                         link.href = objectUrl
                         link.download = Resource_Info.name 
@@ -297,6 +295,9 @@ export default {
                 }).catch(() => {
                     this.$message.error("服务器忙碌，请稍后再试...");
                     return
+                }).finally(()=>{
+                    this.waiting = false;
+                    this.waiting_text = ""
                 });
         },
     }
