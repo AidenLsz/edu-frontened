@@ -1,8 +1,8 @@
 <template>
-  <div class="main-container">
+  <div class="ql-container">
     <el-row
         style="
-        padding: 40px 10% 30px;
+        margin-left: 5vw;
         text-shadow: 2px 6px 10px rgba(67, 92, 130, 0.14);
       "
         justify="start"
@@ -22,144 +22,144 @@
 
 
 
+    <div class="search-body">
+      <transition name="el-fade-in" v-show="show_tag">
+        <p id="title" class="title" v-show="show_tag">试题信息修改</p>
+      </transition>
 
-    <transition name="el-fade-in" v-show="show_tag">
-      <p id="title" class="title" v-show="show_tag">试题信息修改</p>
-    </transition>
-
-    <div class="search-bar" v-show="show_tag">
-            <el-input
-                class="search-input"
-                id="search-input"
-                placeholder="输入题目文本或者ID"
-                v-model="searchText"
-                @keyup.enter.native="search">
-                      <i v-if="searching"
-                         class="el-input__icon el-icon-loading search-btn"
-                         slot="suffix"
-                      />
-                      <i v-else
-                         @click="search"
-                         slot="suffix"
-                         class="el-input__icon el-icon-search search-btn"
-                      />
-            </el-input>
-    </div>
-    <div class="select" v-show="show_tag">
-      <div class="select_way">
-        搜索方式：
+      <div class="search-bar" v-show="show_tag">
+        <el-input
+            class="search-input"
+            id="search-input"
+            placeholder="输入题目文本或者ID"
+            v-model="searchText"
+            @keyup.enter.native="search">
+          <i v-if="searching"
+             class="el-input__icon el-icon-loading search-btn"
+             slot="suffix"
+          />
+          <i v-else
+             @click="search"
+             slot="suffix"
+             class="el-input__icon el-icon-search search-btn"
+          />
+        </el-input>
       </div>
-      <div>
-        <el-radio-group v-model="searchtype" min="1" max="2">
-<!--          <el-checkbox-button v-for="type in select_type" :label="type" :key="type">{{type}}</el-checkbox-button>-->
-          <el-radio-button label="单题搜索" ></el-radio-button>
-          <el-radio-button label="题组搜索"></el-radio-button>
-          <el-radio-button label="试卷搜索"></el-radio-button>
-
-        </el-radio-group>
-      </div>
-      <div class="select_DB">
-        搜索库：
-      </div>
-      <div>
-        <el-radio-group v-model="testDB" min="1" max="1">
-<!--          <el-checkbox-button v-for="DB in dbs" :label="DB" :key="DB">{{DB}}</el-checkbox-button>-->
-          <el-radio-button label="测试库"></el-radio-button>
-          <el-radio-button label="正式库"></el-radio-button>
-
-        </el-radio-group>
-      </div>
-    </div>
-    <!--    <div style="padding: 0">-->
-    <!--      <el-switch-->
-    <!--          v-model="testDB"-->
-    <!--          active-text="测试库"-->
-    <!--      >-->
-    <!--        测试库-->
-    <!--      </el-switch>-->
-    <!--    </div>-->
-
-    <!--    <div v-show="questions.length !== 0" class="sidebar">-->
-    <!--      <el-button-->
-    <!--        plain-->
-    <!--        v-for="j in questions.length"-->
-    <!--        v-bind:key="j"-->
-    <!--        style="margin: 4px auto; padding: 10px; width: 100%; text-align: center"-->
-    <!--      >-->
-    <!--        {{ j }}-->
-    <!--      </el-button>-->
-
-    <!--      <el-button-->
-    <!--        @click="toTop"-->
-    <!--        plain-->
-    <!--        style="margin: 4px auto; padding: 10px; width: 100%; height: 100%; text-align: center"-->
-    <!--      >-->
-    <!--        <i class="el-icon-top"></i>-->
-    <!--      </el-button>-->
-    <!--    </div>-->
-
-    <transition-group name="el-fade-in">
-      <div
-          v-for="(item, index) in questions"
-          v-bind:key="item.question_ID"
-          class="question-item"
-      >
-        <div style="font-size: 26px; margin-bottom: 12px; text-align: center">
-          试题{{ index + 1 }}
+      <div class="select" v-show="show_tag">
+        <div class="select_way">
+          搜索方式：
         </div>
+        <div>
+          <el-radio-group v-model="searchtype" min="1" max="2">
+            <!--          <el-checkbox-button v-for="type in select_type" :label="type" :key="type">{{type}}</el-checkbox-button>-->
+            <el-radio-button label="单题搜索" ></el-radio-button>
+            <el-radio-button label="题组搜索"></el-radio-button>
+            <el-radio-button label="试卷搜索"></el-radio-button>
 
-        <div v-if="item.edit !== true">
-          <Mathdown :content="item.stem" :name="'Q_' + index + '_Stem'"></Mathdown>
-          <el-row v-for="(v, i) in item.options" v-bind:key="v" type="flex" justify="start"
-                  style="margin-top:10px"
-          >
-            <span>{{ Get_Option_Label(i) }}：</span>
-            <Mathdown :content="item.options[i]"></Mathdown>
-          </el-row>
-          <hr/>
-          <el-row type="flex" justify="start" style="margin-bottom: 6px">
-            <span style="white-space: nowrap;">答案：</span><Mathdown :content="item.answer"></Mathdown>
-          </el-row>
-          <el-row type="flex" justify="start">
-            <span style="white-space: nowrap;">解析：</span><Mathdown :content="item.analysis"></Mathdown>
-          </el-row>
-          <hr/>
-          <div class="question-prop">
-            <span style="">学科：{{['其他', '数学', '英语', '历史', '政治', '物理', '化学', '生物', '语文', '地理'][item.subject]}}</span>
-            <span style="">学段：{{['其他', '初中', '高中', '大学', '成人', '小学'][item.period]}}</span>
-            <span style="">题型：{{['其他', '多选题', '填空题', '判断题', '简答题', '计算题', '单选题'][item.type]}}</span>
-            <span style="">来源：{{['其他', '', '', '', '', '', '', '', '', '', '高考', '讯飞', '考试中心', 'LUNA', '题库中国'][item.system]}}</span>
-            <span style="">真题：{{['未处理', '非真题', '真卷', '高考真卷', '中考真卷'][item.pastpaper]}}</span>
-            <!--            display: grid;justify-items: end;align-items: center;grid-template-columns: 1fr;-->
-            <div class="edit-div">
-              <el-button class="edit-btn" round plain @click="onEdit(index)" :loading="loading === true">编辑</el-button>
-            </div>
+          </el-radio-group>
+        </div>
+        <div class="select_DB">
+          搜索库：
+        </div>
+        <div>
+          <el-radio-group v-model="testDB" min="1" max="1">
+            <!--          <el-checkbox-button v-for="DB in dbs" :label="DB" :key="DB">{{DB}}</el-checkbox-button>-->
+            <el-radio-button label="测试库"></el-radio-button>
+            <el-radio-button label="正式库"></el-radio-button>
+
+          </el-radio-group>
+        </div>
+      </div>
+      <!--    <div style="padding: 0">-->
+      <!--      <el-switch-->
+      <!--          v-model="testDB"-->
+      <!--          active-text="测试库"-->
+      <!--      >-->
+      <!--        测试库-->
+      <!--      </el-switch>-->
+      <!--    </div>-->
+
+      <!--    <div v-show="questions.length !== 0" class="sidebar">-->
+      <!--      <el-button-->
+      <!--        plain-->
+      <!--        v-for="j in questions.length"-->
+      <!--        v-bind:key="j"-->
+      <!--        style="margin: 4px auto; padding: 10px; width: 100%; text-align: center"-->
+      <!--      >-->
+      <!--        {{ j }}-->
+      <!--      </el-button>-->
+
+      <!--      <el-button-->
+      <!--        @click="toTop"-->
+      <!--        plain-->
+      <!--        style="margin: 4px auto; padding: 10px; width: 100%; height: 100%; text-align: center"-->
+      <!--      >-->
+      <!--        <i class="el-icon-top"></i>-->
+      <!--      </el-button>-->
+      <!--    </div>-->
+
+      <transition-group name="el-fade-in">
+        <div
+            v-for="(item, index) in questions"
+            v-bind:key="item.question_ID"
+            class="question-item"
+        >
+          <div style="font-size: 26px; margin-bottom: 12px; text-align: center">
+            试题{{ index + 1 }}
           </div>
-          <!--          <el-row type="flex" justify="space-between" align="middle">-->
-          <!--            <el-row type="flex" justify="start" align="middle">-->
-          <!--            </el-row>-->
-          <!--              <el-button round plain @click="item.unfold = true">查看解析</el-button>-->
-          <!--          </el-row>-->
-        </div>
-        <el-form v-else ref="form" :model="item" label-width="44px">
-          <el-form-item label="ID">
-            <el-button
-                @click="copyQuestionID($event,item.question_ID)"
-                plain style="user-select: none; user-focus: none; width: 100%;text-align: start;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"
-            >{{item.question_ID}}</el-button>
-          </el-form-item>
-          <el-form-item label="属性">
-            <div
-                style="
+
+          <div v-if="item.edit !== true">
+            <Mathdown :content="item.stem" :name="'Q_' + index + '_Stem'"></Mathdown>
+            <el-row v-for="(v, i) in item.options" v-bind:key="v" type="flex" justify="start"
+                    style="margin-top:10px"
+            >
+              <span>{{ Get_Option_Label(i) }}：</span>
+              <Mathdown :content="item.options[i]"></Mathdown>
+            </el-row>
+            <hr/>
+            <el-row type="flex" justify="start" style="margin-bottom: 6px">
+              <span style="white-space: nowrap;">答案：</span><Mathdown :content="item.answer"></Mathdown>
+            </el-row>
+            <el-row type="flex" justify="start">
+              <span style="white-space: nowrap;">解析：</span><Mathdown :content="item.analysis"></Mathdown>
+            </el-row>
+            <hr/>
+            <div class="question-prop">
+              <span style="">学科：{{['其他', '数学', '英语', '历史', '政治', '物理', '化学', '生物', '语文', '地理'][item.subject]}}</span>
+              <span style="">学段：{{['其他', '初中', '高中', '大学', '成人', '小学'][item.period]}}</span>
+              <span style="">题型：{{['其他', '多选题', '填空题', '判断题', '简答题', '计算题', '单选题'][item.type]}}</span>
+              <span style="">来源：{{['其他', '', '', '', '', '', '', '', '', '', '高考', '讯飞', '考试中心', 'LUNA', '题库中国'][item.system]}}</span>
+              <span style="">真题：{{['未处理', '非真题', '真卷', '高考真卷', '中考真卷'][item.pastpaper]}}</span>
+              <!--            display: grid;justify-items: end;align-items: center;grid-template-columns: 1fr;-->
+              <div class="edit-div">
+                <el-button class="edit-btn" round plain @click="onEdit(index)" :loading="loading === true">编辑</el-button>
+              </div>
+            </div>
+            <!--          <el-row type="flex" justify="space-between" align="middle">-->
+            <!--            <el-row type="flex" justify="start" align="middle">-->
+            <!--            </el-row>-->
+            <!--              <el-button round plain @click="item.unfold = true">查看解析</el-button>-->
+            <!--          </el-row>-->
+          </div>
+          <el-form v-else ref="form" :model="item" label-width="44px">
+            <el-form-item label="ID">
+              <el-button
+                  @click="copyQuestionID($event,item.question_ID)"
+                  plain style="user-select: none; user-focus: none; width: 100%;text-align: start;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"
+              >{{item.question_ID}}</el-button>
+            </el-form-item>
+            <el-form-item label="属性">
+              <div
+                  style="
               display: grid;
               grid-template-columns: 1fr 1fr;
               grid-row-gap: 14px;
               grid-column-gap: 10px;
             "
-            >
-              <el-select v-model="item.subject" placeholder="学科">
-                <el-option
-                    v-for="(item, id) in [
+              >
+                <el-select v-model="item.subject" placeholder="学科">
+                  <el-option
+                      v-for="(item, id) in [
                   '其他',
                   '数学',
                   '英语',
@@ -171,14 +171,14 @@
                   '语文',
                   '地理',
                 ]"
-                    :label="'学科：' + item"
-                    :key="id"
-                    :value="id"
-                ></el-option>
-              </el-select>
-              <el-select v-model="item.period" placeholder="学段">
-                <el-option
-                    v-for="(item, id) in [
+                      :label="'学科：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-select v-model="item.period" placeholder="学段">
+                  <el-option
+                      v-for="(item, id) in [
                     '其他',
                     '初中',
                     '高中',
@@ -186,14 +186,14 @@
                     '成人',
                     '小学',
                   ]"
-                    :label="'学段：' + item"
-                    :key="id"
-                    :value="id"
-                ></el-option>
-              </el-select>
-              <el-select v-model="item.system" placeholder="来源">
-                <el-option
-                    v-for="(item, id) in [
+                      :label="'学段：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-select v-model="item.system" placeholder="来源">
+                  <el-option
+                      v-for="(item, id) in [
                     '其他',
                     '',
                     '',
@@ -210,29 +210,29 @@
                     'LUNA',
                     '题库中国',
                   ]"
-                    :v-if="item !== ''"
-                    :label="'来源：' + item"
-                    :key="id"
-                    :value="id"
-                ></el-option>
-              </el-select>
-              <el-select v-model="item.pastpaper" placeholder="真题">
-                <el-option
-                    v-for="(item, id) in [
+                      :v-if="item !== ''"
+                      :label="'来源：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-select v-model="item.pastpaper" placeholder="真题">
+                  <el-option
+                      v-for="(item, id) in [
                     '未处理',
                     '非真题',
                     '真卷',
                     '高考真卷',
                     '中考真卷',
                   ]"
-                    :label="'真题：' + item"
-                    :key="id"
-                    :value="id"
-                ></el-option>
-              </el-select>
-              <el-select v-model="item.type" placeholder="题型">
-                <el-option
-                    v-for="(item, id) in [
+                      :label="'真题：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-select v-model="item.type" placeholder="题型">
+                  <el-option
+                      v-for="(item, id) in [
                     '其他',
                     '多选题',
                     '填空题',
@@ -241,62 +241,63 @@
                     '计算题',
                     '单选题',
                   ]"
-                    :label="'题型：' + item"
-                    :key="id"
-                    :value="id"
-                ></el-option>
-              </el-select>
-              <el-date-picker
-                  style="width: 100%"
-                  v-model="item.date"
-                  type="date"
-                  placeholder="选择日期"
-              >
-              </el-date-picker>
-            </div>
-          </el-form-item>
-          <el-form-item label="题干">
-            <el-input
-                type="textarea"
-                :autosize="{ minRows: 5, maxRows: 10 }"
-                v-model="item.stem"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="选项">
-            <div style="display: flex; flex-direction: column; row-gap: 14px">
-              <div v-for="(opt, j) in item.options" v-bind:key="opt">
-                <el-input
-                    v-model="item.options[j]"
-                    type="textarea"
-                    :autosize="{ minRows: 2, maxRows: 10 }"
-                ></el-input>
+                      :label="'题型：' + item"
+                      :key="id"
+                      :value="id"
+                  ></el-option>
+                </el-select>
+                <el-date-picker
+                    style="width: 100%"
+                    v-model="item.date"
+                    type="date"
+                    placeholder="选择日期"
+                >
+                </el-date-picker>
               </div>
-            </div>
-          </el-form-item>
-          <el-form-item label="答案">
-            <el-input
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 10 }"
-                v-model="item.answer"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="解析">
-            <el-input
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 10 }"
-                v-model="item.analysis"
-            ></el-input>
-          </el-form-item>
-          <el-row type="flex" justify="end">
-            <!--            <el-button round plain>切换图片显示</el-button>-->
-            <el-button round plain @click="update(index)" :loading="loading === true">提交修改</el-button>
-            <el-button round plain @click="onPreview(index)">预览</el-button>
-          </el-row>
-        </el-form>
-      </div>
-    </transition-group>
+            </el-form-item>
+            <el-form-item label="题干">
+              <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 5, maxRows: 10 }"
+                  v-model="item.stem"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="选项">
+              <div style="display: flex; flex-direction: column; row-gap: 14px">
+                <div v-for="(opt, j) in item.options" v-bind:key="opt">
+                  <el-input
+                      v-model="item.options[j]"
+                      type="textarea"
+                      :autosize="{ minRows: 2, maxRows: 10 }"
+                  ></el-input>
+                </div>
+              </div>
+            </el-form-item>
+            <el-form-item label="答案">
+              <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 10 }"
+                  v-model="item.answer"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="解析">
+              <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 10 }"
+                  v-model="item.analysis"
+              ></el-input>
+            </el-form-item>
+            <el-row type="flex" justify="end">
+              <!--            <el-button round plain>切换图片显示</el-button>-->
+              <el-button round plain @click="update(index)" :loading="loading === true">提交修改</el-button>
+              <el-button round plain @click="onPreview(index)">预览</el-button>
+            </el-row>
+          </el-form>
+        </div>
+      </transition-group>
 
-    <div style="margin-bottom: 56px"/>
+      <div style="margin-bottom: 56px"/>
+    </div>
   </div>
 </template>
 
@@ -600,77 +601,28 @@ export default {
 </script>
 
 <style scoped>
-/*html, head, body {*/
-/*  margin: 0;*/
-/*  padding: 0;*/
-/*  width: 100%;*/
-/*  height: 100%;*/
-/*}*/
 
 body .el-scrollbar__wrap {
   overflow-x: hidden;
 }
 
-.main-container {
-  /*width: 100%;*/
-  /*height: 100%;*/
-  /*margin: 0 0 0 !important;*/
-  /*background-color: #fefefe;*/
+.ql-container {
   position: relative;
-  width: 1440px;
-  height: 1438px;
+  width: 100%;
+  min-height: 100vh;
 
   background: #FDFDFD;
 }
 
-/*.nav {*/
-/*  height: 58px;*/
-/*  background-color: rgba(255, 255, 255, .75);*/
-/*  margin: 0 auto;*/
-/*  width: 100%;*/
-/*  border-bottom: 1px solid rgba(196, 196, 196, 0.32);*/
-/*  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);*/
-/*  !*backdrop-filter: blur(10px);*!*/
-/*  !*-webkit-backdrop-filter: brightness(20%);*!*/
-/*  -webkit-backdrop-filter: saturate(200%) blur(14px);*/
-/*  backdrop-filter: saturate(200%) blur(14px);*/
-/*  position: fixed;*/
-/*  top: 0;*/
-/*  z-index: 100;*/
-/*  !*flex: auto;*!*/
-/*  !*alignment: center;*!*/
-/*}*/
-
-/*.logo {*/
-/*  margin-left: 6%;*/
-/*  margin-top: 12px;*/
-/*  height: 34px;*/
-/*  alignment: center;*/
-/*}*/
+.search-body {
+  width: 80%;
+  margin: 0 auto;
+  padding-top: 20vh;
+}
 
 .title {
-  /*text-align: center;*/
-  /*font-size: 36px;*/
-  /*margin-top: 120px;*/
-  /*transition: all;*/
-  /*transition-duration: 300ms;*/
-  /*position: absolute;*/
-  /*width: 238px;*/
-  /*height: 46px;*/
-  /*left: 601px;*/
-  /*top: 309px;*/
 
-  /*font-family: Sarasa Gothic SC;*/
-  /*font-style: normal;*/
-  /*font-weight: normal;*/
-  /*font-size: 37px;*/
-  /*line-height: 46px;*/
-  position: absolute;
-  width: 268px;
-  height: 46px;
-  left: 601px;
-  top: 309px;
-
+  margin-bottom: 30px;
   font-family: Sarasa Gothic SC;
   font-style: normal;
   font-weight: normal;
@@ -689,51 +641,20 @@ body .el-scrollbar__wrap {
 }
 
 .search-bar {
-  /*width: 50%;*/
-  /*margin: 30px auto 46px;*/
-  /*filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.08));*/
-  /*transition: all;*/
-  /*transition-duration: 300ms;*/
-  position: absolute;
-  width: 726px;
-  height: 34px;
-  left: 456px;
-  top: 399px;
 
+  margin: 0 auto;
   background: #FFFFFF;
-  border: 1px solid #D9D9D9;
   box-sizing: border-box;
   border-radius: 10px;
-  /*display: inline*/
 }
 
-/*.search-bar:hover {*/
-/*  !*transform: scale(1.02);*!*/
-/*  !*filter: drop-shadow(0px 4px 10px rgba(0, 0, 24, 0.12));*!*/
-/*  !*border-color: #1E88C7;*!*/
-/*  position: absolute;*/
-/*  width: 726px;*/
-/*  height: 34px;*/
-/*  left: 356px;*/
-/*  top: 399px;*/
-
-/*  background: #FFFFFF;*/
-/*  border: 1px solid #D9D9D9;*/
-/*  box-sizing: border-box;*/
-/*  border-radius: 10px;*/
-/*}*/
 .select_way {
-  position: static;
-  width: 88px;
-  height: 30px;
-  left: 0px;
-  top: 5px;
 
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
   font-size: 15px;
-  line-height: 30px;
+  line-height: 40px;
   /* identical to box height, or 187% */
 
   display: flex;
@@ -751,17 +672,12 @@ body .el-scrollbar__wrap {
   margin: 0px 12px;
 }
 .select_DB {
-  position: static;
-  width: 72px;
-  height: 30px;
-  left: 0px;
-  top: 5px;
 
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
   font-size: 15px;
-  line-height: 30px;
+  line-height: 40px;
   /* identical to box height, or 187% */
 
   display: flex;
@@ -776,7 +692,7 @@ body .el-scrollbar__wrap {
   flex: none;
   order: 0;
   flex-grow: 0;
-  margin: 0px 12px;
+  margin: 0px 5px 0px 20px;
 }
 
 .select {
@@ -786,15 +702,12 @@ body .el-scrollbar__wrap {
   /* Auto Layout */
 
   display: flex;
+  margin-top: 35px;
+  justify-content: center;
   flex-direction: row;
   align-items: flex-start;
   padding: 0px;
 
-  position: absolute;
-  width: 668px;
-  height: 40px;
-  left: 408px;
-  top: 474px;
 }
 .sidebar {
   position: fixed;
