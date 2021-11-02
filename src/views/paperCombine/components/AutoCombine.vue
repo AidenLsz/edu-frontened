@@ -1,5 +1,8 @@
 <template>
-  <div style=" margin-top: 5vh; margin-bottom: 5vh;">
+  <div style=" margin-top: 5vh; margin-bottom: 5vh;"
+    v-loading="Combine_loading"
+    element-loading-text="正在组卷，请稍候..."
+    element-loading-spinner="el-icon-loading">
     <!-- 搜索框行 -->
     <el-row type="flex" justify="start">
       <el-col :span="6" style="padding-left: 3vw; padding-right: 3vw;">
@@ -260,7 +263,8 @@ export default {
         databaseAim: [],
         // 最上面的知识点是否全部显示
         KnowledgePoint_All_Show: false,
-        Ques_List: []
+        Ques_List: [],
+        Combine_loading: false
     }
   },
   watch:{
@@ -318,7 +322,17 @@ export default {
     },
     Auto_Combine(){
 
+      this.$confirm("使用智能组卷将清空已存入试题篮的试题，确定要继续吗？", "提示", {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+      .then(() => {
+
         this.$message.success("正在组卷")
+        this.Combine_loading = true;
+
+        this.$emit("Clear_Cart", true)
 
         let data = {
             subject: this.Subject,
@@ -351,19 +365,6 @@ export default {
           }
         }
 
-        // let file = new File(
-        //   [JSON.stringify(data, null, 4)],
-        //   "Auto_Combine.json",
-        //   { type: "text/plain;charset=utf-8" }
-        // );
-        // FileSaver.saveAs(file);
-
-        // let Flag = true
-        // if(Flag){
-        //   this.$message.info("后续服务由于服务调用出现问题，所以仍在开发过程中，敬请期待...")
-        //   return
-        // }
-
         commonAjax(this.backendIP + '/api/paperAutoGenerate', {
           'Paper_Data': JSON.stringify(data, null, 4)
         })
@@ -372,12 +373,16 @@ export default {
             this.Add_New_Ques_To_Cart(data[i])
           }
           this.Emit_All();
-          // this.Loading = false
           this.$message.success("组卷结束")
         }).catch(()=>{
           this.$message.error("虽然找到推荐题目，但由于数据库中缺少推荐题目的某些数据，无法返回结果，请稍后重试，会为您重新推荐题目。")
+        }).finally(() => {
+          this.Combine_loading = false;
         })
-        
+      })
+      .catch(() => {
+        this.$message.warning("已取消。")
+      })
     },
         // 尝试添加试题
     Add_New_Ques_To_Cart(Ques_Info){
