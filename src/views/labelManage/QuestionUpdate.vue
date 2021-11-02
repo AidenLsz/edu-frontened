@@ -19,7 +19,7 @@
 
     <div class="search-body">
       <transition  name="el-fade-in">
-        <p :class="{'title': true, 'center': show_tag}" id="title">试题信息修改</p>
+        <p :class="{'title-center': true, 'center': show_tag}" id="title">试题信息修改</p>
       </transition>
 
       <div :class="{'search-bar': true, 'center': show_tag}">
@@ -104,19 +104,19 @@
           </div>
 
           <div v-if="item.edit !== true">
-            <Mathdown :content="item.stem" :name="'Q_' + index + '_Stem'"></Mathdown>
+            <Mathdown :content="parseImg(item.stem)" :name="'Q_' + index + '_Stem'"></Mathdown>
             <el-row v-for="(v, i) in item.options" v-bind:key="v" type="flex" justify="start"
                     style="margin-top:10px"
             >
               <span>{{ Get_Option_Label(i) }}：</span>
-              <Mathdown :content="item.options[i]"></Mathdown>
+              <Mathdown :name="'Q_' + index + '_Options'" :content="parseImg(item.options[i])"></Mathdown>
             </el-row>
             <hr/>
             <el-row type="flex" justify="start" style="margin-bottom: 6px">
-              <span style="white-space: nowrap;">答案：</span><Mathdown :content="item.answer"></Mathdown>
+              <span style="white-space: nowrap;">答案：</span><Mathdown :name="'Q_' + index + '_Answer'"  :content="parseImg(item.answer)"></Mathdown>
             </el-row>
             <el-row type="flex" justify="start">
-              <span style="white-space: nowrap;">解析：</span><Mathdown :content="item.analysis"></Mathdown>
+              <span style="white-space: nowrap;">解析：</span><Mathdown :name="'Q_' + index + '_Analysis'" :content="parseImg(item.analysis)"></Mathdown>
             </el-row>
             <hr/>
             <div class="question-prop">
@@ -315,6 +315,7 @@ export default {
       questions: [],
       edit: [],
       dbs,
+      figures: [],
       select_type,
       unfold: [],
       testDB: dbs[0],
@@ -374,6 +375,10 @@ export default {
 
     returnToSearch() {
       this.show_tag = true;
+    },
+
+    parseImg(str) {
+        return str.replace(/\$\\FigureID{([0-9a-z-]*)?}\$/g, ($1, $2) => `<img src="${this.figures.find(ele => ele.figure_ID === $2).img}">`);
     },
 
     async search() {
@@ -436,7 +441,13 @@ export default {
         this.show_tag=false;
         let edit = this.questions.length === 1;
         console.log(edit)
+
+
+        // this.questions = data.questions;
+        this.figures = data.figures;
         this.questions = data.questions;
+
+
         // for(let question of this.questions) {
         //   question.fromTestDB = test;
         //   question.edit = edit
@@ -607,7 +618,7 @@ body .el-scrollbar__wrap {
   margin: 0 auto;
 }
 
-.title {
+.title-center {
 
   margin-bottom: 30px;
   margin-top: 5vh;
@@ -629,7 +640,7 @@ body .el-scrollbar__wrap {
   color: rgba(5, 5, 5, 0.9);
 }
 
-.title.center {
+.title-center.center {
   margin-top: 20vh;
 }
 
