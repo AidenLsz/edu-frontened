@@ -17,17 +17,12 @@
       </el-col>
     </el-row>
 
-
-
-
-
-
     <div class="search-body">
-      <transition name="el-fade-in" v-show="show_tag">
-        <p id="title" class="title" v-show="show_tag">试题信息修改</p>
+      <transition  name="el-fade-in">
+        <p :class="{'title-center': true, 'center': show_tag}" id="title">试题信息修改</p>
       </transition>
 
-      <div class="search-bar" v-show="show_tag">
+      <div :class="{'search-bar': true, 'center': show_tag}">
         <el-input
             class="search-input"
             id="search-input"
@@ -45,12 +40,12 @@
           />
         </el-input>
       </div>
-      <div class="select" v-show="show_tag">
+      <div :class="{'select': true, 'center': show_tag}">
         <div class="select_way">
           搜索方式：
         </div>
         <div>
-          <el-radio-group v-model="searchtype" min="1" max="2">
+          <el-radio-group v-model="searchtype" min="0" max="3">
             <!--          <el-checkbox-button v-for="type in select_type" :label="type" :key="type">{{type}}</el-checkbox-button>-->
             <el-radio-button label="单题搜索" ></el-radio-button>
             <el-radio-button label="题组搜索"></el-radio-button>
@@ -109,19 +104,19 @@
           </div>
 
           <div v-if="item.edit !== true">
-            <Mathdown :content="item.stem" :name="'Q_' + index + '_Stem'"></Mathdown>
+            <Mathdown :content="parseImg(item.stem)" :name="'Q_' + index + '_Stem'"></Mathdown>
             <el-row v-for="(v, i) in item.options" v-bind:key="v" type="flex" justify="start"
                     style="margin-top:10px"
             >
               <span>{{ Get_Option_Label(i) }}：</span>
-              <Mathdown :content="item.options[i]"></Mathdown>
+              <Mathdown :name="'Q_' + index + '_Options'" :content="parseImg(item.options[i])"></Mathdown>
             </el-row>
             <hr/>
             <el-row type="flex" justify="start" style="margin-bottom: 6px">
-              <span style="white-space: nowrap;">答案：</span><Mathdown :content="item.answer"></Mathdown>
+              <span style="white-space: nowrap;">答案：</span><Mathdown :name="'Q_' + index + '_Answer'"  :content="parseImg(item.answer)"></Mathdown>
             </el-row>
             <el-row type="flex" justify="start">
-              <span style="white-space: nowrap;">解析：</span><Mathdown :content="item.analysis"></Mathdown>
+              <span style="white-space: nowrap;">解析：</span><Mathdown :name="'Q_' + index + '_Analysis'" :content="parseImg(item.analysis)"></Mathdown>
             </el-row>
             <hr/>
             <div class="question-prop">
@@ -313,15 +308,18 @@ export default {
   components: { Mathdown },
   name: "QuestionUpdate",
   data() {
+    const dbs = ['测试库','正式库'];
+    const select_type = ['单题搜索','题组搜索','试卷搜索'];
     return {
       searchText: "",
       questions: [],
       edit: [],
-      dbs: ['测试库','正式库'],
-      select_type: ['单题搜索','题组搜索','试卷搜索'],
+      dbs,
+      figures: [],
+      select_type,
       unfold: [],
-      testDB: "try",
-      searchtype: 1,
+      testDB: dbs[0],
+      searchtype: select_type[0],
       show_tag:true,
       loading: false,
       searching: false,
@@ -375,27 +373,32 @@ export default {
   },
   methods: {
 
-    search() {
+    returnToSearch() {
+      this.show_tag = true;
+    },
+
+    parseImg(str) {
+        return str.replace(/\$\\FigureID{([0-9a-z-]*)?}\$/g, ($1, $2) => `<img src="${this.figures.find(ele => ele.figure_ID === $2).img}">`);
+    },
+
+    async search() {
+      //debug
+      // this.questions = this.mockData;
+      // return;
+
+      let test = false;
+      let search_type = 1;
 
       // const idReg = new RegExp("[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}")
-      if(this.searchtype=='单题搜索')
-        this.searchstatus=1;
-      else if(this.searchtype=='题组搜索')
-        this.searchstatus=2;
+      if(this.searchtype==='单题搜索')
+        search_type = 1;
+      else if(this.searchtype==='题组搜索')
+        search_type = 2;
       else
-        this.searchstatus=3;
-      if(this.testDB=='测试库')
-        this.testDB=true;
-      else
-        this.testDB=false;
-      // alert(this.searchtype);
-      // alert("End");
-      this.searchtype=this.searchstatus;
+        search_type = 3;
 
-      // alert(this.searchtype);
-
+      if (this.testDB==='测试库') test = true;
       this.searching = true;
-      let test = this.testDB;
       console.log("搜索按钮被点击: " + this.searchText);
       //005dcfa8-b211-11eb-90bf-3c9c0fb58abe
 
@@ -410,58 +413,54 @@ export default {
       // );
 
       //Post传参形式
-      let formData = {
+      const formData = {
         'query': this.searchText,
-        'test': test,
-        'search_type': this.searchtype,
+        test,
+        search_type,
       }
-      // if (idReg.test(this.searchText)) {
-      //
-      // }
-      this.$http
-          .post(backendURL + "/api/search_question", formData, { emulateJSON: true })
-          .then(function (res) {
 
-            let data = res.data;
+      const handleRequestError = () => {
+        this.searching = false
+        this.$notify.error({
+          title: '检索失败',
+        });
+        // console.log(e)
+      };
 
-            console.log('获得结果')
-            //判断错误
+      try {
+        const res = await this.$http.post(backendURL + "/api/search_question", formData, { emulateJSON: true })
+        let data = res.data;
+        console.log('获得结果')
 
-            if(data.error !== "" || data.questions.length === 0) {
-              this.searching = false
-              this.$notify.error({
-                title: '检索失败',
-              });
-              console.log(data)
-            }
-            this.show_tag=false;
-            let edit = this.questions.length === 1;
-            console.log(edit)
-            this.questions = data.questions;
-            // for(let question of this.questions) {
-            //   question.fromTestDB = test;
-            //   question.edit = edit
-            // }
-            for(let i = 0; i < this.questions.length; i++){
-              this.questions[i].edit = edit
-              this.questions[i].fromTestDB = test;
-            }
-            this.searching = false
+        //判断错误
+        if(data.error !== "" || data.questions.length === 0) {
+          handleRequestError(data.error);
+          return;
+        }
 
-            let title = document.getElementById('title')
-            title.style.marginTop = '20px'
-          })
-          .catch((e) => {
-            this.searching = false
+        this.show_tag=false;
+        let edit = this.questions.length === 1;
+        console.log(edit)
 
-            this.$notify.error({
-              title: '检索失败',
-            });
-            console.log(e)
-          });
 
-      //debug
-      // this.questions = this.mockData;
+        // this.questions = data.questions;
+        this.figures = data.figures;
+        this.questions = data.questions;
+
+
+        // for(let question of this.questions) {
+        //   question.fromTestDB = test;
+        //   question.edit = edit
+        // }
+        for(let i = 0; i < this.questions.length; i++){
+          this.questions[i].edit = edit
+          this.questions[i].fromTestDB = test;
+        }
+        this.searching = false
+
+      } catch(e) {
+        handleRequestError(e);
+      }
     },
     onPreview(id) {
       console.log(this.questions[id].edit)
@@ -617,12 +616,13 @@ body .el-scrollbar__wrap {
 .search-body {
   width: 80%;
   margin: 0 auto;
-  padding-top: 20vh;
 }
 
-.title {
+.title-center {
 
   margin-bottom: 30px;
+  margin-top: 5vh;
+  transition: .3s;
   font-family: Sarasa Gothic SC;
   font-style: normal;
   font-weight: normal;
@@ -638,6 +638,10 @@ body .el-scrollbar__wrap {
   letter-spacing: 0.05em;
 
   color: rgba(5, 5, 5, 0.9);
+}
+
+.title-center.center {
+  margin-top: 20vh;
 }
 
 .search-bar {
@@ -709,17 +713,12 @@ body .el-scrollbar__wrap {
   padding: 0px;
 
 }
-.sidebar {
-  position: fixed;
-  float: right;
-  right: 5%;
-  top: 40%;
-  /*height: 400px;*/
-  width: 54px;
-  padding: 8px;
-  border: 1px solid rgba(196, 196, 196, 0.4);
-  border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+@media (max-width: 856px) {
+    .select {
+      flex-direction: column;
+      align-items: center;
+    }
 }
 
 .search-btn {
@@ -774,29 +773,7 @@ body .el-scrollbar__wrap {
   /*border-color: #d0d0d0;*/
 }
 
-.leastHeight {
-  height: 54px;
-}
-
-.radio-group-type {
-  /*display: flex;*/
-  /*width: 200%;*/
-}
-
 .radio-group-type .el-radio-button__inner {
-}
-
-.el-radio-button {
-  /*width: 14%*/
-}
-
-.el-textarea__inner {
-  border-radius: 6px !important;
-  padding: 10px 14px 8px !important;
-}
-
-.el-date-editor {
-  border-radius: 6px !important;
 }
 
 /*@media (min-width: 1280px) {*/
@@ -838,7 +815,7 @@ body .el-scrollbar__wrap {
   }
 
   .search-bar {
-    width: 55%;
+    width: 80%;
   }
 
   .question-prop {
@@ -857,7 +834,7 @@ body .el-scrollbar__wrap {
   }
 
   .search-bar {
-    width: 60%;
+    width: 70%;
   }
 
   .question-prop {
