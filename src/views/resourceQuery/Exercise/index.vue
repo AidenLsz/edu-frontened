@@ -564,9 +564,6 @@ export default {
       this.Width_Now = document.body.clientWidth
     }
   },
-  updated() {
-
-  },
   methods: {
         // 粘贴事件
         Paste_Function(e){
