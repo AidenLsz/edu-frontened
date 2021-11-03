@@ -15,12 +15,24 @@
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>分析</el-breadcrumb-item>
           <el-breadcrumb-item>多卷分析</el-breadcrumb-item>
-          <el-breadcrumb-item v-if="chosen_paper_List.length > 0">分析报告</el-breadcrumb-item>
+          <el-breadcrumb-item v-if="chosen_paper_List.length > 0"
+            >分析报告</el-breadcrumb-item
+          >
         </el-breadcrumb>
       </el-col>
     </el-row>
+    <!-- <el-row class="description" justify="center">
+      <div  >
+      所选各试卷卷内各小题难度变化情况如下图所示。总的来看，卷内题目的难度由前至后总体呈递增趋势，中间穿插几道较难的题目，以体现试题的区分度和层次性。在所选的这张试卷中，这张试卷的平均难度最高，其难度为，这张试卷中的第小题是难度最高的一个小题，其难度为。
+      </div>
+    </el-row> -->
 
-    <el-row v-if="chosen_paper_List.length == 0" type="flex" justify="start" style="margin-top: 30px">
+    <el-row
+      v-if="chosen_paper_List.length == 0"
+      type="flex"
+      justify="start"
+      style="margin-top: 30px"
+    >
       <el-col :span="2.5">
         <span>分析属性勾选：</span>
       </el-col>
@@ -34,7 +46,12 @@
       </el-col>
     </el-row>
 
-    <el-row v-if="chosen_paper_List.length == 0" type="flex" justify="start" style="margin-top: 30px">
+    <el-row
+      v-if="chosen_paper_List.length == 0"
+      type="flex"
+      justify="start"
+      style="margin-top: 30px"
+    >
       <el-button type="primary" @click="Open_Paper_Base()"
         >从试卷库中选择</el-button
       >
@@ -51,7 +68,11 @@
       <SearchPaper @Close_Paper_Base="CPB"></SearchPaper>
     </el-dialog>
 
-    <el-row v-if="chosen_paper_List.length > 0" justify="center" style="margin-bottom:40px;">
+    <el-row
+      v-if="chosen_paper_List.length > 0"
+      justify="center"
+      style="margin-bottom: 40px"
+    >
       <h1>多卷分析报告</h1>
     </el-row>
     <el-row v-if="chosen_paper_List.length > 0" justify="start">
@@ -61,20 +82,43 @@
         :key="'paper' + i"
         style="line-height: 20px"
       >
-        {{ i.toString() + "."}}&nbsp;&nbsp;&nbsp;&nbsp;{{chosen_paper_List[i - 1].title }}
+        {{ i.toString() + "." }}&nbsp;&nbsp;&nbsp;&nbsp;{{
+          chosen_paper_List[i - 1].title
+        }}
       </p>
     </el-row>
 
-    <el-row
-      v-show="show_word_cnt_Bar"
-      type="flex"
-      justify="center"
-      style="margin-bottom: 100px"
-    >
+    <el-divider v-if="show_word_cnt_Bar"></el-divider>
+    <!-- <el-row justify="center">居中</el-row> -->
+    <el-row class="description" v-show="show_word_cnt_Bar" justify="center">
+      所选各试卷的字数、图片数和公式数的统计结果如下图所示。可以看到虽然相较于其他学科，数学试卷中的文字信息相对较少，各卷平均字数仅为
+      {{ word_cnt_aver }}
+      ，但是数学可以通过公式与图片来进行补充。总的来看，试卷中的图片数量基本稳定在每卷
+      {{ figure_cnt_aver }} 张图，有少量上下浮动，而每卷平均有
+      {{ equation_cnt_aver }}
+      个以上的公式。不同模式的信息载体能更为全面地考查学生获取和整合信息的能力，要求学生联系并充分利用公式、图像与文本之间的关系。
+    </el-row>
+    <el-row v-show="show_word_cnt_Bar" type="flex" justify="center">
       <div id="word_cnt_Bar" class="word_cnt_Bar"></div>
     </el-row>
 
-    <el-row v-show="show_Word_Cloud" type="flex" justify="center">
+    <el-divider v-if="show_Word_Cloud"></el-divider>
+    <el-row class="description" v-show="show_Word_Cloud" justify="center">
+      对所选各试卷使用关键词抽取技术提取所含关键字，所得结果如下图所示。可以看到，各试卷中出现频率较高的关键词往往各不相同，例如
+      {{ title0 }} 中的 "{{ keyword_cache[0] }}" 和 "{{ keyword_cache[1] }}" ，
+      {{ title1 }} 中的 "{{ keyword_cache[2] }}" 和 "{{ keyword_cache[3] }}"
+      。总的来看，这 {{ paper_num }} 张试卷中出现总频率最高的 TOP10 关键词为
+      <span v-for="i in 10" :key="'keyword' + i">
+        "{{ keyword_total[i - 1] }}"
+      </span>
+      。
+    </el-row>
+    <el-row
+      v-show="show_Word_Cloud"
+      type="flex"
+      justify="center"
+      style="margin-top: 40px"
+    >
       <p
         style="
           font-size: 16px;
@@ -105,10 +149,32 @@
       <div id="Radar" class="word_cnt_Bar"></div>
     </el-row> -->
     <!-- for test -->
+    <el-divider v-if="show_knowledge2score"></el-divider>
+    <el-row class="description" v-show="show_knowledge2score" justify="center">
+      所选各试卷在各一级知识点上考察分值的情况如下图所示。在所选的
+      {{ knowledge_num }} 个一级知识点中， "{{ most_welcomed_knowledgepoint }}"
+      是这 {{ paper_num }} 张试卷最爱考察的知识点，平均每张试卷有
+      {{ highest_aver_score }} 分在考察这一知识点，其次为 "{{
+        second_welcomed_knowledgepoint[0]
+      }}" "{{ second_welcomed_knowledgepoint[1] }}" "{{
+        second_welcomed_knowledgepoint[2]
+      }}" 。 {{ paper_lowest_score }} 这张试卷对于 "{{
+        lowest_score_knowledgepoint
+      }}" 这一知识点的考察最少，仅为 {{ lowest_score }} 分。
+    </el-row>
     <el-row v-show="show_knowledge2score" type="flex" justify="center">
       <div id="Radar" class="word_cnt_Bar"></div>
     </el-row>
 
+    <el-divider v-if="show_difficulty_change"></el-divider>
+    <el-row class="description" v-show="show_knowledge2score" justify="start">
+      所选各试卷卷内各小题难度变化情况如下图所示。总的来看，卷内题目的难度由前至后总体呈递增趋势，中间穿插几道较难的题目，以体现试题的区分度和层次性。在所选的这
+      {{ paper_num }} 张试卷中，
+      {{ most_difficult_paper }} 这张试卷的平均难度最高，其难度为
+      {{ highest_difficulty }} ， {{ hardest_question_paper }} 这张试卷中的第
+      {{ hardest_question_num }} 小题是难度最高的一个小题，其难度为
+      {{ hardest_question_difficulty }} 。
+    </el-row>
     <el-row v-show="show_difficulty_change" type="flex" justify="center">
       <div
         id="diffi_change"
@@ -200,6 +266,47 @@ export default {
       keyword_blacklist: ["已知"],
       // 试卷分析进度
       progress: 0,
+      // 字数平均值
+      word_cnt_aver: 0,
+      // 图片数平均值
+      figure_cnt_aver: 0,
+      // 公式数平均值
+      equation_cnt_aver: 0,
+      // keyword_cache[0..1]存储两个在试卷1中出现了但没在其他试卷中出现的关键词
+      // keyword_cache[2..3]存储两个在试卷2中出现了但没在其他试卷中出现的关键词
+      keyword_cache: [],
+      // 第一张试卷的标题
+      title0: "",
+      // 第二张试卷的标题
+      title1: "",
+      // 试卷数
+      paper_num: 0,
+      // 关键词总体top10
+      keyword_total: [],
+      // 平均考察分值最高的知识点名
+      most_welcomed_knowledgepoint: "",
+      // 最高的平均考察分值
+      highest_aver_score: 0,
+      // 平均考察分支第二高～第四高的知识点名
+      second_welcomed_knowledgepoint: [],
+      // 知识点分值最低的纸卷名
+      paper_lowest_score: "",
+      // 分值最低的知识点名
+      lowest_score_knowledgepoint: "",
+      // 知识点总数
+      knowledge_num: 0,
+      // 最低分值
+      lowest_score: 10000,
+      // 平均难度最大的试卷标题
+      most_difficult_paper: "",
+      // 最大平均难度值
+      highest_difficulty: 0,
+      // 难度最高的小题所在试卷的标题
+      hardest_question_paper: "",
+      // 难度最高的小题的题号
+      hardest_question_num: 0,
+      // 最大难度值
+      hardest_question_difficulty: 0,
     };
   },
   mounted() {
@@ -298,6 +405,11 @@ export default {
     },
     // 初始化词云
     Init_Word_Cloud() {
+      this.title0 = this.analyse_result[0].title;
+      this.title1 = this.analyse_result[1].title;
+      this.paper_num = this.analyse_result.length;
+      this.handle_keyword_total();
+      let keyword_list = [];
       this.show_Word_Cloud = true;
       for (let i = 1; i <= this.chosen_paper_List.length; i++) {
         // 获取div对象，和echarts是一个道理，获取完数据后重新捕捉这些对象即可
@@ -316,12 +428,37 @@ export default {
           //shape: "circle",
           color: "random-dark",
         };
-        let keyword_list = this.handle_keyword(i - 1, 50);
-        console.log(keyword_list);
-        for (let item of keyword_list) {
+        keyword_list[i - 1] = this.handle_keyword(i - 1, 50);
+        //console.log(keyword_list[i-1]);
+        for (let item of keyword_list[i - 1]) {
           option.list.push([item.word, item.cnt]);
         }
         wc.setOption(option);
+      }
+      //取在试卷1中出现了但没在其他试卷中出现的关键词
+      for (let item of keyword_list[0]) {
+        let flag = true;
+        for (let j = 1; j < this.chosen_paper_List.length; j++)
+          if (keyword_list[j].indexOf(item) != -1) {
+            flag = false;
+            break;
+          }
+        if (flag) this.keyword_cache.push(item.word);
+        if (this.keyword_cache.length == 2) break;
+      }
+
+      //取在试卷2中出现了但没在其他试卷中出现的关键词
+      for (let item of keyword_list[1]) {
+        let flag = true;
+        for (let j = 0; j < this.chosen_paper_List.length; j++) {
+          if (j == 1) continue;
+          if (keyword_list[j].indexOf(item) != -1) {
+            flag = false;
+            break;
+          }
+        }
+        if (flag) this.keyword_cache.push(item.word);
+        if (this.keyword_cache.length == 4) break;
       }
     },
     // 处理试卷index的关键词，返回一个数组，包含n个关键词以及他们的频数
@@ -356,9 +493,48 @@ export default {
       keyword_list.sort(compare);
       return keyword_list.slice(0, n);
     },
+    // 统计所有试卷中关键词的top10
+    handle_keyword_total() {
+      let keyword_list = [];
+      for (let index = 0; index < this.analyse_result.length; index++) {
+        for (const value1 of this.analyse_result[index].keyword_list)
+          for (const value2 of value1) {
+            // 黑名单中的关键词当作没看到
+            if (this.keyword_blacklist.indexOf(value2) != -1) continue;
+            let k = keyword_list.findIndex((x) => x.word === value2);
+            if (k == -1)
+              // 还未记录该关键字 && 该关键词不在黑名单中
+              keyword_list.push({
+                word: value2,
+                cnt: 1,
+              });
+            // 已经记录该关键字
+            else keyword_list[k].cnt++;
+          }
+      }
+      // 对cnt从大到小排序
+      var compare = function (obj1, obj2) {
+        var val1 = obj1.cnt;
+        var val2 = obj2.cnt;
+        if (val1 < val2) {
+          return 1;
+        } else if (val1 > val2) {
+          return -1;
+        } else {
+          return 0;
+        }
+      };
+      keyword_list.sort(compare);
+      // this.keyword_total = keyword_list.slice(0, 10);
+      for (let i = 0; i < 10; i++)
+        this.keyword_total.push(keyword_list[i].word);
+    },
     // 初始化试卷字数的柱状图的方法
     Init_word_cnt_Bar() {
       this.show_word_cnt_Bar = true;
+      this.word_cnt_aver = this.Get_word_cnt_aver();
+      this.figure_cnt_aver = this.Get_figure_cnt_aver();
+      this.equation_cnt_aver = this.Get_equation_cnt_aver();
       //console.log("0 wordcnt", this.analyse_result[0].word_cnt);
       let myChart = echarts.init(document.getElementById("word_cnt_Bar"));
       let colors = ["#EE6666", "#5470C6", "#91CC75"];
@@ -547,6 +723,7 @@ export default {
       });
     },
     Init_Radar() {
+      this.paper_num = this.analyse_result.length;
       this.show_knowledge2score = true;
       let myChart = echarts.init(document.getElementById("Radar"));
       //let colors = ["#EE6666", "#5470C6", "#91CC75"];
@@ -655,15 +832,55 @@ export default {
       }
       for (let knowledge of knowledge_list) {
         //console.log(knowledge);
+        this.knowledge_num ++;
         option.radar[0].indicator.push({ text: knowledge });
       }
 
+      let aver_score = [];
+      for (let knowledge of knowledge_list) {
+        let sum = 0;
+        for (let i = 0; i < this.analyse_result.length; i++) {
+          let score = this.analyse_result[i].knowledge2score[knowledge];
+          if (score == undefined) continue;
+          sum += score;
+          if (score < this.lowest_score) {
+            this.lowest_score = score;
+            this.lowest_score_knowledgepoint = knowledge;
+            this.paper_lowest_score = this.analyse_result[i].title;
+          }
+        }
+        sum /= this.analyse_result.length;
+        aver_score.push({
+          knowledge: knowledge,
+          score: sum,
+        });
+      }
       //console.log(option.Radar[0].indicator);
+
+      // 对score从大到小排序
+      var compare_score = function (obj1, obj2) {
+        var val1 = obj1.score;
+        var val2 = obj2.score;
+        if (val1 < val2) {
+          return 1;
+        } else if (val1 > val2) {
+          return -1;
+        } else {
+          return 0;
+        }
+      };
+      aver_score.sort(compare_score);
+      console.log("aver_score", aver_score);
+      this.most_welcomed_knowledgepoint = aver_score[0].knowledge;
+      this.highest_aver_score = aver_score[0].score;
+      for (let i = 1; i <= 3; i++)
+        this.second_welcomed_knowledgepoint.push(aver_score[i].knowledge);
 
       myChart.setOption(option);
     },
     Init_difficulty_change() {
       this.show_difficulty_change = true;
+      this.paper_num = this.analyse_result.length;
       //console.log("0 wordcnt", this.analyse_result[0].word_cnt);
       let myChart = echarts.init(document.getElementById("diffi_change"));
       let colors = [
@@ -765,6 +982,10 @@ export default {
         average_difficulty =
           average_difficulty / this.analyse_result[i].difficulty_list.length;
         average_difficulty = average_difficulty.toFixed(2);
+        if (average_difficulty > this.highest_difficulty) {
+          this.highest_difficulty = average_difficulty;
+          this.most_difficult_paper = this.analyse_result[i].title;
+        }
         //console.log(average_difficulty);
         option.series.push({
           name: this.analyse_result[i].title,
@@ -795,6 +1016,21 @@ export default {
       window.addEventListener("resize", function () {
         myChart.resize();
       });
+
+      for (let i = 0; i < this.analyse_result.length; i++) {
+        for (let j = 0; j < this.analyse_result[i].difficulty_list.length; j++)
+          if (
+            this.analyse_result[i].difficulty_list[j] >
+            this.hardest_question_difficulty
+          ) {
+            this.hardest_question_difficulty =
+              this.analyse_result[i].difficulty_list[j];
+            this.hardest_question_paper = this.analyse_result[i].title;
+            this.hardest_question_num = j + 1;
+          }
+      }
+      this.hardest_question_difficulty =
+        this.hardest_question_difficulty.toFixed(2);
     },
     resize_title(title) {
       let max_width = 13;
@@ -904,6 +1140,30 @@ export default {
       };
       myChart.setOption(option);
     },
+    // 字数平均值
+    Get_word_cnt_aver() {
+      let aver = 0;
+      for (let i = 0; i < this.analyse_result.length; i++)
+        aver += this.analyse_result[i].word_cnt;
+      aver = Math.floor(aver / this.analyse_result.length);
+      return aver;
+    },
+    // 图片数平均值
+    Get_figure_cnt_aver() {
+      let aver = 0;
+      for (let i = 0; i < this.analyse_result.length; i++)
+        aver += this.analyse_result[i].figure_cnt;
+      aver = Math.floor(aver / this.analyse_result.length);
+      return aver;
+    },
+    // 公式数平均值
+    Get_equation_cnt_aver() {
+      let aver = 0;
+      for (let i = 0; i < this.analyse_result.length; i++)
+        aver += this.analyse_result[i].equation_cnt;
+      aver = Math.floor(aver / this.analyse_result.length);
+      return aver;
+    },
   },
 };
 </script>
@@ -932,5 +1192,19 @@ export default {
   margin-top: 40px;
   margin-bottom: 40px;
   border: 3px solid #eef5fe;
+}
+
+.description {
+  margin: 50px auto 0 auto;
+  text-align: left;
+  width: 1000px;
+  font-size: 18px;
+}
+
+.el-divider--horizontal {
+  display: block;
+  height: 4px;
+  width: 100%;
+  margin: 24px 0;
 }
 </style>
