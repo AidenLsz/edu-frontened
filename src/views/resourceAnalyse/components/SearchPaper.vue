@@ -178,11 +178,24 @@
           </div>
         </el-col>
       </template>
-      <el-col :span="7" style="height: 30px"></el-col>
-      <el-col :span="6" style="height: 30px">
-        <el-button type="success" plain @click="confirm_choice()"
-          >开始多卷分析</el-button
+      <el-col :span="8" style="height: 30px"></el-col>
+      <el-col :span="7" style="height: 30px">
+        <el-tooltip
+          placement="top"
+          content="请至少选择两张试卷"
+          :disabled="chosen_paper_List_Cache.length >= 2"
         >
+          <div style="width: 120px; margin-left:32px;">
+            <el-button
+              type="success"
+              plain
+              :disabled="chosen_paper_List_Cache.length <= 1"
+              @click="confirm_choice()"
+              style="position: relative;"
+              >开始多卷分析</el-button
+            >
+          </div>
+        </el-tooltip>
       </el-col>
       <el-col :span="5"></el-col>
       <!-- <el-col :span="2">
@@ -326,10 +339,12 @@
             type="flex"
             justify="center"
             slot="reference"
-            style="background-color: #409eff;
-            height:44.4px;
-            width:150px;
-            border-radius: 15px;"
+            style="
+              background-color: #409eff;
+              height: 44.4px;
+              width: 150px;
+              border-radius: 15px;
+            "
           >
             <i
               class="el-icon-shopping-cart-2"
@@ -356,7 +371,7 @@
             >
               <label>{{ chosen_paper_List_Cache.length }}</label>
             </div>
-            <p style="line-height: 44.4px; color:white;">试卷篮</p>
+            <p style="line-height: 44.4px; color: white">试卷篮</p>
           </el-row>
         </el-popover>
       </el-col>
@@ -1420,5 +1435,13 @@ export default {
 }
 #choosebox ::v-deep .el-checkbox__inner {
   border-color: rgb(64, 158, 255);
+}
+.fake_button {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  color: rgba(255, 255, 255, 1);
 }
 </style>
