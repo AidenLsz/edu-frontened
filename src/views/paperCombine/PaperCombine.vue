@@ -136,7 +136,12 @@
         <FromDatabasePaper @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></FromDatabasePaper>
     </el-row>
     <el-row v-if="Using_Menu_Index == 'autoCombine'">
-        <AutoCombine @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></AutoCombine>
+        <AutoCombine 
+            @Add_To_Cart="Add_To_Question_Cart"
+            @Jump_To_SC="Jump_To_SC"
+            @Clear_Cart="Clear_Cart"
+            :Period.sync="Selected_Period" 
+            :Subject.sync="Selected_Subject"></AutoCombine>
     </el-row>
     <el-row v-if="Using_Menu_Index == 'startCombine'">
         <StartCombine 

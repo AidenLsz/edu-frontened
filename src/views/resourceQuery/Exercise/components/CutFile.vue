@@ -303,7 +303,7 @@ export default {
 .box-card {
   position: fixed;
   overflow: visible;
-  top:90px;
+  top: 134px;
   // background: rgba(248,251, 255, .9);
   background: rgba(255, 255, 255, 0.95);
   width: 792px;
@@ -319,7 +319,7 @@ export default {
 }
 #openBtn{
   z-index:2002;
-  top:90px;
+  top:134px;
 }
 #closeBtn{
   // z-index:2002;
@@ -332,7 +332,6 @@ export default {
 {
     position: absolute;
     // left:0;
-    // top:90px;
     width: 48px;
     height: 182px;
     border-radius: 0px 10px 10px 0px;

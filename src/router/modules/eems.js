@@ -8,6 +8,11 @@ const router=[
     name: "Exercise",
     component:()=> import("@/views/resourceQuery/Exercise/index"),
   },
+  {
+    path: "multiSourceSearch",
+    name: "MultiSourceSearch",
+    component:()=> import("@/views/resourceQuery/Exercise/MultiSourceSearch"),
+  },
   // {
   //   path: "multiexercise",
   //   name: "Exercise",

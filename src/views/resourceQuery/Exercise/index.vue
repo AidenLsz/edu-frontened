@@ -161,6 +161,9 @@
                     style="margin-top: 2vh;">
                     <span style="font-size: 4rem">试题检索</span>
                 </el-row>
+                <div class="Background_Round">
+
+                </div>
                 <!-- 功能区 -->
                 <el-row
                     class="Padding_Width"
@@ -285,7 +288,7 @@
                             </el-button>
                         </el-row>
                     </el-col>
-                    <el-col :span="7" :offset="1" style="height: 512px" v-show="Search_Extra == 'ImgSearch'">
+                    <el-col :span="7" :offset="1" style="height: 512px;" v-show="Search_Extra == 'ImgSearch'">
                         <input
                             type='file'
                             id="ImgInput"
@@ -382,7 +385,7 @@
                 :total="Total_Count">
             </el-pagination>
         </el-row>
-        <cut-file ref='cutFile' @search="handleSearch"/>
+        <CutFile ref='cutFile' @search="handleSearch"/>
         <el-dialog
           title="选择学科"
           :visible.sync="confirmSubjectDialogVisible"
@@ -421,13 +424,13 @@ import {commonAjax} from '@/common/utils/ajax'
 import SearchQuestionItem from '@/views/resourceQuery/components/SearchQuestionItem'
 import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
 import ComplexInput from '@/common/components/ComplexInput'
-import CutFile from '@/views/testPage/CutFile.vue'
+import CutFile from '@/views/resourceQuery/Exercise/components/CutFile'
 
 
 export default {
   name: "",
   components:{
-      SearchQuestionItem, QuestionAnalyse, ComplexInput,CutFile
+      SearchQuestionItem, QuestionAnalyse, ComplexInput, CutFile
   },
   data() {
     return {
@@ -532,8 +535,6 @@ export default {
         confirmSubjectDialogVisible:false,
         file:'',
         paper_type:'语文',
-        // 窄窗口用的抽屉是否显示
-        Width_Now: 0,
     };
   },
   destroyed(){
@@ -981,10 +982,11 @@ export default {
             return Style
         },
         Get_Card_Margin(Question_Index){
-            let Style_Row_0 = '-128px 10vw 64px 10vw'
-            let Style_Row_1 = '-128px 10vw 128px 10vw'
+            let Style_Row_0 = '-128px auto 64px auto'
+            let Style_Row_1 = '-128px auto 128px auto'
             let Style = {
                 'margin': Question_Index == this.Question_List.length - 1 ? Style_Row_0 : Style_Row_1,
+                'width': '1344px'
             }
             return Style
         },
@@ -1061,29 +1063,31 @@ export default {
     font-size: 16px;
 }
 
-// .Background_Round{
-//     position: relative;
-//     width: 1000px;
-//     height: 1000px;
-//     right: -24px;
-//     top: -24px;
-//     border-radius: 50%;
-//     background: linear-gradient( 180deg, rgba(#D9E9FE, 0%), rgba(#C8E0FF, 100%));
-//     box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.06);
-//     z-index: -1;
-// }
+.Background_Round{
+    position: absolute;
+    width: 1200px;
+    height: 1200px;
+    right: -25%;
+    top: -51%;
+    border-radius: 50%;
+    background: linear-gradient( 180deg, rgba(#D9E9FE, 0%), rgba(#C8E0FF, 100%));
+    box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.06);
+    z-index: -1;
+}
 
-// .Background_Round_Position{
-//     position: absolute;
-//     right: 0px;
-//     width: 850px;
-//     background: transparent;
-//     overflow: hidden;
-//     z-index: -1;
-// }
+.Background_Round_Position{
+    position: absolute;
+    right: 0px;
+    width: 850px;
+    background: transparent;
+    overflow: hidden;
+    z-index: -1;
+}
 
 .Question_Card{
     box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
+    width: 1168px;
+    margin: 0 auto;
     border-radius: 10px;
     opacity: 0.95;
 }
@@ -1104,15 +1108,17 @@ export default {
 }
 
 .Padding_Width{
-    padding-right: 10vw;
-    padding-left: 10vw;
+    padding-right: 88px;
+    padding-left: 88px;
 }
 
 .Main_Background{
-    background: url('./NewSearchQues_Background.jpg');
-    background-size: auto 100%;
-    background-position: right;
-    background-repeat: no-repeat;
+    // background: url('./NewSearchQues_Background.jpg');
+    // background-size: 100% auto;
+    // background-position: right;
+    // background-repeat: no-repeat;
+    width: 1344px;
+    margin: 0 auto;
     margin-top: -80px;
     padding-bottom: 64px;
     margin-bottom: 64px;

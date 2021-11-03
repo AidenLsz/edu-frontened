@@ -507,7 +507,7 @@
     <!-- <basic-header/> -->
     <el-main>
       <div id="header-sticky" class="sticky-menu" style="height: 80px;">
-        <el-row class="NavBarArea" :style="Get_NavBar_Width('Normal')" type="flex" justify="center">
+        <el-row class="NavBarArea Normal_Navbar" type="flex" justify="center">
           <el-col :span="4" style="padding-top: 20px;">
             <el-row type="flex" justify="start">
               <img
@@ -758,7 +758,7 @@
             </el-row>
           </el-col>
         </el-row>
-        <el-row class="NavBarArea" :style="Get_NavBar_Width('Narrow')" type="flex" justify="center">
+        <el-row class="NavBarArea Narrow_Navbar" type="flex" justify="center">
           <el-col :span="4" style="padding-top: 20px;">
             <el-row type="flex" justify="start">
               <img
@@ -779,7 +779,7 @@
           </el-col>
         </el-row>
       </div>
-      <div style="min-height: 100vh; padding-top: 80px;">
+      <div style="padding-top: 90px">
         <router-view :key="$route.fullPath"></router-view>
       </div>
       <basic-footer />
@@ -825,35 +825,10 @@ export default {
     };
   },
   mounted() {
-    // if(this.$route.name=='user'){
-    //     this.isUser=true
-    // }
-    // var user = sessionStorage.getItem("user");
-    // if (user) {
-    //   this.username = user;
-    // }
-    // if (this.username === "advanced" || this.username === "admin") {
-    //   this.isAdmin = true;
-    // }
-    // this.root = this.username === "root";
-    // console.log(this.root);
-    // $(window).on("scroll", function () {
-    //   var scroll = $(window).scrollTop();
-    //   if (scroll < 700) {
-    //     $("#header-sticky").removeClass("sticky-menu");
-    //   } else {
-    //     $("#header-sticky").addClass("sticky-menu");
-    //   }
-    // });
-    this.Width_Now = document.body.clientWidth
     this.getGroups();
   },
   watch:{
-    Width_Now(newVal){
-      if(newVal >= 768){
-        this.Narrow_Navbar_Drawer = false;
-      }
-    }
+    
   },
   updated() {
     var user = sessionStorage.getItem("user");
@@ -862,45 +837,11 @@ export default {
     } else {
       this.username = "";
     }
-    window.onresize = () => {
-      this.Width_Now = document.body.clientWidth
-    }
   },
   methods: {
     // 打开过窄时的导航栏
     Open_Narrow_Navbar_Drawer(){
       this.Narrow_Navbar_Drawer = true;
-    },
-    // 调整导航栏宽度
-    Get_NavBar_Width(Part){
-      let Width_Border = {min: 768, max: 1344}
-      if(Part == 'Normal'){
-        if(this.Width_Now < Width_Border.min){
-          return {
-            "display": "none"
-          }
-        }else if(this.Width_Now >= Width_Border.min && this.Width_Now < Width_Border.max){
-          return {
-            "width": this.Width_Now + 'px',
-            "padding": "0px 32px",
-          }
-        }else{
-          return {
-            "width": "1344px",
-            "margin": "0px " + ((this.Width_Now - 1344)/2) + "px",
-          }
-        }
-      }else{
-        if(this.Width_Now >= Width_Border.min){
-          return {
-            "display": "none"
-          }
-        }else{
-          return {
-            "padding": "0px 32px",
-          }
-        }
-      }
     },
     // 查看用户个人信息及组织架构
     checkUserInfo() {
@@ -976,16 +917,6 @@ export default {
         "color": "black",
         "margin-left": "10px",
       };
-    },
-    Calculate_Title_Margin() {
-      var Width = window.screen.width;
-      var CWidth = document.body.clientWidth;
-      // console.log(Width, CWidth)
-      if (Width - CWidth < 300) {
-        return "0px";
-      } else {
-        return 0 - (CWidth / Width) * (CWidth / Width) * 40 + "px";
-      }
     },
     ToTop() {
       window.scrollTo(0, 0);
@@ -1324,7 +1255,7 @@ export default {
   height: 40px;
   width: 40px;
   color: #000;
-  margin-top: 15px;
+  margin-top: 18px;
   cursor: pointer;
   transition: 200ms;
 }
@@ -1355,4 +1286,31 @@ export default {
   margin: 10px 0px 10px 20px;
 }
 
+.Narrow_Navbar{
+  display: none;
+}
+
+.Normal_Navbar{
+  width: 100vw;
+  padding: 0 32px;
+}
+
+@media screen and (max-width: 768px) {
+  .Narrow_Navbar{
+    padding: "0px 32px";
+    margin-right: 30px;
+    display: block;
+  }
+
+  .Normal_Navbar{
+    display: none;
+  }
+}
+
+@media screen and (min-width: 1344px) {
+  .Normal_Navbar{
+    width: 1344px;
+    margin: 0 auto;
+  }
+}
 </style>

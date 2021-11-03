@@ -364,7 +364,8 @@
         <el-row 
             class="Replace_Question_Aim"
             v-for="(Question, Question_Index) in Replace_Question_List"
-            :key="'Replacing_Question_Aim_' + Question_Index">
+            :key="'Replacing_Question_Aim_' + Question_Index"
+            :id="'Replacing_Question_Aim_' + Question_Index">
             <el-col :span="24">
                 <el-row type="flex" justify="start">
                     <Mathdown :content="Question.stem" :name="'Replacing_Question_Aim_' + Question_Index + '_Stem'"></Mathdown>
@@ -380,6 +381,9 @@
         :visible.sync="Combine_Replace_Bundle"
         title="题包替换" 
         width="1192px"
+        v-loading="Bundle_Loading"
+        element-loading-text="检索替换题包中，请等待..."
+        element-loading-spinner="el-icon-loading"
         @close="Reset_Dialog_Params"
         :modal-append-to-body="false"
         :close-on-click-modal="true">
@@ -518,10 +522,35 @@
                         </div>
                     </el-col>
                 </el-row>
+                <el-row type="flex" justify="center" style="margin-top: 30px;">
+                    <el-button @click="Search_Replace_Bundle()" type="primary">根据当前条件检索替换用题目</el-button>
+                </el-row>
             </el-col>
         </el-row>
-        <el-row type="flex" justify="center">
-            <label>题包替换部分的服务仍处于开发过程当中，目前暂时只支持单题手动替换</label>
+        <el-row 
+            class="Replace_Question_Aim"
+            v-for="(Question, Question_Index) in Replace_Bundle_List"
+            :key="'Replacing_Bundle_Aim_' + Question_Index"
+            :id="'Replacing_Bundle_Aim_' + Question_Index">
+            <Mathdown :content="Question.stem" :name="'Replacing_Bundle_Aim_' + Question_Index + '_Stem'"></Mathdown>
+        </el-row>
+        <el-row 
+            type="flex" 
+            justify="center" 
+            style="margin-top: 10px"
+            v-if="Replace_Bundle_List.length != 0">
+            <el-button type="primary" @click="Replace_Bundle_With_It()">用这组题替换</el-button>
+        </el-row>
+        <el-row
+            v-if="Replace_Bundle_List.length != 0"
+            style="padding-top: 20px; padding-bottom: 20px; background: transparent">
+            <el-pagination
+                @current-change="Page_Index_Change"
+                :current-page.sync="Page_Index"
+                :page-size="Combine_Replace_Bundle_Info.sub_question.length"
+                layout="total, prev, pager, next"
+                :total="Combine_Replace_Bundle_Info.sub_question.length * 3">
+            </el-pagination>
         </el-row>
     </el-dialog>
     <!-- 替换前后对比页面 -->
@@ -959,14 +988,14 @@
                     </el-col>
                     <el-col :span="12">
                         <el-row type="flex" justify="end">
-                            <el-button 
+                            <!-- <el-button 
                                 type="primary" 
                                 size="small" 
-                                style="margin-right: 30px"
+                                style="margin-right: 30px;"
                                 v-show="Combine_Paper_Changing"
                                 @click="Get_Replace_Bundle(Sub_Index)">
                                 替换此组大题
-                            </el-button>
+                            </el-button> -->
                             <el-button type="success" size="small" @click="Change_Dialog_Info(Sub_Index, (Sub_Index + 1) + '')">
                                 查看大题分析
                             </el-button>
@@ -1010,6 +1039,8 @@ import jsPDF from 'jspdf';
 import QuestionAnalyse from "./QuestionAnalyse.vue"
 
 import Mathdown from '@/common/components/Mathdown'
+
+// import FileSaver from 'file-saver'
 
 import {commonAjax} from '@/common/utils/ajax'
 
@@ -1199,9 +1230,12 @@ export default {
             // 用来替换的题目、题包列表
             Replace_Question_List: [],
             Replace_Bundle_List: [],
+            Replace_Bundle_List_All: [],
             // 转等待圈
             Question_Loading: false,
-            Bundle_Loading: false
+            Bundle_Loading: false,
+            // 只有题包替换回用到的东西，一共五页
+            Page_Index: 1
         }
     },
     destroyed(){
@@ -1350,10 +1384,6 @@ export default {
                 }
             }
         },
-        // 展示目前题目的替换情况
-        Replacing_Temp_Result_Show(){
-            alert("Just Show")
-        },
         // 预览替换结果，准备开始替换
         Replacing_Do(){
             this.Combine_Replace_Compare = true;
@@ -1388,6 +1418,87 @@ export default {
 
             this.Combine_Replace_Question = false
 
+        },
+        Replace_Bundle_With_It(){
+
+            let RA = this.Replace_Position;
+
+            this.Combine_Replace_Bundle_Info.difficulty = ['全部', '自定义'].indexOf(this.filterKPTree_Bundle.Difficulty) != -1 ?
+                this.Difficulty_List.indexOf(this.filterKPTree_Bundle.Difficulty) * 0.2 - 0.1 : this.filterKPTree_Bundle.Difficulty == '全部' ? 
+                    this.Combine_Replace_Bundle_Info.difficulty : (this.filterKPTree_Bundle.Difficulty_Range[0] + this.filterKPTree_Bundle.Difficulty_Range[1])/2;
+
+            this.Combine_Replace_Bundle_Info.update = true;
+
+            for(let i = 0; i < this.Replace_Bundle_List.length; i++){
+                let Question = this.Replace_Bundle_List[i]
+                let Temp_Question = {
+                    difficulty: Question.difficulty != null ? Question.difficulty : this.Combine_Replace_Bundle_Info.sub_question[i].difficulty,
+                    id: Question.id,
+                    stem: Question.stem,
+                    options: Question.options,
+                    answer: Question.answer,
+                    analysis: Question.analysis,
+                    score: this.Combine_Replace_Bundle_Info.sub_question[i].score,
+                    update: true,
+                    type: this.Combine_Replace_Bundle_Info.type,
+                    knowledgePointInfos: this.Combine_Replace_Bundle_Info.sub_question[i].knowledgePointInfos
+                }
+                this.Combine_Replace_Bundle_Info.sub_question.splice(i, 1, JSON.parse(JSON.stringify(Temp_Question)))
+            }
+            this.Update_Combine_Paper.splice(RA, 1, JSON.parse(JSON.stringify(this.Combine_Replace_Bundle_Info)))
+        },
+        Jump_To_Top(Part){
+            document.getElementById(Part).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+        },
+        Page_Index_Change(){
+            this.Replace_Bundle_List = JSON.parse(JSON.stringify(this.Replace_Bundle_List_All[this.Page_Index - 1]))
+            this.Jump_To_Top('Replacing_Bundle_Aim_0')
+        },
+        Search_Replace_Bundle(){
+            
+            this.Bundle_Loading = true;
+
+            let Param = {}
+
+            let kl = [[0], [1], [2]]
+
+            for(let i = 0; i < this.Combine_Replace_Bundle_Info.knowledgePointInfos.ID.length; i++){
+                kl[this.Combine_Replace_Bundle_Info.knowledgePointInfos.Layer[i]].push(this.Combine_Replace_Bundle_Info.knowledgePointInfos.Label[i])
+            }
+
+            let SAP = JSON.parse(sessionStorage.getItem("SubjectAndPeriod"))
+
+            var data = {
+                "subject": SAP.Subject,
+                "period": SAP.Period,
+                "database": this.filterKPTree_Bundle.Database,
+                "difficulty": this.filterKPTree_Bundle.Difficulty_Range,
+                "type": this.Combine_Replace_Bundle_Info.type,
+                "number": this.Combine_Replace_Bundle_Info.sub_question.length,
+                "knowledgePoint": kl,
+            }
+
+            Param.data=JSON.stringify(data)
+
+            // let file = new File(
+            //     [JSON.stringify(data, null, 4)],
+            //     "自组卷报告.json",
+            //     { type: "text/plain;charset=utf-8" }
+            //     );
+            // FileSaver.saveAs(file);
+
+            // console.log(Param)
+            // console.log(this.Combine_Replace_Bundle_Info)
+
+            // commonAjax(this.backendIP+'/api/search', Param)
+            // .then((data)=>{
+            //     this.Replace_Bundle_List_All = data.results
+            //     this.Replace_Bundle_List = data.results[0]
+            //     this.Bundle_Loading = false;
+            // }).catch(() => {
+            //     this.$message.error("服务器过忙，请稍后再试。")
+            //     this.Bundle_Loading = false;
+            // })
         },
         // 检索替换题目用的题目
         Search_Replace_Question(){
@@ -1427,9 +1538,12 @@ export default {
                 console.log(data.results)
                 this.Replace_Question_List = data.results
                 this.Question_Loading = false;
+                
             }).catch(() => {
                 this.$message.error("服务器过忙，请稍后再试。")
                 this.Question_Loading = false;
+            }).finally(() => {
+                this.Jump_To_Top('Replacing_Question_Aim_0')
             })
         },
         // 根据不同选择的状况调整按钮样式
@@ -1668,7 +1782,8 @@ export default {
             this.Replace_Bundle_List = [],
             // 转等待圈
             this.Question_Loading = false,
-            this.Bundle_Loading = false
+            this.Bundle_Loading = false,
+            this.Page_Index = 1
         },
         // 检测要“修改”的题目
         Get_Replace_Aim(Info){

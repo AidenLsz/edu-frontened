@@ -42,11 +42,19 @@ export default {
 <style lang="scss" scoped>
 .Test{
     position: fixed;
-    backdrop-filter: blur(24px) !important;
-    -webkit-backdrop-filter: blur(24px) !important;
-    background: rgba($color: white, $alpha: 0.5);
+    background: rgba($color: white, $alpha: 1);
     border: 1px solid red;
     height: 50px;
     width: 100%;
+}
+
+@media screen and (max-width: 800px) {
+  .Test{
+      position: fixed;
+      background: rgba($color: black, $alpha: 1);
+      border: 1px solid red;
+      height: 50px;
+      width: 100%;
+  }
 }
 </style>

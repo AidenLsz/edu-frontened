@@ -169,6 +169,7 @@ src     文件夹部分
             - SelectFile.vue               上传文件
             - CutFile.vue                  切分文件
           - index.vue                    入口文件
+          - MultiSourceSearch.vue        多源查重页面，主要是不知道放哪儿，好像原来有个类似的页面是放这儿的
         + KU           知识点搜索
           + components - 专属于知识点检索的组件
             - CoStudy.vue         共同学习
