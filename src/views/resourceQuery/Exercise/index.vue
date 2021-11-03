@@ -557,6 +557,12 @@ export default {
     ImgSearchArea.addEventListener('dragleave', this.onDragOut, true);
     ImgSearchArea.addEventListener('drop', this.onDrop, true);
     window.addEventListener('paste', this.Paste_Function)
+    this.Width_Now = document.body.clientWidth
+  },
+  updated() {
+    window.onresize = () => {
+      this.Width_Now = document.body.clientWidth
+    }
   },
   updated() {
 
