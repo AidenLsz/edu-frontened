@@ -732,6 +732,7 @@ export default {
                             "subject": this.Subject,
                             "period": this.Period,
                             "questions": JSON.stringify(Submit_JSON),
+                            'ig_ID':this.Item_Group,
                             }, null, 4),
             'questionInput': true,
             'ig_ID':this.Item_Group
