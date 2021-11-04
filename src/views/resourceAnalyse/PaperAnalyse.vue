@@ -348,10 +348,10 @@
                         </div>
                     </el-col>
                 </el-row>
-                <el-row type="flex" justify="center" style="margin-top: 30px;">
-                    <el-button @click="Search_Replace_Question()" type="primary">根据当前条件检索替换用题目</el-button>
-                </el-row>
             </el-col>
+        </el-row>
+        <el-row type="flex" justify="center" style="margin-top: 30px;">
+            <el-button @click="Search_Replace_Question()" type="primary">根据当前条件检索替换用题目</el-button>
         </el-row>
         <el-divider></el-divider>
         <el-row type="flex" justify="start">
@@ -359,6 +359,10 @@
         </el-row>
         <el-row type="flex" justify="start">
             <Mathdown :content="Combine_Replace_Question_Info.stem" :name="'Replacing_Question_Stem'"></Mathdown>
+        </el-row>
+        <el-row v-for="(Option, Option_Index) in Combine_Replace_Question_Info.options" :key="'Option_' + Option_Index" style="line-height: 40px" type="flex" justify="start">
+            <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+            <Mathdown style="width:700px" :content="Option" :name="'Replacing_Option_' + Option_Index"></Mathdown>
         </el-row>
         <el-divider v-if="Replace_Question_List.length > 0"></el-divider>
         <el-row 
@@ -369,6 +373,10 @@
             <el-col :span="24">
                 <el-row type="flex" justify="start">
                     <Mathdown :content="Question.stem" :name="'Replacing_Question_Aim_' + Question_Index + '_Stem'"></Mathdown>
+                </el-row>
+                <el-row v-for="(Option, Option_Index) in Question.options" :key="'Replacing_Question_' + Question_Index + '_Option_' + Option_Index" style="line-height: 40px" type="flex" justify="start">
+                    <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+                    <Mathdown style="width:700px" :content="Option" :name="'Replacing_Question_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
                 </el-row>
                 <el-row type="flex" justify="center" style="margin-top: 10px">
                     <el-button type="primary" @click="Replace_Question_With_It(Question)">用这道题替换</el-button>
@@ -522,10 +530,10 @@
                         </div>
                     </el-col>
                 </el-row>
-                <el-row type="flex" justify="center" style="margin-top: 30px;">
-                    <el-button @click="Search_Replace_Bundle()" type="primary">根据当前条件检索替换用题目</el-button>
-                </el-row>
             </el-col>
+        </el-row>
+        <el-row type="flex" justify="center" style="margin-top: 30px;">
+            <el-button @click="Search_Replace_Bundle()" type="primary">根据当前条件检索替换用题目</el-button>
         </el-row>
         <el-divider></el-divider>
         <el-row 
@@ -536,6 +544,10 @@
             <el-col>
                 <el-row type="flex" justify="start" style="padding: 0px 10px">
                     <Mathdown :content="Question.stem" :name="'Replacing_Bundle_Aim_' + Question_Index + '_Stem'"></Mathdown>
+                </el-row>
+                <el-row v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index" style="line-height: 40px" type="flex" justify="start">
+                    <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+                    <Mathdown style="width:700px" :content="Option" :name="'Replacing_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 20px;">
                     <label style="width: 60px; margin-right: 10px">难度：</label>
@@ -583,15 +595,24 @@
                     :key="'Replacing_Result_Bundle_' + Bundle_Index + '_Question_' + Question_Index"
                     style="margin-bottom: 10px;">
                     <el-col>
-                        <el-row 
-                            v-if="Question.update" 
-                            type="flex" 
-                            justify="start"
-                            class="Before_Replace_Question">
-                            <Mathdown 
-                                :content="Backup_Combine_Paper[Bundle_Index].sub_question[Question_Index].stem" 
-                                :name="'Replacing_Results_Backup_' + Bundle_Index + '_' + Question_Index"></Mathdown>
-                        </el-row>
+                        <div 
+                            class="Before_Replace_Question"
+                            v-if="Question.update">
+                            <el-row 
+                                type="flex" 
+                                justify="start">
+                                <Mathdown 
+                                    :content="Backup_Combine_Paper[Bundle_Index].sub_question[Question_Index].stem" 
+                                    :name="'Replacing_Results_Backup_' + Bundle_Index + '_' + Question_Index"></Mathdown>
+                            </el-row>
+                            <el-row
+                                v-for="(Option, Option_Index) in Backup_Combine_Paper[Bundle_Index].sub_question[Question_Index].options" 
+                                :key="'Backup_' + Bundle_Index + '_Option_'+ Option_Index + '_Of_' + Question_Index" 
+                                style="line-height: 40px" type="flex" justify="start">
+                                <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+                                <Mathdown style="width:700px" :content="Option" :name="'Backup_' + Bundle_Index + '_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
+                            </el-row>
+                        </div>
                         <el-row v-if="Question.update" type="flex" justify="center">
                             <i class="el-icon-arrow-down" style="font-size: 30px; opacity: 0.7; color: #409EFF; margin: 10px; font-weight: bold; margin-right: 30px"></i>
                             <el-tooltip content="还原为初始题目" placement="right">
@@ -601,14 +622,22 @@
                                     style="font-size: 30px; opacity: 0.7; color: #409EFF; margin: 10px; font-weight: bold; cursor: pointer"></i>
                             </el-tooltip>
                         </el-row>
-                        <el-row
-                            type="flex" 
-                            justify="start"
-                            :class="Question.update ? 'After_Replace_Question': 'None_Replace_Question'">
-                            <Mathdown 
-                                :content="Question.stem" 
-                                :name="'Replacing_Results_Update_' + Bundle_Index + '_' + Question_Index"></Mathdown>
-                        </el-row>
+                        <div :class="Question.update ? 'After_Replace_Question': 'None_Replace_Question'">
+                            <el-row
+                                type="flex" 
+                                justify="start">
+                                <Mathdown 
+                                    :content="Question.stem" 
+                                    :name="'Replacing_Results_Update_' + Bundle_Index + '_' + Question_Index"></Mathdown>
+                            </el-row>
+                            <el-row
+                                v-for="(Option, Option_Index) in Question.options" 
+                                :key="'Update_' + Bundle_Index + '_Option_'+ Option_Index + '_Of_' + Question_Index" 
+                                style="line-height: 40px" type="flex" justify="start">
+                                <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+                                <Mathdown style="width:700px" :content="Option" :name="'Update_' + Bundle_Index + '_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
+                            </el-row>
+                        </div>
                     </el-col>
                 </el-row>
             </el-col>
@@ -1338,6 +1367,10 @@ export default {
         document.getElementById('Analyse_Title').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     },
     methods: {
+        // 返回选项标签
+        Get_Option_Label(Index){
+            return String.fromCharCode(Index + 65)
+        },
         // 取消某道题或某个题包的替换
         Reset_To_Origin(Bundle_Index, Question_Index = null){
             if(Question_Index == null){
