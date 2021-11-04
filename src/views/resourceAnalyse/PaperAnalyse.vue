@@ -348,10 +348,10 @@
                         </div>
                     </el-col>
                 </el-row>
-                <el-row type="flex" justify="center" style="margin-top: 30px;">
-                    <el-button @click="Search_Replace_Question()" type="primary">根据当前条件检索替换用题目</el-button>
-                </el-row>
             </el-col>
+        </el-row>
+        <el-row type="flex" justify="center" style="margin-top: 30px;">
+            <el-button @click="Search_Replace_Question()" type="primary">根据当前条件检索替换用题目</el-button>
         </el-row>
         <el-divider></el-divider>
         <el-row type="flex" justify="start">
@@ -359,6 +359,10 @@
         </el-row>
         <el-row type="flex" justify="start">
             <Mathdown :content="Combine_Replace_Question_Info.stem" :name="'Replacing_Question_Stem'"></Mathdown>
+        </el-row>
+        <el-row v-for="(Option, Option_Index) in Combine_Replace_Question_Info.options" :key="'Option_' + Option_Index" style="line-height: 40px" type="flex" justify="start">
+            <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+            <Mathdown style="width:700px" :content="Option" :name="'Replacing_Option_' + Option_Index"></Mathdown>
         </el-row>
         <el-divider v-if="Replace_Question_List.length > 0"></el-divider>
         <el-row 
@@ -369,6 +373,10 @@
             <el-col :span="24">
                 <el-row type="flex" justify="start">
                     <Mathdown :content="Question.stem" :name="'Replacing_Question_Aim_' + Question_Index + '_Stem'"></Mathdown>
+                </el-row>
+                <el-row v-for="(Option, Option_Index) in Question.options" :key="'Replacing_Question_' + Question_Index + '_Option_' + Option_Index" style="line-height: 40px" type="flex" justify="start">
+                    <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+                    <Mathdown style="width:700px" :content="Option" :name="'Replacing_Question_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
                 </el-row>
                 <el-row type="flex" justify="center" style="margin-top: 10px">
                     <el-button type="primary" @click="Replace_Question_With_It(Question)">用这道题替换</el-button>
@@ -522,34 +530,47 @@
                         </div>
                     </el-col>
                 </el-row>
-                <el-row type="flex" justify="center" style="margin-top: 30px;">
-                    <el-button @click="Search_Replace_Bundle()" type="primary">根据当前条件检索替换用题目</el-button>
-                </el-row>
             </el-col>
         </el-row>
+        <el-row type="flex" justify="center" style="margin-top: 30px;">
+            <el-button @click="Search_Replace_Bundle()" type="primary">根据当前条件检索替换用题目</el-button>
+        </el-row>
+        <el-divider></el-divider>
         <el-row 
             class="Replace_Question_Aim"
-            v-for="(Question, Question_Index) in Replace_Bundle_List"
+            v-for="(Question, Question_Index) in Replace_Bundle_List.sub_question"
             :key="'Replacing_Bundle_Aim_' + Question_Index"
             :id="'Replacing_Bundle_Aim_' + Question_Index">
-            <Mathdown :content="Question.stem" :name="'Replacing_Bundle_Aim_' + Question_Index + '_Stem'"></Mathdown>
+            <el-col>
+                <el-row type="flex" justify="start" style="padding: 0px 10px">
+                    <Mathdown :content="Question.stem" :name="'Replacing_Bundle_Aim_' + Question_Index + '_Stem'"></Mathdown>
+                </el-row>
+                <el-row v-for="(Option, Option_Index) in Question.options" :key="'Option_'+ Option_Index + '_Of_' + Question_Index" style="line-height: 40px" type="flex" justify="start">
+                    <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+                    <Mathdown style="width:700px" :content="Option" :name="'Replacing_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-top: 20px;">
+                    <label style="width: 60px; margin-right: 10px">难度：</label>
+                    <span style="width: 60px; margin-right: 10px">{{Question.difficulty.toFixed(3)}}</span>
+                </el-row>
+            </el-col>
         </el-row>
         <el-row 
             type="flex" 
             justify="center" 
             style="margin-top: 10px"
-            v-if="Replace_Bundle_List.length != 0">
+            v-if="Replace_Bundle_List_All.length > 0">
             <el-button type="primary" @click="Replace_Bundle_With_It()">用这组题替换</el-button>
         </el-row>
         <el-row
-            v-if="Replace_Bundle_List.length != 0"
+            v-if="Replace_Bundle_List_All.length > 0"
             style="padding-top: 20px; padding-bottom: 20px; background: transparent">
             <el-pagination
                 @current-change="Page_Index_Change"
                 :current-page.sync="Page_Index"
-                :page-size="Combine_Replace_Bundle_Info.sub_question.length"
+                :page-size="1"
                 layout="total, prev, pager, next"
-                :total="Combine_Replace_Bundle_Info.sub_question.length * 3">
+                :total="Replace_Bundle_List_All.length">
             </el-pagination>
         </el-row>
     </el-dialog>
@@ -574,15 +595,24 @@
                     :key="'Replacing_Result_Bundle_' + Bundle_Index + '_Question_' + Question_Index"
                     style="margin-bottom: 10px;">
                     <el-col>
-                        <el-row 
-                            v-if="Question.update" 
-                            type="flex" 
-                            justify="start"
-                            class="Before_Replace_Question">
-                            <Mathdown 
-                                :content="Backup_Combine_Paper[Bundle_Index].sub_question[Question_Index].stem" 
-                                :name="'Replacing_Results_Backup_' + Bundle_Index + '_' + Question_Index"></Mathdown>
-                        </el-row>
+                        <div 
+                            class="Before_Replace_Question"
+                            v-if="Question.update">
+                            <el-row 
+                                type="flex" 
+                                justify="start">
+                                <Mathdown 
+                                    :content="Backup_Combine_Paper[Bundle_Index].sub_question[Question_Index].stem" 
+                                    :name="'Replacing_Results_Backup_' + Bundle_Index + '_' + Question_Index"></Mathdown>
+                            </el-row>
+                            <el-row
+                                v-for="(Option, Option_Index) in Backup_Combine_Paper[Bundle_Index].sub_question[Question_Index].options" 
+                                :key="'Backup_' + Bundle_Index + '_Option_'+ Option_Index + '_Of_' + Question_Index" 
+                                style="line-height: 40px" type="flex" justify="start">
+                                <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+                                <Mathdown style="width:700px" :content="Option" :name="'Backup_' + Bundle_Index + '_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
+                            </el-row>
+                        </div>
                         <el-row v-if="Question.update" type="flex" justify="center">
                             <i class="el-icon-arrow-down" style="font-size: 30px; opacity: 0.7; color: #409EFF; margin: 10px; font-weight: bold; margin-right: 30px"></i>
                             <el-tooltip content="还原为初始题目" placement="right">
@@ -592,14 +622,22 @@
                                     style="font-size: 30px; opacity: 0.7; color: #409EFF; margin: 10px; font-weight: bold; cursor: pointer"></i>
                             </el-tooltip>
                         </el-row>
-                        <el-row
-                            type="flex" 
-                            justify="start"
-                            :class="Question.update ? 'After_Replace_Question': 'None_Replace_Question'">
-                            <Mathdown 
-                                :content="Question.stem" 
-                                :name="'Replacing_Results_Update_' + Bundle_Index + '_' + Question_Index"></Mathdown>
-                        </el-row>
+                        <div :class="Question.update ? 'After_Replace_Question': 'None_Replace_Question'">
+                            <el-row
+                                type="flex" 
+                                justify="start">
+                                <Mathdown 
+                                    :content="Question.stem" 
+                                    :name="'Replacing_Results_Update_' + Bundle_Index + '_' + Question_Index"></Mathdown>
+                            </el-row>
+                            <el-row
+                                v-for="(Option, Option_Index) in Question.options" 
+                                :key="'Update_' + Bundle_Index + '_Option_'+ Option_Index + '_Of_' + Question_Index" 
+                                style="line-height: 40px" type="flex" justify="start">
+                                <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+                                <Mathdown style="width:700px" :content="Option" :name="'Update_' + Bundle_Index + '_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
+                            </el-row>
+                        </div>
                     </el-col>
                 </el-row>
             </el-col>
@@ -988,14 +1026,14 @@
                     </el-col>
                     <el-col :span="12">
                         <el-row type="flex" justify="end">
-                            <!-- <el-button 
+                            <el-button 
                                 type="primary" 
                                 size="small" 
                                 style="margin-right: 30px;"
                                 v-show="Combine_Paper_Changing"
                                 @click="Get_Replace_Bundle(Sub_Index)">
                                 替换此组大题
-                            </el-button> -->
+                            </el-button>
                             <el-button type="success" size="small" @click="Change_Dialog_Info(Sub_Index, (Sub_Index + 1) + '')">
                                 查看大题分析
                             </el-button>
@@ -1229,7 +1267,7 @@ export default {
             Database_List: [],
             // 用来替换的题目、题包列表
             Replace_Question_List: [],
-            Replace_Bundle_List: [],
+            Replace_Bundle_List: {},
             Replace_Bundle_List_All: [],
             // 转等待圈
             Question_Loading: false,
@@ -1329,6 +1367,10 @@ export default {
         document.getElementById('Analyse_Title').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     },
     methods: {
+        // 返回选项标签
+        Get_Option_Label(Index){
+            return String.fromCharCode(Index + 65)
+        },
         // 取消某道题或某个题包的替换
         Reset_To_Origin(Bundle_Index, Question_Index = null){
             if(Question_Index == null){
@@ -1423,29 +1465,48 @@ export default {
 
             let RA = this.Replace_Position;
 
-            this.Combine_Replace_Bundle_Info.difficulty = ['全部', '自定义'].indexOf(this.filterKPTree_Bundle.Difficulty) != -1 ?
-                this.Difficulty_List.indexOf(this.filterKPTree_Bundle.Difficulty) * 0.2 - 0.1 : this.filterKPTree_Bundle.Difficulty == '全部' ? 
-                    this.Combine_Replace_Bundle_Info.difficulty : (this.filterKPTree_Bundle.Difficulty_Range[0] + this.filterKPTree_Bundle.Difficulty_Range[1])/2;
+            // this.Combine_Replace_Bundle_Info.difficulty = ['全部', '自定义'].indexOf(this.filterKPTree_Bundle.Difficulty) != -1 ?
+            //     this.Difficulty_List.indexOf(this.filterKPTree_Bundle.Difficulty) * 0.2 - 0.1 : this.filterKPTree_Bundle.Difficulty == '全部' ? 
+            //         this.Combine_Replace_Bundle_Info.difficulty : (this.filterKPTree_Bundle.Difficulty_Range[0] + this.filterKPTree_Bundle.Difficulty_Range[1])/2;
 
-            this.Combine_Replace_Bundle_Info.update = true;
+            // this.Combine_Replace_Bundle_Info.update = true;
 
-            for(let i = 0; i < this.Replace_Bundle_List.length; i++){
-                let Question = this.Replace_Bundle_List[i]
-                let Temp_Question = {
-                    difficulty: Question.difficulty != null ? Question.difficulty : this.Combine_Replace_Bundle_Info.sub_question[i].difficulty,
-                    id: Question.id,
-                    stem: Question.stem,
-                    options: Question.options,
-                    answer: Question.answer,
-                    analysis: Question.analysis,
-                    score: this.Combine_Replace_Bundle_Info.sub_question[i].score,
-                    update: true,
-                    type: this.Combine_Replace_Bundle_Info.type,
-                    knowledgePointInfos: this.Combine_Replace_Bundle_Info.sub_question[i].knowledgePointInfos
+            // for(let i = 0; i < this.Replace_Bundle_List.length; i++){
+            //     let Question = this.Replace_Bundle_List[i]
+            //     let Temp_Question = {
+            //         difficulty: Question.difficulty != null ? Question.difficulty : this.Combine_Replace_Bundle_Info.sub_question[i].difficulty,
+            //         id: Question.id,
+            //         stem: Question.stem,
+            //         options: Question.options,
+            //         answer: Question.answer,
+            //         analysis: Question.analysis,
+            //         score: this.Combine_Replace_Bundle_Info.sub_question[i].score,
+            //         update: true,
+            //         type: this.Combine_Replace_Bundle_Info.type,
+            //         knowledgePointInfos: this.Combine_Replace_Bundle_Info.sub_question[i].knowledgePointInfos
+            //     }
+            //     this.Combine_Replace_Bundle_Info.sub_question.splice(i, 1, JSON.parse(JSON.stringify(Temp_Question)))
+            // }
+            this.Update_Combine_Paper.splice(RA, 1, JSON.parse(JSON.stringify(this.Replace_Bundle_List)))
+            this.Combine_Replace_Bundle = false;
+        },
+        Search_KP_ID(Label, Layer){
+            for(let Layer_0 = 0; Layer_0 < this.TreeData.length; Layer_0++){
+                if(Label == this.TreeData[Layer_0].label && Layer == this.TreeData[Layer_0].level){
+                    return this.TreeData[Layer_0].id
                 }
-                this.Combine_Replace_Bundle_Info.sub_question.splice(i, 1, JSON.parse(JSON.stringify(Temp_Question)))
+                for(let Layer_1 = 0; Layer_1 < this.TreeData[Layer_0].children.length; Layer_1++){
+                    if(Label == this.TreeData[Layer_0].children[Layer_1].label && Layer == this.TreeData[Layer_0].children[Layer_1].level){
+                        return this.TreeData[Layer_0].children[Layer_1].id
+                    }
+                    for(let Layer_2 = 0; Layer_2 < this.TreeData[Layer_0].children[Layer_1].children.length; Layer_2++){
+                        if(Label == this.TreeData[Layer_0].children[Layer_1].children[Layer_2].label && 
+                            Layer == this.TreeData[Layer_0].children[Layer_1].children[Layer_2].level){
+                                return this.TreeData[Layer_0].children[Layer_1].children[Layer_2].id
+                        }
+                    }
+                }
             }
-            this.Update_Combine_Paper.splice(RA, 1, JSON.parse(JSON.stringify(this.Combine_Replace_Bundle_Info)))
         },
         Jump_To_Top(Part){
             document.getElementById(Part).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
@@ -1478,7 +1539,7 @@ export default {
                 "knowledgePoint": kl,
             }
 
-            Param.data=JSON.stringify(data)
+            Param.Question_Data=JSON.stringify(data)
 
             // let file = new File(
             //     [JSON.stringify(data, null, 4)],
@@ -1490,15 +1551,67 @@ export default {
             // console.log(Param)
             // console.log(this.Combine_Replace_Bundle_Info)
 
-            // commonAjax(this.backendIP+'/api/search', Param)
-            // .then((data)=>{
-            //     this.Replace_Bundle_List_All = data.results
-            //     this.Replace_Bundle_List = data.results[0]
-            //     this.Bundle_Loading = false;
-            // }).catch(() => {
-            //     this.$message.error("服务器过忙，请稍后再试。")
-            //     this.Bundle_Loading = false;
-            // })
+            commonAjax(this.backendIP + '/api/replace_question', Param)
+            .then((data)=>{
+                console.log(data)
+                this.Replace_Bundle_List_All = []
+                this.Replace_Bundle_List = {}
+                for(let Bundle_Index = 0; Bundle_Index < data.length; Bundle_Index++){
+                    let Temp_Difficulty = 0
+                    let Temp_Replace_Bundle_Info = {
+                        difficulty: 0,
+                        knowledgePointInfos: {
+                            ID: [],
+                            Label: [],
+                            Layer: []
+                        },
+                        update: true,
+                        type: "",
+                        sub_question: []
+                    }
+                    let List = data[Bundle_Index];
+                    for(let Question_Index = 0; Question_Index < List.length; Question_Index++){
+                        let Question = List[Question_Index]
+                        Temp_Difficulty = Temp_Difficulty + Question.difficulty
+                        let Temp_Replace_Question_Info = {
+                            difficulty: Question.difficulty,
+                            id: Question.id,
+                            stem: Question.stem,
+                            options: Question.options,
+                            answer: Question.answer,
+                            analysis: Question.analysis,
+                            score: Question.score,
+                            update: true,
+                            type: Question.type,
+                            knowledgePointInfos: {
+                                ID: [],
+                                Label: Question.knowledgePoint.label,
+                                Layer: Question.knowledgePoint.layer
+                            },
+                        }
+                        for(let KP_Index = 0; KP_Index < Temp_Replace_Question_Info.knowledgePointInfos.Label.length; KP_Index++){
+                            let ID = this.Search_KP_ID(Temp_Replace_Question_Info.knowledgePointInfos.Label[KP_Index], Temp_Replace_Question_Info.knowledgePointInfos.Layer[KP_Index])
+                            Temp_Replace_Question_Info.knowledgePointInfos.ID.push(ID)
+                            if(Temp_Replace_Bundle_Info.knowledgePointInfos.ID.indexOf(ID) == -1){
+                                Temp_Replace_Bundle_Info.knowledgePointInfos.ID.push(ID)
+                                Temp_Replace_Bundle_Info.knowledgePointInfos.Label.push(Temp_Replace_Question_Info.knowledgePointInfos.Label[KP_Index])
+                                Temp_Replace_Bundle_Info.knowledgePointInfos.Layer.push(Temp_Replace_Question_Info.knowledgePointInfos.Layer[KP_Index])
+                            }
+                        }
+                        Temp_Replace_Bundle_Info.sub_question.push(Temp_Replace_Question_Info)
+                    }
+                    Temp_Replace_Bundle_Info.type = this.Combine_Replace_Bundle_Info.type
+                    Temp_Replace_Bundle_Info.difficulty = Temp_Difficulty/Temp_Replace_Bundle_Info.sub_question.length
+                    this.Replace_Bundle_List_All.push(Temp_Replace_Bundle_Info)
+                }
+                this.Replace_Bundle_List = this.Replace_Bundle_List_All[0]
+                console.log(this.Replace_Bundle_List_All)
+                console.log(this.Replace_Bundle_List)
+            }).catch(() => {
+                this.$message.error("服务器过忙，请稍后再试。")
+            }).finally(()=>{
+                this.Bundle_Loading = false;
+            })
         },
         // 检索替换题目用的题目
         Search_Replace_Question(){
@@ -1779,7 +1892,8 @@ export default {
             this.Replace_Position = ""
             // 用来替换的题目、题包列表
             this.Replace_Question_List = [],
-            this.Replace_Bundle_List = [],
+            this.Replace_Bundle_List_All = [],
+            this.Replace_Bundle_List = {},
             // 转等待圈
             this.Question_Loading = false,
             this.Bundle_Loading = false,

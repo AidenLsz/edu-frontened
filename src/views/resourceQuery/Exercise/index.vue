@@ -280,12 +280,14 @@
                                 <span style="margin-right: 4px">&Sigma;</span>输入助手
                             </el-button>
                             <!-- 切换知识点过滤检索或者文件检索的按钮 -->
-                            <el-button
-                                style="border-radius: 10px;"
-                                @click="Change_Search_Extra()">
-                                <i class="el-icon-location" style="margin-right: 4px"></i>
-                                {{Search_Extra == 'ImgSearch' ? '文件搜题' : '纯文字检索'}}模式
-                            </el-button>
+                            <el-tooltip content="点击切换检索模式" placement="top">
+                                <el-button
+                                    style="border-radius: 10px;"
+                                    @click="Change_Search_Extra()">
+                                    <i class="el-icon-location" style="margin-right: 4px"></i>
+                                    {{Search_Extra == 'ImgSearch' ? '文件搜题' : '纯文字检索'}}模式
+                                </el-button>
+                            </el-tooltip>
                         </el-row>
                     </el-col>
                     <el-col :span="7" :offset="1" style="height: 512px;" v-show="Search_Extra == 'ImgSearch'">

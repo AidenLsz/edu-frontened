@@ -1039,6 +1039,7 @@ export default {
         this.$emit("Add_To_Cart", JSON.stringify(List[i]));
       }
       this.$emit("Jump_To_SC", true)
+      window.localStorage.removeItem("Replacing_Result")
       this.refresh = !this.refresh
     },
     Search_KP_ID(Label, Layer){
