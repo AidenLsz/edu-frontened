@@ -218,34 +218,34 @@
             <!-- 循环遍历每一个题包 -->
             <el-row v-if="Question_Bundle.length == 0" style="width: 100%;">
               <el-col>
-                <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+                <el-row type="flex" justify="start" class="Break_Line" style="margin-bottom: 10px;">
                   关于如何创建题包：
                 </el-row>
-                <el-row type="flex" justify="start" style="text-align:left">
+                <el-row type="flex" justify="start" class="Break_Line">
                   1：使用下方的单题录入组件，试题将自动创建尚未存在的对应类型的题包并自动加入。
                 </el-row>
-                <el-row type="flex" justify="start">
+                <el-row type="flex" justify="start" class="Break_Line">
                   2：使用右上角的按钮，手动插入题包。
                 </el-row>
-                <el-row type="flex" justify="start">
+                <el-row type="flex" justify="start" class="Break_Line">
                   2-1：若手动插入的题包类型为唯一存在的此类型题包，则试题仍然会自动归类。
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-bottom: 20px;">
+                <el-row type="flex" justify="start" class="Break_Line" style="margin-bottom: 20px;">
                   2-2：若手动插入的题包类型不是唯一存在的此类型题包，则应当填写说明项以便于区分。
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-bottom: 10px;">
+                <el-row type="flex" justify="start" class="Break_Line" style="margin-bottom: 10px;">
                   关于如何使用单题录入组件：
                 </el-row>
-                <el-row type="flex" justify="start" style="text-align:left">
+                <el-row type="flex" justify="start" class="Break_Line">
                   1：选择或切换题目类型，至少填写所有必填项，点击确定提交，将自动检查语法是否符合规范，并提示应当修改哪些内容，通过检查后将加入题包。
                 </el-row>
-                <el-row type="flex" justify="start">
+                <el-row type="flex" justify="start" class="Break_Line">
                   2：若题目类型对应的题包唯一或不存在，将自动创建新题包或加入对应类型的题包。
                 </el-row>
-                <el-row type="flex" justify="start">
+                <el-row type="flex" justify="start" class="Break_Line">
                   3：若题目类型对应的题包不唯一，则需要用户手动在弹出的对话框中选择加入哪一个题包。
                 </el-row>
-                <el-row type="flex" justify="start">
+                <el-row type="flex" justify="start" class="Break_Line">
                   4：切换题目类型将视为创建新题目，会清空正在录入的题目数据，请注意。
                 </el-row>
               </el-col>
@@ -4016,5 +4016,11 @@ export default {
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
+}
+
+
+.Break_Line{
+   word-break:break-all; 
+   text-align: left
 }
 </style>

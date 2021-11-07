@@ -645,9 +645,6 @@ export default {
                 this.Type_Reset(newVal, oldVal);
             }
         },
-        Paste_Analysis(newVal){
-            this.$message.warning(newVal + " is Pasted.")
-        }
     },
     mounted() {
         this.Init_Picture_Upload_Dom();

@@ -1,7 +1,7 @@
 <!-- 作为递归自身的节点 -->
 <template>
     <div 
-        style="margin: 0px 6vw 10px 6vw" 
+        style="margin: 0px 20px 10px 20px" 
         ref="QuestionInfo"
         v-loading="loading"
         element-loading-text="正在加载分析报告..."
@@ -49,12 +49,14 @@
                     <i class="el-icon-arrow-up"></i>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-bottom: 10px; position: relative; height: 250px; overflow: hidden;" v-if="!All_Question_Show">
-                    <div class="Hidden_Ques" ref="OverFlow_DIV">
-                        <PaperAnalyseQuestion :Question="Question" style="width: 100%"></PaperAnalyseQuestion>
-                    </div>
-                    <div :class="Get_Display()" @click="Change_AQS()" v-if="!Init_AQS">
-                        <el-row type="flex" justify="center" style="font-size: 50px; color: #409EFF;"><i class="el-icon-arrow-down"></i></el-row>
-                    </div>
+                    <el-col>
+                        <div class="Hidden_Ques" ref="OverFlow_DIV">
+                            <PaperAnalyseQuestion :Question="Question" style="width: 100%"></PaperAnalyseQuestion>
+                        </div>
+                        <div :class="Get_Display()" @click="Change_AQS()" v-if="!Init_AQS">
+                            <el-row type="flex" justify="center" style="font-size: 50px; color: #409EFF;"><i class="el-icon-arrow-down"></i></el-row>
+                        </div>
+                    </el-col>
                 </el-row>
                 
             </el-col>
@@ -748,6 +750,7 @@ export default {
 }
 .Hidden_Ques{
     position: absolute;
+    width: 100%;
     top: 0px;
     z-index: 1;  
     min-height: 250px;
