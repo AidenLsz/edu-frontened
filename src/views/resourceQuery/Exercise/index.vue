@@ -338,8 +338,9 @@
                 </el-row>
                 <el-row
                     v-if="Question_List.length == 0"
-                    style="height: 60px; width: 100%">
-
+                    style="height: 200px; line-height: 200px; width: 100%; font-weight: bold; font-size: 24px; color: #ccc"
+                    type="flex" justify="center">
+                    暂无检索结果
                 </el-row>
                 <el-row
                     v-else
@@ -363,7 +364,7 @@
                 >
                 <el-row
                     :id="'Question_' + Question_Index"
-                    style="width: 100%; height: 64px; background: transparent; opacity: 0; z-index: -1">
+                    style="width: 100%; height: 64px; background: transparent; opacity: 0; z-index: -1;">
 
                 </el-row>
                 <el-row class="Question_Card" style="background: white">

@@ -1409,9 +1409,6 @@ export default {
                 this.Reset_Question_Info();
             }
         },
-        Paste_Analysis(newVal){
-            this.$message.warning(newVal + " is Pasted.")
-        },
     },
     mounted() {
         this.Init_Picture_Upload_Dom();
