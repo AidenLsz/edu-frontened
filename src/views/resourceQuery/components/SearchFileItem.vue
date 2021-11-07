@@ -7,7 +7,7 @@
             <label>文件名：</label>
         </div>
         <div align="left" class="Item_Info">
-            <span style="text-align: left">{{Item.name}}</span>
+            <span style="text-align: left">{{Item.file_name}}</span>
         </div>
     </el-row>
     <el-row type="flex" justify="start" style="font-size: 14px; margin-top: 10px;">
@@ -26,7 +26,7 @@
                 学科：{{File.subject}}
             </span>
             <span class="Extra_Info_Item">
-                文件类型：{{File.type}}
+                文件类型：{{File.pattern.toUpperCase()}}
             </span>
         </div>
         <div
@@ -55,10 +55,17 @@ export default {
         type: Object,
         default: function(){
             return {
-                "name": "",
-                "stem": "",
+                "analysis": "", 
+                "answer": "", 
+                "database": "", 
+                "id": "", 
+                "options": [], 
+                "period": "", 
+                "stem": "", 
+                "subject": "", 
                 "type": "",
-                "subject": ""
+                "pattern": "docx",
+                "file_name": null
             }
         }
     },

@@ -314,16 +314,6 @@
                             <el-button type="primary" style="border-radius: 10px; background: #539DD9" @click="Img_Reset()"><i class="el-icon-refresh" style="margin-right: 4px"></i>重新编辑</el-button>
                         </el-row>
                     </el-col>
-                    <el-col :span="7" :offset="1" style="height: 430px; display: none" v-show="Search_Extra == 'KnowledgePoint'">
-                        <div class="ImgSearchArea">
-                            <el-row style="margin-top: 40%">
-                                知识树的处理方案仍在商讨中...
-                            </el-row>
-                        </div>
-                        <el-row type="flex" justify="center" style="margin-top: 20px">
-                            <el-button type="danger" style="border-radius: 10px;"><i class="el-icon-close" style="margin-right: 10px;"></i>清空知识点</el-button>
-                        </el-row>
-                    </el-col>
                 </el-row>
                 <el-row
                     v-if="Result_List.length == 0"
@@ -355,14 +345,14 @@
                     style="width: 100%; height: 64px; background: transparent; opacity: 0; z-index: -1">
 
                 </el-row>
-                <el-row class="Question_Card" style="background: white">
+                <el-row class="Question_Card" style="background: white" v-if="List_Item.pattern == 'text'">
                     <SearchQuestionItem
                         :Question="List_Item"
                         :Question_Index="List_Item_Index"
                         @Check_Question_Analysis="Check_Question_Analysis"
                         @Expand_Aim="Expand_Aim"></SearchQuestionItem>
                 </el-row>
-                <el-row class="Question_Card" style="background: white">
+                <el-row class="Question_Card" style="background: white" v-else>
                     <SearchFileItem
                         :File="List_Item"
                         @Download_File="Download_File"></SearchFileItem>
@@ -524,6 +514,10 @@ export default {
       
   },
   methods: {
+        Download_File(Info){
+            let File_Info = JSON.parse(Info)
+            console.log(File_Info)
+        },
         // 粘贴事件
         Paste_Function(e){
             if(this.Search_Extra == 'ImgSearch'){
@@ -795,7 +789,8 @@ export default {
                 "period": this.Chosen_Options.Period,
                 "type": this.Chosen_Options.Type,
                 "difficulty": Difficulty,
-                "semantic": this.Chosen_Options.Semantic == '精准匹配' ? 0 : 1
+                "semantic": this.Chosen_Options.Semantic == '精准匹配' ? 0 : 1,
+                "is_file_type": 1
             }) 
 
             Param.data = Data

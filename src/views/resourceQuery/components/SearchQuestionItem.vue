@@ -96,7 +96,9 @@ export default {
                 "period": "", 
                 "stem": "", 
                 "subject": "", 
-                "type": ""
+                "type": "",
+                "pattern": "text",
+                "file_name": null
             }
         }
     },
