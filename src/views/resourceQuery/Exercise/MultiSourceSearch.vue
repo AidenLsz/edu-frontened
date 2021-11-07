@@ -486,7 +486,17 @@ export default {
         // 用于写文字来表示正在等待什么内容的变量
         Waiting_Text: "",
         // 输入助手的对话框
-        Complex_Input_Dialog: false
+        Complex_Input_Dialog: false,
+        // 多源下载时的文件类型
+        File_Type_Blob:{
+            'doc': "application/msword",
+            'docx': "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            'pdf': "application/pdf",
+            'ppt': "application/vnd.ms-powerpoint",
+            'pptx': "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            'jpg': 'image/jpeg',
+            'jpeg': "image/jpeg"
+        },
     };
   },
   destroyed(){
@@ -516,7 +526,57 @@ export default {
   methods: {
         Download_File(Info){
             let File_Info = JSON.parse(Info)
-            console.log(File_Info)
+            let Item = {
+                type: File_Info.pattern,
+                name: File_Info.file_name,
+                subject: File_Info.subject
+            }
+            this.Multi_Source_Resource_Download(Item)
+        },
+        Multi_Source_Resource_Download(Item){
+
+            this.waiting = true;
+            this.waiting_text = "资源准备下载中，请稍后..."
+
+            let TYPE = Item.type
+
+            let Resource_Info = {
+                name: Item.name,
+                subject: Item.subject
+            }
+
+            let config = {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
+                responseType: 'arraybuffer',
+                emulateJSON: true
+            }
+
+            let param = new FormData();
+
+            param.append('data', JSON.stringify(Resource_Info, null, 4));
+
+            this.$http
+                .post(this.backendIP + "/api/multi_source_download", param, config)
+                .then(function(data) {
+                    if(data.data){
+                        const link = document.createElement('a')
+                        let blob = new Blob([data.data],
+                            {type: this.File_Type_Blob[TYPE.toLowerCase()]})
+                        let objectUrl = URL.createObjectURL(blob)
+                        link.href = objectUrl
+                        link.download = Resource_Info.name 
+                        link.click()
+                        URL.revokeObjectURL(objectUrl);
+                    }
+                }).catch(() => {
+                    this.$message.error("服务器忙碌，请稍后再试...");
+                    return
+                }).finally(()=>{
+                    this.waiting = false;
+                    this.waiting_text = ""
+                });
         },
         // 粘贴事件
         Paste_Function(e){
