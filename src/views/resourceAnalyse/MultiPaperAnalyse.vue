@@ -1,7 +1,12 @@
 <template>
   <div
     class="MultiPaperAnalyse"
-    style="min-height: 100vh; padding-left: 10%; padding-right: 10%; padding-top: 10px"
+    style="
+      min-height: 100vh;
+      padding-left: 10%;
+      padding-right: 10%;
+      padding-top: 10px;
+    "
     v-loading="Question_Analysing"
     :element-loading-text="
       progress + '/' + chosen_paper_List.length + '分析中，请等待...'
@@ -832,7 +837,7 @@ export default {
       }
       for (let knowledge of knowledge_list) {
         //console.log(knowledge);
-        this.knowledge_num ++;
+        this.knowledge_num++;
         option.radar[0].indicator.push({ text: knowledge });
       }
 
@@ -850,6 +855,7 @@ export default {
           }
         }
         sum /= this.analyse_result.length;
+        sum = sum.toFixed(1);
         aver_score.push({
           knowledge: knowledge,
           score: sum,
