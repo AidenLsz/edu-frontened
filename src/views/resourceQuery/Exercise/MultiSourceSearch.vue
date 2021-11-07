@@ -857,6 +857,7 @@ export default {
 
             commonAjax(this.backendIP+'/api/search', Param)
             .then((data)=>{
+                console.log(data.results)
                 this.Total_Count = data.totalLength
                 this.Page_Length = 5
                 this.Result_List = [];

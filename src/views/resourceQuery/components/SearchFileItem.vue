@@ -1,26 +1,27 @@
 // 用于新页面的单题显示组件
 
 <template>
-  <div style="border-radius: 10px; background: white">
-    <el-row type="flex" justify="start" style="font-size: 16px">
+  <div style="border-radius: 10px; background: white;">
+    <el-row type="flex" justify="start" style="font-size: 16px; padding-left: 30px; background: white; padding-top: 15px; border-radius: 10px">
         <div align="left" style="width: 80px; margin-right: 10px">
             <label>文件名：</label>
         </div>
         <div align="left" class="Item_Info">
-            <span style="text-align: left">{{Item.file_name}}</span>
+            <span style="text-align: left">{{File.file_name}}</span>
         </div>
     </el-row>
-    <el-row type="flex" justify="start" style="font-size: 14px; margin-top: 10px;">
+    <el-row type="flex" justify="start" style="font-size: 14px; margin-top: 10px; text-align: left; padding-left: 30px; background: white; padding-bottom: 8px">
         <div align="left" style="width: 80px; margin-right: 10px">
             <label>相关信息：</label>
         </div>
-        <div align="left" class="Item_Info">
-            <span style="text-align: left">{{Item.stem}}</span>
+        <div align="left" class="Item_Info" style="margin-right: 30px">
+            <span style="text-align: left">{{File.stem}}</span>
         </div>
     </el-row>
     <el-row class="Detail_Line">
         <div
             class="Detail_Line_Left" 
+            align="left"
             style="line-height: 44px; padding: 0px 16px 0px 16px; border-radius: 10px; background: #F8F8F8">
             <span class="Extra_Info_Item">
                 学科：{{File.subject}}
