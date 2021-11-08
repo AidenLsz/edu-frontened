@@ -66,7 +66,9 @@ export default {
                 "subject": "", 
                 "type": "",
                 "pattern": "docx",
-                "file_name": null
+                "file_name": null,
+                "pastpaper": "",
+                "area": ""
             }
         }
     },

@@ -597,6 +597,16 @@
 							"mail": "1300985820@qq.com",
 							"intro": "人类高质量研究生\n喜欢听广东话的湖南人∩喜欢吃湖南菜的广东人"
 						}
+						,{
+							"name": "刘正韬",
+							"mail": "ztl223@mail.ustc.edu.cn",
+							"intro": "这个人懒爆了，什么都没有留下"
+						}
+						,{
+							"name": "郭禹祥",
+							"mail": "guoyx18@mail.ustc.edu.cn",
+							"intro": "喜欢统计的大数据搬砖者"
+						}
 					],
 					// 特邀工程师
 					"invitedEngineer": [
@@ -624,6 +634,10 @@
 							"name": "靳浩然",
 							"mail": "jhr584289035@mail.ustc.edu.cn",
 							"intro": "希望能永远对生活怀揣激情和向往"
+						}, {
+							"name": "朱仕哲",
+							"mail": "icarushhh@mail.ustc.edu.cn",
+							"intro": "海边的卡夫卡"
 						}
 					],
 					// 技术顾问
@@ -716,6 +730,8 @@
 						"林嘉滢": "/members/林嘉滢.jpg",
 						"李佳桐": "/members/李佳桐.jpg",
 						"胡子睿": "/members/胡子睿.jpg",
+						"刘正韬": "/members/刘正韬.jpg",
+						"郭禹祥": "/members/郭禹祥.jpg",
 						// 特邀工程师
 
 						// 实习生
@@ -724,6 +740,7 @@
 						"关浩祥": "/members/关浩祥.jpg",
 						"李平治": "/members/李平治.jpg",
 						"靳浩然": "/members/靳浩然.jpg",
+						"朱仕哲": "/members/朱仕哲.jpg",
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
 						"高维博": "/members/高维博.jpeg",

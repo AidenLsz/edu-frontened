@@ -364,7 +364,7 @@
                 >
                 <el-row
                     :id="'Question_' + Question_Index"
-                    style="width: 100%; height: 64px; background: transparent; opacity: 0; z-index: -1;">
+                    style="width: 100%; height: 128px; background: transparent; opacity: 0; z-index: -1;">
 
                 </el-row>
                 <el-row class="Question_Card" style="background: white">
@@ -994,8 +994,8 @@ export default {
             return Style
         },
         Get_Card_Margin(Question_Index){
-            let Style_Row_0 = '-128px auto 64px auto'
-            let Style_Row_1 = '-128px auto 128px auto'
+            let Style_Row_0 = '-192px auto 64px auto'
+            let Style_Row_1 = '-192px auto 128px auto'
             let Style = {
                 'margin': Question_Index == this.Question_List.length - 1 ? Style_Row_0 : Style_Row_1,
                 'width': '1344px'
