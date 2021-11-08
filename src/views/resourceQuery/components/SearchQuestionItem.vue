@@ -47,7 +47,7 @@
                     align="right" 
                     class="Detail_Line_Infos">
                     <span class="Extra_Info_Item">
-                        真题情况：未知
+                        真题情况：{{Question.pastpaper}}
                     </span>
                     <span class="Extra_Info_Item">
                         所属题库：{{Question.database}}
@@ -98,7 +98,9 @@ export default {
                 "subject": "", 
                 "type": "",
                 "pattern": "text",
-                "file_name": null
+                "file_name": null,
+                "pastpaper": "",
+                "area": ""
             }
         }
     },
