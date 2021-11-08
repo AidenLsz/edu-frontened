@@ -168,6 +168,87 @@
         </div>
       </el-row>
     </div>
+    <!-- 知识点直观呈现 -->
+    <div style="width: 100%; background: #F8F9FA;" align="center">
+      <el-row class="Area_Row" style="height: 700px;" type="flex" justify="center">
+        <div class="KU_Search_Left" align="center">
+          <img src="./ITAS_Home_KU.png" width="500">
+          <el-input 
+            v-model="Home_Ku" 
+            placeholder="请输入知识点" 
+            prefix-icon="el-icon-search"
+            style="width: 350px; margin-top: 40px;"></el-input>
+        </div>
+        <div class="KU_Search_Right">
+          <el-row>
+            <el-col>
+              <el-row type="flex" justify="start" class="Part_Title">
+                <span>知识点直观呈现</span>
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 18px;">
+                <div class="Dot"></div>智能且直观的知识点组织与呈现
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
+                <div class="Dot"></div>知识点检索与详细介绍
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
+                <div class="Dot"></div>前驱后继、共同学习和层级关系三种知识关系展示
+              </el-row>
+            </el-col>
+          </el-row>
+        </div>
+      </el-row>
+    </div>
+    <!-- 组卷系统介绍 -->
+    <div style="width: 100%;" align="center">
+      <el-row class="Area_Row" style="padding-top: 100px; padding-bottom: 100px;">
+        <div class="Combine_Paper_Area_Left">
+          <el-row>
+            <el-col>
+              <el-row type="flex" justify="start" class="Part_Title">
+                <span>多样化组卷系统，一应俱全</span>
+              </el-row>
+              <el-row 
+                type="flex" 
+                justify="start" 
+                style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
+                智能组卷系统提供丰富的搜题、选题方式，试卷和答题卡编辑、预览与下载功能
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 20px;">
+                <div class="Dot"></div>关键词搜题
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+                <div class="Dot"></div>知识点搜题
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+                <div class="Dot"></div>以题搜题
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+                <div class="Dot"></div>试卷搜题
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 60px;">
+                <div class="All_Button Start_Analysis_Button">
+                  开始体验<i class="el-icon-right" style="margin-left: 10px;"></i>
+                </div>
+              </el-row>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="Combine_Paper_Area_Right">
+          <el-col>
+            <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(-2deg); display: block; padding: 0">
+              <span style="font-size: 22px">多样化搜题、选题</span>
+            </div>
+            <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(2deg); display: block; padding: 0">
+              <span style="font-size: 22px">试卷和答题卡生成</span>
+            </div>
+            <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(-2deg); display: block; padding: 0">
+              <span style="font-size: 22px">个性化试卷导出</span>
+            </div>
+          </el-col>
+        </div>
+      </el-row>
+    </div>
   </div>
 </template>
 <script>
@@ -183,7 +264,8 @@ export default {
   },
   data() {
     return {
-
+      // 知识点
+      Home_Ku: ""
     }
   },
   watch: {
@@ -317,6 +399,20 @@ export default {
   height: 500px;
 }
 
+.Combine_Paper_Area_Right{
+  display: inline-block;
+  width: 500px;
+  height: 500px;
+  padding-top: 80px;
+}
+.Combine_Paper_Area_Left{
+  width: 668px;
+  padding-top: 40px;
+  padding-right: 50px;
+  display: inline-block;
+  height: 500px;
+}
+
 .Area_Row{
   width: 1344px;
   padding: 0 88px;
@@ -373,11 +469,34 @@ export default {
   display: inline-block;
 }
 
+.KU_Search_Left{
+  width: 568px;
+  padding-top: 180px;
+  padding-left: 40px;
+  display: inline-block;
+}
+
+.KU_Search_Right{
+  width: 600px;
+  padding-top: 230px;
+  padding-left: 50px;
+  display: inline-block;
+}
+
 .Resource_Manager_Float_Block_Question{
   width: 224px;
   height: 92px;
   background: white;
   margin-right: 20px;
+}
+
+.Combine_Paper_Area_Div{
+  width: 224px;
+  height: 60px;
+  line-height: 60px;
+  margin-top: 40px;
+  background: white;
+  display: block;
 }
 
 .Resource_Manager_Float_Block_Subject{
