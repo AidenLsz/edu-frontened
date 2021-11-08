@@ -350,7 +350,7 @@
                     <i
                         class="el-icon-d-arrow-left"
                         @click="Jump_To('Question_0')"
-                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer; z-index: -1"></i>
+                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer; z-index: 1"></i>
                 </el-row>
             </el-col>
         </el-row>

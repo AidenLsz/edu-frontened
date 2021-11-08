@@ -344,13 +344,13 @@
                 </el-row>
                 <el-row
                     v-else
-                    style="height: 60px; line-height: 40px; width: 100%; padding-bottom: 20px"
+                    style="height: 128px; line-height: 40px; width: 100%; padding-top: 20px;"
                     type="flex"
                     justify="center">
                     <i
                         class="el-icon-d-arrow-left"
                         @click="Jump_To('Question_0')"
-                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer; z-index: -1;"></i>
+                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer; z-index: 1;"></i>
                 </el-row>
             </el-col>
         </el-row>
@@ -364,7 +364,7 @@
                 >
                 <el-row
                     :id="'Question_' + Question_Index"
-                    style="width: 100%; height: 128px; background: transparent; opacity: 0; z-index: -1;">
+                    style="width: 100%; height: 128px; background: transparent; opacity: 0; z-index: -2;">
 
                 </el-row>
                 <el-row class="Question_Card" style="background: white">
@@ -695,6 +695,8 @@ export default {
         // },
         // 上传文件的方法
         Doc_Upload_Input(){
+            this.Waiting_Param = true;
+            this.Waiting_Text = "试卷切分中，请稍后..."
           this.confirmSubjectDialogVisible=false
           // console.log(this.paper_type);
           this.formData = new FormData();
