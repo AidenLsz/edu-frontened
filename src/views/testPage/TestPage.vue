@@ -5,21 +5,24 @@
         <el-row>
           <el-col>
             <el-row type="flex" justify="start">
-              深层次、多维度分析
+              <span style="font-size: 40px;">深层次、多维度智能分析</span>
             </el-row>
-            <el-row type="flex" justify="start" style="word-break:break-all; text-align: left">
+            <el-row 
+              type="flex" 
+              justify="start" 
+              style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 18px; color: #888">
               使用人工智能和数据挖掘技术对试题和试卷，在各个层次、多个维度上分析，如各题型占比、关键词比较、知识点分值和难度变化
             </el-row>
-            <el-row type="flex" justify="start">
-              ·试题质量、难度分析
+            <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 18px;">
+              <div class="Dot"></div>试题质量、难度分析
             </el-row>
-            <el-row type="flex" justify="start">
-              ·试题、试卷知识点分析
+            <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
+              <div class="Dot"></div>试题、试卷知识点分析
             </el-row>
-            <el-row type="flex" justify="start">
-              ·试卷综合分析
+            <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
+              <div class="Dot"></div>试卷综合分析
             </el-row>
-            <el-row type="flex" justify="start">
+            <el-row type="flex" justify="start" style="margin-top: 60px;">
               <div class="All_Button Start_Analysis_Button">
                 开始分析<i class="el-icon-right" style="margin-left: 10px;"></i>
               </div>
@@ -60,6 +63,16 @@ export default {
       var Home_Radar = echarts.init(document.getElementById("Multi_Analyse_Radar_Chart"));
       //let colors = ["#EE6666", "#5470C6", "#91CC75"];
       let option = {
+        title: {
+          text: "知识点分值比较", //这里的参数是整个图标的标题 后面也可以加注释
+          bottom: 20,
+          left: "36.5%",
+          textStyle: {
+            fontSize: 18,
+            fontStyle: "normal",
+            fontWeight: "bold",
+          },
+        },
         tooltip: {
           trigger: "item",
         },
@@ -67,7 +80,13 @@ export default {
           show: true,
           orient: "vertical", 
           right: 0,
-          top: "bottom",
+          bottom: 60,
+          itemHeight: 6, //修改icon图形大小
+          itemWidth: 10,
+          textStyle: {
+            fontSize: 8,
+            color: '#000'
+          },
           data: [ "2020年全国统一高考数学试卷（文科）（新课标i)",
                   "2020年全国统一高考数学试卷（文科）（新课标ii)",
                   "2020年全国统一高考数学试卷（文科）（新课标iii)",
@@ -96,9 +115,10 @@ export default {
               textStyle: {
                 fontSize: 14,
                 color: "#000000",
+                fontWeight: "bold",
               },
             },
-            radius: 130,
+            radius: 150,
             indicator: [
               {text: "排列组合与概率统计"},
               {text: "代数"},
@@ -157,6 +177,8 @@ export default {
 }
 .Multi_Analyse_Rader_Left{
   width: 668px;
+  padding-top: 40px;
+  padding-right: 50px;
   display: inline-block;
   height: 500px;
 }
@@ -164,6 +186,7 @@ export default {
   width: 1344px;
   padding: 0 88px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .All_Button{
@@ -179,4 +202,13 @@ export default {
   color: black;
 }
 
+.Dot{
+  border-radius: 50%; 
+  height: 7px; 
+  width: 7px; 
+  background: black; 
+  margin-top: 8px; 
+  margin-right: 20px;
+  margin-left: 10px;
+}
 </style>
