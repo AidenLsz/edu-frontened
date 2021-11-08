@@ -1,6 +1,71 @@
 <template>
   <div style="margin-top: 2vh;">
-    <!-- 多层次，多维度智能分析 -->
+    <!-- 注册即功能简介 -->
+    <div style="width: 100%; height: 700px" align="center">
+      <el-row class="Area_Row" type="flex" justify="center">
+        <div class="Home_Area_Left">
+          <el-row>
+            <el-col>
+              <el-row type="flex" justify="start" class="Part_Title">
+                <span>LUNA智能教辅平台</span>
+              </el-row>
+              <el-row 
+                type="flex" 
+                justify="start" 
+                style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
+                深层次、多维度分析处理海量教育资源，智能化、个性化资源管理、组织、查询、分析服务
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 60px;">
+                <div class="All_Button Start_Analysis_Button">
+                  立即加入<i class="el-icon-right" style="margin-left: 10px;"></i>
+                </div>
+              </el-row>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="Home_Area_Right">
+          <el-row type="flex" justify="center" style="margin: 0; padding: 0; padding-top: 130px">
+            <div style="width: 250px; margin-right: 15px; height: 300px;">
+              <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question">
+                <div style="display: inline-block; width: 64px;">
+                  <img src="../../assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -13px;">
+                </div>
+                <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
+                  <span style="font-size: 22px">教学资源</span>
+                </div>
+              </div>
+              <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question" style="margin-top: 30px;">
+                <div style="display: inline-block; width: 64px;">
+                  <img src="../../assets/dataIcon2.png" width="64px" height="64px" style="margin-top: -13px;">
+                </div>
+                <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
+                  <span style="font-size: 22px">组卷系统</span>
+                </div>
+              </div>
+            </div>
+            <div style="width: 250px; height: 300px;">
+              <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question" style="margin-top: 30px;">
+                <div style="display: inline-block; width: 64px;">
+                  <img src="../../assets/dataIcon3.png" width="64px" height="64px" style="margin-top: -13px;">
+                </div>
+                <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
+                  <span style="font-size: 22px;">智能分析</span>
+                </div>
+              </div>
+              <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question" style="margin-top: 30px;">
+                <div style="display: inline-block; width: 64px;">
+                  <img src="../../assets/dataIcon3.png" width="64px" height="64px" style="margin-top: -13px;">
+                </div>
+                <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
+                  <span style="font-size: 22px">知识检索</span>
+                </div>
+              </div>
+            </div>
+          </el-row>
+        </div>
+      </el-row>
+    </div>
+    <!-- 资源录入 -->
     <div style="width: 100%; background: #F8F9FA;" align="center">
       <el-row class="Area_Row" style="height: 700px;" type="flex" justify="center">
         <div class="Resource_Manager_Left" align="left">
@@ -57,7 +122,7 @@
                 <div class="Dot"></div>使用高效准确的试题相似度评估算法，提升题库的资源质量
               </el-row>
               <el-row type="flex" justify="start" style="margin-top: 80px;">
-                <div class="All_Button Start_Analysis_Button">
+                <div class="All_Button Start_Analysis_Button" style="background: white">
                   录入资源<i class="el-icon-right" style="margin-left: 10px;"></i>
                 </div>
               </el-row>
@@ -269,6 +334,8 @@ export default {
 
 .Start_Analysis_Button{
   color: black;
+  background: white;
+  cursor: pointer;
 }
 
 .Dot{
@@ -338,5 +405,18 @@ export default {
   border: 1px solid #d3d3d3;
   padding: 12px;
   border-radius: 16px;
+}
+
+.Home_Area_Left{
+  display: inline-block;
+  width: 618px;
+  height: 700px;
+  padding-top: 170px;
+}
+
+.Home_Area_Right{
+  display: inline-block;
+  width: 550px;
+  height: 700px;
 }
 </style>
