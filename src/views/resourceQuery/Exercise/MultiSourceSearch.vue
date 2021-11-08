@@ -13,7 +13,7 @@
                 <i class="el-icon-download" style="transform: rotate(180deg);"></i>
             </el-row>
             <el-row
-                v-for="i in Result_List.length"
+                v-for="i in Question_List.length"
                 :key="'Jump_Item_' + i"
                 class="Jump_Item"
                 @click.native="Jump_To('Question_' + (i-1))">
@@ -21,7 +21,7 @@
             </el-row>
             <el-row
                 class="Jump_Item"
-                v-if="Result_List.length > 0"
+                v-if="Question_List.length > 0"
                 @click.native="Jump_To('Page_Seg')">
                 <i class="el-icon-download"></i>
             </el-row>
@@ -34,6 +34,15 @@
             :close-on-click-modal="false">
             <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="Search_Content"></ComplexInput>
         </el-dialog>
+        <!-- 按照设计稿写一个超巨大圆当背景用
+        <el-row
+            ref="Background_Round_Position"
+            style="top: -380px"
+            class="Background_Round_Position">
+            <div class="Background_Round">
+
+            </div>
+        </el-row> -->
         <!-- 查看分析报告 -->
         <el-dialog
             :visible.sync="Question_Analyse_Dialog"
@@ -126,7 +135,7 @@
                 </el-row>
 
             </el-dialog>
-        <el-row type="flex" justify="center" style="padding-top: 120px" class="Main_Background">
+        <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
             <el-col>
                 <!-- 面包屑行 -->
                 <el-row
@@ -139,7 +148,7 @@
                             首页
                         </el-breadcrumb-item>
                         <el-breadcrumb-item>
-                            多源检索
+                            试题查重
                         </el-breadcrumb-item>
                     </el-breadcrumb>
 
@@ -150,7 +159,7 @@
                     type="flex"
                     justify="start"
                     style="margin-top: 2vh;">
-                    <span style="font-size: 4rem">多源检索</span>
+                    <span style="font-size: 4rem">试题查重</span>
                 </el-row>
                 <div class="Background_Round">
 
@@ -214,7 +223,7 @@
                                 v-show="Chosen_Options.Difficulty == '自定义'"
                                 v-model="Difficulty_Value"
                                 range
-                                style="background: white; width: 170px; border: 1px solid #ccc; padding: 0px 15px 0px 17px; border-radius: 10px; margin-left: 40px"
+                                style="background: white; width: 170px; border: 1px solid #ccc; padding: 0px 15px 0px 17px; border-radius: 10px; margin-left: 40px; z-index: -1"
                                 :step="0.01"
                                 :max="1"
                                 :min="0">
@@ -271,12 +280,14 @@
                                 <span style="margin-right: 4px">&Sigma;</span>输入助手
                             </el-button>
                             <!-- 切换知识点过滤检索或者文件检索的按钮 -->
-                            <el-button
-                                style="border-radius: 10px;"
-                                @click="Change_Search_Extra()">
-                                <i class="el-icon-location" style="margin-right: 4px"></i>
-                                {{Search_Extra == 'ImgSearch' ? '文件搜题' : '纯文字检索'}}模式
-                            </el-button>
+                            <el-tooltip content="点击切换检索模式" placement="top">
+                                <el-button
+                                    style="border-radius: 10px;"
+                                    @click="Change_Search_Extra()">
+                                    <i class="el-icon-location" style="margin-right: 4px"></i>
+                                    {{Search_Extra == 'ImgSearch' ? '文件搜题' : '纯文字检索'}}模式
+                                </el-button>
+                            </el-tooltip>
                         </el-row>
                     </el-col>
                     <el-col :span="7" :offset="1" style="height: 512px;" v-show="Search_Extra == 'ImgSearch'">
@@ -286,7 +297,7 @@
                             ref="ImgInput"
                             :multiple="false"
                             @change="File_Upload_Input($event)"
-                            accept='.jpg, .jpeg, .png'
+                            accept='.jpg, .jpeg, .png, .docx, .doc'
                             style="display: none"/>
                         <div
                             id="ImgSearchArea"
@@ -314,11 +325,22 @@
                             <el-button type="primary" style="border-radius: 10px; background: #539DD9" @click="Img_Reset()"><i class="el-icon-refresh" style="margin-right: 4px"></i>重新编辑</el-button>
                         </el-row>
                     </el-col>
+                    <el-col :span="7" :offset="1" style="height: 430px; display: none" v-show="Search_Extra == 'KnowledgePoint'">
+                        <div class="ImgSearchArea">
+                            <el-row style="margin-top: 40%">
+                                知识树的处理方案仍在商讨中...
+                            </el-row>
+                        </div>
+                        <el-row type="flex" justify="center" style="margin-top: 20px">
+                            <el-button type="danger" style="border-radius: 10px;"><i class="el-icon-close" style="margin-right: 10px;"></i>清空知识点</el-button>
+                        </el-row>
+                    </el-col>
                 </el-row>
                 <el-row
-                    v-if="Result_List.length == 0"
-                    style="height: 60px; width: 100%">
-
+                    v-if="Question_List.length == 0"
+                    style="height: 200px; line-height: 200px; width: 100%; font-weight: bold; font-size: 24px; color: #ccc"
+                    type="flex" justify="center">
+                    暂无检索结果
                 </el-row>
                 <el-row
                     v-else
@@ -328,39 +350,39 @@
                     <i
                         class="el-icon-d-arrow-left"
                         @click="Jump_To('Question_0')"
-                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer; z-index: 3"></i>
+                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer; z-index: -1"></i>
                 </el-row>
             </el-col>
         </el-row>
         <el-row
-            v-for="(List_Item, List_Item_Index) in Result_List"
-            :style="Get_Card_Background(List_Item_Index)"
-            :key="'Result_List_' + List_Item_Index"
+            v-for="(Question, Question_Index) in Question_List"
+            :style="Get_Card_Background(Question_Index)"
+            :key="'Question_' + Question_Index"
             >
             <div
-                :style="Get_Card_Margin(List_Item_Index)"
+                :style="Get_Card_Margin(Question_Index)"
                 >
                 <el-row
-                    :id="'Question_' + List_Item_Index"
-                    style="width: 100%; height: 64px; background: transparent; opacity: 0; z-index: -1">
+                    :id="'Question_' + Question_Index"
+                    style="width: 100%; height: 64px; background: transparent; opacity: 0; z-index: -1;">
 
                 </el-row>
-                <el-row class="Question_Card" style="background: white" v-if="List_Item.pattern == 'text'">
+                <el-row class="Question_Card" style="background: white" v-if="Question.pattern == 'text'">
                     <SearchQuestionItem
-                        :Question="List_Item"
-                        :Question_Index="List_Item_Index"
+                        :Question="Question"
+                        :Question_Index="Question_Index"
                         @Check_Question_Analysis="Check_Question_Analysis"
                         @Expand_Aim="Expand_Aim"></SearchQuestionItem>
                 </el-row>
                 <el-row class="Question_Card" style="background: white" v-else>
                     <SearchFileItem
-                        :File="List_Item"
+                        :File="Question"
                         @Download_File="Download_File"></SearchFileItem>
                 </el-row>
             </div>
         </el-row>
         <el-row
-            v-if="Result_List.length != 0"
+            v-if="Question_List.length != 0"
             id="Page_Seg"
             style="padding-top: 20px; padding-bottom: 20px; background: transparent">
             <el-pagination
@@ -371,6 +393,35 @@
                 :total="Total_Count">
             </el-pagination>
         </el-row>
+        <CutFile ref='cutFile' @search="handleSearch" @File_Cut_End="File_Cut_End"/>
+        <el-dialog
+          title="选择学科"
+          :visible.sync="confirmSubjectDialogVisible"
+          width="800px">
+          <el-row type="flex" justify="start" style="margin-bottom: -1vh">
+            <el-col style="margin-left:80px;width:280px;">
+                <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; font-size: 18px">
+                    <label>请选择文件对应的学科:</label>
+                </el-row>
+            </el-col>
+            <el-col :span="20" :offset="1">
+                <el-row type="flex" justify="start">
+                    <el-select v-model="paper_type" placeholder="请选择科目">
+                      <el-option
+                          v-for="item in multiExerciseMap"
+                          :key="item.label"
+                          :label="item.label"
+                          :value="item.label">
+                      </el-option>
+                    </el-select>
+                </el-row>
+            </el-col>
+          </el-row>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="confirmSubjectDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="Doc_Upload_Input">确 定</el-button>
+          </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -382,12 +433,13 @@ import SearchQuestionItem from '@/views/resourceQuery/components/SearchQuestionI
 import SearchFileItem from '@/views/resourceQuery/components/SearchFileItem'
 import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
 import ComplexInput from '@/common/components/ComplexInput'
+import CutFile from '@/views/resourceQuery/Exercise/components/CutFile'
 
 
 export default {
   name: "",
   components:{
-      SearchQuestionItem, SearchFileItem, QuestionAnalyse, ComplexInput
+      SearchQuestionItem, QuestionAnalyse, ComplexInput, CutFile, SearchFileItem
   },
   data() {
     return {
@@ -405,7 +457,7 @@ export default {
             Period: ["高中"],
             Subject: ["数学"],
             Type: ["单选题"],
-            Difficulty: "中等",
+            Difficulty: "自定义",
             Database: [],
             Semantic: "精确匹配"
         },
@@ -443,7 +495,7 @@ export default {
         // 控制图片切分组件是否显示
         Cropper_Dialog: false,
         // 控制检索结果的题目数组
-        Result_List: [],
+        Question_List: [],
         // 记录上次检索的时候所使用的信息
         History_Chosen_Options:{
             Period: [],
@@ -497,6 +549,11 @@ export default {
             'jpg': 'image/jpeg',
             'jpeg': "image/jpeg"
         },
+        formData:'',
+        config:'',
+        confirmSubjectDialogVisible:false,
+        file:'',
+        paper_type:'语文',
     };
   },
   destroyed(){
@@ -524,6 +581,11 @@ export default {
       
   },
   methods: {
+      //试卷切分完成
+      File_Cut_End(){
+          this.Waiting_Param = false;
+          this.Waiting_Text = ""
+      },
         Download_File(Info){
             let File_Info = JSON.parse(Info)
             let Item = {
@@ -687,7 +749,48 @@ export default {
             this.ImgInput.click();
         },
         File_Upload_Input(event){
-          this.Img_Upload_Input(event)
+          if (/image\/\w+/.test(event.target.files[0].type)) {
+            this.Img_Upload_Input(event)
+          }else {
+            this.file = event.target.files[0]
+            this.confirmSubjectDialogVisible=true;
+            // this.Confirm_Paper_Type();
+            // this.Doc_Upload_Input(event)
+          }
+        },
+        // Confirm_Paper_Type(){
+        // },
+        // 上传文件的方法
+        Doc_Upload_Input(){
+
+            this.Waiting_Param = true;
+            this.Waiting_Text = "试卷切分中，请稍后..."
+          this.confirmSubjectDialogVisible=false
+          // console.log(this.paper_type);
+          this.formData = new FormData();
+
+          this.formData.append("files", this.file);
+
+          this.config = {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          };
+          let res = variable.multiExerciseMap.filter((item)=>item.label==this.paper_type)
+          this.formData.append("paper_type", res[0].val);
+          this.formData.append("data_format", '0');
+          // 为了防止需要老版本的地方崩溃，先加了这个，以后用不到了再说
+          this.formData.append("paper_Cut_New", true);
+          this.$refs.cutFile.uploadAndCut(this.formData, this.config)
+        },
+        handleSearch(ItemContent,Search_Type){
+          this.Search_Extra = Search_Type
+          if (Search_Type == 'ImgSearch') {
+            this.Img_Cut = ItemContent
+          }else{
+            this.Search_Content = ItemContent
+          }
+          this.Search_Do()
         },
         // 实际处理图片选择事件
         Img_Upload_Input(event){
@@ -775,10 +878,35 @@ export default {
             this.Img_Cut = this.Img_All;
             this.Cropper_Dialog = true;
         },
+        // 获取知识树的方法
+        // 获取知识树
+        Init(){
+
+            let config = {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
+                emulateJSON: true
+            }
+
+            let param = new FormData();
+
+            param.append('system', 'tiku');
+            param.append('subject', this.Subject);
+            param.append('period', this.Period);
+
+            this.$http
+                .post(this.backendIP + "/api/getKnowledgeSystem", param, config)
+                .then(function(data) {
+                    this.TreeData = data.body.knowledge_system
+                    this.$refs.tree.setCheckedKeys([])
+                    this.waiting = false;
+                })
+        },
         // 切换检索类型，如果是文字，则图片内容部分自动清空，如果是图片，则文字部分内容自动清空
         // 紧接着是各种属性值的重置
         Change_Search_Extra(){
-            this.$confirm('即将切换输入类型至 ' + (this.Search_Extra == 'ImgSearch' ? '纯文字检索' : '文件检索') + ' 模式，将清空之前的检索内容，确定切换吗？', '提示', {
+            this.$confirm('即将切换输入类型至 ' + (this.Search_Extra == 'ImgSearch' ? '文字检索' : '文件检索') + ' 模式，将清空之前的检索内容，确定切换吗？', '提示', {
                 confirmButtonText: '确定切换',
                 cancelButtonText: '取消切换',
                 type: 'warning'
@@ -799,7 +927,7 @@ export default {
                     Img: "",
                     Search_Content: "",
                 }
-                this.Result_List = []
+                this.Question_List = []
                 this.Page_Index = 1
             }).catch(() => {
 
@@ -857,18 +985,26 @@ export default {
 
             commonAjax(this.backendIP+'/api/search', Param)
             .then((data)=>{
-                console.log(data.results)
-                this.Total_Count = data.totalLength
-                this.Page_Length = 5
-                this.Result_List = [];
-                for(let i = 0; i < data.results.length; i++){
-                    this.Result_List.push(data.results[i])
+                if(data.results.length > 0){
+                    this.Total_Count = data.totalLength
+                    this.Page_Length = 5
+                    this.Question_List = [];
+                    for(let i = 0; i < data.results.length; i++){
+                        this.Question_List.push(data.results[i])
+                    }
+                    setTimeout(()=>{
+                        document.getElementById('Question_0').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+                    }, 100)
+                }else{
+                    this.$message.warning("没有找到符合的结果，请尝试修改选项。")
+                    this.Jump_To('Filter');
                 }
+            }).catch(()=>{
+                this.$message.error("服务器好像开小差了，请稍后再试。")
+                this.Jump_To('Filter');
+            }).finally(()=>{
                 this.Waiting_Param = false
                 this.Waiting_Text = ""
-                setTimeout(()=>{
-                    document.getElementById('Question_0').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
-                }, 100)
             })
 
             return
@@ -937,7 +1073,7 @@ export default {
             let Style_Row_0 = '-128px auto 64px auto'
             let Style_Row_1 = '-128px auto 128px auto'
             let Style = {
-                'margin': Question_Index == this.Result_List.length - 1 ? Style_Row_0 : Style_Row_1,
+                'margin': Question_Index == this.Question_List.length - 1 ? Style_Row_0 : Style_Row_1,
                 'width': '1344px'
             }
             return Style

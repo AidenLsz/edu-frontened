@@ -223,7 +223,7 @@
                                 v-show="Chosen_Options.Difficulty == '自定义'"
                                 v-model="Difficulty_Value"
                                 range
-                                style="background: white; width: 170px; border: 1px solid #ccc; padding: 0px 15px 0px 17px; border-radius: 10px; margin-left: 40px"
+                                style="background: white; width: 170px; border: 1px solid #ccc; padding: 0px 15px 0px 17px; border-radius: 10px; margin-left: 40px; z-index: -1;"
                                 :step="0.01"
                                 :max="1"
                                 :min="0">
@@ -350,7 +350,7 @@
                     <i
                         class="el-icon-d-arrow-left"
                         @click="Jump_To('Question_0')"
-                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer; z-index: 3"></i>
+                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer; z-index: -1;"></i>
                 </el-row>
             </el-col>
         </el-row>
@@ -388,7 +388,7 @@
                 :total="Total_Count">
             </el-pagination>
         </el-row>
-        <CutFile ref='cutFile' @search="handleSearch"/>
+        <CutFile ref='cutFile' @search="handleSearch" @File_Cut_End="File_Cut_End"/>
         <el-dialog
           title="选择学科"
           :visible.sync="confirmSubjectDialogVisible"
@@ -568,6 +568,11 @@ export default {
     }
   },
   methods: {
+      //试卷切分完成
+      File_Cut_End(){
+          this.Waiting_Param = false;
+          this.Waiting_Text = ""
+      },
         // 粘贴事件
         Paste_Function(e){
             if(this.Search_Extra == 'ImgSearch'){
@@ -909,17 +914,26 @@ export default {
 
             commonAjax(this.backendIP+'/api/search', Param)
             .then((data)=>{
-                this.Total_Count = data.totalLength
-                this.Page_Length = 5
-                this.Question_List = [];
-                for(let i = 0; i < data.results.length; i++){
-                    this.Question_List.push(data.results[i])
+                if(data.results.length > 0){
+                    this.Total_Count = data.totalLength
+                    this.Page_Length = 5
+                    this.Question_List = [];
+                    for(let i = 0; i < data.results.length; i++){
+                        this.Question_List.push(data.results[i])
+                    }
+                    setTimeout(()=>{
+                        document.getElementById('Question_0').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+                    }, 100)
+                }else{
+                    this.$message.warning("没有找到符合的结果，请尝试修改选项。")
+                    this.Jump_To('Filter');
                 }
+            }).catch(()=>{
+                this.$message.error("服务器好像开小差了，请稍后再试。")
+                this.Jump_To('Filter');
+            }).finally(()=>{
                 this.Waiting_Param = false
                 this.Waiting_Text = ""
-                setTimeout(()=>{
-                    document.getElementById('Question_0').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
-                }, 100)
             })
 
             return
