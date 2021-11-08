@@ -1,5 +1,6 @@
 <template>
   <div style="margin-top: 2vh;">
+<<<<<<< HEAD
     <!-- 注册即功能简介 -->
     <div style="width: 100%; height: 700px" align="center">
       <el-row class="Area_Row" type="flex" justify="center">
@@ -74,6 +75,17 @@
               <div style="display: inline-block; width: 64px;">
                 <img src="../../assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -32px;">
               </div>
+=======
+    <!-- 多层次，多维度智能分析 -->
+    <div style="width: 100%; background: #F8F9FA;" align="center">
+      <el-row class="Area_Row" style="height: 700px;" type="flex" justify="center">
+        <div class="Resource_Manager_Left" align="left">
+          <el-row>
+            <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question">
+              <div style="display: inline-block; width: 64px;">
+                <img src="../../assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -32px;">
+              </div>
+>>>>>>> edae430... Temp-Save
               <div style="display: inline-block; width: 110px; margin-left: 15px">
                 <span style="font-size: 28px">2500万+</span><br>道试题
               </div>
@@ -122,7 +134,11 @@
                 <div class="Dot"></div>使用高效准确的试题相似度评估算法，提升题库的资源质量
               </el-row>
               <el-row type="flex" justify="start" style="margin-top: 80px;">
+<<<<<<< HEAD
                 <div class="All_Button Start_Analysis_Button" style="background: white">
+=======
+                <div class="All_Button Start_Analysis_Button">
+>>>>>>> edae430... Temp-Save
                   录入资源<i class="el-icon-right" style="margin-left: 10px;"></i>
                 </div>
               </el-row>
@@ -168,6 +184,7 @@
         </div>
       </el-row>
     </div>
+<<<<<<< HEAD
     <!-- 知识点直观呈现 -->
     <div style="width: 100%; background: #F8F9FA;" align="center">
       <el-row class="Area_Row" style="height: 700px;" type="flex" justify="center">
@@ -249,6 +266,8 @@
         </div>
       </el-row>
     </div>
+=======
+>>>>>>> edae430... Temp-Save
   </div>
 </template>
 <script>
@@ -399,6 +418,7 @@ export default {
   height: 500px;
 }
 
+<<<<<<< HEAD
 .Combine_Paper_Area_Right{
   display: inline-block;
   width: 500px;
@@ -413,6 +433,8 @@ export default {
   height: 500px;
 }
 
+=======
+>>>>>>> edae430... Temp-Save
 .Area_Row{
   width: 1344px;
   padding: 0 88px;
@@ -469,6 +491,7 @@ export default {
   display: inline-block;
 }
 
+<<<<<<< HEAD
 .KU_Search_Left{
   width: 568px;
   padding-top: 180px;
@@ -483,6 +506,8 @@ export default {
   display: inline-block;
 }
 
+=======
+>>>>>>> edae430... Temp-Save
 .Resource_Manager_Float_Block_Question{
   width: 224px;
   height: 92px;
@@ -490,6 +515,7 @@ export default {
   margin-right: 20px;
 }
 
+<<<<<<< HEAD
 .Combine_Paper_Area_Div{
   width: 224px;
   height: 60px;
@@ -499,6 +525,8 @@ export default {
   display: block;
 }
 
+=======
+>>>>>>> edae430... Temp-Save
 .Resource_Manager_Float_Block_Subject{
   width: 148px;
   height: 92px;
@@ -525,6 +553,7 @@ export default {
   padding: 12px;
   border-radius: 16px;
 }
+<<<<<<< HEAD
 
 .Home_Area_Left{
   display: inline-block;
@@ -538,4 +567,6 @@ export default {
   width: 550px;
   height: 700px;
 }
+=======
+>>>>>>> edae430... Temp-Save
 </style>
