@@ -121,13 +121,7 @@
                                 <el-col :span="18" style="border-left: 2px solid #ECECEC; padding-top: 8px; padding-left: 10px; padding-bottom: 8px">
                                     <el-row v-for="(item, index) in Question.knowledge_points_frontend.kp" :key="index" type="flex" justify="start">
                                     <el-tag style="background: transparent; color: black" effect="plain" class="kp_tag">
-                                        <el-badge 
-                                            :hidden="Question.knowledge_points_frontend.kp_priority.indexOf(item) == -1" 
-                                            :value="Question.knowledge_points_frontend.kp_priority.indexOf(item) + 1" 
-                                            class="kp_badge"
-                                            type="primary">
                                         {{ item }}
-                                        </el-badge>
                                     </el-tag>
                                     </el-row>
                                 </el-col>

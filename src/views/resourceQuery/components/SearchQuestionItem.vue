@@ -40,7 +40,7 @@
                     class="Detail_Line_Expand">
                     <el-button type="text" @click="Expand = !Expand; Expand_Aim()" style="height: 44px;">
                         <i :class=" Expand ? 'el-icon-d-arrow-right' : 'el-icon-d-arrow-left'" style="margin-right: 2px; transform: rotate(270deg);"></i>
-                        {{Expand ? '收起' : '展开'}}
+                        {{Expand ? '隐藏' : '查看'}}答案和解析
                     </el-button>
                 </div>
                 <div
@@ -155,13 +155,13 @@ export default {
 }
 .Detail_Line_Expand{
     display: inline-block;
-    width: 60px;
+    width: 130px;
 }
 .Detail_Line_Infos{
     position: relative;
     display: inline-block;
     right: 0px;
-    width: calc(100% - 60px);
+    width: calc(100% - 130px);
 }
 
 .Search_Button{
