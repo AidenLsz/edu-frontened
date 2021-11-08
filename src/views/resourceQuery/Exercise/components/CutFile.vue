@@ -1,5 +1,5 @@
 <template lang="html">
-  <div style="overflow: visible;">
+  <div style="overflow: visible;" v-show="Paper_Content.length != 0">
     <div class="tab panel-btn" id="openBtn" @click="openPanel()">
       <div>
         <div><i class="el-icon-d-arrow-right"></i></div>
@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="container"
-            style=""
+            style="z-index: 999"
             v-loading="File_Uploading"
             element-loading-text="加载中，请等待..."
             element-loading-spinner="el-icon-loading">
@@ -179,6 +179,7 @@ export default {
         }).catch(() => {
           this.$alert("切分过程出现错误，这可能是由于服务器原因导致目前暂时无法提供服务，请重新提交文件或稍后再试。", "提示")
         }).finally(()=>{
+          this.$emit("File_Cut_End", true);
           this.File_Uploading=false;
         });
     },
