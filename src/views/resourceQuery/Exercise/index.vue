@@ -423,12 +423,12 @@
 <script>
 
 import * as variable from '@/common/utils/variable'
-import {commonAjax} from '@/common/utils/ajax'
 import SearchQuestionItem from '@/views/resourceQuery/components/SearchQuestionItem'
 import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
 import ComplexInput from '@/common/components/ComplexInput'
 import CutFile from '@/views/resourceQuery/Exercise/components/CutFile'
 
+import {commonAjax} from '@/common/utils/ajax'
 
 export default {
   name: "",
@@ -874,12 +874,7 @@ export default {
 
             let Difficulty = []
             if(this.Chosen_Options.Difficulty != '自定义'){
-                let Index = this.All_Options.Difficulty.indexOf(this.Chosen_Options.Difficulty)
-                let min = 0.0;
-                for(let i = 0; i < Index; i++){
-                    min = min + 0.2
-                }
-                Difficulty = [min, min + 0.2]
+                Difficulty = [variable.Difficulty[this.Chosen_Options.Difficulty].min, variable.Difficulty[this.Chosen_Options.Difficulty].max]
             }else{
                 Difficulty = [this.Difficulty_Value[0], this.Difficulty_Value[1]]
             }
@@ -995,7 +990,6 @@ export default {
         },
         // 展开后回到此题的初始位置
         Expand_Aim(val){
-            console.log(val)
             let Aim = JSON.parse(val).Aim;
             this.Jump_To(Aim)
         }
