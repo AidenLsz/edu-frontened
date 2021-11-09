@@ -281,8 +281,9 @@
                             </el-button>
                             <!-- 切换知识点过滤检索或者文件检索的按钮 -->
                             <el-switch
-                                style="display: block; margin-top: 9px; margin-left: 20px;"
+                                style="display: block; margin-top: 9px; margin-left: 10px;"
                                 v-model="Search_Extra"
+                                @change="Change_Search_Extra"
                                 active-color="#409EFF"
                                 inactive-color="#13ce66"
                                 active-text="文件检索模式"
@@ -837,7 +838,6 @@ export default {
                 for (var i = 0; i < data.length; i++) {
                     this.All_Options.Database.push({name:data[i], nick: data[i]})
                 }
-                console.log(this.All_Options.Database)
             })
         },
         // 通过点击区域来激活图片选择用的input组件
@@ -1000,34 +1000,24 @@ export default {
         },
         // 切换检索类型，如果是文字，则图片内容部分自动清空，如果是图片，则文字部分内容自动清空
         // 紧接着是各种属性值的重置
-        Change_Search_Extra(){
-            this.$confirm('即将切换输入类型至 ' + (this.Search_Extra == 'ImgSearch' ? '文字检索' : '文件检索') + ' 模式，将清空之前的检索内容，确定切换吗？', '提示', {
-                confirmButtonText: '确定切换',
-                cancelButtonText: '取消切换',
-                type: 'warning'
-            }).then(() => {
-                if(this.Search_Extra == 'ImgSearch'){
-                    this.Img_Clear()
-                }else{
-                    this.Search_Content = ""
-                }
-                this.Search_Extra = this.Search_Extra == 'ImgSearch' ? 'KnowledgePoint' : 'ImgSearch'
-                this.History_Chosen_Options = {
-                    Period: [],
-                    Subject: [],
-                    Type: [],
-                    Difficulty: "",
-                    Database: [],
-                    Semantic: "",
-                    Img: "",
-                    Search_Content: "",
-                }
-                this.Question_List = []
-                this.Page_Index = 1
-            }).catch(() => {
-
-            })
-
+        Change_Search_Extra(val){
+            if(val == 'ImgSearch'){
+                this.Search_Content = ""
+            }else{
+                this.Img_Clear()
+            }
+            this.History_Chosen_Options = {
+                Period: [],
+                Subject: [],
+                Type: [],
+                Difficulty: "",
+                Database: [],
+                Semantic: "",
+                Img: "",
+                Search_Content: "",
+            }
+            this.Question_List = []
+            this.Page_Index = 1
         },
         // 检索用的方法
         Search_Do(){

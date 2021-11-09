@@ -3,7 +3,7 @@
     <!-- 注册和登录 -->
     <login ref="login" @register_show="register_show" />
     <register ref="register" />
-        <!-- 试卷分析路径跳转 -->
+    <!-- 试卷分析路径跳转 -->
     <el-dialog :visible.sync="Analyse_Paper" width="800px">
       <el-row>
         <el-col :span="8">
@@ -292,8 +292,14 @@
                 <div 
                   class="All_Button Start_Analysis_Button" 
                   style="background: white"
-                  @click="Route_Trans('/inputMarked')">
-                  录入资源<i class="el-icon-right" style="margin-left: 10px;"></i>
+                  @click="Route_Trans('/exercise')">
+                  试题检索<i class="el-icon-right" style="margin-left: 10px;"></i>
+                </div>
+                <div 
+                  class="All_Button Start_Analysis_Button" 
+                  style="background: white; margin-left: 30px;"
+                  @click="Route_Trans('/searchPaper')">
+                  试卷检索<i class="el-icon-right" style="margin-left: 10px;"></i>
                 </div>
               </el-row>
             </el-col>
