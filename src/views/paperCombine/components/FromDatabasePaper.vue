@@ -218,6 +218,12 @@ export default {
       Period: {
           type: String,
           default: "高中"
+      },
+      Database_List: {
+        type: Array,
+        default: function(){
+          return []
+        }
       }
   },
   data() {
@@ -231,7 +237,7 @@ export default {
       // 存放返回的题目内容
       Paper_Ques_List: [],
       // 存放将要查询的数据库名称
-      databaseAim: [],
+      databaseAim: this.Database_List,
       // 试卷的ID和标题组
       Paper_ID_List: [],
       Paper_Title_List: [],
@@ -385,26 +391,9 @@ export default {
     },
     initDatabaseList(){
       this.filterRecord.database = [true]
-      this.databaseAim = [
-        {name: '全部', nick: '全部'},
-        {name: 'public', nick: '公开题库'}]
-      //未登录时，不调用获取题库的端口
-      if(!this.$store.state.user.token){
-          return ;
+      for(let i = 1; i < this.databaseAim.length - 1; i++){
+        this.filterRecord.database.push(false)
       }
-      commonAjax(this.backendIP+'/api/get_user_ig_name',
-          {
-          type:'Question',
-          action:'R',
-          }
-      ).then((res)=>{
-          let data=res.ig_name;
-          for (var i = 0; i < data.length; i++) {
-              this.filterRecord.database.push(false)
-              this.databaseAim.push({name: data[i], nick: data[i]})
-          }
-          this.databaseAim[2].nick = "个人题库"
-      })
     },
     // 查看试卷分析报告
     Check_Analyse(ID, DatabaseName){

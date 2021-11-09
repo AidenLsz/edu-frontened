@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div 
+    :key="'Combine_Paper_Whole_' + Refresh_Flag"
+    v-loading="loading"
+    element-loading-text="正在获取您可以使用的题库范围，请稍后..."
+    element-loading-spinner="el-icon-loading"
+    >
     <!-- 地址框 -->
     <el-row justify="start" type="flex" style="margin-bottom: 3vh; margin-left: 5vw; margin-right: 5vw; margin-top: 10px;">
       <el-col>
@@ -117,23 +122,37 @@
         </el-col>
     </el-row>
     <el-row v-if="Using_Menu_Index == 'keyword'">
-        <Keyword @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></Keyword>
+        <Keyword @Add_To_Cart="Add_To_Question_Cart" 
+        :Period.sync="Selected_Period" 
+        :Subject.sync="Selected_Subject"  
+        :Database_List.sync="Database_List"></Keyword>
     </el-row>
     <el-row v-if="Using_Menu_Index == 'knowledgePoint'">
-        <KnowledgePoint @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></KnowledgePoint>
+        <KnowledgePoint @Add_To_Cart="Add_To_Question_Cart" 
+        :Period.sync="Selected_Period" 
+        :Subject.sync="Selected_Subject"  
+        :Database_List.sync="Database_List"></KnowledgePoint>
     </el-row>
     <el-row v-if="Using_Menu_Index == 'import'">
-        <InputQuestion @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></InputQuestion>
+        <InputQuestion @Add_To_Cart="Add_To_Question_Cart" 
+        :Period.sync="Selected_Period" 
+        :Subject.sync="Selected_Subject"></InputQuestion>
     </el-row>
     <el-row v-if="Using_Menu_Index == 'detailTable'">
         <DetailTable 
             @Jump_To_SC="Jump_To_SC"
             @Add_To_Cart="Add_To_Question_Cart" 
             @Clear_Cart="Clear_Cart" 
-            :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></DetailTable>
+            :Period.sync="Selected_Period" 
+            :Subject.sync="Selected_Subject" 
+            :Database_List.sync="Database_List"></DetailTable>
     </el-row>
     <el-row v-if="Using_Menu_Index == 'databasePaper'">
-        <FromDatabasePaper @Add_To_Cart="Add_To_Question_Cart" :Period.sync="Selected_Period" :Subject.sync="Selected_Subject"></FromDatabasePaper>
+        <FromDatabasePaper 
+        @Add_To_Cart="Add_To_Question_Cart" 
+        :Period.sync="Selected_Period" 
+        :Subject.sync="Selected_Subject"
+        :Database_List.sync="Database_List"></FromDatabasePaper>
     </el-row>
     <el-row v-if="Using_Menu_Index == 'autoCombine'">
         <AutoCombine 
@@ -141,7 +160,8 @@
             @Jump_To_SC="Jump_To_SC"
             @Clear_Cart="Clear_Cart"
             :Period.sync="Selected_Period" 
-            :Subject.sync="Selected_Subject"></AutoCombine>
+            :Subject.sync="Selected_Subject"
+            :Database_List.sync="Database_List"></AutoCombine>
     </el-row>
     <el-row v-if="Using_Menu_Index == 'startCombine'">
         <StartCombine 
@@ -166,6 +186,8 @@ import FromDatabasePaper from '@/views/paperCombine/components/FromDatabasePaper
 import AutoCombine from '@/views/paperCombine/components/AutoCombine'
 
 import * as echarts from 'echarts';
+
+import {commonAjax} from '@/common/utils/ajax'
 
 var Question_Cart_Charts = "";
 
@@ -198,7 +220,14 @@ export default {
         }],
         // 被选中的学段和科目
         Selected_Period: "高中",
-        Selected_Subject: "数学"
+        Selected_Subject: "数学",
+        Database_List: [
+            {name: '全部', nick: '全部'}, 
+            {name: 'public', nick: '公开题库'}
+        ],
+        Refresh_Flag: false,
+        // 获取题库的等待时间
+        loading: true
     }
   },
   watch:{
@@ -211,6 +240,7 @@ export default {
     //     return 
     //   }
       this.Init_Question_Type_Chart();
+      this.initDatabaseList();
   },
   methods: {
       Jump_To_SC(){
@@ -449,7 +479,32 @@ export default {
         //     }
         // }
         this.Using_Menu_Index = Aim;
-    }
+    },
+    // 获取数据库
+    // 获取用户所具有的题库权限
+    initDatabaseList(){
+        this.Database_List = [
+          {name: '全部', nick: '全部'}, 
+          {name: 'public', nick: '公开题库'}]
+        //未登录时，不调用获取题库的端口
+        if(!this.$store.state.user.token){
+            return ;
+        }
+        commonAjax(this.backendIP+'/api/get_user_ig_name',
+            {
+            type:'Question',
+            action:'R',
+            }
+        ).then((res)=>{
+            let data=res.ig_name;
+            for (var i = 0; i < data.length; i++) {
+                this.Database_List.push({name: data[i], nick: data[i]})
+            }
+            this.Database_List[2].nick = "个人题库";
+            this.Refresh_Flag = !this.Refresh_Flag;
+            this.loading = false
+        })
+    },
   },
 }
 </script>

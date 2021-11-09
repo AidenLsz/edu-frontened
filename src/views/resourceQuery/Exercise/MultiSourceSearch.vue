@@ -223,7 +223,7 @@
                                 v-show="Chosen_Options.Difficulty == '自定义'"
                                 v-model="Difficulty_Value"
                                 range
-                                style="background: white; width: 170px; border: 1px solid #ccc; padding: 0px 15px 0px 17px; border-radius: 10px; margin-left: 40px; z-index: -1"
+                                style="background: white; width: 170px; border: 1px solid #ccc; padding: 0px 15px 0px 17px; border-radius: 10px; margin-left: 40px; z-index: 0"
                                 :step="0.01"
                                 :max="1"
                                 :min="0">

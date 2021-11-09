@@ -91,19 +91,6 @@
               </el-row>
           </el-col>
         </el-row>
-        <!-- 筛选行 - 题库 -->
-        <el-row style="margin-top: 2vh; font-size: 16px;">
-          <el-col :span="2">
-              <el-row type="flex" justify="start" style="height: 30px; line-height: 30px">
-                  <label>题库：</label>
-              </el-row>
-          </el-col>
-          <el-col :span="2" v-for="(databaseName, databaseIndex) in databaseAim" :key="'Database_' + databaseIndex">
-              <el-row type="flex" justify="center" :class="filterButtonStyle('database', databaseIndex)" @click.native="database_Change(databaseIndex)">
-                  <span>{{databaseName.nick || databaseName.name}}</span>
-              </el-row>
-          </el-col>
-        </el-row>
         <!-- 筛选行 - 题型 -->
         <el-row style="margin-top: 2vh; font-size: 16px; ">
           <el-col :span="2">
@@ -114,6 +101,19 @@
           <el-col :span="2" v-for="(typeName, typeIndex) in typeAim" :key="'type_' + typeIndex">
               <el-row type="flex" justify="center" :class="filterButtonStyle('type', typeIndex)" @click.native="type_Change(typeIndex)">
                   <span>{{typeName}}</span>
+              </el-row>
+          </el-col>
+        </el-row>
+        <!-- 筛选行 - 题库 -->
+        <el-row style="margin-top: 2vh; font-size: 16px;">
+          <el-col :span="2">
+              <el-row type="flex" justify="start" style="height: 30px; line-height: 30px">
+                  <label>题库：</label>
+              </el-row>
+          </el-col>
+          <el-col :span="databaseIndex == 0 ? 2 : 3" v-for="(databaseName, databaseIndex) in databaseAim" :key="'Database_' + databaseIndex">
+              <el-row type="flex" justify="center" :class="filterButtonStyle('database', databaseIndex)" @click.native="database_Change(databaseIndex)">
+                  <span>{{databaseName.nick || databaseName.name}}</span>
               </el-row>
           </el-col>
         </el-row>
@@ -155,7 +155,7 @@
     </el-row>
     
     <el-row type="flex" justify="center" style="margin-top: 30px">
-        <el-button type="primary" @click="Auto_Combine()">生成试卷</el-button>
+        <el-button type="primary" @click="Auto_Combine()" :disabled="filterRecord.type.indexOf(true) == -1">生成试卷</el-button>
     </el-row>
   </div>
 </template>
@@ -176,6 +176,12 @@ export default {
       Period: {
           type: String,
           default: "高中"
+      },
+      Database_List: {
+        type: Array,
+        default: function(){
+          return []
+        }
       }
   },
   components: {},
@@ -260,7 +266,7 @@ export default {
         // 用于筛选的题目难度
         difficultyAim: ['全部', '容易', '较易', '中等', '较难', '困难'],
         // 用于筛选的数据库名
-        databaseAim: [],
+        databaseAim: this.Database_List,
         // 最上面的知识点是否全部显示
         KnowledgePoint_All_Show: false,
         Ques_List: [],
@@ -560,26 +566,9 @@ export default {
     // 获取用户所具有的题库权限
     initDatabaseList(){
         this.filterRecord.database = [true]
-        this.databaseAim = [
-          {name: '全部', nick: '全部'}, 
-          {name: 'public', nick: '公开题库'}]
-        //未登录时，不调用获取题库的端口
-        if(!this.$store.state.user.token){
-            return ;
+        for(let i = 1; i < this.databaseAim.length; i++){
+          this.filterRecord.database.push(false)
         }
-        commonAjax(this.backendIP+'/api/get_user_ig_name',
-            {
-            type:'Question',
-            action:'R',
-            }
-        ).then((res)=>{
-            let data=res.ig_name;
-            for (var i = 0; i < data.length; i++) {
-                this.filterRecord.database.push(false)
-                this.databaseAim.push({name: data[i], nick: data[i]})
-            }
-            this.databaseAim[2].nick = "个人题库"
-        })
     },
     // 根据不同选择的状况调整按钮样式
     filterButtonStyle(type, index){

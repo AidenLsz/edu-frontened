@@ -456,6 +456,12 @@ export default {
     Period: {
       type: String,
       default: "高中"
+    },
+    Database_List: {
+      type: Array,
+      default: function(){
+        return []
+      }
     }
   },
   data() {
@@ -488,7 +494,7 @@ export default {
       // 用于添加大题项的单题分数
       Add_Bundle_Score: 5,
       // 可选择的题库项
-      DatabaseAim: [],
+      DatabaseAim: this.Database_List,
       // 正在进行编辑的题包序号，题目序号以及题目内容
       Editing_Bundle: -1,
       Editing_Ques: -1,
@@ -563,7 +569,6 @@ export default {
     },
   },
   mounted() {
-    this.initDatabaseList();
     if(sessionStorage.getItem("Table_Info")){
       this.Table_Info = JSON.parse(sessionStorage.getItem("Table_Info"))
     }
