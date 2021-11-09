@@ -213,7 +213,7 @@
             <div style="width: 250px; height: 300px;">
               <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question" style="margin-top: 30px;">
                 <div style="display: inline-block; width: 64px;">
-                  <img src="@/assets/SearchIcon.svg" width="64px" height="64px" style="margin-top: -13px;">
+                  <img src="@/assets/SearchIcon.svg" width="48px" height="48px" style="margin-top: -8px; margin-left: 8px">
                 </div>
                 <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
                   <span style="font-size: 22px;">智能分析</span>
@@ -765,6 +765,7 @@ export default {
 
 .Home_Area_Right{
   display: inline-block;
+  padding-top: 60px;
   width: 550px;
   height: 700px;
 }

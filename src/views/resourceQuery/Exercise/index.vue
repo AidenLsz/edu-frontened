@@ -471,7 +471,7 @@ export default {
             Subject: ["数学"],
             Type: ["单选题"],
             Difficulty: "中等",
-            Database: [],
+            Database: ['公共题库'],
             Semantic: "精确匹配"
         },
         // 换页时使用的变量
