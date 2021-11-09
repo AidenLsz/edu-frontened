@@ -336,7 +336,8 @@ export default {
     width: 48px;
     height: 182px;
     border-radius: 0px 10px 10px 0px;
-    background-color: #eef1f7;
+    background-color: white;
+    box-shadow: 0px 6px 28px rgba(0, 0, 0, 0.12);
     cursor:default;
     >div{
       width: 16px;

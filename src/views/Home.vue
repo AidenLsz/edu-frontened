@@ -817,6 +817,7 @@ export default {
       );
     });
     this.ToTop();
+    document.body.scrollTo(0, 500)
   },
   methods: {
     // 调整首页统计表格的内容
@@ -1086,7 +1087,7 @@ export default {
 .sticky-menu {
   left: 0;
   margin: auto;
-  position: fixed;
+  position: absolute;
   top: 0;
   width: 100%;
   box-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.07);

@@ -132,8 +132,7 @@
     <el-dialog
       :visible.sync="Analyse_Switch_Dialog"
       title="分析"
-      width="65%"
-      :close="CloseFunctions"
+      width="800px"
       :modal-append-to-body="false"
       :close-on-click-modal="false">
       <el-row style="padding-top: 30px; background: white; padding-bottom: 30px">
@@ -214,7 +213,7 @@
             <div style="width: 250px; height: 300px;">
               <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question" style="margin-top: 30px;">
                 <div style="display: inline-block; width: 64px;">
-                  <img src="@/assets/dataIcon3.png" width="64px" height="64px" style="margin-top: -13px;">
+                  <img src="@/assets/SearchIcon.svg" width="64px" height="64px" style="margin-top: -13px;">
                 </div>
                 <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
                   <span style="font-size: 22px;">智能分析</span>
@@ -248,7 +247,7 @@
             </div>
             <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Subject">
               <div style="display: inline-block; width: 64px;">
-                <img src="@/assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -32px;">
+                <img src="@/assets/SubjectIcon.png" width="64px" height="64px" style="margin-top: -32px;">
               </div>
               <div style="display: inline-block; width: 40px; margin-left: 15px">
                 <span style="font-size: 28px">9</span>大学科
@@ -258,7 +257,7 @@
           <el-row style="margin-top: 30px;">
             <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Paper">
               <div style="display: inline-block; width: 64px;">
-                <img src="@/assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -32px;">
+                <img src="@/assets/dataIcon2.png" width="64px" height="64px" style="margin-top: -32px;">
               </div>
               <div style="display: inline-block; width: 95px; margin-left: 15px">
                 <span style="font-size: 28px">33万+</span><br>套试卷
@@ -266,7 +265,7 @@
             </div>
             <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Period">
               <div style="display: inline-block; width: 64px;">
-                <img src="@/assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -32px;">
+                <img src="@/assets/PeriodIcon.png" width="64px" height="64px" style="margin-top: -32px;">
               </div>
               <div style="display: inline-block; width: 150px; margin-left: 15px" align="center">
                 <span style="font-size: 28px">小学至成人</span><br>多学段覆盖
@@ -602,6 +601,7 @@ export default {
   },
 }
 </script>
+
 <style lang="scss" scoped>
 .Multi_Analyse_Radar_Chart{
   display: inline-block;

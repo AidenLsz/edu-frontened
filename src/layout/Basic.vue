@@ -1122,7 +1122,7 @@ export default {
 
 .sticky-menu {
   left: 0;
-  position: fixed;
+  position: absolute;
   height: 80px;
   top: 0;
   width: 100%;

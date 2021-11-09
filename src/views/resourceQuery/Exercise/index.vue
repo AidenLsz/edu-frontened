@@ -178,7 +178,7 @@
                                 <span
                                     v-for="(Period_Item, Period_Item_Index) in All_Options.Period" :key="'Filter_Period_' + Period_Item_Index"
                                     :class="Focus_Filter('Period', Period_Item)"
-                                    :style="Filter_Item('Period', Period_Item_Index)"
+                                    :style="Filter_Item('Period', Period_Item_Index, Period_Item)"
                                     @click="Filter_Change('Period', Period_Item)">
                                     {{Period_Item}}
                                 </span>
@@ -190,7 +190,7 @@
                                 <span
                                     v-for="(Subject_Item, Subject_Item_Index) in All_Options.Subject" :key="'Filter_Subject_' + Subject_Item_Index"
                                     :class="Focus_Filter('Subject', Subject_Item)"
-                                    :style="Filter_Item('Subject', Subject_Item_Index)"
+                                    :style="Filter_Item('Subject', Subject_Item_Index, Subject_Item)"
                                     @click="Filter_Change('Subject', Subject_Item)">
                                     {{Subject_Item}}
                                 </span>
@@ -202,7 +202,7 @@
                                 <span
                                     v-for="(Type_Item, Type_Item_Index) in All_Options.Type" :key="'Filter_Type_' + Type_Item_Index"
                                     :class="Focus_Filter('Type', Type_Item)"
-                                    :style="Filter_Item('Type', Type_Item_Index)"
+                                    :style="Filter_Item('Type', Type_Item_Index, Type_Item)"
                                     @click="Filter_Change('Type', Type_Item)">
                                     {{Type_Item}}
                                 </span>
@@ -214,7 +214,7 @@
                                 <span
                                     v-for="(Difficulty_Item, Difficulty_Item_Index) in All_Options.Difficulty" :key="'Filter_Difficulty_' + Difficulty_Item_Index"
                                     :class="Focus_Filter('Difficulty', Difficulty_Item)"
-                                    :style="Filter_Item('Difficulty', Difficulty_Item_Index)"
+                                    :style="Filter_Item('Difficulty', Difficulty_Item_Index, Difficulty_Item)"
                                     @click="Filter_Change('Difficulty', Difficulty_Item)">
                                     {{Difficulty_Item_Index != All_Options.Difficulty.length - 1 ? Difficulty_Item : Chosen_Options.Difficulty == '自定义' ? Difficulty_Value[0] + '~' + Difficulty_Value[1] : '自定义'}}
                                 </span>
@@ -235,7 +235,7 @@
                                 <span
                                     v-for="(Database_Item, Database_Item_Index) in All_Options.Database" :key="'Filter_Database_' + Database_Item_Index"
                                     :class="Focus_Filter('Database', Database_Item.nick)"
-                                    :style="Filter_Item('Database', Database_Item_Index)"
+                                    :style="Filter_Item('Database', Database_Item_Index, Database_Item.nick)"
                                     @click="Filter_Change('Database', Database_Item.nick)">
                                     {{Database_Item.nick}}
                                 </span>
@@ -247,7 +247,7 @@
                                 <span
                                     v-for="(Semantic_Item, Semantic_Item_Index) in All_Options.Semantic" :key="'Filter_Semantic_' + Semantic_Item_Index"
                                     :class="Focus_Filter('Semantic', Semantic_Item)"
-                                    :style="Filter_Item('Semantic', Semantic_Item_Index)"
+                                    :style="Filter_Item('Semantic', Semantic_Item_Index, Semantic_Item)"
                                     @click="Filter_Change('Semantic', Semantic_Item)">
                                     {{Semantic_Item}}
                                 </span>
@@ -280,14 +280,22 @@
                                 <span style="margin-right: 4px">&Sigma;</span>输入助手
                             </el-button>
                             <!-- 切换知识点过滤检索或者文件检索的按钮 -->
-                            <el-tooltip content="点击切换检索模式" placement="top">
-                                <el-button
+                            <el-switch
+                                style="display: block; margin-top: 9px; margin-left: 20px;"
+                                v-model="Search_Extra"
+                                active-color="#409EFF"
+                                inactive-color="#13ce66"
+                                active-text="文件检索模式"
+                                active-value="ImgSearch"
+                                inactive-text="纯文字检索模式"
+                                inactive-value="KnowledgePoint">
+                            </el-switch>
+                                <!-- <el-button
                                     style="border-radius: 10px;"
                                     @click="Change_Search_Extra()">
                                     <i class="el-icon-location" style="margin-right: 4px"></i>
                                     {{Search_Extra == 'ImgSearch' ? '文件搜题' : '纯文字检索'}}模式
-                                </el-button>
-                            </el-tooltip>
+                                </el-button> -->
                         </el-row>
                     </el-col>
                     <el-col :span="7" :offset="1" style="height: 512px;" v-show="Search_Extra == 'ImgSearch'">
@@ -305,7 +313,7 @@
                             @click="Img_Upload()"
                             class="ImgSearchArea"
                             style="cursor: pointer;">
-                            <el-row style="margin-top: 40%">
+                            <el-row style="margin-top: 46%">
                                 <i class="el-icon-upload" style="font-size: 60px"></i><br/>
                                 <span style="font-size: 18px; margin-top: 5px; margin-bottom: 5px; display: inline-block">点击或粘贴以上传</span><br/>
                                 <span>支持图片和word文档</span>
@@ -350,31 +358,41 @@
                     <i
                         class="el-icon-d-arrow-left"
                         @click="Jump_To('Question_0')"
-                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.45; cursor: pointer; z-index: 1;"></i>
+                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.5; cursor: pointer; z-index: 1;"></i>
                 </el-row>
             </el-col>
         </el-row>
-        <el-row
-            v-for="(Question, Question_Index) in Question_List"
-            :style="Get_Card_Background(Question_Index)"
-            :key="'Question_' + Question_Index"
-            >
-            <div
-                :style="Get_Card_Margin(Question_Index)"
-                >
-                <el-row
-                    :id="'Question_' + Question_Index"
-                    style="width: 100%; height: 128px; background: transparent; opacity: 0; z-index: -1; border-top: 1px solid red">
+        <el-row>
+            <el-col>
+                <div 
+                    v-for="(Question, Question_Index) in Question_List"
+                    :style="Get_Card_Background(Question_Index)"
+                    :key="'Question_' + Question_Index">
+                    <el-row>
+                        <div 
+                            :id="'Question_' + Question_Index"
+                            style="height: 10px; width: 10px; background: transparent;position: relative; margin-top: -192px">
 
-                </el-row>
-                <el-row class="Question_Card" style="background: white">
-                    <SearchQuestionItem
-                        :Question="Question"
-                        :Question_Index="Question_Index"
-                        @Check_Question_Analysis="Check_Question_Analysis"
-                        @Expand_Aim="Expand_Aim"></SearchQuestionItem>
-                </el-row>
-            </div>
+                        </div>
+                    </el-row>
+                    <el-row>
+                        <div
+                            :style="Get_Card_Margin(Question_Index)"
+                            >
+                            <el-row style="width: 100%; height: 64px; background: transparent; opacity: 0; z-index: -1; border-top: 1px solid red">
+
+                            </el-row>
+                            <el-row class="Question_Card" style="background: white">
+                                <SearchQuestionItem
+                                    :Question="Question"
+                                    :Question_Index="Question_Index"
+                                    @Check_Question_Analysis="Check_Question_Analysis"
+                                    @Expand_Aim="Expand_Aim"></SearchQuestionItem>
+                            </el-row>
+                        </div>
+                    </el-row>
+                </div>
+            </el-col>
         </el-row>
         <el-row
             v-if="Question_List.length != 0"
@@ -469,6 +487,7 @@ export default {
         // 设定额外搜索条件，KnowledgePoint指知识点筛选模式，ImgSearch指图片检索模式
         // 可以通过点击按钮切换到另外一个模式
         Search_Extra: "KnowledgePoint",
+        Search_Extra_Switch: false,
         // 用于备份整张的图片，配合用于进行切分，默认值是空
         Img_All: "",
         // 用于保存拿来检索的图片被切分后的内容
@@ -560,12 +579,9 @@ export default {
     ImgSearchArea.addEventListener('dragleave', this.onDragOut, true);
     ImgSearchArea.addEventListener('drop', this.onDrop, true);
     window.addEventListener('paste', this.Paste_Function)
-    this.Width_Now = document.body.clientWidth
   },
   updated() {
-    window.onresize = () => {
-      this.Width_Now = document.body.clientWidth
-    }
+
   },
   methods: {
       //试卷切分完成
@@ -600,16 +616,162 @@ export default {
         },
         // 控制筛选项的样式显示
         // 参数分别是筛选项所属的属性，筛选项对应的索引值
-        Filter_Item(Part, Index){
+        Filter_Item(Part, Index, Item){
             let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '105px': '70px'
+            let BORDER_LEFT = ""
+            let BORDER_RIGHT = ""
+            if(Part == 'Semantic'){
+                if(this.Chosen_Options[Part] != Item){
+                    if(Index == 0){
+                        BORDER_RIGHT = "none"
+                    }else{
+                        BORDER_LEFT = "none"
+                    }
+                }
+            }else if(Part == 'Difficulty'){
+                if(this.Chosen_Options.Difficulty != Item){
+                    if(Index > 0 && Index < this.All_Options.Difficulty.length - 1){
+                        if(this.Chosen_Options.Difficulty == this.All_Options.Difficulty[Index + 1]){
+                            BORDER_RIGHT = "none"
+                            BORDER_LEFT = "none"
+                        }else if(this.Chosen_Options.Difficulty == this.All_Options.Difficulty[Index - 1]){
+                            BORDER_LEFT = "none"
+                            BORDER_RIGHT = "1px solid #ccc"
+                        }else{
+                            BORDER_LEFT = "none"
+                            BORDER_RIGHT = "1px solid #ccc"
+                        }
+                    }else{
+                        if(Index == 0 && this.Chosen_Options.Difficulty == this.All_Options.Difficulty[1]){
+                            BORDER_RIGHT = "none"
+                        }else if(Index == 0){
+                            BORDER_RIGHT = "1px solid #ccc"
+                        }else if(Index == this.All_Options.Difficulty.length - 1 && this.Chosen_Options.Difficulty == this.All_Options.Difficulty[this.All_Options.Difficulty.length - 2]){
+                            BORDER_LEFT = "none"
+                        }else if(Index == this.All_Options.Difficulty.length - 1){
+                            BORDER_LEFT = "none"
+                        }
+                    }
+                }
+            }else if(Part != 'Database'){
+                if(this.Chosen_Options[Part].indexOf(Item) == -1){
+                    if(Index > 0 && Index < this.All_Options[Part].length - 1){
+                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) == -1){
+                            BORDER_RIGHT = "1px solid #ccc"
+                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) != -1){
+                            BORDER_RIGHT = "none"
+                        }
+                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) == -1){
+                            BORDER_LEFT = "none"
+                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) != -1){
+                            BORDER_LEFT = "none"
+                        }
+                    }else if(Index == 0){
+                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) == -1){
+                            BORDER_RIGHT = "1px solid #ccc"
+                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) != -1){
+                            BORDER_RIGHT = "none"
+                        }
+                    }else if(Index == this.All_Options[Part].length - 1){
+                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) == -1){
+                            BORDER_LEFT = "none"
+                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) != -1){
+                            BORDER_LEFT = "none"
+                        }
+                    }
+                }else{
+                    if(Index > 0 && Index < this.All_Options[Part].length - 1){
+                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) == -1){
+                            BORDER_RIGHT = "1px solid #409EFF"
+                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) != -1){
+                            BORDER_RIGHT = "1px solid #409EFF"
+                        }
+                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) == -1){
+                            BORDER_LEFT = "1px solid #409EFF"
+                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) != -1){
+                            BORDER_LEFT = "none"
+                        }
+                    }else if(Index == 0){
+                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) == -1){
+                            BORDER_RIGHT = "1px solid #409EFF"
+                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) != -1){
+                            BORDER_RIGHT = "1px solid #409EFF"
+                        }
+                    }else if(Index == this.All_Options[Part].length - 1){
+                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) == -1){
+                            BORDER_LEFT = "1px solid #409EFF"
+                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) != -1){
+                            BORDER_LEFT = "none"
+                        }
+                    }
+                }
+            }
+            else if(Part == 'Database'){
+                if(this.Chosen_Options.Database.indexOf(Item) == -1){
+                    if(Index > 0 && Index < this.All_Options.Database.length - 1){
+                        if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) == -1){
+                            BORDER_RIGHT = "0.5px solid #ccc"
+                        }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) != -1){
+                            BORDER_RIGHT = "none"
+                        }
+                        if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) == -1){
+                            BORDER_LEFT = "0.5px solid #ccc"
+                        }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) != -1){
+                            BORDER_LEFT = "none"
+                        }
+                    }else if(Index == 0){
+                        if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) == -1){
+                            BORDER_RIGHT = "0.5px solid #ccc"
+                        }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) != -1){
+                            BORDER_RIGHT = "none"
+                        }
+                    }else if(Index == this.All_Options.Database.length - 1){
+                        if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) == -1){
+                            BORDER_LEFT = "0.5px solid #ccc"
+                        }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) != -1){
+                            BORDER_LEFT = "none"
+                        }
+                    }
+                }else{
+                    if(this.All_Options.Database.length > 1){
+                        if(Index > 0 && Index < this.All_Options.Database.length - 1){
+                            if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) == -1){
+                                BORDER_RIGHT = "1px solid #409EFF"
+                            }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) != -1){
+                                BORDER_RIGHT = "0.5px solid #409EFF"
+                            }
+                            if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) == -1){
+                                BORDER_LEFT = "1px solid #409EFF"
+                            }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) != -1){
+                                BORDER_LEFT = "0.5px solid #409EFF"
+                            }
+                        }else if(Index == 0){
+                            if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) == -1){
+                                BORDER_RIGHT = "1px solid #409EFF"
+                            }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) != -1){
+                                BORDER_RIGHT = "0.5px solid #409EFF"
+                            }
+                        }else if(Index == this.All_Options.Database.length - 1){
+                            if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) == -1){
+                                BORDER_LEFT = "1px solid #409EFF"
+                            }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) != -1){
+                                BORDER_LEFT = "0.5px solid #409EFF"
+                            }
+                        }
+                    }
+                }
+            }
             return {
                 "width": WIDTH,
                 "height": "40px",
                 "line-height": "40px",
                 "text-align": "center",
                 "display": "inline-block",
+                "box-sizing": "border-box",
                 "background": "white",
                 "cursor": "pointer",
+                "border-left": BORDER_LEFT,
+                "border-right": BORDER_RIGHT,
                 "border-top-left-radius": Index == 0 ? "10px" : "0px",
                 "border-bottom-left-radius": Index == 0 ? "10px" : "0px",
                 "border-top-right-radius": Index == this.All_Options[Part].length - 1 ? "10px" : "0px",
@@ -675,6 +837,7 @@ export default {
                 for (var i = 0; i < data.length; i++) {
                     this.All_Options.Database.push({name:data[i], nick: data[i]})
                 }
+                console.log(this.All_Options.Database)
             })
         },
         // 通过点击区域来激活图片选择用的input组件
@@ -991,13 +1154,13 @@ export default {
         Get_Card_Background(Question_Index){
             let Style = {
                 'background': Question_Index % 2 == 0 ? '#F0F5FB' : 'white',
-
+                'width': "100%",
             }
             return Style
         },
         Get_Card_Margin(Question_Index){
-            let Style_Row_0 = '-192px auto 128px auto'
-            let Style_Row_1 = '-192px auto 192px auto'
+            let Style_Row_0 = '-128px auto 64px auto'
+            let Style_Row_1 = '-128px auto 128px auto'
             let Style = {
                 'margin': Question_Index == this.Question_List.length - 1 ? Style_Row_0 : Style_Row_1,
                 'width': '1344px'
@@ -1038,7 +1201,7 @@ export default {
 
 .Unchosen_Option:hover{
     color: rgba($color: #409EFF, $alpha: 0.6);
-    border: 1px solid rgba($color: #409EFF, $alpha: 0.6);
+    // border: 1px solid rgba($color: #409EFF, $alpha: 0.6);
     box-sizing: border-box;
 }
 
