@@ -6,7 +6,7 @@
         <div>多题切分结果</div>
       </div>
     </div>
-    <el-card class="box-card" id="res" style="padding:0px">
+    <el-card class="box-card" id="res" style="padding:0px; z-index: 2">
       <div class="tab panel-btn" id="closeBtn" @click="closePanel()">
         <div>
           <div><i class="el-icon-d-arrow-left"></i></div>

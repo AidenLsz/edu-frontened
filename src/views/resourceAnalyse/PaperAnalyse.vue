@@ -1359,6 +1359,9 @@ export default {
         this.Init();
         if(sessionStorage.getItem("ChangingCombine")){
             this.Combine_Paper_Changing = true;
+            this.$alert("替换结果可点击右下角按钮查看，查看并确认后完成替换。", "题目替换指南", {
+                confirmButtonText: "确认"
+            })
             this.Backup_Combine_Paper = JSON.parse(sessionStorage.getItem("ChangingCombineInfo"))
             this.Update_Combine_Paper = JSON.parse(sessionStorage.getItem("ChangingCombineInfo"))
             this.TreeData = JSON.parse(sessionStorage.getItem("ChangingKPTree"))
