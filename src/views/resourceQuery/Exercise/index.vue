@@ -1149,8 +1149,8 @@ export default {
             return Style
         },
         Get_Card_Margin(Question_Index){
-            let Style_Row_0 = '-192px auto 128px auto'
-            let Style_Row_1 = '-192px auto 192px auto'
+            let Style_Row_0 = '-128px auto 64px auto'
+            let Style_Row_1 = '-128px auto 128px auto'
             let Style = {
                 'margin': Question_Index == this.Question_List.length - 1 ? Style_Row_0 : Style_Row_1,
                 'width': '1344px'
