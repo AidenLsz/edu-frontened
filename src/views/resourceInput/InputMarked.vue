@@ -201,7 +201,10 @@ export default {
   methods:{
         // 卷动至最上方
         To_Top(){
-            window.scrollTo(0,0);
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            })
         },
         // 获取UUID
         Get_User_UUID(){

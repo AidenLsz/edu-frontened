@@ -1,28 +1,257 @@
 <template>
-  <div style="margin-top: 2vh">
-    <el-row>
-        <div v-for="i in 4" :id="'container' + i" :key="'Word_Cloud_' + i" style="height: 405px; width: 405px; border: 1px solid black; display: inline-block"></div>
-    </el-row>
-    <el-row>
-      <div id="Multi-Y" style="height: 600px">
+  <div style="margin-top: 2vh;">
+    <!-- 注册即功能简介 -->
+    <div style="width: 100%; height: 700px" align="center">
+      <el-row class="Area_Row" type="flex" justify="center">
+        <div class="Home_Area_Left">
+          <el-row>
+            <el-col>
+              <el-row type="flex" justify="start" class="Part_Title">
+                <span>LUNA智能教辅平台</span>
+              </el-row>
+              <el-row 
+                type="flex" 
+                justify="start" 
+                style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
+                深层次、多维度分析处理海量教育资源，智能化、个性化资源管理、组织、查询、分析服务
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 60px;">
+                <div class="All_Button Start_Analysis_Button">
+                  立即加入<i class="el-icon-right" style="margin-left: 10px;"></i>
+                </div>
+              </el-row>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="Home_Area_Right">
+          <el-row type="flex" justify="center" style="margin: 0; padding: 0; padding-top: 130px">
+            <div style="width: 250px; margin-right: 15px; height: 300px;">
+              <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question">
+                <div style="display: inline-block; width: 64px;">
+                  <img src="../../assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -13px;">
+                </div>
+                <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
+                  <span style="font-size: 22px">教学资源</span>
+                </div>
+              </div>
+              <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question" style="margin-top: 30px;">
+                <div style="display: inline-block; width: 64px;">
+                  <img src="../../assets/dataIcon2.png" width="64px" height="64px" style="margin-top: -13px;">
+                </div>
+                <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
+                  <span style="font-size: 22px">组卷系统</span>
+                </div>
+              </div>
+            </div>
+            <div style="width: 250px; height: 300px;">
+              <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question" style="margin-top: 30px;">
+                <div style="display: inline-block; width: 64px;">
+                  <img src="../../assets/dataIcon3.png" width="64px" height="64px" style="margin-top: -13px;">
+                </div>
+                <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
+                  <span style="font-size: 22px;">智能分析</span>
+                </div>
+              </div>
+              <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question" style="margin-top: 30px;">
+                <div style="display: inline-block; width: 64px;">
+                  <img src="../../assets/dataIcon3.png" width="64px" height="64px" style="margin-top: -13px;">
+                </div>
+                <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
+                  <span style="font-size: 22px">知识检索</span>
+                </div>
+              </div>
+            </div>
+          </el-row>
+        </div>
+      </el-row>
+    </div>
+    <!-- 资源录入 -->
+    <div style="width: 100%; background: #F8F9FA;" align="center">
+      <el-row class="Area_Row" style="height: 700px;" type="flex" justify="center">
+        <div class="Resource_Manager_Left" align="left">
+          <el-row>
+            <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question">
+              <div style="display: inline-block; width: 64px;">
+                <img src="../../assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -32px;">
+              </div>
+              <div style="display: inline-block; width: 110px; margin-left: 15px">
+                <span style="font-size: 28px">2500万+</span><br>道试题
+              </div>
+            </div>
+            <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Subject">
+              <div style="display: inline-block; width: 64px;">
+                <img src="../../assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -32px;">
+              </div>
+              <div style="display: inline-block; width: 40px; margin-left: 15px">
+                <span style="font-size: 28px">9</span>大学科
+              </div>
+            </div>
+          </el-row>
+          <el-row style="margin-top: 30px;">
+            <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Paper">
+              <div style="display: inline-block; width: 64px;">
+                <img src="../../assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -32px;">
+              </div>
+              <div style="display: inline-block; width: 95px; margin-left: 15px">
+                <span style="font-size: 28px">33万+</span><br>套试卷
+              </div>
+            </div>
+            <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Period">
+              <div style="display: inline-block; width: 64px;">
+                <img src="../../assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -32px;">
+              </div>
+              <div style="display: inline-block; width: 150px; margin-left: 15px" align="center">
+                <span style="font-size: 28px">小学至成人</span><br>多学段覆盖
+              </div>
+            </div>
+          </el-row>
+        </div>
+        <div class="Resource_Manager_Right">
+          <el-row>
+            <el-col>
+              <el-row type="flex" justify="start" class="Part_Title">
+                <span>海量教学资源、智能处理</span>
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 18px;">
+                <div class="Dot"></div>智能化、个性化的资源（试题、试卷）的录入、查询和管理服务
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
+                <div class="Dot"></div>内置标准化、体系化的教学资源
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
+                <div class="Dot"></div>使用高效准确的试题相似度评估算法，提升题库的资源质量
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 80px;">
+                <div class="All_Button Start_Analysis_Button" style="background: white">
+                  录入资源<i class="el-icon-right" style="margin-left: 10px;"></i>
+                </div>
+              </el-row>
+            </el-col>
+          </el-row>
+        </div>
+      </el-row>
+    </div>
+    <!-- 多层次，多维度智能分析 -->
+    <div style="width: 100%;" align="center">
+      <el-row class="Area_Row" style="padding-top: 100px; padding-bottom: 100px;">
+        <div class="Multi_Analyse_Rader_Left">
+          <el-row>
+            <el-col>
+              <el-row type="flex" justify="start" class="Part_Title">
+                <span>深层次、多维度智能分析</span>
+              </el-row>
+              <el-row 
+                type="flex" 
+                justify="start" 
+                style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
+                使用人工智能和数据挖掘技术对试题和试卷，在各个层次、多个维度上分析，如各题型占比、关键词比较、知识点分值和难度变化
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 20px;">
+                <div class="Dot"></div>试题质量、难度分析
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+                <div class="Dot"></div>试题、试卷知识点分析
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+                <div class="Dot"></div>试卷综合分析
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 60px;">
+                <div class="All_Button Start_Analysis_Button">
+                  开始分析<i class="el-icon-right" style="margin-left: 10px;"></i>
+                </div>
+              </el-row>
+            </el-col>
+          </el-row>
+        </div>
+        <div id="Multi_Analyse_Radar_Chart" class="Multi_Analyse_Radar_Chart">
 
-      </div>
-    </el-row>
+        </div>
+      </el-row>
+    </div>
+    <!-- 知识点直观呈现 -->
+    <div style="width: 100%; background: #F8F9FA;" align="center">
+      <el-row class="Area_Row" style="height: 700px;" type="flex" justify="center">
+        <div class="KU_Search_Left" align="center">
+          <img src="./ITAS_Home_KU.png" width="500">
+          <el-input 
+            v-model="Home_Ku" 
+            placeholder="请输入知识点" 
+            prefix-icon="el-icon-search"
+            style="width: 350px; margin-top: 40px;"></el-input>
+        </div>
+        <div class="KU_Search_Right">
+          <el-row>
+            <el-col>
+              <el-row type="flex" justify="start" class="Part_Title">
+                <span>知识点直观呈现</span>
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 18px;">
+                <div class="Dot"></div>智能且直观的知识点组织与呈现
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
+                <div class="Dot"></div>知识点检索与详细介绍
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
+                <div class="Dot"></div>前驱后继、共同学习和层级关系三种知识关系展示
+              </el-row>
+            </el-col>
+          </el-row>
+        </div>
+      </el-row>
+    </div>
+    <!-- 组卷系统介绍 -->
+    <div style="width: 100%;" align="center">
+      <el-row class="Area_Row" style="padding-top: 100px; padding-bottom: 100px;">
+        <div class="Combine_Paper_Area_Left">
+          <el-row>
+            <el-col>
+              <el-row type="flex" justify="start" class="Part_Title">
+                <span>多样化组卷系统，一应俱全</span>
+              </el-row>
+              <el-row 
+                type="flex" 
+                justify="start" 
+                style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
+                智能组卷系统提供丰富的搜题、选题方式，试卷和答题卡编辑、预览与下载功能
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 20px;">
+                <div class="Dot"></div>关键词搜题
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+                <div class="Dot"></div>知识点搜题
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+                <div class="Dot"></div>以题搜题
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+                <div class="Dot"></div>试卷搜题
+              </el-row>
+              <el-row type="flex" justify="start" style="margin-top: 60px;">
+                <div class="All_Button Start_Analysis_Button">
+                  开始体验<i class="el-icon-right" style="margin-left: 10px;"></i>
+                </div>
+              </el-row>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="Combine_Paper_Area_Right">
+          <el-col>
+            <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(-2deg); display: block; padding: 0">
+              <span style="font-size: 22px">多样化搜题、选题</span>
+            </div>
+            <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(2deg); display: block; padding: 0">
+              <span style="font-size: 22px">试卷和答题卡生成</span>
+            </div>
+            <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(-2deg); display: block; padding: 0">
+              <span style="font-size: 22px">个性化试卷导出</span>
+            </div>
+          </el-col>
+        </div>
+      </el-row>
+    </div>
   </div>
 </template>
 <script>
-
-// 关于如何创建词云图
-
-// 第一步 cnpm install js2wordcloud --save 安装js2wordcloud包
-// 第二步 按照下面的方式引入这个包
-// 第三步 按照Init_Word_Cloud方法来在你需要的时候需要的位置生成词云
-// 其原理和echarts区别不大，你自己调整一下数据即可
-// 注：其宽度和高度最小值是400px（div不带border的情况下），小于这个值会导致词云图可能显示不完全
-
-import Js2WordCloud from 'js2wordcloud'
-
-// 关于如何创建三Y轴图
 
 import * as echarts from 'echarts';
 
@@ -35,157 +264,299 @@ export default {
   },
   data() {
     return {
-
+      // 知识点
+      Home_Ku: ""
     }
   },
   watch: {
 
   },
   mounted() {
-    this.Init_Word_Cloud();
-    this.Init_MultiY_Charts();
+    this.Init_Home_Page_Radar()
   },
   methods: {
-    Init_Word_Cloud(){
-      for(let i = 1; i < 5; i++){
-        // 获取div对象，和echarts是一个道理，获取完数据后重新捕捉这些对象即可
-        // 建议创建若干个预置对象，和echarts一样，然后用户点击左右切换的时候根据数据清空已有数据然后导入新的数据进行渲染
-        // 具体方式可以参照statistics.vue那个BarChart变量，意思是一样的
-        var wc = new Js2WordCloud(document.getElementById('container' + i))
-        wc.setOption({
-            tooltip: {
-                show: true
-            },
-            // 把数据放在这儿就行了
-            list: [['谈笑风生', 80], ['谈笑风生', 80], ['谈笑风生', 70], ['谈笑风生', 70], ['谈笑风生', 60], ['谈笑风生', 60]],
-            // 这是字体颜色，你可以自己生成
-            color: '#15a4fa'
-        })
-      }
-    },
-    Init_MultiY_Charts(){
-      var Chart = echarts.init(document.getElementById('Multi-Y'));
-      const colors = ['#5470C6', '#91CC75', '#EE6666'];
-      let options = {
-        // 调整多Y轴的颜色，具体什么颜色你自己按照需求来
-        color: colors,
-        // 这个是示例的触发位置，这个是移动到轴上的时候
+    Init_Home_Page_Radar(){
+      var Home_Radar = echarts.init(document.getElementById("Multi_Analyse_Radar_Chart"));
+      //let colors = ["#EE6666", "#5470C6", "#91CC75"];
+      let option = {
+        title: {
+          text: "知识点分值比较", //这里的参数是整个图标的标题 后面也可以加注释
+          bottom: 20,
+          left: "36.5%",
+          textStyle: {
+            fontSize: 18,
+            fontStyle: "normal",
+            fontWeight: "bold",
+          },
+        },
         tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          }
+          trigger: "item",
         },
-        // 这个是Y轴的位置
-        grid: {
-          right: '10%'
-        },
-        // 有几根Y轴写几个变量，这代表了想表示的变量
         legend: {
-          data: ['Evaporation', 'Precipitation', 'Temperature']
+          show: true,
+          orient: "vertical", 
+          right: 0,
+          bottom: 60,
+          itemHeight: 6, //修改icon图形大小
+          itemWidth: 10,
+          textStyle: {
+            fontSize: 8,
+            color: '#000'
+          },
+          data: [ "2020年全国统一高考数学试卷（文科）（新课标i)",
+                  "2020年全国统一高考数学试卷（文科）（新课标ii)",
+                  "2020年全国统一高考数学试卷（文科）（新课标iii)",
+                  "2020年全国统一高考数学试卷（理科）（新课标i)"],
         },
-        // 这里是X轴的数据，比如卷1，卷2之类的，你自己组织怎么写
-        xAxis: [
+        radar: [
           {
-            type: 'category',
-            axisTick: {
-              alignWithLabel: true
+            center: ["50%", "44%"],
+            splitArea: {
+              areaStyle: {
+                color: ["#FFFFFF"],
+              },
             },
-            // prettier-ignore
-            data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-          }
-        ],
-        // 有几根Y轴就有几个字典，name要和legend的data项向对应，min和max你自己定
-        // position指坐标轴位置
-        // axisLine是轴线，show是显示，lineStyle是线的样式，color控制颜色，自己按需求调整
-        // formatter是内容的显示标签，不带axisLabel这一项的话就是单纯显示数据，具体怎么弄你要自己查echarts，不同的图的格式不一样
-        // offset是偏移量，主要是为了Y轴不要重叠到一起
-        yAxis: [
-          {
-            type: 'value',
-            name: 'Evaporation',
-            min: 0,
-            max: 250,
-            position: 'right',
             axisLine: {
-              show: true,
               lineStyle: {
-                color: colors[0]
-              }
+                color: "rgba(255, 255, 255, 1)",
+              },
             },
-            axisLabel: {
-              formatter: '{value} ml'
-            }
+            splitLine: {
+              lineStyle: {
+                color: "rgba(255, 255, 255, 1)",
+              },
+            },
+            name: {
+              formatter: "{value}",
+              textStyle: {
+                fontSize: 14,
+                color: "#000000",
+                fontWeight: "bold",
+              },
+            },
+            radius: 150,
+            indicator: [
+              {text: "排列组合与概率统计"},
+              {text: "代数"},
+              {text: "算法与框图"},
+              {text: "数学竞赛"},
+              {text: "推理与证明"},
+              {text: "立体几何"},
+              {text: "三角函数"},
+              {text: "高等数学"},
+              {text: "平面解析几何"},
+              {text: "数学知识延伸"}
+            ],
           },
-          {
-            type: 'value',
-            name: 'Precipitation',
-            min: 0,
-            max: 250,
-            position: 'right',
-            offset: 80,
-            axisLine: {
-              show: true,
-              lineStyle: {
-                color: colors[1]
-              }
-            },
-            axisLabel: {
-              formatter: '{value} ml'
-            }
-          },
-          {
-            type: 'value',
-            name: '温度',
-            min: 0,
-            max: 25,
-            position: 'left',
-            axisLine: {
-              show: true,
-              lineStyle: {
-                color: colors[2]
-              }
-            },
-            axisLabel: {
-              formatter: '{value} °C'
-            }
-          }
         ],
-        // 数据项，name需要和legend的数据一一对应
-        // type是指这个图的类型，bar是柱状，line是折线图
-        // yAxisIndex是指这个东西的优先级，你按照先后顺序写一下，别互相覆盖了就可以
-        // data是指数据，把对应这个变量的数据写进去就可以了
+        calculable: true,
         series: [
           {
-            name: 'Evaporation',
-            type: 'bar',
+            name: "知识点分值",
+            type: "radar",
+            lineStyle: {
+              type: "dashed",
+            },
+            symbol: "circle", // 拐点的样式
+            symbolSize: 10,
             data: [
-              2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3
-            ]
+              {
+                value: [90, 154, 76, 29, 5, 39, 37, 15, 20, 23],
+                name: "2020年全国统一高考数学试卷（文科）（新课标i)"
+              },
+              {
+                value: [113, 155, 101, 15, 44, 39, 39, 32, 32, 10],
+                name: "2020年全国统一高考数学试卷（文科）（新课标ii)"
+              },
+              {
+                value: [118, 143, 99, 20, 37, 27, 17, 42, 20, 15],
+                name: "2020年全国统一高考数学试卷（文科）（新课标iii)"
+              },
+              {
+                value: [115, 143, 84, 15, 39, 44, 25, 37, 20, 0],
+                name: "2020年全国统一高考数学试卷（理科）（新课标i)"
+              },
+            ],
           },
-          {
-            name: 'Precipitation',
-            type: 'bar',
-            yAxisIndex: 1,
-            data: [
-              2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3
-            ]
-          },
-          {
-            name: 'Temperature',
-            type: 'line',
-            yAxisIndex: 2,
-            data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
-          }
-        ]
+        ],
       };
-      Chart.setOption(options)
-      //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-      window.addEventListener('resize', function() {Chart.resize()});
-    }
+      Home_Radar.setOption(option);
+    },
+    // 检索知识点
+    Search_KU() {
+      this.$router.push({
+        name: "Knowledge Unit",
+        params: { name: this.Home_Ku, knowledgeSystem: "neea" }
+      });
+    },
+    // 跳转至新页面
+    Route_Trans(route){
+      document.body.scrollTo(0, 0)
+      this.$router.push({ path: route });
+    },
+    // 注册和登录相关
+    login_show() {
+      this.$refs.login.show();
+      this.$refs.register.hide();
+    },
+    register_show() {
+      this.$refs.login.hide();
+      this.$refs.register.show();
+    },
   },
 }
 </script>
-<style >
+<style lang="scss" scoped>
+.Multi_Analyse_Radar_Chart{
+  display: inline-block;
+  width: 500px;
+  height: 500px;
+}
+.Multi_Analyse_Rader_Left{
+  width: 668px;
+  padding-top: 40px;
+  padding-right: 50px;
+  display: inline-block;
+  height: 500px;
+}
 
+.Combine_Paper_Area_Right{
+  display: inline-block;
+  width: 500px;
+  height: 500px;
+  padding-top: 80px;
+}
+.Combine_Paper_Area_Left{
+  width: 668px;
+  padding-top: 40px;
+  padding-right: 50px;
+  display: inline-block;
+  height: 500px;
+}
+
+.Area_Row{
+  width: 1344px;
+  padding: 0 88px;
+}
+
+.All_Button{
+  width: 134px;
+  height: 48px;
+  line-height: 48px;
+  font-size: 14px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px 0px rgba($color: #000, $alpha: 0.12);
+  border: 1px solid #d3d3d3
+}
+
+.Start_Analysis_Button{
+  color: black;
+  background: white;
+  cursor: pointer;
+}
+
+.Dot{
+  border-radius: 50%; 
+  height: 7px; 
+  width: 7px; 
+  background: black; 
+  margin-top: 10px; 
+  margin-right: 20px;
+  margin-left: 10px;
+}
+
+.Part_Title{
+  font-family: Sarasa Gothic SC;
+  font-size: 44px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 53px;
+  letter-spacing: 0em;
+  text-align: center;
+
+}
+
+.Resource_Manager_Left{
+  width: 568px;
+  padding-top: 230px;
+  padding-left: 40px;
+  display: inline-block;
+}
+
+.Resource_Manager_Right{
+  width: 600px;
+  padding-top: 170px;
+  padding-left: 50px;
+  display: inline-block;
+}
+
+.KU_Search_Left{
+  width: 568px;
+  padding-top: 180px;
+  padding-left: 40px;
+  display: inline-block;
+}
+
+.KU_Search_Right{
+  width: 600px;
+  padding-top: 230px;
+  padding-left: 50px;
+  display: inline-block;
+}
+
+.Resource_Manager_Float_Block_Question{
+  width: 224px;
+  height: 92px;
+  background: white;
+  margin-right: 20px;
+}
+
+.Combine_Paper_Area_Div{
+  width: 224px;
+  height: 60px;
+  line-height: 60px;
+  margin-top: 40px;
+  background: white;
+  display: block;
+}
+
+.Resource_Manager_Float_Block_Subject{
+  width: 148px;
+  height: 92px;
+  background: white;
+}
+
+.Resource_Manager_Float_Block_Paper{
+  width: 200px;
+  height: 92px;
+  background: white;
+  margin-right: 20px;
+}
+
+.Resource_Manager_Float_Block_Period{
+  width: 265px;
+  height: 92px;
+  background: white;
+}
+
+.Resource_Manager_Float_Block{
+  box-shadow: 0px 4px 8px 0px rgba($color: #000, $alpha: 0.12);
+  display: inline-block;
+  border: 1px solid #d3d3d3;
+  padding: 12px;
+  border-radius: 16px;
+}
+
+.Home_Area_Left{
+  display: inline-block;
+  width: 618px;
+  height: 700px;
+  padding-top: 170px;
+}
+
+.Home_Area_Right{
+  display: inline-block;
+  width: 550px;
+  height: 700px;
+}
 </style>

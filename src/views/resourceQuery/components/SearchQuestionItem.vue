@@ -47,6 +47,9 @@
                     align="right" 
                     class="Detail_Line_Infos">
                     <span class="Extra_Info_Item">
+                        地区：{{Question.area}}
+                    </span>
+                    <span class="Extra_Info_Item">
                         真题情况：{{Question.pastpaper}}
                     </span>
                     <span class="Extra_Info_Item">

@@ -355,9 +355,6 @@ export default {
             this.KU_Data_Per[index2].push(this.Chart_Data.num_per[index].Knowledge[index2]);
           }
       }
-      console.log(this.Question_Data_Per);
-
-
       this.Redraw_Bar();
     }
   }
