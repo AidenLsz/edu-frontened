@@ -381,7 +381,28 @@ export default {
         ],
       };
       Home_Radar.setOption(option);
-    }
+    },
+    // 检索知识点
+    Search_KU() {
+      this.$router.push({
+        name: "Knowledge Unit",
+        params: { name: this.Home_Ku, knowledgeSystem: "neea" }
+      });
+    },
+    // 跳转至新页面
+    Route_Trans(route){
+      document.body.scrollTo(0, 0)
+      this.$router.push({ path: route });
+    },
+    // 注册和登录相关
+    login_show() {
+      this.$refs.login.show();
+      this.$refs.register.hide();
+    },
+    register_show() {
+      this.$refs.login.hide();
+      this.$refs.register.show();
+    },
   },
 }
 </script>
