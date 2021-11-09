@@ -506,7 +506,9 @@
     </el-header> -->
     <!-- <basic-header/> -->
     <el-main>
-      <div id="header-sticky" class="sticky-menu" style="height: 80px;">
+      <div id="header-sticky" :class="{
+        'sticky-menu': true,
+        'Little_Shadow': Get_Current_Path()}" style="height: 80px;">
         <el-row class="NavBarArea Normal_Navbar" type="flex" justify="center">
           <el-col :span="4" style="padding-top: 20px;">
             <el-row type="flex" justify="start">
@@ -839,6 +841,13 @@ export default {
     }
   },
   methods: {
+    Get_Current_Path(){
+      if(this.$route.path == '/'){
+        return false
+      }else{
+        return true
+      }
+    },
     // 打开过窄时的导航栏
     Open_Narrow_Navbar_Drawer(){
       this.Narrow_Navbar_Drawer = true;
@@ -1133,6 +1142,11 @@ export default {
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   margin-top: 0px;
+}
+
+.Little_Shadow{
+  border-bottom: 1px solid rgba(196, 196, 196, 0.4);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.06);
 }
 
 /* scrollUp */
