@@ -320,10 +320,17 @@ export default {
         let param={}
 
         let database = [];
-        for(let i = 0 ; i < this.filterRecord.database.length; i++){
-            if(this.filterRecord.database[i]){
-                database.push(this.databaseAim[i+1].name)
-            }
+
+        if(this.filterRecord.database.indexOf(true) != -1){
+          for(let i = 0 ; i < this.filterRecord.database.length; i++){
+              if(this.filterRecord.database[i]){
+                  database.push(this.databaseAim[i+1].name)
+              }
+          }
+        }else{
+          for(let i = 0 ; i < this.filterRecord.database.length; i++){
+            database.push(this.databaseAim[i+1].name)
+          }
         }
 
         let type = [];
@@ -365,7 +372,7 @@ export default {
     // 获取用户所具有的题库权限
     initDatabaseList(){
         this.filterRecord.database = [true]
-        for(let i = 1; i < this.databaseAim.length - 1; i++){
+        for(let i = 2; i < this.databaseAim.length; i++){
           this.filterRecord.database.push(false)
         }
     },
@@ -407,7 +414,7 @@ export default {
                     return "filterButtonUnfocus"
                 }
             }else{
-                if(this.filterRecord.database[index-1]){
+                if(this.filterRecord.database[index - 1]){
                     return "filterButtonFocus"
                 }else{
                     return "filterButtonUnfocus"
@@ -484,7 +491,7 @@ export default {
     // 更新数据库选择情况
     database_Change(databaseIndex){
         if(databaseIndex > 0){
-            this.filterRecord.database.splice(databaseIndex - 1, 1, !this.filterRecord.database[databaseIndex-1])
+            this.filterRecord.database.splice(databaseIndex - 1, 1, !this.filterRecord.database[databaseIndex - 1])
         }else{
             let l = this.filterRecord.database.length;
             if(this.filterRecord.database.indexOf(false) == -1){

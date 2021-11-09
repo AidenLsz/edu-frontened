@@ -350,15 +350,15 @@ export default {
         }
 
         if(this.filterRecord.database.indexOf(true) != -1){
-            for(let i = 1; i < this.filterRecord.database.length; i++){
-                if(this.filterRecord.database[i]){
-                    data.database.push(this.databaseAim[i-1].name)
-                }
-            }
+          for(let i = 0 ; i < this.filterRecord.database.length; i++){
+              if(this.filterRecord.database[i]){
+                  data.database.push(this.databaseAim[i+1].name)
+              }
+          }
         }else{
-            for(let i = 1; i < this.databaseAim.length; i++){
-                data.database.push(this.databaseAim[i].name)
-            }
+          for(let i = 0 ; i < this.filterRecord.database.length; i++){
+            data.database.push(this.databaseAim[i+1].name)
+          }
         }
 
         for(let i = 0; i < this.KnowledgeUnitLevelList.length; i++){
@@ -559,7 +559,7 @@ export default {
     // 获取用户所具有的题库权限
     initDatabaseList(){
         this.filterRecord.database = [true]
-        for(let i = 1; i < this.databaseAim.length; i++){
+        for(let i = 1; i < this.databaseAim.length - 1; i++){
           this.filterRecord.database.push(false)
         }
     },

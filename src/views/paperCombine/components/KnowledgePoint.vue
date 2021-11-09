@@ -421,11 +421,17 @@ export default {
       let param={}
 
       let database = [];
-      for(let i = 0 ; i < this.filterRecord.database.length; i++){
-          if(this.filterRecord.database[i]){
-              database.push(this.databaseAim[i+1].name)
+      if(this.filterRecord.database.indexOf(true) != -1){
+          for(let i = 0 ; i < this.filterRecord.database.length; i++){
+              if(this.filterRecord.database[i]){
+                  database.push(this.databaseAim[i+1].name)
+              }
           }
-      }
+        }else{
+          for(let i = 0 ; i < this.filterRecord.database.length; i++){
+            database.push(this.databaseAim[i+1].name)
+          }
+        }
 
       let type = [];
       for(let i = 0 ; i < this.filterRecord.type.length; i++){
@@ -463,8 +469,6 @@ export default {
         })
 
         param.data=data
-
-        console.log(param)
 
         commonAjax(this.backendIP+'/api/search', param)
         .then((data)=>{

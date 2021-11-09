@@ -571,17 +571,23 @@ export default {
       this.Paper_Ques_List = [];
 
       let param={}
-      var database_list = [];
+      var database = [];
+      if(this.filterRecord.database.indexOf(true) != -1){
         for(let i = 0 ; i < this.filterRecord.database.length; i++){
             if(this.filterRecord.database[i]){
-                database_list.push(this.databaseAim[i+1].name)
+                database.push(this.databaseAim[i+1].name)
             }
         }
+      }else{
+        for(let i = 0 ; i < this.filterRecord.database.length; i++){
+          database.push(this.databaseAim[i+1].name)
+        }
+      }
 
       var data = JSON.stringify({
         "content": this.content,
         "size": 5,
-        "database": database_list,
+        "database": database,
         "page_count": this.Page_Index,
         "subject": [this.Subject],
         "period": [this.Period]
