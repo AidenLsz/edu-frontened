@@ -350,9 +350,9 @@ export default {
         }
 
         if(this.filterRecord.database.indexOf(true) != -1){
-            for(let i = 0; i < this.filterRecord.database.length; i++){
+            for(let i = 1; i < this.filterRecord.database.length; i++){
                 if(this.filterRecord.database[i]){
-                    data.database.push(this.databaseAim[i+1].name)
+                    data.database.push(this.databaseAim[i-1].name)
                 }
             }
         }else{
@@ -539,23 +539,16 @@ export default {
     },
       // 点击节点后的方法
       handleCheckChange(data, checked) {
-
-        if(checked && this.KnowledgeUnitIDList.indexOf(data.label) == -1){
+        if(checked){
+          this.KnowledgeUnitList.push(data.label)
           this.KnowledgeUnitIDList.push(data.id)
-        }else if(!checked &&  this.KnowledgeUnitIDList.indexOf(data.label) != -1){
-          this.KnowledgeUnitIDList.splice(this.KnowledgeUnitIDList.indexOf(data.label), 1)
+          this.KnowledgeUnitLevelList.push(data.level)
+        }else if(!checked && this.KnowledgeUnitIDList.indexOf(data.id) != -1){
+          this.KnowledgeUnitList.splice(this.KnowledgeUnitIDList.indexOf(data.id), 1);
+          this.KnowledgeUnitIDList.splice(this.KnowledgeUnitIDList.indexOf(data.id), 1);
+          this.KnowledgeUnitLevelList.splice(this.KnowledgeUnitIDList.indexOf(data.id), 1);
+          this.$refs.tree.setCheckedKeys(this.KnowledgeUnitIDList);
         }
-
-        this.$refs.tree.setCheckedKeys(this.KnowledgeUnitIDList)
-
-        let Items = this.$refs.tree.getCheckedNodes()
-        this.KnowledgeUnitList = [];
-        this.KnowledgeUnitLevelList = []
-        for(let i = 0; i < Items.length; i++){
-            this.KnowledgeUnitList.push(Items[i].label)
-            this.KnowledgeUnitLevelList.push(Items[i].level)
-        }
-
       },
       // 知识点过滤
       // 这里是输入过滤用的方法
