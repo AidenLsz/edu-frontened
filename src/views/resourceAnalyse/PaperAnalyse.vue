@@ -1644,14 +1644,14 @@ export default {
                     "knowledge_list": kl,
                     "select": "多选",
                     "filter": "并集"
-                }
+                },
+                "semantic": 0
             })
 
             Param.data=data
 
             commonAjax(this.backendIP+'/api/search', Param)
             .then((data)=>{
-                console.log(data.results)
                 this.Replace_Question_List = data.results
                 this.Question_Loading = false;
                 

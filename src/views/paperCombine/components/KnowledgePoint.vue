@@ -465,7 +465,8 @@ export default {
             "knowledge_list": kl,
             "select": this.KnowledgeSelectType,
             "filter": this.KnowledgeFilterType
-          }
+          },
+          "semantic": 0
         })
 
         param.data=data

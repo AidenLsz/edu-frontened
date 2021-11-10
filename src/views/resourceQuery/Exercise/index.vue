@@ -1057,8 +1057,10 @@ export default {
                 "period": this.Chosen_Options.Period,
                 "type": this.Chosen_Options.Type,
                 "difficulty": Difficulty,
-                "semantic": this.Chosen_Options.Semantic == '精准匹配' ? 0 : 1
+                "semantic": this.Chosen_Options.Semantic == "精确匹配" ? 0 : 1
             }) 
+
+            console.log(Data)
 
             Param.data = Data
 

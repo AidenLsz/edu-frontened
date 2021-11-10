@@ -1288,7 +1288,8 @@ export default {
           "subject": [this.Subject],
           "period": [this.Period],
           "difficulty": [0.0, 1.0],
-          "type": type
+          "type": type,
+          "semantic": 0
         })
 
         // param.append("data", data);

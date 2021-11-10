@@ -348,7 +348,8 @@ export default {
           "subject": [this.Subject],
           "period": [this.Period],
           "difficulty": this.filterRecord.difficulty,
-          "type": type
+          "type": type,
+          "semantic": 0
         })
 
         // param.append("data", data);
