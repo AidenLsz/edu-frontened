@@ -1060,8 +1060,6 @@ export default {
                 "semantic": this.Chosen_Options.Semantic == "精确匹配" ? 0 : 1
             }) 
 
-            console.log(Data)
-
             Param.data = Data
 
             commonAjax(this.backendIP+'/api/search', Param)
