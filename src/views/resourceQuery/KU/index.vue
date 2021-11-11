@@ -51,6 +51,17 @@
           </el-button>
         </el-col>
     </el-row>
+    <!-- 相关搜索 -->
+    <div class="ConnectSearch" v-if="similar_nodes.length">
+      <span>相关搜索</span>
+      <el-row type="flex" v-model="similar_nodes" v-for="_row in 2" :key="_row">
+        <el-col :span="4" v-for="_rol in 5" :key="_rol" >
+          <el-button size="medium" type="info" plain >
+            {{getSimilarNodesElement(_row, _rol)}}
+          </el-button>
+        </el-col>          
+      </el-row>        
+    </div>
 
     <el-row class="panel-body" v-loading="loading" style="" v-if="FullChange">
       <div class="tab panel-btn" id="openBtn" @click="openPanel()">
@@ -193,6 +204,7 @@ export default {
       node: {},
       neighbors_groups: {},
       neighbors_hierarchy : [],
+      similar_nodes: [],
       sour: "rjb_new",
       sourceLabel: ["百科", "人教版"],
       checkList: ["前驱后继", "共同学习", "层级结构"],
@@ -267,6 +279,9 @@ export default {
     }
   },
   methods: {
+    getSimilarNodesElement(val1, val2){
+      return this.similar_nodes[(val1-1)*5 + val2 - 1];
+    },
     openInstructionDialog(){
       this.$refs.instruction.openDialog();
     },
@@ -397,24 +412,36 @@ export default {
               duration: 5 * 1000
             })
           } else {
-            this.openPanel();
-            this.initFullScreen();
-            this.data=data.data
-            this.handleSwitchTabs()
-            this.drawGraph()
-            this.loading = false;
+            if (data.data.similar_nodes.length === 0){
+              this.openPanel();
+              this.initFullScreen();
+              this.data=data.data
+              this.similar_nodes = data.data.similar_nodes
+              this.handleSwitchTabs()
+              this.drawGraph()
+              this.loading = false;
+            }else {
+              Message({
+                message: '查询不到该知识点',
+                type: 'error',
+                duration: 2000
+              })
+              this.similar_nodes = data.data.similar_nodes
+              this.loading = false;
+            }
           }
           if(sessionStorage.getItem("KUFromPaperAnalyse")){
             sessionStorage.removeItem("KUFromPaperAnalyse")
           }
         })
         .catch(()=>{
-          this.loading = false;
           Message({
             message: '查询不到该知识点',
             type: 'error',
             duration: 5 * 1000
           })
+
+          this.loading = false;
         });
     },
     drawPresuc(){
