@@ -926,9 +926,8 @@ export default {
         ).then((res)=>{
             let data=res.ig_name;
             for (var i = 0; i < data.length; i++) {
-                this.DatabaseAim.push({name: data[i], nick: data[i]})
+                this.DatabaseAim.push({name:data[i], nick: "个人题库" + (data.length > 1 ? (i+1) + "" : "")})
             }
-            this.DatabaseAim[2].nick = "个人题库"
         })
     },
     // 获取知识树

@@ -498,9 +498,8 @@ export default {
         ).then((res)=>{
             let data=res.ig_name;
             for (var i = 0; i < data.length; i++) {
-                this.Database_List.push({name: data[i], nick: data[i]})
+                this.Database_List.push({name:data[i], nick: "个人题库" + (data.length > 1 ? (i+1) + "" : "")})
             }
-            this.Database_List[2].nick = "个人题库";
             this.Refresh_Flag = !this.Refresh_Flag;
             this.loading = false
         })

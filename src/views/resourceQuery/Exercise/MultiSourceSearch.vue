@@ -772,24 +772,24 @@ export default {
                 if(this.Chosen_Options.Database.indexOf(Item) == -1){
                     if(Index > 0 && Index < this.All_Options.Database.length - 1){
                         if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) == -1){
-                            BORDER_RIGHT = "0.5px solid #ccc"
+                            BORDER_RIGHT = "1px solid #ccc"
                         }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) != -1){
                             BORDER_RIGHT = "none"
                         }
                         if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) == -1){
-                            BORDER_LEFT = "0.5px solid #ccc"
+                            BORDER_LEFT = "none"
                         }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) != -1){
                             BORDER_LEFT = "none"
                         }
                     }else if(Index == 0){
                         if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) == -1){
-                            BORDER_RIGHT = "0.5px solid #ccc"
+                            BORDER_RIGHT = "1px solid #ccc"
                         }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) != -1){
                             BORDER_RIGHT = "none"
                         }
                     }else if(Index == this.All_Options.Database.length - 1){
                         if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) == -1){
-                            BORDER_LEFT = "0.5px solid #ccc"
+                            BORDER_LEFT = "none"
                         }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) != -1){
                             BORDER_LEFT = "none"
                         }
@@ -811,13 +811,13 @@ export default {
                             if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) == -1){
                                 BORDER_RIGHT = "1px solid #409EFF"
                             }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) != -1){
-                                BORDER_RIGHT = "0.5px solid #409EFF"
+                                BORDER_RIGHT = "1px solid #409EFF"
                             }
                         }else if(Index == this.All_Options.Database.length - 1){
                             if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) == -1){
                                 BORDER_LEFT = "1px solid #409EFF"
                             }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) != -1){
-                                BORDER_LEFT = "0.5px solid #409EFF"
+                                BORDER_LEFT = "none"
                             }
                         }
                     }
@@ -896,7 +896,7 @@ export default {
             ).then((res)=>{
                 let data=res.ig_name;
                 for (var i = 0; i < data.length; i++) {
-                    this.All_Options.Database.push({name:data[i], nick: data[i]})
+                    this.All_Options.Database.push({name:data[i], nick: "个人题库" + (data.length > 1 ? (i+1) + "" : "")})
                 }
             })
         },
