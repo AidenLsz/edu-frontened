@@ -216,12 +216,10 @@
         <div
           style="
             min-height: 100vh;
-            padding: 20px 2vw 20px 2vw;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12),
-              0 0 6px rgba(0, 0, 0, 0.04);
-            border-radius: 4px;
-            border: 3px solid #409eff;
-            background-color: #ffffff;
+            padding: 44px 40px 40px 40px;
+            box-shadow: 0px 6px 28px rgba(0, 0, 0, 0.12);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
           "
         >
           <div style="min-height: 90vh">
