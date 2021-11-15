@@ -421,7 +421,7 @@
       </div>
     </el-header>
     <!-- <basic-header/> -->
-    <el-main>
+    <el-main style="overflow: auto">
       <div style="min-height: 100vh">
         <router-view :key="$route.fullPath"></router-view>
       </div>
