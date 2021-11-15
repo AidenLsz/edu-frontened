@@ -171,17 +171,18 @@
           <el-row>
             <el-col>
               <el-row type="flex" justify="start" class="Part_Title">
-                <span>LUNA智能教辅平台</span>
+                <span>智能教辅平台</span>
               </el-row>
               <el-row 
                 type="flex" 
-                justify="start" 
-                style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
+                justify="start"
+                class="Home_Area_Left_Center" 
+                style="word-break: break-all; text-align: left; font-size: 20px; height: 64px; line-height: 32px; color: #595959">
                 深层次、多维度分析处理海量教育资源，智能化、个性化资源管理、组织、查询、分析服务
               </el-row>
-              <el-row type="flex" justify="start" style="margin-top: 60px;">
-                <div class="All_Button Start_Analysis_Button" @click="register_show">
-                  立即加入<i class="el-icon-right" style="margin-left: 10px;"></i>
+              <el-row type="flex" justify="start">
+                <div class="All_Button Start_Analysis_Button" @click="register_show" style="color: white; background: #3E89E0">
+                  现在加入
                 </div>
                 <!-- <div class="All_Button Start_Analysis_Button" @click="Route_Trans('user/userInfo')" v-else>
                   我的信息<i class="el-icon-right" style="margin-left: 10px;"></i>
@@ -190,41 +191,41 @@
             </el-col>
           </el-row>
         </div>
-        <div class="Home_Area_Right">
-          <el-row type="flex" justify="center" style="margin: 0; padding: 0; padding-top: 130px">
-            <div style="width: 250px; margin-right: 15px; height: 300px;">
-              <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question">
-                <div style="display: inline-block; width: 64px;">
-                  <img src="@/assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -13px;">
+        <div class="Home_Area_Right" align="center">
+          <el-row type="flex" justify="center" style="margin: 0; padding: 0;">
+            <div style="width: 250px; margin-right: 12px; height: 300px;" align="right">
+              <div class="Home_Area_Right_Block">
+                <div style="display: inline-block; width: 48px;">
+                  <img src="@/assets/dataIcon1.png" style="margin-top: -8px" width="48px" height="48px">
                 </div>
-                <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
-                  <span style="font-size: 22px">教学资源</span>
+                <div class="Home_Area_Right_Text">
+                  <span style="font-size: 22px; display: block; margin-top: 8px">教学资源</span>
                 </div>
               </div>
-              <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question" style="margin-top: 30px;">
-                <div style="display: inline-block; width: 64px;">
-                  <img src="@/assets/dataIcon2.png" width="64px" height="64px" style="margin-top: -13px;">
+              <div class=" Home_Area_Right_Block" style="margin-top: 12px;">
+                <div style="display: inline-block; width: 48px;">
+                  <img src="@/assets/dataIcon2.png" width="48px" height="48px" style="margin-top: -8px">
                 </div>
-                <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
-                  <span style="font-size: 22px">组卷系统</span>
+                <div class="Home_Area_Right_Text">
+                  <span style="font-size: 22px; display: block; margin-top: 8px">组卷系统</span>
                 </div>
               </div>
             </div>
-            <div style="width: 250px; height: 300px;">
-              <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question" style="margin-top: 30px;">
-                <div style="display: inline-block; width: 64px;">
-                  <img src="@/assets/SearchIcon.svg" width="48px" height="48px" style="margin-top: -8px; margin-left: 8px">
+            <div style="width: 250px; height: 300px;" align="left">
+              <div class="Home_Area_Right_Block" style="margin-top: 10px;">
+                <div style="display: inline-block; width: 48px;">
+                  <img src="@/assets/SearchIcon.svg" width="48px" height="48px" style="margin-top: -8px">
                 </div>
-                <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
-                  <span style="font-size: 22px;">智能分析</span>
+                <div class="Home_Area_Right_Text">
+                  <span style="font-size: 22px; display: block; margin-top: 8px">智能分析</span>
                 </div>
               </div>
-              <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Question" style="margin-top: 30px;">
-                <div style="display: inline-block; width: 64px;">
-                  <img src="@/assets/dataIcon3.png" width="64px" height="64px" style="margin-top: -13px;">
+              <div class="Home_Area_Right_Block" style="margin-top: 12px;">
+                <div style="display: inline-block; width: 48px;">
+                  <img src="@/assets/dataIcon3.png" width="48px" height="48px" style="margin-top: -8px">
                 </div>
-                <div style="display: inline-block; width: 110px; margin-left: 15px; padding-top: 20px;">
-                  <span style="font-size: 22px">知识检索</span>
+                <div class="Home_Area_Right_Text">
+                  <span style="font-size: 22px; display: block; margin-top: 8px">知识检索</span>
                 </div>
               </div>
             </div>
@@ -232,7 +233,7 @@
         </div>
       </el-row>
     </div>
-    <!-- 资源录入 -->
+    <!-- 资源检索 -->
     <div style="width: 100%; background: #F8F9FA;" align="center">
       <el-row class="Area_Row" style="height: 700px;" type="flex" justify="center">
         <div class="Resource_Manager_Left" align="left">
@@ -241,7 +242,7 @@
               <div style="display: inline-block; width: 64px;">
                 <img src="@/assets/dataIcon1.png" width="64px" height="64px" style="margin-top: -32px;">
               </div>
-              <div style="display: inline-block; width: 110px; margin-left: 15px">
+              <div style="display: inline-block; width: 110px; margin-left: 16px">
                 <span style="font-size: 28px">2500万+</span><br>道试题
               </div>
             </div>
@@ -249,7 +250,7 @@
               <div style="display: inline-block; width: 64px;">
                 <img src="@/assets/SubjectIcon.png" width="64px" height="64px" style="margin-top: -32px;">
               </div>
-              <div style="display: inline-block; width: 40px; margin-left: 15px">
+              <div style="display: inline-block; width: 37px; margin-left: 12px">
                 <span style="font-size: 28px">9</span>大学科
               </div>
             </div>
@@ -259,16 +260,16 @@
               <div style="display: inline-block; width: 64px;">
                 <img src="@/assets/dataIcon2.png" width="64px" height="64px" style="margin-top: -32px;">
               </div>
-              <div style="display: inline-block; width: 95px; margin-left: 15px">
+              <div style="display: inline-block; width: 95px; margin-left: 16px">
                 <span style="font-size: 28px">33万+</span><br>套试卷
               </div>
             </div>
             <div class="Resource_Manager_Float_Block Resource_Manager_Float_Block_Period">
               <div style="display: inline-block; width: 64px;">
-                <img src="@/assets/PeriodIcon.png" width="64px" height="64px" style="margin-top: -32px;">
+                <img src="@/assets/PeriodIcon.png" width="64px" height="64px" style="margin-top: -40px;">
               </div>
-              <div style="display: inline-block; width: 150px; margin-left: 15px" align="center">
-                <span style="font-size: 28px">小学至成人</span><br>多学段覆盖
+              <div style="display: inline-block; width: 150px; margin-left: 16px" align="center">
+                <span style="font-size: 28px">小学~成人</span><br>多学段覆盖
               </div>
             </div>
           </el-row>
@@ -279,27 +280,26 @@
               <el-row type="flex" justify="start" class="Part_Title">
                 <span>海量教学资源、智能处理</span>
               </el-row>
-              <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 18px;">
+              <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 20px;">
                 <div class="Dot"></div>智能化、个性化的资源（试题、试卷）的录入、查询和管理服务
               </el-row>
-              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
                 <div class="Dot"></div>内置标准化、体系化的教学资源
               </el-row>
-              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
+              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
                 <div class="Dot"></div>使用高效准确的试题相似度评估算法，提升题库的资源质量
               </el-row>
               <el-row type="flex" justify="start" style="margin-top: 80px;">
-                <div 
-                  class="All_Button Start_Analysis_Button" 
-                  style="background: white"
-                  @click="Route_Trans('/exercise')">
-                  试题检索<i class="el-icon-right" style="margin-left: 10px;"></i>
+                <div>
+                  <el-input v-model="Exercise_Content" placeholder="试题检索">
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                  </el-input>
                 </div>
                 <div 
                   class="All_Button Start_Analysis_Button" 
-                  style="background: white; margin-left: 30px;"
-                  @click="Route_Trans('/searchPaper')">
-                  试卷检索<i class="el-icon-right" style="margin-left: 10px;"></i>
+                  style="background: white; margin-left: 16px; width: 120px; padding-left: 16px"
+                  @click="Route_Trans('/exercise')">
+                  试题检索<i class="el-icon-right" style="margin-left: 4px;"></i>
                 </div>
               </el-row>
             </el-col>
@@ -308,7 +308,7 @@
       </el-row>
     </div>
     <!-- 多层次，多维度智能分析 -->
-    <div style="width: 100%;" align="center">
+    <div style="width: 100%; height: 700px" align="center">
       <el-row class="Area_Row" style="padding-top: 100px; padding-bottom: 100px;">
         <div class="Multi_Analyse_Rader_Left">
           <el-row>
@@ -319,20 +319,20 @@
               <el-row 
                 type="flex" 
                 justify="start" 
-                style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
+                style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 20px; height: 84px; line-height: 28px; color: #595959">
                 使用人工智能和数据挖掘技术对试题和试卷，在各个层次、多个维度上分析，如各题型占比、关键词比较、知识点分值和难度变化
               </el-row>
-              <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 20px;">
+              <el-row type="flex" justify="start" style="margin-top: 28px; margin-bottom: 10px; font-size: 20px;">
                 <div class="Dot"></div>试题质量、难度分析
               </el-row>
-              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+              <el-row type="flex" justify="start" style="margin-top: 16px; margin-bottom: 10px; font-size: 20px;">
                 <div class="Dot"></div>试题、试卷知识点分析
               </el-row>
-              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+              <el-row type="flex" justify="start" style="margin-top: 16px; margin-bottom: 10px; font-size: 20px;">
                 <div class="Dot"></div>试卷综合分析
               </el-row>
               <el-row type="flex" justify="start" style="margin-top: 60px;">
-                <div class="All_Button Start_Analysis_Button" @click="Analyse_Switch_Dialog = true">
+                <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Analyse_Switch_Dialog = true">
                   开始分析<i class="el-icon-right" style="margin-left: 10px;"></i>
                 </div>
               </el-row>
@@ -348,13 +348,22 @@
     <div style="width: 100%; background: #F8F9FA;" align="center">
       <el-row class="Area_Row" style="height: 700px;" type="flex" justify="center">
         <div class="KU_Search_Left" align="center">
-          <img src="@/assets/ITAS_Home_KU.png" width="500">
-          <el-input 
-            v-model="Home_Ku" 
-            @keydown.enter.native="Search_KU"
-            placeholder="请输入知识点" 
-            prefix-icon="el-icon-search"
-            style="width: 350px; margin-top: 40px;"></el-input>
+          <div>
+            <img src="@/assets/ITAS_Home_KU.png" width="417" >
+          </div>
+          <div style="width: 400px; margin-top: 32px; margin-bottom: 32px" align="center">
+            <el-col>
+              <el-row type="flex" justify="start">
+                <el-button 
+                  type="text" 
+                  style="color: black; font-weight: bold; font-size: 20px"
+                  @click="Search_KU('三角函数')">三角函数<i class="el-icon-right" style="margin-left: 10px;"></i></el-button>
+              </el-row>
+              <el-row type="flex" justify="start" style="word-break: break-all; text-align: left; margin-top: 16px;">
+                三角函数是基本初等函数之一，是以角度（数学上最常用弧度制，下同）为自变量，角度对应任意角终边与单位圆交点坐标或其比值为因变量的函数。也可以等价地用与单位圆有关的各种线段的长度来定义三角函数在研究三角形和圆等几何形状的性质时有重要作用...
+              </el-row>
+            </el-col>
+          </div>
         </div>
         <div class="KU_Search_Right">
           <el-row>
@@ -371,6 +380,14 @@
               <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
                 <div class="Dot"></div>前驱后继、共同学习和层级关系三种知识关系展示
               </el-row>
+              <el-row type="flex" justify="start">
+                <el-input 
+                  v-model="Home_Ku" 
+                  @keydown.enter.native="Search_KU"
+                  placeholder="知识点搜索" 
+                  prefix-icon="el-icon-search"
+                  style="width: 300px; margin-top: 44px;"></el-input>
+              </el-row>
             </el-col>
           </el-row>
         </div>
@@ -378,7 +395,7 @@
     </div>
     <!-- 组卷系统介绍 -->
     <div style="width: 100%;" align="center">
-      <el-row class="Area_Row" style="padding-top: 100px; padding-bottom: 100px;">
+      <el-row class="Area_Row" style="height: 700px">
         <div class="Combine_Paper_Area_Left">
           <el-row>
             <el-col>
@@ -388,23 +405,23 @@
               <el-row 
                 type="flex" 
                 justify="start" 
-                style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
+                style="word-break: break-all; text-align: left; margin-top: 24px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
                 智能组卷系统提供丰富的搜题、选题方式，试卷和答题卡编辑、预览与下载功能
               </el-row>
-              <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 20px;">
+              <el-row type="flex" justify="start" style="margin-top: 24px; margin-bottom: 10px; font-size: 20px;">
                 <div class="Dot"></div>关键词搜题
               </el-row>
-              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+              <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
                 <div class="Dot"></div>知识点搜题
               </el-row>
-              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+              <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
                 <div class="Dot"></div>以题搜题
               </el-row>
-              <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
+              <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
                 <div class="Dot"></div>试卷搜题
               </el-row>
-              <el-row type="flex" justify="start" style="margin-top: 60px;">
-                <div class="All_Button Start_Analysis_Button" @click="Route_Trans('/paperCombine')">
+              <el-row type="flex" justify="start" style="margin-top: 44px;">
+                <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Route_Trans('/paperCombine')">
                   开始体验<i class="el-icon-right" style="margin-left: 10px;"></i>
                 </div>
               </el-row>
@@ -413,7 +430,7 @@
         </div>
         <div class="Combine_Paper_Area_Right">
           <el-col>
-            <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(-2deg); display: block; padding: 0">
+            <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(-2deg); display: block; padding: 0;">
               <span style="font-size: 22px">多样化搜题、选题</span>
             </div>
             <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(2deg); display: block; padding: 0">
@@ -445,6 +462,8 @@ export default {
     return {
       // 知识点
       Home_Ku: "",
+      // 试题检索
+      Exercise_Content: "",
       // 分析资源跳转对话框
       Analyse_Switch_Dialog: false,
       // 试题、试卷
@@ -497,7 +516,7 @@ export default {
           show: true,
           orient: "vertical", 
           right: 0,
-          bottom: 60,
+          bottom: 30,
           itemHeight: 6, //修改icon图形大小
           itemWidth: 10,
           textStyle: {
@@ -535,7 +554,7 @@ export default {
                 fontWeight: "bold",
               },
             },
-            radius: 150,
+            radius: 120,
             indicator: [
               {text: "排列组合与概率统计"},
               {text: "代数"},
@@ -584,16 +603,20 @@ export default {
       Home_Radar.setOption(option);
     },
     // 检索知识点
-    Search_KU() {
+    Search_KU(KnowledgeUnit = "") {
+      console.log(KnowledgeUnit)
       this.$router.push({
         name: "Knowledge Unit",
-        params: { name: this.Home_Ku, knowledgeSystem: "neea" }
+        params: { name: KnowledgeUnit != "" ? KnowledgeUnit : this.Home_Ku, knowledgeSystem: "neea" }
       });
     },
     // 跳转至新页面
     Route_Trans(route){
       document.body.scrollTo(0, 0)
       this.$router.push({ path: '/itas' + route });
+      if(route == '/exercise'){      
+        sessionStorage.setItem("ITAS_Content", this.Exercise_Content)
+      }
     },
     // 注册和登录相关
     login_show() {
@@ -611,43 +634,45 @@ export default {
 <style lang="scss" scoped>
 .Multi_Analyse_Radar_Chart{
   display: inline-block;
-  width: 500px;
-  height: 500px;
+  width: 630px;
+  height: 405px;
+  margin: auto 0;
+  background: rgba(254, 254, 254, 0.8);
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
 }
 .Multi_Analyse_Rader_Left{
-  width: 668px;
-  padding-top: 40px;
-  padding-right: 50px;
+  width: 562px;
+  padding-right: 48px;
   display: inline-block;
-  height: 500px;
 }
 
 .Combine_Paper_Area_Right{
   display: inline-block;
-  width: 500px;
-  height: 500px;
-  padding-top: 80px;
+  width: 624px;
+  height: 700px;
+  padding-top: 180px;
 }
 .Combine_Paper_Area_Left{
-  width: 668px;
-  padding-top: 40px;
-  padding-right: 50px;
+  padding-top: 135px;
+  height: 700px;
+  width: 568px;
   display: inline-block;
-  height: 500px;
 }
 
 .Area_Row{
-  width: 1344px;
-  padding: 0 88px;
+  width: 1192px;
+  padding: 0 0px;
 }
 
 .All_Button{
-  width: 134px;
+  width: 160px;
   height: 48px;
-  line-height: 48px;
-  font-size: 14px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px 0px rgba($color: #000, $alpha: 0.12);
+  padding: 13px 18px;
+  line-height: 22px;
+  font-size: 16px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px 0px rgba($color: #000, $alpha: 0.12);
 }
 
 .Start_Analysis_Button{
@@ -675,49 +700,59 @@ export default {
 }
 
 .Part_Title{
-  font-family: Sarasa Gothic SC;
+  font-family: PingFang SC;
   font-size: 44px;
   font-style: normal;
   font-weight: 600;
-  line-height: 53px;
+  line-height: 60px;
   letter-spacing: 0em;
   text-align: center;
 
 }
 
 .Resource_Manager_Left{
-  width: 568px;
-  padding-top: 230px;
-  padding-left: 40px;
+  width: 558px;
+  padding-top: 241px;
   display: inline-block;
 }
 
 .Resource_Manager_Right{
-  width: 600px;
-  padding-top: 170px;
-  padding-left: 50px;
+  width: 634px;
+  padding-top: 199px;
   display: inline-block;
+}
+
+.Resource_Manager_Right ::v-deep .el-input__inner{
+    border-radius: 10px;
+    width: 300px;
+    height: 48px;
+    border: 1px solid rgba($color: #000, $alpha: 0.14);
+    box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.02);
 }
 
 .KU_Search_Left{
-  width: 568px;
-  padding-top: 180px;
-  padding-left: 40px;
+  width: 465px;
+  height: 500px;
+  margin-top: 100px;
+  padding: 24px;
   display: inline-block;
+  background: rgba(254, 254, 254, 0.8);
+  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.04);
+  border-radius: 10px;
 }
 
 .KU_Search_Right{
-  width: 600px;
-  padding-top: 230px;
-  padding-left: 50px;
+  width: 667px;
+  padding-top: 200px;
+  margin-left: 60px;
   display: inline-block;
 }
 
 .Resource_Manager_Float_Block_Question{
-  width: 224px;
-  height: 92px;
+  width: 249px;
+  height: 99px;
   background: white;
-  margin-right: 20px;
+  margin-right: 16px;
 }
 
 .Combine_Paper_Area_Div{
@@ -730,43 +765,67 @@ export default {
 }
 
 .Resource_Manager_Float_Block_Subject{
-  width: 148px;
-  height: 92px;
+  width: 149px;
+  height: 99px;
   background: white;
 }
 
 .Resource_Manager_Float_Block_Paper{
-  width: 200px;
-  height: 92px;
+  width: 212px;
+  height: 99px;
   background: white;
-  margin-right: 20px;
+  margin-right: 16px;
 }
 
 .Resource_Manager_Float_Block_Period{
   width: 265px;
-  height: 92px;
+  height: 99px;
   background: white;
 }
 
 .Resource_Manager_Float_Block{
-  box-shadow: 0px 4px 8px 0px rgba($color: #000, $alpha: 0.12);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
   display: inline-block;
   border: 1px solid #d3d3d3;
-  padding: 12px;
+  padding: 16px;
   border-radius: 16px;
 }
 
 .Home_Area_Left{
   display: inline-block;
   width: 618px;
-  height: 700px;
-  padding-top: 170px;
+  height: 740px;
+  padding-top: 180px;
+}
+
+.Home_Area_Left_Center{
+  margin-top: 20px;
+  margin-bottom: 56px;
 }
 
 .Home_Area_Right{
   display: inline-block;
-  padding-top: 60px;
-  width: 550px;
-  height: 700px;
+  padding-top: 230px;
+  width: 522px;
+  height: 740px;
+}
+
+.Home_Area_Right_Block{
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  display: inline-block;
+  border: 1px solid #d3d3d3;
+  padding: 12px;
+  border-radius: 16px;
+  width: 180px;
+  height: 72px;
+  background: white;
+}
+
+.Home_Area_Right_Text{
+  display: inline-block; 
+  width: 90px; 
+  height: 31px; 
+  line-height: 31px; 
+  margin-left: 12px;
 }
 </style>

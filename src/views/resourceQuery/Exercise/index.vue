@@ -580,6 +580,13 @@ export default {
     ImgSearchArea.addEventListener('dragleave', this.onDragOut, true);
     ImgSearchArea.addEventListener('drop', this.onDrop, true);
     window.addEventListener('paste', this.Paste_Function)
+    setTimeout(()=>{
+        if (sessionStorage.getItem("ITAS_Content")) {
+            this.Search_Content = sessionStorage.getItem("ITAS_Content");
+            sessionStorage.removeItem("ITAS_Content")
+            this.Search_Do()
+        }
+    }, 100)
   },
   updated() {
 
