@@ -52,16 +52,16 @@
         </el-col>
     </el-row>
     <!-- 相关搜索 -->
-    <div class="ConnectSearch" v-if="similar_nodes.length">
-      <span>相关搜索</span>
+    <el-row class="ConnectSearch" v-if="similar_nodes.length" style="">
+      <el-row style="margin-left: -1330px;font-size: 14px;">相关搜索</el-row>
       <el-row type="flex" v-model="similar_nodes" v-for="_row in 2" :key="_row">
         <el-col :span="4" v-for="_rol in 5" :key="_rol" >
-          <el-button size="medium" type="info" plain >
+          <el-button class="info-btn" size="medium" type="info" plain >
             {{getSimilarNodesElement(_row, _rol)}}
           </el-button>
         </el-col>          
       </el-row>        
-    </div>
+    </el-row>
 
     <el-row class="panel-body" v-loading="loading" style="" v-if="FullChange">
       <div class="tab panel-btn" id="openBtn" @click="openPanel()">
@@ -738,8 +738,18 @@ export default {
   margin-top: 15px;
   margin-left: 20px;
 }
-
+::v-deep .info-btn{
+  // background-color: red;
+  width: 200px;
+  text-align: left;
+}
 .panel-body{
+  position:relative;
+  padding-top: 5vh;
+  margin-left: 5vw;
+  margin-right: 5vw;
+}
+.ConnectSearch{
   position:relative;
   padding-top: 5vh;
   margin-left: 5vw;
