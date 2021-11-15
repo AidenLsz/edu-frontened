@@ -18,47 +18,30 @@
             v-loading="File_Uploading"
             element-loading-text="加载中，请等待..."
             element-loading-spinner="el-icon-loading">
-          <el-row
+          <!-- <el-row
             v-if="Paper_Content.length!=0"
             style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer;position:relative">
-              <div style="position:absolute;top:25px;right:30px;z-index:2003">
-                <el-button
-                    class="copy-btn"
-                    @click="copy($event,-1)"
-                    data-clipboard-text="llllll"
-                    >
-                    <div class="">
-                      <i class="el-icon-copy-document"></i>复制
-                    </div>
-                </el-button>
-                <el-button
-                    class="search-btn"
-                    @click="search(-1)">
-                    <div class="">
-                      <i class="el-icon-search"></i>搜索
-                    </div>
-                </el-button>
-              </div>
-          </el-row>
+          </el-row> -->
           <el-row
             v-for="(Item, Item_Index) in Paper_Content"
             :key="'Line_' + Item_Index">
+            <div v-if="Item == 'DIVIDER_LINES'" class="btns">
+              <el-button
+                  class="copy-btn"
+                  @click="copy($event,Item_Index)">
+                  <i class="el-icon-copy-document"></i>复制
+              </el-button>
+              <el-button
+                  class="search-btn"
+                  @click="search(Item_Index)">
+                  <i class="el-icon-search"></i>搜索
+              </el-button>
+            </div>
               <el-col style="padding-right:30px;">
                 <el-row
                   v-if="Item == 'DIVIDER_LINES'"
                   style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer;position:relative">
-                  <div style="position:absolute;top:25px;right:0px;z-index:2003">
-                    <el-button
-                        class="copy-btn"
-                        @click="copy($event,Item_Index)">
-                        <i class="el-icon-copy-document"></i>复制
-                    </el-button>
-                    <el-button
-                        class="search-btn"
-                        @click="search(Item_Index)">
-                        <i class="el-icon-search"></i>搜索
-                    </el-button>
-                  </div>
+                  <!-- style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer;position:relative"> -->
                   <el-col>
                     <el-row
                       @click.native="Delete_Divider(Item_Index)"
@@ -66,6 +49,7 @@
                       @mouseleave.native="Paper_Divider_Index = -1"
                       :style="'border-top: 2px dashed ' + (Paper_Divider_Index == Item_Index ? 'red' : '#ccc') + '; width: 100%;'"></el-row>
                   </el-col>
+                  <!-- <div style="position:absolute;top:25px;right:0px;z-index:2003"> -->
                 </el-row>
                 <el-row :id ="'Item_'+Item_Index" v-if="Item != 'DIVIDER_LINES'&& Item.para_type == '0'" :style="Item.para_style">
                   <span
@@ -104,6 +88,18 @@
                   </el-col>
                 </el-row>
               </el-col>
+              <div v-if="Item_Index == Paper_Content.length-1" class="btns">
+                <el-button
+                    class="copy-btn"
+                    @click="copy($event,Paper_Content.length)">
+                    <i class="el-icon-copy-document"></i>复制
+                </el-button>
+                <el-button
+                    class="search-btn"
+                    @click="search(Paper_Content.length)">
+                    <i class="el-icon-search"></i>搜索
+                </el-button>
+              </div>
           </el-row>
         </div>
       <div ref="searchQues" id="searchQues"></div>
@@ -207,7 +203,7 @@ export default {
       const clipboard = new Clipboard(e.target, { text: () => this.Get_Content_By_Id(text).join(' ')})
       clipboard.on('success', () => {
         this.$message({
-          message: '复制qustion_ID成功',
+          message: '复制成功',
           type: 'success'
         });
         // 释放内存
@@ -228,10 +224,18 @@ export default {
     Get_Content_By_Id(Item_Index){
       let Reg_C = new RegExp('&#xa0;', 'g')
       let ItemContent=[]
-      for (var i = Item_Index+1; i < this.Paper_Content.length; i++) {
+      let start = 0, end = Item_Index
+      for (let i = end-1; i > 0; i--) {
         if (this.Paper_Content[i]=='DIVIDER_LINES') {
+          start = i;
           break;
         }
+      }
+
+      for (let i = start; i < end; i++) {
+        // if (this.Paper_Content[i]=='DIVIDER_LINES') {
+        //   break;
+        // }
         // 0 代表文字和图片内容
         // 1 代表试卷中的表格内容（不太清楚要怎么办，但总之应该是这么返回才对……吧？）
         if(this.Paper_Content[i].para_type == '0'){
@@ -255,6 +259,7 @@ export default {
           ItemContent.push(this.Table_Img_Get(this.Paper_Content[i].table_raw_html))
         }
       }
+      console.log(ItemContent);
       return ItemContent
     },
     search(Item_Index){
@@ -296,8 +301,9 @@ export default {
   display: flex;
   width:100%;
   padding:55px 37px;
-  height: 77vh;
+  height: 80vh;
   flex-flow: column;
+  overflow-x: hidden;
   overflow-y: scroll;
   border-radius: 15px;
 }
@@ -305,12 +311,10 @@ export default {
   position: fixed;
   overflow: visible;
   top: 134px;
-  // background: rgba(248,251, 255, .9);
   background: rgba(255, 255, 255, 0.95);
   width: 792px;
   height: 80vh;
   left: -100%;
-  // z-index: 2001;
   opacity:0;
 }
 .panel-btn{
@@ -373,5 +377,10 @@ export default {
   background-color: #fff;
   color: #082135;
   border: 1px solid rgba(0, 0, 0, 0.14)
+}
+.btns{
+  // float:right;
+  text-align:right;
+  margin:8px 22px 0px;
 }
 </style>
