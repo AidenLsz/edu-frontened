@@ -34,6 +34,9 @@
             :close-on-click-modal="false">
             <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="Search_Content"></ComplexInput>
         </el-dialog>
+        <instruction
+            ref="instruction"
+        />
         <!-- 按照设计稿写一个超巨大圆当背景用
         <el-row
             ref="Background_Round_Position"
@@ -135,7 +138,7 @@
                 </el-row>
 
             </el-dialog>
-        <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
+        <el-row type="flex" justify="center" style="padding-top: 110px" class="Main_Background">
             <el-col>
                 <!-- 面包屑行 -->
                 <el-row
@@ -149,6 +152,9 @@
                         </el-breadcrumb-item>
                         <el-breadcrumb-item>
                             试题查重
+                            <span @click="openInstructionDialog" style="cursor:pointer;">
+                                <i class="el-icon-question"></i>
+                            </span>
                         </el-breadcrumb-item>
                     </el-breadcrumb>
 
@@ -445,12 +451,13 @@ import SearchFileItem from '@/views/resourceQuery/components/SearchFileItem'
 import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
 import ComplexInput from '@/common/components/ComplexInput'
 import CutFile from '@/views/resourceQuery/Exercise/components/CutFile'
-
+import Instruction from '@/views/resourceQuery/components/InstructionMultiSourceSearch.vue'
 
 export default {
   name: "",
   components:{
-      SearchQuestionItem, QuestionAnalyse, ComplexInput, CutFile, SearchFileItem
+      SearchQuestionItem, QuestionAnalyse, ComplexInput, 
+      CutFile, SearchFileItem, Instruction
   },
   data() {
     return {
@@ -592,6 +599,10 @@ export default {
       
   },
   methods: {
+      // 介绍对话框打开
+      openInstructionDialog(){
+            this.$refs.instruction.openDialog();
+        },
       //试卷切分完成
       File_Cut_End(){
           this.Waiting_Param = false;
