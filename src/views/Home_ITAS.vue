@@ -171,7 +171,7 @@
           <div class="Home_Area_Left">
             <el-row>
               <el-col>
-                <el-row type="flex" justify="start" class="Part_Title">
+                <el-row type="flex" justify="start" class="Part_Title" style="font-size: 58px;">
                   <span>智能教辅平台</span>
                 </el-row>
                 <el-row 
@@ -452,14 +452,14 @@
       <div style="width: 100%; height: 700px" align="center" id="Border_Div">
         <el-row class="Area_Row" type="flex" justify="center">
           <div class="Home_Area_Left">
-            <el-row type="flex" justify="start" class="Part_Title">
+            <el-row type="flex" justify="start" class="Part_Title" style="font-size: 58px; height: 81px; line-height: 81px;">
               <span>智能教辅平台</span>
             </el-row>
             <el-row 
               type="flex" 
               justify="start"
               class="Home_Area_Left_Center" 
-              style="word-break: break-all; text-align: left; font-size: 20px; line-height: 32px; color: #595959">
+              style="word-break: break-all; text-align: left; font-size: 20px; line-height: 32px; color: #595959; margin-top: 20px;">
               深层次、多维度分析处理海量教育资源，智能化、个性化资源管理、组织、查询、分析服务
             </el-row>
             <el-row type="flex" justify="start" style="margin: 0; padding: 0;">
