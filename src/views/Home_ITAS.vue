@@ -291,16 +291,22 @@
                   <div class="Dot"></div>使用高效准确的试题相似度评估算法，提升题库的资源质量
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 80px;">
-                  <div>
+                  <!-- <div>
                     <el-input v-model="Exercise_Content" placeholder="试题检索">
                       <i slot="prefix" class="el-input__icon el-icon-search"></i> 
                     </el-input>
+                  </div> -->
+                  <div 
+                    class="All_Button Start_Analysis_Button" 
+                    style="background: white; width: 120px; padding-left: 16px"
+                    @click="Route_Trans('/exercise')">
+                    试题检索<i class="el-icon-right" style="margin-left: 4px;"></i>
                   </div>
                   <div 
                     class="All_Button Start_Analysis_Button" 
                     style="background: white; margin-left: 16px; width: 120px; padding-left: 16px"
-                    @click="Route_Trans('/exercise')">
-                    试题检索<i class="el-icon-right" style="margin-left: 4px;"></i>
+                    @click="Route_Trans('/searchPaper')">
+                    试卷检索<i class="el-icon-right" style="margin-left: 4px;"></i>
                   </div>
                 </el-row>
               </el-col>
@@ -458,7 +464,7 @@
               type="flex" 
               justify="start"
               class="Home_Area_Left_Center" 
-              style="word-break: break-all; text-align: left; font-size: 20px; height: 64px; line-height: 32px; color: #595959">
+              style="word-break: break-all; text-align: left; font-size: 20px; line-height: 32px; color: #595959">
               深层次、多维度分析处理海量教育资源，智能化、个性化资源管理、组织、查询、分析服务
             </el-row>
             <el-row type="flex" justify="start" style="margin: 0; padding: 0;">
@@ -561,16 +567,22 @@
               </div>
             </el-row>
             <el-row type="flex" justify="start" style="margin-top: 44px;">
-              <div>
+              <!-- <div>
                 <el-input v-model="Exercise_Content" placeholder="试题检索">
                   <i slot="prefix" class="el-input__icon el-icon-search"></i> 
                 </el-input>
+              </div> -->
+              <div 
+                class="All_Button Start_Analysis_Button" 
+                style="background: white; width: 120px; padding-left: 16px"
+                @click="Route_Trans('/exercise')">
+                试题检索<i class="el-icon-right" style="margin-left: 4px;"></i>
               </div>
               <div 
                 class="All_Button Start_Analysis_Button" 
                 style="background: white; margin-left: 16px; width: 120px; padding-left: 16px"
-                @click="Route_Trans('/exercise')">
-                试题检索<i class="el-icon-right" style="margin-left: 4px;"></i>
+                @click="Route_Trans('/searchPaper')">
+                试卷检索<i class="el-icon-right" style="margin-left: 4px;"></i>
               </div>
             </el-row>
           </div>
@@ -982,9 +994,6 @@ export default {
     Route_Trans(route){
       document.body.scrollTo(0, 0)
       this.$router.push({ path: '/itas' + route });
-      if(route == '/exercise'){      
-        sessionStorage.setItem("ITAS_Content", this.Exercise_Content)
-      }
     },
     // 注册和登录相关
     login_show() {
@@ -1013,8 +1022,9 @@ export default {
 .Multi_Analyse_Radar_Chart_Narrow{
   display: inline-block;
   width: 100%;
-  height: 340px;
+  height: 388px;
   margin: auto 0;
+  padding: 24px;
   background: rgba(254, 254, 254, 0.8);
   box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.08);
   border-radius: 10px;
@@ -1257,7 +1267,7 @@ export default {
     width: 100%;
     padding: 44px;
     height: 740px;
-    padding-top: 180px;
+    padding-top: 120px;
   }
 
   .Home_Area_Left_Center{
@@ -1312,6 +1322,7 @@ export default {
     background: #F8F9FA;
     width: 100%;
     height: 450px;
+    margin-top: 44px;
     padding: 32px;
     display: inline-block;
     background: rgba(254, 254, 254, 0.8);
