@@ -860,6 +860,7 @@ export default {
         ],
       };
       Home_Radar.setOption(option);
+      window.addEventListener('resize', function() {Home_Radar.resize()});
     },
     // 初始化首页的那张雷达图
     Init_Home_Page_Radar_Narrow(){
@@ -968,6 +969,7 @@ export default {
         ],
       };
       Home_Radar.setOption(option);
+      window.addEventListener('resize', function() {Home_Radar.resize()});
     },
     // 检索知识点
     Search_KU(KnowledgeUnit = "") {
@@ -1052,7 +1054,7 @@ export default {
   line-height: 22px;
   font-size: 16px;
   border-radius: 8px;
-  box-shadow: 0px 2px 4px 0px rgba($color: #000, $alpha: 0.12);
+  box-shadow: 0px 2px 4px 0px rgba($color: #000, $alpha: 0.08);
 }
 
 .Start_Analysis_Button{
@@ -1144,7 +1146,7 @@ export default {
   padding: 24px;
   display: inline-block;
   background: rgba(254, 254, 254, 0.8);
-  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.08);
   border-radius: 10px;
 }
 
@@ -1313,7 +1315,7 @@ export default {
     padding: 32px;
     display: inline-block;
     background: rgba(254, 254, 254, 0.8);
-    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.04);
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.08);
     border-radius: 10px;
   }
 }
