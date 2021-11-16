@@ -290,21 +290,16 @@
                 <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 20px;">
                   <div class="Dot"></div>使用高效准确的试题相似度评估算法，提升题库的资源质量
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 80px;">
-                  <!-- <div>
-                    <el-input v-model="Exercise_Content" placeholder="试题检索">
-                      <i slot="prefix" class="el-input__icon el-icon-search"></i> 
-                    </el-input>
-                  </div> -->
+                <el-row type="flex" justify="start" style="margin-top: 44px;">
                   <div 
                     class="All_Button Start_Analysis_Button" 
-                    style="background: white; width: 120px; padding-left: 16px"
+                    style="background: white; width: 144px; padding-left: 16px"
                     @click="Route_Trans('/exercise')">
                     试题检索<i class="el-icon-right" style="margin-left: 4px;"></i>
                   </div>
                   <div 
                     class="All_Button Start_Analysis_Button" 
-                    style="background: white; margin-left: 16px; width: 120px; padding-left: 16px"
+                    style="background: white; margin-left: 16px; width: 144px; padding-left: 16px"
                     @click="Route_Trans('/searchPaper')">
                     试卷检索<i class="el-icon-right" style="margin-left: 4px;"></i>
                   </div>
@@ -338,7 +333,7 @@
                 <el-row type="flex" justify="start" style="margin-top: 16px; margin-bottom: 10px; font-size: 20px;">
                   <div class="Dot"></div>试卷综合分析
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 60px;">
+                <el-row type="flex" justify="start" style="margin-top: 44px;">
                   <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Analyse_Switch_Dialog = true">
                     开始分析<i class="el-icon-right" style="margin-left: 10px;"></i>
                   </div>
@@ -574,13 +569,13 @@
               </div> -->
               <div 
                 class="All_Button Start_Analysis_Button" 
-                style="background: white; width: 120px; padding-left: 16px"
+                style="background: white; width: 144px; padding-left: 16px"
                 @click="Route_Trans('/exercise')">
                 试题检索<i class="el-icon-right" style="margin-left: 4px;"></i>
               </div>
               <div 
                 class="All_Button Start_Analysis_Button" 
-                style="background: white; margin-left: 16px; width: 120px; padding-left: 16px"
+                style="background: white; margin-left: 16px; width: 144px; padding-left: 16px"
                 @click="Route_Trans('/searchPaper')">
                 试卷检索<i class="el-icon-right" style="margin-left: 4px;"></i>
               </div>
