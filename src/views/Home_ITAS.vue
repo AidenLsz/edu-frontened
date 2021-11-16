@@ -226,7 +226,7 @@
                     <img src="@/assets/dataIcon3.png" width="48px" height="48px" style="margin-top: -8px">
                   </div>
                   <div class="Home_Area_Right_Text">
-                    <span style="font-size: 22px; display: block; margin-top: 8px">知识检索</span>
+                    <span style="font-size: 22px; display: block; margin-top: 8px">知识联想</span>
                   </div>
                 </div>
               </div>
@@ -270,7 +270,7 @@
                   <img src="@/assets/PeriodIcon.png" width="64px" height="64px" style="margin-top: -40px;">
                 </div>
                 <div style="display: inline-block; width: 150px; margin-left: 16px; font-size: 18px" align="center">
-                  <span style="font-size: 28px">小学~成人</span><br>多学段覆盖
+                  <span style="font-size: 28px">小学~成人</span><br>全学段覆盖
                 </div>
               </div>
             </el-row>
@@ -374,10 +374,10 @@
                   <span>知识点直观呈现</span>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 18px;">
-                  <div class="Dot"></div>智能且直观的知识点组织与呈现
+                  <div class="Dot"></div>知识点智能化组织与呈现
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
-                  <div class="Dot"></div>知识点检索与详细介绍
+                  <div class="Dot"></div>辅助学生梳理知识结构
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
                   <div class="Dot"></div>前驱后继、共同学习和层级关系三种知识关系展示
@@ -409,9 +409,12 @@
                   type="flex" 
                   justify="start" 
                   style="word-break: break-all; text-align: left; margin-top: 24px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
-                  智能组卷系统提供丰富的搜题、选题方式，试卷和答题卡编辑、预览与下载功能
+                  智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 24px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>智能组卷
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
                   <div class="Dot"></div>关键词搜题
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
@@ -419,9 +422,6 @@
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
                   <div class="Dot"></div>以题搜题
-                </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>试卷搜题
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 44px;">
                   <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Route_Trans('/paperCombine')">
@@ -440,7 +440,7 @@
                 <span style="font-size: 22px">试卷和答题卡生成</span>
               </div>
               <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(-2deg); display: block; padding: 0">
-                <span style="font-size: 22px">个性化试卷导出</span>
+                <span style="font-size: 22px">高质量自动化组卷</span>
               </div>
             </el-col>
           </div>
@@ -492,7 +492,7 @@
                   <img src="@/assets/dataIcon3.png" width="48px" height="48px" style="margin-top: -8px">
                 </div>
                 <div class="Home_Area_Right_Text">
-                  <span style="font-size: 22px; display: block; margin-top: 8px">知识检索</span>
+                  <span style="font-size: 22px; display: block; margin-top: 8px">知识联想</span>
                 </div>
               </div>
             </el-row>
@@ -557,7 +557,7 @@
                   <img src="@/assets/PeriodIcon.png" width="64px" height="64px" style="margin-top: -40px;">
                 </div>
                 <div style="display: inline-block; width: 150px; margin-left: 16px; font-size: 18px" align="center">
-                  <span style="font-size: 28px">小学~成人</span><br>多学段覆盖
+                  <span style="font-size: 28px">小学~成人</span><br>全学段覆盖
                 </div>
               </div>
             </el-row>
@@ -630,10 +630,10 @@
                   <span>知识点直观呈现</span>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 40px; margin-bottom: 10px; font-size: 18px;">
-                  <div class="Dot"></div>智能且直观的知识点组织与呈现
+                  <div class="Dot"></div>知识点智能化组织与呈现
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
-                  <div class="Dot"></div>知识点检索与详细介绍
+                  <div class="Dot"></div>辅助学生梳理知识结构
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 20px; margin-bottom: 10px; font-size: 18px;">
                   <div class="Dot"></div>前驱后继、共同学习和层级关系三种知识关系展示
@@ -683,9 +683,12 @@
                   type="flex" 
                   justify="start" 
                   style="word-break: break-all; text-align: left; margin-top: 24px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
-                  智能组卷系统提供丰富的搜题、选题方式，试卷和答题卡编辑、预览与下载功能
+                  智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 24px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>智能组卷
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
                   <div class="Dot"></div>关键词搜题
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
@@ -693,9 +696,6 @@
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
                   <div class="Dot"></div>以题搜题
-                </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>试卷搜题
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 44px;">
                   <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Route_Trans('/paperCombine')">
