@@ -46,6 +46,9 @@
         <el-button v-if="$store.getters.isLuna" round @click="changeCountButton('KU')" ref="countButtonKU" :class="Get_Count_Style('KU')">
           知识单元
         </el-button>
+        <el-button round @click="changeCountButton('Resources')" ref="countButtonResources" :class="Get_Count_Style('Resources')">
+          教辅教材
+        </el-button>
       </el-button-group>
     </el-row>
 
@@ -86,14 +89,17 @@ export default {
       Num_Paper: 0,
       Num_Question: 0,
       Num_KU: 0,
+      Num_Resources: 0,
 
       Paper_Data_Sub: [],
       Question_Data_Sub: [],
-      KU_Data_Sub: [],//修改的属性
+      KU_Data_Sub: [],
+      Resources_Data_Sub: [],
 
       Paper_Data_Per: [],
       Question_Data_Per: [],
-      KU_Data_Per: [],//新加入属性
+      KU_Data_Per: [],
+      Resources_Data_Per: [],
 
       Chart_Data: {},
       Count_Type: "Question",
@@ -253,6 +259,9 @@ export default {
         }else if(this.Count_Type == 'KU'){
           option.series[0].name = '知识单元'
           option.series[0].data = this.KU_Data_Sub
+        }else if(this.Count_Type == 'Resources'){
+          option.series[0].name = '教辅教材'
+          option.series[0].data = this.Resources_Data_Sub
         }
       }
 
@@ -272,6 +281,7 @@ export default {
            if(this.Count_Type == 'Question' )            option.series[ind].data = this.Question_Data_Per[ind];
            else if(this.Count_Type == 'Paper')           option.series[ind].data = this.Paper_Data_Per[ind];
            else if(this.Count_Type == 'KU')              option.series[ind].data = this.KU_Data_Per[ind];
+           else if(this.Count_Type == 'Resources')       option.series[ind].data = this.Resources_Data_Per[ind];
          }
          option.legend.data = storeName;
          option.series[ind] = {
@@ -290,6 +300,8 @@ export default {
           option.series[ind].data = this.Paper_Data_Sub
         else if(this.Count_Type == 'KU')
           option.series[ind].data = this.KU_Data_Sub
+        else if(this.Count_Type == 'Resources')
+          option.series[ind].data = this.Resources_Data_Sub
       }
       // console.log(option.series)
       BarChart.setOption(option);
@@ -327,32 +339,39 @@ export default {
       this.Paper_Data_Sub = [];
       this.Question_Data_Sub = [];
       this.KU_Data_Sub = [];
+      this.Resources_Data_Sub = [];
+
       this.Paper_Data_Per = [];
       this.Question_Data_Per = [];
       this.KU_Data_Per = [];
+      this.Resources_Data_Per = [];
 
       this.Chart_Data = data;
 
       this.Num_Paper = this.Chart_Data.num_paper;
       this.Num_Question = this.Chart_Data.num_question;
       this.Num_KU = this.Chart_Data.num_knowledge;
+      this.Num_Resources = this.Chart_Data.num_resources;  
       this.List = this.Chart_Data.list_per;
 
       for(var ind = 0; ind < this.Chart_Data.list_per.length; ind++){
           this.Paper_Data_Per[ind] = new Array();
           this.Question_Data_Per[ind] = new Array();
           this.KU_Data_Per[ind] = new Array();
+          this.Resources_Data_Per[ind] = new Array();  
       }
 
       for(var index = 0; index < this.Chart_Data.list_sub.length; index ++){
           this.Paper_Data_Sub.push(this.Chart_Data.num_sub[index].Paper);
           this.Question_Data_Sub.push(this.Chart_Data.num_sub[index].Question);
-          this.KU_Data_Sub.push(this.Chart_Data.num_sub[index].Knowledge);//后端PQK数据名已调整为大写！
+          this.KU_Data_Sub.push(this.Chart_Data.num_sub[index].Knowledge);
+          this.Resources_Data_Sub.push(this.Chart_Data.num_sub[index].Resources);
 
           for(var index2 = 0; index2 < this.Chart_Data.list_per.length; index2 ++){
             this.Paper_Data_Per[index2].push(this.Chart_Data.num_per[index].Paper[index2]);
             this.Question_Data_Per[index2].push(this.Chart_Data.num_per[index].Question[index2]);
             this.KU_Data_Per[index2].push(this.Chart_Data.num_per[index].Knowledge[index2]);
+            this.Resources_Data_Per[index2].push(this.Chart_Data.num_per[index].Resources[index2]);
           }
       }
       this.Redraw_Bar();
