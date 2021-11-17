@@ -86,7 +86,7 @@ export default {
   .pd-upload {
     position: relative;
     height: 100%;
-    box-shadow: rgb(0 0 0 / 10%) 0px 2px 12px 0px;
+    box-shadow: rgba(0, 0, 0, .1) 0px 2px 12px 0px;
 
     &__img {
       max-width: 80px;
