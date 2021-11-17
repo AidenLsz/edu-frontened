@@ -2,7 +2,7 @@
   <div class="ql-container">
     <el-row
         style="
-        margin-left: 5vw;
+        margin-left: 10vw;
         text-shadow: 2px 6px 10px rgba(67, 92, 130, 0.14);
       "
         justify="start"
