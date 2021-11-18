@@ -249,6 +249,7 @@ import {commonAjax} from '@/common/utils/ajax'
 import Mathdown from '@/common/components/Mathdown'
 
 import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
+import * as variable from '@/common/utils/variable'
 
 export default {
   name: 'KnowledgePoint',
@@ -650,8 +651,9 @@ export default {
                 }
             }
         }else if(type == "difficulty"){
+            let Difficulty_Key_Word = this.difficultyAim[index] 
             if(index > 0){
-                if(this.filterRecord.difficulty[0] == ((index - 1) * 0.2).toFixed(1) && (this.filterRecord.difficulty[1] == (index * 0.2).toFixed(1))){
+                if(this.filterRecord.difficulty[0] == variable.Difficulty[Difficulty_Key_Word].min && (this.filterRecord.difficulty[1] == variable.Difficulty[Difficulty_Key_Word].max)){
                     return "filterButtonFocus"
                 }else{
                     return "filterButtonUnfocus"
@@ -696,20 +698,27 @@ export default {
     },
     // 用按钮控制难度区间
     difficulty_Change(difficultyIndex){
+        let Difficulty_Key_Word = this.difficultyAim[difficultyIndex] 
         if(difficultyIndex > 0){
-            this.filterRecord.difficulty.splice(0, 2, parseFloat("0." + (difficultyIndex - 1) * 2), parseFloat(((difficultyIndex * 0.2).toFixed(1))))
+            this.filterRecord.difficulty.splice(0, 2, variable.Difficulty[Difficulty_Key_Word].min, variable.Difficulty[Difficulty_Key_Word].max)
         }else{
             this.filterRecord.difficulty.splice(0, 2, 0.0, 1.0)
         }
+        this.selfDiffGap = false;
     },
     // 获取难度手动输入按钮的样式
     selfDiffGapClass(){
+      let Difficulty_List = ['容易', '较易', '中等', '较难', '困难']
+      let Flag = false
+      for(let i = 0; i < 5; i++){
+        if(variable.Difficulty[Difficulty_List[i]].min == this.filterRecord.difficulty[0] && variable.Difficulty[Difficulty_List[i]].max == this.filterRecord.difficulty[1]){
+          Flag = true;
+          break
+        }
+      }
         if(this.filterRecord.difficulty[0] == 0.0 && this.filterRecord.difficulty[1] == 1.0){
             return "filterButtonUnfocus"
-        }else if(
-            this.Minus_Float(this.filterRecord.difficulty[0], this.filterRecord.difficulty[1]) == 0.2 &&
-            [0, 0.2, 0.4, 0.6, 0.8, 1.0].indexOf(this.filterRecord.difficulty[0]) != -1)
-        {
+        }else if(Flag){
             return "filterButtonUnfocus"
         }else{
             return "filterButtonFocus"

@@ -195,6 +195,67 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <el-dialog 
+      custom-class="None_Padding_Dialog"
+      :visible.sync="Compare_Paper_Dialog"
+      title="换一题"
+      width="1344px"
+      :modal-append-to-body="true"
+      :close-on-click-modal="false"
+      >
+      <DetailTable
+        @Add_To_Cart="Add_To_Compare_Cart"
+        ref="DetailTable"
+        :CompareMode="true"   
+        :Period.sync="Period" 
+        :Subject.sync="Subject" 
+        :Database_List.sync="Database_List"></DetailTable>
+        <el-divider v-if="Compare_Paper_Questions.length > 0"></el-divider>
+        <el-row type="flex" justify="center" v-if="Compare_Paper_Questions.length > 0">
+          <label>为您类比推荐以下试题：</label>
+        </el-row>
+        <!-- 遍历大题 -->
+        <div 
+          v-for="(Question_List_Item, Index) in Compare_Paper_Questions" 
+          :key="'Compare_Item_' + Index" 
+          class="Compare_Bundle"
+          :id="'Compare_Item_' + Index">
+            <el-row type="flex" justify="start" class="Compare_Bundle_Type">
+              {{Question_List_Item.type}}
+            </el-row>
+            <!-- 每道题内容显示的部分 -->
+            <el-row 
+              v-for="(Question, IndexIn) in Question_List_Item.list" 
+              :key="'Compare_Item_' + Index + '_' + IndexIn"
+              type="flex" justify="center"
+              >
+              <!-- 把这些部分垂直排列 -->
+              <el-col>
+                <el-row 
+                  type="flex" 
+                  justify="start" 
+                  style="margin-bottom: 5px;">
+                  <Mathdown 
+                    :content="'(' + Question.score + '分) '+ (IndexIn + 1) + '. $ $ '+ Question.stem" 
+                    :name="'Compare_Question_Stem_' + Index + '_' + IndexIn"></Mathdown>
+                </el-row>
+                <el-row 
+                  v-for="(Option, OptionIndex) in Question.options" 
+                  :key="'Q_O_' + Index + '_' + IndexIn + '_' + OptionIndex"
+                  style="margin-bottom: 2px;">
+                  <Mathdown 
+                    style="width: 50%"
+                    :content="Get_Option_Index(OptionIndex) + ': $ $ ' + Option"
+                    :name="'Compare_Q_O_' + Index + '_' + IndexIn + '_' + OptionIndex"></Mathdown>
+                </el-row>
+              </el-col>
+            </el-row>
+        </div>
+        <el-row type="flex" justify="center" v-if="Compare_Paper_Questions.length > 0">
+          <el-button type="primary" style="margin-right: 30px" @click="Get_Another_Paper()"><i class="el-icon-refresh"></i>再换一组</el-button>
+          <el-button type="success" @click="Use_This_Compare_Paper()"><i class="el-icon-check"></i>使用此卷</el-button>
+        </el-row>
+    </el-dialog>
       <el-row>
         <el-col :span="5">
           <!-- 设置区块 -->
@@ -267,8 +328,16 @@
                 <el-col :span="12">
                   <el-row type="flex" justify="center">
                     <el-button type="text" style="font-size: 14px; color: grey" @click.native="Check_Answer_Card()">
-                      <i class="el-icon-s-data"></i>
+                      <i class="el-icon-s-claim"></i>
                       <span>查看答题卡</span>
+                    </el-button>
+                  </el-row>
+                </el-col>
+                <el-col :span="12">
+                  <el-row type="flex" justify="center">
+                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Auto_Compare_Combine_Paper()">
+                      <i class="el-icon-s-opportunity"></i>
+                      <span>类比组卷</span>
                     </el-button>
                   </el-row>
                 </el-col>
@@ -370,7 +439,7 @@
                           </el-col>
                         </el-row>
                         <el-row type="flex" justify="center">
-                          <el-button type="primary" size="medium" @click="submit(Index, (Row_Index - 1) * 6 + Col_Index - 1)"><i class="el-icon-refresh" style="margin-right: 15px;"></i>换一题</el-button>
+                          <el-button type="primary" size="medium" @click="replace_with_another_question(Index, (Row_Index - 1) * 6 + Col_Index - 1)"><i class="el-icon-refresh" style="margin-right: 15px;"></i>换一题</el-button>
                         </el-row>
                         <el-row 
                           slot="reference"
@@ -721,7 +790,7 @@
                             <el-button 
                               type="text" 
                               size="medium" 
-                              @click="submit(Index, IndexIn)"
+                              @click="replace_with_another_question(Index, IndexIn)"
                               style="height: 30px; line-height: 30px; margin-right: 10px; padding: 0px"><i class="el-icon-refresh" style="margin-right: 15px;"></i>换一题</el-button>
                         </el-row>
                     </el-col>
@@ -737,7 +806,11 @@
 <script>
 
 import Mathdown from '@/common/components/Mathdown'
+import DetailTable from '@/views/paperCombine/components/DetailTable'
 import {commonAjax} from '@/common/utils/ajax'
+
+import * as variable from '@/common/utils/variable'
+
 export default {
   name: 'StartCombine',
   props: {
@@ -757,7 +830,7 @@ export default {
     }
   },
   components: {
-    Mathdown
+    Mathdown, DetailTable
   },
   data() {
     return {
@@ -827,7 +900,13 @@ export default {
       // 用来监控替换结果的监听器
       Replacing_Interval: "",
       // 替换后刷新一下页面
-      refresh: false
+      refresh: false,
+      // 记录一下双向细目表，用于类比组卷
+      Detail_Table: [],
+      // 类比组卷的对话框
+      Compare_Paper_Dialog: false,
+      // 拿来模拟成卷的样子，展示类比出来的题目列表
+      Compare_Paper_Questions: [],
     }
   },
   watch:{
@@ -849,6 +928,53 @@ export default {
     this.Init_Database_List();
   },
   methods: {
+    // 再换一组
+    Get_Another_Paper(){
+      this.Compare_Paper_Questions = [];
+      this.$refs.DetailTable.Use_Table_Info();
+    },
+    // 完成替换
+    Use_This_Compare_Paper(){
+      this.$confirm("将使用这份类比组卷的结果替换当前全部题目的内容，确定要继续吗？", "提示", {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        .then(() => {
+          this.$emit("Clear_Cart", true)
+          for(let i = 0; i < this.Compare_Paper_Questions.length; i++){
+            for(let j = 0; j < this.Compare_Paper_Questions[j].list.length; j++){
+              this.$emit("Add_To_Cart", JSON.stringify(this.Compare_Paper_Questions[i].list[j]));
+            }
+          }
+        })
+        .finally(() => {
+          this.Compare_Paper_Questions = []
+          sessionStorage.removeItem("Compare_Table_Info")
+          this.Compare_Paper_Dialog = false;
+        })
+    },
+    // 类比组卷结果检索
+    Add_To_Compare_Cart(val){
+      let Item = JSON.parse(val)
+      let Flag = false;
+      for(let i = 0; i < this.Compare_Paper_Questions.length; i++){
+        if(this.Compare_Paper_Questions[i].type == Item.type){
+          this.Compare_Paper_Questions[i].list.push(Item)
+          Flag = true
+          break
+        }
+      }
+      if(Flag == false){
+        this.Compare_Paper_Questions.push({
+          type: Item.type,
+          list: [Item]
+        })
+      }
+      setTimeout(()=>{
+          document.getElementById('Compare_Item_0').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      }, 100)
+    },
     // 打开答题卡页面
     Check_Answer_Card(){
       sessionStorage.setItem("CombinePaper_AnswerCard", JSON.stringify(this.Question_List));
@@ -1029,6 +1155,254 @@ export default {
         this.waiting = false;
         this.waiting_text = ""
       })
+    },
+    // 开始导出用于分析报告的数据
+    Auto_Compare_Combine_Paper(){
+
+      this.waiting_text = "正在组织类比试卷，请稍后..."
+      this.waiting = true;
+
+      let Analyse_Paper_JSON = {
+        subject: this.Subject,
+        title: this.Setting_Info.title,
+        data: []
+      }
+
+      for(let i = 0; i < this.Question_List.length; i++){
+        let Bundle_Format = {
+          is_longques: 2,
+          desc: this.Question_List[i].type,
+          content: []
+        }
+        for(let j = 0; j < this.Question_List[i].list.length; j++){
+          let Question_Item = {
+            score: this.Question_List[i].list[j].score,
+            stem: this.Question_List[i].list[j].stem,
+            options: this.Question_List[i].list[j].options,
+            answer: this.Question_List[i].list[j].answer,
+            analysis: this.Question_List[i].list[j].analyse
+          }
+          Bundle_Format.content.push(Question_Item)
+        }
+        Analyse_Paper_JSON.data.push(Bundle_Format);
+      }
+
+      commonAjax(this.backendIP+'/api/combinePaperAnalyseReport',
+        {
+          Paper_Data: JSON.stringify(Analyse_Paper_JSON)
+        }
+      ).then((data)=>{
+        let Changing_Info = []
+        let Bundle_Item = {}
+        for(let Bundle_Index = 0; Bundle_Index < data.sub_question.length; Bundle_Index++){
+          let Info_Item = {
+            difficulty: 0,
+            knowledgePointInfos: {
+              ID: [],
+              Label: [],
+              Layer: []
+            },
+            update: false,
+            type: "",
+            sub_question: []
+          }
+          Bundle_Item = data.sub_question[Bundle_Index]
+          Info_Item.difficulty = Bundle_Item.difficulty_statistics.mean
+          Info_Item.type = this.Question_List[Bundle_Index].type
+          for(let Sub_Index = 0; Sub_Index < Bundle_Item.sub_question.length; Sub_Index++){
+            let Question = Bundle_Item.sub_question[Sub_Index]
+            let Question_Item = {
+              difficulty: Question.difficulty,
+              id: this.Question_List[Bundle_Index].list[Sub_Index].id,
+              stem: Question.stem,
+              options: Question.options,
+              answer: Question.answer,
+              analysis: Question.analysis,
+              score: Question.score,
+              update: false,
+              type: this.Question_List[Bundle_Index].type,
+              knowledgePointInfos: {
+                ID: [],
+                Label: [],
+                Layer: []
+              },
+            }
+            let KP_Layer = Question.knowledge_points_frontend.kp_layer
+            let KP_ID = ""
+            for(let Layer_0 = 0; Layer_0 < KP_Layer.length; Layer_0++){
+              KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].label, 0)
+              if(KP_ID != "" && Question_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+
+                Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].label)
+                Question_Item.knowledgePointInfos.Layer.push(0)
+
+                if(Info_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+                  Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].label)
+                  Info_Item.knowledgePointInfos.Layer.push(0)
+                  Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                }
+
+              }
+
+              for(let Layer_1 = 0; Layer_1 < KP_Layer[Layer_0].children.length; Layer_1++){
+                KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].children[Layer_1].label, 1)
+                if(KP_ID != "" && Question_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+
+                  Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].label)                 
+                  Question_Item.knowledgePointInfos.Layer.push(1)
+                  Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                  
+                  if(Info_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+                    Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].label)
+                    Info_Item.knowledgePointInfos.Layer.push(1)
+                    Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                  }
+
+                }
+                for(let Layer_2 = 0; Layer_2 < KP_Layer[Layer_0].children[Layer_1].children.length; Layer_2++){
+                  KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label, 2)
+                  if(KP_ID != "" && Question_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+
+                    Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label)              
+                    Question_Item.knowledgePointInfos.Layer.push(2)
+                    Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                    
+                    if(Info_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+                      Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label)
+                      Info_Item.knowledgePointInfos.Layer.push(2)
+                      Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                    }
+
+                  } 
+                }
+              }
+            }
+            Info_Item.sub_question.push(Question_Item)
+          }
+          Changing_Info.push(Info_Item)
+        }
+        this.Auto_Compare_Combine_Paper_Save_Table(Changing_Info)
+      })
+    },
+    // 具体处理知识点的部分
+    Search_KP(Info, Type){
+
+      let database = []
+
+      for(let i = 0; i < this.Database_List.length; i++){
+        database.push(this.Database_List[i].name)
+      }
+
+      let type = [Type];
+
+      let kl = [[0], [1], [2]];
+
+      for(let i = 0; i < Info.knowledgePointsIDs.length; i++){
+        kl[Info.knowledgePointsLevels[i]].push(Info.knowledgePoints[i])
+      }
+
+      for(let i = 2; i >= 0; i--){
+        if(kl[i].length == 1){
+          kl.splice(i, 1)
+        }
+      }
+
+      let knowledge_Dict = {}
+
+      if(kl.length > 0){
+        knowledge_Dict = {
+          "knowledge_list": kl,
+          "select_way": Info.select,
+          "filter_way": Info.filter
+        }
+      }
+
+      var data = {
+        "database": database,
+        "score": Info.score,
+        "subject": [this.Subject],
+        "period": [this.Period],
+        "difficulty": [Info.difficulty[0], Info.difficulty[1]],
+        "type": type,
+        "knowledge": knowledge_Dict
+      }
+
+      return data
+
+    },
+    // 等到数据整理完了之后，类比组卷的具体实现
+    Auto_Compare_Combine_Paper_Save_Table(Changing_Info){
+
+      let Table_Info = []
+      
+      for(let i = 0; i < Changing_Info.length; i++){
+        let Bundle_Format = {
+          Type: Changing_Info[i].type,
+          List: []
+        }
+        for(let j = 0; j < Changing_Info[i].sub_question.length; j++){
+          let Item = {
+            score: Changing_Info[i].sub_question[j].score,
+            // 从知识点查询那儿来的经验
+            knowledgePoints: Changing_Info[i].sub_question[j].knowledgePointInfos.Label,
+            knowledgePointsIDs: Changing_Info[i].sub_question[j].knowledgePointInfos.ID,
+            knowledgePointsLevels: Changing_Info[i].sub_question[j].knowledgePointInfos.Layer,
+            // 难度项
+            difficulty: [],
+            // 题库
+            source: '全部',
+            select: '多选',
+            filter: '并集'
+          }
+          let Text_List = ['容易', '较易', '中等', '较难', '困难'];
+          for(let k = 0; k < 5; k++){
+            if(Changing_Info[i].sub_question[j].difficulty > variable.Difficulty[Text_List[k]].min && Changing_Info[i].sub_question[j].difficulty < variable.Difficulty[Text_List[k]].max ){
+              Item.difficulty = [variable.Difficulty[Text_List[k]].min, variable.Difficulty[Text_List[k]].max]
+              break
+            }
+          }
+          Bundle_Format.List.push(Item)
+        }
+        Table_Info.push(Bundle_Format);
+      }
+
+      this.Detail_Table = JSON.parse(JSON.stringify(Table_Info))
+      sessionStorage.setItem("Compare_Table_Info", JSON.stringify(Table_Info))
+
+      this.Compare_Paper_Dialog = true
+      this.Compare_Paper_Questions = []
+      this.waiting_text = ""
+      this.waiting = false;
+
+    },
+    // 换一页
+    Auto_Compare_Combine_Paper_Do(){
+
+      let Table_Info = JSON.parse(JSON.stringify(this.Detail_Table))
+
+      let Searching_Question_Info = []
+
+      for(let i = 0; i < Table_Info.length; i++){
+        let Bundle = Table_Info[i];
+        for(let j = 0; j < Bundle.List.length; j++){
+          Searching_Question_Info.push(this.Search_KP(Bundle.List[j], Bundle.Type))
+        }
+      }
+
+      this.waiting_text = ""
+      this.waiting = false;
+
+      // commonAjax(this.backendIP+'/api/detail_table_generate', {
+      //   'detail_table': JSON.stringify(this.Searching_Question_Info, null, 4)
+      // })
+      // .then((data)=>{
+      //   for(let i = 0; i < data.length; i++){
+      //     this.Add_New_Ques_To_Cart(data[i])
+      //   }
+      //   this.Emit_All();
+      //   this.Loading = false
+      // })
     },
     Start_Replace_Questions(Result){
       clearInterval(this.Replacing_Interval)
@@ -1263,7 +1637,7 @@ export default {
     },
     // 准备开始做一下“换一题”
     // 检索试题内容
-    submit(Index, IndexIn) {
+    replace_with_another_question(Index, IndexIn) {
 
         this.Replace_Dialog_Show = true;
         this.loading = true;
@@ -1277,8 +1651,10 @@ export default {
           type = ["填空题"]
         }else if(this.Question_List[Index].list[IndexIn].type == "解答题"){
           type = ["简答题", "计算题"]
+        }else{
+          type = [this.Question_List[Index].list[IndexIn].type]
         }
-        
+
         var data = JSON.stringify({
           "content": this.Question_List[Index].list[IndexIn].stem,
           "size": 6,
@@ -1521,6 +1897,11 @@ export default {
   border: 1px solid #92D050;
   color: #92D050;
 }
+.None_Padding_Dialog .el-dialog__body{
+  padding: 0;
+  padding-bottom: 30px;
+  margin: 0;
+}
 </style>
 <style lang="scss" scoped>
 .Custom_Score_Input{
@@ -1583,6 +1964,7 @@ export default {
   padding: 0px;
   border-radius: 0px;
 }
+
 .Bundle_Introduce_Input.el-input {
   width: 200px;
 }
@@ -1597,5 +1979,16 @@ export default {
   background: #F8FBFF;
   border: 1px dashed black;
   margin-left: 5vw;
+}
+// 类比组卷的时候，大题题包的样式
+.Compare_Bundle{
+  margin: 30px;
+  padding: 24px;
+}
+// 题包类型的样式
+.Compare_Bundle_Type{
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 </style>
