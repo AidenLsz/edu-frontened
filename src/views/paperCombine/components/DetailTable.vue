@@ -1,5 +1,5 @@
 <template>
-  <div style=" margin-top: 5vh; margin-bottom: 5vh; min-height: 40vh;">
+  <div style=" margin-top: 5vh; margin-bottom: 5vh; min-height: 40vh;" v-loading="Edit_Bundle_Dialog">
     <el-dialog
         :visible.sync="New_Bundle_Dialog"
         title="添加新的细目表大题项"
@@ -64,10 +64,12 @@
     <el-dialog
         :visible.sync="Edit_Bundle_Dialog"
         title="细目表元素编辑"
-        width="70%"
+        width="1344px"
+        :modal='CompareMode ? false: true'
         :modal-append-to-body="false"
         :close-on-click-modal="false"
         @close="Editing_Reset()">
+        <div style="padding: 36px;">
         <el-row>
           <el-col :span="3">
             <el-row type="flex" justify="start">
@@ -171,19 +173,22 @@
             </el-row>
           </el-col>
         </el-row>
-      <el-row type="flex" justify="center" style="margin-top: 30px;">
-        <el-button type="success" @click="Edit_Finish()">编辑完成</el-button>
-      </el-row>
+        <el-row type="flex" justify="center" style="margin-top: 30px;">
+          <el-button type="success" @click="Edit_Finish()">编辑完成</el-button>
+        </el-row>
+      </div>
     </el-dialog>
       <el-row 
-        style="margin-left: 5vw; margin-right: 5vw"
+        :style="CompareMode ? '' : 'margin-left: 5vw; margin-right: 5vw'"
         v-loading="Loading"
         :element-loading-text="Get_Waiting_Label()"
         element-loading-spinner="el-icon-loading"
+        type="flex"
+        justify="center"
         >
-        <el-col :span="18" style="padding: 20px 30px;" class="Shadow_Border">
+        <el-col :span="CompareMode ? 17: 18" style="padding: 20px 30px;" class="Shadow_Border">
           <el-row type="flex" justify="center" style="margin-bottom: 15px;">
-            <label style="font-size: 18px">双向细目表名称</label>
+            <label style="font-size: 18px">{{CompareMode ? "类比组卷 - 双向细目表" : "双向细目表名称"}}</label>
           </el-row>
           <el-row v-for="(Bundle, Bundle_Index) in Table_Info" :key="'Table_Line_' + Bundle_Index" style="margin-bottom: 30px;">
             <el-col>
@@ -313,36 +318,36 @@
                       <el-row type="flex" justify="start">
                         <el-col :span="12">
                           <el-row type="flex" justify="center">
-                            <el-button type="text" @click="Difficulty_Change(0, Bundle_Index, Ques_I)">容易</el-button>
+                            <el-button type="text" @click="Difficulty_Change('容易', Bundle_Index, Ques_I)">容易</el-button>
                           </el-row>
                         </el-col>
                         <el-col :span="12">
                           <el-row type="flex" justify="center">
-                            <el-button type="text" @click="Difficulty_Change(1, Bundle_Index, Ques_I)">较易</el-button>
-                          </el-row>
-                        </el-col>
-                      </el-row>
-                      <el-row type="flex" justify="start">
-                        <el-col :span="12">
-                          <el-row type="flex" justify="center">
-                            <el-button type="text" @click="Difficulty_Change(2, Bundle_Index, Ques_I)">中等</el-button>
-                          </el-row>
-                        </el-col>
-                        <el-col :span="12">
-                          <el-row type="flex" justify="center">
-                            <el-button type="text" @click="Difficulty_Change(3, Bundle_Index, Ques_I)">较难</el-button>
+                            <el-button type="text" @click="Difficulty_Change('较易', Bundle_Index, Ques_I)">较易</el-button>
                           </el-row>
                         </el-col>
                       </el-row>
                       <el-row type="flex" justify="start">
                         <el-col :span="12">
                           <el-row type="flex" justify="center">
-                            <el-button type="text" @click="Difficulty_Change(4, Bundle_Index, Ques_I)">困难</el-button>
+                            <el-button type="text" @click="Difficulty_Change('中等', Bundle_Index, Ques_I)">中等</el-button>
                           </el-row>
                         </el-col>
                         <el-col :span="12">
                           <el-row type="flex" justify="center">
-                            <el-button type="text" @click="Difficulty_Change(5, Bundle_Index, Ques_I)">自定义</el-button>
+                            <el-button type="text" @click="Difficulty_Change('较难', Bundle_Index, Ques_I)">较难</el-button>
+                          </el-row>
+                        </el-col>
+                      </el-row>
+                      <el-row type="flex" justify="start">
+                        <el-col :span="12">
+                          <el-row type="flex" justify="center">
+                            <el-button type="text" @click="Difficulty_Change('困难', Bundle_Index, Ques_I)">困难</el-button>
+                          </el-row>
+                        </el-col>
+                        <el-col :span="12">
+                          <el-row type="flex" justify="center">
+                            <el-button type="text" @click="Difficulty_Change('自定义', Bundle_Index, Ques_I)">自定义</el-button>
                           </el-row>
                         </el-col>
                       </el-row>
@@ -437,6 +442,7 @@
 <script>
 
 import {commonAjax} from '@/common/utils/ajax'
+import * as variable from '@/common/utils/variable'
 
 // import FileSaver from 'file-saver'
 
@@ -462,6 +468,10 @@ export default {
       default: function(){
         return []
       }
+    },
+    CompareMode: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -506,7 +516,7 @@ export default {
         knowledgePointsIDs: [],
         knowledgePointsLevels: [],
         // 难度项
-        difficulty: [0.0, 0.2],
+        difficulty: [variable.Difficulty['容易'].min, variable.Difficulty['容易'].max],
         // 题库
         source: 'default',
         select: '单选',
@@ -572,6 +582,17 @@ export default {
     if(sessionStorage.getItem("Table_Info")){
       this.Table_Info = JSON.parse(sessionStorage.getItem("Table_Info"))
     }
+    if(this.CompareMode){
+      this.Table_Info = JSON.parse(sessionStorage.getItem("Compare_Table_Info"))
+      this.DatabaseAim.splice(0, 0, {
+        name: "全部",
+        nick: "全部"
+      })
+      setTimeout(()=>{
+        this.Editing_Reset();
+      }, 100)
+    }
+    
     this.Init();
   },
   methods: {
@@ -588,9 +609,9 @@ export default {
           database.push(this.DatabaseAim[i].name)
         }
       }else{
-        for(let i = 1; i < this.DatabaseAim.length; i++){
-          if(this.DatabaseAim[i].nick == Info.source){
-            database.push(this.DatabaseAim[i].name)
+        for(let i = 0; i < this.Database_List.length; i++){
+          if(this.Database_List[i].nick == Info.source){
+            database.push(this.Database_List[i].name)
           }
         }
       }
@@ -621,13 +642,15 @@ export default {
 
       var data = {
           "database": database,
+          "page_count": 1,
           "score": Info.score,
           "subject": [this.Subject],
           "period": [this.Period],
           "difficulty": [parseFloat(Info.difficulty[0]), parseFloat(Info.difficulty[1])],
           // "difficulty": [0, 1],
           "type": type,
-          "knowledge": knowledge_Dict
+          "knowledge": knowledge_Dict,
+          "semantic": 0
         }
 
         this.Searching_Question_Info.push(data)
@@ -656,32 +679,61 @@ export default {
         this.$emit("Add_To_Cart", JSON.stringify(this.Ques_List[i]));
       }
       this.$emit("Jump_To_SC", true)
-      this.Total = 0
       this.Ques_List = []
       this.Searching_Question_Info = []
     },
     // 开始生成试卷
     Use_Table_Info(){
+      if(!this.CompareMode){
+        this.$confirm("使用细目表组卷将清空已存入试题篮的试题，确定要继续吗？", "提示", {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        .then(() => {
+          this.Loading = true;
+          sessionStorage.setItem('Table_Info', JSON.stringify(this.Table_Info))
+          this.$emit("Clear_Cart", true)
+          for(let i = 0; i < this.Table_Info.length; i++){
+            let Bundle = this.Table_Info[i];
+            for(let j = 0; j < Bundle.List.length; j++){
+              this.Search_KP(Bundle.List[j], Bundle.Type)
+            }
+          }
 
-      this.$confirm("使用细目表组卷将清空已存入试题篮的试题，确定要继续吗？", "提示", {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-      .then(() => {
+          // let file = new File(
+          //     [JSON.stringify(this.Searching_Question_Info, null, 4)],
+          //     "Searching_Question_Info.json",
+          //     { type: "text/plain;charset=utf-8" }
+          //     );
+          // FileSaver.saveAs(file);
+
+          commonAjax(this.backendIP+'/api/detail_table_generate', {
+            'detail_table': JSON.stringify(this.Searching_Question_Info, null, 4)
+          })
+          .then((data)=>{
+            for(let i = 0; i < data.length; i++){
+              this.Add_New_Ques_To_Cart(data[i])
+            }
+            this.Emit_All();
+            this.Loading = false
+          })
+        })
+        .catch(() => {
+          this.$message.warning("已取消。")
+        })
+        .finally(() => {
+          this.Searching_Question_Info = []
+        })
+      }else{
         this.Loading = true;
-        sessionStorage.setItem('Table_Info', JSON.stringify(this.Table_Info))
-        this.$emit("Clear_Cart", true)
-        for(let i = 0; i < this.Table_Info.length; i++){
-          this.Total = this.Total + this.Table_Info[i].List.length;
-        }
         for(let i = 0; i < this.Table_Info.length; i++){
           let Bundle = this.Table_Info[i];
           for(let j = 0; j < Bundle.List.length; j++){
             this.Search_KP(Bundle.List[j], Bundle.Type)
           }
         }
-
+        this.$emit("Clear_List", true)
         commonAjax(this.backendIP+'/api/detail_table_generate', {
           'detail_table': JSON.stringify(this.Searching_Question_Info, null, 4)
         })
@@ -691,22 +743,10 @@ export default {
           }
           this.Emit_All();
           this.Loading = false
+        }).finally(() => {
+          this.Searching_Question_Info = []
         })
-
-        // let file = new File(
-        //   [JSON.stringify(this.Searching_Question_Info, null, 4)],
-        //   "DetailTable.json",
-        //   { type: "text/plain;charset=utf-8" }
-        // );
-        // FileSaver.saveAs(file);
-      })
-      .catch(() => {
-        this.$message.warning("已取消。")
-      })
-      .finally(() => {
-        this.Searching_Question_Info = []
-      })
-      
+      }     
     },
     // 删除大题
     Delete_Bundle(Bundle_Index){
@@ -723,7 +763,7 @@ export default {
         knowledgePointsIDs: [],
         knowledgePointsLevels: [],
         // 难度项
-        difficulty: [0.0, 0.2],
+        difficulty: [variable.Difficulty['容易'].min, variable.Difficulty['容易'].max],
         // 题库
         source: this.DatabaseAim[0].nick,
         select: '单选',
@@ -810,9 +850,8 @@ export default {
     },
     // 调整单题难度项
     Difficulty_Change(Swi, Bundle_Index, Ques_I){
-      let Num_List = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0];
-      if(Swi < 5){
-        this.Table_Info[Bundle_Index].List[Ques_I].difficulty = [Num_List[Swi], Num_List[Swi+1]];
+      if(Swi != '自定义'){
+        this.Table_Info[Bundle_Index].List[Ques_I].difficulty = [variable.Difficulty[Swi].min, variable.Difficulty[Swi].max];
         this.Init_Paint();
       }else{
         this.Editing_Bundle = Bundle_Index;
@@ -826,13 +865,10 @@ export default {
     },
     // 根据难度项的数据返回对应的文字
     Get_Difficulty_Text(Diff){
-      let Num_List = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0];
       let Text_List = ['容易', '较易', '中等', '较难', '困难'];
       for(let i = 0; i < 5; i++){
-        if(Math.abs(parseFloat(Diff[0]) - Num_List[i]) < 0.00001){
-          if(Math.abs(parseFloat(Diff[1]) - Num_List[i+1]) < 0.00001){
-            return Text_List[i]
-          }
+        if(Diff[0] == variable.Difficulty[Text_List[i]].min && Diff[1] == variable.Difficulty[Text_List[i]].max){
+          return Text_List[i]
         }
       }
       return parseFloat(Diff[0]).toFixed(2) + "~" + parseFloat(Diff[1]).toFixed(2)
@@ -892,7 +928,7 @@ export default {
           knowledgePointsIDs: [],
           knowledgePointsLevels: [],
           // 难度项
-          difficulty: [0.0, 0.2],
+          difficulty: [variable.Difficulty['容易'].min, variable.Difficulty['容易'].max],
           // 题库
           source: this.DatabaseAim[0].nick,
           select: '单选',

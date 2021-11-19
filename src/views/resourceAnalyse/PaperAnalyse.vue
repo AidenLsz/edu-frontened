@@ -1556,7 +1556,6 @@ export default {
 
             commonAjax(this.backendIP + '/api/replace_question', Param)
             .then((data)=>{
-                console.log(data)
                 this.Replace_Bundle_List_All = []
                 this.Replace_Bundle_List = {}
                 for(let Bundle_Index = 0; Bundle_Index < data.length; Bundle_Index++){
@@ -1608,8 +1607,6 @@ export default {
                     this.Replace_Bundle_List_All.push(Temp_Replace_Bundle_Info)
                 }
                 this.Replace_Bundle_List = this.Replace_Bundle_List_All[0]
-                console.log(this.Replace_Bundle_List_All)
-                console.log(this.Replace_Bundle_List)
             }).catch(() => {
                 this.$message.error("服务器过忙，请稍后再试。")
             }).finally(()=>{
@@ -1697,7 +1694,6 @@ export default {
         },
         // 更新数据库选择情况
         database_Change(Keyword, Database){
-            console.log(Keyword, Database)
             if(Keyword == 'Question'){
                 let Index = this.filterKPTree_Question.Database.indexOf(Database)
                 if(Index == -1){
@@ -3607,8 +3603,6 @@ export default {
             if(sessionStorage.getItem('PaperJson')){
                 this.Paper_Json = JSON.parse(sessionStorage.getItem('PaperJson'))
             }
-
-            console.log(this.Paper_Json)
 
             var Temp_Score_Dict = this.Paper_Json.knowledge2score;
             while(Object.keys(Temp_Score_Dict).length > this.KnowledgeScore_List.length){

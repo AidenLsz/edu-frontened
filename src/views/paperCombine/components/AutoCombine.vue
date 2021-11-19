@@ -613,19 +613,6 @@ export default {
     difficulty_Change(difficulty){
         this.filterRecord.difficulty = difficulty
     },
-    // 获取难度手动输入按钮的样式
-    selfDiffGapClass(){
-        if(this.filterRecord.difficulty[0] == 0.0 && this.filterRecord.difficulty[1] == 1.0){
-            return "filterButtonUnfocus"
-        }else if(
-            this.Minus_Float(this.filterRecord.difficulty[0], this.filterRecord.difficulty[1]) == 0.2 &&
-            [0, 0.2, 0.4, 0.6, 0.8, 1.0].indexOf(this.filterRecord.difficulty[0]) != -1)
-        {
-            return "filterButtonUnfocus"
-        }else{
-            return "filterButtonFocus"
-        }
-    },
     // 更新数据库选择情况
     database_Change(databaseIndex){
         if(databaseIndex > 0){

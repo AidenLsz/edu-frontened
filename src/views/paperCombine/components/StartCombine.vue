@@ -1,5 +1,6 @@
 <template>
   <div style=" padding-top: 5vh; padding-bottom: 5vh; min-height: 40vh; padding-left: 5vw; padding-right: 5vw; background: #EEF5FE">
+    <!-- 题目内容检查 -->
     <el-dialog 
       :visible.sync="Question_Check_Switch"
       title="题目内容检查"
@@ -70,6 +71,7 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <!-- 试卷下载 -->
     <el-dialog 
       :visible.sync="Download_Combine_Paper_Dialog"
       title="试卷下载"
@@ -144,7 +146,8 @@
         </el-col>
       </el-row>
     </el-dialog>
-    <el-dialog 
+    <!-- 换一题 - 旧 -->
+    <!-- <el-dialog 
       :visible.sync="Replace_Dialog_Show"
       title="换一题"
       width="70%"
@@ -194,6 +197,251 @@
           </el-row>
         </el-col>
       </el-row>
+    </el-dialog> -->
+    <!-- 类比组卷的对话框 -->
+    <el-dialog 
+      custom-class="None_Padding_Dialog"
+      :visible.sync="Compare_Paper_Dialog"
+      title="类比试卷推荐"
+      width="1344px"
+      :modal-append-to-body="true"
+      :close-on-click-modal="false"
+      >
+      <DetailTable
+        @Add_To_Cart="Add_To_Compare_Cart"
+        @Clear_List="Clear_List"
+        ref="DetailTable"
+        :CompareMode="true"   
+        :Period.sync="Period" 
+        :Subject.sync="Subject" 
+        :Database_List.sync="Database_List"></DetailTable>
+        <el-divider v-if="Compare_Paper_Questions.length > 0"></el-divider>
+        <el-row type="flex" justify="center" v-if="Compare_Paper_Questions.length > 0">
+          <label>为您类比推荐以下试题：</label>
+        </el-row>
+        <!-- 遍历大题 -->
+        <div 
+          v-for="(Question_List_Item, Index) in Compare_Paper_Questions" 
+          :key="'Compare_Item_' + Index" 
+          class="Compare_Bundle"
+          :id="'Compare_Item_' + Index">
+            <el-row type="flex" justify="start" class="Compare_Bundle_Type">
+              {{Question_List_Item.type}}
+            </el-row>
+            <!-- 每道题内容显示的部分 -->
+            <el-row 
+              v-for="(Question, IndexIn) in Question_List_Item.list" 
+              :key="'Compare_Item_' + Index + '_' + IndexIn"
+              type="flex" justify="center"
+              >
+              <!-- 把这些部分垂直排列 -->
+              <el-col>
+                <el-row 
+                  type="flex" 
+                  justify="start" 
+                  style="margin-bottom: 5px;">
+                  <Mathdown 
+                    :content="'(' + Question.score + '分) '+ (IndexIn + 1) + '. $ $ '+ Question.stem" 
+                    :name="'Compare_Question_Stem_' + Index + '_' + IndexIn"></Mathdown>
+                </el-row>
+                <el-row 
+                  v-for="(Option, OptionIndex) in Question.options" 
+                  :key="'Q_O_' + Index + '_' + IndexIn + '_' + OptionIndex"
+                  style="margin-bottom: 2px;">
+                  <Mathdown 
+                    style="width: 50%"
+                    :content="Get_Option_Index(OptionIndex) + ': $ $ ' + Option"
+                    :name="'Compare_Q_O_' + Index + '_' + IndexIn + '_' + OptionIndex"></Mathdown>
+                </el-row>
+              </el-col>
+            </el-row>
+        </div>
+        <el-row type="flex" justify="center" v-if="Compare_Paper_Questions.length > 0">
+          <el-button type="primary" style="margin-right: 30px" @click="Get_Another_Paper()"><i class="el-icon-refresh"></i>再换一组</el-button>
+          <el-button type="success" @click="Use_This_Compare_Paper()"><i class="el-icon-check"></i>使用此卷</el-button>
+        </el-row>
+    </el-dialog>
+    <!-- 单题替换页面 -->
+    <el-dialog 
+        :visible.sync="Replace_Dialog_Show"
+        title="试题替换" 
+        width="1192px"
+        @close="Replace_Dialog_Close()"
+        v-loading="Question_Loading"
+        element-loading-text="检索替换试题中，请等待..."
+        element-loading-spinner="el-icon-loading"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false">
+        <el-row type="flex" justify="start">
+            <el-col :span="5" style="height: 420px; overflow: scroll">
+                <el-row type="flex" justify="center" style="margin: 0px 1.5vw 15px 1.5vw">
+                    <el-input
+                        placeholder="输入关键字进行过滤"
+                        v-model="filterText_Question_KPTree">
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </el-row>
+                <el-row type="flex" justify="start">
+                    <el-tree 
+                        :data="TreeData"
+                        check-strictly
+                        node-key="id"
+                        show-checkbox
+                        :props="defaultProps"
+                        check-on-click-node
+                        :filter-node-method="filterNode_Question_KPTree"
+                        @check-change="handleCheckChange_Question_KPTree"
+                        style="font-size: 10px;"
+                        ref="Question_KPTree">
+                    </el-tree>
+                </el-row>
+            </el-col>
+            <el-col :span="18" :offset="1">
+                <el-row type="flex" justify="start" style="margin-bottom: 10px">
+                    <label>题型：{{Combine_Replace_Question_Info.type}}（无法修改）</label><label style="margin-left: 50px">分值：{{Combine_Replace_Question_Info.score}}（无法在此处修改）</label>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 15px; height: 30px; line-height: 30px;">
+                    <el-col :span="2">
+                        <el-row type="flex" justify="start">
+                            <label>难度：</label>
+                        </el-row>
+                    </el-col>
+                    <el-col 
+                        :span="3" 
+                        v-for="(Difficulty, Difficulty_Index) in Difficulty_List"
+                        :key="'Question_Difficulty_' + Difficulty_Index">
+                        <div
+                            align="center"
+                            :class="filterButtonStyle('Question', 'Difficulty', Difficulty)" 
+                            @click="difficulty_Change('Question', Difficulty)">
+                            {{Difficulty}}
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row 
+                    type="flex" 
+                    justify="start" 
+                    v-show="filterKPTree_Question.Difficulty == '自定义'"
+                    style="margin-bottom: 15px; height: 30px; line-height: 30px;">
+                    <el-col :span="6" style="margin-top: 5px;">
+                        <el-row type="flex" justify="start">
+                            <label>自定义难度：{{filterKPTree_Question.Difficulty_Range[0]}}
+                            <span style="margin-left: 10px; margin-right: 10px">至</span>
+                            {{filterKPTree_Question.Difficulty_Range[1]}}</label>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="18">
+                        <el-row type="flex" justify="start">
+                            <el-slider
+                                v-model="filterKPTree_Question.Difficulty_Range"
+                                range
+                                show-stops
+                                style="width: 560px;"
+                                :step="0.01"
+                                :min="0"
+                                :max="1">
+                            </el-slider>
+                        </el-row>
+                    </el-col>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 15px; height: 30px; line-height: 30px;">
+                    <el-col :span="2">
+                        <el-row type="flex" justify="start">
+                            <label>题库：</label>
+                        </el-row>
+                    </el-col>
+                    <el-col 
+                        :span="3" 
+                        v-for="(Database, Database_Index) in Database_List"
+                        :key="'Question_Database_' + Database_Index">
+                        <div
+                            align="center"
+                            :class="filterButtonStyle('Question', 'Database', Database.name)" 
+                            @click="database_Change('Question', Database.name)">
+                            {{Database.nick || Database.name}}
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 10px">
+                    <label>已选择的知识点：</label>
+                    <el-button 
+                        type="text" 
+                        v-if="Combine_Replace_Question_Info.knowledgePointInfos.Label.length > 30"
+                        @click="filterKPTree_Question.Expand = !filterKPTree_Question.Expand">
+                        {{filterKPTree_Question.Expand ? "收起过多" : "展开全部"}}知识点</el-button>
+                </el-row>
+                <el-row 
+                    type="flex" 
+                    justify="center" 
+                    v-for="KP_Row_Index in 
+                        (Math.ceil(Combine_Replace_Question_Info.knowledgePointInfos.Label.length/6) <= 5 ? 
+                        Math.ceil(Combine_Replace_Question_Info.knowledgePointInfos.Label.length/6) : 
+                        filterKPTree_Question.Expand ? 
+                            Math.ceil(Combine_Replace_Question_Info.knowledgePointInfos.Label.length/6) : 
+                            5)"
+                    :key="'Replacing_Question_KP_Row_' + KP_Row_Index"
+                    style="margin-bottom: 10px;">
+                    <el-col 
+                        :span="4" 
+                        v-for="Col_Index in 6" 
+                        :key="'Replacing_Question_KP_Row_' + KP_Row_Index + '_Col_' + Col_Index">
+                        <el-tooltip 
+                            v-if="(KP_Row_Index - 1) * 6 + Col_Index - 1 < Combine_Replace_Question_Info.knowledgePointInfos.Label.length"
+                            effect="dark" 
+                            :content="Combine_Replace_Question_Info.knowledgePointInfos.Label[(KP_Row_Index - 1) * 6 + Col_Index - 1] 
+                            + ' - ' + (Combine_Replace_Question_Info.knowledgePointInfos.Layer[(KP_Row_Index - 1) * 6 + Col_Index - 1] + 1) + '级知识点'"
+                            placement="top">
+                            <div 
+                                align="center"
+                                class="KU_Button"
+                                :style="Get_Different_Level_Color(Combine_Replace_Question_Info.knowledgePointInfos.Layer[(KP_Row_Index - 1) * 6 + Col_Index - 1])"
+                                @click="Delete_KP_Question((KP_Row_Index - 1) * 6 + Col_Index - 1)">
+                                {{Get_Show(Combine_Replace_Question_Info.knowledgePointInfos.Label[(KP_Row_Index - 1) * 6 + Col_Index - 1])}}
+                                <i class="el-icon-delete" style="margin-left: 10px; font-size: 20px"></i>
+                            </div>
+                        </el-tooltip>
+                        <div 
+                            v-else 
+                            style="width: 100%; height: 30px; line-height: 30px">
+                            
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-col>
+        </el-row>
+        <el-row type="flex" justify="center" style="margin-top: 30px;">
+            <el-button @click="Search_Replace_Question()" type="primary">根据当前条件检索替换用题目</el-button>
+        </el-row>
+        <el-divider></el-divider>
+        <el-row type="flex" justify="start">
+            <label>当前题目题干内容：</label>
+        </el-row>
+        <el-row type="flex" justify="start">
+            <Mathdown :content="Combine_Replace_Question_Info.stem" :name="'Replacing_Question_Stem'"></Mathdown>
+        </el-row>
+        <el-row v-for="(Option, Option_Index) in Combine_Replace_Question_Info.options" :key="'Option_' + Option_Index" style="line-height: 40px" type="flex" justify="start">
+            <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+            <Mathdown style="width:700px" :content="Option" :name="'Replacing_Option_' + Option_Index"></Mathdown>
+        </el-row>
+        <el-divider v-if="Replace_Question_List.length > 0"></el-divider>
+        <el-row 
+            class="Replace_Question_Aim"
+            v-for="(Question, Question_Index) in Replace_Question_List"
+            :key="'Replacing_Question_Aim_' + Question_Index"
+            :id="'Replacing_Question_Aim_' + Question_Index">
+            <el-col :span="24">
+                <el-row type="flex" justify="start">
+                    <Mathdown :content="Question.stem" :name="'Replacing_Question_Aim_' + Question_Index + '_Stem'"></Mathdown>
+                </el-row>
+                <el-row v-for="(Option, Option_Index) in Question.options" :key="'Replacing_Question_' + Question_Index + '_Option_' + Option_Index" style="line-height: 40px" type="flex" justify="start">
+                    <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+                    <Mathdown style="width:700px" :content="Option" :name="'Replacing_Question_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
+                </el-row>
+                <el-row type="flex" justify="center" style="margin-top: 10px">
+                    <el-button type="primary" @click="Replace_Question_With_It(Question)">用这道题替换</el-button>
+                </el-row>
+            </el-col>
+        </el-row>
     </el-dialog>
       <el-row>
         <el-col :span="5">
@@ -267,8 +515,16 @@
                 <el-col :span="12">
                   <el-row type="flex" justify="center">
                     <el-button type="text" style="font-size: 14px; color: grey" @click.native="Check_Answer_Card()">
-                      <i class="el-icon-s-data"></i>
+                      <i class="el-icon-s-claim"></i>
                       <span>查看答题卡</span>
+                    </el-button>
+                  </el-row>
+                </el-col>
+                <el-col :span="12">
+                  <el-row type="flex" justify="center">
+                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Auto_Compare_Combine_Paper()">
+                      <i class="el-icon-s-opportunity"></i>
+                      <span>类比组卷</span>
                     </el-button>
                   </el-row>
                 </el-col>
@@ -370,7 +626,7 @@
                           </el-col>
                         </el-row>
                         <el-row type="flex" justify="center">
-                          <el-button type="primary" size="medium" @click="submit(Index, (Row_Index - 1) * 6 + Col_Index - 1)"><i class="el-icon-refresh" style="margin-right: 15px;"></i>换一题</el-button>
+                          <el-button type="primary" size="medium" @click="Get_Question_Difficulty_And_KP(Index, (Row_Index - 1) * 6 + Col_Index - 1)"><i class="el-icon-refresh" style="margin-right: 15px;"></i>换一题</el-button>
                         </el-row>
                         <el-row 
                           slot="reference"
@@ -721,7 +977,7 @@
                             <el-button 
                               type="text" 
                               size="medium" 
-                              @click="submit(Index, IndexIn)"
+                              @click="Get_Question_Difficulty_And_KP(Index, IndexIn)"
                               style="height: 30px; line-height: 30px; margin-right: 10px; padding: 0px"><i class="el-icon-refresh" style="margin-right: 15px;"></i>换一题</el-button>
                         </el-row>
                     </el-col>
@@ -737,7 +993,13 @@
 <script>
 
 import Mathdown from '@/common/components/Mathdown'
+import DetailTable from '@/views/paperCombine/components/DetailTable'
 import {commonAjax} from '@/common/utils/ajax'
+
+// import FileSaver from 'file-saver'
+
+import * as variable from '@/common/utils/variable'
+
 export default {
   name: 'StartCombine',
   props: {
@@ -757,7 +1019,7 @@ export default {
     }
   },
   components: {
-    Mathdown
+    Mathdown, DetailTable
   },
   data() {
     return {
@@ -819,6 +1081,31 @@ export default {
       Replace_Question_Index: -1,
       // 用于替换的目标题目
       Replace_Question_List: [],
+      // 单题替换、题包替换的信息内容
+      Combine_Replace_Question_Info: {
+          difficulty: 0,
+          id: "",
+          stem: "",
+          options: [],
+          answer: "",
+          analysis: "",
+          score: 0,
+          type: "",
+          knowledgePointInfos: {
+              ID: [],
+              Label: [],
+              Layer: []
+          },
+      },
+      // 单选多选的信息筛选，单选多选，交集并集，是否显示全部知识点
+      filterKPTree_Question:{
+          Choice: "多选",
+          Method: "并集",
+          Expand: false,
+          Difficulty: "全部",
+          Difficulty_Range: [0, 1],
+          Database: ['public']
+      },
       // 以下内容用于在组卷分析报告页面替换题目时的一些需要的信息
       // 1:知识点层级树
       TreeData: {},
@@ -827,7 +1114,24 @@ export default {
       // 用来监控替换结果的监听器
       Replacing_Interval: "",
       // 替换后刷新一下页面
-      refresh: false
+      refresh: false,
+      // 记录一下双向细目表，用于类比组卷
+      Detail_Table: [],
+      // 类比组卷的对话框
+      Compare_Paper_Dialog: false,
+      // 拿来模拟成卷的样子，展示类比出来的题目列表
+      Compare_Paper_Questions: [],
+      // 正在检索替换试题
+      Question_Loading: false,
+      // 知识点过滤用的文本
+      filterText_Question_KPTree: "",
+      // 这里用于定义哪些内容是用于生成树的，这里定义了字数的关键字为children，标签的标签值为label
+      defaultProps: {
+          children: 'children',
+          label: 'label'
+      },
+      // 难度筛选列表
+      Difficulty_List: ['全部', '容易', '较易', '中等', '较难', '困难', "自定义"]
     }
   },
   watch:{
@@ -839,7 +1143,10 @@ export default {
     },
     Export_Setting_Type(){
       this.Init_Setting_CheckBox();
-    }
+    },
+    filterText_Question_KPTree(val) {
+        this.$refs.Question_KPTree.filter(val);
+    },
   },
   mounted() {
     this.Init_Setting_CheckBox();
@@ -849,6 +1156,223 @@ export default {
     this.Init_Database_List();
   },
   methods: {
+    // 更新数据库选择情况
+    database_Change(Keyword, Database){
+        let Index = this.filterKPTree_Question.Database.indexOf(Database)
+        if(Index == -1){
+            this.filterKPTree_Question.Database.push(Database)
+        }else{
+            this.filterKPTree_Question.Database.splice(Index, 1)
+        }
+    },
+    // 用选中的试题内容替换当前题目
+    Replace_Question_With_It(Question){
+        // 单题替换、题包替换的信息内容
+        let Temp_Question = {
+            id: Question.id,
+            stem: Question.stem,
+            options: Question.options,
+            answer: Question.answer,
+            analyse: Question.analysis,
+            score: this.Combine_Replace_Question_Info.score,
+            type: this.Combine_Replace_Question_Info.type
+        }
+
+        this.Question_List[this.Replace_Question_Bundle_Index].list.splice(this.Replace_Question_Index, 1, Temp_Question)
+        this.refresh = !this.refresh;
+
+        this.Replace_Dialog_Show = false
+
+    },
+    // 检索替换题目用的题目
+    Search_Replace_Question(){
+
+        this.Question_Loading = true;
+
+        let Param = {}
+
+        let kl = [[0], [1], [2]]
+
+        for(let i = 0; i < this.Combine_Replace_Question_Info.knowledgePointInfos.ID.length; i++){
+            kl[this.Combine_Replace_Question_Info.knowledgePointInfos.Layer[i]].push(this.Combine_Replace_Question_Info.knowledgePointInfos.Label[i])
+        }
+
+        var data = JSON.stringify({
+            "content": this.Combine_Replace_Question_Info.stem,
+            "size": 5,
+            "database": this.filterKPTree_Question.Database,
+            "page_count": 1,
+            "subject": [this.Subject],
+            "period": [this.Period],
+            "difficulty": this.filterKPTree_Question.Difficulty_Range,
+            "type": [this.Combine_Replace_Question_Info.type],
+            "knowledge": {
+                "knowledge_list": kl,
+                "select": "多选",
+                "filter": "并集"
+            },
+            "semantic": 0
+        })
+
+        Param.data=data
+
+        commonAjax(this.backendIP+'/api/search', Param)
+        .then((data)=>{
+            this.Replace_Question_List = data.results
+            this.Question_Loading = false;
+            
+        }).catch(() => {
+            this.$message.error("服务器过忙，请稍后再试。")
+            this.Question_Loading = false;
+        }).finally(() => {
+            this.Jump_To_Top('Replacing_Question_Aim_0')
+        })
+    },
+    // 跳转至某一块区域
+    Jump_To_Top(Part){
+        document.getElementById(Part).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+    },
+    // 获取知识点显示内容
+    Get_Show(label = ""){
+        if(label.length > 5){
+            return label.substring(0, 5) + "..."
+        }else{
+            return label
+        }
+    },
+    // 在单题替换的对话框里点击知识点删除
+    Delete_KP_Question(Index){
+        this.Combine_Replace_Question_Info.knowledgePointInfos.ID.splice(Index, 1);
+        this.Combine_Replace_Question_Info.knowledgePointInfos.Label.splice(Index, 1);
+        this.Combine_Replace_Question_Info.knowledgePointInfos.Layer.splice(Index, 1);
+        this.$refs.Question_KPTree.setCheckedKeys(this.Combine_Replace_Question_Info.knowledgePointInfos.ID);
+    },
+    // 根据层级不同，进行一点简单的颜色区分
+    Get_Different_Level_Color(level){
+        if(level == 0){
+            return {
+                'color': "#E6A23C",
+                'background': "rgba(230, 162, 60, 0.1)",
+                'border': "1px solid #E6A23C"
+            }
+        }else if(level == 1){
+            return {
+                'color': "#67C23A",
+                'background': "rgba(103, 194, 58, 0.1)",
+                'border': "1px solid #67C23A"
+            }
+        }
+    },
+    // 用按钮控制难度区间
+    difficulty_Change(Keyword, Difficulty){
+        this.filterKPTree_Question.Difficulty = Difficulty
+        let Index = this.Difficulty_List.indexOf(Difficulty);
+        if(Index == 0){
+            this.filterKPTree_Question.Difficulty_Range = [0, 1]
+        }else if(Index != 6){
+            this.filterKPTree_Question.Difficulty_Range = [variable.Difficulty[Difficulty].min, variable.Difficulty[Difficulty].max]
+        }
+    },
+    // 根据不同选择的状况调整按钮样式
+    filterButtonStyle(Keyword, type, index){
+        if(type == "Difficulty"){
+            if(this.filterKPTree_Question.Difficulty == index){
+                return "filterButtonFocus"
+            }else{
+                return "filterButtonUnfocus"
+            }
+        }
+        else if(type == "Database"){
+            if(this.filterKPTree_Question.Database.indexOf(index) != -1){
+                return "filterButtonFocus"
+            }else{
+                return "filterButtonUnfocus"
+            }
+        }
+    },
+    // 点击节点后的方法
+    handleCheckChange_Question_KPTree(data, checked) {
+        if (checked && this.filterKPTree_Question.Choice == "单选") {
+            this.Combine_Replace_Question_Info.knowledgePointInfos.ID = [];
+            this.Combine_Replace_Question_Info.knowledgePointInfos.Label = [];
+            this.Combine_Replace_Question_Info.knowledgePointInfos.Layer = [];
+            this.$refs.Question_KPTree.setCheckedKeys([data.id])
+            this.Combine_Replace_Question_Info.knowledgePointInfos.ID.push(data.id)
+            this.Combine_Replace_Question_Info.knowledgePointInfos.Label.push(data.label)
+            this.Combine_Replace_Question_Info.knowledgePointInfos.Layer.push(data.level)
+        }else if(!checked && this.filterKPTree_Question.Choice == "单选") {
+            this.Combine_Replace_Question_Info.knowledgePointInfos.ID = [];
+            this.Combine_Replace_Question_Info.knowledgePointInfos.Label = [];
+            this.Combine_Replace_Question_Info.knowledgePointInfos.Layer = [];
+            this.$refs.Question_KPTree.setCheckedKeys([])
+        }
+        else if(checked && this.filterKPTree_Question.Choice == "多选" && this.Combine_Replace_Question_Info.knowledgePointInfos.ID.indexOf(data.id) == -1){
+            this.Combine_Replace_Question_Info.knowledgePointInfos.ID.push(data.id)
+            this.Combine_Replace_Question_Info.knowledgePointInfos.Label.push(data.label)
+            this.Combine_Replace_Question_Info.knowledgePointInfos.Layer.push(data.level)
+        }else if(!checked && this.filterKPTree_Question.Choice == "多选" && this.Combine_Replace_Question_Info.knowledgePointInfos.ID.indexOf(data.id) != -1){
+            let Index = this.Combine_Replace_Question_Info.knowledgePointInfos.ID.indexOf(data.id)
+            this.Combine_Replace_Question_Info.knowledgePointInfos.ID.splice(Index, 1);
+            this.Combine_Replace_Question_Info.knowledgePointInfos.Label.splice(Index, 1);
+            this.Combine_Replace_Question_Info.knowledgePointInfos.Layer.splice(Index, 1);
+            this.$refs.Question_KPTree.setCheckedKeys(this.Combine_Replace_Question_Info.knowledgePointInfos.ID);
+        }
+    },
+    // 这里是输入过滤用的方法
+    filterNode_Question_KPTree(value, data) {
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
+    },
+    // 再换一组
+    Get_Another_Paper(){
+      this.Compare_Paper_Questions = [];
+      this.$refs.DetailTable.Use_Table_Info();
+    },
+    Clear_List(){
+      this.Compare_Paper_Questions = [];
+    },
+    // 完成替换
+    Use_This_Compare_Paper(){
+      this.$confirm("将使用这份类比组卷的结果替换当前全部题目的内容，确定要继续吗？", "提示", {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        .then(() => {
+          this.$emit("Clear_Cart", true)
+          for(let i = 0; i < this.Compare_Paper_Questions.length; i++){
+            for(let j = 0; j < this.Compare_Paper_Questions[j].list.length; j++){
+              this.$emit("Add_To_Cart", JSON.stringify(this.Compare_Paper_Questions[i].list[j]));
+            }
+          }
+        })
+        .finally(() => {
+          this.Compare_Paper_Questions = []
+          sessionStorage.removeItem("Compare_Table_Info")
+          this.Compare_Paper_Dialog = false;
+        })
+    },
+    // 类比组卷结果检索
+    Add_To_Compare_Cart(val){
+      let Item = JSON.parse(val)
+      let Flag = false;
+      for(let i = 0; i < this.Compare_Paper_Questions.length; i++){
+        if(this.Compare_Paper_Questions[i].type == Item.type){
+          this.Compare_Paper_Questions[i].list.push(Item)
+          Flag = true
+          break
+        }
+      }
+      if(Flag == false){
+        this.Compare_Paper_Questions.push({
+          type: Item.type,
+          list: [Item]
+        })
+      }
+      setTimeout(()=>{
+          document.getElementById('Compare_Item_0').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      }, 100)
+    },
     // 打开答题卡页面
     Check_Answer_Card(){
       sessionStorage.setItem("CombinePaper_AnswerCard", JSON.stringify(this.Question_List));
@@ -1029,6 +1553,254 @@ export default {
         this.waiting = false;
         this.waiting_text = ""
       })
+    },
+    // 开始导出用于分析报告的数据
+    Auto_Compare_Combine_Paper(){
+
+      this.waiting_text = "正在组织类比试卷，请稍后..."
+      this.waiting = true;
+
+      let Analyse_Paper_JSON = {
+        subject: this.Subject,
+        title: this.Setting_Info.title,
+        data: []
+      }
+
+      for(let i = 0; i < this.Question_List.length; i++){
+        let Bundle_Format = {
+          is_longques: 2,
+          desc: this.Question_List[i].type,
+          content: []
+        }
+        for(let j = 0; j < this.Question_List[i].list.length; j++){
+          let Question_Item = {
+            score: this.Question_List[i].list[j].score,
+            stem: this.Question_List[i].list[j].stem,
+            options: this.Question_List[i].list[j].options,
+            answer: this.Question_List[i].list[j].answer,
+            analysis: this.Question_List[i].list[j].analyse
+          }
+          Bundle_Format.content.push(Question_Item)
+        }
+        Analyse_Paper_JSON.data.push(Bundle_Format);
+      }
+
+      commonAjax(this.backendIP+'/api/combinePaperAnalyseReport',
+        {
+          Paper_Data: JSON.stringify(Analyse_Paper_JSON)
+        }
+      ).then((data)=>{
+        let Changing_Info = []
+        let Bundle_Item = {}
+        for(let Bundle_Index = 0; Bundle_Index < data.sub_question.length; Bundle_Index++){
+          let Info_Item = {
+            difficulty: 0,
+            knowledgePointInfos: {
+              ID: [],
+              Label: [],
+              Layer: []
+            },
+            update: false,
+            type: "",
+            sub_question: []
+          }
+          Bundle_Item = data.sub_question[Bundle_Index]
+          Info_Item.difficulty = Bundle_Item.difficulty_statistics.mean
+          Info_Item.type = this.Question_List[Bundle_Index].type
+          for(let Sub_Index = 0; Sub_Index < Bundle_Item.sub_question.length; Sub_Index++){
+            let Question = Bundle_Item.sub_question[Sub_Index]
+            let Question_Item = {
+              difficulty: Question.difficulty,
+              id: this.Question_List[Bundle_Index].list[Sub_Index].id,
+              stem: Question.stem,
+              options: Question.options,
+              answer: Question.answer,
+              analysis: Question.analysis,
+              score: Question.score,
+              update: false,
+              type: this.Question_List[Bundle_Index].type,
+              knowledgePointInfos: {
+                ID: [],
+                Label: [],
+                Layer: []
+              },
+            }
+            let KP_Layer = Question.knowledge_points_frontend.kp_layer
+            let KP_ID = ""
+            for(let Layer_0 = 0; Layer_0 < KP_Layer.length; Layer_0++){
+              KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].label, 0)
+              if(KP_ID != "" && Question_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+
+                Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].label)
+                Question_Item.knowledgePointInfos.Layer.push(0)
+
+                if(Info_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+                  Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].label)
+                  Info_Item.knowledgePointInfos.Layer.push(0)
+                  Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                }
+
+              }
+
+              for(let Layer_1 = 0; Layer_1 < KP_Layer[Layer_0].children.length; Layer_1++){
+                KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].children[Layer_1].label, 1)
+                if(KP_ID != "" && Question_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+
+                  Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].label)                 
+                  Question_Item.knowledgePointInfos.Layer.push(1)
+                  Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                  
+                  if(Info_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+                    Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].label)
+                    Info_Item.knowledgePointInfos.Layer.push(1)
+                    Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                  }
+
+                }
+                for(let Layer_2 = 0; Layer_2 < KP_Layer[Layer_0].children[Layer_1].children.length; Layer_2++){
+                  KP_ID = this.Search_KP_ID(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label, 2)
+                  if(KP_ID != "" && Question_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+
+                    Question_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label)              
+                    Question_Item.knowledgePointInfos.Layer.push(2)
+                    Question_Item.knowledgePointInfos.ID.push(KP_ID)
+                    
+                    if(Info_Item.knowledgePointInfos.ID.indexOf(KP_ID) == -1){
+                      Info_Item.knowledgePointInfos.Label.push(KP_Layer[Layer_0].children[Layer_1].children[Layer_2].label)
+                      Info_Item.knowledgePointInfos.Layer.push(2)
+                      Info_Item.knowledgePointInfos.ID.push(KP_ID)
+                    }
+
+                  } 
+                }
+              }
+            }
+            Info_Item.sub_question.push(Question_Item)
+          }
+          Changing_Info.push(Info_Item)
+        }
+        this.Auto_Compare_Combine_Paper_Save_Table(Changing_Info)
+      })
+    },
+    // 具体处理知识点的部分
+    Search_KP(Info, Type){
+
+      let database = []
+
+      for(let i = 0; i < this.Database_List.length; i++){
+        database.push(this.Database_List[i].name)
+      }
+
+      let type = [Type];
+
+      let kl = [[0], [1], [2]];
+
+      for(let i = 0; i < Info.knowledgePointsIDs.length; i++){
+        kl[Info.knowledgePointsLevels[i]].push(Info.knowledgePoints[i])
+      }
+
+      for(let i = 2; i >= 0; i--){
+        if(kl[i].length == 1){
+          kl.splice(i, 1)
+        }
+      }
+
+      let knowledge_Dict = {}
+
+      if(kl.length > 0){
+        knowledge_Dict = {
+          "knowledge_list": kl,
+          "select_way": Info.select,
+          "filter_way": Info.filter
+        }
+      }
+
+      var data = {
+        "database": database,
+        "score": Info.score,
+        "subject": [this.Subject],
+        "period": [this.Period],
+        "difficulty": [Info.difficulty[0], Info.difficulty[1]],
+        "type": type,
+        "knowledge": knowledge_Dict
+      }
+
+      return data
+
+    },
+    // 等到数据整理完了之后，类比组卷的具体实现
+    Auto_Compare_Combine_Paper_Save_Table(Changing_Info){
+
+      let Table_Info = []
+      
+      for(let i = 0; i < Changing_Info.length; i++){
+        let Bundle_Format = {
+          Type: Changing_Info[i].type,
+          List: []
+        }
+        for(let j = 0; j < Changing_Info[i].sub_question.length; j++){
+          let Item = {
+            score: Changing_Info[i].sub_question[j].score,
+            // 从知识点查询那儿来的经验
+            knowledgePoints: Changing_Info[i].sub_question[j].knowledgePointInfos.Label,
+            knowledgePointsIDs: Changing_Info[i].sub_question[j].knowledgePointInfos.ID,
+            knowledgePointsLevels: Changing_Info[i].sub_question[j].knowledgePointInfos.Layer,
+            // 难度项
+            difficulty: [],
+            // 题库
+            source: '全部',
+            select: '多选',
+            filter: '并集'
+          }
+          let Text_List = ['容易', '较易', '中等', '较难', '困难'];
+          for(let k = 0; k < 5; k++){
+            if(Changing_Info[i].sub_question[j].difficulty > variable.Difficulty[Text_List[k]].min && Changing_Info[i].sub_question[j].difficulty < variable.Difficulty[Text_List[k]].max ){
+              Item.difficulty = [variable.Difficulty[Text_List[k]].min, variable.Difficulty[Text_List[k]].max]
+              break
+            }
+          }
+          Bundle_Format.List.push(Item)
+        }
+        Table_Info.push(Bundle_Format);
+      }
+
+      this.Detail_Table = JSON.parse(JSON.stringify(Table_Info))
+      sessionStorage.setItem("Compare_Table_Info", JSON.stringify(Table_Info))
+
+      this.Compare_Paper_Dialog = true
+      this.Compare_Paper_Questions = []
+      this.waiting_text = ""
+      this.waiting = false;
+
+    },
+    // 换一页
+    Auto_Compare_Combine_Paper_Do(){
+
+      let Table_Info = JSON.parse(JSON.stringify(this.Detail_Table))
+
+      let Searching_Question_Info = []
+
+      for(let i = 0; i < Table_Info.length; i++){
+        let Bundle = Table_Info[i];
+        for(let j = 0; j < Bundle.List.length; j++){
+          Searching_Question_Info.push(this.Search_KP(Bundle.List[j], Bundle.Type))
+        }
+      }
+
+      this.waiting_text = ""
+      this.waiting = false;
+
+      // commonAjax(this.backendIP+'/api/detail_table_generate', {
+      //   'detail_table': JSON.stringify(this.Searching_Question_Info, null, 4)
+      // })
+      // .then((data)=>{
+      //   for(let i = 0; i < data.length; i++){
+      //     this.Add_New_Ques_To_Cart(data[i])
+      //   }
+      //   this.Emit_All();
+      //   this.Loading = false
+      // })
     },
     Start_Replace_Questions(Result){
       clearInterval(this.Replacing_Interval)
@@ -1263,7 +2035,7 @@ export default {
     },
     // 准备开始做一下“换一题”
     // 检索试题内容
-    submit(Index, IndexIn) {
+    replace_with_another_question(Index, IndexIn) {
 
         this.Replace_Dialog_Show = true;
         this.loading = true;
@@ -1277,8 +2049,10 @@ export default {
           type = ["填空题"]
         }else if(this.Question_List[Index].list[IndexIn].type == "解答题"){
           type = ["简答题", "计算题"]
+        }else{
+          type = [this.Question_List[Index].list[IndexIn].type]
         }
-        
+
         var data = JSON.stringify({
           "content": this.Question_List[Index].list[IndexIn].stem,
           "size": 6,
@@ -1307,6 +2081,59 @@ export default {
             this.$message.error("服务器过忙，请稍后再试。")
             this.loading = false;
         })
+    },
+    // 检索难度和知识点用于替换
+    Get_Question_Difficulty_And_KP(Index, IndexIn){
+
+      this.Replace_Question_Bundle_Index = Index;
+      this.Replace_Question_Index = IndexIn;
+      
+      this.waiting = true;
+      this.waiting_text = "正在识别知识点和难度，请稍后...";
+      
+      let Question = this.Question_List[Index].list[IndexIn];
+      let Param = {
+        "Question_Data": JSON.stringify({
+          "subject": this.Subject,
+          "questions": [{
+            "stem": Question.stem
+          }]
+        })
+      }
+      commonAjax(this.backendIP + '/api/get_know_diff', Param)
+      .then((data)=>{
+          this.Combine_Replace_Question_Info = {
+            difficulty: data[0].difficulty,
+            id: Question.id,
+            stem: Question.stem,
+            options: Question.options,
+            answer: Question.answer,
+            analysis: Question.analyse,
+            score: Question.score,
+            type: Question.type,
+            knowledgePointInfos: {
+                ID: [],
+                Label: [],
+                Layer: []
+            },
+          }
+          for(let i = 0; i < data[0].knowledgePoint.label.length; i++){
+            let ID = this.Search_KP_ID(data[0].knowledgePoint.label[i], data[0].knowledgePoint.layer[i])
+            if(this.Combine_Replace_Question_Info.knowledgePointInfos.ID.indexOf(ID) == -1){
+              this.Combine_Replace_Question_Info.knowledgePointInfos.ID.push(ID),
+              this.Combine_Replace_Question_Info.knowledgePointInfos.Label.push(data[0].knowledgePoint.label[i])
+              this.Combine_Replace_Question_Info.knowledgePointInfos.Layer.push(data[0].knowledgePoint.layer[i])
+            }
+          }
+          this.Replace_Dialog_Show = true;
+          setTimeout(()=>{
+            this.$refs.Question_KPTree.setCheckedKeys(this.Combine_Replace_Question_Info.knowledgePointInfos.ID);
+          }, 100)
+      })
+      .finally(()=>{
+        this.waiting = false;
+        this.waiting_text = "";
+      })
     },
     // 根据当前正在悬浮的题目返回不同的样式
     Get_Hover_Question(Index, IndexIn){
@@ -1521,6 +2348,11 @@ export default {
   border: 1px solid #92D050;
   color: #92D050;
 }
+.None_Padding_Dialog .el-dialog__body{
+  padding: 0;
+  padding-bottom: 30px;
+  margin: 0;
+}
 </style>
 <style lang="scss" scoped>
 .Custom_Score_Input{
@@ -1583,6 +2415,7 @@ export default {
   padding: 0px;
   border-radius: 0px;
 }
+
 .Bundle_Introduce_Input.el-input {
   width: 200px;
 }
@@ -1597,5 +2430,60 @@ export default {
   background: #F8FBFF;
   border: 1px dashed black;
   margin-left: 5vw;
+}
+// 类比组卷的时候，大题题包的样式
+.Compare_Bundle{
+  margin: 30px;
+  padding: 24px;
+}
+// 题包类型的样式
+.Compare_Bundle_Type{
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+// 知识点内容的样式
+.KU_Button{
+  border: 1px solid #409EFF;
+  background: #F8FBFF;
+  margin: 0px 0px 0px 10px;
+  padding: 4px;
+  color: #409EFF;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.filterButtonUnfocus{
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #409EFF;
+    color: #409EFF;
+    border-radius: 30px;
+    margin-left: 8px; 
+    margin-right: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.filterButtonFocus{
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #409EFF;
+    color: white;
+    border-radius: 30px;
+    margin-left: 8px; 
+    margin-right: 8px;
+    box-sizing: border-box;
+    background: #409EFF;
+    cursor: pointer;
+}
+// 替换单题的时候，试题的试题卡
+.Replace_Question_Aim{
+    margin: 30px 0;
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba($color: #000000, $alpha: 0.12);
 }
 </style>
