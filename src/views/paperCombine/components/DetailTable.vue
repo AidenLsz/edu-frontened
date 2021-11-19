@@ -733,6 +733,7 @@ export default {
             this.Search_KP(Bundle.List[j], Bundle.Type)
           }
         }
+        this.$emit("Clear_List", true)
         commonAjax(this.backendIP+'/api/detail_table_generate', {
           'detail_table': JSON.stringify(this.Searching_Question_Info, null, 4)
         })
