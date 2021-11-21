@@ -309,43 +309,57 @@
           </div>
         </el-row>
       </div>
-      <!-- 多层次，多维度智能分析 -->
-      <div style="width: 100%; height: 700px" align="center">
-        <el-row class="Area_Row" style="padding-top: 100px; padding-bottom: 100px;">
-          <div class="Multi_Analyse_Rader_Left">
+      <!-- 组卷系统介绍 -->
+      <div style="width: 100%;" align="center">
+        <el-row class="Area_Row" style="height: 700px">
+          <div class="Combine_Paper_Area_Left">
             <el-row>
               <el-col>
                 <el-row type="flex" justify="start" class="Part_Title">
-                  <span>深层次、多维度智能分析</span>
+                  <span>多样化组卷系统，一应俱全</span>
                 </el-row>
                 <el-row 
                   type="flex" 
                   justify="start" 
-                  style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 20px; height: 84px; line-height: 28px; color: #595959">
-                  使用人工智能和数据挖掘技术对试题和试卷，在各个层次、多个维度上分析，如各题型占比、关键词比较、知识点分值和难度变化
+                  style="word-break: break-all; text-align: left; margin-top: 24px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
+                  智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 28px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>试题质量、难度分析
+                <el-row type="flex" justify="start" style="margin-top: 24px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>智能组卷
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 16px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>试题、试卷知识点分析
+                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>关键词搜题
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 16px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>试卷综合分析
+                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>知识点搜题
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>以题搜题
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 44px;">
-                  <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Analyse_Switch_Dialog = true">
-                    开始分析<i class="el-icon-right" style="margin-left: 10px;"></i>
+                  <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Route_Trans('/paperCombine')">
+                    开始体验<i class="el-icon-right" style="margin-left: 10px;"></i>
                   </div>
                 </el-row>
               </el-col>
             </el-row>
           </div>
-          <div id="Multi_Analyse_Radar_Chart" class="Multi_Analyse_Radar_Chart">
-
+          <div class="Combine_Paper_Area_Right">
+            <el-col>
+              <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(-2deg); display: block; padding: 0;">
+                <span style="font-size: 22px">多样化搜题、选题</span>
+              </div>
+              <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(2deg); display: block; padding: 0">
+                <span style="font-size: 22px">试卷和答题卡生成</span>
+              </div>
+              <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(-2deg); display: block; padding: 0">
+                <span style="font-size: 22px">高质量自动化组卷</span>
+              </div>
+            </el-col>
           </div>
         </el-row>
       </div>
+      
       <!-- 知识点直观呈现 -->
       <div style="width: 100%; background: #F8F9FA;" align="center">
         <el-row class="Area_Row" style="height: 700px;" type="flex" justify="center">
@@ -396,53 +410,40 @@
           </div>
         </el-row>
       </div>
-      <!-- 组卷系统介绍 -->
-      <div style="width: 100%;" align="center">
-        <el-row class="Area_Row" style="height: 700px">
-          <div class="Combine_Paper_Area_Left">
+      <!-- 多层次，多维度智能分析 -->
+      <div style="width: 100%; height: 700px" align="center">
+        <el-row class="Area_Row" style="padding-top: 100px; padding-bottom: 100px;">
+          <div class="Multi_Analyse_Rader_Left">
             <el-row>
               <el-col>
                 <el-row type="flex" justify="start" class="Part_Title">
-                  <span>多样化组卷系统，一应俱全</span>
+                  <span>深层次、多维度智能分析</span>
                 </el-row>
                 <el-row 
                   type="flex" 
                   justify="start" 
-                  style="word-break: break-all; text-align: left; margin-top: 24px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
-                  智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能
+                  style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 20px; height: 84px; line-height: 28px; color: #595959">
+                  使用人工智能和数据挖掘技术对试题和试卷，在各个层次、多个维度上分析，如各题型占比、关键词比较、知识点分值和难度变化
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 24px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>智能组卷
+                <el-row type="flex" justify="start" style="margin-top: 28px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>试题质量、难度分析
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>关键词搜题
+                <el-row type="flex" justify="start" style="margin-top: 16px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>试题、试卷知识点分析
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>知识点搜题
-                </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>以题搜题
+                <el-row type="flex" justify="start" style="margin-top: 16px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>试卷综合分析
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 44px;">
-                  <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Route_Trans('/paperCombine')">
-                    开始体验<i class="el-icon-right" style="margin-left: 10px;"></i>
+                  <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Analyse_Switch_Dialog = true">
+                    开始分析<i class="el-icon-right" style="margin-left: 10px;"></i>
                   </div>
                 </el-row>
               </el-col>
             </el-row>
           </div>
-          <div class="Combine_Paper_Area_Right">
-            <el-col>
-              <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(-2deg); display: block; padding: 0;">
-                <span style="font-size: 22px">多样化搜题、选题</span>
-              </div>
-              <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(2deg); display: block; padding: 0">
-                <span style="font-size: 22px">试卷和答题卡生成</span>
-              </div>
-              <div class="Resource_Manager_Float_Block Combine_Paper_Area_Div" style="transform: rotate(-2deg); display: block; padding: 0">
-                <span style="font-size: 22px">高质量自动化组卷</span>
-              </div>
-            </el-col>
+          <div id="Multi_Analyse_Radar_Chart" class="Multi_Analyse_Radar_Chart">
+
           </div>
         </el-row>
       </div>
@@ -583,36 +584,36 @@
           </div>
         </el-row>
       </div>
-      <!-- 多层次，多维度智能分析 -->
-      <div style="width: 100%; height: 950px" align="center">
-        <el-row class="Area_Row" style="padding-top: 60px; ">
-          <div class="Multi_Analyse_Rader_Left">
+      <!-- 组卷系统介绍 -->
+      <div style="width: 100%;" align="center">
+        <el-row class="Area_Row" style="height: 700px">
+          <div class="Combine_Paper_Area_Left">
             <el-row>
               <el-col>
                 <el-row type="flex" justify="start" class="Part_Title">
-                  <span>深层次、多维度智能分析</span>
+                  <span>多样化组卷系统，一应俱全</span>
                 </el-row>
                 <el-row 
                   type="flex" 
                   justify="start" 
                   style="word-break: break-all; text-align: left; margin-top: 24px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
-                  使用人工智能和数据挖掘技术对试题和试卷，在各个层次、多个维度上分析，如各题型占比、关键词比较、知识点分值和难度变化
+                  智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 24px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>试题质量、难度分析
+                  <div class="Dot"></div>智能组卷
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 16px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>试题、试卷知识点分析
+                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>关键词搜题
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 16px; margin-bottom: 44px; font-size: 20px;">
-                  <div class="Dot"></div>试卷综合分析
+                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>知识点搜题
                 </el-row>
-                <div id="Multi_Analyse_Radar_Chart_Narrow" class="Multi_Analyse_Radar_Chart_Narrow">
-
-                </div>
+                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>以题搜题
+                </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 44px;">
-                  <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Analyse_Switch_Dialog = true">
-                    开始分析<i class="el-icon-right" style="margin-left: 10px;"></i>
+                  <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Route_Trans('/paperCombine')">
+                    开始体验<i class="el-icon-right" style="margin-left: 10px;"></i>
                   </div>
                 </el-row>
               </el-col>
@@ -670,36 +671,36 @@
           </div>
         </el-row>
       </div>
-      <!-- 组卷系统介绍 -->
-      <div style="width: 100%;" align="center">
-        <el-row class="Area_Row" style="height: 700px">
-          <div class="Combine_Paper_Area_Left">
+      <!-- 多层次，多维度智能分析 -->
+      <div style="width: 100%; height: 950px" align="center">
+        <el-row class="Area_Row" style="padding-top: 60px; ">
+          <div class="Multi_Analyse_Rader_Left">
             <el-row>
               <el-col>
                 <el-row type="flex" justify="start" class="Part_Title">
-                  <span>多样化组卷系统，一应俱全</span>
+                  <span>深层次、多维度智能分析</span>
                 </el-row>
                 <el-row 
                   type="flex" 
                   justify="start" 
                   style="word-break: break-all; text-align: left; margin-top: 24px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
-                  智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能
+                  使用人工智能和数据挖掘技术对试题和试卷，在各个层次、多个维度上分析，如各题型占比、关键词比较、知识点分值和难度变化
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 24px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>智能组卷
+                  <div class="Dot"></div>试题质量、难度分析
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>关键词搜题
+                <el-row type="flex" justify="start" style="margin-top: 16px; margin-bottom: 10px; font-size: 20px;">
+                  <div class="Dot"></div>试题、试卷知识点分析
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>知识点搜题
+                <el-row type="flex" justify="start" style="margin-top: 16px; margin-bottom: 44px; font-size: 20px;">
+                  <div class="Dot"></div>试卷综合分析
                 </el-row>
-                <el-row type="flex" justify="start" style="margin-top: 13px; margin-bottom: 10px; font-size: 20px;">
-                  <div class="Dot"></div>以题搜题
-                </el-row>
+                <div id="Multi_Analyse_Radar_Chart_Narrow" class="Multi_Analyse_Radar_Chart_Narrow">
+
+                </div>
                 <el-row type="flex" justify="start" style="margin-top: 44px;">
-                  <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Route_Trans('/paperCombine')">
-                    开始体验<i class="el-icon-right" style="margin-left: 10px;"></i>
+                  <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Analyse_Switch_Dialog = true">
+                    开始分析<i class="el-icon-right" style="margin-left: 10px;"></i>
                   </div>
                 </el-row>
               </el-col>
