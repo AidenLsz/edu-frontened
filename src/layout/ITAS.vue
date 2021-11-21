@@ -3,45 +3,72 @@
     <!-- 试卷分析路径跳转 -->
     <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-row>
-            <el-button @click="PAS(0)" circle style="height: 200px; width: 200px"><img
+            <el-button
+              @click="PAS(0)"
+              circle
+              style="height: 200px; width: 200px"
+              ><img
                 src="@/assets/icon4.png"
                 width="150%"
                 style="margin-left: -46px; margin-top: -46px"
-            />
+              />
             </el-button>
           </el-row>
           <el-row>
             <el-button
-                type="text"
-                @click="PAS(0)"
-                style="margin-top: 30px; font-size: 20px; color: black"
+              type="text"
+              @click="PAS(0)"
+              style="margin-top: 30px; font-size: 20px; color: black"
             >
               录入试卷进行分析
             </el-button>
           </el-row>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-row>
             <el-button
-                @click="PAS(1)"
-                circle
-                style="height: 200px; width: 200px"
-            ><img
+              @click="PAS(1)"
+              circle
+              style="height: 200px; width: 200px"
+              ><img
                 src="@/assets/icon1.png"
                 width="150%"
                 style="margin-left: -46px; margin-top: -46px"
-            />
+              />
             </el-button>
           </el-row>
           <el-row>
             <el-button
-                type="text"
-                @click="PAS(1)"
-                style="margin-top: 30px; font-size: 20px; color: black"
+              type="text"
+              @click="PAS(1)"
+              style="margin-top: 30px; font-size: 20px; color: black"
             >
               选择题库中试卷进行分析
+            </el-button>
+          </el-row>
+        </el-col>
+        <el-col :span="8">
+          <el-row>
+            <el-button
+              @click="PAS(2)"
+              circle
+              style="height: 200px; width: 200px"
+              ><img
+                src="@/assets/icon15.png"
+                width="60%"
+                style="margin-left: 0px; margin-top: 0px"
+              />
+            </el-button>
+          </el-row>
+          <el-row>
+            <el-button
+              type="text"
+              @click="PAS(2)"
+              style="margin-top: 30px; font-size: 20px; color: black"
+            >
+              选择多张试卷进行分析
             </el-button>
           </el-row>
         </el-col>
@@ -101,10 +128,10 @@
     <login ref="login" @register_show="register_show" />
     <register ref="register" />
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
-    <el-header style="height: 70px">
+    <el-header style="height: 70px; margin-bottom: 30px;">
       <div id="header-sticky" class="sticky-menu">
-        <el-row>
-          <el-col :span="4" style="padding-top: 20px; padding-left: 30px">
+        <el-row type="flex" justify="start">
+          <div align="left" class="Header_Icon" style="padding-top: 20px; padding-left: 5vw">
             <img
                 src="@/assets/luna_icon.png"
                 alt="Logo"
@@ -112,243 +139,89 @@
                 style="cursor: pointer"
                 @click="goToMainPage"
             />
-          </el-col>
-          <el-col :span="10" :offset="10">
+          </div>
+          <div align="right" class="Header_Functions">
             <el-row type="flex" justify="end">
-              <!--
-							<el-col :span="4" style="padding-top: 15px;">
-								<el-button type="text" @click="goTolalala" class="navbar">啦啦啦</el-button>
-							</el-col>
-							-->
-              <el-col
-                  :span="2"
+              <div
+                  align="center"
+                  class="Function_Items"
                   v-if="$store.state.user.name"
                   style="padding-top: 15px"
               >
                 <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
-              </el-col>
-              <el-col :span="4" :offset="1" v-else style="padding-top: 15px">
-                <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
-              </el-col>
-              <!-- <el-col :span="4" style="padding-top: 15px">
+              </div>
+              <!-- 功能分离处 -->
+              <div 
+                align="center"
+                class="Function_Items"
+                style="padding-top: 15px; padding-left: 0; width: 120px;" >
                 <el-menu
                     mode="horizontal"
-                    style="border-bottom: 3px solid #409eff; padding-bottom: 10px"
+                    style="border-bottom: none; padding-bottom: 10px; width: 120px;"
                 >
-                  <el-submenu index="0">
-                    <template slot="title">
-                      <span :style="Title_Pos()">功能</span>
-                    </template>
-
-                    <el-menu-item index="1">
-                    <router-link
-                        to="/ku"
-                        :underline="false"
-                        @click.native="ToTop"> 
-                    <span style="color: black">知识单元检索</span>
-                    </router-link>
-                    </el-menu-item>
-
-                    <el-submenu index="2">
-                      <template slot="title"
-                      ><span style="color: black">资源管理</span></template
-                      >
-                    <el-submenu index="2-1">
-                      <template slot="title"
-                      ><span style="color: black">资源检索</span></template
-                      >
-                      <router-link
-                          to="/exercise"
-                          :underline="false"
-                          @click.native="ToTop"> 
-                      <el-menu-item index="2-1-1"
-                      ><span style="color: black">试题检索</span>
-                      </el-menu-item>
-                      </router-link>
-
-                      <router-link
-                          to="/searchPaper"
-                          :underline="false"
-                          @click.native="ToTop"> 
-                      <el-menu-item index="2-1-2"
-                      ><span style="color: black">试卷检索</span>
-                      </el-menu-item>
-                      </router-link>
-
-                    </el-submenu>
-
-                    <el-submenu index="2-2">
-                      <template slot="title"
-                      ><span style="color: black">资源录入</span></template
-                      >
-                      <router-link
-                          to="/inputMarked"
-                          :underline="false"
-                          @click.native="ToTop"> 
-                      <el-menu-item index="2-2-1"
-                      ><span style="color: black">试题录入</span>
-                      </el-menu-item>
-                      </router-link>
-                      <router-link
-                          to="/inputPaper"
-                          :underline="false"
-                          @click.native="ToTop"> 
-                      <el-menu-item index="2-2-2"
-                      ><span style="color: black">试卷录入</span>
-                      </el-menu-item>
-                      </router-link>
-                    </el-submenu>
-                     
-                    <el-menu-item index="2-3">
-                      <router-link
-                          to="/manage/dashboard"
-                          :underline="false"
-                          @click.native="ToTop">
-                      <span style="color: black">我的资源</span>
-                      </router-link>
-                    </el-menu-item>
-                    </el-submenu>
-
-                    <el-submenu index="3">
-                      <template slot="title"
-                      ><span style="color: black">资源分析</span></template
-                      >
-                      <el-menu-item
-                          index="3-1"
-                          @click="QuestionAnalyseSwitch()"
-                          @click.native="ToTop"
-                      >
-                        <span style="color: black">试题资源</span>
-                      </el-menu-item>
-                      <el-menu-item
-                          index="3-2"
-                          @click="PaperAnalyseSwitch()"
-                          @click.native="ToTop"
-                      >
-                        <span style="color: black">试卷资源</span>
-                      </el-menu-item>
-                    </el-submenu>
-                  
-                    <el-menu-item index="4">
-                      <router-link
-                        to="/paperCombine"
-                        :underline="false"
-                        @click.native="ToTop">
-                      <span style="color: black">组卷系统</span>
-                      </router-link>
-                    </el-menu-item>
-
-                    <router-link
-                        to="/estimate"
-                        :underline="false"
-                        @click.native="ToTop"
-                        style="display: none"
+                <el-submenu index="1">
+                    <template slot="title"
+                    ><span :style="Title_Pos()">教学资源</span></template
                     >
-                      <el-menu-item index="7">
-                        <span style="color: black">试题属性预估</span>
+                    <router-link
+                      :to="rootPath+'inputMarked'"
+                      :underline="false"
+                      @click.native="ToTop"> 
+                      <el-menu-item index="2-1">
+                        <span style="color: black">试题录入</span>
                       </el-menu-item>
                     </router-link>
                     <router-link
-                        to="/similarity"
-                        :underline="false"
-                        @click.native="ToTop"
-                        style="display: none"
-                    >
-                      <el-menu-item index="8">
-                        <span style="color: black">相似题预估</span>
+                      :to="rootPath+'inputPaper'"
+                      :underline="false"
+                      @click.native="ToTop"> 
+                      <el-menu-item index="2-2">
+                        <span style="color: black">试卷录入</span>
                       </el-menu-item>
                     </router-link>
                     <router-link
-                        to="/admin"
-                        v-if="Get_Priority()"
-                        :underline="false"
-                        @click.native="ToTop"
-                    >
-                      <el-menu-item index="9">
-                        <span style="color: red">管理员页面</span>
+                      :to="rootPath+'manage/dashboard'"
+                      :underline="false"
+                      @click.native="ToTop">
+                      <el-menu-item index="2-3">
+                        <span style="color: black">我的资源</span>
                       </el-menu-item>
                     </router-link>
                   </el-submenu>
                 </el-menu>
-              </el-col> -->
-              <!-- 功能分离处 -->
-
-
-              <el-col :span="4" style="padding-top: 15px" >
-                <el-menu
-                    mode="horizontal"
-                    style="border-bottom: 3px solid #409eff; padding-bottom: 10px"
+              </div> 
+              <div 
+                align="center"
+                class="Function_Items" style="padding-top: 15px">
+                <el-button type="text" @click="composePaperSystem" class="navbar"
+                >组卷系统</el-button
                 >
-                <el-submenu index="2">
-                      <template slot="title"
-                      ><span :style="Title_Pos()">资源管理</span></template
-                      >
-                    <el-submenu index="2-1">
-                      <template slot="title"
-                      ><span style="color: black">资源检索</span></template
-                      >
-                      <router-link
-                          :to="rootPath+'exercise'"
-                          :underline="false"
-                          @click.native="ToTop"> 
-                      <el-menu-item index="2-1-1"
-                      ><span style="color: black">试题检索</span>
-                      </el-menu-item>
-                      </router-link>
+              </div> 
+              <div 
+                align="center"
+                class="Function_Items" style="padding-top: 15px">
+                <el-button type="text" @click="knowledegeUnitSearch" class="navbar"
+                >知识联想</el-button
+                >
+              </div>
+              <div 
+                align="center"
+                class="Function_Items" style="padding-top: 15px">
+                <el-button type="text" @click="PaperAnalyseSwitch" class="navbar"
+                >智能分析</el-button
+                >
+              </div>
 
-                      <router-link
-                          :to="rootPath+'searchPaper'"
-                          :underline="false"
-                          @click.native="ToTop"> 
-                      <el-menu-item index="2-1-2"
-                      ><span style="color: black">试卷检索</span>
-                      </el-menu-item>
-                      </router-link>
-
-                    </el-submenu>
-
-                    <el-submenu index="2-2">
-                      <template slot="title"
-                      ><span style="color: black">资源录入</span></template
-                      >
-                      <router-link
-                          :to="rootPath+'inputMarked'"
-                          :underline="false"
-                          @click.native="ToTop"> 
-                      <el-menu-item index="2-2-1"
-                      ><span style="color: black">试题录入</span>
-                      </el-menu-item>
-                      </router-link>
-                      <router-link
-                          :to="rootPath+'inputPaper'"
-                          :underline="false"
-                          @click.native="ToTop"> 
-                      <el-menu-item index="2-2-2"
-                      ><span style="color: black">试卷录入</span>
-                      </el-menu-item>
-                      </router-link>
-                    </el-submenu>
-                     
-                    <el-menu-item index="2-3">
-                      <router-link
-                          :to="rootPath+'manage/dashboard'"
-                          :underline="false"
-                          @click.native="ToTop">
-                      <span style="color: black">我的资源</span>
-                      </router-link>
-                    </el-menu-item>
-                    </el-submenu>
-                </el-menu>
-              </el-col>  
-
-              <el-col :span="4" style="padding-top: 15px">
+              <!-- <div 
+                align="center"
+                class="Function_Items" style="padding-top: 15px; width: 120px;">
                 <el-menu
                     mode="horizontal"
-                    style="border-bottom: 3px solid #409eff; padding-bottom: 10px"
+                    style="border-bottom: none; padding-bottom: 10px"
                 >
                   <el-submenu index="3">
                     <template slot="title"
-                    ><span :style="Title_Pos()">资源分析</span></template
+                    ><span :style="Title_Pos()">智能分析</span></template
                     >
                     <el-menu-item
                         index="3-1"
@@ -366,21 +239,10 @@
                     </el-menu-item>
                   </el-submenu>
                 </el-menu>
-              </el-col>
-              
-              <el-col :span="4" style="padding-top: 15px">
-                <el-button type="text" @click="knowledegeUnitSearch" class="navbar"
-                >知识检索</el-button
-                >
-              </el-col>
-
-              <el-col :span="4" style="padding-top: 15px">
-                <el-button type="text" @click="composePaperSystem" class="navbar"
-                >组卷系统</el-button
-                >
-              </el-col>
-
-              <el-col :span="4" style="padding-top: 15px"  v-if="$store.state.user.name" >
+              </div> -->
+              <div 
+                align="center"
+                class="Function_Items" style="padding-top: 17px"  v-if="$store.state.user.name" >
                 <el-row>
                   <el-dropdown
                       trigger="hover"
@@ -404,19 +266,23 @@
                     </el-dropdown-menu>
                   </el-dropdown>
                 </el-row>
-              </el-col>
-              <el-col :span="4" style="padding-top: 15px" v-else>
+              </div>
+              <div 
+                align="center"
+                class="Function_Items" style="padding-top: 15px" v-else>
                 <el-button type="text" @click="login_show" class="navbar"
                 >登录</el-button
                 >
-              </el-col>
-              <el-col :span="4" style="padding-top: 15px">
+              </div>
+              <div 
+                align="center"
+                class="Function_Items" style="padding-top: 15px">
                 <el-button type="text" @click="register_show" class="navbar"
                 >注册</el-button
                 >
-              </el-col>
+              </div>
             </el-row>
-          </el-col>
+          </div>
         </el-row>
       </div>
     </el-header>
@@ -520,12 +386,17 @@ export default {
           path: this.rootPath + "paperAnalyseInput"
         });
         this.PaperAnalyseSwitchFlag = false;
-      } else {
+      } else if( index == 1){
         this.$router.push({
           path: this.rootPath + "searchPaper"
         });
         this.PaperAnalyseSwitchFlag = false;
-      }
+      }else if (index == 2) {
+        this.$router.push({
+          path: this.rootPath + "multipaperanalyse",
+        });
+        this.PaperAnalyseSwitchFlag = false;
+      } 
     },
     // 跳转至试卷分析的不同位置的对话框
     PaperAnalyseSwitch() {
@@ -536,6 +407,7 @@ export default {
         "font-size": "18px",
         color: "black",
         "margin-left": "0px",
+        "padding-left": "0px"
       };
     },
     Calculate_Title_Margin() {
@@ -639,6 +511,10 @@ export default {
   border-bottom: 2px solid transparent;
   width: 50%;
   z-index: 999;
+}
+
+.Function_Items .el-submenu__title {
+  padding: 0;
 }
 
 .el-header .el-menu .el-menu--horizontal {
@@ -836,4 +712,16 @@ export default {
   height: 100%;
   width: 100%;
 }
+
+.Header_Icon{
+  width: 300px;
+}
+.Header_Functions{
+  width: calc(100% - 5vw - 300px);
+}
+
+.Function_Items{
+  width: 100px;
+}
+
 </style>

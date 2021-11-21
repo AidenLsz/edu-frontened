@@ -70,6 +70,11 @@ const router=[
     component:()=> import("@/views/resourceAnalyse/QuestionAnalyseInput")
   },
   {
+    path: "MultiPaperAnalyse",
+    name: "MultiPaperAnalyse",
+    component: () => import("@/views/resourceAnalyse/MultiPaperAnalyse.vue"),
+  },
+  {
     path: "inputPaper",
     name: "inputPaper",
     component:()=> import("@/views/resourceInput/InputPaper"),
