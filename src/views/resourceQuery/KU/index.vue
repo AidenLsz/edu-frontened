@@ -1,57 +1,105 @@
 /* eslint-disable camelcase */
 <template>
   <div class="ku" style="padding-top: 10px">
-    <el-dialog
+    <!-- <el-dialog
         :visible.sync="simpleInput"
         title="LUNA输入助手"
         width="65%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
       <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="content"></ComplexInput>
-    </el-dialog>
+    </el-dialog> -->
 
-    <el-row justify="start" type="flex">
-      <el-col style="padding-left: 5vw;">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>
-            知识单元检索
-            <span @click="openInstructionDialog" style="cursor:pointer;">
-              <i class="el-icon-question"></i>
-            </span>
-          </el-breadcrumb-item>
-        </el-breadcrumb>
-      </el-col>
+    <el-row justify="start" type="flex" style="margin: 0">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>
+          知识单元检索
+          <span @click="openInstructionDialog" style="cursor:pointer;">
+            <i class="el-icon-question"></i>
+          </span>
+        </el-breadcrumb-item>
+      </el-breadcrumb>
     </el-row>
-
     <instruction ref="instruction"/>
-    <!-- 搜索框行 -->
-    <el-row type="flex" justify="start" class="SearchArea">
-        <el-col :span="20">
-          <el-input class="SearchInput" v-model="ku_name" type="text" @keyup.enter.native="submit(ku_name)">
-
-          </el-input>
-        </el-col>
-        <el-col :span="1">
-          <el-button type="text" style="font-size: 20px; color: black;" size="small" v-if="content != ''" @click="content = ''">
-            <i class="el-icon-close"></i>
-          </el-button>
-        </el-col>
-        <el-col :span="1">
-          <el-divider direction="vertical"></el-divider>
-        </el-col>
-        <el-col :span="1">
-          <el-button type="text" style="font-size: 18px; color: black; display: block; margin-left: -5px"  size="small" @click="simpleInput = true">
-            ∑
-          </el-button>
-        </el-col>
-        <el-col :span="1">
-          <el-button type="text" style="font-size: 20px; display: block; margin-left: -8px;" size="small" @click="submit(ku_name)">
-            <i class="el-icon-search"></i>
-          </el-button>
-        </el-col>
+    <!-- 页面标题行 -->
+    <el-row
+        type="flex"
+        class="KU_Title"
+        justify="start"
+        style="margin-top: 12px; margin-bottom: 30px;">
+        <span>知识单元检索</span>
     </el-row>
-    <!-- 相关搜索 -->
+
+    <!-- 学科行 -->
+    <el-row type="flex" justify="start" style="margin-bottom: 18px; font-size: 18px;">
+      <label>学科</label>
+    </el-row>
+    <el-row type="flex" justify="start" class="SearchArea">
+      <div 
+        v-for="(Subject, Subject_Index) in Subject_List_All" 
+        :key="'Subject_' + Subject_Index"
+        :class="Get_Subject_Button_Class(Subject)" 
+        @click="Change_Subject_List(Subject)">
+        <span>{{Subject}}</span>
+      </div>
+    </el-row>
+
+    <!-- 学段行 -->
+    <el-row type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;">
+      <label>学段</label>
+    </el-row>
+    <el-row type="flex" justify="start" class="SearchArea">
+      <div 
+        v-for="(Period, Period_Index) in Period_List_All" 
+        :key="'Period_' + Period_Index"
+        :class="Get_Period_Button_Class(Period)" 
+        @click="Change_Period_List(Period)">
+        <span>{{Period}}</span>
+      </div>
+    </el-row>
+    
+    <!-- 搜索框行 -->
+    <el-row type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;">
+      <label>检索</label>
+    </el-row>
+    <el-row type="flex" justify="start" class="SearchArea">
+      <div style="width: 684px">
+        <el-input 
+          prefix-icon="el-icon-search"
+          placeholder="请输入知识单元名称"
+          class="SearchInput" v-model="ku_name" type="text" @keyup.enter.native="submit(ku_name)">
+
+        </el-input>
+      </div>
+      <div class="SearchButton" @click="submit(ku_name)">
+        <span>检索</span>
+      </div>
+    </el-row>
+
+    <!-- 搜索结果行 -->
+    <el-row type="flex" justify="start" style="margin: 0;" v-show="Search_KU">
+      <el-button type="text" @click="Transition_Show = !Transition_Show" style="color: black"><i class="el-icon-caret-right" :style="Get_Rotate_Triangle(Transition_Show)"></i><label style="cursor: pointer">搜索结果</label></el-button>
+    </el-row>
+    <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 32px">
+      <transition name="el-zoom-in-top">
+        <!-- 用于显示知识点的地方 -->
+        <div v-show="Transition_Show" class="transition-box">
+          <!-- <div v-for="(Node_Name, Node_Index) in similar_nodes" :key="'Similar_' + Node_Index" class="KU_Point_Card">
+            <KnowledgePointCard>
+
+            </KnowledgePointCard>
+          </div> -->
+          <div v-for="Node_Index in 5" :key="'Similar_' + Node_Index" class="KU_Point_Card">
+            <KnowledgePointCard>
+
+            </KnowledgePointCard>
+          </div>
+        </div>
+      </transition>
+    </el-row>
+  
+    <!-- 相关搜索
     <el-row class="ConnectSearch" v-if="similar_nodes.length" style="">
       <el-row style="margin-left: -1330px;font-size: 14px;">相关搜索</el-row>
       <el-row type="flex" v-model="similar_nodes" v-for="_row in 2" :key="_row">
@@ -61,108 +109,81 @@
           </el-button>
         </el-col>          
       </el-row>        
-    </el-row>
+    </el-row> -->
 
-    <el-row class="panel-body" v-loading="loading" style="" v-if="FullChange">
-      <div class="tab panel-btn" id="openBtn" @click="openPanel()">
-            <div>知识卡片</div>
-          <div class="arrow"></div>
+    <el-row type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;" v-if="Search_Result">
+      <label>知识点详情</label>
+    </el-row>
+    <el-row class="panel-body" v-loading="loading" v-if="Search_Result">
+      <div class="graph" id="graph_container">
+        <Graph
+          ref="graph"
+          @search="search"
+          />
       </div>
-      <el-card class="box-card left">
-        <div class="panel-btn" id="closeBtn" @click="closePanel()">
-          <i class="el-icon-d-arrow-left"></i>
-        </div>
-        <div class="container">
-          <div class="intro">
-            <!-- <el-row type="flex" justify="start">
-              <h4 style="color: #0a1612; font-weight: bold">知识单元简介</h4>
-            </el-row> -->
-            <el-row type="flex" justify="start" class="title">
-              {{ data.nodes?data.nodes.node.name:"" }}
-            </el-row>
-            <el-row type="flex" justify="start" class="content">
-              <el-col>
-                {{ (data.nodes?data.nodes.node.description:"").split("...")[0] }}
-                <a
-                  v-if="ku_name.length > 0"
-                  v-bind:href="url"
-                  target="_blank"
-                  :underline="false"
-                >
-                </a>
-              </el-col>
-            </el-row>
-          </div>
-          <el-divider></el-divider>
-          <el-row class="detail">
-            <el-col>
-              <el-row>
-                <h4 style="color: #0a1612; float: left; font-weight: bold">知识关系
-                  <el-tooltip  class="item" effect="dark" placement="right">
-                    <div class="instruction" slot="content">
-                      <h5>前驱后继</h5>
-                      <p>
-                        前驱节点是学习当前节点的必要条件，掌握了前驱节点才能理解当前知识节点。掌握当前知识节点是掌握后继节点的必要条件。
-                      </p>
-                      <h5>共同学习</h5>
-                      <p>
-                        共同学习知识节点和当前知识节点有相互促进关系，掌握了共同学习知识节点可以更好地理解当前知识节点。
-                      </p>
-                      <h5>层级关系</h5>
-                      <p>
-                        树状节点图中，上级节点包括当前知识节点，当前知识节点包括下级节点。
-                      </p>
-                    </div>
-                    <i class="el-icon-question"></i>
-                  </el-tooltip>
-                </h4>
-              </el-row>
-              <el-tabs v-model="activeName" :stretch="true" :lazy="true" @click.native="handleSwitchTabs()" >
-                <el-button type="text" class="zoom-in-btn" size="small" @click="handleFullScreen()">
-                  <i class="el-icon-full-screen"></i>
-                </el-button>
-                <el-tab-pane
-                 label="前驱后继" name="presuc" id="presuc_container" class="svg-container">
-                  <pre-suc
-                    ref="presuc"
-                    @search="search"
-                  />
-                </el-tab-pane>
-                <el-tab-pane label="共同学习" name="costudy" id="costudy_container" class="svg-container">
-                  <co-study
-                    ref="costudy"
-                    @search="search"
-                    />
-                </el-tab-pane>
-                <el-tab-pane label="层级关系" name="hierarchy" id="tree_container" class="svg-container">
-                  <Hierarchy
-                    ref="hierarchy"
-                    />
-                </el-tab-pane>
-              </el-tabs>
-            </el-col>
+      <div class="container">
+        <div class="intro">
+          <el-row type="flex" justify="start" class="title">
+            {{ data.nodes ? data.nodes.node.name : "" }}
+          </el-row>
+          <el-row type="flex" justify="start" class="content">
+            {{ (data.nodes ? data.nodes.node.description : "").split("...")[0] }}
           </el-row>
         </div>
-
-      </el-card>
-
-      <el-col>
-        <div class="graph" id="graph_container">
-          <Graph
-            ref="graph"
-            @search="search"
-            />
-            <!-- :node="node" -->
-            <!-- :neighbors_groups="neighbors_groups"
-            :neighbors_hierarchy="neighbors_hierarchy"
-            :inward_arrow="inward_arrow"
-            :outward_arrow="outward_arrow"
-            :undirected_len="undirected_len"
-            :superior_layer="superior_layer"
-            :inferior_layer="inferior_layer"
-            :selected_type="checkList" -->
+        <div class="detail">
+          <el-row class="Relation_Title">
+            <label style="color: #0a1612; float: left; font-weight: bold">知识关系
+              <el-tooltip  class="item" effect="dark" placement="top">
+                <div class="instruction" slot="content">
+                  <h5>前驱后继</h5>
+                  <p>
+                    前驱节点是学习当前节点的必要条件，掌握了前驱节点才能理解当前知识节点。掌握当前知识节点是掌握后继节点的必要条件。
+                  </p>
+                  <h5 style="margin-top: 12px; display: inline-block">共同学习</h5>
+                  <p>
+                    共同学习知识节点和当前知识节点有相互促进关系，掌握了共同学习知识节点可以更好地理解当前知识节点。
+                  </p>
+                  <h5 style="margin-top: 12px; display: inline-block">层级关系</h5>
+                  <p>
+                    树状节点图中，上级节点包括当前知识节点，当前知识节点包括下级节点。
+                  </p>
+                </div>
+                <i class="el-icon-question"></i>
+              </el-tooltip>
+            </label>
+            <el-button type="text" class="zoom-in-btn" size="small" @click="handleFullScreen()">
+              <i class="el-icon-full-screen" style="margin-right: 10px"></i>全屏显示
+            </el-button>
+          </el-row>
+          <div>
+            <el-tabs v-model="activeName" :stretch="false" :lazy="true" @click.native="handleSwitchTabs()">
+              <el-tab-pane
+                label="前驱后继" name="presuc" id="presuc_container" class="svg-container">
+                <pre-suc
+                  ref="presuc"
+                  @search="search"
+                />
+              </el-tab-pane>
+              <el-tab-pane label="共同学习" name="costudy" id="costudy_container" class="svg-container">
+                <co-study
+                  ref="costudy"
+                  @search="search"
+                  />
+              </el-tab-pane>
+              <el-tab-pane label="层级关系" name="hierarchy" id="tree_container" class="svg-container">
+                <Hierarchy
+                  ref="hierarchy"
+                  />
+              </el-tab-pane>
+            </el-tabs>
+          </div>
         </div>
-      </el-col>
+      </div>
+
+      
+    </el-row>
+    <el-row v-else style="height: 300px; width: 100%;">
+      <label style="font-size: 24px; margin-top: 60px; color: #ccc">{{Search_KU ? "点击按钮查看详情信息" : "尚未检索知识点"}}</label>
     </el-row>
   </div>
 </template>
@@ -174,24 +195,29 @@ import PreSuc from "./components/PreSuc.vue";
 import CoStudy from "./components/CoStudy.vue";
 import Hierarchy from "./components/Hierarchy.vue";
 import Graph from "./components/Graph.vue";
-import ComplexInput from "@/common/components/ComplexInput.vue";
+// import ComplexInput from "@/common/components/ComplexInput.vue";
 import screenfull from 'screenfull'
 import {dataDict} from './components/utils.js'
 import {Message } from 'element-ui'
 import Instruction from './components/InstructionKU.vue'
 
+import KnowledgePointCard from '@/views/resourceQuery/KU/components/KnowledgePointCard'
+
 export default {
   components: {
     Graph,
-    ComplexInput,
+    // ComplexInput,
     PreSuc,
     CoStudy,
     Hierarchy,
-    Instruction
+    Instruction,
+    KnowledgePointCard
   },
   name: "KU",
   data() {
     return {
+      // 变化区块
+      Transition_Show:false,
       activeName:"presuc",
       content:"",
       // ku_name: "函数",
@@ -223,7 +249,6 @@ export default {
       url: "",
       image_infos: [],
       complex_input_flag: false,
-      FullChange: true,
       // 知识体系名称
       KS_List: [
         {
@@ -251,6 +276,15 @@ export default {
       knowledgeSystem: "neea",
       // 当前是否为简单输入格式
       simpleInput: false,
+      // 以下为2021 11 22 新增内容，关于学科和学段的筛选
+      Subject_List_All: ["语文", "数学", "英语", "政治", "历史", "地理", "化学", "物理", "生物"],
+      Period_List_All: ["小学", "初中", "高中", "大学", "成人"],
+      Subject_List: [],
+      Period_List: [],
+      // 标记是否为“知识点检索结果”的状况
+      Search_Result: false,
+      // 标记是否为“知识点关键字检索”的状况
+      Search_KU: false,
     };
   },
   mounted() {
@@ -279,30 +313,56 @@ export default {
     }
   },
   methods: {
+    // 小三角的变化
+    Get_Rotate_Triangle(Transition_Show){
+      let Style = {
+        "transition-duration": "300ms",
+        "transform": Transition_Show ? "rotate(90deg)" : "",
+        "margin-right": "10px",
+        "color": "black"
+      }
+
+      return Style
+    },
+    // 调整过滤项
+    Change_Subject_List(Subject){
+      let Index = this.Subject_List.indexOf(Subject)
+      if(Index == -1){
+        this.Subject_List.push(Subject)
+      }else{
+        this.Subject_List.splice(Index, 1)
+      }
+    },
+    Change_Period_List(Period){
+      let Index = this.Period_List.indexOf(Period)
+      if(Index == -1){
+        this.Period_List.push(Period)
+      }else{
+        this.Period_List.splice(Index, 1)
+      }
+
+    },
+    // 获取学科过滤按钮的类别
+    Get_Subject_Button_Class(Subject){
+      if(this.Subject_List.indexOf(Subject) != -1){
+        return "Chosen_Filter"
+      }else{
+        return "Unchosen_Filter"
+      }
+    },
+    // 获取学段过滤按钮的类别
+    Get_Period_Button_Class(Period){
+      if(this.Period_List.indexOf(Period) != -1){
+        return "Chosen_Filter"
+      }else{
+        return "Unchosen_Filter"
+      }
+    },
     getSimilarNodesElement(val1, val2){
       return this.similar_nodes[(val1-1)*5 + val2 - 1];
     },
     openInstructionDialog(){
       this.$refs.instruction.openDialog();
-    },
-    openPanel() {
-      $('.box-card.left').animate({
-        left: '0%',
-        opacity: 1
-      },'easeInOutExpo')
-      $('#openBtn').hide()
-      $('#closeBtn').show()
-
-      // $('.box-card.left').css('display','block')
-    },
-    closePanel(){
-      $('.box-card.left').animate({
-        left: '-50%',
-        opacity: 0,
-      }, 'easeInOutExpo')
-      $('#openBtn').show()
-      $('#closeBtn').hide()
-      // setTimeout(function(){ $('.box-card.left').css('display','none') }, 1000);
     },
     handleSwitchTabs(){
       d3.selectAll("#presuc>*").remove();
@@ -362,14 +422,6 @@ export default {
     search(val){
       this.submit(val);
     },
-    ComplexInputFullChange(val){
-      if(val){
-        this.FullChange = false;
-      }
-      else{
-        this.FullChange = true;
-      }
-    },
     dataSource(tab) {
       this.sour = "rjb_new";
       return tab.name;
@@ -404,7 +456,9 @@ export default {
           { emulateJSON: true }
         )
         .then(function(data) {
-          if (data.data.node === null) {
+
+          console.log(data.data.similar_nodes)
+          if (data.data.nodes === null) {
             this.loading = false;
             Message({
               message: '查询不到该知识点',
@@ -413,10 +467,11 @@ export default {
             })
           } else {
             if (data.data.similar_nodes.length === 0){
-              this.openPanel();
               this.initFullScreen();
               this.data=data.data
               this.similar_nodes = data.data.similar_nodes
+              this.neighbors_hierarchy = data.data.neighbors_hierarchy
+              this.neighbors_undirected = data.data.neighbors_undirected
               this.handleSwitchTabs()
               this.drawGraph()
               this.loading = false;
@@ -533,7 +588,7 @@ export default {
             children: []
           }
         }
-        mid_data=data.children[0]
+        // mid_data=data.children[0]
       }
       mid_data={
         name: data.nodes.node.name,
@@ -718,15 +773,20 @@ export default {
 }
 .zoom-in-btn{
   position:absolute;
-  top:-10px;
+  top:59px;
   right:0px;
-  color:#ADADAD;
-  font-size: 18px;
+  color: black;
+  z-index: 2;
   display: block;
+  font-family: PingFang SC;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 22px;
 }
 .ku {
-  // background: url("../assets/sub_bg.png") repeat;
-  background-size: 100%;
+  width: 1192px;
+  margin: 0 auto;
 }
 .ku h6 {
   color: #666;
@@ -745,26 +805,18 @@ export default {
 }
 .panel-body{
   position:relative;
-  padding-top: 5vh;
-  margin-left: 5vw;
-  margin-right: 5vw;
+  padding: 48px 32px;
+  background: #FFFFFF;
+  border: 1px solid rgba(212, 212, 212, 0.5);
+  box-sizing: border-box;
+  box-shadow: 1px 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 .ConnectSearch{
   position:relative;
   padding-top: 5vh;
   margin-left: 5vw;
   margin-right: 5vw;
-}
-
-.box-card {
-    position: absolute;
-    margin-left: 15px;
-    background: rgba(248,251, 255, .7);
-    width: 37.5%;
-    height: 850px;
-    // z-index: 10;
-    left: -3%;
-    opacity:0;
 }
 .panel-btn{
   position: absolute;
@@ -811,26 +863,26 @@ export default {
   display: flex;
   width:100%;
   flex-flow: column;
-  padding-left: 5%;
-  padding-right: 5%;
-  padding-top: 5%;
-  height: 800px;
+  padding: 0;
 }
 .intro{
-  max-height:40%;
+  max-height:20%;
 }
 .intro >.content{
-  max-height:180px;
-  overflow-y: scroll;
+  max-height:240px;
+  overflow-y: auto;
 }
 .detail{
+  margin-top: 40px;
+  height: 400px;
   flex:1;
 }
 .detail .el-tab-pane{
-  overflow-y: scroll;
+  overflow-y: auto;
+  margin-bottom: 0;
 }
 .svg-container{
-  height:380px;
+  height:321px;
 }
 .svg-container:fullscreen{
   height: 100%;
@@ -838,12 +890,9 @@ export default {
 }
 .graph {
   // position: relative;
-  border: 1px solid #fff;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
-  height: 850px;
+  height: 345px;
   background-color: #fff;
-  margin-right: 20px;
+  margin-bottom: 32px;
 }
 .el-row {
   margin-bottom: 20px;
@@ -859,13 +908,24 @@ export default {
 }
 .title {
   text-align: left;
-  font-weight: bold;
-  font-size: 22px;
   color: #0a1612;
+  font-family: Noto Sans SC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 41px;
+  margin-bottom: 16px;
 }
 .content {
+  margin-top: 0;
   text-align: left;
-  text-indent: 2em;
+  font-family: PingFang SC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
+  letter-spacing: 0em;
+
 }
 .el-tag {
   margin-left: 10px;
@@ -928,8 +988,15 @@ export default {
 <style lang="scss" scoped>
 .SearchInput{
   font-size: 16px;
-  line-height: 28px;
-  height: 28px
+  line-height: 46px;
+  width: 684px;
+  height: 46px;
+  background: #FFFFFF;
+  border: 1px solid #D4D4D4;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
 }
 .SearchInput ::v-deep .el-input__inner {
   border: 0;
@@ -947,11 +1014,110 @@ export default {
 .FilterButton{
   padding-top: 12px;
 }
+
 .SearchArea{
-  margin-left: 5vw;
-  border: 1px solid Silver;
-  width: 60%;
-  border-radius: 18px;
-  -webkit-box-shadow: 2px 4px 8px rgba(25, 25, 25, 0.15);
+
+}
+
+.SearchButton{
+  display: block;
+  margin-left: 12px;
+  width: 120px;
+  height: 46px;
+  line-height: 46px;
+  color: white;
+  cursor: pointer;
+  background: linear-gradient(90deg, #65A1E6 0%, #3E89E0 100%);
+  /* capsule */
+
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  transition-duration: 300ms;
+}
+
+.SearchButton:hover{
+  background: linear-gradient(90deg, #3777BF 0%, #1863BA 100%);
+  transition-duration: 300ms;
+}
+
+.Unchosen_Filter{
+  display: block;
+  margin-right: 12px;
+  width: 80px;
+  height: 46px;
+  line-height: 46px;
+  color: black;
+  cursor: pointer;
+  /* capsule */
+  background: #FFFFFF;
+  border: 1px solid #D4D4D4;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  transition-duration: 300ms;
+}
+
+.Unchosen_Filter:hover{
+  border: 1px solid #B3B3B3;
+  color: #295D99;
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.12);
+  transition-duration: 300ms;
+}
+
+.Chosen_Filter{
+  display: block;
+  margin-right: 12px;
+  width: 80px;
+  height: 46px;
+  line-height: 46px;
+  color: white;
+  cursor: pointer;
+  /* capsule */
+  background: linear-gradient(90deg, #65A1E6 0%, #3E89E0 100%);
+  box-sizing: border-box;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  transition-duration: 300ms;
+}
+
+.Chosen_Filter:hover{
+  background: linear-gradient(90deg, #3777BF 0%, #1863BA 100%);
+  transition-duration: 300ms;
+}
+
+.Relation_Title{
+  font-family: Noto Sans SC;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 35px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+}
+
+.transition-box {
+  box-sizing: border-box;
+}
+
+.KU_Point_Card{
+  width: 100%;
+  height: 120px;
+  margin-bottom: 24px;
+}
+
+.KU_Title{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 56px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.05em;
+
+  color: #000000;
+
+  text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
 }
 </style>
