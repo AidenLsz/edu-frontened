@@ -2,7 +2,7 @@
 
 <template>
   <div class="Whole_Card">
-    <el-row type="flex" justify="start" style="font-size: 16px; padding-left: 30px; background: white; padding-top: 15px; border-radius: 10px">
+    <div align="left" style="font-size: 16px; padding-left: 30px; background: white; padding-top: 15px; border-radius: 10px;">
         <div align="left" class="Item_Info">
             <span style="text-align: left">{{KnowledgePoint.label}}</span>
         </div>
@@ -15,7 +15,7 @@
         <div align="center" class="Layer_Info">
             {{KnowledgePoint.layer}}
         </div>
-    </el-row>
+    </div>
     <el-row class="Detail_Line">
         <div
             class="Detail_Line_Left" 
@@ -51,7 +51,7 @@ export default {
         type: Object,
         default: function(){
             return {
-                "label": "三角函数",
+                "label": "三角函数三角函数三角函数三角函数三角函数三角函数",
                 "subject": "数学",
                 "period": "高中",
                 "layer": "一级知识点",
@@ -67,7 +67,7 @@ export default {
   },
   methods: {
       Search_Knowledge_Point(){
-          this.$emit("Download_File", JSON.stringify(this.KnowledgePoint))
+          this.$emit("Search_This_KU", JSON.stringify(this.KnowledgePoint))
       }
   }
 };
@@ -84,13 +84,13 @@ export default {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    vertical-align: bottom;
+    vertical-align: middle;
     margin-right: 16px;
 }
 .Detail_Line_Right{
     width: 132px;
     height: 44px;
-    vertical-align: bottom;
+    vertical-align: middle;
     display: inline-block;
 }
 
@@ -114,27 +114,23 @@ export default {
     font-style: normal;
     font-weight: 500;
     font-size: 24px;
+    height: 34px;
     line-height: 34px;
+    margin-right: 16px;
     /* identical to box height */
 
-    display: flex;
+    display: inline-block;
     align-items: center;
     letter-spacing: 0.05em;
 
     color: #000000;
 }
 .Whole_Card{
-    background: #FFFFFF;
-    opacity: 0.95;
-    /* capsule */
-
-    border: 1px solid #D4D4D4;
-    box-sizing: border-box;
-    box-shadow: 0px 6px 24px rgba(0, 0, 0, 0.12);
-    border-radius: 10px;
+    width: 100%;
 }
 
 .Subject_Info{
+    display: inline-block;
     width: 52px;
     height: 34px;
     line-height: 34px;
@@ -144,10 +140,11 @@ export default {
     border-radius: 6px;
     font-size: 16px;
     color: #397CC9;
-    margin-left: 16px;
+    margin-right: 12px;
 }
 
 .Period_Info{
+    display: inline-block;
     width: 52px;
     height: 34px;
     line-height: 34px;
@@ -157,10 +154,11 @@ export default {
     border-radius: 6px;
     font-size: 16px;
     color: #4C39C9;
-    margin-left: 12px;
+    margin-right: 12px;
 }
 
 .Layer_Info{
+    display: inline-block;
     width: 100px;
     height: 34px;
     line-height: 34px;
@@ -169,6 +167,5 @@ export default {
     box-sizing: border-box;
     color: #C9395A;
     border-radius: 6px;
-    margin-left: 12px;
 }
 </style>

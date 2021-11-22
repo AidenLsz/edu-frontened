@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 <template>
-  <div class="ku" style="padding-top: 10px">
+  <div class="ku" style="padding-top: 32px; overflow: auto">
     <!-- <el-dialog
         :visible.sync="simpleInput"
         title="LUNA输入助手"
@@ -10,7 +10,7 @@
       <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="content"></ComplexInput>
     </el-dialog> -->
 
-    <el-row justify="start" type="flex" style="margin: 0">
+    <el-row justify="start" type="flex" style="margin: 0;">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>
@@ -27,7 +27,7 @@
         type="flex"
         class="KU_Title"
         justify="start"
-        style="margin-top: 12px; margin-bottom: 30px;">
+        style="margin-top: 12px; margin-bottom: 30px; margin-left: -4px;">
         <span>知识单元检索</span>
     </el-row>
 
@@ -35,36 +35,38 @@
     <el-row type="flex" justify="start" style="margin-bottom: 18px; font-size: 18px;">
       <label>学科</label>
     </el-row>
-    <el-row type="flex" justify="start" class="SearchArea">
+    <div class="SearchArea" align="left" style="margin-bottom: 20px;">
       <div 
         v-for="(Subject, Subject_Index) in Subject_List_All" 
         :key="'Subject_' + Subject_Index"
+        align="center"
         :class="Get_Subject_Button_Class(Subject)" 
         @click="Change_Subject_List(Subject)">
         <span>{{Subject}}</span>
       </div>
-    </el-row>
+    </div>
 
     <!-- 学段行 -->
     <el-row type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;">
       <label>学段</label>
     </el-row>
-    <el-row type="flex" justify="start" class="SearchArea">
+    <div class="SearchArea" align="left" style="margin-bottom: 20px;">
       <div 
         v-for="(Period, Period_Index) in Period_List_All" 
         :key="'Period_' + Period_Index"
+        align="center"
         :class="Get_Period_Button_Class(Period)" 
         @click="Change_Period_List(Period)">
         <span>{{Period}}</span>
       </div>
-    </el-row>
+    </div>
     
     <!-- 搜索框行 -->
     <el-row type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;">
       <label>检索</label>
     </el-row>
     <el-row type="flex" justify="start" class="SearchArea">
-      <div style="width: 684px">
+      <div class="SearchInputDIV">
         <el-input 
           prefix-icon="el-icon-search"
           placeholder="请输入知识单元名称"
@@ -79,7 +81,20 @@
 
     <!-- 搜索结果行 -->
     <el-row type="flex" justify="start" style="margin: 0;" v-show="Search_KU">
-      <el-button type="text" @click="Transition_Show = !Transition_Show" style="color: black"><i class="el-icon-caret-right" :style="Get_Rotate_Triangle(Transition_Show)"></i><label style="cursor: pointer">搜索结果</label></el-button>
+      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">搜索结果</label>
+      <el-button type="text" @click="Transition_Show = !Transition_Show" style="color: #4A4B56">
+        <i class="el-icon-caret-right" :style="Get_Rotate_Triangle(Transition_Show)"></i>
+        <label style="cursor: pointer">{{Transition_Show ? "仅看当前" : "查看更多"}}</label>
+      </el-button>
+    </el-row>
+    <el-row 
+      type="flex" 
+      justify="start" 
+      :style="'margin: 0; margin-bottom:' + Transition_Show ? ' 32px' : ' 24px'" 
+      class="KU_Point_Card">
+      <KnowledgePointCard @Search_This_KU="Search_KU_Do">
+
+      </KnowledgePointCard>
     </el-row>
     <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 32px">
       <transition name="el-zoom-in-top">
@@ -90,11 +105,16 @@
 
             </KnowledgePointCard>
           </div> -->
-          <div v-for="Node_Index in 5" :key="'Similar_' + Node_Index" class="KU_Point_Card">
-            <KnowledgePointCard>
+          <el-row 
+            v-for="Node_Index in 5" 
+            :key="'Similar_' + Node_Index" 
+            type="flex" 
+            justify="start"
+            class="KU_Point_Card">
+            <KnowledgePointCard  @Search_This_KU="Search_KU_Do">
 
             </KnowledgePointCard>
-          </div>
+          </el-row>
         </div>
       </transition>
     </el-row>
@@ -284,7 +304,7 @@ export default {
       // 标记是否为“知识点检索结果”的状况
       Search_Result: false,
       // 标记是否为“知识点关键字检索”的状况
-      Search_KU: false,
+      Search_KU: true,
     };
   },
   mounted() {
@@ -313,13 +333,18 @@ export default {
     }
   },
   methods: {
+    // 确认要检索某个知识点
+    Search_KU_Do(KU_Info){
+      let Info = JSON.parse(KU_Info);
+      console.log(Info)
+    },
     // 小三角的变化
     Get_Rotate_Triangle(Transition_Show){
       let Style = {
         "transition-duration": "300ms",
         "transform": Transition_Show ? "rotate(90deg)" : "",
         "margin-right": "10px",
-        "color": "black"
+        "color": "#4A4B56"
       }
 
       return Style
@@ -785,7 +810,8 @@ export default {
   line-height: 22px;
 }
 .ku {
-  width: 1192px;
+  width: 1344px;
+  padding: 0 88px;
   margin: 0 auto;
 }
 .ku h6 {
@@ -989,7 +1015,6 @@ export default {
 .SearchInput{
   font-size: 16px;
   line-height: 46px;
-  width: 684px;
   height: 46px;
   background: #FFFFFF;
   border: 1px solid #D4D4D4;
@@ -997,6 +1022,9 @@ export default {
   box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
   border-radius: 10px;
   -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
+}
+.SearchInputDIV{
+  width: 684px;
 }
 .SearchInput ::v-deep .el-input__inner {
   border: 0;
@@ -1016,7 +1044,7 @@ export default {
 }
 
 .SearchArea{
-
+  width: 100%
 }
 
 .SearchButton{
@@ -1041,8 +1069,9 @@ export default {
 }
 
 .Unchosen_Filter{
-  display: block;
+  display: inline-block;
   margin-right: 12px;
+  margin-bottom: 12px;
   width: 80px;
   height: 46px;
   line-height: 46px;
@@ -1065,11 +1094,12 @@ export default {
 }
 
 .Chosen_Filter{
-  display: block;
+  display: inline-block;
   margin-right: 12px;
   width: 80px;
   height: 46px;
   line-height: 46px;
+  margin-bottom: 12px;
   color: white;
   cursor: pointer;
   /* capsule */
@@ -1098,12 +1128,19 @@ export default {
 
 .transition-box {
   box-sizing: border-box;
+  width: 100%;
 }
 
 .KU_Point_Card{
   width: 100%;
-  height: 120px;
   margin-bottom: 24px;
+  background: #FFFFFF;
+  opacity: 0.95;
+  /* capsule */
+  border: 1px solid #D4D4D4;
+  box-sizing: border-box;
+  box-shadow: 0px 6px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 10px;
 }
 
 .KU_Title{
@@ -1119,5 +1156,29 @@ export default {
   color: #000000;
 
   text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+@media screen and (min-width: 768px) and (max-width: 1344px) {
+  .ku{
+    width: 100%;
+    padding: 0 88px;
+    margin: 0;
+  }
+
+  .SearchInputDIV{
+    width: calc(100% - 120px)
+  }
+}
+
+@media screen and (max-width: 768px){
+  .ku{
+    width: 100%;
+    padding: 0 32px;
+    margin: 0;
+  }
+
+  .SearchInputDIV{
+    width: calc(100% - 120px)
+  }
 }
 </style>
