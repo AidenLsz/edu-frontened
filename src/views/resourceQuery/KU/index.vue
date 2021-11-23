@@ -365,6 +365,7 @@ export default {
       // document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
       this.Search_KU = false
       this.Transition_Show = false
+      this.Search_Result = false
       let Param = {
         data: JSON.stringify({
           content: KU_Name,
