@@ -606,6 +606,10 @@
 							"name": "郭禹祥",
 							"mail": "guoyx18@mail.ustc.edu.cn",
 							"intro": "喜欢统计的大数据搬砖者"
+						}, {
+							"name": "毛雪菲",
+							"mail": "maoxuefeifinnie@gmail.com",
+							"intro": "不知名小美工Finnie"
 						}
 					],
 					// 特邀工程师
@@ -736,6 +740,7 @@
 						"胡子睿": "/members/胡子睿.jpg",
 						"刘正韬": "/members/刘正韬.jpg",
 						"郭禹祥": "/members/郭禹祥.jpg",
+						"毛雪菲": "/members/毛雪菲.jpg",
 						// 特邀工程师
 
 						// 实习生
