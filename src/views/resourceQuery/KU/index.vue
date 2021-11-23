@@ -62,7 +62,7 @@
     </div>
     
     <!-- 搜索框行 -->
-    <el-row type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;">
+    <el-row id="Search_Bar" type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;">
       <label>检索</label>
     </el-row>
     <el-row type="flex" justify="start" class="SearchArea">
@@ -70,11 +70,11 @@
         <el-input 
           prefix-icon="el-icon-search"
           placeholder="请输入知识单元名称"
-          class="SearchInput" v-model="ku_name" type="text" @keyup.enter.native="submit(ku_name)">
+          class="SearchInput" v-model="ku_name" type="text" @keyup.enter.native="Search_KU_Info(ku_name)">
 
         </el-input>
       </div>
-      <div class="SearchButton" @click="submit(ku_name)">
+      <div class="SearchButton" @click="Search_KU_Info(ku_name)">
         <span>检索</span>
       </div>
     </el-row>
@@ -88,6 +88,7 @@
       </el-button>
     </el-row>
     <el-row 
+      v-show="Search_KU"
       type="flex" 
       justify="start" 
       :style="'margin: 0; margin-bottom:' + Transition_Show ? ' 32px' : ' 24px'" 
@@ -130,11 +131,13 @@
         </el-col>          
       </el-row>        
     </el-row> -->
-
-    <el-row type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;" v-if="Search_Result">
+    <el-row>
+      <div class="KU_Detail_Aim" id="KU_Detail"></div>
+    </el-row>
+    <el-row type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px; margin-top: -10px" v-show="Search_Result">
       <label>知识点详情</label>
     </el-row>
-    <el-row class="panel-body" v-loading="loading" v-if="Search_Result">
+    <el-row class="panel-body" v-loading="loading" v-show="Search_Result">
       <div class="graph" id="graph_container">
         <Graph
           ref="graph"
@@ -202,7 +205,7 @@
 
       
     </el-row>
-    <el-row v-else style="height: 300px; width: 100%;">
+    <el-row v-show="!Search_Result" style="height: 300px; width: 100%;">
       <label style="font-size: 24px; margin-top: 60px; color: #ccc">{{Search_KU ? "点击按钮查看详情信息" : "尚未检索知识点"}}</label>
     </el-row>
   </div>
@@ -222,11 +225,11 @@ import {Message } from 'element-ui'
 import Instruction from './components/InstructionKU.vue'
 
 import KnowledgePointCard from '@/views/resourceQuery/KU/components/KnowledgePointCard'
+// import {commonAjax} from '@/common/utils/ajax'
 
 export default {
   components: {
     Graph,
-    // ComplexInput,
     PreSuc,
     CoStudy,
     Hierarchy,
@@ -304,7 +307,7 @@ export default {
       // 标记是否为“知识点检索结果”的状况
       Search_Result: false,
       // 标记是否为“知识点关键字检索”的状况
-      Search_KU: true,
+      Search_KU: false,
     };
   },
   mounted() {
@@ -313,11 +316,11 @@ export default {
     // console.log(this.root_view);
     if (this.$route.params.name) {
       this.ku_name = this.$route.params.name;
-      this.submit(this.ku_name);
+      this.Search_KU_Info(this.ku_name);
     }
     if (sessionStorage.getItem('KUFromPaperAnalyse')){
       this.ku_name = sessionStorage.getItem('KUFromPaperAnalyse');
-      this.submit(this.ku_name);
+      this.Search_KU_Info(this.ku_name);
     }
     this.ToTop();
   },
@@ -333,10 +336,30 @@ export default {
     }
   },
   methods: {
+    Search_KU_Info(KU_Name){
+      KU_Name
+      this.Search_KU = true;
+      this.Transition_Show = true;
+      document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      // this.Search_KU = false
+      // this.Transition_Show = false
+      // commonAjax(this.backendIP+'/api/GetSimilarKnowledge',
+      //   {
+      //     content: KU_Name,
+      //     subject: this.Subject_List,
+      //     period: this.Period_List
+      //   }
+      // ).then((data)=>{
+      //   this.Search_KU = true;
+      //   this.Transition_Show = true;
+      //   document.getElementById("KU_Detail").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      //   console.log(data)
+      // })
+    },
     // 确认要检索某个知识点
     Search_KU_Do(KU_Info){
       let Info = JSON.parse(KU_Info);
-      console.log(Info)
+      this.submit(Info.content)
     },
     // 小三角的变化
     Get_Rotate_Triangle(Transition_Show){
@@ -441,11 +464,8 @@ export default {
     ToTop(){
       window.scrollTo(0,0);
     },
-    Research(val){
-      this.submit(val);
-    },
     search(val){
-      this.submit(val);
+      this.Search_KU_Info(val);
     },
     dataSource(tab) {
       this.sour = "rjb_new";
@@ -460,11 +480,11 @@ export default {
      * 提交
      */
     submit(name, ks) {
+      if (name !== undefined) this.ku_name = name;
+      if (ks !== undefined) this.knowledgeSystem = ks;
       if (this.ku_name.length === 0) {
         return;
       }
-      if (name !== undefined) this.ku_name = name;
-      if (ks !== undefined) this.knowledgeSystem = ks;
       this.url =
         "https://baike.baidu.com/search/word?word=" + encodeURI(this.ku_name);
       this.loading = true;
@@ -481,28 +501,30 @@ export default {
           { emulateJSON: true }
         )
         .then(function(data) {
-
-          console.log(data.data.similar_nodes)
           if (data.data.nodes === null) {
             this.loading = false;
             Message({
-              message: '查询不到该知识点',
+              message: '没有此知识点的相关内容',
               type: 'error',
               duration: 5 * 1000
             })
           } else {
+            this.Search_Result = true;
             if (data.data.similar_nodes.length === 0){
               this.initFullScreen();
               this.data=data.data
               this.similar_nodes = data.data.similar_nodes
               this.neighbors_hierarchy = data.data.neighbors_hierarchy
               this.neighbors_undirected = data.data.neighbors_undirected
-              this.handleSwitchTabs()
-              this.drawGraph()
+              setTimeout(()=>{
+                this.drawGraph()
+                this.handleSwitchTabs()
+                document.getElementById("KU_Detail").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+              }, 100)
               this.loading = false;
-            }else {
+            } else {
               Message({
-                message: '查询不到该知识点',
+                message: '没有此知识点的信息，但为您推荐近似的知识点',
                 type: 'error',
                 duration: 2000
               })
@@ -516,7 +538,7 @@ export default {
         })
         .catch(()=>{
           Message({
-            message: '查询不到该知识点',
+            message: '服务出现故障，请重新输入并检索',
             type: 'error',
             duration: 5 * 1000
           })
@@ -1180,5 +1202,14 @@ export default {
   .SearchInputDIV{
     width: calc(100% - 120px)
   }
+}
+
+.KU_Detail_Aim{
+  position: relative;
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin-top: -96px;
+  background: transparent;
 }
 </style>

@@ -2,9 +2,9 @@
 
 <template>
   <div class="Whole_Card">
-    <div align="left" style="font-size: 16px; padding-left: 30px; background: white; padding-top: 15px; border-radius: 10px;">
+    <div align="left" style="font-size: 16px; padding-left: 30px; background: white; padding-top: 3px; border-radius: 10px;">
         <div align="left" class="Item_Info">
-            <span style="text-align: left">{{KnowledgePoint.label}}</span>
+            <span style="text-align: left;">{{KnowledgePoint.content}}</span>
         </div>
         <div align="center" class="Subject_Info">
             {{KnowledgePoint.subject}}
@@ -13,7 +13,7 @@
             {{KnowledgePoint.period}}
         </div>
         <div align="center" class="Layer_Info">
-            {{KnowledgePoint.layer}}
+            {{KnowledgePoint.level}}
         </div>
     </div>
     <el-row class="Detail_Line">
@@ -22,7 +22,7 @@
             align="left"
             style="line-height: 44px; padding: 0px 16px 0px 16px; border-radius: 10px; background: #F8F8F8">
             <span class="Extra_Info_Item">
-                {{KnowledgePoint.shortIntro}}
+                {{KnowledgePoint.description}}
             </span>
         </div>
         <div
@@ -51,11 +51,11 @@ export default {
         type: Object,
         default: function(){
             return {
-                "label": "三角函数三角函数三角函数三角函数三角函数三角函数",
+                "content": "三角函数",
                 "subject": "数学",
                 "period": "高中",
-                "layer": "一级知识点",
-                "shortIntro": "123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123",
+                "level": "一级知识点",
+                "description": "123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123",
             }
         }
     },
@@ -76,7 +76,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .Detail_Line{
-    padding: 16px 16px 16px 16px;
+    padding: 6px 16px 16px 16px;
 }
 .Detail_Line_Left{
     display: inline-block;
@@ -111,19 +111,14 @@ export default {
 
 .Item_Info{
     font-family: PingFang SC;
-    font-style: normal;
-    font-weight: 500;
     font-size: 24px;
     height: 34px;
     line-height: 34px;
-    margin-right: 16px;
     /* identical to box height */
-
     display: inline-block;
-    align-items: center;
     letter-spacing: 0.05em;
-
     color: #000000;
+    margin: 12px 4px 12px 0px;
 }
 .Whole_Card{
     width: 100%;
@@ -140,7 +135,7 @@ export default {
     border-radius: 6px;
     font-size: 16px;
     color: #397CC9;
-    margin-right: 12px;
+    margin: 12px 6px;
 }
 
 .Period_Info{
@@ -154,7 +149,7 @@ export default {
     border-radius: 6px;
     font-size: 16px;
     color: #4C39C9;
-    margin-right: 12px;
+    margin: 12px 6px;
 }
 
 .Layer_Info{
@@ -167,5 +162,6 @@ export default {
     box-sizing: border-box;
     color: #C9395A;
     border-radius: 6px;
+    margin: 12px 6px;
 }
 </style>
