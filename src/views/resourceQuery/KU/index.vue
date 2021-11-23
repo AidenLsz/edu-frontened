@@ -107,12 +107,12 @@
             </KnowledgePointCard>
           </div> -->
           <el-row 
-            v-for="Node_Index in 5" 
-            :key="'Similar_' + Node_Index" 
+            v-for="KU_Index in (KU_Search_List.length - 1)" 
+            :key="'Similar_' + KU_Index" 
             type="flex" 
             justify="start"
             class="KU_Point_Card">
-            <KnowledgePointCard  @Search_This_KU="Search_KU_Do">
+            <KnowledgePointCard  @Search_This_KU="Search_KU_Do" :KnowledgePoint="KU_Search_List[KU_Index]">
 
             </KnowledgePointCard>
           </el-row>
@@ -225,7 +225,7 @@ import {Message } from 'element-ui'
 import Instruction from './components/InstructionKU.vue'
 
 import KnowledgePointCard from '@/views/resourceQuery/KU/components/KnowledgePointCard'
-// import {commonAjax} from '@/common/utils/ajax'
+import {commonAjax} from '@/common/utils/ajax'
 
 export default {
   components: {
@@ -308,6 +308,22 @@ export default {
       Search_Result: false,
       // 标记是否为“知识点关键字检索”的状况
       Search_KU: false,
+      KU_Search_List: [
+        {
+            "content": "三角函数",
+            "subject": "数学",
+            "period": "高中",
+            "level": "一级知识点",
+            "description": "123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123",
+        },
+        {
+            "content": "三角函数",
+            "subject": "数学",
+            "period": "高中",
+            "level": "一级知识点",
+            "description": "123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123",
+        }
+      ]
     };
   },
   mounted() {
@@ -337,24 +353,30 @@ export default {
   },
   methods: {
     Search_KU_Info(KU_Name){
-      KU_Name
-      this.Search_KU = true;
-      this.Transition_Show = true;
-      document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
-      // this.Search_KU = false
-      // this.Transition_Show = false
-      // commonAjax(this.backendIP+'/api/GetSimilarKnowledge',
-      //   {
-      //     content: KU_Name,
-      //     subject: this.Subject_List,
-      //     period: this.Period_List
-      //   }
-      // ).then((data)=>{
-      //   this.Search_KU = true;
-      //   this.Transition_Show = true;
-      //   document.getElementById("KU_Detail").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
-      //   console.log(data)
-      // })
+      // KU_Name
+      // this.Search_KU = true;
+      // this.Transition_Show = true;
+      // document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      this.Search_KU = false
+      this.Transition_Show = false
+      let Param = {
+        data: JSON.stringify({
+          content: KU_Name,
+          subject: this.Subject_List,
+          period: this.Period_List
+        })
+      }
+      console.log("Start.")
+      commonAjax(this.backendIP+'/api/GetSimilarKnowledge', Param)
+      .then((data)=>{
+        let Result = JSON.parse(data)
+        console.log(Result)
+        this.KU_Search_List = Result.results
+        this.Search_KU = true;
+        this.Transition_Show = true;
+        document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+        
+      })
     },
     // 确认要检索某个知识点
     Search_KU_Do(KU_Info){
