@@ -13,7 +13,7 @@
             {{KnowledgePoint.period}}
         </div>
         <div align="center" class="Layer_Info">
-            {{KnowledgePoint.level}}
+            {{KnowledgePoint.level == 0 ? "一级知识点" : KnowledgePoint.level == 1 ? "二级知识点" : KnowledgePoint.level == 2 ? "三级知识点" : KnowledgePoint.level}}
         </div>
     </div>
     <el-row class="Detail_Line">

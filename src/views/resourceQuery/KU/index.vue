@@ -1,6 +1,12 @@
 /* eslint-disable camelcase */
 <template>
-  <div class="ku" style="padding-top: 32px; overflow: auto">
+  <div 
+    class="ku" 
+    style="padding-top: 32px; overflow: auto" 
+    v-loading="loading"
+    element-loading-text="正在读取知识点网络，请稍后..."
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.28)">
     <!-- <el-dialog
         :visible.sync="simpleInput"
         title="LUNA输入助手"
@@ -84,7 +90,7 @@
       <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">搜索结果</label>
       <el-button type="text" @click="Transition_Show = !Transition_Show" style="color: #4A4B56">
         <i class="el-icon-caret-right" :style="Get_Rotate_Triangle(Transition_Show)"></i>
-        <label style="cursor: pointer">{{Transition_Show ? "仅看当前" : "查看更多"}}</label>
+        <label style="cursor: pointer">{{Transition_Show ? "仅看首个" : "查看更多"}}</label>
       </el-button>
     </el-row>
     <el-row 
@@ -93,7 +99,7 @@
       justify="start" 
       :style="'margin: 0; margin-bottom:' + Transition_Show ? ' 32px' : ' 24px'" 
       class="KU_Point_Card">
-      <KnowledgePointCard @Search_This_KU="Search_KU_Do">
+      <KnowledgePointCard @Search_This_KU="Search_KU_Do" :KnowledgePoint="KU_Search_List[0]">
 
       </KnowledgePointCard>
     </el-row>
@@ -366,12 +372,9 @@ export default {
           period: this.Period_List
         })
       }
-      console.log("Start.")
       commonAjax(this.backendIP+'/api/GetSimilarKnowledge', Param)
       .then((data)=>{
-        let Result = JSON.parse(data)
-        console.log(Result)
-        this.KU_Search_List = Result.results
+        this.KU_Search_List = data.results
         this.Search_KU = true;
         this.Transition_Show = true;
         document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
@@ -531,13 +534,13 @@ export default {
               duration: 5 * 1000
             })
           } else {
-            this.Search_Result = true;
             if (data.data.similar_nodes.length === 0){
               this.initFullScreen();
               this.data=data.data
               this.similar_nodes = data.data.similar_nodes
               this.neighbors_hierarchy = data.data.neighbors_hierarchy
               this.neighbors_undirected = data.data.neighbors_undirected
+              this.Search_Result = true;
               setTimeout(()=>{
                 this.drawGraph()
                 this.handleSwitchTabs()
@@ -546,11 +549,12 @@ export default {
               this.loading = false;
             } else {
               Message({
-                message: '没有此知识点的信息，但为您推荐近似的知识点',
+                message: '暂缺此知识点的网络信息，正在为您推荐近似的知识点',
                 type: 'error',
                 duration: 2000
               })
-              this.similar_nodes = data.data.similar_nodes
+              this.Search_Result = false;
+              this.Search_KU_Info(this.ku_name);
               this.loading = false;
             }
           }
