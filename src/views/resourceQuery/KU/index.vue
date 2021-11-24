@@ -86,7 +86,7 @@
     </el-row>
 
     <!-- 搜索结果行 -->
-    <el-row type="flex" justify="start" style="margin: 0;" v-show="Search_KU">
+    <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 8px;" v-show="Search_KU">
       <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">搜索结果</label>
       <el-button type="text" @click="Transition_Show = !Transition_Show" style="color: #4A4B56">
         <i class="el-icon-caret-right" :style="Get_Rotate_Triangle(Transition_Show)"></i>
@@ -103,10 +103,10 @@
 
       </KnowledgePointCard>
     </el-row>
-    <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 32px">
+    <el-row type="flex" justify="start" style="margin: 0;">
       <transition name="el-zoom-in-top">
         <!-- 用于显示知识点的地方 -->
-        <div v-show="Transition_Show" class="transition-box">
+        <div v-show="Transition_Show" class="transition-box" style="margin-bottom: 32px;">
           <!-- <div v-for="(Node_Name, Node_Index) in similar_nodes" :key="'Similar_' + Node_Index" class="KU_Point_Card">
             <KnowledgePointCard>
 
@@ -375,11 +375,18 @@ export default {
       }
       commonAjax(this.backendIP+'/api/GetSimilarKnowledge', Param)
       .then((data)=>{
-        this.KU_Search_List = data.results
-        this.Search_KU = true;
-        this.Transition_Show = true;
-        document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
-        
+        if(data.results.length > 0){
+          this.KU_Search_List = data.results
+          this.Search_KU = true;
+          this.Transition_Show = true;
+          document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+        }else{
+          Message({
+            message: '⽆返回结果，请修改查询条件',
+            type: 'error',
+            duration: 2000
+          })
+        }
       })
     },
     // 确认要检索某个知识点
@@ -390,7 +397,7 @@ export default {
     // 小三角的变化
     Get_Rotate_Triangle(Transition_Show){
       let Style = {
-        "transition-duration": "300ms",
+        "transition-duration": "200ms",
         "transform": Transition_Show ? "rotate(90deg)" : "",
         "margin-right": "10px",
         "color": "#4A4B56"
@@ -506,11 +513,8 @@ export default {
      * 提交
      */
     submit(name, ks) {
-      if (name !== undefined) this.ku_name = name;
+      // if (name !== undefined) this.ku_name = name;
       if (ks !== undefined) this.knowledgeSystem = ks;
-      if (this.ku_name.length === 0) {
-        return;
-      }
       this.url =
         "https://baike.baidu.com/search/word?word=" + encodeURI(this.ku_name);
       this.loading = true;
@@ -519,7 +523,7 @@ export default {
         .post(
           this.backendIP + "/api/ku_v2",
           {
-            ku_name: this.ku_name,
+            ku_name: name,
             ku_type: this.ku_type,
             ku_edge_type: this.checkList,
             system: this.knowledgeSystem
@@ -527,6 +531,7 @@ export default {
           { emulateJSON: true }
         )
         .then(function(data) {
+          console.log(data)
           if (data.data.nodes === null) {
             this.loading = false;
             Message({
@@ -1109,12 +1114,11 @@ export default {
 
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
   border-radius: 10px;
-  transition-duration: 300ms;
+  transition-duration: 200ms;
 }
 
 .SearchButton:hover{
   background: linear-gradient(90deg, #3777BF 0%, #1863BA 100%);
-  transition-duration: 300ms;
 }
 
 .Unchosen_Filter{
@@ -1132,14 +1136,13 @@ export default {
   box-sizing: border-box;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
   border-radius: 10px;
-  transition-duration: 300ms;
+  transition-duration: 200ms;
 }
 
 .Unchosen_Filter:hover{
   border: 1px solid #B3B3B3;
   color: #295D99;
   box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.12);
-  transition-duration: 300ms;
 }
 
 .Chosen_Filter{
@@ -1156,12 +1159,11 @@ export default {
   box-sizing: border-box;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
   border-radius: 10px;
-  transition-duration: 300ms;
+  transition-duration: 200ms;
 }
 
 .Chosen_Filter:hover{
   background: linear-gradient(90deg, #3777BF 0%, #1863BA 100%);
-  transition-duration: 300ms;
 }
 
 .Relation_Title{

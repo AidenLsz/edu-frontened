@@ -2,9 +2,9 @@
 
 <template>
   <div class="Whole_Card">
-    <div align="left" style="font-size: 16px; padding-left: 30px; background: white; padding-top: 3px; border-radius: 10px;">
+    <div align="left" style="font-size: 16px; padding-left: 18px; background: white; padding-top: 3px; border-radius: 10px;">
         <div align="left" class="Item_Info">
-            <span style="text-align: left;">{{KnowledgePoint.content}}</span>
+            {{KnowledgePoint.content}}
         </div>
         <div align="center" class="Subject_Info">
             {{KnowledgePoint.subject}}
@@ -76,7 +76,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .Detail_Line{
-    padding: 6px 16px 16px 16px;
+    padding: 16px 16px 16px 16px;
 }
 .Detail_Line_Left{
     display: inline-block;
@@ -97,12 +97,11 @@ export default {
 .Search_Button{
     width: 124px;
     height: 48px;
-
     background: linear-gradient(90deg, #78ABE6 0%, #5A74E0 100%);
     /* capsule */
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
     border-radius: 10px;
-    transition-duration: 300ms;
+    transition-duration: 200ms;
 }
 
 .Search_Button:hover{
@@ -110,7 +109,6 @@ export default {
 }
 
 .Item_Info{
-    font-family: PingFang SC;
     font-size: 24px;
     height: 34px;
     line-height: 34px;
@@ -118,7 +116,9 @@ export default {
     display: inline-block;
     letter-spacing: 0.05em;
     color: #000000;
-    margin: 12px 4px 12px 0px;
+    margin-right: 4px;
+    box-sizing: border-box;
+    margin-top: 12px;
 }
 .Whole_Card{
     width: 100%;
@@ -135,7 +135,7 @@ export default {
     border-radius: 6px;
     font-size: 16px;
     color: #397CC9;
-    margin: 12px 6px;
+    margin: 12px 6px 0px 6px;
 }
 
 .Period_Info{
@@ -149,7 +149,7 @@ export default {
     border-radius: 6px;
     font-size: 16px;
     color: #4C39C9;
-    margin: 12px 6px;
+    margin: 12px 6px 0px 6px;
 }
 
 .Layer_Info{
@@ -162,6 +162,6 @@ export default {
     box-sizing: border-box;
     color: #C9395A;
     border-radius: 6px;
-    margin: 12px 6px;
+    margin: 12px 6px 0px 6px;
 }
 </style>
