@@ -1134,7 +1134,7 @@ export default {
   position: absolute;
   height: 80px;
   top: 0;
-  width: 100%;
+  width: calc(100vw - 16px);
   z-index: 999;
   background: rgba($color: white, $alpha: 0.76);
   backdrop-filter: blur(16px) !important;

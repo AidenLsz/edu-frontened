@@ -1,5 +1,10 @@
 <template>
-  <div style="margin-top: 5vh; padding-left: 5vw; padding-right: 5vw">
+  <div 
+    id="Page_Top"
+    style="margin-top: 5vh; padding-left: 5vw; padding-right: 5vw"
+    v-loading="File_Uploading"
+    :element-loading-text="File_Uploading_Text"
+    element-loading-spinner="el-icon-loading">
     <el-dialog
         :visible.sync="Wrong_Char_Dialog"
         title="格式错误提示"
@@ -15,7 +20,7 @@
     </el-dialog>
     <el-row type="flex" justify="start" style="margin-top: -1vh;">
         <el-col :span="13">
-            <el-row type="flex" justify="start" style="height: 40px; line-height: 40px;">
+            <el-row type="flex" justify="start" style="height: 40px; line-height: 40px;" v-show="Import_Mode == 'Single'">
                 <el-col v-for="Type in Type_List" :key="'Ques_Type_' + Type.label" :span="24/8">
                     <el-row 
                         type="flex" 
@@ -26,14 +31,184 @@
                     </el-row>
                 </el-col>
             </el-row>
+            <el-row type="flex" justify="start" style="height: 40px; line-height: 40px;" v-show="Import_Mode == 'Paper'">
+                <el-button type="primary" @click="File_Upload()">点击此处上传{{Subject}}试卷文件</el-button>
+                
+                <label style="height: 40px; line-height: 40px; margin: 0px 16px 0px 40px">当前显示试卷：</label>
+                <span style="height: 40px; line-height: 40px">{{File_Name == "" ? "尚未选择试卷" : File_Name}}</span>
+            </el-row>
+        </el-col>
+        <el-col :span="11">
+            <el-row type="flex" justify="end">
+                <input type="file" accept=".doc, .docx" id="File_Upload" :multiple="false" style="display: none">
+                <!-- 切换知识点过滤检索或者文件检索的按钮 -->
+                <el-switch
+                    style="display: block; margin-top: 9px; margin-left: 10px;"
+                    v-model="Import_Mode"
+                    active-color="#409EFF"
+                    inactive-color="#13ce66"
+                    inactive-text="手动录入单题模式"
+                    inactive-value="Single"
+                    active-text="整卷切分导入模式"
+                    active-value="Paper">
+                </el-switch>
+            </el-row>
         </el-col>
     </el-row>
-    <el-row type="flex" justify="center" style="border: 3px solid #409EFF; min-height: 30vh; border-radius: 15px; margin-top: 30px; margin-bottom: 30px;">
+    <el-row 
+        type="flex" 
+        justify="center" 
+        v-show="Import_Mode == 'Single'"
+        style="border: 3px solid #409EFF; min-height: 30vh; border-radius: 15px; margin-top: 30px; margin-bottom: 30px;">
         <OptionQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['单选题', '多选题', '判断题'].indexOf(Type) != -1" :detailType.sync="Type"></OptionQuestions>
         <FillQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['填空题'].indexOf(Type) != -1" :detailType.sync="Type"></FillQuestions>
         <AnswerQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['简答题', '计算题'].indexOf(Type) != -1" :detailType.sync="Type"></AnswerQuestions>
         <MixQuestions @Emit_And_Submit="Prepare_For_Submit" style="width: 100%" v-if="['综合题'].indexOf(Type) != -1" :detailType.sync="Type"></MixQuestions>
     </el-row>
+    <!-- 试卷切分的显示部分 -->
+    <div 
+      v-show="Import_Mode == 'Paper' && Paper_Content.length > 0" 
+      style="padding: 32px; min-height: 100vh; border: 3px solid #409EFF; border-radius: 15px; margin-top: 30px; margin-bottom: 30px;">
+        <el-row type="flex" justify="start">
+            <!-- 切换知识点过滤检索或者文件检索的按钮 -->
+            <el-switch
+                style="display: block; margin-top: 9px; margin-left: 10px;"
+                v-model="File_Step"
+                active-color="#409EFF"
+                inactive-color="#13ce66"
+                inactive-text="文件切分调整页面"
+                inactive-value="File_Cutting"
+                active-text="确认识别内容加入题包"
+                active-value="Question_Checking">
+            </el-switch>
+            <el-button v-show="File_Step == 'Question_Checking'" type="primary" @click="All_Choose_In_One_Click()" style="margin-left: 30px">一键选中所有题目</el-button>
+        </el-row>
+      <div v-show="File_Step == 'File_Cutting'">
+        <div style="min-height: 90vh;">
+        <el-row
+            v-for="(Item, Item_Index) in Paper_Content"
+            :key="'Line_' + Item_Index">
+            <!-- 所有切分结果呈一列 -->
+            <el-col>
+                <!-- Item != 'DIVIDER_LINES' 这代表这部分内容是切分出来的结果的部分 -->
+                <!-- 所有显示基本上就是把切分出来的内容按照配套的html格式显示出来 -->
+                <el-row v-if="Item != 'DIVIDER_LINES'&& Item.para_type == '0'" :style="Item.para_style">
+                <span
+                    v-for="(message, index_i) in Item.runs"
+                    :key="'Line_' + Item_Index + '_' + index_i + '_run'"
+                    :style="message.run_style"
+                >
+                    <span
+                    v-if="message.run_type == '0'"
+                    v-html="message.run_text"
+                    ></span>
+                    <img
+                    v-else-if="message.run_type == '1'"
+                    :src="Paper_Image_Dict[message.image.src]"
+                    :width="message.image.width"
+                    :height="message.image.height"
+                    :style="message.image.style"
+                    :alt="message.image.alt"
+                    />
+                </span>
+                </el-row>
+                <el-row v-if="Item != 'DIVIDER_LINES' && Item.para_type == '1'">
+                <div :style="Item.para_style">
+                    <span v-html="Table_Img_Get(Item.table_raw_html)"></span>
+                </div>
+                </el-row>
+                <!-- Item == 'DIVIDER_LINES' 这代表这个元素是原试卷内容里面的某一部分的分界线 -->
+                <!-- mouse事件的作用是判断当前鼠标悬浮在哪个线上，用来操作的，用不到可以删 -->
+                <el-row 
+                v-if="Item == 'DIVIDER_LINES'" 
+                style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer"
+                @click.native="Delete_Divider(Item_Index)"
+                @mouseenter.native="Paper_Divider_Index = Item_Index"
+                @mouseleave.native="Paper_Divider_Index = -1">
+                    <el-col>
+                    <el-row :style="'border-top: 2px dashed ' + (Paper_Divider_Index == Item_Index ? 'red' : '#ccc') + '; width: 100%;'"></el-row>
+                    </el-col>
+                </el-row>
+                <!-- Item != 'DIVIDER_LINES' 即添加新切分线的部分是在试卷元素的后面出现的、其下一个内容不能是切分线、也不能是试卷的最后一个部分 -->
+                <el-row 
+                v-if="Item != 'DIVIDER_LINES' && Item_Index != Paper_Content.length - 1 && Paper_Content[Item_Index + 1] != 'DIVIDER_LINES'" 
+                style="height: 14px; width: 100%; padding-top: 6px; cursor: pointer;" 
+                @click.native="Add_Divider(Item_Index)"
+                @mouseenter.native="Paper_Divider_Index = Item_Index"
+                @mouseleave.native="Paper_Divider_Index = -1">
+                <el-col>
+                    <el-row v-show="Paper_Divider_Index == Item_Index" style="border-top: 2px dashed #409EFF; width: 100%;"></el-row>
+                </el-col>
+                </el-row>
+            </el-col>
+        </el-row>
+        </div>
+        <el-row type="flex" justify="end" style="padding-right: 30px; margin-top: 30px; margin-bottom: 30px;">
+            <el-button type="primary" icon="el-icon-refresh" @click="Paper_Data_Reset()" style="margin-right: 20px">重置试卷数据</el-button>
+            <el-button type="primary" icon="el-icon-delete" @click="Paper_Data_Clear()" style="margin-right: 20px">清空当前数据</el-button>
+            <el-button type="primary" icon="el-icon-check" @click="Divider_Final_Check()">切分确认</el-button>
+        </el-row>
+      </div>
+      <div v-show="File_Step == 'Question_Checking'">
+          <div 
+            v-for="(Question, Question_Index) in Question_Infos" 
+            :key="'Checking_Question_' + Question_Index" 
+            class="Checking_Question_Item">
+                <el-row type="flex" justify="start" style="margin-bottom: 16px;">
+                    <label style="height: 40px; line-height: 40px; margin-right: 15px;">此题的分数为：</label>
+                    <el-input-number v-model="Question_Infos[Question_Index].score" placeholder=""></el-input-number>
+                    <label style="height: 40px; line-height: 40px; margin-left: 40px; margin-right: 15px;">此题的题型为：</label>
+                    <el-radio-group 
+                        v-model="Question_Infos[Question_Index].type" 
+                        style="padding-top: 13px;"
+                        v-if="['单选题', '多选题', '判断题'].indexOf(Question.type) != -1">
+                        <el-radio label="单选题">单选题</el-radio>
+                        <el-radio label="多选题">多选题</el-radio>
+                        <el-radio label="判断题">判断题</el-radio>
+                    </el-radio-group>
+                    <el-radio-group 
+                        v-model="Question_Infos[Question_Index].type" 
+                        style="padding-top: 13px;"
+                        v-else>
+                        <el-radio label="填空题">填空题</el-radio>
+                        <el-radio label="简答题">简答题</el-radio>
+                        <el-radio label="计算题">计算题</el-radio>
+                    </el-radio-group>
+                </el-row>
+                <el-row type="flex" justify="start">
+                    <Mathdown :content="Question.stem" :name="'Checking_Question_Stem_' + Question_Index"></Mathdown>
+                </el-row>
+                <el-row 
+                    v-for="(Option, Option_Index) in Question.options" 
+                    :key="'Checking_Question_Stem_' + Question_Index + '_Option_' + Option_Index" 
+                    style="line-height: 40px" 
+                    type="flex" 
+                    justify="start">
+                    <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
+                    <Mathdown style="width:700px" :content="Option" :name="'Checking_Question_Stem_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
+                </el-row>
+                <el-row type="flex" justify="center">
+                    <div :class="{
+                            'Button_Basic': true,
+                            'Picking_Button': Picking_List[Question_Index],
+                            'Unpicking_Button': !Picking_List[Question_Index]
+                        }"
+                        @click="Change_Picking_Status(Question_Index)"
+                        align="center">
+                        {{Picking_List[Question_Index] ? "已选中此题目（点击取消）" : "未选中此题目（点击选中）"}}
+                    </div>
+                </el-row>
+          </div>
+          <div align="center">
+              <el-button type="success" @click="All_Question_Checked()">试题检查完成</el-button>
+          </div>
+      </div>
+    </div>
+    <div 
+        v-show="Import_Mode == 'Paper' && Paper_Content.length == 0" 
+        style="min-height: 80vh; padding-top: 180px;">
+        <label style="font-size: 24px; color: #ccc">点击左上角按钮选择当前学科的试卷进行切分</label>
+    </div>
   </div>
 </template>
 
@@ -44,12 +219,14 @@ import FillQuestions from '@/views/resourceInput/components/FillQuestions.vue'
 import AnswerQuestions from '@/views/resourceInput/components/AnswerQuestions.vue'
 import MixQuestions from '@/views/resourceInput/components/MixQuestions.vue'
 
+import Mathdown from '@/common/components/Mathdown'
+
 import {commonAjax} from '@/common/utils/ajax'
 
 export default {
   name: "inputMarked",
   components: {
-      OptionQuestions, FillQuestions, AnswerQuestions, MixQuestions
+      OptionQuestions, FillQuestions, AnswerQuestions, MixQuestions, Mathdown
   },
   data() {
     return {
@@ -75,7 +252,35 @@ export default {
         // 用于展示错误数据的信息栏
         Wrong_Char_Info: "",
         // 保存用户的UUID信息
-        UUID: ""
+        UUID: "",
+        // 录入模式
+        Import_Mode: "Single",
+        // 保存Input组件
+        File_Selector: "",
+        // 表示正在切分的变量
+        File_Uploading: false,
+        File_Uploading_Text: "",
+        // 试卷内容，试卷配图内容，切分结果，切分结果备份
+        // 用于存放拿来显示的变量
+        Paper_Content: [],
+        // 用来进行初始结果的备份
+        Paper_Content_BackUp: [],
+        // 存放拿来进行显示的图片
+        Paper_Image_Dict: {
+
+        },
+        // 标记切分点的变量
+        Paper_Divider_Index: -1,
+        // 正在切分的卷子名称
+        File_Name: "",
+        // 因为是分两步，所以文件切分的显示过程还要加一个变量来区分这两步
+        // File_Cutting - 切分
+        // Question_Checking - 试题确认
+        File_Step: "File_Cutting",
+        // 存放题目信息识别后留下来的内容
+        Question_Infos: [],
+        // 存放这些留下来的内容是否要被用于放到试题组里面去
+        Picking_List: []
     };
   },
   props: {
@@ -95,12 +300,284 @@ export default {
         return 
       }
       this.Get_User_UUID();
-      this.To_Top();
+      this.Init_File_Selector()
   },
   methods:{
+        // 完成全部题目的检查
+        All_Question_Checked(){
+            this.$confirm('确认要导入所有选中的题目吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(()=>{
+                for(let i = 0; i < this.Picking_List.length; i++){
+                    if(this.Picking_List[i]){
+                        this.$emit("Add_To_Cart", JSON.stringify(this.Question_Infos[i]))
+                    }
+                }
+                this.$message.success("已将所有选中的题目导入试题篮中。")
+                this.To_Top();
+            }).catch(()=>{
+                this.$message.info("已取消")
+            })
+        },
+        // 调整是否选中
+        Change_Picking_Status(Question_Index){
+            this.Picking_List.splice(Question_Index, 1, !this.Picking_List[Question_Index])
+        },
+        // 一键选中所有题目
+        All_Choose_In_One_Click(){
+            for(let i = 0; i < this.Picking_List.length; i++){
+                this.Picking_List.splice(i, 1, true)
+            }
+        },
+        // 返回选项标签
+        Get_Option_Label(Index){
+            return String.fromCharCode(Index + 65)
+        },
+        // 初始化选择器
+        Init_File_Selector(){
+            this.File_Selector = document.getElementById("File_Upload");
+            this.File_Selector.addEventListener("change", (e)=>{
+                if(e.target.files[0]){
+                    this.File_Uploading = true
+                    this.File_Uploading_Text = "切分试卷中，请稍后..."
+                    this.File_Upload_Do(e.target.files[0])
+                    this.File_Selector.value = ""
+                }
+            })
+        },
+        Import_Mode_Change(){
+            this.Import_Mode = this.Import_Mode == "Single" ? "Paper" : "Single"
+        },
+        // 导入试卷切分的部分
+        File_Upload(){
+            this.File_Selector.click();
+        },
+        // 上传文件
+        File_Upload_Do(file){
+
+            this.Paper_Content = []
+            this.Picking_List = []
+            this.Paper_Image_Dict = {}
+            this.Paper_Divider_Index = -1;
+
+            this.File_Name = file.name
+
+            let formData = new FormData();
+
+            // 对应的切分编号，是约定好的，别动就好
+            let Num_Dict = {
+                英语: "0",
+                数学: "1",
+                文综: "2",
+                政治: "2",
+                历史: "2",
+                地理: "2",
+                理综: "3",
+                物理: "3",
+                化学: "3",
+                生物: "3",
+                语文: "4",
+            }
+
+            formData.append("files", file);
+            formData.append("paper_type", Num_Dict[this.Subject]);
+            formData.append("data_format", '0');
+            // 为了防止需要老版本的地方崩溃，先加了这个，以后用不到了再说
+            formData.append("paper_Cut_New", true);
+
+            let config = {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            };
+
+            this.File_Cutting(formData, config);
+        },
+        // 选择上传
+        File_Cutting(formData, config) {
+
+            this.$http
+            .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
+            .then(function(data) {
+                // 切分出来的文字部分
+                this.Paper_Content = data.data.paper
+                // 切分出来的图片部分，注意在显然的时候，需要从这里找到对应的图片内容
+                this.Paper_Image_Dict = data.data.image_dict
+                // 空列表，用来存放元素
+                let Lists = []
+                for(let i = 0; i < data.data.paper.length; i++){
+                    for(let j = 0; j < data.data.paper[i].sub_para.length; j++){
+                        // 这是切分格式的结果，我也不知道为什么sub_para会是一个数组，但是这样读取就没问题
+                        let Para = data.data.paper[i].sub_para[j]
+                        // 把每个大段里面的每个小内容抽出来，单独塞到List里面
+                        for(let k = 0; k < Para.length; k++){
+                            Lists.push(Para[k])
+                        }
+                    }
+                    // 只要不是最后一个大段，那么就往里面塞一个“切分线”元素
+                    if(i != data.data.paper.length - 1){
+                        Lists.push("DIVIDER_LINES")
+                    }
+                }
+                // 把转化结果丢给显示区域，同时留一个备份
+                this.Paper_Content = Lists
+                this.Paper_Content_BackUp = Lists
+                this.File_Uploading = false;
+            }).catch(() => {
+                this.$alert("切分过程出现错误，这可能是由于服务器原因导致目前暂时无法提供服务，请重新提交文件或稍后再试。", "提示")
+                this.File_Uploading = false;
+                this.File_Name = ""
+            });
+        },
+        // 更新表格中的图片文件
+        Table_Img_Get(Table_Html){
+            for(var key in this.Paper_Image_Dict){
+                var Img_Name_Catcher = new RegExp('<img src="' + key + '"')
+                if(Img_Name_Catcher.exec(Table_Html) != null){
+                Table_Html = Table_Html.replace(Img_Name_Catcher,'<img src="' + this.Paper_Image_Dict[key] + '"')
+                }
+            }
+            return Table_Html
+        },
+        // 尝试添加和删除切分线
+        Delete_Divider(Item_Index){
+            this.Paper_Content.splice(Item_Index, 1)
+            this.Paper_Divider_Index = -1;
+        },
+        Add_Divider(Item_Index){
+            this.Paper_Content.splice(Item_Index + 1, 0, 'DIVIDER_LINES')
+            this.Paper_Divider_Index = -1;
+        },
+        // 重置
+        Paper_Data_Reset(){
+            this.$confirm('您点击了重置当前试卷切分内容的按钮，当前的切分结果将被重置为当前试卷最开始的切分结果，确定要重置吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(()=>{
+                this.Paper_Content = JSON.parse(JSON.stringify(this.Paper_Content_BackUp));
+                this.Paper_Divider_Index = -1;
+            }).catch(()=>{
+                this.$message.info("已取消")
+            })
+        },
+        // 清空试卷数据
+        Paper_Data_Clear(){
+            this.$confirm('您点击了清空当前试卷切分内容的按钮，当前的切分结果将被清空，您将需要重新导入其他试卷，确定要清空吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(()=>{
+                this.File_Name = ""
+                this.File_Uploading = false
+                this.Paper_Content = []
+                this.Paper_Image_Dict = {}
+                this.Paper_Divider_Index = -1;
+            }).catch(()=>{
+                this.$message.info("已取消")
+            })
+        },
+        // 将切分后的内容整理成导出格式
+        Divider_Final_Check(){
+
+            this.File_Uploading = true;
+            this.File_Uploading_Text = "正在从切分结果中识别题目，请稍后..."
+
+            let Reg_C = new RegExp('&#xa0;', 'g')
+
+            let Out_JSON = []
+            let ID = 0
+            let Item = {
+                id: ID,
+                subject: this.Subject,
+                period: this.Period,
+                content: []
+            }
+            for(let i = 0; i < this.Paper_Content.length; i++){
+                if(this.Paper_Content[i] == "DIVIDER_LINES"){
+                    // 每次遇到切分线，就把当前累积的内容推进去，然后将内容重置一下，再给序号加一
+                    Out_JSON.push(JSON.parse(JSON.stringify(Item)))
+                    ID = ID + 1;
+                    Item = {
+                    id: ID,
+                    subject: this.Subject,
+                    period: this.Period,
+                    content: []
+                }
+            }else{
+                // 0 代表文字和图片内容
+                // 1 代表试卷中的表格内容（不太清楚要怎么办，但总之应该是这么返回才对……吧？）
+                if(this.Paper_Content[i].para_type == '0'){
+                let Content = ""
+                for(let j = 0; j < this.Paper_Content[i].runs.length; j++){
+                    if(this.Paper_Content[i].runs[j].run_type == '0'){
+                        Content = Content + this.Paper_Content[i].runs[j].run_text
+                    }else if(this.Paper_Content[i].runs[j].run_type == '1'){
+                        Content = Content 
+                            + "<img src='" + this.Paper_Image_Dict[this.Paper_Content[i].runs[j].image.src] + "' " 
+                            + " width='" + this.Paper_Content[i].runs[j].image.width + "' " 
+                            + " height='" + this.Paper_Content[i].runs[j].image.height + "' " 
+                            + " style='" + this.Paper_Content[i].runs[j].image.style + "' " 
+                            + " alt='" + this.Paper_Content[i].runs[j].image.alt + "' " 
+                            + ">"
+                    }
+                }
+                    Content = Content.replace(Reg_C, "")
+                    Item.content.push(Content)
+                }else{
+                    Item.content.push(this.Table_Img_Get(this.Paper_Content[i].table_raw_html))
+                }
+            }
+            }
+            // 把累积到的最后一组也压进去
+            Out_JSON.push(JSON.parse(JSON.stringify(Item)))
+
+            let Param = {
+                'Paper_Cut_Result': JSON.stringify(Out_JSON, null, 4)
+            }
+
+            commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param)
+            .then((res)=>{
+                this.Question_Infos = []
+                let Result = res.data
+                this.Question_Infos_Fill(Result);
+                this.File_Step = "Question_Checking"
+            }).catch(
+                ()=>{
+                    this.$message.error("解析出现异常，请重试。")
+                }
+            ).finally(()=>{
+                this.File_Uploading = false
+                this.File_Uploading_Text = ""
+            })
+        },
+        Question_Infos_Fill(Result){
+            for(let i = 0; i < Result.length; i++){
+                let Item = {
+                    id: Result[i].id,
+                    stem: Result[i].stem,
+                    options: Result[i].options,
+                    answer:  Result[i].answer,
+                    analyse:  Result[i].analysis,
+                    score:  Result[i].score,
+                    type: Result[i].type == "选择题" ? "单选题" : Result[i].type == "综合题" ? "简答题" : Result[i].type
+                }
+                for(let j = 0; j < Result[i].subquestions.length; j++){
+                    Item.stem = Item.stem + '\n' + Result[i].subquestions[j].sub_stem;
+                    for(let k = 0; k < Result[i].subquestions[j].sub_options.length; k++){
+                        Item.stem = Item.stem + '\n' + String.fromCharCode(65 + k) + Result[i].subquestions[j].sub_options[k]
+                    }
+                }
+                this.Question_Infos.push(JSON.parse(JSON.stringify(Item)))
+                this.Picking_List.push(false)
+                this.To_Top();
+            }
+        },
         // 卷动至最上方
         To_Top(){
-            window.scrollTo(0,0);
+            document.getElementById("Page_Top").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
         },
         // 获取UUID
         Get_User_UUID(){
@@ -646,8 +1123,6 @@ export default {
 
       }else{
 
-        console.log(Submit_JSON)
-
         Question_Show_Infos.stem = Submit_JSON.desc
         for(let i = 0; i < Submit_JSON.desc_image.length; i++){
           Question_Show_Infos.stem += "<img src='" + Submit_JSON.desc_image[i] + "'>"
@@ -798,5 +1273,42 @@ export default {
 .typeButton.unFocusType:hover{
     background: #E5EEFF;
     border: 1px solid #F5FEFF;
+}
+
+.Checking_Question_Item{
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 16px;
+    margin: 20px 0px;
+}
+
+.Button_Basic{
+    width: 260px;
+    height: 40px;
+    line-height: 40px;
+    margin-top: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
+    -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
+    color: white;
+    cursor: pointer;
+}
+
+.Picking_Button{
+    background-color: #67C23A;
+    transition-duration: 200ms;
+}
+
+.Picking_Button:hover{
+    background-color: rgba(#67C23A, 0.6);
+}
+
+.Unpicking_Button{
+    background-color: #C0C4CC;
+    transition-duration: 200ms;
+}
+
+.Unpicking_Button:hover{
+    background-color: rgba(#C0C4CC, 0.6);
 }
 </style>
