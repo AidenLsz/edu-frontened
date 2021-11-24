@@ -505,7 +505,7 @@
       
     </el-header> -->
     <!-- <basic-header/> -->
-    <el-main>
+    <el-main style="overflow: auto">
       <div id="header-sticky" :class="{
         'sticky-menu': true,
         'Little_Shadow': Get_Current_Path()}" style="height: 80px;">
