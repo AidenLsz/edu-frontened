@@ -235,7 +235,11 @@ export default {
         },
       // 跳转至整卷录入页面
       toPaper(){
-        this.$router.push({path: "/inputPaper"})
+        let _path = "/"
+        if(this.$route.path.indexOf("itas")||this.$route.path.indexOf("eems")){
+          _path = this.$route.path.toLowerCase().replace(this.$route.name.toLowerCase(), "")
+        }
+        this.$router.push({path: _path + "inputPaper"})
       },
       // 返回按钮样式
       Get_Type_Button_Class(Type){

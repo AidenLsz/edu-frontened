@@ -2325,7 +2325,11 @@ export default {
       },
       // 单题录入
       toSingle(){
-        this.$router.push({path: "/QuestionAnalyseInput"})
+        let _path = "/"
+        if(this.$route.path.indexOf("itas")||this.$route.path.indexOf("eems")){
+          _path = this.$route.path.toLowerCase().replace(this.$route.name.toLowerCase(), "")
+        }        
+        this.$router.push({path: _path + "questionAnalyseInput"})
       },
       // 展示题目大类标题的方法
       Get_Bundle_Label(Type, Bundle_Index){
