@@ -62,7 +62,7 @@ const router=[
   {
     path: "paperAnalyseInput",
     name: "PaperAnalyseInput",
-    component:()=> import("@/views/resourceAnalyse/QuestionAnalyseInput"),
+    component:()=> import("@/views/resourceAnalyse/PaperAnalyseInput"),
   },
   {
     path: "questionAnalyse",
