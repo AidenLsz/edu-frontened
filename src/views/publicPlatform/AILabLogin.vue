@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="button-box">
-        <el-button type="primary" class="LoginButton"
+        <el-button type="primary" class="LoginButton" @click="Login"
           ><span style="font-family: Roboto; font-weight: bold; color: white"
             >登录</span
           ></el-button
@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { commonAjax } from "@/common/utils/ajax";
+
 export default {
   name: "AILabLogin",
   data() {
@@ -54,6 +56,17 @@ export default {
         path: "/PublicPlatform/AILabRegister",
       });
       this.ToTop();
+    },
+    Login() {
+      commonAjax(
+        "https://ailab-api-backend-275-production.env.bdaa.pro/v1/user/login",
+        {
+          user_name: this.username,
+          password: this.password,
+        }
+      ).then((data) => {
+        console.log("login", data);
+      });
     },
   },
 };

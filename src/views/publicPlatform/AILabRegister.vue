@@ -1,10 +1,12 @@
 <template>
   <el-row type="flex" justify="center">
     <div class="dialogue">
-      <el-row type="flex" justify="center"
+      <el-row
+        type="flex"
+        justify="center"
         style="
           height: 28px;
-          margin:45px;
+          margin: 45px;
           font-family: Roboto;
           font-style: normal;
           font-weight: bold;
@@ -14,7 +16,8 @@
           align-items: flex-end;
           color: #3e89e0;
         "
-      >AI-lab用户注册</el-row>
+        >AI-lab用户注册</el-row
+      >
       <div
         style="
           display: flex;
@@ -219,7 +222,7 @@
                   color: #447aab;
                   line-height: 22px;
                 "
-                @click="SendVerifyCode"
+                @click="SendCaptcha"
               >
                 发送验证码
               </p> -->
@@ -227,7 +230,7 @@
                 v-if="!SendCode"
                 type="primary"
                 class="SendButton"
-                @click="SendVerifyCode"
+                @click="SendCaptcha"
                 ><span style="font-family: Sarasa Gothic SC; color: #447aab"
                   >发送验证码</span
                 ></el-button
@@ -244,7 +247,7 @@
         <div class="input">
           <p class="text">验证码</p>
           <el-input
-            v-model="verify_code"
+            v-model="captcha"
             placeholder="请填写邮箱中的七位验证码"
             style="width: 420px"
           >
@@ -300,7 +303,7 @@
           background: #ffffff;
         "
       >
-        <el-button type="primary" class="RegisterButton"
+        <el-button type="primary" class="RegisterButton" @click="Register"
           ><span style="font-family: Roboto; font-weight: bold; color: white"
             >注册</span
           ></el-button
@@ -314,8 +317,11 @@
 </template>
 
 <script>
+import { commonAjax } from "@/common/utils/ajax";
+
 export default {
   name: "AILabLogin",
+  components: {},
   data() {
     return {
       // 是否选择同意《服务协议》
@@ -324,13 +330,19 @@ export default {
       password: "",
       repeat_password: "",
       mail: "",
-      verify_code: "",
+      captcha: "",
       phone: "",
       // 是否已经发送出去验证码
       SendCode: false,
       // 验证码重发倒计时
       resend_cntdown: 10,
     };
+  },
+  watch: {
+    username(val) {
+      var reg=/(_|[a-z]|[A-Z]|[0-9])*/
+      return reg.test(val);
+    }
   },
   methods: {
     ToTop() {
@@ -354,17 +366,59 @@ export default {
       });
       this.ToTop();
     },
-    SendVerifyCode() {
-      this.SendCode = true;
-      this.resend_cntdown = 10;
-      this.timer = setInterval(() => {
-        this.resend_cntdown--;
-      }, 1000);
-      setTimeout(() => {
-        this.SendCode = false;
-        clearInterval(this.timer);
-      }, 10000);
+    SendCaptcha() {
+      var emreg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+      if (emreg.test(this.mail) == false) {
+        // 测试邮箱地址是否合法
+        this.$message({
+          showClose: true,
+          message: "请输入正确的邮箱地址",
+          type: "error",
+        });
+      } else {
+        commonAjax(
+          "https://ailab-api-backend-275-production.env.bdaa.pro/v1/user/captcha",
+          {
+            user_name: this.username,
+            mail: this.mail,
+          }
+        ).then((data) => {
+          console.log("SendCaptcha", data);
+          this.SendCode = true;
+          this.resend_cntdown = 10;
+          this.timer = setInterval(() => {
+            this.resend_cntdown--;
+          }, 1000);
+          setTimeout(() => {
+            this.SendCode = false;
+            clearInterval(this.timer);
+          }, 10000);
+        });
+      }
     },
+    Register() {
+      if (this.password != this.repeat_password)
+      {
+        this.$message({
+          showClose: true,
+          message: "两次输入的密码不相同",
+          type: "error",
+        });
+      } else
+      {
+        commonAjax(
+          "https://ailab-api-backend-275-production.env.bdaa.pro/v1/user/signup",
+          {
+            user_name: this.username,
+            password: this.password,
+            mail: this.mail,
+            captcha: this.captcha
+          }
+        ).then((data) => {
+          console.log("Register", data);
+        });
+      }
+    }
   },
 };
 </script>
