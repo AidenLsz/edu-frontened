@@ -69,7 +69,7 @@
     <div 
       v-show="Import_Mode == 'Paper' && Paper_Content.length > 0" 
       style="padding: 32px; min-height: 100vh; border: 3px solid #409EFF; border-radius: 15px; margin-top: 30px; margin-bottom: 30px;">
-        <el-row type="flex" justify="start">
+        <el-row type="flex" justify="start" v-show="Question_Infos.length > 0">
             <!-- 切换知识点过滤检索或者文件检索的按钮 -->
             <el-switch
                 style="display: block; margin-top: 9px; margin-left: 10px;"
