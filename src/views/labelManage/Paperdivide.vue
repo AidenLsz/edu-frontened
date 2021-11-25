@@ -151,6 +151,7 @@ export default {
       // subject
       formData.append("paper_type", getPaperType(this.pdForm.subject));
       formData.append("data_format", "0");
+      formData.append("paper_Cut_New", true);
       try {
         const data = await this.$http.post(
           "https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload",
