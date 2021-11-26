@@ -1241,8 +1241,8 @@ export default {
     overflow: hidden;
     width: 1200px;
     height: 1200px;
-    margin-left: calc((100%-1344px - 16px)/2);
-    left: -185px;
+    margin-left: calc((100% - 1344px - 16px)/2);
+    left: 505px;
     top: -51%;
     border-radius: 50%;
     background: linear-gradient( 180deg, rgba(#D9E9FE, 0%), rgba(#C8E0FF, 100%));
