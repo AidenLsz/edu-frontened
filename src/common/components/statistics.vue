@@ -1,3 +1,4 @@
+<script src="../../router/index.js"></script>
 <template lang="html">
   <div class="">
     <el-row style="margin-top: 40px; padding-bottom: 40px">
@@ -73,7 +74,6 @@
 <script>
 import $ from "jquery";
 import {commonAjax} from '@/common/utils/ajax'
-import * as echarts from 'echarts';
 var BarChart;
 
 export default {
@@ -104,10 +104,13 @@ export default {
       Chart_Data: {},
       Count_Type: "Question",
       List:[],
-      value1 : false  //显示学段细分开关点击时的返回值
+      value1 : false,  //显示学段细分开关点击时的返回值
+      echarts: null,
     };
   },
-  mounted() {
+  async mounted() {
+    const echarts = await import('echarts');
+    this.echarts = echarts;
     this.Init_Bar();
     // data - background
     $("[data-background]").each(function() {
@@ -156,7 +159,10 @@ export default {
       if (BarChart != null && BarChart != "" && BarChart != undefined) {
         BarChart.dispose();//销毁
       }
-      BarChart = echarts.init(document.getElementById('data_chart'));
+      if (!this.echarts) {
+        return;
+      }
+      BarChart = this.echarts.init(document.getElementById('data_chart'));
         let option = {
           grid: {
             x: 80, //x=70时y轴坐标可能显示不全，可以改成百分比
@@ -351,14 +357,14 @@ export default {
       this.Num_Paper = this.Chart_Data.num_paper;
       this.Num_Question = this.Chart_Data.num_question;
       this.Num_KU = this.Chart_Data.num_knowledge;
-      this.Num_Resources = this.Chart_Data.num_resources;  
+      this.Num_Resources = this.Chart_Data.num_resources;
       this.List = this.Chart_Data.list_per;
 
       for(var ind = 0; ind < this.Chart_Data.list_per.length; ind++){
           this.Paper_Data_Per[ind] = new Array();
           this.Question_Data_Per[ind] = new Array();
           this.KU_Data_Per[ind] = new Array();
-          this.Resources_Data_Per[ind] = new Array();  
+          this.Resources_Data_Per[ind] = new Array();
       }
 
       for(var index = 0; index < this.Chart_Data.list_sub.length; index ++){

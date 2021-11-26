@@ -1,13 +1,13 @@
-<!-- 
+<!--
 
 The line of README
 The line of README
 The line of README
 
 1：
-  需要配置Update_CI事件对应的方法来获取ComplexInput组件的文本内容 
+  需要配置Update_CI事件对应的方法来获取ComplexInput组件的文本内容
   Update_CI事件会将当前ComplexInput组件的文本内容返回至前端，返回值val为文本的内容
-  
+
 2：
   需要配置Update_Image事件对应的方法来获取ComplexInput组件的图片内容
   Update_Image事件会将当前ComplexInput组件的图片内容返回至前端，返回值为图片信息数组
@@ -21,25 +21,25 @@ The line of README
 
 <template>
   <div>
-    <!-- <el-dialog 
-      width="80%" 
-      height="500px" 
-      :visible.sync="helper_dialog" 
-      @close="Clear()" 
-      top="2vh" 
+    <!-- <el-dialog
+      width="80%"
+      height="500px"
+      :visible.sync="helper_dialog"
+      @close="Clear()"
+      top="2vh"
       style="background: rgba(225,225,225,0.3); "
       :modal-append-to-body="false"
       :append-to-body="true">
       <template slot="title">
-          <el-row type="flex" justify="center" style="font-size: 18px;">快速公式助手</el-row>  
+          <el-row type="flex" justify="center" style="font-size: 18px;">快速公式助手</el-row>
       </template>
       <el-container>
         <el-aside width="22%" height="500px" style="box-shadow: 0px 0px 2px 2px #ddd; background: transparent; padding-top: 10px">
           <el-row>
             <el-col :span="11" :offset="1" style="text-align: left">上标</el-col>
-            <el-col :span="11" :offset="1" style="text-align: left">a^2</el-col>  
+            <el-col :span="11" :offset="1" style="text-align: left">a^2</el-col>
           </el-row>
-          <el-row>                
+          <el-row>
             <el-col :span="11" :offset="1" style="text-align: left">下标</el-col>
             <el-col :span="11" :offset="1" style="text-align: left">a_2</el-col>
           </el-row>
@@ -52,7 +52,7 @@ The line of README
             <el-col :span="11" :offset="1" style="text-align: left">a_{a+b}</el-col>
           </el-row>
           <el-row>
-            <el-col :span="11" :offset="1" style="text-align: left">组合上下标</el-col>                   
+            <el-col :span="11" :offset="1" style="text-align: left">组合上下标</el-col>
             <el-col :span="11" :offset="1" style="text-align: left">a_2^3</el-col>
           </el-row>
           <el-row>
@@ -86,7 +86,7 @@ The line of README
                             </el-col>
                             <el-col :span="4" :offset="1">
                               <el-radio label="frac">分式</el-radio>
-                            </el-col>                      
+                            </el-col>
                           </el-row>
                           <el-row>
                             <el-col :span="4">
@@ -121,9 +121,9 @@ The line of README
                             <el-col :span="4" :offset="1">
                               <el-radio label="bcup">并集(A1~An)</el-radio>
                             </el-col>
-                          </el-row> 
-                        </el-radio-group>               
-                      </el-form-item>     
+                          </el-row>
+                        </el-radio-group>
+                      </el-form-item>
                     </el-col>
                   </el-row>
                 </el-form>
@@ -159,7 +159,7 @@ The line of README
                             </el-col>
                             <el-col :span="4" :offset="1">
                               <el-radio label="$\left \langle \frac{a}{b} \right \rangle$">角括号</el-radio>
-                            </el-col>                  
+                            </el-col>
                           </el-row>
                           <el-row :span="24" >
                             <el-col :span="4">
@@ -173,10 +173,10 @@ The line of README
                             </el-col>
                             <el-col :span="4" :offset="1">
                               <el-radio label="$\left \lceil \frac{c}{d} \right \rceil$">取顶</el-radio>
-                            </el-col> 
+                            </el-col>
                             <el-col :span="4" :offset="1">
                               <el-radio label="$\left / \frac{a}{b} \right \backslash$">斜线与反斜线</el-radio>
-                            </el-col>                 
+                            </el-col>
                           </el-row>
                           <el-row :span="24" >
                             <el-col :span="4">
@@ -193,7 +193,7 @@ The line of README
                             </el-col>
                             <el-col :span="4" :offset="1">
                               <el-radio label="$\Bigg ( \bigg [ \Big \{ \big \langle \left | \| \frac{a}{b} \| \right | \big \rangle \Big \} \bigg ] \Bigg )$">括号大小控制示例</el-radio>
-                            </el-col>              
+                            </el-col>
                           </el-row>
                           <el-row :span="24" >
                             <el-col :span="6">
@@ -201,10 +201,10 @@ The line of README
                             </el-col>
                             <el-col :span="6" :offset="4">
                               <el-radio label="$\left. \frac{a}{b} \right \}$">单右括号（左侧补齐）</el-radio>
-                            </el-col>                  
+                            </el-col>
                           </el-row>
-                        </el-radio-group>               
-                      </el-form-item>     
+                        </el-radio-group>
+                      </el-form-item>
                     </el-col>
                   </el-row>
                 </el-form>
@@ -259,7 +259,7 @@ The line of README
                             </el-col>
                             <el-col :span="4" :offset="1">
                               <el-radio label="sec">正割sec</el-radio>
-                            </el-col>                       
+                            </el-col>
                           </el-row>
                           <el-row>
                             <el-col :span="4">
@@ -288,9 +288,9 @@ The line of README
                             <el-col :span="4" :offset="1">
                               <el-radio label="coth">双曲余切coth</el-radio>
                             </el-col>
-                          </el-row> 
-                        </el-radio-group>               
-                      </el-form-item>     
+                          </el-row>
+                        </el-radio-group>
+                      </el-form-item>
                     </el-col>
                   </el-row>
                 </el-form>
@@ -313,10 +313,10 @@ The line of README
                             </el-col>
                             <el-col :span="3" :offset="1">
                               <el-radio label="inf">下确界</el-radio>
-                            </el-col>                      
+                            </el-col>
                           </el-row>
-                        </el-radio-group>               
-                      </el-form-item>     
+                        </el-radio-group>
+                      </el-form-item>
                     </el-col>
                   </el-row>
                 </el-form>
@@ -339,7 +339,7 @@ The line of README
                             </el-col>
                             <el-col :span="5" :offset="1">
                               <el-radio label="liminf">下极限</el-radio>
-                            </el-col>                                         
+                            </el-col>
                           </el-row>
                           <el-row :span="24" >
                             <el-col :span="5">
@@ -353,10 +353,10 @@ The line of README
                             </el-col>
                             <el-col :span="5" :offset="1">
                               <el-radio label="ker">核（kernal）</el-radio>
-                            </el-col>                                         
+                            </el-col>
                           </el-row>
-                        </el-radio-group>               
-                      </el-form-item>     
+                        </el-radio-group>
+                      </el-form-item>
                     </el-col>
                   </el-row>
                 </el-form>
@@ -379,10 +379,10 @@ The line of README
                             </el-col>
                             <el-col :span="5" :offset="1">
                               <el-radio label="arg">角度</el-radio>
-                            </el-col>                                         
+                            </el-col>
                           </el-row>
-                        </el-radio-group>               
-                      </el-form-item>     
+                        </el-radio-group>
+                      </el-form-item>
                     </el-col>
                   </el-row>
                 </el-form>
@@ -405,10 +405,10 @@ The line of README
                             </el-col>
                             <el-col :span="4" :offset="1">
                               <el-radio label="par">偏导</el-radio>
-                            </el-col> 
+                            </el-col>
                             <el-col :span="4" :offset="1">
                               <el-radio label="nabla">梯度元素</el-radio>
-                            </el-col>                                         
+                            </el-col>
                           </el-row>
                           <el-row :span="24" >
                             <el-col :span="6">
@@ -416,7 +416,7 @@ The line of README
                             </el-col>
                             <el-col :span="6" :offset="4">
                               <el-radio label="par2h">dx/dy（格式2）</el-radio>
-                            </el-col> 
+                            </el-col>
                           </el-row>
                           <el-row :span="24">
                             <el-col :span="6">
@@ -424,7 +424,7 @@ The line of README
                             </el-col>
                             <el-col :span="6" :offset="4">
                               <el-radio label="par2v">dx/dy（格式2 | 竖版）</el-radio>
-                            </el-col>                                        
+                            </el-col>
                           </el-row>
                           <el-row :span="24" >
                             <el-col :span="4">
@@ -432,19 +432,19 @@ The line of README
                             </el-col>
                             <el-col :span="4" :offset="1">
                               <el-radio label="backprime">导数符号（反）</el-radio>
-                            </el-col>                                       
+                            </el-col>
                             <el-col :span="4" :offset="1">
                               <el-radio label="deri">导数</el-radio>
                             </el-col>
                             <el-col :span="4" :offset="1">
                               <el-radio label="deridot1">导数（点形式 | 1阶）</el-radio>
-                            </el-col>  
+                            </el-col>
                             <el-col :span="4" :offset="1">
                               <el-radio label="deridot2">导数（点形式 | 2阶）</el-radio>
-                            </el-col>                                    
+                            </el-col>
                           </el-row>
-                        </el-radio-group>               
-                      </el-form-item>     
+                        </el-radio-group>
+                      </el-form-item>
                     </el-col>
                   </el-row>
                 </el-form>
@@ -527,7 +527,7 @@ The line of README
                             </el-col>
                             <el-col :span="5" :offset="1">
                               <el-radio label="pmod">对 x 取余</el-radio>
-                            </el-col>      
+                            </el-col>
                           </el-row>
                           <el-row>
                             <el-col :span="5" :offset="1">
@@ -537,16 +537,16 @@ The line of README
                               <el-radio label="lcm">最小公倍数</el-radio>
                             </el-col>
                           </el-row>
-                          <el-row>   
+                          <el-row>
                             <el-col :span="5" :offset="1">
                               <el-radio label="surd">开根符号</el-radio>
                             </el-col>
                             <el-col :span="5" :offset="1">
                               <el-radio label="sqrt">开根</el-radio>
-                            </el-col>               
+                            </el-col>
                           </el-row>
-                        </el-radio-group>               
-                      </el-form-item>     
+                        </el-radio-group>
+                      </el-form-item>
                     </el-col>
                   </el-row>
                 </el-form>
@@ -633,10 +633,10 @@ The line of README
                     <div v-if="Part_Common_Page">
                       <el-row style="margin-top: -15px" v-for="Outer in Math.ceil(Part_Common_List.常用运算符.length/24)" :key="'CBOL_' + (Outer - 1)">
                         <el-col :span="1" v-for="index in 24" :key="'CBOL_'  + (Outer - 1) + '_' + index">
-                          <button 
-                            style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                            size="mini" 
-                            v-if="Part_Common_List_Index('常用运算符', (Outer - 1) * 24 + (index - 1))" 
+                          <button
+                            style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                            size="mini"
+                            v-if="Part_Common_List_Index('常用运算符', (Outer - 1) * 24 + (index - 1))"
                             @click="Add_Part_Common_List('常用运算符', (Outer - 1) * 24 + (index - 1))">
                             <Mathdown :name="'Common_Binary_Operator_List_' + ((Outer - 1) * 24 + index) + Mathdown_Name_Special" :content="Part_Common_List.常用运算符[(Outer - 1) * 24 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
@@ -651,10 +651,10 @@ The line of README
                     <div v-if="Part_Common_Page">
                       <el-row style="margin-top: -15px" v-for="Outer in Math.ceil(Part_Common_List.二元运算符.length/24)" :key="'CROL_' + (Outer - 1)">
                         <el-col :span="1" v-for="index in 24" :key="'CROL_'  + (Outer - 1) + '_' + index">
-                          <button 
-                            style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                            size="mini" 
-                            v-if="Part_Common_List_Index('二元运算符', (Outer - 1) * 24 + (index - 1))" 
+                          <button
+                            style="width: 25px; height: 25px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                            size="mini"
+                            v-if="Part_Common_List_Index('二元运算符', (Outer - 1) * 24 + (index - 1))"
                             @click="Add_Part_Common_List('二元运算符', (Outer - 1) * 24 + (index - 1))">
                             <Mathdown :name="'Common_Relational_Operator_List_' + ((Outer - 1) * 24 + index) + Mathdown_Name_Special" :content="Part_Common_List.二元运算符[(Outer - 1) * 24 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
@@ -679,10 +679,10 @@ The line of README
                       <el-row style="margin-top: -15px" v-for="Outer in Math.ceil(Part_Common_List.分式.length/6)" :key="'CFOL_' + (Outer - 1)">
                         <el-col :span="4" v-for="index in 6" :key="'CFOL_'  + (Outer - 1) + '_' + index">
                           <el-row type="flex" justify="center">
-                            <button 
-                              style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                              size="mini" 
-                              v-if="Part_Common_List_Index('分式', (Outer - 1) * 6 + (index - 1))" 
+                            <button
+                              style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                              size="mini"
+                              v-if="Part_Common_List_Index('分式', (Outer - 1) * 6 + (index - 1))"
                               @click="Add_Part_Common_List('分式', (Outer - 1) * 6 + (index - 1))">
                               <Mathdown :name="'Common_Fractional_Operator_List_' + ((Outer - 1) * 6 + index) + Mathdown_Name_Special" :content="Part_Common_List.分式[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                             </button>
@@ -699,10 +699,10 @@ The line of README
                       <el-row style="margin-top: -15px; margin: 0px" v-for="Outer in Math.ceil(Part_Common_List.指数.length/6)" :key="'CEOL_' + (Outer - 1)">
                         <el-col :span="4" v-for="index in 6" :key="'CEOL_'  + (Outer - 1) + '_' + index">
                           <el-row type="flex" justify="center">
-                            <button 
-                              style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                              size="mini" 
-                              v-if="Part_Common_List_Index('指数', (Outer - 1) * 6 + (index - 1))" 
+                            <button
+                              style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                              size="mini"
+                              v-if="Part_Common_List_Index('指数', (Outer - 1) * 6 + (index - 1))"
                               @click="Add_Part_Common_List('指数', (Outer - 1) * 6 + (index - 1))">
                               <Mathdown :name="'Common_Exponential_Operator_List_' + ((Outer - 1) * 6 + index) + Mathdown_Name_Special" :content="Part_Common_List.指数[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                             </button>
@@ -726,10 +726,10 @@ The line of README
                     <el-row v-for="Outer in Math.ceil(Part_Subscript_List.length/6)" :key="'SL_' + (Outer - 1)" style="margin: 0px">
                       <el-col :span="4" v-for="index in 6" :key="'SL_'  + (Outer - 1) + '_' + index">
                         <el-row type="flex" justify="center">
-                          <button 
-                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                            size="mini" 
-                            v-if="(Outer - 1) * 6 + (index - 1) < Part_Subscript_List.length" 
+                          <button
+                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                            size="mini"
+                            v-if="(Outer - 1) * 6 + (index - 1) < Part_Subscript_List.length"
                             @click="Add(Part_Subscript_List[(Outer - 1) * 6 + (index - 1)])">
                             <Mathdown :name="'Subscript_List_' + ((Outer - 1) * 6 + index) + Mathdown_Name_Special" :content="Part_Subscript_List[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
@@ -752,10 +752,10 @@ The line of README
                     <el-row v-for="Outer in Math.ceil(Part_Set_List.length/12)" :key="'SOL_' + (Outer - 1)" style="margin: 0px">
                       <el-col :span="2" v-for="index in 12" :key="'SOL_'  + (Outer - 1) + '_' + index">
                         <el-row type="flex" justify="center">
-                          <button 
-                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                            size="mini" 
-                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Set_List.length" 
+                          <button
+                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                            size="mini"
+                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Set_List.length"
                             @click="Add(Part_Set_List[(Outer - 1) * 12 + (index - 1)])">
                             <Mathdown :name="'Set_Operator_List_' + ((Outer - 1) * 12 + index) + Mathdown_Name_Special" :content="Part_Set_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
@@ -778,10 +778,10 @@ The line of README
                     <el-row v-for="Outer in Math.ceil(Part_Logical_List.length/12)" :key="'SLL_' + (Outer - 1)" style="margin: 0px">
                       <el-col :span="2" v-for="index in 12" :key="'SLL_'  + (Outer - 1) + '_' + index">
                         <el-row type="flex" justify="center">
-                          <button 
-                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                            size="mini" 
-                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Logical_List.length" 
+                          <button
+                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                            size="mini"
+                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Logical_List.length"
                             @click="Add(Part_Logical_List[(Outer - 1) * 12 + (index - 1)])">
                             <Mathdown :name="'Set_Logical_List_' + ((Outer - 1) * 12 + index) + Mathdown_Name_Special" :content="Part_Logical_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
@@ -804,10 +804,10 @@ The line of README
                     <el-row v-for="Outer in Math.ceil(Part_Parentheses_List.length/12)" :key="'PL_' + (Outer - 1)" style="margin: 0px">
                       <el-col :span="2" v-for="index in 12" :key="'PL_'  + (Outer - 1) + '_' + index">
                         <el-row type="flex" justify="center">
-                          <button 
-                            style="width: 50px; height: 75px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                            size="mini" 
-                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Parentheses_List.length && Part_Parentheses_List[(Outer - 1) * 12 + (index - 1)] != ''" 
+                          <button
+                            style="width: 50px; height: 75px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                            size="mini"
+                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Parentheses_List.length && Part_Parentheses_List[(Outer - 1) * 12 + (index - 1)] != ''"
                             @click="Add(Part_Parentheses_List[(Outer - 1) * 12 + (index - 1)])">
                             <Mathdown :name="'Parentheses_List_' + ((Outer - 1) * 12 + index) + Mathdown_Name_Special" :content="Part_Parentheses_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
@@ -830,10 +830,10 @@ The line of README
                     <el-row v-for="Outer in Math.ceil(Part_Arrow_List.length/12)" :key="'AL_' + (Outer - 1)" style="margin: 0px">
                       <el-col :span="2" v-for="index in 12" :key="'AL_'  + (Outer - 1) + '_' + index">
                         <el-row type="flex" justify="center">
-                          <button 
-                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                            size="mini" 
-                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Arrow_List.length && Part_Arrow_List[(Outer - 1) * 12 + (index - 1)] != ''" 
+                          <button
+                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                            size="mini"
+                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Arrow_List.length && Part_Arrow_List[(Outer - 1) * 12 + (index - 1)] != ''"
                             @click="Add(Part_Arrow_List[(Outer - 1) * 12 + (index - 1)])">
                             <Mathdown :name="'Arrow_List_' + ((Outer - 1) * 12 + index) + Mathdown_Name_Special" :content="Part_Arrow_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
@@ -856,10 +856,10 @@ The line of README
                     <el-row v-for="Outer in Math.ceil(Part_Calculus_List.length/8)" :key="'CL_' + (Outer - 1)" style="margin: 0px">
                       <el-col :span="3" v-for="index in 8" :key="'CL_'  + (Outer - 1) + '_' + index">
                         <el-row type="flex" justify="center">
-                          <button 
-                            style="width: 75px; height: 75px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                            size="mini" 
-                            v-if="(Outer - 1) * 8 + (index - 1) < Part_Calculus_List.length && Part_Calculus_List[(Outer - 1) * 8 + (index - 1)] != ''" 
+                          <button
+                            style="width: 75px; height: 75px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                            size="mini"
+                            v-if="(Outer - 1) * 8 + (index - 1) < Part_Calculus_List.length && Part_Calculus_List[(Outer - 1) * 8 + (index - 1)] != ''"
                             @click="Add(Part_Calculus_List[(Outer - 1) * 8 + (index - 1)])">
                             <Mathdown :name="'Calculus_List_' + ((Outer - 1) * 8 + index) + Mathdown_Name_Special" :content="Part_Calculus_List[(Outer - 1) * 8 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
@@ -882,10 +882,10 @@ The line of README
                     <el-row v-for="Outer in Math.ceil(Part_Triangle_List.length/6)" :key="'TL_' + (Outer - 1)" style="margin: 0px">
                       <el-col :span="4" v-for="index in 6" :key="'TL_'  + (Outer - 1) + '_' + index">
                         <el-row type="flex" justify="center">
-                          <button 
-                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                            size="mini" 
-                            v-if="(Outer - 1) * 6 + (index - 1) < Part_Triangle_List.length && Part_Triangle_List[(Outer - 1) * 6 + (index - 1)] != ''" 
+                          <button
+                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                            size="mini"
+                            v-if="(Outer - 1) * 6 + (index - 1) < Part_Triangle_List.length && Part_Triangle_List[(Outer - 1) * 6 + (index - 1)] != ''"
                             @click="Add(Part_Triangle_List[(Outer - 1) * 6 + (index - 1)])">
                             <Mathdown :name="'Triangle_List_' + ((Outer - 1) * 6 + index) + Mathdown_Name_Special" :content="Part_Triangle_List[(Outer - 1) * 6 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
@@ -908,10 +908,10 @@ The line of README
                     <el-row v-for="Outer in Math.ceil(Part_Geometry_List.length/12)" :key="'GL_' + (Outer - 1)" style="margin: 0px">
                       <el-col :span="2" v-for="index in 12" :key="'GL_'  + (Outer - 1) + '_' + index">
                         <el-row type="flex" justify="center">
-                          <button 
-                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                            size="mini" 
-                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Geometry_List.length && Part_Geometry_List[(Outer - 1) * 12 + (index - 1)] != ''" 
+                          <button
+                            style="width: 50px; height: 50px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                            size="mini"
+                            v-if="(Outer - 1) * 12 + (index - 1) < Part_Geometry_List.length && Part_Geometry_List[(Outer - 1) * 12 + (index - 1)] != ''"
                             @click="Add(Part_Geometry_List[(Outer - 1) * 12 + (index - 1)])">
                             <Mathdown :name="'Geometry_List_' + ((Outer - 1) * 12 + index) + Mathdown_Name_Special" :content="Part_Geometry_List[(Outer - 1) * 12 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
@@ -934,10 +934,10 @@ The line of README
                     <el-row v-for="Outer in Math.ceil(Part_Matrix_List.length/4)" :key="'ML_' + (Outer - 1)" style="margin: 0px">
                       <el-col :span="6" v-for="index in 4" :key="'ML_'  + (Outer - 1) + '_' + index">
                         <el-row type="flex" justify="center">
-                          <button 
-                            style="width: 150px; height: 100px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;" 
-                            size="mini" 
-                            v-if="(Outer - 1) * 4 + (index - 1) < Part_Matrix_List.length && Part_Matrix_List[(Outer - 1) * 4 + (index - 1)] != ''" 
+                          <button
+                            style="width: 150px; height: 100px; margin-right: 5px; background: transparent; border: none; margin-top: -3px;"
+                            size="mini"
+                            v-if="(Outer - 1) * 4 + (index - 1) < Part_Matrix_List.length && Part_Matrix_List[(Outer - 1) * 4 + (index - 1)] != ''"
                             @click="Add(Part_Matrix_List[(Outer - 1) * 4 + (index - 1)])">
                             <Mathdown :name="'Matrix_List_' + ((Outer - 1) * 4 + index) + Mathdown_Name_Special" :content="Part_Matrix_List[(Outer - 1) * 4 + (index - 1)]" style="margin-top: -3px; margin-left: -2px; text-align: center"></Mathdown>
                           </button>
@@ -955,7 +955,7 @@ The line of README
             <el-popover ref="hint" placement="top" content="提供LaTex格式的数学公式元素的辅助输入功能。注：显示区使用KaTex进行解析，可能和LaTex结果显示上有差异，但LaTex格式无误。" width="300" trigger="hover"></el-popover>
             <el-button v-popover:hint class="Math_Helper" size="mini" @click="Open_Helper()">&Sigma;</el-button>
           </div> -->
-        </el-row> 
+        </el-row>
         <!-- 右侧插入常见符号的部分 -->
         <div slot="right-toolbar-after" type="flex" justify="start" @mousewheel.prevent="Common_Page_Change">
           <el-row>
@@ -1017,7 +1017,7 @@ The line of README
               </el-popover>
             </el-col>
           </el-row>
-        </div>        
+        </div>
       </mavon-editor>
     </el-row>
     <el-row type="flex" justify="center">
@@ -1029,8 +1029,11 @@ The line of README
 <script>
 /* eslint-disable */
 import Mathdown from "./Mathdown.vue";
+
+import { mavonEditor } from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 export default {
-  components: { Mathdown },
+  components: { Mathdown, mavonEditor },
   name: "ComplexInput",
   props: {
     Get_Out_Content: {
@@ -1092,15 +1095,15 @@ export default {
       Common_Page_Index: 0,
       Common_Symbol_Set: {
         // 默认栏
-        '常用符号': ["$\\pm$", "$\\infty$", "$\=$", "$\\neq$", "~", "$\\times$", "$\\div$", 
-                    "$\!$", "$\\propto$", "$\<$", "$\\ll$", "$\>$", "$\\gg$", "$\\leq$", 
+        '常用符号': ["$\\pm$", "$\\infty$", "$\=$", "$\\neq$", "~", "$\\times$", "$\\div$",
+                    "$\!$", "$\\propto$", "$\<$", "$\\ll$", "$\>$", "$\\gg$", "$\\leq$",
                     "$\\geq$", "$\\mp$", "$\\cong$", "$\\approx$", "$\\equiv$", "$\\forall$", "$\\complement$",
                     "$\\partial$", "$\\sqrt[]{}$", "$\\sqrt[3]{}$", "$\\sqrt[4]{}$", "$\\cup$", "$\\cap$", "$\\emptyset$",
                     "$\\%$", "$^{\\circ}$", "$^{\\circ}F$", "$^{\\circ}C$", "$\\Delta$", "$\\nabla$", "$\\exists$",
                     "$\\nexists$", "$\\in$", "$\\ni$", "$\\gets$", "$\\uparrow$", "$\\to$", "$\\downarrow$",
-                    "$\\leftrightarrow$", "$\\because$", "$\\therefore$", "$\+$", "$\-$", "$\\neg$", "$\\alpha$", 
-                    "$\\beta$", "$\\gamma$", "$\\delta$", "$\\varepsilon$", "$\\epsilon$", "$\\theta$", "$\\vartheta$", 
-                    "$\\mu$", "$\\pi$", "$\\rho$", "$\\sigma$", "$\\tau$", "$\\varphi$", "$\\omega$", 
+                    "$\\leftrightarrow$", "$\\because$", "$\\therefore$", "$\+$", "$\-$", "$\\neg$", "$\\alpha$",
+                    "$\\beta$", "$\\gamma$", "$\\delta$", "$\\varepsilon$", "$\\epsilon$", "$\\theta$", "$\\vartheta$",
+                    "$\\mu$", "$\\pi$", "$\\rho$", "$\\sigma$", "$\\tau$", "$\\varphi$", "$\\omega$",
                     "$\\ast$", "$\\bullet$", "$\\vdots$", "$\\cdots$", "$\\ddots$", "$\\aleph$", "$\\beth$"],
         // 希腊字母
         '希腊字母': ["$\\alpha$", "$\\beta$", "$\\gamma$", "$\\delta$", "$\\varepsilon$", "$\\epsilon$", "$\\zeta$",
@@ -1113,9 +1116,9 @@ export default {
                   "$\\rm{T}$", "$\\Upsilon$", "$\\Phi$", "$\\rm{X}$", "$\\Psi$", "$\\Omega$"],
         // 其他字母类符号
         '字母符号': ["$\\rm{F}$", "$\\Finv$", "$\\exists$", "$\\nexists$",
-                    "$\\forall$", "$\\complement$", "$\\partial$", "$\\hbar$", 
+                    "$\\forall$", "$\\complement$", "$\\partial$", "$\\hbar$",
                     "$\\mathcal{g}$", "$\\mathcal{H}$", "$\\mathcal{R}$", "$\\mathcal{L}$",
-                    "$\\mathcal{l}$", "$\\mathcal{B}$", "$\\mathcal{E}$", "$\\mathcal{F}$", "$\\mathcal{o}$", 
+                    "$\\mathcal{l}$", "$\\mathcal{B}$", "$\\mathcal{E}$", "$\\mathcal{F}$", "$\\mathcal{o}$",
                     "$\\mathfrak{H}$", "$\\mathfrak{h}$", "$\\mathfrak{l}$", "$\\mathfrak{R}$",
                     "$\\mathbb{K}$", "$\\mathbb{Z}$", "$\\mathbb{R}$", "$\\mathbb{N}$", "$\\mathbb{Q}$", "$\\mathbb{P}$", "$\\mathbb{I}$",
                     "$\\gimel$", "$\\daleth$", "$\\aleph$", "$\\beth$", "$\\infty$", "$\\backepsilon$", "$\\eth$", "$\\Im$", "$\\imath$",
@@ -1123,15 +1126,15 @@ export default {
       },
       Common_Symbol_Type: '常用符号',
       // 当前显示的按钮内容
-      Symbol_List: ["$\\pm$", "$\\infty$", "$\=$", "$\\neq$", "~", "$\\times$", "$\\div$", 
-                    "$\!$", "$\\propto$", "$\<$", "$\\ll$", "$\>$", "$\\gg$", "$\\leq$", 
+      Symbol_List: ["$\\pm$", "$\\infty$", "$\=$", "$\\neq$", "~", "$\\times$", "$\\div$",
+                    "$\!$", "$\\propto$", "$\<$", "$\\ll$", "$\>$", "$\\gg$", "$\\leq$",
                     "$\\geq$", "$\\mp$", "$\\cong$", "$\\approx$", "$\\equiv$", "$\\forall$", "$\\complement$",
                     "$\\partial$", "$\\sqrt[]{}$", "$\\sqrt[3]{}$", "$\\sqrt[4]{}$", "$\\cup$", "$\\cap$", "$\\emptyset$",
                     "$\\%$", "$^{\\circ}$", "$^{\\circ}F$", "$^{\\circ}C$", "$\\Delta$", "$\\nabla$", "$\\exists$",
                     "$\\nexists$", "$\\in$", "$\\ni$", "$\\gets$", "$\\uparrow$", "$\\to$", "$\\downarrow$",
-                    "$\\leftrightarrow$", "$\\because$", "$\\therefore$", "$\+$", "$\-$", "$\\neg$", "$\\alpha$", 
-                    "$\\beta$", "$\\gamma$", "$\\delta$", "$\\varepsilon$", "$\\epsilon$", "$\\theta$", "$\\vartheta$", 
-                    "$\\mu$", "$\\pi$", "$\\rho$", "$\\sigma$", "$\\tau$", "$\\varphi$", "$\\omega$", 
+                    "$\\leftrightarrow$", "$\\because$", "$\\therefore$", "$\+$", "$\-$", "$\\neg$", "$\\alpha$",
+                    "$\\beta$", "$\\gamma$", "$\\delta$", "$\\varepsilon$", "$\\epsilon$", "$\\theta$", "$\\vartheta$",
+                    "$\\mu$", "$\\pi$", "$\\rho$", "$\\sigma$", "$\\tau$", "$\\varphi$", "$\\omega$",
                     "$\\ast$", "$\\bullet$", "$\\vdots$", "$\\cdots$", "$\\ddots$", "$\\aleph$", "$\\beth$"],
       // 第一个按钮是否显示的是第一页，由于只有两页，所以可以直接判断
       Part_Common_Page: true,
@@ -1139,10 +1142,10 @@ export default {
       Part_Common_List:{
         "常用运算符": ["$\+$", "$\-$", "$\\div$", "$\\times$", "$\\pm$", "$\\mp$", "$\\propto$", "$\/$", "$\\ast$", "$\\circ$",
                       "$\\bullet$", "$\\cdot$", "$\\cap$", "$\\cup$", "$\\uplus$", "$\\sqcap$", "$\\sqcup$", "$\\wedge$", "$\\vee$"],
-        "二元运算符": ["$\=$", "$\\neq$", "$\<$", "$\>$", "$\\leq$", "$\\geq$", "$\\nless$", "$\\nleq$", "$\\ngtr$", "$\\ngeq$", 
-                      "$\\equiv$", "$\\sim$", "$\\simeq$", "$\\approx$", "$\\cong$", "$\\not\\equiv$", "$\\not\\simeq$", "$\\not\\approx$", "$\\not\\cong$", "$\\propto$", 
-                      "$\\ll$", "$\\gg$", "$\\in$", "$\\ni$", "$\\notin$", "$\\subset$", "$\\supset$", "$\\subseteq$", "$\\supseteq$", "$\\prec$", 
-                      "$\\succ$", "$\\preceq$", "$\\succeq$", "$\\sqsubset$", "$\\sqsupset$", "$\\sqsubseteq$", "$\\sqsupseteq$", "$\\parallel$", "$\\bot$", "$\\vdash$", 
+        "二元运算符": ["$\=$", "$\\neq$", "$\<$", "$\>$", "$\\leq$", "$\\geq$", "$\\nless$", "$\\nleq$", "$\\ngtr$", "$\\ngeq$",
+                      "$\\equiv$", "$\\sim$", "$\\simeq$", "$\\approx$", "$\\cong$", "$\\not\\equiv$", "$\\not\\simeq$", "$\\not\\approx$", "$\\not\\cong$", "$\\propto$",
+                      "$\\ll$", "$\\gg$", "$\\in$", "$\\ni$", "$\\notin$", "$\\subset$", "$\\supset$", "$\\subseteq$", "$\\supseteq$", "$\\prec$",
+                      "$\\succ$", "$\\preceq$", "$\\succeq$", "$\\sqsubset$", "$\\sqsupset$", "$\\sqsubseteq$", "$\\sqsupseteq$", "$\\parallel$", "$\\bot$", "$\\vdash$",
                       "$\\dashv$", "$\\bowtie$", "$\\asymp$"],
         "分式": ["$\\frac{a}{b}$", "$\\frac{d{a}}{d{b}}$", "$\\frac{\\nabla{a}}{\\nabla{b}}$", "$\\frac{\\partial{a}}{\\partial{b}}$", "$\\frac{\\delta{a}}{\\delta{b}}$", "$\\frac{\\pi}{2}$",
                 "$\\mathrm{a}/\\mathrm{b}$", "$\\mathrm{d{a}}/\\mathrm{d{b}}$", "$\\mathrm{\\nabla{a}}/\\mathrm{\\nabla{b}}$", "$\\mathrm{\\partial{a}}/\\mathrm{\\partial{b}}$", "$\\mathrm{\\delta{a}}/\\mathrm{\\delta{b}}$", "$\\mathrm{\\pi}/\\mathrm{2}$",
@@ -1151,63 +1154,63 @@ export default {
         "指数": ["$e^2$", "$a^b$", "$\\log {a}$", "$\\ln {a}$", "$\\lg {a}$", "$\\log_{a}^{b}$"]
       },
       // 集合运算符
-      Part_Set_List: ["$\\forall$", "$\\exists$", "$\\nexists$", "$\\emptyset$", "$\\varnothing$", "$\\in$", "$\\not\\in$", "$\\ni$", "$\\not\\ni$", 
-                      "$\\subset$", "$\\subseteq$", "$\\subseteqq$", "$\\subsetneqq$", "$\\supset$", "$\\supseteq$", 
+      Part_Set_List: ["$\\forall$", "$\\exists$", "$\\nexists$", "$\\emptyset$", "$\\varnothing$", "$\\in$", "$\\not\\in$", "$\\ni$", "$\\not\\ni$",
+                      "$\\subset$", "$\\subseteq$", "$\\subseteqq$", "$\\subsetneqq$", "$\\supset$", "$\\supseteq$",
                       "$\\supseteqq$", "$\\supsetneqq$", "$\\cup$", "$\\cap$", "$\\bigcap$", "$\\bigcup$"],
       // 逻辑运算符
       Part_Logical_List: ["$\\neg$", "$\p$", "$\q$", "$\\neg \p$", "$\\neg \q$", "$\\wedge$", "$\\vee$", "$\\bigwedge$", "$\\bigvee$"],
       // 上下标
       Part_Subscript_List: ["$\F_{a}^{}$", "$\F_{}^{b}$", "$\F_{a}^{b}$", "${}_{a}^{b}\F_{}^{}$", "${}_{}^{b}\F_{}^{}$", "${}_{a}^{b}\F_{c}^{d}$"],
       // 括号
-      Part_Parentheses_List: ["$\( A \)$", "$\[ A \]$", "$\\{ A \\}$", "$\\langle A \\rangle$", "$\\lceil A \\rceil$", "$\\lfloor A \\rfloor$", 
-                              "$\\left| A \\right|$", "$\\left \\| A \\right \\|$", "$\[ A \[$", "$\] A \]$", "$\] A \[$", "$\( A \| B \)$", 
-                              "$\[ A \| B \]$", "$\\{ A \| B \\}$", "$\\langle A \| B \\rangle$", 
+      Part_Parentheses_List: ["$\( A \)$", "$\[ A \]$", "$\\{ A \\}$", "$\\langle A \\rangle$", "$\\lceil A \\rceil$", "$\\lfloor A \\rfloor$",
+                              "$\\left| A \\right|$", "$\\left \\| A \\right \\|$", "$\[ A \[$", "$\] A \]$", "$\] A \[$", "$\( A \| B \)$",
+                              "$\[ A \| B \]$", "$\\{ A \| B \\}$", "$\\langle A \| B \\rangle$",
                               "$\( A $", "$ A \)$", "$\[ A $", "$ A \]$", "$\\{ A $", "$ A \\}$", "$\\langle A $", "$ A \\rangle$",
-                              "$\\lceil A $", "$ A \\rceil$", "$\\lfloor A $", "$ A \\rfloor$", "$\| A $", "$ A \|$", "$\\| A $", "$ A \\|$", 
-                              "$\\left \\{\\frac{a}{b} \\right.$", "$\\left. \\frac{a}{b} \\right \\}$", 
+                              "$\\lceil A $", "$ A \\rceil$", "$\\lfloor A $", "$ A \\rfloor$", "$\| A $", "$ A \|$", "$\\| A $", "$ A \\|$",
+                              "$\\left \\{\\frac{a}{b} \\right.$", "$\\left. \\frac{a}{b} \\right \\}$",
                               "$\\begin{cases} \\frac{n}{2}, & \\text{if } n\\text{ is even} \\\\ 3n+1, & \\text{if } n\\text{ is odd} \\end{cases}$", "", "",
                               "$\\begin{pmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{pmatrix}$", "", "",
                               "$\\begin{vmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{vmatrix}$", "", "",
                               "$\\begin{bmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{bmatrix}$", "", "",
                               "$\\begin{Bmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{Bmatrix}$", "", "",],
       // 箭头
-      Part_Arrow_List: ["$\\uparrow$", "$\\Uparrow$", "$\\downarrow$", "$\\Downarrow$", "$\\updownarrow$", "$\\Updownarrow$", "$\\rightarrow$", "$\\Rightarrow$", "$\\leftarrow$", 
-                        "$\\Leftarrow$", "$\\leftrightarrow$", "$\\Leftrightarrow$", "$\\longrightarrow$", "$\\Longrightarrow$", "$\\longleftarrow$", "$\\Longleftarrow$", "$\\rightleftharpoons$", "$\\nearrow$", 
+      Part_Arrow_List: ["$\\uparrow$", "$\\Uparrow$", "$\\downarrow$", "$\\Downarrow$", "$\\updownarrow$", "$\\Updownarrow$", "$\\rightarrow$", "$\\Rightarrow$", "$\\leftarrow$",
+                        "$\\Leftarrow$", "$\\leftrightarrow$", "$\\Leftrightarrow$", "$\\longrightarrow$", "$\\Longrightarrow$", "$\\longleftarrow$", "$\\Longleftarrow$", "$\\rightleftharpoons$", "$\\nearrow$",
                         "$\\searrow$", "$\\nLeftarrow$", "$\\nRightarrow$", "$\\rightleftarrows$", "$\\leftrightarrows$", "$\\rightrightarrows$", "$\\curvearrowright$", "$\\Longleftrightarrow$", "$\\leftrightsquigarrow$"],
       // 微积分
-      Part_Calculus_List: ["$\d x$", "$\\mathrm{d} x$", "$\\partial x$", "$\\nabla x$", 
-                           "$\dy/\dx$", "$\\mathrm{d}y/\\mathrm{d}x$", "$\\frac{\dy}{\dx}$", 
-                           "$\\frac{\\mathrm{d}y}{\\mathrm{d}x}$", "$\\frac{\\partial^2}{\\partial x_1\\partial x_2}y$", 
+      Part_Calculus_List: ["$\d x$", "$\\mathrm{d} x$", "$\\partial x$", "$\\nabla x$",
+                           "$\dy/\dx$", "$\\mathrm{d}y/\\mathrm{d}x$", "$\\frac{\dy}{\dx}$",
+                           "$\\frac{\\mathrm{d}y}{\\mathrm{d}x}$", "$\\frac{\\partial^2}{\\partial x_1\\partial x_2}y$",
                            "$\\int_{a}^{b}$", "$\\iint_{a}^{b}$", "$\\iiint_{a}^{b}$", "$\\oint_{}^{}$", "$\\oint_{a}^{b}$",
-                           "$\\sum_{x = a}^{b}$", 
-                           "$\\begin{matrix} \\sum_{x = a}^{b} \\end{matrix}$", 
+                           "$\\sum_{x = a}^{b}$",
+                           "$\\begin{matrix} \\sum_{x = a}^{b} \\end{matrix}$",
                            "$\\prod_{x = a}^{b}$",
-                           "$\\begin{matrix} \\prod_{x = a}^{b} \\end{matrix}$", 
-                           "$\\coprod_{x = a}^{b}$", 
+                           "$\\begin{matrix} \\prod_{x = a}^{b} \\end{matrix}$",
+                           "$\\coprod_{x = a}^{b}$",
                            "$\\begin{pmatrix} \\coprod_{x = a}^{b} \\end{pmatrix}$",
                            "$x\\prime$", "$x\\backprime$", "$f^{\\prime}$", "$f'$", "$f''$", "$f^{(3)}$", "$\\dot y$", "$\\ddot y$",
-                           "$\\lim u$", "$\\liminf v$", "$\\limsup w$", "$\\lim_{x \\to \\infty} \\frac{1}{n(n+1)}$", 
+                           "$\\lim u$", "$\\liminf v$", "$\\limsup w$", "$\\lim_{x \\to \\infty} \\frac{1}{n(n+1)}$",
                            "$\\dim x$", "$\\deg x$", "$\\det x$", "$\\ker\\phi$"],
       // 三角
-      Part_Triangle_List: ["$\\sin {\\theta}$", "$\\cos {\\theta}$", "$\\tan {\\theta}$", 
-                           "$\\csc {\\theta}$", "$\\sec {\\theta}$", "$\\cot {\\theta}$", 
-                           "$\\sin^{-1} {\\theta}$", "$\\cos^{-1} {\\theta}$", "$\\tan^{-1} {\\theta}$", 
-                           "$\\csc^{-1} {\\theta}$", "$\\sec^{-1} {\\theta}$", "$\\cot^{-1} {\\theta}$", 
-                           "$\\sinh {\\theta}$", "$\\cosh {\\theta}$", "$\\tanh {\\theta}$", 
-                           "$\\mathrm{csch} {\\theta}$", "$\\mathrm{sech} {\\theta}$", "$\\coth {\\theta}$", 
-                           "$\\sinh^{-1} {\\theta}$", "$\\cosh^{-1} {\\theta}$", "$\\tanh^{-1} {\\theta}$", 
-                           "$\\mathrm{csch}^{-1} {\\theta}$", "$\\mathrm{sech}^{-1} {\\theta}$", "$\\coth^{-1} {\\theta}$", 
+      Part_Triangle_List: ["$\\sin {\\theta}$", "$\\cos {\\theta}$", "$\\tan {\\theta}$",
+                           "$\\csc {\\theta}$", "$\\sec {\\theta}$", "$\\cot {\\theta}$",
+                           "$\\sin^{-1} {\\theta}$", "$\\cos^{-1} {\\theta}$", "$\\tan^{-1} {\\theta}$",
+                           "$\\csc^{-1} {\\theta}$", "$\\sec^{-1} {\\theta}$", "$\\cot^{-1} {\\theta}$",
+                           "$\\sinh {\\theta}$", "$\\cosh {\\theta}$", "$\\tanh {\\theta}$",
+                           "$\\mathrm{csch} {\\theta}$", "$\\mathrm{sech} {\\theta}$", "$\\coth {\\theta}$",
+                           "$\\sinh^{-1} {\\theta}$", "$\\cosh^{-1} {\\theta}$", "$\\tanh^{-1} {\\theta}$",
+                           "$\\mathrm{csch}^{-1} {\\theta}$", "$\\mathrm{sech}^{-1} {\\theta}$", "$\\coth^{-1} {\\theta}$",
                            "$\\sin {\\theta}$", "$\\cos {2\\theta}$", "$\\tan {\\theta} = \\frac{\\sin {\\theta}}{\\cos {\\theta}}$",  ],
       // 几何
-      Part_Geometry_List: ["$\\Box$", "$\\Diamond$", "$\\Delta$", "$\\angle A$", "$\\circ$", "$\\perp$", "$\\vec{a}$", 
-                           "$\\overrightarrow{AB}$", "$\\overleftarrow{AB}$", "$\\overline{m+n}$", "$\\overline{AB}$", "$\\underline{m+n}$", "$\\underline{AB}$", "$\/\/$", 
+      Part_Geometry_List: ["$\\Box$", "$\\Diamond$", "$\\Delta$", "$\\angle A$", "$\\circ$", "$\\perp$", "$\\vec{a}$",
+                           "$\\overrightarrow{AB}$", "$\\overleftarrow{AB}$", "$\\overline{m+n}$", "$\\overline{AB}$", "$\\underline{m+n}$", "$\\underline{AB}$", "$\/\/$",
                            "$\\boxplus$", "$\\triangle$", "$\\odot$", "$\\overset{\\frown}{AB}$", "$\\lozenge$", "$\\blacklozenge$", "$\\measuredangle$"],
       // 矩阵
       Part_Matrix_List: ["$\\begin{pmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{pmatrix}$",
                          "$\\begin{vmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{vmatrix}$",
                          "$\\begin{Vmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{Vmatrix}$",
                          "$\\begin{bmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{bmatrix}$",
-                         "$\\begin{Bmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{Bmatrix}$", 
+                         "$\\begin{Bmatrix} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\end{Bmatrix}$",
                          "$\\begin{pmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$",
                          "$\\begin{vmatrix} 1 &   &   \\\\   & 1 &   \\\\   &   & 1 \\end{vmatrix}$",
                          "$\\begin{bmatrix} 1 &   &   \\\\   & \\ddots &   \\\\   &   & 1 \\end{bmatrix}$",
@@ -1307,7 +1310,7 @@ export default {
     Get_Mavon_Class(value){
       if(value){
         setTimeout(()=>{this.$emit("Full_Change", value)}, 10);
-        return "ME_Full"   
+        return "ME_Full"
       }else{
         setTimeout(()=>{this.$emit("Full_Change", value)}, 10);
         return "ME_Unfull"
@@ -1410,35 +1413,35 @@ export default {
 
     //     var temp_param2 = "d{变量占位符1}";
     //     var temp_param3 = "d{变量占位符2}";
-        
+
     //     this.temp_latex = "$" + temp_param2 + "/" + temp_param3 + "$"
 
     //   }else if(this.temp_param_type == 'par2h'){
 
     //     var temp_param2 = "$\\mathrm{d}{变量占位符1}";
     //     var temp_param3 = "$\\mathrm{d}{变量占位符2}";
-        
+
     //     this.temp_latex = "$\\mathrm{d}{a}/\\mathrm{d}{b}$"
 
     //   }else if(this.temp_param_type == 'par1v'){
 
     //     var temp_param2 = "d{变量占位符1}";
     //     var temp_param3 = "d{变量占位符2}";
-        
+
     //     this.temp_latex = "$\\frac{d{a}}{d{b}}$"
 
     //   }else if(this.temp_param_type == 'par2v'){
 
     //     var temp_param2 = "$\\mathrm{d}{变量占位符1}";
     //     var temp_param3 = "$\\mathrm{d}{变量占位符2}";
-        
+
     //     this.temp_latex = "$\\frac{" + temp_param2 + "}{" + temp_param3 + "}$"
 
     //   }else if(this.temp_param_type == 'par'){
-        
+
     //     var temp_param2 = "$\\partial {变量占位符1}";
     //     var temp_param3 = "$\\partial {变量占位符2}";
-        
+
     //     this.temp_latex = "$\\frac{" + temp_param2 + "}{" + temp_param3 + "}$"
 
     //   }else if(this.temp_param_type == 'prime'){
@@ -1450,7 +1453,7 @@ export default {
     //     this.temp_latex = "$\\backprime$"
 
     //   }else if(this.temp_param_type == 'deri'){
-        
+
     //     this.temp_latex = "${变量占位符}^{(次数占位符)}$"
 
     //   }else if(this.temp_param_type == 'deridot1'){
@@ -1473,7 +1476,7 @@ export default {
     //     this.temp_latex = "$\\gcd (变量占位符，多个变量请用英文逗号分隔)$";
     //   }else if(this.temp_param_type == 'lcm'){
     //     this.temp_latex = "$\\operatorname{lcm}(变量占位符，多个变量请用英文逗号分隔)$"
-    //   }else if(this.temp_param_type == 'sqrt'){  
+    //   }else if(this.temp_param_type == 'sqrt'){
     //     this.temp_latex = "$\\sqrt[次数占位符]{开根项占位符}$";
     //   }else if(this.temp_param_type == 'surd'){
     //     this.temp_latex = "$\\surd$";
@@ -1491,13 +1494,13 @@ export default {
     //   else if(this.temp_param_type == 'mul'){
     //     this.temp_latex = "$\\prod_{变量名 = 起始值}^{目标值}$"
     //   }else if(this.temp_param_type == 'mmul'){
-    //     this.temp_latex = "$\\begin{matrix} \\prod_{变量名 = 起始值}^{目标值} \\end{matrix}$"  
+    //     this.temp_latex = "$\\begin{matrix} \\prod_{变量名 = 起始值}^{目标值} \\end{matrix}$"
     //   }
     //   // 上积
     //   else if(this.temp_param_type == 'cmul'){
     //     this.temp_latex = "$\\coprod_{变量名 = 起始值}^{目标值}$"
     //   }else if(this.temp_param_type == 'mcmul'){
-    //     this.temp_latex = "$\\begin{matrix} \\coprod_{变量名 = 起始值}^{目标值} \\end{matrix}$"  
+    //     this.temp_latex = "$\\begin{matrix} \\coprod_{变量名 = 起始值}^{目标值} \\end{matrix}$"
     //   }
     //   // 积分，二重积分，三重积分
     //   else if(this.temp_param_type == 'int'){
@@ -1530,7 +1533,7 @@ export default {
     selectFile(e){
 
       if(e.target.files.length > 0){
-      
+
         if(e.target.files[0].type != "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
           this.$alert('    请选择正确类型的文件', '提示', {
             confirmButtonText: '确定'
@@ -1622,7 +1625,7 @@ export default {
     },
     // 打开对话框
     Open_Helper(){
-      this.helper_dialog = true; 
+      this.helper_dialog = true;
     },
     // 返回当前LaTex公式的结果
     Get_Content(){
@@ -1681,32 +1684,32 @@ export default {
 
 <style scoped type="text/css">
 .Math_Helper {
-  color: black; 
-  font-size: 20px; 
+  color: black;
+  font-size: 20px;
   background: #fff;
   margin-top: 2px;
   margin-left: -7px;
-  width: 25px; 
+  width: 25px;
   height: 25px;
   border: none;
 }
 .Math_Helper:hover {
-  color: black; 
-  font-size: 20px; 
+  color: black;
+  font-size: 20px;
   background: #fff;
   margin-top: 2px;
   margin-left: -7px;
-  width: 25px; 
+  width: 25px;
   height: 25px;
   border: none;
 }
 .Math_Helper:focus {
-  color: black; 
-  font-size: 20px; 
+  color: black;
+  font-size: 20px;
   background: #fff;
   margin-top: 2px;
   margin-left: -7px;
-  width: 25px; 
+  width: 25px;
   height: 25px;
   border: none;
 }

@@ -18,8 +18,8 @@ import ITASLayout from '@/layout/ITAS'
 // import Register from "@/components/Register";
 // import FileUpload from "@/components/Upload";
 
-import mavonEditor from 'mavon-editor'
-import 'mavon-editor/dist/css/index.css'
+// import mavonEditor from 'mavon-editor'
+// import 'mavon-editor/dist/css/index.css'
 
 // 解决NavigationDuplicated的问题
 const originalPush = Router.prototype.push
@@ -29,7 +29,7 @@ Router.prototype.push = function push(location) {
 }
 
 Vue.use(Router);
-Vue.use(mavonEditor);
+// Vue.use(mavonEditor);
 const router = new Router({
   mode: "history",
   routes: [
