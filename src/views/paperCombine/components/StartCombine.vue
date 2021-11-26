@@ -1341,7 +1341,7 @@ export default {
         .then(() => {
           this.$emit("Clear_Cart", true)
           for(let i = 0; i < this.Compare_Paper_Questions.length; i++){
-            for(let j = 0; j < this.Compare_Paper_Questions[j].list.length; j++){
+            for(let j = 0; j < this.Compare_Paper_Questions[i].list.length; j++){
               this.$emit("Add_To_Cart", JSON.stringify(this.Compare_Paper_Questions[i].list[j]));
             }
           }
@@ -1432,11 +1432,14 @@ export default {
         Analyse_Paper_JSON.data.push(Bundle_Format);
       }
 
+      console.log(Analyse_Paper_JSON)
+
       commonAjax(this.backendIP+'/api/combinePaperAnalyseReport',
         {
           Paper_Data: JSON.stringify(Analyse_Paper_JSON)
         }
       ).then((data)=>{
+        console.log(data)
         let Changing_Info = []
         let Bundle_Item = {}
         for(let Bundle_Index = 0; Bundle_Index < data.sub_question.length; Bundle_Index++){
@@ -1548,7 +1551,8 @@ export default {
         this.$message.success("试题详情内容已在新页面展开。");
         this.waiting = false;
         this.waiting_text = ""
-      }).catch(() => {
+      }).catch((err) => {
+        console.log(err)
         this.$message.error("服务器忙碌，请稍后再试...")
         this.waiting = false;
         this.waiting_text = ""

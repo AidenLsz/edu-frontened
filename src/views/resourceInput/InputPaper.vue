@@ -2086,7 +2086,7 @@ export default {
         }
 
         //debug
-        console.log(this.Question_Bundle.length);
+        // console.log(this.Question_Bundle.length);
 
         let Type_List = ['单选题', '多选题', '判断题', '填空题', '简答题', '计算题']
         for(let j = 0; j < Type_List.length; j++){
@@ -2099,14 +2099,11 @@ export default {
           Temp_Result_Dict[Type_List[j]].desc = "第" + Count + "个" + Type_List[j] + "题包"
         }
 
-        //debug
-        console.log(Temp_Result_Dict);
-
         commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param).then((res)=>{
           
           let Result = res.data
 
-          console.log(Result)
+          // console.log(Result)
 
           for(let i = 0; i < Result.length; i++){
             if(Result[i].type=='选择题'){
@@ -2180,7 +2177,7 @@ export default {
 
           for(let i = 0; i < Type_List.length; i++){
             if(Temp_Result_Dict[Type_List[i]].list.length > 0){
-              console.log(i, Type_List[i], this.Question_Bundle.length);
+              // console.log(i, Type_List[i], this.Question_Bundle.length);
               this.Question_Bundle.push({
                 type: Type_List[i],
                 desc: Temp_Result_Dict[Type_List[i]].desc,
@@ -2300,7 +2297,7 @@ export default {
         this.$http
           .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
           .then(function(data) {
-            console.log(data.data)
+            // console.log(data.data)
             // 切分出来的文字部分
             this.Paper_Content = data.data.paper
             // 切分出来的图片部分，注意在显然的时候，需要从这里找到对应的图片内容
@@ -2335,11 +2332,11 @@ export default {
         commonAjax(this.backendIP + '/api/getUserUUID', {}).then((res)=>{
           this.UUID = res.UUID
         }).then(() => {
-          console.log('UUID',this.UUID);
+          // console.log('UUID',this.UUID);
         }).catch(
-          (err)=>{
-            console.log(err)
-            console.log("Failed.")
+          ()=>{
+            // console.log(err)
+            // console.log("Failed.")
           }
         )
       },
@@ -3076,12 +3073,12 @@ export default {
       this.Multi_Type_Insert = true;
     },
     Waiting_Insert(Index){
-      console.log(this.Waiting_Question)
+      // console.log(this.Waiting_Question)
       this.Question_Bundle[Index].list.push(JSON.parse(JSON.stringify(this.Waiting_Question)))
       this.Multi_Info = [];
       this.Multi_Type_Insert = false;
       this.Refresh = !this.Refresh;
-      console.log(this.Jumping)
+      // console.log(this.Jumping)
       if(this.Jumping != ""){
         let Aim = this.Jumping.split(" ")
         this.Question_Bundle[Aim[0]].list.splice(Aim[1], 1)
