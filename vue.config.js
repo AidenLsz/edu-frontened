@@ -9,7 +9,10 @@ module.exports = {
         jQuery: 'jquery',
         'window.jQuery': 'jquery',
         Popper: ['popper.js', 'default']
-      })
+      }),
+      new webpack.optimize.MinChunkSizePlugin({
+        minChunkSize: 50000,
+      }),
     ]
   },
   pwa: {

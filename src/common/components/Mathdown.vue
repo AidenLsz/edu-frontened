@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-require("mathjax/es5/tex-svg");
+import "mathjax/es5/tex-svg"
 export default {
   name: "Mathdown",
   props: {

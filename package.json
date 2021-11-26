@@ -9,7 +9,7 @@
     "test": "vue-cli-service build --mode test",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "dev": "npm run serve"
+    "dev": "vue-cli-service serve --mode test --hot"
   },
   "dependencies": {
     "axios": "^0.19.2",

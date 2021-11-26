@@ -364,28 +364,28 @@ if __name__ == "__main__":
         print(resp.text)</code></pre>
               <p><strong>返回值</strong></p>
               <pre><code>[{
-    'code': 200, 
-    'msg': '', 
-    'data': {'qid': '0', 
-             'success': 1, 
-             'is_formula': 1, 
-             'detect_formula': 1, 
+    'code': 200,
+    'msg': '',
+    'data': {'qid': '0',
+             'success': 1,
+             'is_formula': 1,
+             'detect_formula': 1,
              'latex': '| f ( x ) - g ( x ) | \\leq k ( k &gt; 0 )'}
-}, 
-{'code': 200, 
- 'msg': '', 
- 'data': {'qid': '1', 
-          'success': 1, 
-          'is_formula': 1, 
-          'detect_formula': 1, 
+},
+{'code': 200,
+ 'msg': '',
+ 'data': {'qid': '1',
+          'success': 1,
+          'is_formula': 1,
+          'detect_formula': 1,
           'latex': 'f ( x ) = ( \\frac { 1 } { 3 } ) ^ { x } - \\sqrt { x }'}
 },
-{'code': 200, 
- 'msg': 'This image is not formula!', 
- 'data': {'qid': '2', 
-          'success': 1, 
-          'is_formula': 0, 
-          'detect_formula': 0, 
+{'code': 200,
+ 'msg': 'This image is not formula!',
+ 'data': {'qid': '2',
+          'success': 1,
+          'is_formula': 0,
+          'detect_formula': 0,
           'latex': ''}
 }]</code></pre>
             </el-col>
@@ -399,7 +399,7 @@ if __name__ == "__main__":
 
 <script>
 // import Mathdown from "@/common/components/Mathdown.vue";
-require("mathjax/es5/tex-svg");
+import "mathjax/es5/tex-svg"
 import $ from "jquery";
 import Instruction from "./components/InstructionImage.vue";
 import Dialogue from "./components/Dialogue.vue";
