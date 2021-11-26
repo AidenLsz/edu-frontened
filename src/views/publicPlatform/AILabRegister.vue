@@ -377,7 +377,7 @@ export default {
         });
       } else {
         commonAjax(
-          "https://ailab-api-backend-275-production.env.bdaa.pro/v1/user/captcha",
+          "https://ailab-api-275-production.env.bdaa.pro/v1/signup/captcha",
           {
             user_name: this.username,
             mail: this.mail,
@@ -407,7 +407,7 @@ export default {
       } else
       {
         commonAjax(
-          "https://ailab-api-backend-275-production.env.bdaa.pro/v1/user/signup",
+          "https://ailab-api-275-production.env.bdaa.pro/v1/signup/signup",
           {
             user_name: this.username,
             password: this.password,

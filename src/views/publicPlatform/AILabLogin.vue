@@ -59,7 +59,7 @@ export default {
     },
     Login() {
       commonAjax(
-        "https://ailab-api-backend-275-production.env.bdaa.pro/v1/user/login",
+        "https://ailab-api-275-production.env.bdaa.pro/v1/user/login",
         {
           user_name: this.username,
           password: this.password,
