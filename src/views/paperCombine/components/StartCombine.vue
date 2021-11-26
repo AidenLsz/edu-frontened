@@ -1341,7 +1341,7 @@ export default {
         .then(() => {
           this.$emit("Clear_Cart", true)
           for(let i = 0; i < this.Compare_Paper_Questions.length; i++){
-            for(let j = 0; j < this.Compare_Paper_Questions[j].list.length; j++){
+            for(let j = 0; j < this.Compare_Paper_Questions[i].list.length; j++){
               this.$emit("Add_To_Cart", JSON.stringify(this.Compare_Paper_Questions[i].list[j]));
             }
           }
