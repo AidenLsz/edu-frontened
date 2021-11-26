@@ -1238,9 +1238,11 @@ export default {
 
 .Background_Round{
     position: absolute;
+    overflow: hidden;
     width: 1200px;
     height: 1200px;
-    right: -25%;
+    margin-left: calc((100%-1344px - 16px)/2);
+    left: -185px;
     top: -51%;
     border-radius: 50%;
     background: linear-gradient( 180deg, rgba(#D9E9FE, 0%), rgba(#C8E0FF, 100%));
@@ -1290,9 +1292,11 @@ export default {
     // background-size: 100% auto;
     // background-position: right;
     // background-repeat: no-repeat;
-    width: 1344px;
-    margin: 0 auto;
-    margin-top: -80px;
+    width: 100%;
+    min-width: 1362px;
+    padding: 0 calc((100% - 1344px - 18px)/2);
+    overflow-x: hidden;
+    margin-top: -70px;
     padding-bottom: 64px;
     margin-bottom: 64px;
 }

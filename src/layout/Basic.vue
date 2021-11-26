@@ -129,14 +129,14 @@
     <register ref="register" />
     <!-- 当屏幕过窄的时候显示的导航栏抽屉 -->
     <el-drawer
-      style="overflow: scroll"
+      style="overflow: scroll;"
       :visible.sync="Narrow_Navbar_Drawer"
       :direction="'rtl'"
       size="260px">
-      <el-row slot="title" type="flex" justify="start">
+      <el-row slot="title" type="flex" justify="start" class="Drawer_Header">
         <span style="font-size: 20px; color: black; padding-left: 5%">LUNA水镜智能</span>
       </el-row>
-      <div style="padding: 0px 10%;">
+      <div style="padding: 0px 10%">
         <!-- 首页 -->
         <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
           <el-button type="text" @click="goToMainPage" class="Narrow_Navbar_Button"
@@ -508,9 +508,9 @@
     <el-main style="overflow: auto">
       <div id="header-sticky" :class="{
         'sticky-menu': true,
-        'Little_Shadow': Get_Current_Path()}" style="height: 80px;">
+        'Little_Shadow': Get_Current_Path()}" style="height: 70px;">
         <el-row class="NavBarArea Normal_Navbar" type="flex" justify="center">
-          <el-col :span="4" style="padding-top: 20px;">
+          <el-col :span="4" style="padding-top: 15px;">
             <el-row type="flex" justify="start">
               <img
                 src="@/assets/luna_icon.png"
@@ -712,12 +712,12 @@
                   >成员</el-button
                 >
               </div>
-              <div style="width: 1px; height: 18px; margin-top: 30px; border-right: 2px solid #aaa; margin-left: 15px; margin-right: 12px">
+              <div style="width: 1px; height: 18px; margin-top: 25px; border-right: 2px solid #aaa; margin-left: 15px; margin-right: 12px">
 
               </div>
               <div
                 class="NarbarItem"
-                style="width: 100px; padding-top: 17px"
+                style="min-width: 100px; padding-top: 12px"
                 v-if="$store.state.user.name"
               >
                 <el-row>
@@ -781,7 +781,7 @@
           </el-col>
         </el-row>
       </div>
-      <div style="padding-top: 90px">
+      <div style="padding-top: 70px">
         <router-view :key="$route.fullPath"></router-view>
       </div>
       <basic-footer />
@@ -1053,6 +1053,12 @@ export default {
    overflow: auto;
 }
 
+.el-drawer__header{
+  height: 70px;
+  line-height: 70px;
+  padding-top: 0px !important;
+  margin-bottom: 0px !important;
+}
 </style>
 
 <style scoped lang="scss">
@@ -1135,6 +1141,7 @@ export default {
   height: 80px;
   top: 0;
   width: calc(100vw - 16px);
+  padding-left: 16px;
   z-index: 999;
   background: rgba($color: white, $alpha: 0.76);
   backdrop-filter: blur(16px) !important;
@@ -1254,13 +1261,13 @@ export default {
   position: relative;
   background: transparent;
   padding: 0px;
-  min-height: 80px;
+  min-height: 70px;
 }
 
 .NarbarItem{
   width: 80px;
-  height: 80px;
-  padding-top: 15px;
+  height: 70px;
+  padding-top: 10px;
   box-sizing: border-box;
   background: transparent;
 }
