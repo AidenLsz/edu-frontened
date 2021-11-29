@@ -38,6 +38,7 @@
 
 <script>
 import { commonAjax } from "@/common/utils/ajax";
+import sha1 from "sha1"
 
 export default {
   name: "AILabLogin",
@@ -62,7 +63,7 @@ export default {
         "https://ailab-api-275-production.env.bdaa.pro/v1/user/login",
         {
           user_name: this.username,
-          password: this.password,
+          password: sha1(this.password),
         }
       ).then((data) => {
         console.log("login", data);

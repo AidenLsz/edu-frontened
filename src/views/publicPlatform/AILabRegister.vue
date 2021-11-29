@@ -303,7 +303,11 @@
           background: #ffffff;
         "
       >
-        <el-button type="primary" class="RegisterButton" @click="Register"
+        <el-button
+          type="primary"
+          class="RegisterButton"
+          :disabled="!checked"
+          @click="Register"
           ><span style="font-family: Roboto; font-weight: bold; color: white"
             >注册</span
           ></el-button
@@ -318,6 +322,7 @@
 
 <script>
 import { commonAjax } from "@/common/utils/ajax";
+import sha1 from "sha1";
 
 export default {
   name: "AILabLogin",
@@ -340,9 +345,9 @@ export default {
   },
   watch: {
     username(val) {
-      var reg=/(_|[a-z]|[A-Z]|[0-9])*/
+      var reg = /(_|[a-z]|[A-Z]|[0-9])*/;
       return reg.test(val);
-    }
+    },
   },
   methods: {
     ToTop() {
@@ -368,7 +373,19 @@ export default {
     },
     SendCaptcha() {
       var emreg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
-      if (emreg.test(this.mail) == false) {
+      if (this.username == "") {
+        this.$message({
+          showClose: true,
+          message: "请输入用户名",
+          type: "error",
+        });
+      } else if (this.mail == "") {
+        this.$message({
+          showClose: true,
+          message: "请输入邮箱",
+          type: "error",
+        });
+      } else if (emreg.test(this.mail) == false) {
         // 测试邮箱地址是否合法
         this.$message({
           showClose: true,
@@ -384,41 +401,94 @@ export default {
           }
         ).then((data) => {
           console.log("SendCaptcha", data);
-          this.SendCode = true;
-          this.resend_cntdown = 10;
-          this.timer = setInterval(() => {
-            this.resend_cntdown--;
-          }, 1000);
-          setTimeout(() => {
-            this.SendCode = false;
-            clearInterval(this.timer);
-          }, 10000);
+          if (data.success) {
+            this.SendCode = true;
+            this.resend_cntdown = 10;
+            this.timer = setInterval(() => {
+              this.resend_cntdown--;
+            }, 1000);
+            setTimeout(() => {
+              this.SendCode = false;
+              clearInterval(this.timer);
+            }, 10000);
+          } else {
+            if (data.errMsg.slice(0, 4) == "Mail") {
+              this.$message({
+                showClose: true,
+                message: "该邮箱已被注册",
+                type: "error",
+              });
+            } else if (data.errMsg.slice(0, 4) == "User") {
+              this.$message({
+                showClose: true,
+                message: "该用户名已被注册",
+                type: "error",
+              });
+            }
+          }
         });
       }
     },
     Register() {
-      if (this.password != this.repeat_password)
-      {
+      if (this.password != this.repeat_password) {
         this.$message({
           showClose: true,
           message: "两次输入的密码不相同",
           type: "error",
         });
-      } else
-      {
+      } else if (this.username == "") {
+        this.$message({
+          showClose: true,
+          message: "请输入用户名",
+          type: "error",
+        });
+      } else if (this.password == "") {
+        this.$message({
+          showClose: true,
+          message: "请输入密码",
+          type: "error",
+        });
+      } else if (this.mail == "") {
+        this.$message({
+          showClose: true,
+          message: "请输入邮箱",
+          type: "error",
+        });
+      } else if (this.captcha == "") {
+        this.$message({
+          showClose: true,
+          message: "请输入验证码",
+          type: "error",
+        });
+      } else {
         commonAjax(
           "https://ailab-api-275-production.env.bdaa.pro/v1/signup/signup",
           {
             user_name: this.username,
-            password: this.password,
+            password: sha1(this.password),
             mail: this.mail,
-            captcha: this.captcha
+            captcha: this.captcha,
           }
         ).then((data) => {
           console.log("Register", data);
+          if (data.success) {
+            this.$message({
+              showClose: true,
+              message: "注册成功，3s后将跳转至登录界面",
+              type: "success",
+            });
+            setTimeout("goToLogin()", 3000);
+          } else {
+            console.log(data.errMsg);
+            this.$message({
+              showClose: true,
+              message: "注册失败，请尝试其他用户名",
+              type: "error",
+            });
+          }
         });
       }
-    }
+    },
   },
 };
 </script>
@@ -515,7 +585,7 @@ export default {
   height: 44px;
   left: 0px;
   top: 0px;
-  background: #3e89e0;
+  /* background: #3e89e0; */
   border-radius: 6px;
 }
 
