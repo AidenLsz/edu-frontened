@@ -567,11 +567,6 @@
 							"name": "肖桐",
 							"mail": "xt20020109@mail.ustc.edu.cn",
 							"intro": "遇到困难睡大觉"
-						},
-						{
-							"name": "杨星月",
-							"mail": "xyyang_selene@mail.ustc.edu. cn",
-							"intro": "生命在于新建文件夹"
 						},{
 							"name": "邬靖宇",
 							"mail": "wujingyu@mail.ustc.edu.cn",
@@ -619,10 +614,6 @@
 					// 实习生
 					"trainee": [
 						{
-							"name": "沈蜀媛",
-							"mail": "st562218@icloud.com",
-							"intro": "还在不断学习（摸鱼）的菜包"
-						}, {
 							"name": "桂栋南",
 							"mail": "gdn2001@mail.ustc.edu.cn",
 							"intro": "中科大19级带数据人\n摸鱼时想学习，学习时想摸鱼的渴望成为学术巨巨的菜鸟"
@@ -646,6 +637,10 @@
 							"name": "袁玉润",
 							"mail": "yr_yuan@mail.ustc.edu.cn",
 							"intro": "19级计科本科生 要学的还有很多"
+						}, {
+							"name": "杨星月",
+							"mail": "xyyang_selene@mail.ustc.edu. cn",
+							"intro": "生命在于新建文件夹"
 						}
 					],
 					// 技术顾问
@@ -732,7 +727,6 @@
 						"申一凯": "/members/申一凯.jpg",
 						"黄炜喆": "/members/黄炜喆.png",
 						"肖桐": "/members/肖桐.png",
-						"杨星月": "/members/杨星月.jpg",
 						"邬靖宇": "/members/邬靖宇.jpg",
 						"王季璐": "/members/王季璐.jpg",
 						"林嘉滢": "/members/林嘉滢.jpg",
@@ -744,13 +738,13 @@
 						// 特邀工程师
 
 						// 实习生
-						"沈蜀媛": "/members/沈蜀媛.jpg",
 						"桂栋南": "/members/桂栋南.jpg",
 						"关浩祥": "/members/关浩祥.jpg",
 						"李平治": "/members/李平治.jpg",
 						"靳浩然": "/members/靳浩然.jpg",
 						"朱仕哲": "/members/朱仕哲.jpg",
 						"袁玉润": "/members/袁玉润.jpg",
+						"杨星月": "/members/杨星月.jpg",
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
 						"高维博": "/members/高维博.jpeg",
