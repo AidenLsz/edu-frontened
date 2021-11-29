@@ -18,30 +18,27 @@
             />
             <el-divider direction="vertical"></el-divider>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="2" style="width:90px;">
             <div
+              id="ailab"
               style="
                 height: 37.5px;
                 line-height: 37.5px;
-                padding-right: 40px;
                 font-size: 22px;
               "
+              @click="goToAILab"
             >
               AI实验室
             </div>
           </el-col>
           <el-col :span="18">
-            <el-row type="flex" justify="end" style="padding-right:20px;">
-              <div
-                class="NarbarItem"
-              >
+            <el-row type="flex" justify="end" style="padding-right: 20px">
+              <div class="NarbarItem">
                 <el-button type="text" @click="goToLogin" class="navbar"
                   >登录</el-button
                 >
               </div>
-              <div
-                class="NarbarItem"
-              >
+              <div class="NarbarItem">
                 <el-button type="text" @click="goToRegister" class="navbar"
                   >注册</el-button
                 >
@@ -187,15 +184,21 @@ export default {
       });
       this.ToTop();
     },
+    goToAILab() {
+      this.$router.push({
+        path: "/PublicPlatform",
+      });
+      this.ToTop();
+    },
     goToLogin() {
       this.$router.push({
-        path:"/PublicPlatform/AILablogin",
+        path: "/PublicPlatform/AILablogin",
       });
       this.ToTop();
     },
     goToRegister() {
       this.$router.push({
-        path:"/PublicPlatform/AILabRegister",
+        path: "/PublicPlatform/AILabRegister",
       });
       this.ToTop();
     },
@@ -419,7 +422,7 @@ export default {
   background-color: black;
 }
 
-.NarbarItem{
+.NarbarItem {
   width: 80px;
   height: 37.5px;
   box-sizing: border-box;
@@ -434,8 +437,8 @@ export default {
 }
 
 .el-button {
-  padding:0px;
-  min-height:37.5px;
+  padding: 0px;
+  min-height: 37.5px;
 }
 
 .el-container {
@@ -467,5 +470,9 @@ export default {
   /*统一设置高度为100%*/
   height: 100%;
   width: 100%;
+}
+
+#ailab:hover {
+  cursor: pointer;
 }
 </style>

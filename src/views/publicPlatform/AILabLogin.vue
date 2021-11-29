@@ -38,7 +38,7 @@
 
 <script>
 import { commonAjax } from "@/common/utils/ajax";
-import sha1 from "sha1"
+import sha1 from "sha1";
 
 export default {
   name: "AILabLogin",
@@ -58,6 +58,12 @@ export default {
       });
       this.ToTop();
     },
+    goToMainPage() {
+      this.$router.push({
+        path: "/PublicPlatform",
+      });
+      this.ToTop();
+    },
     Login() {
       commonAjax(
         "https://ailab-api-275-production.env.bdaa.pro/v1/user/login",
@@ -67,6 +73,23 @@ export default {
         }
       ).then((data) => {
         console.log("login", data);
+        if (data.success) {
+          this.$message({
+            showClose: true,
+            message: "登录成功，3s后将跳转至主界面",
+            type: "success",
+          });
+          setTimeout(() => {
+            this.goToMainPage();
+          }, 3000);
+        } else {
+          console.log(data.errMsg);
+          this.$message({
+            showClose: true,
+            message: "登录失败，用户名或密码错误",
+            type: "error",
+          });
+        }
       });
     },
   },

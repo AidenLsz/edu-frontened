@@ -477,7 +477,9 @@ export default {
               message: "注册成功，3s后将跳转至登录界面",
               type: "success",
             });
-            setTimeout("goToLogin()", 3000);
+            setTimeout(() => {
+              this.goToLogin();
+            }, 3000);
           } else {
             console.log(data.errMsg);
             this.$message({
