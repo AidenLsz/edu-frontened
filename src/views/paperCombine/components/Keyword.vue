@@ -353,7 +353,6 @@ export default {
           "semantic": 0
         })
 
-        console.log(data)
         // param.append("data", data);
         param.data=data
 

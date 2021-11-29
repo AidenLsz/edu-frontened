@@ -1,7 +1,7 @@
 <template>
     <div
         v-loading="Picture_Loading"
-        element-loading-text="正在加载图片，请稍后..."
+        :element-loading-text="Loading_Text"
         element-loading-spinner="el-icon-loading"
         >
         <el-dialog
@@ -582,7 +582,7 @@
 import ComplexInput from '@/common/components/ComplexInput'
 import Mathdown from '@/common/components/Mathdown'
 
-import { extract } from "@/common/utils/extraction.js"
+import {commonAjax} from '@/common/utils/ajax'
 
 export default {
     components: { ComplexInput, Mathdown },
@@ -633,6 +633,7 @@ export default {
             Select_Watcher: "",
             // 读取图片时用于等待
             Picture_Loading: false,
+            Loading_Text: "正在识别图片，请稍后",
             // 用于给公式编辑器折腾内容
             Complex_Content: "",
             // 公式编辑器是否显示
@@ -1047,41 +1048,70 @@ export default {
                 type: 'warning'
             }).then(()=>{
 
-                let result = extract(this.Paste_Analysis);
+                this.Picture_Loading = true;
+                this.Loading_Text = "正在识别结果，请稍后..."
 
-                // 文本框相关重置
-                this.Focusing_Input = ""
-                this.Focusing_Dom = ""
-                this.Text_Start = 0
-                this.Text_End = 0
+                let Out_JSON = [
+                    {
+                        id: 0,
+                        subject: "",
+                        period: "",
+                        content: this.Paste_Analysis.split("\n")
+                    }
+                ]
 
-                // 复杂输入重置
-                this.Complex_Content = ""
-
-                // 题目信息重置并重新录入
-                this.Question.score = 5;
-                this.Question.answer_list = []
-                this.Question.stem = result.题干
-                this.Question.stem_image = []
-                this.Question.answer = result.答案;
-                this.Question.answer_image = []
-                this.Question.analysis = result.解析
-                this.Question.analysis_image = []
-                let Option_List = result.选项.split('，');
-                this.Question.options = [];
-                this.Question.options_image = [];
-                
-                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
-                this.sub_questions = []
-                this.sub_questions_image = []
-                this.sub_questions_score = []
-
-                for(let i = 0; i < Option_List.length; i++){
-                    this.Question.options.push(Option_List[i])
-                    this.Question.options_image.push([])
+                let Param = {
+                    'Paper_Cut_Result': JSON.stringify(Out_JSON, null, 4)
                 }
+
+                commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param)
+                .then((res)=>{
+                    this.Paste_Extract(res.data[0])
+                    this.Picture_Loading = false;
+                    this.Loading_Text = "正在识别图片，请稍后"
+                }).catch(
+                    ()=>{
+                        this.$message.error("解析出现异常，请重试。")
+                    }
+                ).finally(()=>{
+                    
+                }) 
             })
         },
+        Paste_Extract(Question_Info){
+
+            // 文本框相关重置
+            this.Focusing_Input = ""
+            this.Focusing_Dom = ""
+            this.Text_Start = 0
+            this.Text_End = 0
+
+            // 复杂输入重置
+            this.Complex_Content = ""
+
+            // 题目信息重置并重新录入
+            this.Question.score = 5;
+            this.Question.answer_list = []
+            this.Question.stem = Question_Info.stem
+            this.Question.stem_image = []
+            this.Question.answer = this.detailType == '判断题' ? '正确' : this.detailType == '单选题' ? Question_Info.answer : "";
+            this.Question.answer_image = []
+            this.Question.analysis = Question_Info.analysis
+            this.Question.analysis_image = []
+            let Option_List = this.detailType == '判断题' ? [] : Question_Info.options.length <= 0 ? ["", "", "", ""] : Question_Info.options;
+            this.Question.options = [];
+            this.Question.options_image = [];
+            
+            // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+            this.sub_questions = []
+            this.sub_questions_image = []
+            this.sub_questions_score = []
+
+            for(let i = 0; i < Option_List.length; i++){
+                this.Question.options.push(Option_List[i])
+                this.Question.options_image.push([])
+            }
+        }
     }
 }
 </script>
