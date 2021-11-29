@@ -419,7 +419,7 @@
                     </el-row>
                 </el-col>
             </el-row>
-            <!-- <el-row type="flex" justify="start" style="margin-top: 10px; margin-bottom: 20px;">
+            <el-row type="flex" justify="start" style="margin-top: 10px; margin-bottom: 20px;">
                 <el-col :span="2">
                     <el-row type="flex" justify="end" style="font-weight: bold; height: 130px; line-height: 130px">
                         <span>文字粘贴识别：</span>
@@ -439,7 +439,7 @@
                         <el-button type="primary" @click="Text_Split_Do()">开始识别</el-button>
                     </el-row>
                 </el-col>
-            </el-row> -->
+            </el-row>
         </div>
         <!-- 以下部分是预览那一块的部分 -->
         <div v-show="Focus_Function == 'PreView'" style="margin-left: 5vw; margin-right: 5vw; padding-top: 30px; padding-bottom: 30px">
@@ -616,6 +616,8 @@
 import ComplexInput from '@/common/components/ComplexInput'
 import Mathdown from '@/common/components/Mathdown'
 
+import {commonAjax} from '@/common/utils/ajax'
+
 export default {
     components: { ComplexInput, Mathdown },
     name: "AnswerQuestions",
@@ -666,7 +668,9 @@ export default {
             // 用于给公式编辑器折腾内容
             Complex_Content: "",
             // 公式编辑器是否显示
-            Complex_Input_Dialog: false
+            Complex_Input_Dialog: false,
+            // 粘贴识别，但是暂时还没放进来
+            Paste_Analysis: "",
         }
     },
     watch: {
@@ -1044,6 +1048,86 @@ export default {
                 answer_list: []
             }
         },
+        // 自动切分
+        // 用于给试题文本自动切分，现在先只做选择吧，以后功能补齐了再说后面的
+        Text_Split_Do(){
+            this.$confirm('这将清空你现在所录入的全部内容，确定要进行粘贴文字识别吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(()=>{
+
+                this.Picture_Loading = true;
+                this.Loading_Text = "正在识别结果，请稍后..."
+
+                let Out_JSON = [
+                    {
+                        id: 0,
+                        subject: "",
+                        period: "",
+                        content: this.Paste_Analysis.split("\n")
+                    }
+                ]
+                let Param = {
+                    'Paper_Cut_Result': JSON.stringify(Out_JSON, null, 4)
+                }
+
+                commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param)
+                .then((res)=>{
+                    this.Paste_Extract(res.data[0])
+                    this.Picture_Loading = false;
+                    this.Loading_Text = "正在识别图片，请稍后"
+                }).catch(
+                    ()=>{
+                        this.$message.error("解析出现异常，请重试。")
+                    }
+                ).finally(()=>{
+                    
+                }) 
+            })
+        },
+        Paste_Extract(Question_Info){
+
+            // 文本框相关重置
+            this.Focusing_Input = ""
+            this.Focusing_Dom = ""
+            this.Text_Start = 0
+            this.Text_End = 0
+
+            // 复杂输入重置
+            this.Complex_Content = ""
+
+            this.Question = {
+                score: Question_Info.score,
+                stem: Question_Info.stem,
+                stem_image: [],
+                // options两项在填空里也用不到，但是在这里可以拿来保证格式统一
+                options: [],
+                options_image: [],
+                answer: Question_Info.answer,
+                answer_image: [],
+                analysis: Question_Info.analysis,
+                analysis_image: [],
+                // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                sub_questions: [],
+                sub_questions_image: [],
+                sub_questions_score: [],
+                answer_list: []
+            }
+
+            for(let i = 0; i < Question_Info.subquestions.length; i++){
+                this.Question.sub_questions.push(Question_Info.subquestions[i].sub_stem)
+                this.Question.sub_questions_image.push([])
+                this.Question.sub_questions_score.push(Question_Info.subquestions[i].sub_score)
+            }
+
+            if(this.Question.sub_questions.length == 0){
+                this.Question.sub_questions.push("")
+                this.Question.sub_questions_image.push([])
+                this.Question.sub_questions_score.push(5)
+                this.Question.score = 5
+            }
+        }
     }
 }
 </script>

@@ -1178,6 +1178,9 @@ export default {
             type: this.Combine_Replace_Question_Info.type
         }
 
+        this.filterKPTree_Question.Difficulty_Range = [0, 1]
+        this.filterKPTree_Question.Difficulty = "全部"
+
         this.Question_List[this.Replace_Question_Bundle_Index].list.splice(this.Replace_Question_Index, 1, Temp_Question)
         this.refresh = !this.refresh;
 
@@ -1432,14 +1435,11 @@ export default {
         Analyse_Paper_JSON.data.push(Bundle_Format);
       }
 
-      console.log(Analyse_Paper_JSON)
-
       commonAjax(this.backendIP+'/api/combinePaperAnalyseReport',
         {
           Paper_Data: JSON.stringify(Analyse_Paper_JSON)
         }
       ).then((data)=>{
-        console.log(data)
         let Changing_Info = []
         let Bundle_Item = {}
         for(let Bundle_Index = 0; Bundle_Index < data.sub_question.length; Bundle_Index++){
@@ -2120,6 +2120,14 @@ export default {
                 Label: [],
                 Layer: []
             },
+          }
+          for(let i = 1; i < 6; i++){
+            let Difficulty = this.Difficulty_List[i];
+            if(data[0].difficulty < variable.Difficulty[Difficulty].max && data[0].difficulty > variable.Difficulty[Difficulty].min){
+              this.filterKPTree_Question.Difficulty = Difficulty
+              this.filterKPTree_Question.Difficulty_Range = [variable.Difficulty[Difficulty].min, variable.Difficulty[Difficulty].max]
+              break;
+            }
           }
           for(let i = 0; i < data[0].knowledgePoint.label.length; i++){
             let ID = this.Search_KP_ID(data[0].knowledgePoint.label[i], data[0].knowledgePoint.layer[i])

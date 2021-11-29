@@ -310,7 +310,7 @@
                     </el-row>
                 </el-col>
             </el-row>
-            <!-- <el-row type="flex" justify="start" style="margin-top: 10px; margin-bottom: 20px;">
+            <el-row type="flex" justify="start" style="margin-top: 10px; margin-bottom: 30px;">
                 <el-col :span="2">
                     <el-row type="flex" justify="end" style="font-weight: bold; height: 130px; line-height: 130px">
                         <span>文字粘贴识别：</span>
@@ -330,7 +330,7 @@
                         <el-button type="primary" @click="Text_Split_Do()">开始识别</el-button>
                     </el-row>
                 </el-col>
-            </el-row> -->
+            </el-row>
         </div>
         <!-- 以下部分是预览那一块的部分 -->
         <div v-show="Focus_Function == 'PreView'" style="margin-left: 5vw; margin-right: 5vw; padding-top: 30px; padding-bottom: 30px">
@@ -458,6 +458,8 @@
 import ComplexInput from '@/common/components/ComplexInput'
 import Mathdown from '@/common/components/Mathdown'
 
+import {commonAjax} from '@/common/utils/ajax'
+
 export default {
     components: { ComplexInput, Mathdown },
     name: "FillQuestions",
@@ -508,7 +510,9 @@ export default {
             // 用于给公式编辑器折腾内容
             Complex_Content: "",
             // 公式编辑器是否显示
-            Complex_Input_Dialog: false
+            Complex_Input_Dialog: false,
+            // 粘贴识别，但是暂时还没放进来
+            Paste_Analysis: "",
         }
     },
     watch: {
@@ -731,6 +735,72 @@ export default {
                 answer_list: []
             }
         },
+        // 自动切分
+        // 用于给试题文本自动切分，现在先只做选择吧，以后功能补齐了再说后面的
+        Text_Split_Do(){
+            this.$confirm('这将清空你现在所录入的全部内容，确定要进行粘贴文字识别吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(()=>{
+
+                this.Picture_Loading = true;
+                this.Loading_Text = "正在识别结果，请稍后..."
+
+                let Out_JSON = [
+                    {
+                        id: 0,
+                        subject: "",
+                        period: "",
+                        content: this.Paste_Analysis.split("\n")
+                    }
+                ]
+                let Param = {
+                    'Paper_Cut_Result': JSON.stringify(Out_JSON, null, 4)
+                }
+
+                commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param)
+                .then((res)=>{
+                    this.Paste_Extract(res.data[0])
+                    this.Picture_Loading = false;
+                    this.Loading_Text = "正在识别图片，请稍后"
+                }).catch(
+                    ()=>{
+                        this.$message.error("解析出现异常，请重试。")
+                    }
+                ).finally(()=>{
+                    
+                }) 
+            })
+        },
+        Paste_Extract(Question_Info){
+
+            // 文本框相关重置
+            this.Focusing_Input = ""
+            this.Focusing_Dom = ""
+            this.Text_Start = 0
+            this.Text_End = 0
+
+            // 复杂输入重置
+            this.Complex_Content = ""
+
+            // 题目信息重置并重新录入
+            this.Question.score = 5;
+            this.Question.answer_list = []
+            this.Question.stem = Question_Info.stem
+            this.Question.stem_image = []
+            this.Question.answer = Question_Info.answer;
+            this.Question.answer_image = []
+            this.Question.analysis = Question_Info.analysis
+            this.Question.analysis_image = [];
+            this.Question.options = [];
+            this.Question.options_image = [];
+            
+            // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+            this.sub_questions = []
+            this.sub_questions_image = []
+            this.sub_questions_score = []
+        }
     }
 }
 </script>
