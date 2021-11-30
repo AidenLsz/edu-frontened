@@ -232,6 +232,7 @@ import Instruction from './components/InstructionKU.vue'
 
 import KnowledgePointCard from '@/views/resourceQuery/KU/components/KnowledgePointCard'
 import {commonAjax} from '@/common/utils/ajax'
+import {LRStrip} from '@/common/utils/strip'
 
 export default {
   components: {
@@ -359,6 +360,13 @@ export default {
   },
   methods: {
     Search_KU_Info(KU_Name){
+      let Striped_Ku_Name = LRStrip(KU_Name)
+      if(Striped_Ku_Name == ""){
+        this.$message.info("请输入内容")
+        return
+      }else{
+        KU_Name = Striped_Ku_Name
+      }
       // KU_Name
       // this.Search_KU = true;
       // this.Transition_Show = true;

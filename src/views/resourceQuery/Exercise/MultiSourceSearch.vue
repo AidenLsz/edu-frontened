@@ -446,6 +446,7 @@
 
 import * as variable from '@/common/utils/variable'
 import {commonAjax} from '@/common/utils/ajax'
+import {LRStrip} from '@/common/utils/strip'
 import SearchQuestionItem from '@/views/resourceQuery/components/SearchQuestionItem'
 import SearchFileItem from '@/views/resourceQuery/components/SearchFileItem'
 import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
@@ -1097,13 +1098,22 @@ export default {
 
             this.Page_Index_Change_Check()
 
-            this.Waiting_Param = true;
-            this.Waiting_Text = "正在搜索试题..."
-
             let Param = {}
             if(this.Search_Extra == 'ImgSearch'){
                 Param.pic = this.Img_Cut
+            }else{
+                let Striped_Content = LRStrip(this.Search_Content)
+                if(Striped_Content == ""){
+                    this.$message.info("请输入内容")
+                    this.Search_Content = ""
+                    return
+                }else{
+                    this.Search_Content = Striped_Content
+                }
             }
+            
+            this.Waiting_Param = true;
+            this.Waiting_Text = "正在搜索试题..."
 
             let Difficulty = []
             if(this.Chosen_Options.Difficulty != '自定义'){

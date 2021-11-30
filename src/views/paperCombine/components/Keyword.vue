@@ -185,6 +185,7 @@
 import ComplexInput from '@/common/components/ComplexInput'
 
 import {commonAjax} from '@/common/utils/ajax'
+import {LRStrip} from '@/common/utils/strip'
 import Mathdown from '@/common/components/Mathdown'
 
 import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
@@ -309,6 +310,15 @@ export default {
     },
     // 检索试题内容
     submit() {
+
+        let Striped_Keyword = LRStrip(this.searchKeyword)
+        if(Striped_Keyword == ""){
+          this.$message.info("请输入内容")
+          this.searchKeyword = ""
+          return
+        }else{
+          this.searchKeyword = Striped_Keyword
+        }
 
         this.loading = true;
 

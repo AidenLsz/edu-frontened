@@ -323,6 +323,7 @@ import QuestionAnalyse from "../resourceAnalyse/QuestionAnalyse.vue"
 import Instruction from './components/InstructionExercise.vue'
 
 import {commonAjax} from '@/common/utils/ajax'
+import {LRStrip} from '@/common/utils/strip'
 
 export default {
   components: { Mathdown, ComplexInput, QuestionAnalyse,Instruction },
@@ -714,6 +715,15 @@ export default {
       return true
     },
     submit(type, Pic = "") {
+
+      let Striped_Content = LRStrip(this.content)
+      if(Striped_Content == ""){
+          this.$message.info("请输入内容")
+          this.content = ""
+          return
+      }else{
+          this.content = Striped_Content
+      }
 
       this.loading = true;
 
