@@ -206,6 +206,7 @@ import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
 import Instruction from '@/views/resourceQuery/components/InstructionExercise'
 
 import {commonAjax} from '@/common/utils/ajax'
+import {LRStrip} from '@/common/utils/strip'
 
 export default {
   components: { Mathdown, ComplexInput, QuestionAnalyse, Instruction },
@@ -558,6 +559,15 @@ export default {
       return true
     },
     submit() {
+
+      let Striped_Keyword = LRStrip(this.content)
+      if(Striped_Keyword == ""){
+        this.$message.info("请输入内容")
+        this.content = ""
+        return
+      }else{
+        this.content = Striped_Keyword
+      }
 
       this.loading = true;
 
