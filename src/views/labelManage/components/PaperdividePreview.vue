@@ -9,7 +9,7 @@
               <span
                   v-for="(message, index_i) in item.runs"
                   :key="'Line_' + itemIndex + '_' + index_i + '_run'"
-                  :style="removeAbsImgStyle(message.run_stype, 'span', message.run_type)"
+                  :style="removeAbsImgStyle(message.run_style, 'span', message.run_type)"
               >
                 <span
                     v-if="message.run_type === '0'"

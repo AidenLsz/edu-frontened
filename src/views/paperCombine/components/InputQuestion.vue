@@ -96,7 +96,7 @@
                 <span
                     v-for="(message, index_i) in Item.runs"
                     :key="'Line_' + Item_Index + '_' + index_i + '_run'"
-                    :style="message.run_style"
+                    :style="removeAbsImgStyle(message.run_style, 'span', message.run_type)"
                 >
                     <span
                     v-if="message.run_type == '0'"
@@ -107,7 +107,7 @@
                     :src="Paper_Image_Dict[message.image.src]"
                     :width="message.image.width"
                     :height="message.image.height"
-                    :style="message.image.style"
+                    :style="removeAbsImgStyle(message.image.style, 'img', message.run_type)"
                     :alt="message.image.alt"
                     />
                 </span>
@@ -303,6 +303,18 @@ export default {
       this.Init_File_Selector()
   },
   methods:{
+        removeAbsImgStyle(style, type='span', runType='1') {
+            const newStyle = {...style};
+            if (runType === '0') {
+                return newStyle;
+            } else {
+                newStyle.position = 'relative';
+                if (type === 'span') {
+                newStyle.height = 'auto';
+                }
+            }
+            return newStyle;
+        },
         // 完成全部题目的检查
         All_Question_Checked(){
             this.$confirm('确认要导入所有选中的题目吗？', '提示', {

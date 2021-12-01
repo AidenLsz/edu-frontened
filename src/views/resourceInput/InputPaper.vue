@@ -1538,20 +1538,20 @@
               <span
                 v-for="(message, index_i) in Item.runs"
                 :key="'Line_' + Item_Index + '_' + index_i + '_run'"
-                :style="message.run_style"
+                :style="removeAbsImgStyle(message.run_style, 'span', message.run_type)"
               >
-                <span
+                  <span
                   v-if="message.run_type == '0'"
                   v-html="message.run_text"
-                ></span>
-                <img
+                  ></span>
+                  <img
                   v-else-if="message.run_type == '1'"
                   :src="Paper_Image_Dict[message.image.src]"
                   :width="message.image.width"
                   :height="message.image.height"
-                  :style="message.image.style"
+                  :style="removeAbsImgStyle(message.image.style, 'img', message.run_type)"
                   :alt="message.image.alt"
-                />
+                  />
               </span>
             </el-row>
             <el-row v-if="Item != 'DIVIDER_LINES' && Item.para_type == '1'">
@@ -1961,6 +1961,18 @@ export default {
       this.Init_File_Selector();
   },
   methods:{
+    removeAbsImgStyle(style, type='span', runType='1') {
+        const newStyle = {...style};
+        if (runType === '0') {
+            return newStyle;
+        } else {
+            newStyle.position = 'relative';
+            if (type === 'span') {
+            newStyle.height = 'auto';
+            }
+        }
+        return newStyle;
+    },
     // 清空试卷数据
     Paper_Data_Clear(){
       this.$confirm('您点击了清空当前试卷切分内容的按钮，当前的切分结果将被清空，您将需要重新导入其他试卷，确定要清空吗？', '提示', {
