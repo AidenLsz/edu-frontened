@@ -9,7 +9,7 @@
               <span
                   v-for="(message, index_i) in item.runs"
                   :key="'Line_' + itemIndex + '_' + index_i + '_run'"
-                  :style="message.run_style"
+                  :style="removeAbsImgStyle(message.run_stype, 'span', message.run_type)"
               >
                 <span
                     v-if="message.run_type === '0'"
@@ -20,7 +20,7 @@
                     :src="imgDict[message.image.src]"
                     :width="message.image.width"
                     :height="message.image.height"
-                    :style="message.image.style"
+                    :style="removeAbsImgStyle(message.image.style, 'img', message.run_type)"
                     :alt="message.image.alt"
                 />
               </span>
@@ -50,6 +50,18 @@ export default {
     }
   },
   methods: {
+    removeAbsImgStyle(style, type='span', runType='1') {
+      const newStyle = {...style};
+      if (runType === '0') {
+        return newStyle;
+      } else {
+        newStyle.position = 'relative';
+        if (type === 'span') {
+          newStyle.height = 'auto';
+        }
+      }
+      return newStyle;
+    },
     getTableImg(tableHtml) {
       for(const key in this.imgDict){
         const Img_Name_Catcher = new RegExp('<img src="' + key + '"');
