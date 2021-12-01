@@ -6,16 +6,19 @@
 </template>
 
 <script>
-import sp1 from '@/assets/InstSP/SP1.png';
-import sp2 from '@/assets/InstSP/SP2.png';
-import sp3 from '@/assets/InstSP/SP3.png';
-import sp4 from '@/assets/InstSP/SP4.png';
-import sp5 from '@/assets/InstSP/SP5.png';
-import sp6 from '@/assets/InstSP/SP6.png';
-import sp7 from '@/assets/InstSP/SP7.png';
-import sp8 from '@/assets/InstSP/SP8.png';
-import sp9 from '@/assets/InstSP/SP9.png';
+import Intro_1 from '@/assets/InstQuestionSearch(Exercise)/1 - Total.png';
+import Intro_2_1 from '@/assets/InstQuestionSearch(Exercise)/2-1 - NormalSearch.png';
+import Intro_2_2 from '@/assets/InstQuestionSearch(Exercise)/2-2 - InputHelper1.png';
+import Intro_2_3 from '@/assets/InstQuestionSearch(Exercise)/2-3 - InputHelper2.png';
+import Intro_3_1_1 from '@/assets/InstQuestionSearch(Exercise)/3-1-1 - ImgSearch1.png';
+import Intro_3_1_2 from '@/assets/InstQuestionSearch(Exercise)/3-1-2 - ImgSearch2.png';
+import Intro_3_1_3 from '@/assets/InstQuestionSearch(Exercise)/3-1-3 - StartSearch.png';
+import Intro_3_2_1 from '@/assets/InstQuestionSearch(Exercise)/3-2-1 - FileSearch1.png';
+import Intro_3_2_2 from '@/assets/InstQuestionSearch(Exercise)/3-2-2 - FileSearch2.png';
+import Intro_4_1 from '@/assets/InstQuestionSearch(Exercise)/4-1 - ResultIntro1.png';
+
 import Instruction from '@/common/components/Instruction.vue'
+
 export default {
   components:{
     Instruction,
@@ -24,41 +27,45 @@ export default {
     return {
       steps:[
         {
-          desc:'选择需要查询的题库',
-          imgSrc:sp1
+          desc:'筛选条件设置',
+          imgSrc:Intro_1
         },
         {
-          desc:'设置筛选条件',
-          imgSrc:sp2
+          desc:'纯文字检索',
+          imgSrc:Intro_2_1
         },
         {
-          desc:'方式一：输入文字内容进行搜索',
-          imgSrc:sp3
+          desc:'对于含有复杂公式的文本，可以使用输入助手快捷输入公式',
+          imgSrc:Intro_2_2
         },
         {
-          desc:'方式二：上传图片进行搜索',
-          imgSrc:sp4
+          desc:'输入想要的公式并完成编辑进行搜索',
+          imgSrc:Intro_2_3
         },
         {
-          desc:'方式二：上传图片进行搜索-上传图片',
-          imgSrc:sp5
+          desc:'文件检索模式',
+          imgSrc:Intro_3_1_1
         },
         {
-          desc:'方式二：上传图片进行搜索-调整图片并搜索',
-          imgSrc:sp6
+          desc:'如果上传的是jpg或png等图片格式，将会打开图片编辑器，可对搜索内容进行调整',
+          imgSrc:Intro_3_1_2
         },
         {
-          desc:'方式三：输入公式进行搜索',
-          imgSrc:sp7
+          desc:'返回主页后点击检索对图片内容进行检索',
+          imgSrc:Intro_3_1_3
         },
         {
-          desc:'方式三：输入公式进行搜索-编辑公式等搜索内容',
-          imgSrc:sp8
+          desc:'如果上传的是word文档，将会启用切分功能自动识别word文档中的每一道题目',
+          imgSrc:Intro_3_2_1
         },
         {
-          desc:'方式三：输入公式进行搜索-进行搜索',
-          imgSrc:sp9
+          desc:'获得可编辑的题目切分结果，从中选择一个题目进行搜索',
+          imgSrc:Intro_3_2_2
         },
+        {
+          desc:'关于检索结果：检索的结果除了文本外还可以查看多种信息',
+          imgSrc:Intro_4_1
+        }
       ]
     }
   },

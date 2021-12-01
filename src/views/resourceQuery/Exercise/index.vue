@@ -135,6 +135,9 @@
                 </el-row>
 
             </el-dialog>
+            <instruction
+                ref="instruction"
+            />
         <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
             <el-col>
                 <!-- 面包屑行 -->
@@ -150,6 +153,9 @@
                         </el-breadcrumb-item>
                         <el-breadcrumb-item>
                             试题检索
+                            <span @click="openInstructionDialog" style="cursor:pointer;">
+                                <i class="el-icon-question"></i>
+                            </span>
                         </el-breadcrumb-item>
                     </el-breadcrumb>
 
@@ -447,13 +453,15 @@ import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
 import ComplexInput from '@/common/components/ComplexInput'
 import CutFile from '@/views/resourceQuery/Exercise/components/CutFile'
 
+import Instruction from '@/views/resourceQuery/components/InstructionExercise.vue'
+
 import {commonAjax} from '@/common/utils/ajax'
 import {LRStrip} from '@/common/utils/strip'
 
 export default {
   name: "",
   components:{
-      SearchQuestionItem, QuestionAnalyse, ComplexInput, CutFile
+      SearchQuestionItem, QuestionAnalyse, ComplexInput, CutFile, Instruction
   },
   data() {
     return {
@@ -593,6 +601,9 @@ export default {
 
   },
   methods: {
+      openInstructionDialog(){
+            this.$refs.instruction.openDialog();
+        },
       //试卷切分完成
       File_Cut_End(){
           this.Waiting_Param = false;
