@@ -233,9 +233,9 @@ export default {
       valiBtn:'获取验证码',
       formName:'registerForm',
       getPhoneCodeUrl:'https://send-message-service-166-production.env.bdaa.pro/v1',
-      // sendEmailCodeUrl:'https://reg-email-287-review-master-8dyme2.env.bdaa.pro/v1',
+      sendEmailCodeUrl:'https://reg-email-287-review-master-8dyme2.env.bdaa.pro/v1',
       // sendEmailCodeUrl:'http://reg-email-287-production.env.bdaa.pro/v1',
-      sendEmailCodeUrl:'http://locahost:4050',
+      // sendEmailCodeUrl:'http://locahost:4050',
       // ttp://reg-email-287-production.env.bdaa.pro/v1
       ruleForm: {
         username: '',
