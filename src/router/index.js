@@ -94,8 +94,7 @@ function validateLoginPermission(path){
     "/manage/",
     "/inputMarked",
     "/inputPaper",
-    "/paperCombine",
-    "/ku"
+    "/paperCombine"
   ];
   let isUserRoute = ()=>route.some((r)=>path.includes(r))
   return !isUserRoute() || store.state.user.token
