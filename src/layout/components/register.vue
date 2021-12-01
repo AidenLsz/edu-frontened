@@ -233,10 +233,10 @@ export default {
       valiBtn:'获取验证码',
       formName:'registerForm',
       getPhoneCodeUrl:'https://send-message-service-166-production.env.bdaa.pro/v1',
-      sendEmailCodeUrl:'https://reg-email-287-review-master-8dyme2.env.bdaa.pro/v1',
-      // sendEmailCodeUrl:'http://reg-email-287-production.env.bdaa.pro/v1',
-      // sendEmailCodeUrl:'http://locahost:4050',
-      // ttp://reg-email-287-production.env.bdaa.pro/v1
+      // sendEmailCodeUrl:'https://reg-email-288-review-master-8dyme2.env.bdaa.pro/v1',
+      // sendEmailCodeUrl:'https://reg-email-287-review-master-8dyme2.env.bdaa.pro/v1',
+      sendEmailCodeUrl:'https://reg-email-288-production.env.bdaa.pro/v1',
+      // sendEmailCodeUrl:'http://localhost:5050',
       ruleForm: {
         username: '',
         password: '',
@@ -355,19 +355,24 @@ export default {
     },
     sendEmailCode(){
       let validateList = [];
-      // this.$refs[this.formName].validateField(['phone','imgCode','inviteCode'], (err) =>{
-      //     validateList.push(err)
-      // })
+      this.$refs[this.formName].validateField(['email','imgCode','inviteCode'], (err) =>{
+          validateList.push(err)
+      })
       if (validateList.every((err) => err === '')) {
-        // this.tackBtn();   //验证码倒数60秒
+        this.tackBtn();   //验证码倒数60秒
         this.emailCodeOrigin=this.getRandomCode(6)
-        let fd ={
+        let date = new Date();
+        let fd =[{
           'use_default':1,
-          // 'dest_mail':this.ruleForm.email,
-          'dest_mail':'yutingh@mail.ustc.edu.cn',
-          // 'subject':'t1',
-          'message':this.emailCodeOrigin,
-        }
+          'dest_mail':this.ruleForm.email,
+          // 'dest_mail':'yutingh@mail.ustc.edu.cn',
+          'subject':'[LUNA]-邮箱验证码',
+          'message':'<html><body><h1></h1>' + '<p>您好！</p>'
+          + '<p style="text-indent:2em">这里是LUNA系统，此邮件用于验证您的邮箱是否有效。</p>'
+          + '<p style="text-indent:2em">请在注册界面填入如下验证码：' + this.emailCodeOrigin
+          + '</p>' + '\n<p style="text-align:right">LUNA</p>' + '<p style="text-align:right">'
+          + date.toLocaleDateString() + '</p>' + '</body > </html > '
+        }]
         axios.post(this.sendEmailCodeUrl,
           JSON.stringify(fd),
         )
