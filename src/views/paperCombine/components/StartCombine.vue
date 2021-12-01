@@ -1412,6 +1412,7 @@ export default {
 
       let Analyse_Paper_JSON = {
         subject: this.Subject,
+        period: this.Period,
         title: this.Setting_Info.title,
         data: []
       }
@@ -1566,6 +1567,7 @@ export default {
 
       let Analyse_Paper_JSON = {
         subject: this.Subject,
+        period: this.Period,
         title: this.Setting_Info.title,
         data: []
       }
@@ -2099,6 +2101,7 @@ export default {
       let Param = {
         "Question_Data": JSON.stringify({
           "subject": this.Subject,
+          "period": this.Period,
           "questions": [{
             "stem": Question.stem
           }]
