@@ -102,13 +102,23 @@
               </el-row>
             </el-col>
           </el-form-item>
-          <el-form-item label="" label-width="0px" prop="phoneCode" style="margin-bottom: 15px">
+          <!-- <el-form-item label="" label-width="0px" prop="phoneCode" style="margin-bottom: 15px">
             <el-col :span="15">
               <el-input type="text" maxlength="6" suffix-icon="el-icon-lock" placeholder="请输入手机验证码" v-model="ruleForm.phoneCode"/>
             </el-col>
             <el-col :span="8" :offset="1">
               <el-row type="flex" justify="end" >
                 <el-button class="btn-orange" :disabled="disabled" @click="getPhoneCode">{{valiBtn}}</el-button>
+              </el-row>
+            </el-col>
+          </el-form-item> -->
+          <el-form-item label="" label-width="0px" prop="emailCode" style="margin-bottom: 15px">
+            <el-col :span="15">
+              <el-input type="text" maxlength="6" suffix-icon="el-icon-lock" placeholder="请输入邮箱验证码" v-model="ruleForm.emailCode"/>
+            </el-col>
+            <el-col :span="8" :offset="1">
+              <el-row type="flex" justify="end" >
+                <el-button class="btn-orange" :disabled="disabled" @click="sendEmailCode">{{valiBtn}}</el-button>
               </el-row>
             </el-col>
           </el-form-item>
@@ -179,9 +189,16 @@ export default {
         callback()
       }
     }
-    var validatePhoneCode =(rule,value,callback) =>{
-      if (value !== this.phoneCodeOrigin) {
-        callback(new Error('手机验证码错误！'));
+    // var validatePhoneCode =(rule,value,callback) =>{
+    //   if (value !== this.phoneCodeOrigin) {
+    //     callback(new Error('手机验证码错误！'));
+    //   }else{
+    //     callback()
+    //   }
+    // }
+    var validateEmailCode =(rule,value,callback) =>{
+      if (value !== this.emailCodeOrigin) {
+        callback(new Error('邮箱验证码错误！'));
       }else{
         callback()
       }
@@ -210,12 +227,16 @@ export default {
       visible:false,
       imgCodeOrigin:"",
       phoneCodeOrigin:'',
+      emailCodeOrigin:'',
       disabled:false,
       phoneCode:"",
       valiBtn:'获取验证码',
       formName:'registerForm',
       getPhoneCodeUrl:'https://send-message-service-166-production.env.bdaa.pro/v1',
-      // getPhoneCodeUrl:'http://localhost:2025',
+      // sendEmailCodeUrl:'https://reg-email-288-review-master-8dyme2.env.bdaa.pro/v1',
+      // sendEmailCodeUrl:'https://reg-email-287-review-master-8dyme2.env.bdaa.pro/v1',
+      sendEmailCodeUrl:'https://reg-email-288-production.env.bdaa.pro/v1',
+      // sendEmailCodeUrl:'http://localhost:5050',
       ruleForm: {
         username: '',
         password: '',
@@ -239,7 +260,7 @@ export default {
         ],
         email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] },
         ],
         phone: [
           { required: true, message: "请输入手机号码", trigger: "blur" },
@@ -257,10 +278,11 @@ export default {
           { required: true, message: '请输入图形验证码', trigger: 'blur' },
           { validator: validateImgCode, trigger: ['blur'] }
         ],
-        phoneCode:[
-          { required: true, message: '请输入手机验证码', trigger: 'blur' },
+        emailCode:[
+          { required: true, message: '请输入邮箱验证码', trigger: 'blur' },
+          { validator: validateEmailCode, trigger: ['blur'] }
           // { required: false, message: '请输入手机验证码', trigger: 'blur' },
-          { validator: validatePhoneCode, trigger: ['blur'] }
+          // { validator: validatePhoneCode, trigger: ['blur'] }
         ],
         type:[
           { required: true, message: '请选择用户类型', trigger: 'blur' },
@@ -294,6 +316,8 @@ export default {
   mounted(){
     window.localStorage.removeItem("UserAgreement");
     window.localStorage.removeItem("PrivacyPolicy");
+    this.phoneCodeOrigin = this.getRandomCode(4)
+    this.emailCodeOrigin = this.getRandomCode(6)
   },
   methods:{
     // 用户协议
@@ -328,6 +352,36 @@ export default {
     },
     hide(){
       this.visible=false
+    },
+    sendEmailCode(){
+      let validateList = [];
+      this.$refs[this.formName].validateField(['email','imgCode','inviteCode'], (err) =>{
+          validateList.push(err)
+      })
+      if (validateList.every((err) => err === '')) {
+        this.tackBtn();   //验证码倒数60秒
+        this.emailCodeOrigin=this.getRandomCode(6)
+        let date = new Date();
+        let fd =[{
+          'use_default':1,
+          'dest_mail':this.ruleForm.email,
+          // 'dest_mail':'yutingh@mail.ustc.edu.cn',
+          'subject':'[LUNA]-邮箱验证码',
+          'message':'<html><body><h1></h1>' + '<p>您好！</p>'
+          + '<p style="text-indent:2em">这里是LUNA系统，此邮件用于验证您的邮箱是否有效。</p>'
+          + '<p style="text-indent:2em">请在注册界面填入如下验证码：' + this.emailCodeOrigin
+          + '</p>' + '\n<p style="text-align:right">LUNA</p>' + '<p style="text-align:right">'
+          + date.toLocaleDateString() + '</p>' + '</body > </html > '
+        }]
+        axios.post(this.sendEmailCodeUrl,
+          JSON.stringify(fd),
+        )
+        .then( res => {
+            if (res.status==200) {
+              console.log('发送成功');
+            }
+        })
+      }
     },
     getPhoneCode(){
       let validateList = [];
