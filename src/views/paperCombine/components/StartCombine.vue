@@ -1191,6 +1191,7 @@ export default {
     Search_Replace_Question(){
 
         this.Question_Loading = true;
+        this.Replace_Question_List = []; 
 
         let Param = {}
 
