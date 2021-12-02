@@ -1185,6 +1185,7 @@ export default {
         this.refresh = !this.refresh;
 
         this.Replace_Dialog_Show = false
+        this.Replace_Question_List = [];
 
     },
     // 检索替换题目用的题目
@@ -1202,7 +1203,7 @@ export default {
         }
 
         var data = JSON.stringify({
-            "content": this.Combine_Replace_Question_Info.stem,
+            "content": this.Combine_Replace_Question_Info.stem.substring(0, 30),
             "size": 5,
             "database": this.filterKPTree_Question.Database,
             "page_count": 1,
