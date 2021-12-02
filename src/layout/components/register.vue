@@ -266,7 +266,7 @@ export default {
           { required: true, message: "请输入手机号码", trigger: "blur" },
           { min: 11, max: 11, message: "请输入11位手机号码", trigger: "blur" },
           {
-            pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,
+            pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[01235678]|18[0-9]|19[89])\d{8}$/,
             message: "请输入正确的手机号码"
           }
         ],
@@ -456,9 +456,10 @@ export default {
             this.$router.go()
             this.visible = false;
           })
-        }).catch(()=>{
+        }).catch((err)=>{
+          console.log('err',err);
           Message({
-            message: '注册失败！',
+            message: '该用户名或手机号已被注册！',
             type: 'error',
             duration: 5 * 1000
           })
