@@ -3265,6 +3265,7 @@ export default {
         
         let Analyse_Paper_JSON = {
           subject: this.Subject,
+          period: this.Period,
           title: this.Title,
           data: []
         }
