@@ -13,6 +13,9 @@
             style="margin-top: 30px;"
             >确认</el-button>
     </el-dialog>
+    <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <el-row justify="start" type="flex">
       <el-col :span="6">
         <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; padding-top: 13px">
@@ -199,13 +202,9 @@ export default {
       this.Get_Item_Group_List();
   },
   methods:{
-        // 卷动至最上方
         To_Top(){
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            })
-        },
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
         // 获取UUID
         Get_User_UUID(){
             commonAjax(this.backendIP + '/api/getUserUUID', {}).then((res)=>{
@@ -876,5 +875,12 @@ export default {
 .typeButton.unFocusType:hover{
     background: #E5EEFF;
     border: 1px solid #F5FEFF;
+}
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>

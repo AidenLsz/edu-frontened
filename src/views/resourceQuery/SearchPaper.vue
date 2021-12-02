@@ -6,6 +6,9 @@
     element-loading-text="正在加载，请稍后..."
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(211, 211, 211, 0.4)">
+    <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <el-dialog
       :visible.sync="picSearchDialogShow"
       title="图片检索"
@@ -413,7 +416,7 @@ export default {
     window.removeEventListener('paste', this.Paste_Function)
   },
   mounted(){
-    this.ToTop()
+    this.To_Top()
     this.initDatabaseList();
     let upload = document.querySelector('#DragItem');
     upload.addEventListener('dragenter', this.onDragIn, true);
@@ -421,6 +424,9 @@ export default {
     upload.addEventListener('drop', this.onDrop, false);
   },
   methods: {
+    To_Top(){
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
     // 清空计时器
     Reset_Interval(){
       clearInterval(this.Paste_Catcher)
@@ -1103,5 +1109,13 @@ export default {
   overflow: hidden;
   cursor: pointer;
   opacity: 0;
+}
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>

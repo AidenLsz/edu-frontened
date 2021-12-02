@@ -1,6 +1,9 @@
 <template>
   <div style="margin-top: 2vh;">
     <!-- 注册和登录 -->
+    <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <login ref="login" @register_show="register_show" />
     <register ref="register" />
     <!-- 试卷分析路径跳转 -->
@@ -749,8 +752,12 @@ export default {
   mounted() {
     this.Init_Home_Page_Radar();
     this.Init_Home_Page_Radar_Narrow();
+    this.To_Top();
   },
   methods: {
+    To_Top(){
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
     // 分析试题或试卷
     Analyse_Switch(Part){
       if(Part == 'Question'){
@@ -980,10 +987,10 @@ export default {
       window.addEventListener('resize', function() {Home_Radar.resize()});
     },
     // 检索知识点
-    Search_KU(KnowledgeUnit = "") {
+    Search_KU() {
       this.$router.push({
         name: "Knowledge Unit",
-        params: { name: KnowledgeUnit != "" ? KnowledgeUnit : this.Home_Ku, knowledgeSystem: "neea" }
+        params: { name: this.Home_Ku, knowledgeSystem: "neea" }
       });
     },
     // 跳转至新页面
@@ -1333,4 +1340,11 @@ export default {
   }
 }
 
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+}
 </style>

@@ -1,5 +1,8 @@
 <template>
   <div class="exercise" style="margin-bottom: 40px; padding-top: 10px">
+    <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <!-- header -->
     <el-row justify="start" type="flex">
       <el-col style="padding-left: 1vw">
@@ -144,7 +147,13 @@ export default {
       showPublisher: false,
     }
   },
+  mounted(){
+    this.To_Top();
+  },
   methods: {
+    To_Top(){
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
     openInstructionDialog(){
       this.$refs.instruction.openDialog();
     },
@@ -245,4 +254,11 @@ export default {
 
 <style scoped>
 
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+}
 </style>

@@ -1,6 +1,9 @@
 <template>
   <!--todo: polish the format-->
   <div class="home">
+    <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <!-- 试卷分析路径跳转 -->
     <el-dialog :visible.sync="PaperAnalyseSwitchFlag" width="70%">
       <el-row>
@@ -816,10 +819,13 @@ export default {
         "url(" + $(this).attr("data-background") + ")"
       );
     });
-    this.ToTop();
+    this.To_Top();
     document.body.scrollTo(0, 500)
   },
   methods: {
+    To_Top(){
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
     // 调整首页统计表格的内容
     changeCountButton(type){
       this.Count_Type = type;
@@ -1228,4 +1234,12 @@ a {
    border: 3px solid #EEF5FE;
    margin-bottom: 40px;
 } */
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+}
 </style>

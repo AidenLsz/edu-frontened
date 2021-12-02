@@ -128,7 +128,7 @@
     <login ref="login" @register_show="register_show" />
     <register ref="register" />
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
-    <el-header style="height: 70px; margin-bottom: 30px;">
+    <el-header style="height: 70px;">
       <div id="header-sticky" class="sticky-menu">
         <el-row type="flex" justify="start">
           <div align="left" class="Header_Icon" style="padding-top: 20px; padding-left: 5vw">

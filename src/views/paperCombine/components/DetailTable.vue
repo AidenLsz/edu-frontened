@@ -641,6 +641,7 @@ export default {
       }
 
       var data = {
+          "content": Info.stem ? Info.stem : "",
           "database": database,
           "page_count": 1,
           "score": Info.score,
@@ -701,6 +702,7 @@ export default {
             }
           }
 
+          console.log(this.Searching_Question_Info)
           // let file = new File(
           //     [JSON.stringify(this.Searching_Question_Info, null, 4)],
           //     "Searching_Question_Info.json",
@@ -733,6 +735,7 @@ export default {
             this.Search_KP(Bundle.List[j], Bundle.Type)
           }
         }
+        console.log(this.Searching_Question_Info)
         this.$emit("Clear_List", true)
         commonAjax(this.backendIP+'/api/detail_table_generate', {
           'detail_table': JSON.stringify(this.Searching_Question_Info, null, 4)

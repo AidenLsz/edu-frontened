@@ -7,6 +7,9 @@
     element-loading-text="正在读取知识点网络，请稍后..."
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.28)">
+    <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <!-- <el-dialog
         :visible.sync="simpleInput"
         title="LUNA输入助手"
@@ -345,7 +348,7 @@ export default {
       this.ku_name = sessionStorage.getItem('KUFromPaperAnalyse');
       this.Search_KU_Info(this.ku_name);
     }
-    this.ToTop();
+    this.To_Top();
   },
   beforeDestroy() {
     this.destroyFullScreen()
@@ -359,6 +362,9 @@ export default {
     }
   },
   methods: {
+    To_Top(){
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
     Search_KU_Info(KU_Name){
       let Striped_Ku_Name = LRStrip(KU_Name)
       if(Striped_Ku_Name == ""){
@@ -1248,5 +1254,13 @@ export default {
   height: 10px;
   margin-top: -96px;
   background: transparent;
+}
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>

@@ -5,6 +5,9 @@
         v-loading="loading"
         element-loading-text="文档生成中，请等待..."
         element-loading-spinner="el-icon-loading">
+        <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <!-- 加个DIV的手搓小控件，拿来看当前的替换结果 -->
     <div class="Stable_Icon_Button" @click="Replacing_Do()">
         <el-tooltip effect="dark" content="点击查看当前替换状况" placement="left">
@@ -1368,8 +1371,12 @@ export default {
             this.Database_List = JSON.parse(sessionStorage.getItem("ChangingDatabaseList"))
         }
         document.getElementById('Analyse_Title').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+        this.To_Top()
     },
     methods: {
+        To_Top(){
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
         // 返回选项标签
         Get_Option_Label(Index){
             return String.fromCharCode(Index + 65)
@@ -4012,5 +4019,12 @@ export default {
     border: 1px dashed black;
     border-radius: 10px;
     padding: 10px;
+}
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>

@@ -1,6 +1,9 @@
 <template>
   <!--todo: polish the format-->
   <div class="home">
+    <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <section class="slider-bg" >
       <div class="sys-name">
         <img src="@/assets/bdaa.png" alt="Logo"  />
@@ -80,9 +83,12 @@ export default {
         "url(" + $(this).attr("data-background") + ")"
       );
     });
-    this.ToTop();
+    this.To_Top();
   },
   methods: {
+    To_Top(){
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
     // 调整首页统计表格的内容
     changeCountButton(type){
       this.Count_Type = type;
@@ -290,4 +296,11 @@ a {
 }
 
 
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+}
 </style>
