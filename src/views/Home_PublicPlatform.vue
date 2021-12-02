@@ -152,25 +152,25 @@
 			},
 			ToImageTranscription() {
 				this.$router.push({
-					path: "/ImageTranscription"
+					path: "/PublicPlatform/ImageTranscription"
 				});
 				this.ToTop();
 			},
 			ToEstimate() {
 				this.$router.push({
-					path: "/Estimate"
+					path: "/PublicPlatform/Estimate"
 				});
 				this.ToTop();
 			},
 			ToSimilarity() {
 				this.$router.push({
-					path: "/Similarity"
+					path: "/PublicPlatform/Similarity"
 				});
 				this.ToTop();
 			},
 			ToSegmentation() {
 				this.$router.push({
-					path: "/segmentation"
+					path: "/PublicPlatform/segmentation"
 				});
 				this.ToTop();
 			},

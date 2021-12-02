@@ -92,21 +92,26 @@ const visitorRouter=[
     name: "Resources",
     component: () => import("@/views/resourceQuery/Resources"),
   },
-  {
-    path: "/estimate",
-    name: "Estimate",
-    component: () => import("@/views/publicPlatform/Estimate.vue"),
-  },
-  {
-    path: "/segmentation",
-    name: "Segmentation",
-    component: () => import("@/views/publicPlatform/Segmentation.vue"),
-  },
-  {
-    path: "/similarity",
-    name: "Similarity",
-    component: () => import("@/views/publicPlatform/Similarity.vue"),
-  },
+  // {
+  //   path: "/ImageTranscription",
+  //   name: "ImageTranscription",
+  //   component: () => import("@/views/publicPlatform/ImageTranscription.vue"),
+  // },
+  // {
+  //   path: "/estimate",
+  //   name: "Estimate",
+  //   component: () => import("@/views/publicPlatform/Estimate.vue"),
+  // },
+  // {
+  //   path: "/segmentation",
+  //   name: "Segmentation",
+  //   component: () => import("@/views/publicPlatform/Segmentation.vue"),
+  // },
+  // {
+  //   path: "/similarity",
+  //   name: "Similarity",
+  //   component: () => import("@/views/publicPlatform/Similarity.vue"),
+  // },
   {
     path: "/MultiPaperAnalyse",
     name: "MultiPaperAnalyse",
@@ -148,14 +153,9 @@ const visitorRouter=[
     component: () => import("@/views/Members_Introduce"),
   },
   {
-    path: "/PublicPlatform",
+    path: "/publicPlatform",
     name: "PublicPlatform",
-    component: () => import("@/views/PublicPlatform"),
-  },
-  {
-    path: "/ImageTranscription",
-    name: "ImageTranscription",
-    component: () => import("@/views/publicPlatform/ImageTranscription.vue"),
+    component: () => import("@/views/Home_PublicPlatform"),
   },
   {
     path: "/paperAnalyse",

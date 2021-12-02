@@ -4,11 +4,13 @@ import VisitorRouter from '@/router/modules/visitor.js'
 import UserRouter from '@/router/modules/user.js'
 import EEMSRouter from '@/router/modules/eems.js'
 import ITASRouter from '@/router/modules/itas.js'
+import PublicPlatformRouter from '@/router/modules/PublicPlatformRouter.js'
 import store from '@/store'
 import {Message } from 'element-ui'
 import BasicLayout from '@/layout/Basic'
 import EEMSLayout from '@/layout/EEMS'
 import ITASLayout from '@/layout/ITAS'
+import PublicPlatformLayout from '@/layout/PublicPlatformLayout'
 
 // import  AppMain from '@/layout/components/AppMain'
 
@@ -44,6 +46,12 @@ const router = new Router({
       name: "EEMS",
       component: EEMSLayout,
       children:UserRouter.concat(EEMSRouter)
+    },
+    {
+      path: "/publicPlatform",
+      name: "publicPlatform",
+      component: PublicPlatformLayout,
+      children:UserRouter.concat(PublicPlatformRouter)
     },
     {
       path: "/",

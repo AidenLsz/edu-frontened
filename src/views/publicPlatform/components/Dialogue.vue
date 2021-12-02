@@ -38,7 +38,7 @@
           <el-col
             :span="24"
             id="upload_area"
-            style="position: absolute; z-index: 10; display: block"
+            style="position: absolute; z-index: 5; display: block"
           >
             <el-row>
               <el-col :span="24">

@@ -266,7 +266,7 @@
       <div class="panel-btn" id="closeBtn" @click="closePanel()">
         <i class="el-icon-d-arrow-left"></i>
       </div>
-      <div class="container">
+      <div class="container" :style="'height:' + (winHeight - 80) + 'px'">
         <div class="intro">
           <el-row type="flex" justify="start" class="title"> 介绍 </el-row>
           <el-row type="flex" justify="start" class="content">
@@ -415,6 +415,13 @@ export default {
   mounted() {
     this.ToTop();
     this.closePanel();
+    const that = this;
+    window.onresize = () => {
+      return (() => {
+        //console.log(window.innerHeight);
+        that.winHeight = window.innerHeight;
+      })();
+    };
   },
   data() {
     return {
@@ -517,6 +524,8 @@ export default {
       base64_code: "",
       //存储转写结果
       result: "",
+      // 浏览器高度
+      winHeight: window.innerHeight,
     };
   },
   methods: {
@@ -969,7 +978,7 @@ export default {
 // 	height: 90%;
 // 	left: -10px;
 // 	top: 50px;
-// 	//z-index: 10;
+	// z-index: 10;
 // }
 
 .box-card {
@@ -978,7 +987,7 @@ export default {
   background: rgba(248, 251, 255, 0.9);
   // width: 100%;
   // height: 100%;
-  // z-index: 10;
+  z-index: 10;
   width: 840px;
   height: 93%;
   left: 0;
@@ -993,6 +1002,7 @@ export default {
   font-weight: bold;
   padding: 20px 20px 20px 10px;
   color: #888888;
+  z-index: 11;
 }
 
 .tab {
@@ -1002,7 +1012,7 @@ export default {
   border-radius: 0px 10px 10px 0px;
   background-color: #eef1f7;
   cursor: pointer;
-  z-index: 10;
+  //z-index: 10;
 
   // .arrow {
   // 	border-color: #eef1f7 transparent transparent #eef1f7;
@@ -1022,7 +1032,7 @@ export default {
   padding-left: 5%;
   padding-right: 5%;
   padding-top: 5%;
-  height: 650px;
+  // height: 650px;
   overflow-y: scroll;
 }
 
