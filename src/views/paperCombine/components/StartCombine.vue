@@ -1191,6 +1191,7 @@ export default {
     Search_Replace_Question(){
 
         this.Question_Loading = true;
+        this.Replace_Question_List = []; 
 
         let Param = {}
 
@@ -1748,6 +1749,7 @@ export default {
         for(let j = 0; j < Changing_Info[i].sub_question.length; j++){
           let Item = {
             score: Changing_Info[i].sub_question[j].score,
+            stem: Changing_Info[i].sub_question[j].stem,
             // 从知识点查询那儿来的经验
             knowledgePoints: Changing_Info[i].sub_question[j].knowledgePointInfos.Label,
             knowledgePointsIDs: Changing_Info[i].sub_question[j].knowledgePointInfos.ID,

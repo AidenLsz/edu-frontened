@@ -4,6 +4,9 @@
     v-loading="waiting"
     element-loading-text="正在准备答题卡，请稍后..."
     element-loading-spinner="el-icon-loading">
+    <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <div style="margin-left: 10vw; margin-right: 10vw; min-height: 700px; padding-top: 22px; margin-bottom: 30px;">
       <el-dialog 
         :visible.sync="Edit_Part_Dialog"
@@ -883,8 +886,12 @@ export default {
     this.Question_Lists = JSON.parse(sessionStorage.getItem('CombinePaper_AnswerCard'));
     this.Init_Bundle_Options();
     this.Subject = sessionStorage.getItem('AnswerCardSubject');
+    this.To_Top();
   },
   methods: {
+    To_Top(){
+        document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+    },
     // 下载答题卡
     Download_Answer_Card(){
 
@@ -1487,5 +1494,11 @@ export default {
 }
 </style>
 <style scoped>
-
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+}
 </style>

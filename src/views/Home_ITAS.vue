@@ -1,6 +1,9 @@
 <template>
   <div style="margin-top: 2vh;">
     <!-- 注册和登录 -->
+    <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <login ref="login" @register_show="register_show" />
     <register ref="register" />
     <!-- 试卷分析路径跳转 -->
@@ -195,7 +198,7 @@
           <div class="Home_Area_Right" align="center">
             <el-row type="flex" justify="center" style="margin: 0; padding: 0;">
               <div style="width: 250px; margin-right: 12px; height: 300px;" align="right">
-                <div class="Home_Area_Right_Block">
+                <div class="Home_Area_Right_Block" style="cursor: pointer" @click="Jump_To('Teaching_Resource')">
                   <div style="display: inline-block; width: 48px;">
                     <img src="@/assets/dataIcon1.png" style="margin-top: -8px" width="48px" height="48px">
                   </div>
@@ -203,7 +206,7 @@
                     <span style="font-size: 22px; display: block; margin-top: 8px">教学资源</span>
                   </div>
                 </div>
-                <div class=" Home_Area_Right_Block" style="margin-top: 12px;">
+                <div class=" Home_Area_Right_Block" style="margin-top: 12px; cursor: pointer" @click="Jump_To('Paper_Combine')">
                   <div style="display: inline-block; width: 48px;">
                     <img src="@/assets/dataIcon2.png" width="48px" height="48px" style="margin-top: -8px">
                   </div>
@@ -213,7 +216,7 @@
                 </div>
               </div>
               <div style="width: 250px; height: 300px;" align="left">
-                <div class="Home_Area_Right_Block" style="margin-top: 10px;">
+                <div class="Home_Area_Right_Block" style="margin-top: 10px; cursor: pointer" @click="Jump_To('Analysing_Part')">
                   <div style="display: inline-block; width: 48px;">
                     <img src="@/assets/SearchIcon.svg" width="48px" height="48px" style="margin-top: -8px">
                   </div>
@@ -221,7 +224,7 @@
                     <span style="font-size: 22px; display: block; margin-top: 8px">智能分析</span>
                   </div>
                 </div>
-                <div class="Home_Area_Right_Block" style="margin-top: 12px;">
+                <div class="Home_Area_Right_Block" style="margin-top: 12px; cursor: pointer" @click="Jump_To('Knowledge_Unit_Link')">
                   <div style="display: inline-block; width: 48px;">
                     <img src="@/assets/dataIcon3.png" width="48px" height="48px" style="margin-top: -8px">
                   </div>
@@ -235,7 +238,7 @@
         </el-row>
       </div>
       <!-- 资源检索 -->
-      <div style="width: 100%; background: #F8F9FA;" align="center">
+      <div style="width: 100%; background: #F8F9FA;" align="center" id="Teaching_Resource">
         <el-row class="Area_Row" style="height: 700px;" type="flex" justify="center">
           <div class="Resource_Manager_Left" align="left">
             <el-row>
@@ -310,7 +313,7 @@
         </el-row>
       </div>
       <!-- 组卷系统介绍 -->
-      <div style="width: 100%;" align="center">
+      <div style="width: 100%;" align="center" id="Paper_Combine">
         <el-row class="Area_Row" style="height: 700px">
           <div class="Combine_Paper_Area_Left">
             <el-row>
@@ -361,7 +364,7 @@
       </div>
       
       <!-- 知识点直观呈现 -->
-      <div style="width: 100%; background: #F8F9FA;" align="center">
+      <div style="width: 100%; background: #F8F9FA;" align="center" id="Knowledge_Unit_Link">
         <el-row class="Area_Row" style="height: 700px;" type="flex" justify="center">
           <div class="KU_Search_Left" align="center">
             <div>
@@ -411,7 +414,7 @@
         </el-row>
       </div>
       <!-- 多层次，多维度智能分析 -->
-      <div style="width: 100%; height: 700px" align="center">
+      <div style="width: 100%; height: 700px" align="center" id="Analysing_Part">
         <el-row class="Area_Row" style="padding-top: 100px; padding-bottom: 100px;">
           <div class="Multi_Analyse_Rader_Left">
             <el-row>
@@ -749,8 +752,16 @@ export default {
   mounted() {
     this.Init_Home_Page_Radar();
     this.Init_Home_Page_Radar_Narrow();
+    this.To_Top();
   },
   methods: {
+    // 跳转到某个组件的位置
+    Jump_To(Part){
+        document.getElementById(Part).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+    },
+    To_Top(){
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
     // 分析试题或试卷
     Analyse_Switch(Part){
       if(Part == 'Question'){
@@ -980,10 +991,10 @@ export default {
       window.addEventListener('resize', function() {Home_Radar.resize()});
     },
     // 检索知识点
-    Search_KU(KnowledgeUnit = "") {
+    Search_KU() {
       this.$router.push({
         name: "Knowledge Unit",
-        params: { name: KnowledgeUnit != "" ? KnowledgeUnit : this.Home_Ku, knowledgeSystem: "neea" }
+        params: { name: this.Home_Ku, knowledgeSystem: "neea" }
       });
     },
     // 跳转至新页面
@@ -1333,4 +1344,11 @@ export default {
   }
 }
 
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+}
 </style>

@@ -5,6 +5,9 @@
     element-loading-text="正在获取您可以使用的题库范围，请稍后..."
     element-loading-spinner="el-icon-loading"
     >
+    <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <!-- 地址框 -->
     <el-row justify="start" type="flex" style="margin-bottom: 3vh; margin-left: 5vw; margin-right: 5vw; margin-top: 10px;">
       <el-col>
@@ -241,8 +244,12 @@ export default {
     //   }
       this.Init_Question_Type_Chart();
       this.initDatabaseList();
+      this.To_Top();
   },
   methods: {
+      To_Top(){
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
       Jump_To_SC(){
           this.Combine_Paper()
       },
@@ -557,5 +564,13 @@ export default {
     width: 374px;
     height: 374px;
     background: #EEF5FE;
+}
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>

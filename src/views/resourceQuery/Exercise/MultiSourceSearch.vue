@@ -5,6 +5,9 @@
         :element-loading-text="Waiting_Text"
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.28)">
+        <div id="Top_Nav" class="Top_Nav">
+
+    </div>
         <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
         <div class="Jump_Bar">
             <el-row
@@ -594,12 +597,16 @@ export default {
     ImgSearchArea.addEventListener('dragenter', this.onDragIn, true);
     ImgSearchArea.addEventListener('dragleave', this.onDragOut, true);
     ImgSearchArea.addEventListener('drop', this.onDrop, true);
-    window.addEventListener('paste', this.Paste_Function)
+    window.addEventListener('paste', this.Paste_Function);
+    this.To_Top()
   },
   updated() {
       
   },
   methods: {
+      To_Top(){
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
       // 介绍对话框打开
       openInstructionDialog(){
             this.$refs.instruction.openDialog();
@@ -1389,4 +1396,11 @@ export default {
     background: #4484B8;
 }
 
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+}
 </style>
