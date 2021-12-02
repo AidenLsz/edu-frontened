@@ -1,5 +1,8 @@
 <template>
   <div style="margin-top: 10px; padding-left: 5vw; padding-right: 5vw">
+      <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <el-dialog
         :visible.sync="Wrong_Char_Dialog"
         title="格式错误提示"
@@ -176,10 +179,9 @@ export default {
       this.To_Top();
   },
   methods:{
-        // 卷动至最上方
         To_Top(){
-            window.scrollTo(0,0);
-        },
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
         // 获取UUID
         Get_User_UUID(){
             commonAjax(this.backendIP + '/api/getUserUUID', {}).then((res)=>{
@@ -814,5 +816,13 @@ export default {
 .typeButton.unFocusType:hover{
     background: #E5EEFF;
     border: 1px solid #F5FEFF;
+}
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>

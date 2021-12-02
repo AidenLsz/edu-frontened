@@ -4,6 +4,9 @@
     v-loading="File_Uploading"
     element-loading-text="加载中，请等待..."
     element-loading-spinner="el-icon-loading">
+    <div id="Top_Nav" class="Top_Nav">
+
+    </div>
     <el-dialog
         :visible.sync="Wrong_Char_Dialog"
         title="格式错误提示"
@@ -1954,8 +1957,12 @@ export default {
       }
       this.Get_User_UUID();
       this.Init_File_Selector();
+      this.To_Top();
   },
   methods:{
+    To_Top(){
+          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+      },
     removeAbsImgStyle(style, type='span', runType='1') {
         const newStyle = {...style};
         if (runType === '0') {
@@ -4073,5 +4080,13 @@ export default {
 .Break_Line{
    word-break:break-all; 
    text-align: left
+}
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>
