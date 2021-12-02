@@ -331,7 +331,7 @@ export default {
         ],
         phone: [{required: true,message: "请输入手机号码",trigger: "blur"},
           {min: 11,max: 11,message: "请输入11位手机号码",trigger: "blur"},
-          {pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,message: "请输入正确的手机号码"}
+          {pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[01235678]|18[0-9]|19[89])\d{8}$/,message: "请输入正确的手机号码"}
         ],
         // ug_name:[{required: true,message: "请输入组织名称",trigger: "blur"},],
         // ug_email: [{required: true,message: '请输入邮箱地址',trigger: 'blur'},
@@ -339,7 +339,7 @@ export default {
         // ],
         // ug_phone: [{required: true,message: "请输入手机号码",trigger: "blur"},
         //   {min: 11,max: 11,message: "请输入11位手机号码",trigger: "blur"},
-        //   {pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,message: "请输入正确的手机号码"}
+        //   {pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[01235678]|18[0-9]|19[89])\d{8}$/,message: "请输入正确的手机号码"}
         // ],
         join_ug_ID: [{required: true,message: "请输入密码",trigger: "blur"},
           { validator: validateUg_ID, trigger: ['blur','change' ]}],

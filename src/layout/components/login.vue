@@ -58,9 +58,9 @@
           <el-col :span="8">
             <el-button type="primary" style="width: 8vw" round @click="login">登录</el-button>
           </el-col>
-          <el-col :span="6" :offset="1">
+          <!-- <el-col :span="6" :offset="1">
             <el-button type="text" style="color: #aaa">忘记密码？</el-button>
-          </el-col>
+          </el-col> -->
           <el-col v-if="isLuna" :span="6" :offset="3">
             <el-row type="flex" justify="end" >
               <el-button type="text" @click="register_show">注册新用户</el-button>
