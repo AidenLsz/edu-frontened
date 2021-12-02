@@ -169,7 +169,7 @@
           >
             <el-input
               v-model="mail"
-              placeholder="建议填写校内邮箱"
+              placeholder="建议填写国内邮箱"
               style="
                 display: flex;
                 flex-direction: row;
@@ -403,7 +403,7 @@ export default {
           console.log("SendCaptcha", data);
           if (data.success) {
             this.SendCode = true;
-            this.resend_cntdown = 10;
+            this.resend_cntdown = 30;
             this.timer = setInterval(() => {
               this.resend_cntdown--;
             }, 1000);

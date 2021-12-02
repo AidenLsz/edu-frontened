@@ -903,7 +903,7 @@ export default {
       let option = {
         grid: [],
         title: {
-          text: "难度变化",
+          text: "难度变化比较",
           x: "center",
           y: "top",
           textStyle: {
