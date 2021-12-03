@@ -1,5 +1,6 @@
 <template>
   <el-row type="flex" justify="center">
+    <div id="Top_Nav" class="Top_Nav"></div>
     <div class="dialogue">
       <el-row
         type="flex"
@@ -193,13 +194,12 @@
                 flex-direction: row;
                 justify-content: center;
                 align-items: center;
-                padding: 12px 24px;
                 position: static;
                 width: 126px;
                 height: 44px;
                 left: 324px;
                 top: 0px;
-                margin: 0px 12px;
+                margin: 0px 0px 0px 12px;
               "
             >
               <!-- <p
@@ -351,7 +351,13 @@ export default {
   },
   methods: {
     ToTop() {
-      window.scrollTo(0, 0);
+      document
+        .getElementById("Top_Nav")
+        .scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest",
+        });
     },
     goToService() {
       this.$router.push({
@@ -596,10 +602,10 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 12px 24px;
+  /* padding: 0px 0px; */
 
   position: static;
-  width: 96px;
+  width: 100%;
   height: 44px;
   left: 324px;
   top: 0px;
@@ -608,5 +614,13 @@ export default {
   /* border: 1px solid #66aae9;
   box-sizing: border-box;
   border-radius: 6px; */
+}
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>

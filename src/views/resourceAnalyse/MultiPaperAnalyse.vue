@@ -1,7 +1,6 @@
 <template>
   <div
     class="MultiPaperAnalyse"
-    id="Top_Nav"
     style="
       min-height: 100vh;
       padding-left: 10%;
@@ -16,6 +15,7 @@
     "
     element-loading-spinner="el-icon-loading"
   >
+    <div id="Top_Nav" class="Top_Nav"></div>
     <!-- <div class="panel"> -->
     <el-row justify="start" type="flex">
       <el-col>
@@ -339,10 +339,13 @@ export default {
   },
   methods: {
     ToTop() {
-      document.querySelector(`#Top_Nav`).scrollIntoView({
-        behavior: "smooth", // 平滑过渡
-        block: "start", // 上边框与视窗顶部平齐。默认值
-      });
+      document
+        .getElementById("Top_Nav")
+        .scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest",
+        });
     },
     // 打开试卷库
     Open_Paper_Base() {
@@ -448,6 +451,10 @@ export default {
           tooltip: {
             show: true,
           },
+          title: {
+          text: "数字属性比较",
+          
+        },
           list: [],
           rotateRatio: 0,
           gridsize: 3,
@@ -1338,5 +1345,13 @@ export default {
   height: 4px;
   width: 100%;
   margin: 24px 0;
+}
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>

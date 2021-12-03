@@ -10,6 +10,7 @@
       min-height: 100vh;
     "
   >
+    <div id="Top_Nav" class="Top_Nav"></div>
     <!-- <div class="panel"> -->
     <div style="position: relative; padding-left: 10%; padding-right: 10%">
       <el-row justify="start" type="flex">
@@ -430,7 +431,13 @@ export default {
         return newStyle;
     },
     ToTop() {
-      window.scrollTo(0, 0);
+      document
+        .getElementById("Top_Nav")
+        .scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest",
+        });
     },
     // 清空试卷数据
     Paper_Data_Clear() {
@@ -750,5 +757,13 @@ export default {
 #result {
   background-image: url("~@/assets/background_pagenum.png");
   width: 100%;
+}
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>
