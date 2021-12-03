@@ -1276,26 +1276,42 @@ export default {
         fig: this.getFullCanvasDataURL("diffi_change"),
       };
 
-      // let data = { data: JSON.stringify(param) };
-      console.log(param);
+      let report_data = new FormData();
+      report_data.append("data", JSON.stringify(param, null, 4));
+      // console.log(param);
       // console.log(data);
-      commonAjax(
-        "https://multipaper-report-json2docx-286-production.env.bdaa.pro/v1",
-        param
-        // data
-      )
+
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        responseType: "arraybuffer",
+        emulateJSON: true,
+      };
+
+      // commonAjax(
+      //   "https://multipaper-report-json2docx-286-production.env.bdaa.pro/v1",
+      //   // param
+      //   report_data
+      // )
+      this.$http
+        .post(
+          "https://multipaper-report-json2docx-286-production.env.bdaa.pro/v1",
+          report_data,
+          config
+        )
         .then((data) => {
           if (data.data) {
-            this.Download_loading = false;
-            const link = document.createElement("a");
-            let blob = new Blob([data.data], {
-              type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            });
-            let objectUrl = URL.createObjectURL(blob);
-            link.href = objectUrl;
-            link.download = "试卷分析报告.docx";
-            link.click();
-            URL.revokeObjectURL(objectUrl);
+          this.Download_loading = false;
+          const link = document.createElement("a");
+          let blob = new Blob([data.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          let objectUrl = URL.createObjectURL(blob);
+          link.href = objectUrl;
+          link.download = "试卷分析报告.docx";
+          link.click();
+          URL.revokeObjectURL(objectUrl);
           }
         })
         .catch(() => {
