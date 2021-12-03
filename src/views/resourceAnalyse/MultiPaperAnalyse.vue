@@ -1,15 +1,18 @@
 <template>
   <div
     class="MultiPaperAnalyse"
+    id="Top_Nav"
     style="
       min-height: 100vh;
       padding-left: 10%;
       padding-right: 10%;
       padding-top: 10px;
     "
-    v-loading="Question_Analysing"
+    v-loading="Question_Analysing || Download_loading"
     :element-loading-text="
-      progress + '/' + chosen_paper_List.length + '分析中，请等待...'
+      Question_Analysing
+        ? progress + '/' + chosen_paper_List.length + '分析中，请等待...'
+        : '正在处理下载报告，请稍等...'
     "
     element-loading-spinner="el-icon-loading"
   >
@@ -198,6 +201,16 @@
     <el-row v-show="show_word_cnt_Bar && checkList.indexOf('字数') > -1" type="flex" justify="center">
       <div id="word_cnt_Bar" class="word_cnt_Bar"></div>
     </el-row> -->
+    <el-row
+      v-if="analyse_finished"
+      type="flex"
+      justify="center"
+      style="margin-bottom: 40px"
+    >
+      <el-button type="success" plain @click="Report_Download()">
+        下载分析报告</el-button
+      >
+    </el-row>
   </div>
 </template>
 
@@ -208,6 +221,7 @@ import Js2WordCloud from "js2wordcloud";
 import * as echarts from "echarts";
 // import "echarts-wordcloud";
 import { commonAjax } from "@/common/utils/ajax";
+import $ from "jquery";
 
 export default {
   components: { SearchPaper },
@@ -312,6 +326,10 @@ export default {
       hardest_question_num: 0,
       // 最大难度值
       hardest_question_difficulty: 0,
+      // 是否正在加载报告下载
+      Download_loading: false,
+      // 试卷分析是否完成
+      analyse_finished: false,
     };
   },
   mounted() {
@@ -321,7 +339,10 @@ export default {
   },
   methods: {
     ToTop() {
-      window.scrollTo(0, 0);
+      document.querySelector(`#Top_Nav`).scrollIntoView({
+        behavior: "smooth", // 平滑过渡
+        block: "start", // 上边框与视窗顶部平齐。默认值
+      });
     },
     // 打开试卷库
     Open_Paper_Base() {
@@ -334,9 +355,9 @@ export default {
     //   console.log(this.chosen_paper_List);
     // },
     CPB(val) {
-      console.log("Close paper base");
+      // console.log("Close paper base");
       this.chosen_paper_List = val;
-      console.log(this.chosen_paper_List);
+      // console.log(this.chosen_paper_List);
       this.show_paper_base = false;
       if (this.show_word_cnt_Bar)
         echarts.init(document.getElementById("word_cnt_Bar")).dispose();
@@ -358,11 +379,11 @@ export default {
     // 分析试卷
     Analyse() {
       let status = [];
-      console.log("length", this.chosen_paper_List.length);
+      // console.log("length", this.chosen_paper_List.length);
       this.analyse_result.length = this.chosen_paper_List.length;
       for (let i = 0; i < this.chosen_paper_List.length; i++)
         status.push(false);
-      console.log("status", status);
+      // console.log("status", status);
       // return;
       for (let i = 0; i < this.chosen_paper_List.length; i++) {
         commonAjax(this.backendIP + "/api/paperJsonGet", {
@@ -378,7 +399,7 @@ export default {
             (x) => x.ID === data.Paper_Json.id
           );
           status[index] = true;
-          console.log("status[" + index + "] has been true");
+          // console.log("status[" + index + "] has been true");
           //this.analyse_result.push(data.Paper_Json);
           this.analyse_result[index] = data.Paper_Json;
         });
@@ -405,6 +426,8 @@ export default {
           if (this.checkList.indexOf("知识点分值") > -1) this.Init_Radar();
           if (this.checkList.indexOf("难度变化") > -1)
             this.Init_difficulty_change();
+          this.analyse_finished = true;
+          // console.log("finish", this.analyse_finished);
         }
       };
     },
@@ -876,7 +899,7 @@ export default {
         }
       };
       aver_score.sort(compare_score);
-      console.log("aver_score", aver_score);
+      // console.log("aver_score", aver_score);
       this.most_welcomed_knowledgepoint = aver_score[0].knowledge;
       this.highest_aver_score = aver_score[0].score;
       for (let i = 1; i <= 3; i++)
@@ -946,7 +969,7 @@ export default {
       };
 
       for (let i = 0; i < this.analyse_result.length; i++) {
-        console.log(this.analyse_result[i].difficulty_list);
+        // console.log(this.analyse_result[i].difficulty_list);
         option.grid[i] = {
           top: 130 + 160 * i,
           height: 100,
@@ -1041,7 +1064,7 @@ export default {
     resize_title(title) {
       let max_width = 13;
       let newtitle = title.slice(0);
-      console.log(newtitle);
+      // console.log(newtitle);
       for (let i = 1; i <= title.length; i++)
         newtitle =
           newtitle.slice(0, max_width * i + i - 1) +
@@ -1169,6 +1192,109 @@ export default {
         aver += this.analyse_result[i].equation_cnt;
       aver = Math.floor(aver / this.analyse_result.length);
       return aver;
+    },
+    /*
+     * 将多个canvas画布组成的图表合成为一个完整的canvas,并获取完整的dataURl
+     * @param divId divId 包含整个画布的divId
+     * @returns {String} widthXheight@dataURL 例：
+     */
+    getFullCanvasDataURL(divId) {
+      //将第一个画布作为基准。
+      var baseCanvas = $("#" + divId)
+        .find("canvas")
+        .first()[0];
+      if (!baseCanvas) {
+        return false;
+      }
+      var width = baseCanvas.width;
+      var height = baseCanvas.height;
+      var ctx = baseCanvas.getContext("2d");
+      //遍历，将后续的画布添加到在第一个上
+      $("#" + divId)
+        .find("canvas")
+        .each(function (i, canvasObj) {
+          if (i > 0) {
+            var canvasTmp = $(canvasObj)[0];
+            ctx.drawImage(canvasTmp, 0, 0, width, height);
+          }
+        });
+      //获取base64位的url
+      return baseCanvas.toDataURL();
+    },
+    Report_Download() {
+      this.Download_loading = true;
+      let param = {
+        paper_titles: [],
+        part1: {},
+        part2: {},
+        part3: {},
+        part4: {},
+      };
+      for (let i = 0; i < this.analyse_result.length; i++)
+        param.paper_titles.push(this.analyse_result[i].title);
+      param.part1 = {
+        num_words: this.word_cnt_aver,
+        num_pics: this.figure_cnt_aver,
+        num_equations: this.equation_cnt_aver,
+        fig: this.getFullCanvasDataURL("word_cnt_Bar"),
+      };
+      // console.log(param.part1.fig);
+
+      let figs = []; // the figures of wordcloud for each paper
+      for (let i = 1; i <= this.analyse_result.length; i++)
+        figs.push(this.getFullCanvasDataURL("container" + i));
+      param.part2 = {
+        title1: this.title0,
+        keyword1: this.keyword_cache.slice(0, 2),
+        title2: this.title1,
+        keyword2: this.keyword_cache.slice(3, 4),
+        top10: this.keyword_total,
+        fig: figs,
+      };
+
+      param.part3 = {
+        num_kp: this.knowledge_num,
+        kp1: this.most_welcomed_knowledgepoint,
+        kp1_score: this.highest_aver_score,
+        rest_kp: this.second_welcomed_knowledgepoint,
+        title: this.paper_lowest_score,
+        kp2: this.lowest_score_knowledgepoint,
+        kp2_score: this.lowest_score,
+        fig: this.getFullCanvasDataURL("Radar"),
+      };
+
+      param.part4 = {
+        title1: this.most_difficult_paper,
+        difficulty1: this.highest_difficulty,
+        title2: this.hardest_question_paper,
+        index: this.hardest_question_num,
+        difficulty2: this.hardest_question_difficulty,
+        fig: this.getFullCanvasDataURL("diffi_change"),
+      };
+
+      commonAjax(
+        "https://multipaper-report-json2docx-286-production.env.bdaa.pro/v1",
+        param
+      )
+        .then((data) => {
+          if (data.data) {
+            this.Download_loading = false;
+            const link = document.createElement("a");
+            let blob = new Blob([data.data], {
+              type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            });
+            let objectUrl = URL.createObjectURL(blob);
+            link.href = objectUrl;
+            link.download = "试卷分析报告.docx";
+            link.click();
+            URL.revokeObjectURL(objectUrl);
+          }
+        })
+        .catch(() => {
+          alert("服务器过忙，请稍后重新尝试...");
+          this.Download_loading = false;
+          return;
+        });
     },
   },
 };
