@@ -339,13 +339,11 @@ export default {
   },
   methods: {
     ToTop() {
-      document
-        .getElementById("Top_Nav")
-        .scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-          inline: "nearest",
-        });
+      document.getElementById("Top_Nav").scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
     },
     // 打开试卷库
     Open_Paper_Base() {
@@ -452,9 +450,8 @@ export default {
             show: true,
           },
           title: {
-          text: "数字属性比较",
-          
-        },
+            text: "数字属性比较",
+          },
           list: [],
           rotateRatio: 0,
           gridsize: 3,
@@ -1254,7 +1251,7 @@ export default {
         title1: this.title0,
         keyword1: this.keyword_cache.slice(0, 2),
         title2: this.title1,
-        keyword2: this.keyword_cache.slice(3, 4),
+        keyword2: this.keyword_cache.slice(2, 4),
         top10: this.keyword_total,
         fig: figs,
       };
@@ -1279,9 +1276,13 @@ export default {
         fig: this.getFullCanvasDataURL("diffi_change"),
       };
 
+      // let data = { data: JSON.stringify(param) };
+      console.log(param);
+      // console.log(data);
       commonAjax(
         "https://multipaper-report-json2docx-286-production.env.bdaa.pro/v1",
         param
+        // data
       )
         .then((data) => {
           if (data.data) {
@@ -1347,11 +1348,11 @@ export default {
   margin: 24px 0;
 }
 
-.Top_Nav{
-    position: relative;
-    top: -90px;
-    width: 10px;
-    height: 10px;
-    background: transparent;
+.Top_Nav {
+  position: relative;
+  top: -90px;
+  width: 10px;
+  height: 10px;
+  background: transparent;
 }
 </style>
