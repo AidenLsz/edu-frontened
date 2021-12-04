@@ -1,8 +1,10 @@
 <template>
 	<div>
 		<el-row>
+			<div id="Top_Nav" class="Top_Nav">
+			</div>
 			<!-- 老师 -->
-			<el-row style="margin: 30px 0px 10px 0px">
+			<el-row style="margin: 20px 0px 10px 0px">
 				<label style="font-size: 20px">指导老师</label>
 			</el-row>
 			<el-row v-for="Row_Index in Math.ceil(member_data.teachers.length/3)" :key="'T_R_' + Row_Index"
@@ -402,7 +404,7 @@
 	export default {
 		name: "Members",
 		mounted() {
-			this.ToTop();
+			this.To_Top();
 		},
 		data() {
 			return {
@@ -758,8 +760,8 @@
 			}
 		},
 		methods: {
-			ToTop() {
-				window.scrollTo(0, 0);
+			To_Top(){
+				document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
 			},
 			Get_Student_Img(row, index) {
 				var i = (row - 1) * 3 + index
@@ -864,4 +866,12 @@
 		width: 90vw;
 		margin: 10px 5vw;
 	}
+
+	.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+}
 </style>

@@ -392,14 +392,12 @@
                       <el-menu-item
                         index="3-2"
                         @click="QuestionAnalyseSwitch()"
-                        @click.native="ToTop"
                       >
                         <span style="color: black">试题资源</span>
                       </el-menu-item>
                       <el-menu-item
                         index="3-3"
                         @click="PaperAnalyseSwitch()"
-                        @click.native="ToTop"
                       >
                         <span style="color: black">试卷资源</span>
                       </el-menu-item>
@@ -511,10 +509,9 @@
           </el-col>
         </el-row>
       </div>
-      <div id="Top_Nav" class="Top_Nav">
-
-      </div>
-      <div style="padding-top: 50px">
+      <div style="padding-top: 59px">
+        <div id="Top_Nav" class="Top_Nav">
+        </div>
         <router-view :key="$route.fullPath"></router-view>
       </div>
       <basic-footer />
@@ -672,32 +669,31 @@ export default {
         "margin-left": "10px",
       };
     },
-    ToTop() {
-      window.scrollTo(0, 0);
-    },
     goToMainPage() {
       this.$router.push({
         path: "/",
       });
-      this.ToTop();
+      setTimeout(()=>{
+        this.To_Top();
+      }, 100);
     },
     PublicPlatform() {
       this.$router.push({
         path: "/PublicPlatform",
       });
-      this.ToTop();
+      this.To_Top();
     },
     goToImageTranscription() {
       this.$router.push({
         path: "/ImageTranscription",
       });
-      this.ToTop();
+      this.To_Top();
     },
     show_members() {
       this.$router.push({
         path: "/members",
       });
-      this.ToTop();
+      this.To_Top();
     },
     login_show() {
       this.$refs.login.show();
@@ -711,7 +707,7 @@ export default {
       this.$router.push({
         path: "/admin",
       });
-      this.ToTop();
+      this.To_Top();
     },
     // 测试退出函数
     async logout() {
@@ -1084,8 +1080,8 @@ export default {
 .Top_Nav{
     position: relative;
     top: -90px;
-    width: 10px;
-    height: 10px;
+    width: 1px;
+    height: 1px;
     background: transparent;
 }
 </style>
