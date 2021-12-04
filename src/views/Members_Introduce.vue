@@ -637,10 +637,6 @@
 							"name": "袁玉润",
 							"mail": "yr_yuan@mail.ustc.edu.cn",
 							"intro": "19级计科本科生 要学的还有很多"
-						}, {
-							"name": "杨星月",
-							"mail": "xyyang_selene@mail.ustc.edu. cn",
-							"intro": "生命在于新建文件夹"
 						}
 					],
 					// 技术顾问
@@ -744,7 +740,6 @@
 						"靳浩然": "/members/靳浩然.jpg",
 						"朱仕哲": "/members/朱仕哲.jpg",
 						"袁玉润": "/members/袁玉润.jpg",
-						"杨星月": "/members/杨星月.jpg",
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
 						"高维博": "/members/高维博.jpeg",
