@@ -145,155 +145,6 @@
         </el-row>
         <!-- 功能导航栏 -->
         <el-row type="flex" justify="start">
-          <!-- <el-menu
-            mode="horizontal"
-            style="margin: 0px; padding-top: 10px; border: 1px solid black"
-          >
-            <el-submenu index="0">
-              <template slot="title" style="height: 100px; border: 1px solid red">
-                <span style="margin-left: -20px; color: black; font-size: 18px" class="Narrow_Navbar_Button">功能</span>
-              </template>
-              <el-submenu index="1">
-                <template slot="title"
-                  ><span style="color: black">资源录入</span></template
-                >
-                <el-menu-item index="1-1"
-                  ><span style="color: Gainsboro">学习资源</span>
-                </el-menu-item>
-                <router-link
-                  to="/inputMarked"
-                  :underline="false"
-                  @click.native="ToTop"
-                >
-                  <el-menu-item index="1-2">
-                    <span style="color: black">试题资源</span>
-                  </el-menu-item>
-                </router-link>
-                <router-link
-                  to="/inputPaper"
-                  :underline="false"
-                  @click.native="ToTop"
-                >
-                  <el-menu-item index="1-3">
-                    <span style="color: black">试卷资源</span>
-                  </el-menu-item>
-                </router-link>
-                <el-menu-item index="1-4"
-                  ><span style="color: Gainsboro">知识体系</span>
-                </el-menu-item>
-              </el-submenu>
-              <el-submenu index="2">
-                <template slot="title"
-                  ><span style="color: black">查询</span></template
-                >
-
-                <router-link
-                  to="/exercise"
-                  :underline="false"
-                  @click.native="ToTop"
-                >
-                  <el-menu-item index="2-1">
-                    <span style="color: black">试题检索</span>
-                  </el-menu-item>
-                </router-link>
-
-                <router-link
-                  to="/searchPaper"
-                  :underline="false"
-                  @click.native="ToTop"
-                >
-                  <el-menu-item index="2-2">
-                    <span style="color: black">试卷检索</span>
-                  </el-menu-item>
-                </router-link>
-
-                <router-link
-                  to="/ku"
-                  :underline="false"
-                  @click.native="ToTop"
-                >
-                  <el-menu-item index="2-3">
-                    <span style="color: black">知识单元检索</span>
-                  </el-menu-item>
-                </router-link>
-
-                <router-link
-                  to="/resources"
-                  :underline="false"
-                  @click.native="ToTop"
-                >
-                  <el-menu-item index="2-4">
-                    <span style="color: black">学习资源检索</span>
-                  </el-menu-item>
-                </router-link>
-              </el-submenu>
-              <el-submenu index="3">
-                <template slot="title"
-                  ><span style="color: black">分析</span></template
-                >
-                <el-menu-item index="3-1"
-                  ><span style="color: Gainsboro">学习资源</span>
-                </el-menu-item>
-                <el-menu-item
-                  index="3-2"
-                  @click="QuestionAnalyseSwitch()"
-                  @click.native="ToTop"
-                >
-                  <span style="color: black">试题资源</span>
-                </el-menu-item>
-                <el-menu-item
-                  index="3-3"
-                  @click="PaperAnalyseSwitch()"
-                  @click.native="ToTop"
-                >
-                  <span style="color: black">试卷资源</span>
-                </el-menu-item>
-              </el-submenu>
-              <el-submenu index="4">
-                <template slot="title"
-                  ><span style="color: black"
-                    >标注管理平台</span
-                  ></template
-                >
-                <router-link
-                  to="/questionUpdate"
-                  :underline="false"
-                  @click.native="ToTop"
-                >
-                  <el-menu-item index="4-1">
-                    <span style="color: black">试题信息修改</span>
-                  </el-menu-item>
-                </router-link>
-                <router-link
-                    to="/paperdivide"
-                    :underline="false"
-                    @click.native="ToTop"
-                >
-                  <el-menu-item index="4-1">
-                    <span style="color: black">试卷切分</span>
-                  </el-menu-item>
-                </router-link>
-              </el-submenu>
-              <el-menu-item index="5">
-                <router-link
-                  to="/paperCombine"
-                  :underline="false"
-                  @click.native="ToTop"
-                >
-                  <span style="color: black"> 组卷系统 </span>
-                </router-link>
-              </el-menu-item>
-              <el-menu-item index="6">
-                <router-link
-                  to="/manage/dashboard"
-                  :underline="false"
-                  @click.native="ToTop"
-                >
-                  <span style="color: black"> 资源管理 </span>
-                </router-link>
-              </el-menu-item>
-            </el-submenu>
-          </el-menu> -->
           <el-col>
             <el-row 
               type="flex" 
@@ -321,64 +172,28 @@
                   <div align="left" class="Navbar_Drawer_Sub">
                     <span style="color: Gainsboro">学习资源</span>
                   </div>
-                  <div align="left" class="Navbar_Drawer_Sub">
-                    <router-link
-                      to="/inputMarked"
-                      :underline="false"
-                      @click.native="ToTop"
-                    >
-                      <span style="color: black">试题资源</span>
-                    </router-link>
+                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/inputMarked')">
+                    <span style="color: black">试题资源</span>
                   </div>
-                  <div align="left" class="Navbar_Drawer_Sub">
-                    <router-link
-                      to="/inputPaper"
-                      :underline="false"
-                      @click.native="ToTop"
-                    >
-                      <span style="color: black">试卷资源</span>
-                    </router-link>
+                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/inputPaper')">
+                    <span style="color: black">试卷资源</span>
                   </div>
                   <div align="left" class="Navbar_Drawer_Sub">
                     <span style="color: Gainsboro">知识体系</span>
                   </div>
                 </el-collapse-item>
                 <el-collapse-item name="查询" title="查询">
-                  <div align="left" class="Navbar_Drawer_Sub">
-                    <router-link
-                      to="/exercise"
-                      :underline="false"
-                      @click.native="ToTop"
-                    >
-                      <span style="color: black">试题检索</span>
-                    </router-link>
+                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/exercise')">
+                    <span style="color: black">试题检索</span>
                   </div>
-                  <div align="left" class="Navbar_Drawer_Sub">
-                    <router-link
-                      to="/searchPaper"
-                      :underline="false"
-                      @click.native="ToTop"
-                    >
-                      <span style="color: black">试卷检索</span>
-                    </router-link>
+                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/searchPaper')">
+                    <span style="color: black">试卷检索</span>
                   </div>
-                  <div align="left" class="Navbar_Drawer_Sub">
-                    <router-link
-                      to="/ku"
-                      :underline="false"
-                      @click.native="ToTop"
-                    >
-                      <span style="color: black">知识单元检索</span>
-                    </router-link>
+                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/ku')">
+                    <span style="color: black">知识单元检索</span>
                   </div>
-                  <div align="left" class="Navbar_Drawer_Sub">
-                    <router-link
-                      to="/resources"
-                      :underline="false"
-                      @click.native="ToTop"
-                    >
-                      <span style="color: black">学习资源检索</span>
-                    </router-link>
+                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/resources')">
+                    <span style="color: black">学习资源检索</span>
                   </div>
                 </el-collapse-item>
                 <el-collapse-item name="分析" title="分析">
@@ -401,45 +216,21 @@
                   </div>
                 </el-collapse-item>
                 <el-collapse-item name="标注管理平台" title="标注管理平台">
-                  <div align="left" class="Navbar_Drawer_Sub">
-                    <router-link
-                      to="/questionUpdate"
-                      :underline="false"
-                      @click.native="ToTop"
-                    >
-                      <span style="color: black">试题信息修改</span>
-                    </router-link>
+                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/questionUpdate')">
+                    <span style="color: black">试题信息修改</span>
                   </div>
-                  <div align="left" class="Navbar_Drawer_Sub">
-                    <router-link
-                        to="/paperdivide"
-                        :underline="false"
-                        @click.native="ToTop"
-                    >
-                      <span style="color: black">试卷切分</span>
-                    </router-link>
+                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/paperdivide')">
+                    <span style="color: black">试卷切分</span>
                   </div>
                 </el-collapse-item>
                 <el-collapse-item name="组卷系统" title="组卷系统">
-                  <div align="left" class="Navbar_Drawer_Sub">
-                    <router-link
-                        to="/paperCombine"
-                        :underline="false"
-                        @click.native="ToTop"
-                    >
-                      <span style="color: black">组卷页面入口</span>
-                    </router-link>
-                </div>
+                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/paperCombine')">
+                    <span style="color: black">组卷页面入口</span>
+                  </div>
                 </el-collapse-item>
                 <el-collapse-item name="资源管理" title="资源管理">
-                  <div align="left" class="Navbar_Drawer_Sub">
-                    <router-link
-                        to="/manage/dashboard"
-                        :underline="false"
-                        @click.native="ToTop"
-                    >
-                      <span style="color: black">资源管理入口</span>
-                    </router-link>
+                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/manage/dashboard')">
+                    <span style="color: black">资源管理入口</span>
                   </div>
                 </el-collapse-item>
               </el-collapse>
@@ -561,24 +352,12 @@
                       <el-menu-item index="1-1"
                         ><span style="color: Gainsboro">学习资源</span>
                       </el-menu-item>
-                      <router-link
-                        to="/inputMarked"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="1-2">
-                          <span style="color: black">试题资源</span>
-                        </el-menu-item>
-                      </router-link>
-                      <router-link
-                        to="/inputPaper"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="1-3">
-                          <span style="color: black">试卷资源</span>
-                        </el-menu-item>
-                      </router-link>
+                      <el-menu-item index="1-2" @click="Router_Trans('/inputMarked')">
+                        <span style="color: black">试题资源</span>
+                      </el-menu-item>
+                      <el-menu-item index="1-3" @click="Router_Trans('/inputPaper')">
+                        <span style="color: black">试卷资源</span>
+                      </el-menu-item>
                       <el-menu-item index="1-4"
                         ><span style="color: Gainsboro">知识体系</span>
                       </el-menu-item>
@@ -587,46 +366,21 @@
                       <template slot="title"
                         ><span style="color: black">查询</span></template
                       >
+                      <el-menu-item index="2-1" @click="Router_Trans('/exercise')">
+                        <span style="color: black">试题检索</span>
+                      </el-menu-item>
 
-                      <router-link
-                        to="/exercise"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="2-1">
-                          <span style="color: black">试题检索</span>
-                        </el-menu-item>
-                      </router-link>
+                      <el-menu-item index="2-2" @click="Router_Trans('/searchPaper')">
+                        <span style="color: black">试卷检索</span>
+                      </el-menu-item>
 
-                      <router-link
-                        to="/searchPaper"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="2-2">
-                          <span style="color: black">试卷检索</span>
-                        </el-menu-item>
-                      </router-link>
+                      <el-menu-item index="2-3" @click="Router_Trans('/ku')">
+                        <span style="color: black">知识单元检索</span>
+                      </el-menu-item>
 
-                      <router-link
-                        to="/ku"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="2-3">
-                          <span style="color: black">知识单元检索</span>
-                        </el-menu-item>
-                      </router-link>
-
-                      <router-link
-                        to="/resources"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="2-4">
-                          <span style="color: black">学习资源检索</span>
-                        </el-menu-item>
-                      </router-link>
+                      <el-menu-item index="2-4" @click="Router_Trans('/resources')">
+                        <span style="color: black">学习资源检索</span>
+                      </el-menu-item>
                     </el-submenu>
                     <el-submenu index="3">
                       <template slot="title"
@@ -656,43 +410,19 @@
                           >标注管理平台</span
                         ></template
                       >
-                      <router-link
-                        to="/questionUpdate"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                        <el-menu-item index="4-1">
-                          <span style="color: black">试题信息修改</span>
-                        </el-menu-item>
-                      </router-link>
-                      <router-link
-                          to="/paperdivide"
-                          :underline="false"
-                          @click.native="ToTop"
-                      >
-                        <el-menu-item index="4-2">
-                          <span style="color: black">试卷切分</span>
-                        </el-menu-item>
-                      </router-link>
+                      <el-menu-item index="4-1"  @click="Router_Trans('/questionUpdate')">
+                        <span style="color: black">试题信息修改</span>
+                      </el-menu-item>
+                      <el-menu-item index="4-2"  @click="Router_Trans('/paperdivide')">
+                        <span style="color: black">试卷切分</span>
+                      </el-menu-item>
                     </el-submenu>
-                    <router-link
-                        to="/paperCombine"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                      <el-menu-item index="5">
-                        <span style="color: black"> 组卷系统 </span>
-                      </el-menu-item>
-                    </router-link>
-                    <router-link
-                        to="/manage/dashboard"
-                        :underline="false"
-                        @click.native="ToTop"
-                      >
-                      <el-menu-item index="6">
-                        <span style="color: black"> 资源管理 </span>
-                      </el-menu-item>
-                    </router-link>
+                    <el-menu-item index="5"  @click="Router_Trans('/paperCombine')">
+                      <span style="color: black"> 组卷系统 </span>
+                    </el-menu-item>
+                    <el-menu-item index="6" @click="Router_Trans('/manage/dashboard')">
+                      <span style="color: black"> 资源管理 </span>
+                    </el-menu-item>
                   </el-submenu>
                 </el-menu>
 
@@ -781,7 +511,10 @@
           </el-col>
         </el-row>
       </div>
-      <div style="padding-top: 70px">
+      <div id="Top_Nav" class="Top_Nav">
+
+      </div>
+      <div style="padding-top: 50px">
         <router-view :key="$route.fullPath"></router-view>
       </div>
       <basic-footer />
@@ -828,6 +561,7 @@ export default {
   },
   mounted() {
     this.getGroups();
+    this.To_Top();
   },
   watch:{
     
@@ -841,6 +575,17 @@ export default {
     }
   },
   methods: {
+    To_Top(){
+      document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+    },
+    Router_Trans(Path){
+      // this.To_Top();
+      setTimeout(()=>{
+        this.$router.push({
+          path: Path
+        });
+      }, 100)
+    },
     Get_Current_Path(){
       if(this.$route.path == '/'){
         return false
@@ -1305,6 +1050,7 @@ export default {
 /* 路径的跳转点 */
 .Navbar_Drawer_Sub{
   margin: 10px 0px 10px 20px;
+  cursor: pointer;
 }
 
 .Narrow_Navbar{
@@ -1333,5 +1079,13 @@ export default {
     width: 1344px;
     margin: 0 auto;
   }
+}
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>

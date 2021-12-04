@@ -204,6 +204,7 @@
       :visible.sync="Compare_Paper_Dialog"
       title="类比试卷推荐"
       width="1344px"
+      @close="Compare_Paper_Questions = []"
       :modal-append-to-body="true"
       :close-on-click-modal="false"
       >
@@ -2018,6 +2019,8 @@ export default {
     Replace_Dialog_Close(){
       this.Replace_Question_Bundle_Index = -1;
       this.Replace_Question_Index = -1;
+
+      this.Replace_Question_List = [];
     },
     // 返回选项标签
     Get_Option_Label(Index){
