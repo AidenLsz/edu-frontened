@@ -5,6 +5,7 @@
     element-loading-spinner="el-icon-loading"
     style="padding-top: 10px"
   >
+    <div id="Top_Nav" class="Top_Nav"></div>
     <el-row justify="start" type="flex">
       <el-col style="padding-left: 5vw">
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -123,11 +124,7 @@
       >
         识别结果
       </div>
-      <el-table
-        :data="tableData"
-        border
-        style="width: 100%"
-      >
+      <el-table :data="tableData" border style="width: 100%">
         <!-- <ComplexInput @Update_CI="UCI" @Update_Image="UCII" :Get_Out_Content="tableData[num].content"></ComplexInput> -->
         <el-table-column prop="num" label="序号" width="60"> </el-table-column>
         <el-table-column prop="content" label="内容"> </el-table-column>
@@ -399,7 +396,7 @@ if __name__ == "__main__":
 
 <script>
 // import Mathdown from "@/common/components/Mathdown.vue";
-import "mathjax/es5/tex-svg"
+import "mathjax/es5/tex-svg";
 import $ from "jquery";
 import Instruction from "./components/InstructionImage.vue";
 import Dialogue from "./components/Dialogue.vue";
@@ -530,7 +527,11 @@ export default {
   },
   methods: {
     ToTop() {
-      window.scrollTo(0, 0);
+      document.getElementById("Top_Nav").scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
     },
     // // 清空计时器
     // Reset_Interval() {
@@ -870,7 +871,7 @@ export default {
   // width: 400px;
   // height: 650px;
   margin: auto;
-  margin-bottom:50px;
+  margin-bottom: 50px;
   width: 1200px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   border-radius: 4px;
@@ -978,7 +979,7 @@ export default {
 // 	height: 90%;
 // 	left: -10px;
 // 	top: 50px;
-	// z-index: 10;
+// z-index: 10;
 // }
 
 .box-card {
@@ -1060,5 +1061,13 @@ export default {
   top: 50px;
   font-size: 30px;
   z-index: 11;
+}
+
+.Top_Nav {
+  position: relative;
+  top: -90px;
+  width: 10px;
+  height: 10px;
+  background: transparent;
 }
 </style>

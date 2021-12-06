@@ -4,6 +4,7 @@
     element-loading-text="识别中，请等待..."
     element-loading-spinner="el-icon-loading"
     class="estimate" style="padding-top: 10px">
+    <div id="Top_Nav" class="Top_Nav"></div>
     <div class="panel">
       <el-row justify="start" type="flex">
         <el-col style="padding-left: 5vw">
@@ -580,7 +581,13 @@ export default {
   },
   methods: {
     ToTop() {
-      window.scrollTo(0, 0);
+      document
+        .getElementById("Top_Nav")
+        .scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest",
+        });
     },
     openInstructionDialog() {
       this.$refs.instruction.openDialog();
@@ -1051,5 +1058,13 @@ input[type="file"] {
 
 .el-select-dropdown__item.hover {
   background-color: #9cd6f1;
+}
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>

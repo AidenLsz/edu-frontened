@@ -1,5 +1,6 @@
 <template>
   <div class="similarity" style="margin-top: 10px">
+    <div id="Top_Nav" class="Top_Nav"></div>
     <div class="panel">
       <el-row justify="start" type="flex">
         <el-col style="padding-left: 5vw">
@@ -294,7 +295,13 @@ export default {
   },
   methods: {
     ToTop() {
-      window.scrollTo(0, 0);
+      document
+        .getElementById("Top_Nav")
+        .scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest",
+        });
     },
     openInstructionDialog() {
       this.$refs.instruction.openDialog();
@@ -583,4 +590,12 @@ export default {
 		color: #000 !important;
 		border-color: #c5c1c0 !important;
 	} */
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+}
 </style>

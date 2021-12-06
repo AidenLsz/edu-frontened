@@ -1,5 +1,6 @@
 <template>
   <el-row type="flex" justify="center">
+    <div id="Top_Nav" class="Top_Nav"></div>
     <div class="dialogue">
       <el-row class="title"> LUNA-AI </el-row>
       <div class="input-box">
@@ -11,7 +12,7 @@
           ></el-input>
         </div>
         <div class="password-input">
-          <p class="text">密码</p>
+          <p class="text" style="text-align:left;">密码</p>
           <el-input
             v-model="password"
             placeholder="请输入密码"
@@ -50,7 +51,13 @@ export default {
   },
   methods: {
     ToTop() {
-      window.scrollTo(0, 0);
+      document
+        .getElementById("Top_Nav")
+        .scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest",
+        });
     },
     goToRegister() {
       this.$router.push({
@@ -260,5 +267,13 @@ export default {
   border: 2px solid #3e89e0;
   box-sizing: border-box;
   border-radius: 6px;
+}
+
+.Top_Nav{
+    position: relative;
+    top: -90px;
+    width: 10px;
+    height: 10px;
+    background: transparent;
 }
 </style>
