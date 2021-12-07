@@ -274,7 +274,7 @@
         :modal-append-to-body="false"
         :close-on-click-modal="false">
         <el-row type="flex" justify="start">
-            <el-col :span="5" style="height: 420px; overflow: scroll">
+            <el-col :span="5" style="height: 460px; overflow: scroll">
                 <el-row type="flex" justify="center" style="margin: 0px 1.5vw 15px 1.5vw">
                     <el-input
                         placeholder="输入关键字进行过滤"
@@ -300,6 +300,16 @@
             <el-col :span="18" :offset="1">
                 <el-row type="flex" justify="start" style="margin-bottom: 10px">
                     <label>题型：{{Combine_Replace_Question_Info.type}}（无法修改）</label><label style="margin-left: 50px">分值：{{Combine_Replace_Question_Info.score}}（无法在此处修改）</label>
+                </el-row>
+                <el-row type="flex" justify="start" style="margin-bottom: 15px; height: 40px; line-height: 40px;">
+                    <el-col :span="2">
+                        <el-row type="flex" justify="start">
+                            <label>关键字：</label>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="21" style="padding: 0px 8px">
+                        <el-input v-model="Extra_Keyword" placeholder="在此输入想要的关键字（默认使用现在的题干进行检索）"></el-input>
+                    </el-col>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-bottom: 15px; height: 30px; line-height: 30px;">
                     <el-col :span="2">
@@ -1008,6 +1018,7 @@
 import Mathdown from '@/common/components/Mathdown'
 import DetailTable from '@/views/paperCombine/components/DetailTable'
 import {commonAjax} from '@/common/utils/ajax'
+import {LRStrip} from '@/common/utils/strip'
 
 // import FileSaver from 'file-saver'
 
@@ -1145,7 +1156,8 @@ export default {
       },
       // 难度筛选列表
       Difficulty_List: ['全部', '容易', '较易', '中等', '较难', '困难', "自定义"],
-      Page_Index: 1
+      Page_Index: 1,
+      Extra_Keyword: ""
     }
   },
   watch:{
@@ -1208,6 +1220,8 @@ export default {
     // 检索替换题目用的题目
     Search_Replace_Question(){
 
+        this.Extra_Keyword = LRStrip(this.Extra_Keyword);
+
         this.Question_Loading = true;
         this.Replace_Question_List = []; 
 
@@ -1220,7 +1234,7 @@ export default {
         }
 
         var data = JSON.stringify({
-            "content": this.Combine_Replace_Question_Info.stem.substring(0, 30),
+            "content": this.Extra_Keyword.length > 0 ? this.Extra_Keyword : this.Combine_Replace_Question_Info.stem.substring(0, 30),
             "size": 5,
             "database": this.filterKPTree_Question.Database,
             "page_count": this.Page_Index,
@@ -2037,6 +2051,7 @@ export default {
       this.Replace_Question_Index = -1;
 
       this.Replace_Question_List = [];
+      this.Extra_Keyword = "";
     },
     // 返回选项标签
     Get_Option_Label(Index){
