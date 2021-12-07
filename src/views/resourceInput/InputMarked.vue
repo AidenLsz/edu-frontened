@@ -21,7 +21,7 @@
         <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; padding-top: 13px">
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>资源录入</el-breadcrumb-item>
+                <el-breadcrumb-item>{{$store.getters.systemType==2?'教学资源':'资源录入'}}</el-breadcrumb-item>
                 <el-breadcrumb-item>试题资源</el-breadcrumb-item>
             </el-breadcrumb>
         </el-row>
