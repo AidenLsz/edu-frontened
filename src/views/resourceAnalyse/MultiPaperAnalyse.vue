@@ -21,7 +21,7 @@
       <el-col>
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>分析</el-breadcrumb-item>
+          <el-breadcrumb-item>{{$store.getters.systemType==2?'智能':''}}分析</el-breadcrumb-item>
           <el-breadcrumb-item>多卷分析</el-breadcrumb-item>
           <el-breadcrumb-item v-if="chosen_paper_List.length > 0"
             >分析报告</el-breadcrumb-item
