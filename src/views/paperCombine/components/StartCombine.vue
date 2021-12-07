@@ -443,6 +443,18 @@
                 </el-row>
             </el-col>
         </el-row>
+        <el-row
+            v-if="Replace_Question_List.length != 0"
+            id="Page_Seg"
+            style="padding-top: 20px; padding-bottom: 20px; background: transparent">
+            <el-pagination
+                @current-change="Page_Index_Change"
+                :current-page.sync="Page_Index"
+                :page-size="5"
+                layout="total, prev, pager, next"
+                :total="25">
+            </el-pagination>
+        </el-row>
     </el-dialog>
       <el-row>
         <el-col :span="5">
@@ -1132,7 +1144,8 @@ export default {
           label: 'label'
       },
       // 难度筛选列表
-      Difficulty_List: ['全部', '容易', '较易', '中等', '较难', '困难', "自定义"]
+      Difficulty_List: ['全部', '容易', '较易', '中等', '较难', '困难', "自定义"],
+      Page_Index: 1
     }
   },
   watch:{
@@ -1157,6 +1170,9 @@ export default {
     this.Init_Database_List();
   },
   methods: {
+    Page_Index_Change(){
+      this.Search_Replace_Question();
+    },
     // 更新数据库选择情况
     database_Change(Keyword, Database){
         let Index = this.filterKPTree_Question.Database.indexOf(Database)
@@ -1207,7 +1223,7 @@ export default {
             "content": this.Combine_Replace_Question_Info.stem.substring(0, 30),
             "size": 5,
             "database": this.filterKPTree_Question.Database,
-            "page_count": 1,
+            "page_count": this.Page_Index,
             "subject": [this.Subject],
             "period": [this.Period],
             "difficulty": this.filterKPTree_Question.Difficulty_Range,
