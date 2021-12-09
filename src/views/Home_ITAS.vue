@@ -182,7 +182,7 @@
                   justify="start"
                   class="Home_Area_Left_Center" 
                   style="word-break: break-all; text-align: left; font-size: 20px; height: 64px; line-height: 32px; color: #595959">
-                  深层次、多维度分析处理海量教育资源，智能化、个性化资源管理、组织、查询、分析服务
+                  深层次、多维度分析处理海量教育资源，智能化、个性化资源管理、组织、查询、分析功能，为教师提供智能化教学服务
                 </el-row>
                 <el-row type="flex" justify="start">
                   <div class="All_Button Start_Analysis_Button" @click="register_show" style="color: white; background: #3E89E0">
@@ -464,7 +464,7 @@
               justify="start"
               class="Home_Area_Left_Center" 
               style="word-break: break-all; text-align: left; font-size: 20px; line-height: 32px; color: #595959; margin-top: 20px;">
-              深层次、多维度分析处理海量教育资源，智能化、个性化资源管理、组织、查询、分析服务
+              深层次、多维度分析处理海量教育资源，智能化、个性化资源管理、组织、查询、分析功能，为教师提供智能化教学服务
             </el-row>
             <el-row type="flex" justify="start" style="margin: 0; padding: 0;">
               <div class="Home_Area_Right_Block" style="margin-top: 48px; margin-right: 20px;">
