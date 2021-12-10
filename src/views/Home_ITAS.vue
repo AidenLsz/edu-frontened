@@ -297,14 +297,14 @@
                   <div 
                     class="All_Button Start_Analysis_Button" 
                     style="background: white; width: 144px; padding-left: 16px"
-                    @click="Route_Trans('/exercise')">
-                    试题检索<i class="el-icon-right" style="margin-left: 4px;"></i>
+                    @click="Route_Trans('/inputMarked')">
+                    试题录入<i class="el-icon-right" style="margin-left: 4px;"></i>
                   </div>
                   <div 
                     class="All_Button Start_Analysis_Button" 
                     style="background: white; margin-left: 16px; width: 144px; padding-left: 16px"
-                    @click="Route_Trans('/searchPaper')">
-                    试卷检索<i class="el-icon-right" style="margin-left: 4px;"></i>
+                    @click="Route_Trans('/inputPaper')">
+                    试卷录入<i class="el-icon-right" style="margin-left: 4px;"></i>
                   </div>
                 </el-row>
               </el-col>
@@ -438,7 +438,7 @@
                   <div class="Dot"></div>试卷综合分析
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 44px;">
-                  <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Analyse_Switch_Dialog = true">
+                  <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Analyse_Paper = true">
                     开始分析<i class="el-icon-right" style="margin-left: 10px;"></i>
                   </div>
                 </el-row>
@@ -574,14 +574,14 @@
               <div 
                 class="All_Button Start_Analysis_Button" 
                 style="background: white; width: 144px; padding-left: 16px"
-                @click="Route_Trans('/exercise')">
-                试题检索<i class="el-icon-right" style="margin-left: 4px;"></i>
+                @click="Route_Trans('/inputMarked')">
+                试题录入<i class="el-icon-right" style="margin-left: 4px;"></i>
               </div>
               <div 
                 class="All_Button Start_Analysis_Button" 
                 style="background: white; margin-left: 16px; width: 144px; padding-left: 16px"
-                @click="Route_Trans('/searchPaper')">
-                试卷检索<i class="el-icon-right" style="margin-left: 4px;"></i>
+                @click="Route_Trans('/inputPaper')">
+                试卷录入<i class="el-icon-right" style="margin-left: 4px;"></i>
               </div>
             </el-row>
           </div>
@@ -702,7 +702,7 @@
 
                 </div>
                 <el-row type="flex" justify="start" style="margin-top: 44px;">
-                  <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Analyse_Switch_Dialog = true">
+                  <div class="All_Button Start_Analysis_Button" style="width: 144px" @click="Analyse_Paper = true">
                     开始分析<i class="el-icon-right" style="margin-left: 10px;"></i>
                   </div>
                 </el-row>
