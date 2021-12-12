@@ -1,8 +1,8 @@
 <template>
   <div 
     style="padding-top: 10px; padding-left: 5vw; padding-right: 5vw"
-    v-loading="File_Uploading"
-    element-loading-text="加载中，请等待..."
+    v-loading="File_Uploading || Analysing"
+    :element-loading-text="File_Uploading ? '加载中，请等待...' : '分析中...'"
     element-loading-spinner="el-icon-loading">
     <div id="Top_Nav" class="Top_Nav">
 
@@ -1946,7 +1946,9 @@ export default {
       // 标记切分点的变量
       Paper_Divider_Index: -1,
       // 是否正在等待文件切分完成
-      File_Uploading: false
+      File_Uploading: false,
+      // 是否正在分析
+      Analysing: false
     };
   },
   mounted(){
@@ -3263,7 +3265,8 @@ export default {
         return "(" + Index + ")"
       },
       Submit(){
-
+        
+        this.Analysing = true;
         this.Title = this.Title.replace(/^\s*|\s*$/g,"");
         if(this.Title == ""){
           this.$message.error("尚未填写试卷标题或仅有空格，请重新填写。")
@@ -3367,6 +3370,8 @@ export default {
           this.$message.error("服务器忙碌，请稍后再试...")
           this.waiting = false;
           this.waiting_text = ""
+        }).finally(()=>{
+          this.Analysing = false;
         })
         
       },
