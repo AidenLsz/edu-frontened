@@ -1,6 +1,7 @@
 <template>
   <div style="width: 90vw; margin-left: 5vw; padding-top: 60px;">
     <!-- 地址框 -->
+    <div id="Top_Nav" class="Top_Nav"></div>
     <el-row justify="start" type="flex">
       <el-col :span="7">
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -358,10 +359,18 @@ export default {
     }
   },
   mounted() {
+    this.ToTop();
     this.getBaseInfo()
     this.getGroups()
   },
   methods: {
+    ToTop() {
+      document.getElementById("Top_Nav").scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+    },
     selectGroupId(groupid){
       this.groupid=groupid
     },
@@ -510,5 +519,12 @@ export default {
   text-align:right;
   margin-right: 100px;
   margin-bottom: 15px;
+}
+.Top_Nav {
+  position: relative;
+  top: -90px;
+  width: 10px;
+  height: 10px;
+  background: transparent;
 }
 </style>

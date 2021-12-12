@@ -166,7 +166,7 @@
                     <router-link
                       :to="rootPath+'inputMarked'"
                       :underline="false"
-                      @click.native="ToTop"> 
+                      > 
                       <el-menu-item index="2-1">
                         <span style="color: black">试题录入</span>
                       </el-menu-item>
@@ -174,7 +174,7 @@
                     <router-link
                       :to="rootPath+'inputPaper'"
                       :underline="false"
-                      @click.native="ToTop"> 
+                      > 
                       <el-menu-item index="2-2">
                         <span style="color: black">试卷录入</span>
                       </el-menu-item>
@@ -182,7 +182,7 @@
                     <router-link
                       :to="rootPath+'manage/dashboard'"
                       :underline="false"
-                      @click.native="ToTop">
+                      >
                       <el-menu-item index="2-3">
                         <span style="color: black">我的资源</span>
                       </el-menu-item>
