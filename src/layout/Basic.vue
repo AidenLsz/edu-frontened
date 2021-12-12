@@ -125,7 +125,8 @@
         </el-col>
       </el-row>
     </el-dialog>
-    <login ref="login" @register_show="register_show" />
+    <login ref="login" @register_show="register_show" @forget_pass_show="forget_pass_show"/>
+    <forget-pass ref="forget_pass" @forget_pass_show="forget_pass_show" />
     <register ref="register" />
     <!-- 当屏幕过窄的时候显示的导航栏抽屉 -->
     <el-drawer
@@ -146,9 +147,9 @@
         <!-- 功能导航栏 -->
         <el-row type="flex" justify="start">
           <el-col>
-            <el-row 
-              type="flex" 
-              justify="start" 
+            <el-row
+              type="flex"
+              justify="start"
               style="cursor: pointer"
               @click.native="Expand_Navbar_Drawer_Part == '功能' ? Expand_Navbar_Drawer_Part = '' : Expand_Navbar_Drawer_Part = '功能'">
               <el-col :span="12">
@@ -160,8 +161,8 @@
               </el-col>
               <el-col :span="12">
                 <el-row type="flex" justify="end" class="Narrow_Navbar_Item">
-                  <i 
-                    :class="Expand_Navbar_Drawer_Part == '功能' ? 'el-icon-arrow-up' : 'el-icon-arrow-down' " 
+                  <i
+                    :class="Expand_Navbar_Drawer_Part == '功能' ? 'el-icon-arrow-up' : 'el-icon-arrow-down' "
                     style="height: 80px; line-height: 80px; margin-top: -1px;"></i>
                 </el-row>
               </el-col>
@@ -200,16 +201,16 @@
                   <div align="left" class="Navbar_Drawer_Sub">
                     <span style="color: Gainsboro">学习资源</span>
                   </div>
-                  <div 
-                    align="left" 
+                  <div
+                    align="left"
                     class="Navbar_Drawer_Sub"
                     style="cursor: pointer"
                     @click="QuestionAnalyseSwitch()">
                     <span style="color: black">试题资源</span>
                   </div>
-                  <div 
+                  <div
                     align="left"
-                    @click="PaperAnalyseSwitch()" 
+                    @click="PaperAnalyseSwitch()"
                     style="cursor: pointer"
                     class="Navbar_Drawer_Sub">
                       <span style="color: black">试卷资源</span>
@@ -293,7 +294,7 @@
     </el-drawer>
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <!-- <el-header style="height: 80px; background: transparent">
-      
+
     </el-header> -->
     <!-- <basic-header/> -->
     <el-main style="overflow: auto">
@@ -327,14 +328,14 @@
                   >首页</el-button
                 >
               </div>
-              <div 
-                v-else 
+              <div
+                v-else
                 class="NarbarItem">
                 <el-button type="text" @click="goToMainPage" class="navbar"
                   >首页</el-button
                 >
               </div>
-              <div 
+              <div
                 class="NarbarItem"
                 style="width: 100px;">
                 <el-menu
@@ -426,7 +427,7 @@
 
               </div>
 
-              <div 
+              <div
                 style="width: 100px;"
                 class="NarbarItem">
                 <el-button type="text" @click="PublicPlatform" class="navbar"
@@ -434,7 +435,7 @@
                 >
               </div>
 
-              <div 
+              <div
                 class="NarbarItem">
                 <el-button type="text" @click="show_members" class="navbar"
                   >成员</el-button
@@ -472,14 +473,14 @@
                   </el-dropdown>
                 </el-row>
               </div>
-              <div 
+              <div
                 class="NarbarItem"
                 v-else>
                 <el-button type="text" @click="login_show" class="navbar"
                   >登录</el-button
                 >
               </div>
-              <div 
+              <div
                 class="NarbarItem">
                 <el-button type="text" @click="register_show" class="navbar"
                   >注册</el-button
@@ -523,6 +524,7 @@
 // import $ from "jquery";
 import BasicFooter from "@/layout/components/footer.vue";
 import login from "@/layout/components/login.vue";
+import forgetPass from "@/layout/components/forgetPass.vue";
 import register from "@/layout/components/register.vue";
 import { commonAjax } from "@/common/utils/ajax";
 // import BasicHeader from '@/layout/header.vue'
@@ -534,6 +536,7 @@ export default {
     BasicFooter,
     login,
     register,
+    forgetPass
     // BasicHeader,
   },
   data() {
@@ -561,7 +564,7 @@ export default {
     this.To_Top();
   },
   watch:{
-    
+
   },
   updated() {
     var user = sessionStorage.getItem("user");
@@ -637,7 +640,7 @@ export default {
           path: "/paperAnalyseInput",
         });
         this.PaperAnalyseSwitchFlag = false;
-      } else 
+      } else
       if (index == 1) {
         this.$router.push({
           path: "/searchPaper",
@@ -649,7 +652,7 @@ export default {
           path: "/multipaperanalyse",
         });
         this.PaperAnalyseSwitchFlag = false;
-      } 
+      }
     },
     // 跳转至试卷分析的不同位置的对话框
     PaperAnalyseSwitch() {
@@ -698,6 +701,10 @@ export default {
     login_show() {
       this.$refs.login.show();
       this.$refs.register.hide();
+    },
+    forget_pass_show(){
+      this.$refs.login.hide();
+      this.$refs.forget_pass.show();
     },
     register_show() {
       this.$refs.login.hide();
@@ -1026,15 +1033,15 @@ export default {
 }
 
 .Narrow_Navbar_Item{
-  width: 100%; 
-  border-top: 1px solid #ccc; 
-  min-height: 80px; 
+  width: 100%;
+  border-top: 1px solid #ccc;
+  min-height: 80px;
   line-height: 80px;
   font-size: 18px;
 }
 
 .Narrow_Navbar_Button{
-  font-size: 18px; 
+  font-size: 18px;
   color: black;
   transition: 200ms;
 }

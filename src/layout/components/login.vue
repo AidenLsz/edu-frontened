@@ -58,9 +58,9 @@
           <el-col :span="8">
             <el-button type="primary" style="width: 8vw" round @click="login">登录</el-button>
           </el-col>
-          <!-- <el-col :span="6" :offset="1">
-            <el-button type="text" style="color: #aaa">忘记密码？</el-button>
-          </el-col> -->
+          <el-col :span="6" :offset="1">
+            <el-button type="text" style="color: #aaa" @click="forget_pass">忘记密码？</el-button>
+          </el-col>
           <el-col v-if="isLuna" :span="6" :offset="3">
             <el-row type="flex" justify="end" >
               <el-button type="text" @click="register_show">注册新用户</el-button>
@@ -113,6 +113,9 @@ export default {
     register_show(){
       this.$emit('register_show');
     },
+    forget_pass(){
+      this.$emit('forget_pass_show');
+    },
     login() {
       if(!this.account||!this.password){
         alert("用户名和密码不能为空");
@@ -145,8 +148,8 @@ export default {
         })
 
 
-      }).catch((err)=>{
-        if(err&&err.response&&err.response.status==401){
+      }).catch((res)=>{
+        if(res.status==401){
           this.$message.error('用户名或密码不正确！')
         }else {
           this.$message.error('网络或服务器发生错误！')
