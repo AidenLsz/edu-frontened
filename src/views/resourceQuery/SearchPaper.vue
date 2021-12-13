@@ -799,25 +799,8 @@ export default {
         "period": this.Period_Type
       })
 
-      // param.append("data", data);
       param.data=data
 
-      // this.$http
-      // .post(this.backendIP + "/api/search", param, config, {
-      //   emulateJSON: true
-      // })
-      // .then(function(data) {
-      //   this.loading = false;
-      //   this.Paper_ID_List = [];
-      //   this.Paper_Ques_List = [];
-      //   var quess = data.data.results;
-      //   for(var i = 0; i < quess.length; i++){
-      //     this.Paper_Ques_List.push(quess[i])
-      //     this.Paper_ID_List.push(false);
-      //   }
-      //   this.Total_Count = data.data.totalLength
-      //
-      // });
       commonAjax(this.backendIP+'/api/search_paper',param)
       .then((data)=>{
         this.loading = false;

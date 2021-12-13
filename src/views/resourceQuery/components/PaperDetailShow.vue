@@ -1,5 +1,18 @@
 <template>
+    
   <div v-if="Paper_Json.status != 'FAIL'" style="min-height: 73.5vh">
+      <el-dialog
+        :visible.sync="Question_Analyse_Dialog"
+        width="90%"
+        :modal-append-to-body="false"
+        :close-on-click-modal="true"
+        :key="'Question_Analyse_' + Refresh"
+        style="">
+        <template slot="title"></template>
+        <el-row style="margin: 0px;">
+            <QuestionAnalyse :Ques="Question_Analyse_Info"></QuestionAnalyse>
+        </el-row>
+    </el-dialog>
       <el-row v-for="(Sub_Ques, Sub_Index) in Paper_Json.sub_question" :key="Sub_Ques.id" style="margin: 30px 0px">
             <el-row type="flex" justify="start" style="margin: 0px 16.5vw 10px 16.5vw">
                 <el-col :span="20" style="text-align: left">
@@ -7,7 +20,7 @@
                 </el-col>
             </el-row>
             <el-row type="flex" justify="start" style="margin: 0px 16.5vw 10px 16.5vw">
-                <PaperAnalysePQRoot :PackedQues="Sub_Ques" :Index="Sub_Index" style="width: 100%"></PaperAnalysePQRoot>
+                <PaperAnalysePQRoot @Report="Show_Report" :PackedQues="Sub_Ques" :Index="Sub_Index" style="width: 100%"></PaperAnalysePQRoot>
             </el-row>
         </el-row>
   </div>
@@ -20,13 +33,17 @@
 <script>
 
 import PaperAnalysePQRoot from "./../../resourceAnalyse/components/PaperAnalysePQRoot.vue"
+import QuestionAnalyse from '@/views/resourceAnalyse/QuestionAnalyse'
 
 export default {
   name: 'PaperDetailShow',
-  components: { PaperAnalysePQRoot },
+  components: { PaperAnalysePQRoot, QuestionAnalyse },
   data() {
     return {
-        Paper_Json: this.PJ
+        Paper_Json: this.PJ,
+        Question_Analyse_Dialog: false,
+        Question_Analyse_Info: {},
+        Refresh: false
     }
   },
   props: {
@@ -48,6 +65,11 @@ export default {
       }
   },
   methods: {
+        Show_Report(val){
+            this.Question_Analyse_Info = JSON.parse(val);
+            this.Refresh = !this.Refresh;
+            this.Question_Analyse_Dialog = true;
+        },
         // 调整对话框下显示的数据的序号
         Get_Question_Bundle_Index(Bundle_Index){
             var Char_List = ["一","二","三","四","五","六","七","八","九"];
