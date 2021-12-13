@@ -114,7 +114,7 @@
           </el-form-item> -->
           <el-form-item label="" label-width="0px" prop="emailCode" style="margin-bottom: 15px">
             <el-col :span="15">
-              <el-input type="text" maxlength="6" suffix-icon="el-icon-lock" placeholder="请输入邮箱验证码" v-model="ruleForm.emailCode"/>
+              <el-input type="text" maxlength="8" suffix-icon="el-icon-lock" placeholder="请输入邮箱验证码" v-model="ruleForm.emailCode"/>
             </el-col>
             <el-col :span="8" :offset="1">
               <el-row type="flex" justify="end" >
@@ -160,6 +160,7 @@ import vueImgVerify from "@/common/components/vue-img-verify.vue";
 import axios from 'axios'
 import {commonAjax} from "@/common/utils/ajax";
 import {Message } from 'element-ui'
+import md5 from 'js-md5';
 export default {
   components: { vueImgVerify },
   data(){
@@ -197,7 +198,8 @@ export default {
     //   }
     // }
     var validateEmailCode =(rule,value,callback) =>{
-      if (value !== this.emailCodeOrigin) {
+      console.log('md5', md5(value));
+      if (md5(value) !== this.emailCodeOrigin) {
         callback(new Error('邮箱验证码错误！'));
       }else{
         callback()
@@ -221,6 +223,8 @@ export default {
       // 用户政策和隐私协议
       UserAgreement: false,
       PrivacyPolicy: false,
+      // UserAgreement: true,
+      // PrivacyPolicy: true,
       // 对应的检测
       UserAgreementTracer: "",
       PrivacyPolicyTracer: "",
@@ -233,18 +237,18 @@ export default {
       valiBtn:'获取验证码',
       formName:'registerForm',
       getPhoneCodeUrl:'https://send-message-service-166-production.env.bdaa.pro/v1',
-      // sendEmailCodeUrl:'https://reg-email-288-review-master-8dyme2.env.bdaa.pro/v1',
-      // sendEmailCodeUrl:'https://reg-email-287-review-master-8dyme2.env.bdaa.pro/v1',
-      sendEmailCodeUrl:'https://reg-email-288-production.env.bdaa.pro/v1',
-      // sendEmailCodeUrl:'http://localhost:5050',
       ruleForm: {
         username: '',
         password: '',
         email: '',
         phone: '',
         inviteCode:'',
+        // username: 'yutingh',
+        // password: 'hyt123456',
+        // email: 'yutingh@mail.ustc.edu.cn',
+        // phone: '19916935265',
+        // inviteCode:'luna',
         type:'user'
-        // phone: '19916935265'
       },
       rules: {
         username:[
@@ -316,8 +320,8 @@ export default {
   mounted(){
     window.localStorage.removeItem("UserAgreement");
     window.localStorage.removeItem("PrivacyPolicy");
-    this.phoneCodeOrigin = this.getRandomCode(4)
-    this.emailCodeOrigin = this.getRandomCode(6)
+    // this.phoneCodeOrigin = this.getRandomCode(4)
+    // this.emailCodeOrigin = this.getRandomCode(6)
   },
   methods:{
     // 用户协议
@@ -360,26 +364,15 @@ export default {
       })
       if (validateList.every((err) => err === '')) {
         this.tackBtn();   //验证码倒数60秒
-        this.emailCodeOrigin=this.getRandomCode(6)
-        let date = new Date();
-        let fd =[{
-          'use_default':1,
-          'dest_mail':this.ruleForm.email,
-          // 'dest_mail':'yutingh@mail.ustc.edu.cn',
-          'subject':'[LUNA]-邮箱验证码',
-          'message':'<html><body><h1></h1>' + '<p>您好！</p>'
-          + '<p style="text-indent:2em">这里是LUNA系统，此邮件用于验证您的邮箱是否有效。</p>'
-          + '<p style="text-indent:2em">请在注册界面填入如下验证码：' + this.emailCodeOrigin
-          + '</p>' + '\n<p style="text-align:right">LUNA</p>' + '<p style="text-align:right">'
-          + date.toLocaleDateString() + '</p>' + '</body > </html > '
-        }]
-        axios.post(this.sendEmailCodeUrl,
-          JSON.stringify(fd),
-        )
-        .then( res => {
-            if (res.status==200) {
-              console.log('发送成功');
-            }
+        commonAjax(this.backendIP + "/api/send_email_code",{'dest_email':this.ruleForm.email}).then((data)=>{
+          this.emailCodeOrigin = data.code
+        }).catch((err)=>{
+          console.log(err);
+          Message({
+            message: '验证码发送失败！',
+            type: 'error',
+            duration: 5 * 1000
+          })
         })
       }
     },
@@ -440,50 +433,36 @@ export default {
         let fd={
           username:this.ruleForm.username,
           password:this.ruleForm.password,
-          // password:md5(this.ruleForm.password),
           phone:this.ruleForm.phone,
           email:this.ruleForm.email,
           type:this.ruleForm.type,
           groupname:this.ruleForm.groupname,
         }
         commonAjax(this.backendIP + "/api/register",fd).then((data)=>{
+          console.log(data);
           let userInfo={
             token:data.access_token,
             name:this.ruleForm.username,
-            // isAdmin:data.body.isAdmin,
           }
           this.$store.dispatch('user/setUserData', userInfo).then(() => {
             this.$router.go()
             this.visible = false;
           })
         }).catch((err)=>{
-          console.log('err',err);
+          let msg = '注册失败'
+          if(err.status =='403'){
+              msg = '用户名、手机号或邮箱已被注册！'
+          }else if (err.status =='401') {
+              msg = '需填写用户名、密码、手机号、用户类型！'
+          }else if(err.status =='402'){
+              msg = '需填写组织名称！'
+          }
           Message({
-            message: '该用户名或手机号已被注册！',
+            message: msg,
             type: 'error',
             duration: 5 * 1000
           })
         })
-        // this.$http
-        //   .post(
-        //     this.backendIP + "/api/register",
-        //     fd,
-        //     { emulateJSON: true }
-        //   )
-        //   .then(function(data) {
-        //     if (data.status != 200) { //eslint-disable-line
-        //       alert("注册失败");
-        //       return;
-        //     }
-        //     sessionStorage.accessToken = data.body.access_token;
-        //     sessionStorage.user = this.account_reg;
-        //     sessionStorage.isAdmin = true;
-        //     this.visible = false;
-        //     this.$router.push("/dashboard");
-        //   })
-        //   .catch(()=>{
-        //     alert('用户名或手机号已注册！');
-        //   })
       });
     },
     getimgCodeOrigin(code){
