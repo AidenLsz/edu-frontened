@@ -12,7 +12,7 @@
         <div class="Jump_Bar">
             <el-row
                 class="Jump_Item"
-                @click.native="Jump_To('Filter')">
+                @click.native="Jump_To('Top_Nav')">
                 <i class="el-icon-download" style="transform: rotate(180deg);"></i>
             </el-row>
             <el-row
