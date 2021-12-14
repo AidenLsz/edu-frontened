@@ -5,7 +5,7 @@
         :element-loading-text="Waiting_Text"
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.28)">
-        <div id="Top_Nav" class="Top_Nav">
+        <div id="Filter" class="Top_Nav">
 
     </div>
         <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
@@ -126,8 +126,7 @@
                     class="Padding_Width"
                     type="flex"
                     ref="BreadCrumb_Line"
-                    justify="start"
-                    id="Filter">
+                    justify="start">
                     <el-breadcrumb separator-class="el-icon-arrow-right">
                         <el-breadcrumb-item>
                             首页
@@ -456,7 +455,7 @@ export default {
   },
   methods: {
       To_Top(){
-          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+          document.getElementById("Filter").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
       },
       openInstructionDialog(){
             this.$refs.instruction.openDialog();
@@ -1089,8 +1088,8 @@ export default {
     width: 1000px;
     height: 1000px;
     margin-left: calc((100% - 1344px - 16px)/2);
-    left: 505px;
-    top: -51%;
+    left: 600px;
+    top: -55%;
     border-radius: 50%;
     background: linear-gradient( 180deg, rgba(#D9E9FE, 0%), rgba(#C8E0FF, 100%));
     box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.06);
@@ -1136,10 +1135,6 @@ export default {
 }
 
 .Main_Background{
-    // background: url('./NewSearchQues_Background.jpg');
-    // background-size: 100% auto;
-    // background-position: right;
-    // background-repeat: no-repeat;
     width: 100%;
     min-width: 1362px;
     padding: 0 calc((100% - 1344px - 18px)/2);
