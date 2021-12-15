@@ -2,7 +2,7 @@
 
   <!-- 忘记密码 -->
   <div class="">
-    <el-dialog :visible.sync="CheckAuthorityVisible" width="70%" style="margin-top: -13vh;">
+    <el-dialog :visible.sync="CheckAuthorityVisible" width="70%">
       <el-row>
         <el-col :span="10" :offset="2">
           <span style="font-weight: bold; color: #47A2FF; font-size: 24px">

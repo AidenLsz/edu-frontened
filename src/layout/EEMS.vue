@@ -54,7 +54,9 @@
       </el-col>
     </el-row>
   </el-dialog>
-  <login ref="login" />
+  <login ref="login"  @forget_pass_show="forget_pass_show"/>
+  <forget-pass ref="forget_pass" />
+  <register ref="register" />
   <el-header style="height: 70px;">
     <div id="header-sticky" class="sticky-menu">
       <el-row>
@@ -164,6 +166,8 @@
 <script>
 import BasicFooter from '@/layout/components/footer.vue'
 import login from '@/layout/components/login.vue'
+import forgetPass from "@/layout/components/forgetPass.vue";
+import register from "@/layout/components/register.vue";
 import {
   commonAjax
 } from '@/common/utils/ajax'
@@ -172,6 +176,8 @@ export default {
   components: {
     BasicFooter,
     login,
+    forgetPass,
+    register
   },
   data() {
     return {
@@ -277,6 +283,14 @@ export default {
     login_show() {
       this.$refs.login.show()
       // this.$refs.register.hide()
+    },
+    forget_pass_show(){
+      this.$refs.login.hide();
+      this.$refs.forget_pass.show();
+    },
+    register_show() {
+      this.$refs.login.hide();
+      this.$refs.register.show();
     },
     login_admin() {
       this.$router.push({

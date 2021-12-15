@@ -125,7 +125,8 @@
         </el-col>
       </el-row>
     </el-dialog>
-    <login ref="login" @register_show="register_show" />
+    <login ref="login" @register_show="register_show" @forget_pass_show="forget_pass_show()"/>
+    <forget-pass ref="forget_pass" />
     <register ref="register" />
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <el-header style="height: 70px;">
@@ -151,7 +152,7 @@
                 <el-button type="text" @click="goToMainPage" class="navbar">首页</el-button>
               </div>
               <!-- 功能分离处 -->
-              <div 
+              <div
                 align="center"
                 class="Function_Items"
                 style="padding-top: 15px; padding-left: 0; width: 120px;" >
@@ -166,7 +167,7 @@
                     <router-link
                       :to="rootPath+'inputMarked'"
                       :underline="false"
-                      > 
+                      >
                       <el-menu-item index="2-1">
                         <span style="color: black">试题录入</span>
                       </el-menu-item>
@@ -174,7 +175,7 @@
                     <router-link
                       :to="rootPath+'inputPaper'"
                       :underline="false"
-                      > 
+                      >
                       <el-menu-item index="2-2">
                         <span style="color: black">试卷录入</span>
                       </el-menu-item>
@@ -189,22 +190,22 @@
                     </router-link>
                   </el-submenu>
                 </el-menu>
-              </div> 
-              <div 
+              </div>
+              <div
                 align="center"
                 class="Function_Items" style="padding-top: 15px">
                 <el-button type="text" @click="composePaperSystem" class="navbar"
                 >组卷系统</el-button
                 >
-              </div> 
-              <div 
+              </div>
+              <div
                 align="center"
                 class="Function_Items" style="padding-top: 15px">
                 <el-button type="text" @click="knowledegeUnitSearch" class="navbar"
                 >知识联想</el-button
                 >
               </div>
-              <div 
+              <div
                 align="center"
                 class="Function_Items" style="padding-top: 15px">
                 <el-button type="text" @click="PaperAnalyseSwitch" class="navbar"
@@ -212,7 +213,7 @@
                 >
               </div>
 
-              <!-- <div 
+              <!-- <div
                 align="center"
                 class="Function_Items" style="padding-top: 15px; width: 120px;">
                 <el-menu
@@ -240,7 +241,7 @@
                   </el-submenu>
                 </el-menu>
               </div> -->
-              <div 
+              <div
                 align="center"
                 class="Function_Items" style="padding-top: 17px"  v-if="$store.state.user.name" >
                 <el-row>
@@ -267,14 +268,14 @@
                   </el-dropdown>
                 </el-row>
               </div>
-              <div 
+              <div
                 align="center"
                 class="Function_Items" style="padding-top: 15px" v-else>
                 <el-button type="text" @click="login_show" class="navbar"
                 >登录</el-button
                 >
               </div>
-              <div 
+              <div
                 align="center"
                 class="Function_Items" style="padding-top: 15px">
                 <el-button type="text" @click="register_show" class="navbar"
@@ -300,6 +301,7 @@
 // import $ from "jquery";
 import BasicFooter from "@/layout/components/footer.vue";
 import login from "@/layout/components/login.vue";
+import forgetPass from "@/layout/components/forgetPass.vue";
 import register from "@/layout/components/register.vue";
 import { commonAjax } from "@/common/utils/ajax";
 // import BasicHeader from '@/layout/header.vue'
@@ -311,6 +313,7 @@ export default {
     BasicFooter,
     login,
     register,
+    forgetPass
     // BasicHeader,
   },
   data() {
@@ -328,7 +331,7 @@ export default {
     rootPath() {
       console.log("@"+this.$store.getters.rootPath)
       return this.$store.getters.rootPath;
-     
+
     }
   },
   mounted() {
@@ -396,7 +399,7 @@ export default {
           path: this.rootPath + "multipaperanalyse",
         });
         this.PaperAnalyseSwitchFlag = false;
-      } 
+      }
     },
     // 跳转至试卷分析的不同位置的对话框
     PaperAnalyseSwitch() {
@@ -450,6 +453,11 @@ export default {
     login_show() {
       this.$refs.login.show();
       this.$refs.register.hide();
+    },
+    forget_pass_show(){
+      console.log('ss');
+      this.$refs.login.hide();
+      this.$refs.forget_pass.show();
     },
     register_show() {
       this.$refs.login.hide();

@@ -10,7 +10,7 @@
       </el-col>
     </el-row>
     <el-row type="flex" justify="center" style="margin-top: 30px">
-        <label style="font-size: 18px">我的试题资源管理</label>
+        <label style="font-size: 18px">我的试题</label>
     </el-row>
     <el-divider></el-divider>
     <el-row type="flex" justify="start">
@@ -223,7 +223,7 @@ export default {
         else{
           if(this.question_list[val].type == "单选题" || this.question_list[val].type == "多选题"){
             this.QuestionInfo.type = "option";
-            
+
             // 查看选择题
             return 0
           }else{
@@ -236,7 +236,7 @@ export default {
         alert("正在删除第 " + val + " 题")
       },
       Input_New_Question(){
-        alert("正要前往试题录入界面...")
+        this.$router.push({path: '/inputMarked'})
       },
       // 获取用户所具有的题库权限
       initDatabaseList(){
