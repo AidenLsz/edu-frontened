@@ -122,19 +122,33 @@
             </KnowledgePointCard>
           </div> -->
           <el-row 
-            v-for="KU_Index in (KU_Search_List.length - 1)" 
+            v-for="KU_Index in (KU_Search_List.length - (Page_Index - 1) * 5) >= 5 ? 5 : (KU_Search_List.length - (Page_Index - 1) * 5)" 
+            v-show="KU_Index + (Page_Index - 1) * 5 < KU_Search_List.length"
             :key="'Similar_' + KU_Index" 
             type="flex" 
             justify="start"
             class="KU_Point_Card">
-            <KnowledgePointCard  @Search_This_KU="Search_KU_Do" :KnowledgePoint="KU_Search_List[KU_Index]">
+            <KnowledgePointCard  
+              @Search_This_KU="Search_KU_Do" 
+              :KnowledgePoint="KU_Search_List[KU_Index + (Page_Index - 1) * 5 - 1]">
 
             </KnowledgePointCard>
           </el-row>
         </div>
       </transition>
     </el-row>
-  
+    <el-row
+        v-if="KU_Search_List.length > 0"
+        id="Page_Seg"
+        style="padding-top: 20px; padding-bottom: 20px; background: transparent">
+        <el-pagination
+            @current-change="Page_Index_Change"
+            :current-page.sync="Page_Index"
+            :page-size="5"
+            layout="total, prev, pager, next"
+            :total="KU_Search_List.length">
+        </el-pagination>
+    </el-row>
     <!-- 相关搜索
     <el-row class="ConnectSearch" v-if="similar_nodes.length" style="">
       <el-row style="margin-left: -1330px;font-size: 14px;">相关搜索</el-row>
@@ -255,6 +269,8 @@ export default {
   name: "KU",
   data() {
     return {
+      // 新内容，近似知识点翻页
+      Page_Index: 1,
       // 变化区块
       Transition_Show:false,
       activeName:"presuc",
@@ -368,10 +384,15 @@ export default {
     }
   },
   methods: {
+    Page_Index_Change(){
+      document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+      this.Transition_Show = true;
+    },
     To_Top(){
-          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
-      },
+      document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+    },
     Search_KU_Info(KU_Name){
+      this.Page_Index = 1;
       let Striped_Ku_Name = LRStrip(KU_Name)
       if(Striped_Ku_Name == ""){
         this.$message.info("请输入内容")
@@ -518,7 +539,7 @@ export default {
       window.scrollTo(0,0);
     },
     search(val){
-      this.Search_KU_Info(val);
+      this.submit(val);
     },
     dataSource(tab) {
       this.sour = "rjb_new";
@@ -539,6 +560,7 @@ export default {
         "https://baike.baidu.com/search/word?word=" + encodeURI(this.ku_name);
       this.loading = true;
       d3.selectAll("svg>*").remove();
+      this.Page_Index = 1;
       this.$http
         .post(
           this.backendIP + "/api/ku_v2",
@@ -551,7 +573,6 @@ export default {
           { emulateJSON: true }
         )
         .then(function(data) {
-          console.log(data)
           if (data.data.nodes === null) {
             this.loading = false;
             Message({
