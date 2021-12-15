@@ -172,14 +172,18 @@ export default {
       })
     },
     GET_IG_INFO() {
+      this.itemTypeList = []
+      this.itemTypeList.push({
+        'key': 3,
+        'val': variable.itemType[3]
+      })
+      this.itemTypeList.push({
+        'key': 4,
+        'val': variable.itemType[4]
+      })
       commonAjax(this.backendIP + '/api/get_user_ig_info', {}).then((res) => {
         this.itemGroupData = res.ig_info
-        this.itemTypeList = []
         for (let key in this.itemGroupData) {
-          this.itemTypeList.push({
-            'key': key,
-            'val': variable.itemType[key]
-          })
           this.itemGroupData[key] = this.obj2arr(this.groupData(this.itemGroupData[key]));
         }
         if (this.itemTypeList.length > 0) {
