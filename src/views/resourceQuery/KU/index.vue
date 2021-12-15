@@ -106,11 +106,14 @@
       v-show="Search_KU"
       type="flex" 
       justify="start" 
-      :style="'margin: 0; margin-bottom:' + Transition_Show ? ' 32px' : ' 24px'" 
+      style="margin: 0; margin-bottom: 24px" 
       class="KU_Point_Card">
       <KnowledgePointCard @Search_This_KU="Search_KU_Do" :KnowledgePoint="KU_Search_List[0]">
 
       </KnowledgePointCard>
+    </el-row>
+    <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 16px;" v-show="Transition_Show">
+      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">近似结果</label>
     </el-row>
     <el-row type="flex" justify="start" style="margin: 0;">
       <transition name="el-zoom-in-top">
@@ -123,14 +126,14 @@
           </div> -->
           <el-row 
             v-for="KU_Index in (KU_Search_List.length - (Page_Index - 1) * 5) >= 5 ? 5 : (KU_Search_List.length - (Page_Index - 1) * 5)" 
-            v-show="KU_Index + (Page_Index - 1) * 5 < KU_Search_List.length"
+            v-show="KU_Index + (Page_Index - 1) * 5 - 1< KU_Search_List.length"
             :key="'Similar_' + KU_Index" 
             type="flex" 
             justify="start"
             class="KU_Point_Card">
             <KnowledgePointCard  
               @Search_This_KU="Search_KU_Do" 
-              :KnowledgePoint="KU_Search_List[KU_Index + (Page_Index - 1) * 5 - 1]">
+              :KnowledgePoint="KU_Search_List[KU_Index + (Page_Index - 1) * 5]">
 
             </KnowledgePointCard>
           </el-row>
@@ -138,7 +141,7 @@
       </transition>
     </el-row>
     <el-row
-        v-if="KU_Search_List.length > 0"
+        v-if="KU_Search_List.length > 0 && Transition_Show"
         id="Page_Seg"
         style="padding-top: 20px; padding-bottom: 20px; background: transparent">
         <el-pagination
@@ -146,7 +149,7 @@
             :current-page.sync="Page_Index"
             :page-size="5"
             layout="total, prev, pager, next"
-            :total="KU_Search_List.length">
+            :total="50">
         </el-pagination>
     </el-row>
     <!-- 相关搜索
