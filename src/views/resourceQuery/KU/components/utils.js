@@ -48,8 +48,8 @@ export function addTooltip(svgContainer, circle) {
       .style("text-indent", "2em")
 
     Tooltip.html('<p>' + content + '</p>')
-      .style("left", d3.event.offsetX + 25 + "px")
-      .style("top", d3.event.offsetY + "px")
+      .style("left", d3.event.layerX + 50 + "px")
+      .style("top", d3.event.layerY + "px")
     if (!screenfull.isFullscreen) {
       Tooltip
         .style("width", "150px")
