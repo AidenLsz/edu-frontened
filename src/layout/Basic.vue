@@ -126,7 +126,7 @@
       </el-row>
     </el-dialog>
     <login ref="login" @register_show="register_show" @forget_pass_show="forget_pass_show"/>
-    <forget-pass ref="forget_pass" @forget_pass_show="forget_pass_show" />
+    <forget-pass ref="forget_pass" />
     <register ref="register" />
     <!-- 当屏幕过窄的时候显示的导航栏抽屉 -->
     <el-drawer
