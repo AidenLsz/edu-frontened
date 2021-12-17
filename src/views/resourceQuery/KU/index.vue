@@ -96,10 +96,10 @@
 
     <!-- 搜索结果行 -->
     <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 8px;" v-show="Search_KU">
-      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">搜索结果</label>
+      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">相关度最高的结果</label>
       <el-button type="text" @click="Transition_Show = !Transition_Show" style="color: #4A4B56">
         <i class="el-icon-caret-right" :style="Get_Rotate_Triangle(Transition_Show)"></i>
-        <label style="cursor: pointer">{{Transition_Show ? "仅看首个" : "查看更多"}}</label>
+        <label style="cursor: pointer">{{Transition_Show ? "仅看相关度最高的结果" : "查看更多结果"}}</label>
       </el-button>
     </el-row>
     <el-row 
@@ -113,7 +113,7 @@
       </KnowledgePointCard>
     </el-row>
     <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 16px;" v-show="Transition_Show">
-      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">近似结果</label>
+      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">更多结果</label>
     </el-row>
     <el-row type="flex" justify="start" style="margin: 0;">
       <transition name="el-zoom-in-top">

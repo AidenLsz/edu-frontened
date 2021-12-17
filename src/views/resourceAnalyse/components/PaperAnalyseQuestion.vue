@@ -19,7 +19,10 @@
             </el-row>
           </el-col>
           <el-col :span="21">
-            <Mathdown :content="Question.answer" :name="Get_Name('Answer')"></Mathdown>
+            <el-row type="flex" justify="start">
+              <span v-show="!$store.state.user.name" class="Answer_Before_Login">【登录后可见】</span>
+              <Mathdown v-show="$store.state.user.name" :content="Question.answer" :name="Get_Name('Answer')"></Mathdown>
+            </el-row>
           </el-col>
         </el-row>
         <el-row type="flex" justify="start" style="margin: 20px 0px" v-if="Question.analyse != ''">
@@ -83,3 +86,8 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.Answer_Before_Login{
+    color: #999
+}
+</style>

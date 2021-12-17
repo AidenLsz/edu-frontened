@@ -19,8 +19,9 @@
         v-if="Expand" 
         style="text-align: left; padding-left: 40px; line-height:30px; padding-top: 20px;">
         <el-col>
-            <span style="margin-bottom: 10px; display: block">答案：</span>
-            <Mathdown :content="Question.answer" :name="'Q_' + Question_Index + '_Answer'"></Mathdown>
+            <span :style="'margin-bottom: 10px; display: ' + $store.state.user.name ? ' block': ' inline-block'">答案：</span>
+            <span v-show="!$store.state.user.name" class="Answer_Before_Login">【登录后可见】</span>
+            <Mathdown v-show="$store.state.user.name" :content="Question.answer" :name="'Q_' + Question_Index + '_Answer'"></Mathdown>
         </el-col>
     </el-row>
     <el-row 
@@ -174,5 +175,9 @@ export default {
 
 .Search_Button:hover{
     background: #4484B8;
+}
+
+.Answer_Before_Login{
+    color: #999
 }
 </style>
