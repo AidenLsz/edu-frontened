@@ -27,8 +27,12 @@
     <el-row justify="start" type="flex">
       <el-col>
         <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: $store.getters.systemType==2?'/itas':'/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>{{$store.getters.systemType==2?'智能':''}}分析</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item
+            >{{
+              $store.getters.systemType == 2 ? "智能" : ""
+            }}分析</el-breadcrumb-item
+          >
           <el-breadcrumb-item>多卷分析</el-breadcrumb-item>
           <el-breadcrumb-item v-if="chosen_paper_List.length > 0"
             >分析报告</el-breadcrumb-item
@@ -42,7 +46,7 @@
       </div>
     </el-row> -->
 
-    <el-row
+    <!-- <el-row
       v-if="chosen_paper_List.length == 0"
       type="flex"
       justify="start"
@@ -59,7 +63,7 @@
           <el-checkbox label="难度变化"></el-checkbox>
         </el-checkbox-group>
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <el-row
       v-if="chosen_paper_List.length == 0"
@@ -83,69 +87,120 @@
       <SearchPaper @Close_Paper_Base="CPB"></SearchPaper>
     </el-dialog>
 
-    <el-row
-      v-if="chosen_paper_List.length > 0"
-      justify="center"
-      style="margin-bottom: 40px"
-    >
-      <h1>多卷分析报告</h1>
-    </el-row>
-    <el-row v-if="chosen_paper_List.length > 0" justify="start">
-      <p><b>所选试卷</b></p>
-      <p
-        v-for="i in chosen_paper_List.length"
-        :key="'paper' + i"
-        style="line-height: 20px"
-      >
-        {{ i.toString() + "." }}&nbsp;&nbsp;&nbsp;&nbsp;{{
-          chosen_paper_List[i - 1].title
-        }}
-      </p>
-    </el-row>
+    <div v-show="analyse_finished">
+      <el-row justify="center" style="margin-bottom: 40px">
+        <h1>多卷分析报告</h1>
+      </el-row>
+      <el-row justify="start">
+        <p><b>所选试卷</b></p>
+        <p
+          v-for="i in chosen_paper_List.length"
+          :key="'paper' + i"
+          style="line-height: 20px"
+        >
+          {{ i.toString() + "." }}&nbsp;&nbsp;&nbsp;&nbsp;{{
+            chosen_paper_List[i - 1].title
+          }}
+        </p>
+      </el-row>
+      <el-divider></el-divider>
 
-    <el-divider v-if="show_word_cnt_Bar"></el-divider>
-    <!-- <el-row justify="center">居中</el-row> -->
-    <el-row class="description" v-show="show_word_cnt_Bar" justify="center">
-      所选各试卷的字数、图片数和公式数的统计结果如下图所示。可以看到虽然相较于其他学科，数学试卷中的文字信息相对较少，各卷平均字数仅为
-      {{ word_cnt_aver }}
-      ，但是数学可以通过公式与图片来进行补充。总的来看，试卷中的图片数量基本稳定在每卷
-      {{ figure_cnt_aver }} 张图，有少量上下浮动，而每卷平均有
-      {{ equation_cnt_aver }}
-      个以上的公式。不同模式的信息载体能更为全面地考查学生获取和整合信息的能力，要求学生联系并充分利用公式、图像与文本之间的关系。
-    </el-row>
-    <el-row v-show="show_word_cnt_Bar" type="flex" justify="center">
-      <div id="word_cnt_Bar" class="word_cnt_Bar"></div>
-    </el-row>
-
-    <el-divider v-if="show_Word_Cloud"></el-divider>
-    <el-row class="description" v-show="show_Word_Cloud" justify="center">
-      对所选各试卷使用关键词抽取技术提取所含关键字，所得结果如下图所示。可以看到，各试卷中出现频率较高的关键词往往各不相同，例如
-      {{ title0 }} 中的 "{{ keyword_cache[0] }}" 和 "{{ keyword_cache[1] }}" ，
-      {{ title1 }} 中的 "{{ keyword_cache[2] }}" 和 "{{ keyword_cache[3] }}"
-      。总的来看，这 {{ paper_num }} 张试卷中出现总频率最高的 TOP10 关键词为
-      <span v-for="i in 10" :key="'keyword' + i">
-        "{{ keyword_total[i - 1] }}"
-      </span>
-      。
-    </el-row>
-    <el-row
-      v-show="show_Word_Cloud"
-      type="flex"
-      justify="center"
-      style="margin-top: 40px"
-    >
-      <p
-        style="
-          font-size: 16px;
-          font-family: Microsoft YaHei, sans-serif;
-          font-weight: 900;
-        "
+      <!-- 展开栏 -->
+      <el-row
+        type="flex"
+        justify="start"
+        v-on:click.native="show_word_cnt_Bar = !show_word_cnt_Bar"
+        class="Part_Row_Style"
       >
-        关键词比较
-      </p>
-    </el-row>
-    <el-row v-show="checkList.indexOf('关键词') > -1" justify="center">
-      <!-- <el-row v-show="show_Word_Cloud" justify="center"> -->
+        <el-col :span="14" style="text-align: left; line-height: 30px">
+          <el-row type="flex" justify="start">
+            <i
+              class="el-icon-arrow-up"
+              v-if="show_word_cnt_Bar"
+              style="font-size: 24px; line-height: 30px; margin-right: 20px"
+            ></i>
+            <i
+              class="el-icon-arrow-down"
+              v-else
+              style="font-size: 24px; line-height: 30px; margin-right: 20px"
+            ></i>
+            数字属性比较
+          </el-row>
+        </el-col>
+      </el-row>
+      <!-- 文字描述 -->
+      <el-row class="description" v-show="show_word_cnt_Bar" justify="center">
+        所选各试卷的字数、图片数和公式数的统计结果如下图所示。可以看到虽然相较于其他学科，数学试卷中的文字信息相对较少，各卷平均字数仅为
+        {{ word_cnt_aver }}
+        ，但是数学可以通过公式与图片来进行补充。总的来看，试卷中的图片数量基本稳定在每卷
+        {{ figure_cnt_aver }} 张图，有少量上下浮动，而每卷平均有
+        {{ equation_cnt_aver }}
+        个以上的公式。不同模式的信息载体能更为全面地考查学生获取和整合信息的能力，要求学生联系并充分利用公式、图像与文本之间的关系。
+      </el-row>
+      <!-- 图表 -->
+      <el-row v-show="show_word_cnt_Bar" type="flex" justify="center">
+        <div id="word_cnt_Bar" class="word_cnt_Bar"></div>
+      </el-row>
+
+      <!-- <el-divider v-if="show_Word_Cloud"></el-divider> -->
+      <!-- 展开栏 -->
+      <el-row
+        type="flex"
+        justify="start"
+        v-on:click.native="show_Word_Cloud = !show_Word_Cloud"
+        class="Part_Row_Style"
+      >
+        <el-col :span="14" style="text-align: left; line-height: 30px">
+          <el-row type="flex" justify="start">
+            <i
+              class="el-icon-arrow-up"
+              v-if="show_Word_Cloud"
+              style="font-size: 24px; line-height: 30px; margin-right: 20px"
+            ></i>
+            <i
+              class="el-icon-arrow-down"
+              v-else
+              style="font-size: 24px; line-height: 30px; margin-right: 20px"
+            ></i>
+            关键词比较
+          </el-row>
+        </el-col>
+      </el-row>
+      <!-- 文字描述 -->
+      <el-row class="description" v-show="show_Word_Cloud" justify="center">
+        对所选各试卷使用关键词抽取技术提取所含关键字，所得结果如下图所示。可以看到，各试卷中出现频率较高的关键词往往各不相同，例如
+        {{ title0 }} 中的 "{{ keyword_cache[0] }}" 和 "{{ keyword_cache[1] }}"
+        ， {{ title1 }} 中的 "{{ keyword_cache[2] }}" 和 "{{
+          keyword_cache[3]
+        }}" 。总的来看，这 {{ paper_num }} 张试卷中出现总频率最高的 TOP10
+        关键词为
+        <span v-for="i in 10" :key="'keyword' + i">
+          "{{ keyword_total[i - 1] }}"
+        </span>
+        。
+      </el-row>
+      <!-- 标题 -->
+      <el-row
+        v-show="show_Word_Cloud"
+        type="flex"
+        justify="center"
+        style="margin-top: 40px"
+      >
+        <p
+          style="
+            font-size: 16px;
+            font-family: Microsoft YaHei, sans-serif;
+            font-weight: 900;
+          "
+        >
+          关键词比较
+        </p>
+      </el-row>
+    </div>
+    <!-- 图表 -->
+    <!-- 一个非常垃圾的解决方案：由于js2wordcloud要求在渲染画布之前画布必须显式的具有size，而不能是由hidden转为show，因此需要把词云
+        主体部分从analyse_finished中拨出来，勉强可以做到展开和收缩的效果 -->
+    <el-row v-show="show_Word_Cloud" justify="center">
       <div
         v-for="i in chosen_paper_List.length"
         :key="'Word_Cloud_' + i"
@@ -155,69 +210,124 @@
         <p v-show="show_Word_Cloud">{{ chosen_paper_List[i - 1].title }}</p>
       </div>
     </el-row>
-
-    <!-- <el-row
+    <div v-show="analyse_finished">
+      <!-- <el-row
       v-show="show_Radar && checkList.indexOf('知识点') > -1"
       type="flex"
       justify="center"
     >
       <div id="Radar" class="word_cnt_Bar"></div>
     </el-row> -->
-    <!-- for test -->
-    <el-divider v-if="show_knowledge2score"></el-divider>
-    <el-row class="description" v-show="show_knowledge2score" justify="center">
-      所选各试卷在各一级知识点上考察分值的情况如下图所示。在所选的
-      {{ knowledge_num }} 个一级知识点中， "{{ most_welcomed_knowledgepoint }}"
-      是这 {{ paper_num }} 张试卷最爱考察的知识点，平均每张试卷有
-      {{ highest_aver_score }} 分在考察这一知识点，其次为 "{{
-        second_welcomed_knowledgepoint[0]
-      }}" "{{ second_welcomed_knowledgepoint[1] }}" "{{
-        second_welcomed_knowledgepoint[2]
-      }}" 。 {{ paper_lowest_score }} 这张试卷对于 "{{
-        lowest_score_knowledgepoint
-      }}" 这一知识点的考察最少，仅为 {{ lowest_score }} 分。
-    </el-row>
-    <el-row v-show="show_knowledge2score" type="flex" justify="center">
-      <div id="Radar" class="word_cnt_Bar"></div>
-    </el-row>
+      <!-- for test -->
+      <!-- <el-divider v-if="show_knowledge2score"></el-divider> -->
 
-    <el-divider v-if="show_difficulty_change"></el-divider>
-    <el-row class="description" v-show="show_knowledge2score" justify="start">
-      所选各试卷卷内各小题难度变化情况如下图所示。总的来看，卷内题目的难度由前至后总体呈递增趋势，中间穿插几道较难的题目，以体现试题的区分度和层次性。在所选的这
-      {{ paper_num }} 张试卷中，
-      {{ most_difficult_paper }} 这张试卷的平均难度最高，其难度为
-      {{ highest_difficulty }} ， {{ hardest_question_paper }} 这张试卷中的第
-      {{ hardest_question_num }} 小题是难度最高的一个小题，其难度为
-      {{ hardest_question_difficulty }} 。
-    </el-row>
-    <el-row v-show="show_difficulty_change" type="flex" justify="center">
-      <div
-        id="diffi_change"
-        class="diffi_change"
-        :style="'height:' + (160 * chosen_paper_List.length + 150) + 'px'"
-      ></div>
-    </el-row>
-    <!-- <el-row type="flex" justify="center">
-      <div id="test" class="word_cnt_Bar"></div>
-    </el-row> -->
-
-    <!-- <el-row v-show="show_word_cnt_Bar && checkList.indexOf('字数与图片数') > -1" type="flex" justify="center">
-      <div id="word_cnt_Bar" class="word_cnt_Bar"></div>
-    </el-row>
-
-    <el-row v-show="show_word_cnt_Bar && checkList.indexOf('字数') > -1" type="flex" justify="center">
-      <div id="word_cnt_Bar" class="word_cnt_Bar"></div>
-    </el-row> -->
-    <el-row
-      v-if="analyse_finished"
-      type="flex"
-      justify="center"
-      style="margin-bottom: 40px"
-    >
-      <el-button type="success" plain @click="Report_Download()">
-        下载分析报告</el-button
+      <!-- 展开栏 -->
+      <el-row
+        type="flex"
+        justify="start"
+        v-on:click.native="show_knowledge2score = !show_knowledge2score"
+        class="Part_Row_Style"
       >
-    </el-row>
+        <el-col :span="14" style="text-align: left; line-height: 30px">
+          <el-row type="flex" justify="start">
+            <i
+              class="el-icon-arrow-up"
+              v-if="show_knowledge2score"
+              style="font-size: 24px; line-height: 30px; margin-right: 20px"
+            ></i>
+            <i
+              class="el-icon-arrow-down"
+              v-else
+              style="font-size: 24px; line-height: 30px; margin-right: 20px"
+            ></i>
+            知识点分值比较
+          </el-row>
+        </el-col>
+      </el-row>
+      <!-- 文字描述 -->
+      <el-row
+        class="description"
+        v-show="show_knowledge2score"
+        justify="center"
+      >
+        所选各试卷在各一级知识点上考察分值的情况如下图所示。在所选的
+        {{ knowledge_num }} 个一级知识点中， "{{
+          most_welcomed_knowledgepoint
+        }}" 是这 {{ paper_num }} 张试卷最爱考察的知识点，平均每张试卷有
+        {{ highest_aver_score }} 分在考察这一知识点，其次为 "{{
+          second_welcomed_knowledgepoint[0]
+        }}" "{{ second_welcomed_knowledgepoint[1] }}" "{{
+          second_welcomed_knowledgepoint[2]
+        }}" 。 {{ paper_lowest_score }} 这张试卷对于 "{{
+          lowest_score_knowledgepoint
+        }}" 这一知识点的考察最少，仅为 {{ lowest_score }} 分。
+      </el-row>
+      <!-- 图表 -->
+      <el-row v-show="show_knowledge2score" type="flex" justify="center">
+        <div id="Radar" class="word_cnt_Bar"></div>
+      </el-row>
+
+      <!-- 展开栏 -->
+      <el-row
+        type="flex"
+        justify="start"
+        v-on:click.native="show_difficulty_change = !show_difficulty_change"
+        class="Part_Row_Style"
+      >
+        <el-col :span="14" style="text-align: left; line-height: 30px">
+          <el-row type="flex" justify="start">
+            <i
+              class="el-icon-arrow-up"
+              v-if="show_difficulty_change"
+              style="font-size: 24px; line-height: 30px; margin-right: 20px"
+            ></i>
+            <i
+              class="el-icon-arrow-down"
+              v-else
+              style="font-size: 24px; line-height: 30px; margin-right: 20px"
+            ></i>
+            难度变化比较
+          </el-row>
+        </el-col>
+      </el-row>
+      <!-- <el-divider v-if="show_difficulty_change"></el-divider> -->
+      <!-- 文字描述 -->
+      <el-row
+        class="description"
+        v-show="show_difficulty_change"
+        justify="start"
+      >
+        所选各试卷卷内各小题难度变化情况如下图所示。总的来看，卷内题目的难度由前至后总体呈递增趋势，中间穿插几道较难的题目，以体现试题的区分度和层次性。在所选的这
+        {{ paper_num }} 张试卷中，
+        {{ most_difficult_paper }} 这张试卷的平均难度最高，其难度为
+        {{ highest_difficulty }} ， {{ hardest_question_paper }} 这张试卷中的第
+        {{ hardest_question_num }} 小题是难度最高的一个小题，其难度为
+        {{ hardest_question_difficulty }} 。
+      </el-row>
+      <!-- 图表 -->
+      <el-row v-show="show_difficulty_change" type="flex" justify="center">
+        <div
+          id="diffi_change"
+          class="diffi_change"
+          :style="'height:' + (160 * chosen_paper_List.length + 150) + 'px'"
+        ></div>
+      </el-row>
+
+      <!-- 下载按钮 -->
+      <el-row type="flex" justify="center" style="margin-bottom: 40px">
+        <el-button type="success" plain @click="Report_Download()">
+          下载分析报告</el-button
+        >
+      </el-row>
+      <div v-if="CloseButton" class="tab" @click="Close_All()">
+        <div class="text">收起全部</div>
+        <i class="el-icon-caret-top icon"></i>
+      </div>
+      <div v-else class="tab" @click="Show_All()">
+        <div class="text">展开全部</div>
+        <i class="el-icon-caret-bottom icon"></i>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -239,15 +349,15 @@ export default {
       // 是否打开试卷库
       show_paper_base: false,
       // 是否显示试卷字数柱状图
-      show_word_cnt_Bar: false,
+      show_word_cnt_Bar: true,
       // 是否显示关键词词云
-      show_Word_Cloud: false,
+      show_Word_Cloud: true,
       // 是否显示知识点分值雷达图
-      show_knowledge2score: false,
+      show_knowledge2score: true,
       // 是否显示难度变化
-      show_difficulty_change: false,
+      show_difficulty_change: true,
       // 比较属性
-      checkList: ["数字属性", "关键词", "知识点分值", "难度变化"],
+      // checkList: ["数字属性", "关键词", "知识点分值", "难度变化"],
       // 选中的试卷的ID
       chosen_paper_List: [
         // {
@@ -340,6 +450,16 @@ export default {
       analyse_finished: false,
     };
   },
+  computed: {
+    CloseButton() {
+      return (
+        this.show_word_cnt_Bar &&
+        this.show_Word_Cloud &&
+        this.show_knowledge2score &&
+        this.show_difficulty_change
+      );
+    },
+  },
   mounted() {
     this.ToTop();
     // this.Init_test();
@@ -368,21 +488,20 @@ export default {
       this.chosen_paper_List = val;
       // console.log(this.chosen_paper_List);
       this.show_paper_base = false;
-      if (this.show_word_cnt_Bar)
-        echarts.init(document.getElementById("word_cnt_Bar")).dispose();
-      this.show_word_cnt_Bar = false;
+      // if (this.show_word_cnt_Bar)
+      //   echarts.init(document.getElementById("word_cnt_Bar")).dispose();
+      // this.show_word_cnt_Bar = false;
 
-      // if (this.show_Word_Cloud)
-      this.show_Word_Cloud = false;
+      // // if (this.show_Word_Cloud)
+      // this.show_Word_Cloud = false;
 
-      if (this.show_knowledge2score)
-        echarts.init(document.getElementById("Radar")).dispose();
-      this.show_knowledge2score = false;
+      // if (this.show_knowledge2score)
+      //   echarts.init(document.getElementById("Radar")).dispose();
+      // this.show_knowledge2score = false;
 
-      if (this.show_difficulty_change)
-        echarts.init(document.getElementById("diffi_change")).dispose();
-      this.show_difficulty_change = false;
-
+      // if (this.show_difficulty_change)
+      //   echarts.init(document.getElementById("diffi_change")).dispose();
+      // this.show_difficulty_change = false;
       this.Question_Analysing = true;
       this.Analyse();
     },
@@ -1325,16 +1444,16 @@ export default {
         )
         .then((data) => {
           if (data.data) {
-          this.Download_loading = false;
-          const link = document.createElement("a");
-          let blob = new Blob([data.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          });
-          let objectUrl = URL.createObjectURL(blob);
-          link.href = objectUrl;
-          link.download = "试卷分析报告.docx";
-          link.click();
-          URL.revokeObjectURL(objectUrl);
+            this.Download_loading = false;
+            const link = document.createElement("a");
+            let blob = new Blob([data.data], {
+              type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            });
+            let objectUrl = URL.createObjectURL(blob);
+            link.href = objectUrl;
+            link.download = "试卷分析报告.docx";
+            link.click();
+            URL.revokeObjectURL(objectUrl);
           }
         })
         .catch(() => {
@@ -1393,5 +1512,64 @@ export default {
   width: 10px;
   height: 10px;
   background: transparent;
+}
+
+.Part_Row_Style {
+  border-left: 15px solid #409efd;
+  background: rgba(240, 245, 251, 0.45);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  width: 90%;
+  margin: 5px 0 20px 6%;
+  padding-left: 30px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  cursor: pointer;
+}
+
+.tab {
+  position: absolute;
+  width: 40px;
+  height: 133px;
+  left: 0px;
+  top: 258px;
+
+  background: #409eff;
+  border: 4px solid #d9e9fe;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.06);
+  border-radius: 0px 10px 10px 0px;
+  cursor: pointer;
+}
+
+.text {
+  position: absolute;
+  width: 22px;
+  height: 110px;
+  left: calc(50% - 22px / 2);
+  top: 0px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 24px;
+  /* or 120% */
+
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  color: #ffffff;
+}
+
+.icon {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+  left: calc(50% - 24px / 2);
+  top: 103px;
+  color: white;
 }
 </style>
