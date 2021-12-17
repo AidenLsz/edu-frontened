@@ -164,6 +164,26 @@
       </el-row>        
     </el-row> -->
     <el-row>
+      <div class="KU_Detail_Aim" id="History_Aim"></div>
+    </el-row>
+    <div v-show="History_Graph.length > 0" align="left" :key="'History_Graph_' + Refresh">
+      <el-row type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px; margin-top: -10px">
+        <label>知识点详情历史记录</label>
+        <span style="margin-left: 30px; font-size: 14px; padding-top: 3px; color: #aaa">点击可检索详情</span>
+      </el-row>
+      <el-row>
+        <div 
+          align="center" 
+          class="History_Graph"
+          :style="KU == History_KU_Now ? 'border: 1px solid #E6A23C; color: #E6A23C; background-color: LightYellow;' : ''" 
+          v-for="(KU, KU_Index) in History_Graph" 
+          :key="'History_Graph_' + KU_Index"
+          @click="submit(KU)">
+          {{KU}}
+        </div>
+      </el-row>
+    </div>
+    <el-row>
       <div class="KU_Detail_Aim" id="KU_Detail"></div>
     </el-row>
     <el-row type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px; margin-top: -10px" v-show="Search_Result">
@@ -272,8 +292,14 @@ export default {
   name: "KU",
   data() {
     return {
+      // 新内容，查看详情的历史记录
+      History_Graph: [],
+      // 当前正在查看详情的节点名称
+      History_KU_Now: "",
       // 新内容，近似知识点翻页
       Page_Index: 1,
+      // 刷新块
+      Refresh: false,
       // 变化区块
       Transition_Show:false,
       activeName:"presuc",
@@ -372,6 +398,9 @@ export default {
     if (sessionStorage.getItem('KUFromPaperAnalyse')){
       this.ku_name = sessionStorage.getItem('KUFromPaperAnalyse');
       this.Search_KU_Info(this.ku_name);
+    }
+    if (localStorage.getItem('KU_History_Graph')){
+      this.History_Graph = JSON.parse(localStorage.getItem('KU_History_Graph'));
     }
     this.To_Top();
   },
@@ -585,6 +614,19 @@ export default {
             })
           } else {
             if (data.data.similar_nodes.length === 0){
+              let KU_Index = this.History_Graph.indexOf(name);
+              if( KU_Index != -1){
+                this.History_Graph.splice(KU_Index, 1);
+                this.History_Graph.splice(0, 0, name);
+              }else{
+                if(this.History_Graph.length == 10){
+                  this.History_Graph.splice(this.History_Graph.length-1, 1);
+                }
+                this.History_Graph.splice(0, 0, name);
+              }
+              this.History_KU_Now = name;
+              this.Refresh = !this.Refresh;
+              localStorage.setItem("KU_History_Graph", JSON.stringify(this.History_Graph));
               this.initFullScreen();
               this.data=data.data
               this.similar_nodes = data.data.similar_nodes
@@ -1292,5 +1334,21 @@ export default {
     width: 10px;
     height: 10px;
     background: transparent;
+}
+
+.History_Graph{
+    display: inline-block;
+    height: 34px;
+    line-height: 34px;
+    background: #EDF8ED;
+    border: 1px solid #70C745;
+    box-sizing: border-box;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #70C745;
+    margin-right: 12px;
+    margin-bottom: 12px;
+    padding: 0px 12px;
+    cursor: pointer;
 }
 </style>
