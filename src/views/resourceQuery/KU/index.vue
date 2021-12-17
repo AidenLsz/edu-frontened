@@ -96,21 +96,24 @@
 
     <!-- 搜索结果行 -->
     <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 8px;" v-show="Search_KU">
-      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">搜索结果</label>
+      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">相关度最高的结果</label>
       <el-button type="text" @click="Transition_Show = !Transition_Show" style="color: #4A4B56">
         <i class="el-icon-caret-right" :style="Get_Rotate_Triangle(Transition_Show)"></i>
-        <label style="cursor: pointer">{{Transition_Show ? "仅看首个" : "查看更多"}}</label>
+        <label style="cursor: pointer">{{Transition_Show ? "仅看相关度最高的结果" : "查看更多结果"}}</label>
       </el-button>
     </el-row>
     <el-row 
       v-show="Search_KU"
       type="flex" 
       justify="start" 
-      :style="'margin: 0; margin-bottom:' + Transition_Show ? ' 32px' : ' 24px'" 
+      style="margin: 0; margin-bottom: 24px" 
       class="KU_Point_Card">
       <KnowledgePointCard @Search_This_KU="Search_KU_Do" :KnowledgePoint="KU_Search_List[0]">
 
       </KnowledgePointCard>
+    </el-row>
+    <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 16px;" v-show="Transition_Show">
+      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">更多结果</label>
     </el-row>
     <el-row type="flex" justify="start" style="margin: 0;">
       <transition name="el-zoom-in-top">
@@ -122,19 +125,33 @@
             </KnowledgePointCard>
           </div> -->
           <el-row 
-            v-for="KU_Index in (KU_Search_List.length - 1)" 
+            v-for="KU_Index in (KU_Search_List.length - (Page_Index - 1) * 5) >= 5 ? 5 : (KU_Search_List.length - (Page_Index - 1) * 5)" 
+            v-show="KU_Index + (Page_Index - 1) * 5 - 1< KU_Search_List.length"
             :key="'Similar_' + KU_Index" 
             type="flex" 
             justify="start"
             class="KU_Point_Card">
-            <KnowledgePointCard  @Search_This_KU="Search_KU_Do" :KnowledgePoint="KU_Search_List[KU_Index]">
+            <KnowledgePointCard  
+              @Search_This_KU="Search_KU_Do" 
+              :KnowledgePoint="KU_Search_List[KU_Index + (Page_Index - 1) * 5]">
 
             </KnowledgePointCard>
           </el-row>
         </div>
       </transition>
     </el-row>
-  
+    <el-row
+        v-if="KU_Search_List.length > 0 && Transition_Show"
+        id="Page_Seg"
+        style="padding-top: 20px; padding-bottom: 20px; background: transparent">
+        <el-pagination
+            @current-change="Page_Index_Change"
+            :current-page.sync="Page_Index"
+            :page-size="5"
+            layout="total, prev, pager, next"
+            :total="50">
+        </el-pagination>
+    </el-row>
     <!-- 相关搜索
     <el-row class="ConnectSearch" v-if="similar_nodes.length" style="">
       <el-row style="margin-left: -1330px;font-size: 14px;">相关搜索</el-row>
@@ -255,6 +272,8 @@ export default {
   name: "KU",
   data() {
     return {
+      // 新内容，近似知识点翻页
+      Page_Index: 1,
       // 变化区块
       Transition_Show:false,
       activeName:"presuc",
@@ -368,10 +387,15 @@ export default {
     }
   },
   methods: {
+    Page_Index_Change(){
+      document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+      this.Transition_Show = true;
+    },
     To_Top(){
-          document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
-      },
+      document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+    },
     Search_KU_Info(KU_Name){
+      this.Page_Index = 1;
       let Striped_Ku_Name = LRStrip(KU_Name)
       if(Striped_Ku_Name == ""){
         this.$message.info("请输入内容")
@@ -518,7 +542,7 @@ export default {
       window.scrollTo(0,0);
     },
     search(val){
-      this.Search_KU_Info(val);
+      this.submit(val);
     },
     dataSource(tab) {
       this.sour = "rjb_new";
@@ -539,6 +563,7 @@ export default {
         "https://baike.baidu.com/search/word?word=" + encodeURI(this.ku_name);
       this.loading = true;
       d3.selectAll("svg>*").remove();
+      this.Page_Index = 1;
       this.$http
         .post(
           this.backendIP + "/api/ku_v2",
@@ -551,7 +576,6 @@ export default {
           { emulateJSON: true }
         )
         .then(function(data) {
-          console.log(data)
           if (data.data.nodes === null) {
             this.loading = false;
             Message({
