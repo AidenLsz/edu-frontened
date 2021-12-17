@@ -645,6 +645,8 @@ export default {
                 type: 'error',
                 duration: 2000
               })
+              this.History_KU_Now = "";
+              this.Refresh = !this.Refresh;
               this.Search_Result = false;
               this.Search_KU_Info(this.ku_name);
               this.loading = false;
