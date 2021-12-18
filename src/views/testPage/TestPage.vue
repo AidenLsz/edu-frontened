@@ -1,13 +1,21 @@
 <template>
-    <div
-        id="Page"
-        v-loading.fullscreen.lock="Waiting_Param"
-        :element-loading-text="Waiting_Text"
-        element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(0, 0, 0, 0.28)">
+    <div id="Page">
+        <SelfProgress 
+            v-if="Loading_Status"
+            :Full_Count="5"
+            :Now_Count.sync="Now_Count"
+            @Finish_Loading="Loading_Status = false">
+
+        </SelfProgress>
+        <SelfProgress 
+            v-if="Loading_Status_2"
+            :Duration_Time="5"
+            @Finish_Loading="Loading_Status_2 = false">
+
+        </SelfProgress>
         <div id="Filter" class="Top_Nav">
 
-    </div>
+        </div>
         <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
         <div class="Jump_Bar">
             <el-row
@@ -115,10 +123,10 @@
                 </el-col>
                 </el-row>
 
-            </el-dialog>
-            <instruction
-                ref="instruction"
-            />
+        </el-dialog>
+        <instruction
+            ref="instruction"
+        />
         <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
             <el-col>
                 <!-- 面包屑行 -->
@@ -138,7 +146,8 @@
                             </span>
                         </el-breadcrumb-item>
                     </el-breadcrumb>
-
+                    <el-button type="primary" @click="Loading_Progress">点我（跳5次结束）</el-button>
+                    <el-button type="primary" @click="Loading_Progress_2">点我（五秒结束）</el-button>
                 </el-row>
                 <!-- 页面标题行 -->
                 <el-row
@@ -338,6 +347,7 @@
             </el-pagination>
         </el-row>
     </div>
+    
 </template>
 
 <script>
@@ -351,13 +361,18 @@ import Instruction from '@/views/resourceQuery/components/InstructionExercise.vu
 import {commonAjax} from '@/common/utils/ajax'
 import {LRStrip} from '@/common/utils/strip'
 
+import SelfProgress from '@/views/testPage/Progress'
+
 export default {
   name: "",
   components:{
-      SearchPaperItem, ComplexInput, Instruction
+      SearchPaperItem, ComplexInput, Instruction, SelfProgress
   },
   data() {
     return {
+        // 用于等待进度条
+        Loading_Status: false,
+        Loading_Status_2: false,
         // 全部选项，用于显示
         All_Options:{
             Period: ["小学", "初中", "高中", "大学", "成人"],
@@ -418,7 +433,9 @@ export default {
         // 输入助手的对话框
         Complex_Input_Dialog: false,
         // 暂时获得了分析报告的试卷ID
-        Paper_Cache_ID: ""
+        Paper_Cache_ID: "",
+        // 拿来暂时测试进度百分比的
+        Now_Count: 0,
     };
   },
   destroyed(){
@@ -454,6 +471,26 @@ export default {
 
   },
   methods: {
+      Loading_Progress(){
+          this.Loading_Status = true;
+          this.Now_Count = 0;
+          setTimeout(()=>{
+              this.Now_Count++;
+              setTimeout(()=>{
+              this.Now_Count++;setTimeout(()=>{
+              this.Now_Count++;setTimeout(()=>{
+              this.Now_Count++;setTimeout(()=>{
+              this.Now_Count++;
+          }, 500)
+          }, 500)
+          }, 500)
+          }, 500)
+          }, 500)
+          
+      },
+      Loading_Progress_2(){
+          this.Loading_Status_2 = true;
+      },
       To_Top(){
           document.getElementById("Filter").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
       },
