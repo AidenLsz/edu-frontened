@@ -6,9 +6,16 @@
         <el-row
           type="flex"
           align="center"
-          style="padding-top: 20px; padding-bottom: 20px"
+          style="padding-top: 20px; padding-bottom: 20px; position: relative"
         >
-          <el-col :span="4" style="padding-left: 60px">
+          <div
+            style="
+              position: relative;
+              border-right: 2px solid #000000;
+              top: 0;
+              padding-left: 30px;
+            "
+          >
             <img
               src="@/assets/luna_icon.png"
               alt="Logo"
@@ -16,35 +23,31 @@
               style="cursor: pointer"
               @click="goToMainPage"
             />
-            <el-divider direction="vertical"></el-divider>
-          </el-col>
-          <el-col :span="2" style="width:90px;">
-            <div
-              id="ailab"
-              style="
-                height: 37.5px;
-                line-height: 37.5px;
-                font-size: 22px;
-              "
-              @click="goToAILab"
+          </div>
+          <div
+            id="ailab"
+            style="
+              display: inline-block;
+              width: 120px;
+              height: 37.5px;
+              line-height: 37.5px;
+              font-size: 22px;
+              white-space: nowrap;
+            "
+            @click="goToAILab"
+          >
+            AI实验室
+          </div>
+          <div class="NarbarItem" style="right:110px;">
+            <el-button type="text" @click="goToLogin" class="navbar"
+              >登录</el-button
             >
-              AI实验室
-            </div>
-          </el-col>
-          <el-col :span="18">
-            <el-row type="flex" justify="end" style="padding-right: 20px">
-              <div class="NarbarItem">
-                <el-button type="text" @click="goToLogin" class="navbar"
-                  >登录</el-button
-                >
-              </div>
-              <div class="NarbarItem">
-                <el-button type="text" @click="goToRegister" class="navbar"
-                  >注册</el-button
-                >
-              </div>
-            </el-row>
-          </el-col>
+          </div>
+          <div class="NarbarItem" style="right:30px;">
+            <el-button type="text" @click="goToRegister" class="navbar"
+              >注册</el-button
+            >
+          </div>
         </el-row>
       </div>
     </el-header>
@@ -425,8 +428,10 @@ export default {
 .NarbarItem {
   width: 80px;
   height: 37.5px;
+  line-height: 37.5px;
   box-sizing: border-box;
   background: transparent;
+  position:absolute;
 }
 
 .navbar {
