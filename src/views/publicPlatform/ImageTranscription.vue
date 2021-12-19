@@ -131,7 +131,7 @@
       </el-table>
     </el-row>
 
-    <el-dialog
+    <!-- <el-dialog
       :visible.sync="picSearchDialogShow"
       title="图片检索"
       width="80%"
@@ -245,7 +245,7 @@
           </el-row>
         </el-col>
       </el-row>
-    </el-dialog>
+    </el-dialog> -->
 
     <!-- 测试dialogue组件 -->
     <!-- <div>
@@ -841,7 +841,7 @@ export default {
   margin: auto;
   width: 1200px;
   height: 700px;
-  margin-top: 50px;
+  // margin-top: 50px;
   //margin-bottom: 100px;
 }
 
