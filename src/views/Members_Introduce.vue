@@ -639,6 +639,10 @@
 							"name": "袁玉润",
 							"mail": "yr_yuan@mail.ustc.edu.cn",
 							"intro": "19级计科本科生 要学的还有很多"
+						}, {
+							"name": "汪先涛",
+							"mail": "wangxiantao@mail.ustc.edu.cn",
+							"intro": "男，程序员，二次元"
 						}
 					],
 					// 技术顾问
@@ -742,6 +746,7 @@
 						"靳浩然": "/members/靳浩然.jpg",
 						"朱仕哲": "/members/朱仕哲.jpg",
 						"袁玉润": "/members/袁玉润.jpg",
+						"汪先涛": "/members/汪先涛.jpg",
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
 						"高维博": "/members/高维博.jpeg",
