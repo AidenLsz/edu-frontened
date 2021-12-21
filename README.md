@@ -59,11 +59,13 @@ src     文件夹部分
 + assets - 资源模块 - 用于存放项目中使用到的背景图片，符号图片等
     + InstIM InputMarked   试题输入页面的使用说明图片
     + InstIP InputPaper    试卷输入
-    + InstKU KnowledgeUnit 知识点搜索
+    + InstKUSearch KnowledgeUnit 知识点搜索
     + InstME MultiExercise 多试题查重页面
     + InstSP SearchPaper   试题检索与试卷检索共用
     + InstSR SearchResources   资源检索
     + InstUG UserGroup     用户管理
+    + InstMultiSourceSearch 多源查重
+    + InstQuestionSearch    试题检索（新版）
 
 + common - 通用模块 - 用于存放多处多次复用的组件
 
@@ -74,6 +76,7 @@ src     文件夹部分
         - Mathdown.vue          用于Latex渲染的组件，具体说明在最后
         - statistics.vue        统计组件，包含了试题，试卷，知识单元数量的展示
         - vue-img-verify.vue    验证码生成并展示的组件
+        - LunaProgress.vue      进度条组件，具体使用方法在页面内部，为了需要用进度条的时候写的
 
     - styles - SCSS样式存放
 
@@ -85,11 +88,12 @@ src     文件夹部分
         - variable.js   用于存放全局的字典
         - extraction.js 文字粘贴识别的JS文件，目前是初代版本，功能很弱
         - request.js    调整请求头部的JS文件，用于辅助ajax.js控制访问请求
+        - strip.js      处理检索时只有空格或左右加空格等字符影响检索时的状况的JS文件
 
 + historyBackpack - 历史备份模块，用于存放曾经存在于项目中，现在被淘汰掉的文件，如果有回滚需求则便于处理，此文件夹下的内容不可直接用于项目当中，无需详细内容说明
 
 + layout - 页面布局管理
-    - components    页面组件
+    + components    页面组件
         - Sidebar - 导航栏组件
         - footer.vue    页面底部组件
         - login.vue     登录组件
@@ -100,6 +104,7 @@ src     文件夹部分
     - Container.vue 路由嵌套 - 仅为一个容器，不对布局产生影响     
     - SideBar.vue   路由嵌套 - 左侧菜单栏  
     - EEMS.vue      考试系统页面布局（包含考试系统相关组件）
+    - ITAS.vue      教辅平台页面布局
 
 + plugins - 插件导入管理
     - element.js    引入elementUI的JS文件
@@ -162,7 +167,7 @@ src     文件夹部分
         - QuestionAnalyseInput.vue  用户录入试题，用于分析的页面
 
     - resourceQuery - 资源查询部分，目前存放了知识点查询，试题搜索，试卷搜索，教材教辅搜索四部分内容
-        + components - 专属于resourceQuery的组件
+        + components - 专属于resourceQuery的组件，基本用于将检索结果进行单元化显示或者是用于存放使用说明
         + Exercise     根据导航栏路径是否为eems显示为试题搜索或试题查重
           + components - 专属于试题检索（查重）的组件
             - InstructionMultiExercise.vue 多题查重使用说明  
@@ -200,6 +205,7 @@ src     文件夹部分
         - DashBoard.vue     引用统计组件statistics在前端进行展示
         - Home.vue          水镜智能主项目内容的主页面
         - Home_EEMS.vue     智慧考试管理系统的主页面
+        - Home_EEMS.vue     教辅系统的主页面
         - Members_Introduce.vue     成员介绍页面
         - PublicPlatform.vue        AI实验室的主页面
 
