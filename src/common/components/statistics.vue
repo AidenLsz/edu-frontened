@@ -2,39 +2,50 @@
 <template lang="html">
   <div class="">
     <el-row style="margin-top: 40px; padding-bottom: 40px">
-      <el-col :span="$store.getters.isLuna?4:5" :offset="$store.getters.isLuna?4:5" class="partData">
+      <div :class="$store.getters.isLuna ? 'partData_Narrow' : 'partData'">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="10">
             <img src="@/assets/dataIcon1.png" width="60px" style="padding-top: 30px"/>
           </el-col>
-          <el-col :span="12" style="padding-top: 30px">
+          <el-col :span="14" style="padding-top: 30px">
             <p style="font-weight:bold; font-size: 18px; color: black">试题</p>
             <p style="font-weight:bold; font-size: 18px; color: black">{{Num_Question}}</p>
           </el-col>
         </el-row>
-      </el-col>
-      <el-col :span="$store.getters.isLuna?4:5" :offset="$store.getters.isLuna?2:4" class="partData">
+      </div>
+      <div :class="$store.getters.isLuna ? 'partData_Narrow' : 'partData'">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="10">
             <img src="@/assets/dataIcon2.png" width="60px" style="padding-top: 30px"/>
           </el-col>
-          <el-col :span="12" style="padding-top: 30px">
+          <el-col :span="14" style="padding-top: 30px">
             <p style="font-weight:bold; font-size: 18px; color: black">试卷</p>
             <p style="font-weight:bold; font-size: 18px; color: black">{{Num_Paper}}</p>
           </el-col>
         </el-row>
-      </el-col>
-      <el-col v-if="$store.getters.isLuna" :span="4" :offset="2" class="partData">
+      </div>
+      <div v-if="$store.getters.isLuna" class="partData_Narrow">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="10">
             <img src="@/assets/dataIcon3.png" width="60px" style="padding-top: 30px"/>
           </el-col>
-          <el-col :span="12" style="padding-top: 30px">
+          <el-col :span="14" style="padding-top: 30px">
             <p style="font-weight:bold; font-size: 18px; color: black">知识单元</p>
             <p style="font-weight:bold; font-size: 18px; color: black">{{Num_KU}}</p>
           </el-col>
         </el-row>
-      </el-col>
+      </div>
+      <div :class="$store.getters.isLuna ? 'partData_Narrow' : 'partData'" style="margin-right: 0px">
+        <el-row>
+          <el-col :span="10">
+            <img src="@/assets/dataIcon4.png" width="45px" style="padding-top: 30px"/>
+          </el-col>
+          <el-col :span="14" style="padding-top: 30px">
+            <p style="font-weight:bold; font-size: 18px; color: black">教辅教材</p>
+            <p style="font-weight:bold; font-size: 18px; color: black">{{Num_Resources}}</p>
+          </el-col>
+        </el-row>
+      </div>
     </el-row>
     <el-row type="flex" justify="center" style="margin-bottom: 40px">
       <el-button-group>
@@ -415,10 +426,24 @@ a {
 }
 .partData{
   height: 120px;
+  width: 19%;
+  margin-right: 4%;
+  display: inline-block;
   background: #EEF5FE;
   box-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.07);
   -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
   border-radius: 10px;
+}
+
+.partData_Narrow{
+  height: 120px;
+  width: 14.5%;
+  display: inline-block;
+  background: #EEF5FE;
+  box-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.07);
+  -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
+  border-radius: 10px;
+  margin-right: 3%;
 }
 
 .bigBox{
