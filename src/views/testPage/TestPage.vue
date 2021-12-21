@@ -149,86 +149,86 @@
                 </el-row>
             </el-col>
         </el-row>
-        <el-row 
-            v-show="Resource_Info_List.length != 0"
-            type="flex" 
-            justify="center" 
-            class="Padding_Width" 
-            style="width: 100%; min-width: 1362px; font-size: 16px;" >
-            <div align="center">
-                <div class="Table_Label" style="width: 60px" align="center">
-                    序号
+        <div v-if="Resource_Info_List.length != 0">
+            <el-row 
+                type="flex" 
+                justify="center" 
+                class="Padding_Width" 
+                style="width: 100%; min-width: 1362px; font-size: 16px;" >
+                <div align="center">
+                    <div class="Table_Label" style="width: 60px" align="center">
+                        序号
+                    </div>
+                    <div class="Table_Label" style="width: 80px" align="center">
+                        学科
+                    </div>
+                    <div class="Table_Label" style="width: 100px" align="center">
+                        学段/年级
+                    </div>
+                    <div class="Table_Label" style="width: 100px" align="center">
+                        资源类型
+                    </div>
+                    <div class="Table_Label" style="width: 120px" align="center">
+                        出版社
+                    </div>
+                    <div class="Table_Label" style="width: 466px" align="center">
+                        资源名称
+                    </div>
+                    <div class="Table_Label" style="width: 100px" align="center">
+                        存入日期
+                    </div>
+                    <div class="Table_Label" style="width: 160px" align="center">
+                        获取
+                    </div>
                 </div>
-                <div class="Table_Label" style="width: 80px" align="center">
-                    学科
+            </el-row>
+            <el-row 
+                type="flex" 
+                justify="center" 
+                class="Padding_Width" 
+                style="width: 100%; min-width: 1362px;" 
+                v-for="Resource_Info_Index in 10" 
+                :key="'Resource_Info_' + Resource_Info_Index">
+                <div align="center" :style="Resource_Info_Index % 2 == 0 ? '' : 'background: #F4F7FC'">
+                    <div class="Resource_Label" style="width: 60px" align="center">
+                        {{Resource_Info_Index + (Page_Index - 1) * 10}}
+                    </div>
+                    <div class="Resource_Label" style="width: 80px" align="center">
+                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].subject}}
+                    </div>
+                    <div class="Resource_Label" style="width: 100px" align="center">
+                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].period}}
+                    </div>
+                    <div class="Resource_Label" style="width: 100px" align="center">
+                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].type}}
+                    </div>
+                    <div class="Resource_Label" style="width: 120px" align="center">
+                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].publisher}}
+                    </div>
+                    <div class="Resource_Label Resource_Name" style="width: 466px" align="center">
+                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].name}}
+                    </div>
+                    <div class="Resource_Label" style="width: 100px" align="center">
+                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].date}}
+                    </div>
+                    <div class="Resource_Label" style="width: 160px" align="center">
+                        <el-button type="success" size="mini" @click="Resource_Preview(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">预览</el-button>
+                        <el-button type="primary" size="mini" @click="Resource_Download(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">下载</el-button>
+                    </div>
                 </div>
-                <div class="Table_Label" style="width: 100px" align="center">
-                    学段/年级
-                </div>
-                <div class="Table_Label" style="width: 100px" align="center">
-                    资源类型
-                </div>
-                <div class="Table_Label" style="width: 120px" align="center">
-                    出版社
-                </div>
-                <div class="Table_Label" style="width: 466px" align="center">
-                    资源名称
-                </div>
-                <div class="Table_Label" style="width: 100px" align="center">
-                    存入日期
-                </div>
-                <div class="Table_Label" style="width: 160px" align="center">
-                    获取
-                </div>
-            </div>
-        </el-row>
-        <el-row 
-            type="flex" 
-            justify="center" 
-            class="Padding_Width" 
-            style="width: 100%; min-width: 1362px;" 
-            v-for="(Resource_Info, Resource_Info_Index) in Resource_Info_List" 
-            :key="'Resource_Info_' + Resource_Info_Index">
-            <div align="center" :style="Resource_Info_Index % 2 == 0 ? '' : 'background: #F4F7FC'">
-                <div class="Resource_Label" style="width: 60px" align="center">
-                    {{Resource_Info_Index+1}}
-                </div>
-                <div class="Resource_Label" style="width: 80px" align="center">
-                    {{Resource_Info.subject}}
-                </div>
-                <div class="Resource_Label" style="width: 100px" align="center">
-                    {{Resource_Info.period}}
-                </div>
-                <div class="Resource_Label" style="width: 100px" align="center">
-                    {{Resource_Info.type}}
-                </div>
-                <div class="Resource_Label" style="width: 120px" align="center">
-                    {{Resource_Info.publisher}}
-                </div>
-                <div class="Resource_Label Resource_Name" style="width: 466px" align="center">
-                    {{Resource_Info.name}}
-                </div>
-                <div class="Resource_Label" style="width: 100px" align="center">
-                    {{Resource_Info.date}}
-                </div>
-                <div class="Resource_Label" style="width: 160px" align="center">
-                    <el-button type="success" size="mini" @click="Resource_Preview(Resource_Info)">预览</el-button>
-                    <el-button type="primary" size="mini" @click="Resource_Download(Resource_Info)">下载</el-button>
-                </div>
-            </div>
-        </el-row>
-        <el-row
-            v-show="Resource_Info_List.length != 0"
-            id="Page_Seg"
-            style="padding-top: 20px; padding-bottom: 20px; background: transparent">
-            <el-pagination
-                @current-change="Page_Index_Change"
-                :current-page.sync="Page_Index"
-                :page-size="Page_Length"
-                layout="total, prev, pager, next"
-                :total="Total_Count">
-            </el-pagination>
-        </el-row>
+            </el-row>
+            <el-row
+                id="Page_Seg"
+                style="padding-top: 20px; padding-bottom: 20px; background: transparent">
+                <el-pagination
+                    @current-change="Page_Index_Change"
+                    :current-page.sync="Page_Index"
+                    :page-size="Page_Length"
+                    layout="total, prev, pager, next"
+                    :total="Total_Count">
+                </el-pagination>
+            </el-row>
+        </div>
     </div>
     
 </template>
@@ -271,131 +271,11 @@ export default {
         // 换页时使用的总量数字
         Total_Count: 0,
         // 每页的长度，或每页有多少道题
-        Page_Length: 5,
+        Page_Length: 10,
         // 检索内容
         Search_Content: "",
         // 控制检索结果的题目数组
-        Resource_Info_List: [{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        },{
-            filepath: "",
-            type: "课件",
-            subject: "历史",
-            period: "七年级",
-            name: "第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt第16课 明朝的建筑、科技和文学.ppt",
-            date: "2021-10-31",
-            publisher: "人教版（部编）"
-        }],
+        Resource_Info_List: [],
         // 记录上次检索的时候所使用的信息
         History_Chosen_Options:{
             Resource_Type: [],
@@ -552,26 +432,23 @@ export default {
             let Data = JSON.stringify({
                 "content": this.Search_Content,
                 "type": this.Chosen_Options.Resource_Type,
+                "size": 200,
                 "subject": SUBJECT,
                 "period": this.Chosen_Options.Resource_Period
             }) 
-
-            console.log("参入后端的参数：")
-            console.log(Data)
 
             Param.data = Data
 
             commonAjax('https://kg-edu-backend-44-review-search-05cum0.env.bdaa.pro/v1/api/rsc_search', Param)
             .then((data)=>{
                 this.$message.success("已成功获取返回数据")
-                console.log(data)
                 this.Resource_Info_List = data.results;
+                this.Total_Count = data.results.length;
                 setTimeout(()=>{
                     document.getElementById('Resources').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
                 }, 100)
-            }).catch((err)=>{
+            }).catch(()=>{
                 this.$message.error("服务器好像开小差了，请稍后再试。")
-                console.log(err)
                 this.Jump_To('Filter');
             }).finally(()=>{
                 this.Waiting_Param = false
@@ -582,7 +459,7 @@ export default {
         },
         // 滚动到顶部
         Page_Index_Change(){
-            this.Search_Do()
+            this.Jump_To('Resources');
         },
         // 检测是否需要把Page_Index页码调整为1
         Page_Index_Change_Check(){
@@ -622,6 +499,8 @@ export default {
                 "file": Resource_Info.filepath,
             }) 
 
+            console.log(Resource_Info)
+
             Param.data = Data
 
             let config = {
@@ -645,7 +524,11 @@ export default {
                     link.click()
                     URL.revokeObjectURL(objectUrl);
                 }
-                }).catch(() => {
+                }).catch((err) => {
+                    if(err.status == 404){
+                        this.$message.error("此资源维护中，暂时无法提供下载，请尝试更换其他文件...")
+                        return
+                    }
                     this.$message.error("服务器忙碌，请稍后再试...");
                 }).finally(()=>{
                     this.Waiting_Param = false
