@@ -512,7 +512,7 @@ export default {
             }
 
             this.$http
-                .post(this.backendIP + "/api/rsc_get", Param, config)
+                .post("https://kg-edu-backend-44-review-search-05cum0.env.bdaa.pro/v1/api/rsc_get", Param, config)
                 .then(function(data) {
                 if(data.data){
                     const link = document.createElement('a')
