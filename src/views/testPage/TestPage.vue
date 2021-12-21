@@ -441,12 +441,16 @@ export default {
 
             commonAjax('https://kg-edu-backend-44-review-search-05cum0.env.bdaa.pro/v1/api/rsc_search', Param)
             .then((data)=>{
-                this.$message.success("已成功获取返回数据")
-                this.Resource_Info_List = data.results;
-                this.Total_Count = data.results.length;
-                setTimeout(()=>{
-                    document.getElementById('Resources').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
-                }, 100)
+                if(data.results.length > 0){
+                    this.Resource_Info_List = data.results;
+                    this.Total_Count = data.results.length;
+                    setTimeout(()=>{
+                        document.getElementById('Resources').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+                    }, 100)
+                }else{
+                    this.$message.warning("找不到匹配的资源，请调整搜索的筛选项并重试。")
+                    this.Jump_To('Filter');
+                }
             }).catch(()=>{
                 this.$message.error("服务器好像开小差了，请稍后再试。")
                 this.Jump_To('Filter');
@@ -498,8 +502,6 @@ export default {
             let Data = JSON.stringify({
                 "file": Resource_Info.filepath,
             }) 
-
-            console.log(Resource_Info)
 
             Param.data = Data
 
@@ -623,25 +625,6 @@ export default {
     background: transparent;
     overflow: hidden;
     z-index: -1;
-}
-
-.Question_Card{
-    box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
-    width: 1168px;
-    margin: 0 auto;
-    border-radius: 10px;
-    opacity: 0.95;
-}
-
-.ImgSearchArea{
-    width: 100%;
-    height: 240px;
-    margin-top: 20px;
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    text-align: center;
-    background: white;
-    box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
 }
 
 .Filter_Item_Shadow{

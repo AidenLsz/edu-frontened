@@ -6,11 +6,11 @@
 </template>
 
 <script>
-import ku1 from '@/assets/InstKU/KU1.png';
-import ku2 from '@/assets/InstKU/KU2.png';
-import ku3 from '@/assets/InstKU/KU3.png';
-import ku4 from '@/assets/InstKU/KU4.png';
-import ku5 from '@/assets/InstKU/KU5.png';
+import Search from '@/assets/InstKUSearch/1 - Search.png';
+import KUResult from '@/assets/InstKUSearch/2 - KUResult.png';
+import DetailCard from '@/assets/InstKUSearch/3 - DetailCard.png';
+import OtherRelation from '@/assets/InstKUSearch/4 - OtherRelation.png';
+import History from '@/assets/InstKUSearch/5 - History.png';
 import Instruction from '@/common/components/Instruction.vue'
 export default {
   components:{
@@ -20,24 +20,24 @@ export default {
     return {
       steps:[
         {
-          desc:'输入搜索内容：简单文字查询｜复杂公式查询',
-          imgSrc:ku1
+          desc:'输入查询，选择筛选条件',
+          imgSrc:Search
         },
         {
-          desc:'进行查询',
-          imgSrc:ku2
+          desc:'点击搜索后获得知识点搜索结果',
+          imgSrc:KUResult
         },
         {
-          desc:'缩起知识卡片',
-          imgSrc:ku3
+          desc:'点击查看知识点详情后可以看到更丰富的知识点信息',
+          imgSrc:DetailCard
         },
         {
-          desc:'展开知识卡片',
-          imgSrc:ku4
+          desc:'另外也可以查看知识点的不同关系',
+          imgSrc:OtherRelation
         },
         {
-          desc:'筛选知识节点',
-          imgSrc:ku5
+          desc:'可通过知识点的历史记录快速返回之前查询过的知识点',
+          imgSrc:History
         },
       ]
     }
