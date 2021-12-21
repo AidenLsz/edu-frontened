@@ -639,6 +639,10 @@
 							"name": "汪先涛",
 							"mail": "wangxiantao@mail.ustc.edu.cn",
 							"intro": "男，程序员，二次元"
+						}, {
+							"name": "沈嘉徽",
+							"mail": "shenjiahui@mail.ustc.edu.cn",
+							"intro": "退堂鼓表演艺术家"
 						}
 					],
 					// 技术顾问
@@ -742,6 +746,7 @@
 						"靳浩然": "/members/靳浩然.jpg",
 						"朱仕哲": "/members/朱仕哲.jpg",
 						"汪先涛": "/members/汪先涛.jpg",
+						"沈嘉徽": "/members/沈嘉徽.jpg",
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
 						"高维博": "/members/高维博.jpeg",
