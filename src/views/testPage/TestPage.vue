@@ -287,7 +287,17 @@ export default {
         // 用于表示正在等待的变量
         Waiting_Param: false,
         // 用于写文字来表示正在等待什么内容的变量
-        Waiting_Text: ""
+        Waiting_Text: "",
+        // 多源下载时的文件类型
+        File_Type_Blob:{
+            'doc': "application/msword",
+            'docx': "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            'pdf': "application/pdf",
+            'ppt': "application/vnd.ms-powerpoint",
+            'pptx': "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            'jpg': 'image/jpeg',
+            'jpeg': "image/jpeg"
+        },
     };
   },
   destroyed(){
@@ -439,7 +449,7 @@ export default {
 
             Param.data = Data
 
-            commonAjax('https://kg-edu-backend-44-review-search-05cum0.env.bdaa.pro/v1/api/rsc_search', Param)
+            commonAjax(this.backendIP + "/api/rsc_search", Param)
             .then((data)=>{
                 if(data.results.length > 0){
                     this.Resource_Info_List = data.results;
@@ -498,12 +508,9 @@ export default {
             this.Waiting_Param = true
             this.Waiting_Text = "正在准备下载资源，请稍后..."
 
-            let Param = {};
-            let Data = JSON.stringify({
-                "file": Resource_Info.filepath,
-            }) 
-
-            Param.data = Data
+            let Param = {
+                'file': Resource_Info.filepath
+            };
 
             let config = {
                 headers: {
@@ -513,16 +520,19 @@ export default {
                 emulateJSON: true
             }
 
+            let PART = Resource_Info.name.split(".");
+            let TYPE = PART[PART.length - 1];
+
             this.$http
-                .post("https://kg-edu-backend-44-review-search-05cum0.env.bdaa.pro/v1/api/rsc_get", Param, config)
+                .post(this.backendIP + "/api/rsc_get", Param, config)
                 .then(function(data) {
                 if(data.data){
                     const link = document.createElement('a')
                     let blob = new Blob([data.data],
-                        {type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"})
+                        {type: this.File_Type_Blob[TYPE]})
                     let objectUrl = URL.createObjectURL(blob)
                     link.href = objectUrl
-                    link.download = Resource_Info
+                    link.download = Resource_Info.name
                     link.click()
                     URL.revokeObjectURL(objectUrl);
                 }
