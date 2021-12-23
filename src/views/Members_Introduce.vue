@@ -643,6 +643,10 @@
 							"name": "沈嘉徽",
 							"mail": "shenjiahui@mail.ustc.edu.cn",
 							"intro": "退堂鼓表演艺术家"
+						}, {
+							"name": "何晶晶",
+							"mail": "15818636350@163.com",
+							"intro": "中国科学技术大学2020级研究生"
 						}
 					],
 					// 技术顾问
@@ -747,6 +751,7 @@
 						"朱仕哲": "/members/朱仕哲.jpg",
 						"汪先涛": "/members/汪先涛.jpg",
 						"沈嘉徽": "/members/沈嘉徽.jpg",
+						"何晶晶": "/members/何晶晶.jpg",
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
 						"高维博": "/members/高维博.jpeg",
