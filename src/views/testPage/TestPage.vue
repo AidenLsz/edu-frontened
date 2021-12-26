@@ -7,6 +7,11 @@
         <div id="Filter" class="Top_Nav">
 
         </div>
+        <Progress 
+            v-if="Progress_Show"
+            :Duration_Time="5"
+            :Bar_Type="'time'"
+            @Finish_Loading="Progress_Show = false"></Progress>
         <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
         <div class="Jump_Bar">
             <el-row
@@ -57,6 +62,7 @@
                     justify="start"
                     style="margin-top: 2vh;">
                     <span style="font-size: 4rem" class="Label_Shadow">资源检索</span>
+                    <el-button type="primary" @click="Progress_Show = true">Click</el-button>
                 </el-row>
                 <div class="Background_Round">
 
@@ -238,6 +244,7 @@
 import * as variable from '@/common/utils/variable'
 
 import Instruction from '@/views/resourceQuery/components/InstructionExercise.vue'
+import Progress from '@/views/testPage/Progress'
 
 import {commonAjax} from '@/common/utils/ajax'
 import {LRStrip} from '@/common/utils/strip'
@@ -245,7 +252,7 @@ import {LRStrip} from '@/common/utils/strip'
 export default {
   name: "",
   components:{
-      Instruction
+      Instruction, Progress
   },
   data() {
     return {
@@ -298,6 +305,7 @@ export default {
             'jpg': 'image/jpeg',
             'jpeg': "image/jpeg"
         },
+        Progress_Show: false
     };
   },
   destroyed(){
