@@ -1,14 +1,16 @@
 // 为了进度条的需求专门写的简单组件，现在暂时有持续时间式和分数式两种进度
 // 后续根据使用需要，比如进度条想在外部计算，或者根据下载文件的总大小计算下载进度等等需求，可能会再扩充
+// 2021/12/26更新：调整了使用模式的判别，想办法支持了纯文字的等待模式
 
 <template>
   <!-- class的部分很容易理解，就不写注释了 -->
   <!-- 外部大框，把z-index拉满，强行遮盖所有其他组件来防止误操作 -->
   <div class="Percentage_DIV" align="center">
     <!-- 实际进度条的区域部分 -->
-    <div class="Percentage_Area">
-      <!-- 进度条的部分 -->
+    <div class="Percentage_Area" :style="Bar_Type == 'text' ? 'padding-top: 32px' : 'padding-top: 44px'">
+      <!-- 进度条的部分，在text模式下会取消进度条的显示 -->
       <el-progress 
+        v-if="Bar_Type != 'text'"
         :percentage="Percentage_Now_Inner"
         :stroke-width="16"
         color="#539DD9"
@@ -41,31 +43,41 @@ export default {
   name: "",
   props:{
     // 默认的比例，如果后续有类似文件下载进度条之类的可以留一下
-    // 目前就是一个提供default的作用
+    // 目前就是一个提供default的作用，实际使用需要用.sync进行同步，在syn模式下生效
     Percentage_Now:{
       type: Number,
       default: 0
     },
-    // 默认设置的持续时间，如果是-1，则表示要用的是分数式（如1/2，2/2）的进度
+    // 默认设置的持续时间为3秒，需要在time模式下起效
     // 单位是秒
+    // 在page模式下时，设定的是每一个page的预定返回时间，由于JS本身是异步的，建议设为同类单项的一半时间
     Duration_Time:{
       type: Number,
-      default: -1
+      default: 3
     },
-    // 分数式百分比的分母部分，设置一次即可
+    // 分数式百分比的分母部分，设置一次即可，需要在page模式下起效
     Full_Count: {
       type: Number,
-      default: -1
+      default: 1
     },
-    // 分数式百分比的分子部分，调用时需要用.sync进行同步
+    // 分数式百分比的分子部分，调用时需要用.sync进行同步，需要在page模式下起效
     Now_Count: {
       type: Number,
-      default: -1
+      default: 0
     },
     // 文字区域显示的文字部分，可以自行设置
     Loading_Text: {
       type: String,
-      default: "加载中，请稍后..."
+      default: "加载中，请稍后"
+    },
+    // 用于区分使用模式
+    // text的纯文字等待模式，由外部控制loading节奏
+    // page的翻页模式，适用于分段进行的翻页式进度
+    // time的持续时间模式，适用于预估剩余持续时间的时候
+    // syn的和外部进度同步的模式，适用于在服务器有类似于文件或传输一类，有返回比例时使用，但估计绝大多数时候用不上
+    Bar_Type: {
+      type: String,
+      default: "text"
     }
   },
   components:{
@@ -78,6 +90,8 @@ export default {
       // 把百分比保存到组件内部进行使用，避免和使用这一组件的组件产生不必要的冲突
       // 可能以后会根据进度是外部计算还是内部计算来进行一定的调整
       Percentage_Now_Inner: this.Percentage_Now,
+      // 翻页百分比的上限锁定值
+      Page_Gap: 0
     }
   },
   destroyed(){
@@ -97,7 +111,7 @@ export default {
         clearInterval(this.Progress_Interval);
         setTimeout(()=>{
           this.$emit("Finish_Loading", true);
-        }, 500)
+        }, 300)
       }
     }
   },
@@ -108,16 +122,27 @@ export default {
       this.Percentage_Now_Inner = 0;
       // 通过Duration_Time是否为-1来判断是使用持续时间模式还是分数式
       // 根据不同情况设置不同的Interval
-      if(this.Duration_Time == -1){
+      if(this.Bar_Type == 'page'){
         this.Progress_Interval = setInterval(()=>{
-          this.Percentage_Now_Inner = (this.Now_Count / this.Full_Count) * 100;
-        }, 10)
-      }else{
+          if(this.Now_Count < this.Full_Count){
+            this.Page_Gap = ((this.Now_Count + 1) / this.Full_Count) * 100;
+            if(this.Percentage_Now_Inner < this.Page_Gap && this.Percentage_Now_Inner < 98){
+              this.Percentage_Now_Inner = this.Percentage_Now_Inner + 2/(this.Duration_Time * (this.Full_Count - this.Now_Count));
+            }
+          }else if(this.Now_Count == this.Full_Count){
+            this.Percentage_Now_Inner = 100;
+          }
+        }, 20)
+      }else if(this.Bar_Type == 'time'){
         this.Progress_Interval = setInterval(()=>{
-          this.Percentage_Now_Inner = this.Percentage_Now_Inner + 1/this.Duration_Time;
-        }, 10)
+          this.Percentage_Now_Inner = this.Percentage_Now_Inner + 2/this.Duration_Time;
+        }, 20)
+      }else if(this.Bar_Type == 'syn'){
+        this.Progress_Interval = setInterval(()=>{
+          this.Percentage_Now_Inner = this.Percentage_Now;
+        }, 20)
       }
-    }
+    },
   }
 };
 
@@ -139,7 +164,6 @@ export default {
   max-width: 1192px;
   margin: 40vh 64px;
   height: 136px;
-  padding-top: 44px;
   padding-left: 96px;
   padding-right: 96px;
   background: #92D0F4;
