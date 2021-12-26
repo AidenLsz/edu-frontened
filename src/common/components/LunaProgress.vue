@@ -48,11 +48,12 @@ export default {
       type: Number,
       default: 0
     },
-    // 默认设置的持续时间为5秒，需要在time模式下起效
+    // 默认设置的持续时间为3秒，需要在time模式下起效
     // 单位是秒
+    // 在page模式下时，设定的是每一个page的预定返回时间，由于JS本身是异步的，建议设为同类单项的一半时间
     Duration_Time:{
       type: Number,
-      default: 5
+      default: 3
     },
     // 分数式百分比的分母部分，设置一次即可，需要在page模式下起效
     Full_Count: {
@@ -89,6 +90,8 @@ export default {
       // 把百分比保存到组件内部进行使用，避免和使用这一组件的组件产生不必要的冲突
       // 可能以后会根据进度是外部计算还是内部计算来进行一定的调整
       Percentage_Now_Inner: this.Percentage_Now,
+      // 翻页百分比的上限锁定值
+      Page_Gap: 0
     }
   },
   destroyed(){
@@ -121,7 +124,14 @@ export default {
       // 根据不同情况设置不同的Interval
       if(this.Bar_Type == 'page'){
         this.Progress_Interval = setInterval(()=>{
-          this.Percentage_Now_Inner = (this.Now_Count / this.Full_Count) * 100;
+          if(this.Now_Count < this.Full_Count){
+            this.Page_Gap = ((this.Now_Count + 1) / this.Full_Count) * 100;
+            if(this.Percentage_Now_Inner < this.Page_Gap && this.Percentage_Now_Inner < 98){
+              this.Percentage_Now_Inner = this.Percentage_Now_Inner + 2/(this.Duration_Time * (this.Full_Count - this.Now_Count));
+            }
+          }else if(this.Now_Count == this.Full_Count){
+            this.Percentage_Now_Inner = 100;
+          }
         }, 20)
       }else if(this.Bar_Type == 'time'){
         this.Progress_Interval = setInterval(()=>{

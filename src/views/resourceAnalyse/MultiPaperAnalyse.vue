@@ -15,6 +15,7 @@
       v-if="Question_Analysing"
       :Loading_Text="'正在分析，请稍后，当前进度（' + progress + '/' + chosen_paper_List.length + '）...'"
       :Bar_Type="'page'"
+      :Duration_Time="3"
       :Full_Count.sync="chosen_paper_List.length"
       :Now_Count.sync="progress"
       @Finish_Loading="Finish_Loading()"
