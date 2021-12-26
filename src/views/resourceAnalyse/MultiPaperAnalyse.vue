@@ -13,7 +13,7 @@
   >
     <LunaProgress
       v-if="Question_Analysing"
-      :Loading_Text="'正在分析，请稍后'"
+      :Loading_Text="'正在分析，请稍后，当前进度（' + progress + '/' + chosen_paper_List.length + '）...'"
       :Bar_Type="'page'"
       :Full_Count.sync="chosen_paper_List.length"
       :Now_Count.sync="progress"

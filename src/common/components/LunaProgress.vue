@@ -25,7 +25,7 @@
           </div>
         </div>
         <div style="display: inline-block; padding-bottom: 8px;">
-          <label class="Loading_Label">{{Loading_Text + Get_Other_Label(Bar_Type)}}</label>
+          <label class="Loading_Label">{{Loading_Text}}</label>
         </div>
         <div style="display: inline-block; padding-bottom: 4px;">
           <div class="Side_Line Line_Right">
@@ -64,7 +64,7 @@ export default {
       type: Number,
       default: 0
     },
-    // 文字区域显示的文字部分，可以自行设置，
+    // 文字区域显示的文字部分，可以自行设置
     Loading_Text: {
       type: String,
       default: "加载中，请稍后"
@@ -133,18 +133,6 @@ export default {
         }, 20)
       }
     },
-    // 用于监控输出文字内容
-    Get_Other_Label(Bar_Type){
-      if(Bar_Type == 'text'){
-        return "..."
-      }else if(Bar_Type == 'page'){
-        return "，当前进度（" + this.Now_Count + "/" + this.Full_Count + "）..."
-      }else if(Bar_Type == 'time'){
-        return "，预计还需" + ((100 - this.Percentage_Now_Inner)/100 * this.Duration_Time).toFixed(1) + "秒..."
-      }else if(Bar_Type == 'syn'){
-        return "，当前进度" + this.Percentage_Now + "%..."
-      }
-    }
   }
 };
 

@@ -8,6 +8,13 @@
         <div id="Filter" class="Top_Nav">
 
     </div>
+        <LunaProgress 
+            v-if="Paper_Analysing"
+            :Bar_Type="'time'"
+            :Duration_Time="6"
+            :Loading_Text.sync="Paper_Analysing_Text">
+
+        </LunaProgress>
         <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
         <div class="Jump_Bar">
             <el-row
@@ -347,6 +354,7 @@ import SearchPaperItem from '@/views/resourceQuery/components/SearchPaperItem'
 import ComplexInput from '@/common/components/ComplexInput'
 
 import Instruction from '@/views/resourceQuery/components/InstructionExercise.vue'
+import LunaProgress from '@/common/components/LunaProgress'
 
 import {commonAjax} from '@/common/utils/ajax'
 import {LRStrip} from '@/common/utils/strip'
@@ -354,7 +362,7 @@ import {LRStrip} from '@/common/utils/strip'
 export default {
   name: "",
   components:{
-      SearchPaperItem, ComplexInput, Instruction
+      SearchPaperItem, ComplexInput, Instruction, LunaProgress
   },
   data() {
     return {
@@ -418,7 +426,11 @@ export default {
         // 输入助手的对话框
         Complex_Input_Dialog: false,
         // 暂时获得了分析报告的试卷ID
-        Paper_Cache_ID: ""
+        Paper_Cache_ID: "",
+        // 正在获取分析报告的进度条显示变量和显示文字
+        Paper_Analysing: false,
+        Paper_Analysing_Text: "",
+        Paper_Analysing_Over_Time: false
     };
   },
   destroyed(){
@@ -449,6 +461,9 @@ export default {
             this.Search_Do()
         }
     }, 100)
+  },
+  watch:{
+
   },
   updated() {
 
@@ -811,6 +826,9 @@ export default {
             this.Paper_Info_List = []
             this.Page_Index = 1
         },
+        Finish_Loading(){
+            this.Paper_Analysing_Over_Time = true;
+        },
         // 检索用的方法
         Search_Do(){
 
@@ -944,15 +962,16 @@ export default {
         // 修改当前展示的试题的内容
         Paper_Detail(ID){
 
-          this.Waiting_Param = true;
-          this.Waiting_Text = "正在获取整张试卷试题的内容..."
+          this.Paper_Analysing = true;
+          this.Paper_Analysing_Over_Time = false;
+          this.Paper_Analysing_Text = "正在获取整张试卷的全部试题内容..."
 
           if(this.Paper_Cache_ID == ID){
             let routeData = this.$router.resolve({ path: '/paperDetailShow' });
             window.open(routeData.href, '_blank');
             this.$message.success("试题详情内容已在新页面展开。");
-            this.Waiting_Param = false;
-            this.Waiting_Text = "";
+            this.Paper_Analysing = false;
+            this.Paper_Analysing_Text = "";
             return
           }
 
@@ -962,8 +981,8 @@ export default {
               Paper_ID: ID
             }
           ).then((data)=>{
-            this.Waiting_Param = false;
-            this.Waiting_Text = "";
+            this.Paper_Analysing = false;
+            this.Paper_Analysing_Text = "";
             if(data.Paper_Json.status == "FAIL"){
               this.$message.error("服务器繁忙，请稍后再试。")
               return
@@ -983,17 +1002,22 @@ export default {
         // 查看试卷分析报告
         Paper_Analyse(ID){
 
-          if(this.Paper_Cache_ID == ID && sessionStorage.getItem("PaperDetailShow")){
-            let Temp = JSON.parse(sessionStorage.PaperDetailShow);
-            sessionStorage.PaperJson = JSON.stringify(Temp);
-            let routeData = this.$router.resolve({ path: '/paperAnalyse' });
-            window.open(routeData.href, '_blank');
-            this.$message.success("试卷分析报告已在新页面展开。");
-            return
-          }
+            this.Paper_Analysing = true;
+            this.Paper_Analysing_Over_Time = false;
+            this.Paper_Analysing_Text = "正在获取整张试卷分析报告..."
 
-          this.Waiting_Param = true;
-          this.Waiting_Text = "正在获取整张试卷分析报告..."
+            if(this.Paper_Cache_ID == ID && sessionStorage.getItem("PaperDetailShow")){
+                let Temp = JSON.parse(sessionStorage.PaperDetailShow);
+                sessionStorage.PaperJson = JSON.stringify(Temp);
+                let routeData = this.$router.resolve({ path: '/paperAnalyse' });
+                window.open(routeData.href, '_blank');
+                this.$message.success("试卷分析报告已在新页面展开。");
+                this.Paper_Analysing = false;
+                this.Paper_Analysing_Text = "";
+                return
+            }
+
+          
 
           commonAjax(this.backendIP+'/api/paperJsonGet',
             {
@@ -1001,8 +1025,8 @@ export default {
               Paper_ID:ID
             }
           ).then((data)=>{
-            this.Waiting_Param = false;
-            this.Waiting_Text = "";
+            this.Paper_Analysing = false;
+            this.Paper_Analysing_Text = "";
             if(data.Paper_Json.status == "FAIL"){
               this.$message.error("服务器繁忙，请稍后再试。")
               return
