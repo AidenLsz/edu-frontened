@@ -21,7 +21,7 @@
 
     <el-row justify="start" type="flex" style="margin: 0;">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: $store.getters.systemType==2?'/itas':'/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item v-if="$store.getters.systemType==2">
           知识联想
           <span @click="openInstructionDialog" style="cursor:pointer;">

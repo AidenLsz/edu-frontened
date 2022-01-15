@@ -12,7 +12,7 @@
     <el-row justify="start" type="flex" style="margin-bottom: 3vh; margin-left: 5vw; margin-right: 5vw; margin-top: 10px;">
       <el-col>
         <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: $store.getters.systemType==2?'/itas':'/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>
             组卷系统
           </el-breadcrumb-item>
