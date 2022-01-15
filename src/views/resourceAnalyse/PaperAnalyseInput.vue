@@ -98,7 +98,7 @@
       <el-col :span="6">
         <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; padding-top: 13px">
             <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{ path: $store.getters.systemType==2?'/itas':'/' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>{{$store.getters.systemType==2?'智能':'资源'}}分析</el-breadcrumb-item>
                 <el-breadcrumb-item>试卷资源</el-breadcrumb-item>
             </el-breadcrumb>
