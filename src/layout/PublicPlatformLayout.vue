@@ -1,54 +1,44 @@
 <template>
   <el-container id="app">
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
-    <el-header style="height: 75px">
-      <div id="header-sticky" class="sticky-menu">
-        <el-row
-          type="flex"
-          align="center"
-          style="padding-top: 20px; padding-bottom: 20px; position: relative"
+    <el-header style="height: 80px">
+      <div class="logo">
+        <img
+          src="@/assets/luna_icon.png"
+          height="100%"
+          alt="Logo"
+          @click="goToMainPage"
+        />
+      </div>
+      <div id="ailab" @click="goToAILab">
+        <p>AI实验室</p>
+      </div>
+      <div class="vertical_line"></div>
+      <div class="page" style="left: calc(50% - 3% - 90px)">
+        <el-button
+          type="text"
+          class="navbar"
+          style="border-bottom: 2px solid #67b1fe"
+          @click="goToAILab"
+          >首页</el-button
         >
-          <div
-            style="
-              position: relative;
-              border-right: 2px solid #000000;
-              top: 0;
-              padding-left: 30px;
-            "
-          >
-            <img
-              src="@/assets/luna_icon.png"
-              alt="Logo"
-              width="150px"
-              style="cursor: pointer"
-              @click="goToMainPage"
-            />
-          </div>
-          <div
-            id="ailab"
-            style="
-              display: inline-block;
-              width: 120px;
-              height: 37.5px;
-              line-height: 37.5px;
-              font-size: 22px;
-              white-space: nowrap;
-            "
-            @click="goToAILab"
-          >
-            AI实验室
-          </div>
-          <div class="NarbarItem" style="right:110px;">
-            <el-button type="text" @click="goToLogin" class="navbar"
-              >登录</el-button
-            >
-          </div>
-          <div class="NarbarItem" style="right:30px;">
-            <el-button type="text" @click="goToRegister" class="navbar"
-              >注册</el-button
-            >
-          </div>
-        </el-row>
+      </div>
+      <div class="page" style="left: calc(50% - 30px)">
+        <el-button type="text" class="navbar">页面1</el-button>
+      </div>
+      <div class="page" style="left: calc(50% + 3% + 30px)">
+        <el-button type="text" class="navbar">页面2</el-button>
+      </div>
+      <!-- <div class="icon-search">
+        <i class="el-icon-search" style="font-size: 32px"></i>
+      </div> -->
+      <div class="reg">
+        <el-button type="text" icon="el-icon-user-solid" class="reg_text" @click="goToLogin">
+          登陆
+        </el-button>
+      </div>
+      <div class="login">
+        <el-button round @click="goToRegister">注册</el-button>
       </div>
     </el-header>
     <!-- <basic-header/> -->
@@ -66,7 +56,7 @@
 import BasicFooter from "@/layout/components/footer.vue";
 // import login from "@/layout/components/login.vue";
 // import register from "@/layout/components/register.vue";
-import { commonAjax } from "@/common/utils/ajax";
+// import { commonAjax } from "@/common/utils/ajax";
 // import BasicHeader from '@/layout/header.vue'
 // import vueImgVerify from "@/common/components/vue-img-verify.vue";
 export default {
@@ -96,7 +86,7 @@ export default {
     },
   },
   mounted() {
-    this.getGroups();
+    // this.getGroups();
   },
   updated() {
     var user = sessionStorage.getItem("user");
@@ -107,77 +97,6 @@ export default {
     }
   },
   methods: {
-    // 查看用户个人信息及组织架构
-    checkUserInfo() {
-      this.$router.push({
-        path: this.rootPath + "user/userInfo",
-      });
-    },
-    checkUserGroup() {
-      this.$router.push({
-        path: this.rootPath + "user/userGroup",
-      });
-    },
-    getGroups() {
-      commonAjax(this.backendIP + "/api/get_users_by_admin", {}).then((res) => {
-        if (res.data.length > 0 && res.data.some((data) => data.is_admin)) {
-          this.isGroup = true;
-        } else {
-          this.isGroup = false;
-        }
-      });
-    },
-    QAS(index) {
-      if (index == 0) {
-        this.$router.push({
-          path: this.rootPath + "QuestionAnalyseInput",
-        });
-        this.QuestionAnalyseSwitchFlag = false;
-      } else {
-        this.$router.push({
-          path: this.rootPath + "exercise",
-        });
-        this.QuestionAnalyseSwitchFlag = false;
-      }
-    },
-    // 跳转至试题分析的不同位置的对话框
-    QuestionAnalyseSwitch() {
-      this.QuestionAnalyseSwitchFlag = true;
-    },
-    PAS(index) {
-      if (index == 0) {
-        this.$router.push({
-          path: this.rootPath + "paperAnalyseInput",
-        });
-        this.PaperAnalyseSwitchFlag = false;
-      } else {
-        this.$router.push({
-          path: this.rootPath + "searchPaper",
-        });
-        this.PaperAnalyseSwitchFlag = false;
-      }
-    },
-    // 跳转至试卷分析的不同位置的对话框
-    PaperAnalyseSwitch() {
-      this.PaperAnalyseSwitchFlag = true;
-    },
-    Title_Pos() {
-      return {
-        "font-size": "18px",
-        color: "black",
-        "margin-left": "0px",
-      };
-    },
-    Calculate_Title_Margin() {
-      var Width = window.screen.width;
-      var CWidth = document.body.clientWidth;
-      // console.log(Width, CWidth)
-      if (Width - CWidth < 300) {
-        return "0px";
-      } else {
-        return 0 - (CWidth / Width) * (CWidth / Width) * 40 + "px";
-      }
-    },
     ToTop() {
       window.scrollTo(0, 0);
     },
@@ -205,12 +124,6 @@ export default {
       });
       this.ToTop();
     },
-    knowledegeUnitSearch() {
-      this.$router.push({
-        path: this.rootPath + "ku",
-      });
-      this.ToTop();
-    },
     composePaperSystem() {
       this.$router.push({
         path: this.rootPath + "paperCombine",
@@ -223,184 +136,125 @@ export default {
       });
       this.ToTop();
     },
-    login_show() {
-      this.$refs.login.show();
-      this.$refs.register.hide();
-    },
-    register_show() {
-      this.$refs.login.hide();
-      this.$refs.register.show();
-    },
-    login_admin() {
-      this.$router.push({
-        path: "/admin",
-      });
-      this.ToTop();
-    },
-    // 测试退出函数
-    async logout() {
-      await this.$store.dispatch("user/logout");
-      this.$router.push(this.rootPath);
-      location.reload();
-    },
-    goToUserPage() {
-      this.$router.push("/dashboard");
-    },
   },
 };
 </script>
-<style scoped lang="scss">
-.el-header
-  .el-menu--horizontal
-  ::v-deep
-  .el-submenu.is-active
-  .el-submenu__title {
-  border-bottom: none;
-}
-
-.el-header .el-menu--horizontal ::v-deep .el-submenu .el-submenu__title {
-  height: 42px;
-  line-height: 18px;
-  padding-top: 15px;
-  border-bottom: 2px solid transparent;
-  width: 50%;
-  z-index: 999;
-}
-
-.el-header .el-menu .el-menu--horizontal {
-  border-bottom: none;
-}
-</style>
-<style>
-.el-header
-  .el-menu--horizontal
-  ::v-deep
-  .el-submenu.is-active
-  .el-submenu__title {
-  border-bottom: none;
-}
-
-.el-header .el-menu--horizontal ::v-deep .el-submenu .el-submenu__title {
-  height: 42px;
-  line-height: 18px;
-  padding-top: 15px;
-  border-bottom: 2px solid transparent;
-  width: 50%;
-  z-index: 999;
-}
-
-.el-header .el-menu .el-menu--horizontal {
-  border-bottom: none;
-}
-</style>
 
 <style scoped lang="scss">
-.menu-area {
-  margin-top: -60px;
-  padding-bottom: -10px;
-  margin-right: 0px;
-  background-color: #fff;
+.sticky-menu {
+  position: absolute;
+  width: 89%;
+  height: 100%;
+  left: 5.5%;
+  background-color: white;
 }
 
 .logo {
-  margin-left: -100px;
-}
-
-.main-menu ul li {
-  display: inline-block;
-  position: relative;
-  margin-right: -10px;
-}
-
-.main-menu ul li:first-child {
-  margin-left: 0;
-}
-
-.main-menu ul li a {
-  display: block;
-  color: #1a2930;
-  opacity: 0.8;
-  padding: 0;
-  font-size: 18px;
-  font-weight: 700;
-  position: relative;
-  margin-bottom: -20px;
-  text-decoration: none;
-}
-
-.main-menu ul li:hover > a {
-  color: #000;
-  opacity: 1;
-  font-weight: 900;
-  text-decoration: none;
-}
-
-.main-menu ul li.active > a {
-  color: #ffd700;
-  opacity: 1;
-  font-weight: 900;
-  text-decoration: none;
-}
-
-.main-menu ul > li > a::before {
-  content: "";
   position: absolute;
-  left: 0;
-  bottom: 5px;
-  width: 0;
-  height: 2px;
-  background: #fff;
-  transition: 0.3s;
+  width: 168px;
+  height: 42px;
+  left: 12%;
+  top: 19px;
+  // background-color: white;
+  cursor: pointer;
 }
 
-.main-menu ul > li:hover > a::before {
-  width: 100%;
-}
-
-.main-menu ul li.active a::before {
-  content: "";
+.vertical_line {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 2px;
-  background: #fff;
-  transition: 0.3s;
-}
-
-.sticky-menu {
-  left: 0;
-  margin: auto;
-  position: fixed;
-  max-height: 75px;
-  top: 0;
-  width: 100%;
-  box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  background: #fff;
-  -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
-  animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
-  -webkit-box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.5);
-  margin-top: 0px;
-}
-
-/* scrollUp */
-#scrollUp {
-  background: #fff;
+  width: 0px;
   height: 40px;
-  width: 40px;
-  right: 50px;
-  bottom: 77px;
-  color: #666666;
-  text-align: center;
-  border-radius: 50%;
-  font-size: 20px;
-  line-height: 43px;
+  left: calc(12% + 168px);
+  top: 20px;
+  border-left: 2px solid #ffffff;
+  // transform: rotate(90deg);
 }
 
-#scrollUp:hover {
-  background: #666666;
-  color: #fff;
+#ailab {
+  position: absolute;
+  width: 80px;
+  height: 23px;
+  left: calc(12% + 168px);
+  margin-left: 17px;
+  top: 28.5px;
+
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 23px;
+  /* identical to box height */
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.page {
+  position: absolute;
+  width: 60px;
+  height: 25px;
+  // left: calc(50% - 90px);
+  top: 12px;
+  cursor: pointer;
+}
+
+.navbar {
+  /* line-height: 37.5px; */
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 25px;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+}
+
+.icon-search {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  left: 72.3%;
+  top: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+.reg {
+  position: absolute;
+  height: 22px;
+  left: calc(72.3% + 84px);
+  top: 17px;
+  color: white;
+  cursor: pointer;
+}
+
+.reg_text {
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+}
+
+.login {
+  position: absolute;
+  height: 22px;
+  left: calc(72.3% + 169px);
+  top: 20px;
+  // background-color: rgba(0, 0, 0, 0);
+  cursor: pointer;
+  .el-button {
+    background-color: black;
+    color: white;
+    font-size: 18px;
+    border: 2px solid #ffffff;
+    box-sizing: border-box;
+    border-radius: 55px;
+  }
+  .el-button:hover{
+    color: #66b1ff;
+  }
 }
 
 #app {
@@ -410,42 +264,8 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-
-.el-dropdown-link {
-  cursor: pointer;
-  color: #1a2930;
-  font-size: 18px;
-  font-weight: 900;
-}
 </style>
 <style scoped>
-.el-divider--vertical {
-  height: 25px;
-  width: 1px;
-  background-color: black;
-}
-
-.NarbarItem {
-  width: 80px;
-  height: 37.5px;
-  line-height: 37.5px;
-  box-sizing: border-box;
-  background: transparent;
-  position:absolute;
-}
-
-.navbar {
-  /* line-height: 37.5px; */
-  font-size: 18px;
-  color: black;
-  margin: 0 auto;
-}
-
-.el-button {
-  padding: 0px;
-  min-height: 37.5px;
-}
-
 .el-container {
   /*设置内部填充为0，几个布局元素之间没有间距*/
   padding: 0px;
@@ -475,9 +295,6 @@ export default {
   /*统一设置高度为100%*/
   height: 100%;
   width: 100%;
-}
-
-#ailab:hover {
-  cursor: pointer;
+  background: #000;
 }
 </style>
