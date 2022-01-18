@@ -245,7 +245,7 @@ export default {
   // background-color: rgba(0, 0, 0, 0);
   cursor: pointer;
   .el-button {
-    background-color: black;
+    background-color: #23242A;
     color: white;
     font-size: 18px;
     border: 2px solid #ffffff;
@@ -263,6 +263,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  // min-width: 1440px;
 }
 </style>
 <style scoped>
@@ -295,6 +296,6 @@ export default {
   /*统一设置高度为100%*/
   height: 100%;
   width: 100%;
-  background: #000;
+  background: #23242A;
 }
 </style>

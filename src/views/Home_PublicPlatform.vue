@@ -1,235 +1,487 @@
 <template>
-	<div style="margin-top: 5vh;">
-		<el-row style="margin: 30px 0px 10px 0px">
-			<label style="font-size: 30px">AI实验室</label>
-		</el-row>
-
-		<el-row style="margin: 50px 200px 10px 200px">
-			<p style="font-size: 18px;">
-				本平台由LUNA团队提供和维护，依托领先的技术实力，我们为用户提供高品质的教育产品及服务，全面分析试题，提升学习效率，目前推出了包括图片转写、属性预估、相似度分析等多款在线服务，旨在为用户提供智能练习、难题解析等多元化的智能教育服务。
-			</p>
-		</el-row>
-
-		<!-- <el-divider></el-divider> -->
-
-		<!-- API area -->
-		<section class="API-area">
-			<el-row>
-				<el-col :span="4" :offset="5">
-					<el-divider></el-divider>
-				</el-col>
-				<el-col :span="6">
-					<h1 style="padding-left: 5vw; padding-right: 4vw; letter-spacing: 1vw; margin-top: 5px">API服务</h1>
-				</el-col>
-				<el-col :span="4">
-					<el-divider></el-divider>
-				</el-col>
-			</el-row>
-
-			<el-row style="padding-top: 30px; padding-bottom: 30px">
-				<el-col :span="6">
-					<el-row>
-						<el-button @click="ToImageTranscription()" circle style="height: 200px; width: 200px;"><img
-								src="../assets/icon9.png" width="50%" />
-						</el-button>
-					</el-row>
-					<el-row>
-						<label @click="ToImageTranscription()" class="name">
-							图片转写
-						</label>
-					</el-row>
-					<el-row class="description">
-						<span>识别图片中的文字、公式与图例，并将其中的公式转化为统一标准的排版语言（如latex）</span>
-					</el-row>
-				</el-col>
-				<el-col :span="6">
-					<el-row>
-						<el-button @click="ToEstimate()" circle style="height: 200px; width: 200px"><img
-								src="../assets/icon10.png" width="50%" />
-						</el-button>
-					</el-row>
-					<el-row>
-						<label @click="ToEstimate()" class="name">
-							属性预估
-						</label>
-					</el-row>
-					<el-row class="description">
-						<span>自动预测试题的难度、信效度和知识点等属性，提高学生的做题效率和提升组卷的质量</span>
-					</el-row>
-				</el-col>
-				<el-col :span="6">
-					<el-row>
-						<el-button @click="ToSimilarity()" circle style="height: 200px; width: 200px"><img
-								src="../assets/icon11.png" width="50%" />
-						</el-button>
-					</el-row>
-					<el-row>
-						<label @click="ToSimilarity()" class="name">
-							相似度估计
-						</label>
-					</el-row>
-					<el-row class="description">
-						<span>基于人工智能算法，判断两个题目之间的相似程度</span>
-					</el-row>
-				</el-col>
-				<el-col :span="6">
-					<el-row>
-						<el-button @click="ToSegmentation()" circle style="height: 200px; width: 200px"><img
-								src="../assets/icon14.png" width="50%" />
-						</el-button>
-					</el-row>
-					<el-row>
-						<label @click="ToSegmentation()" class="name">
-							试卷打散入库
-						</label>
-					</el-row>
-					<el-row class="description">
-						<span>将试卷切分为题目、答案、解析等部分，提取其中的试题并入数据库</span>
-					</el-row>
-				</el-col>
-			</el-row>
-		</section>
-
-		<!-- algorithm area -->
-		<section class="algorithm-area">
-			<el-row>
-				<el-col :span="3" :offset="5">
-					<el-divider></el-divider>
-				</el-col>
-				<el-col :span="8">
-					<h1 style="padding-left: 5vw; padding-right: 4vw; letter-spacing: 1vw; margin-top: 5px">开源数据与算法</h1>
-				</el-col>
-				<el-col :span="3">
-					<el-divider></el-divider>
-				</el-col>
-			</el-row>
-
-			<el-row style="padding-top: 30px; padding-bottom: 30px">
-				<el-col :span="12">
-					<el-row>
-						<el-button @click="ToEduDate()()" circle style="height: 200px; width: 200px;">
-							<img src="../assets/icon12.png" width="80%" />
-						</el-button>
-					</el-row>
-					<el-row>
-						<label @click="ToEduDate()" class="name">
-							教育数据集
-						</label>
-					</el-row>
-					<el-row class="description">
-						<span>提供教育数据集、便利的下载接口和预处理教育数据集的界面</span>
-					</el-row>
-				</el-col>
-				<el-col :span="12">
-					<el-row>
-						<el-button @click="ToEduNLP()()" circle style="height: 200px; width: 200px">
-							<img src="../assets/icon13.png" width="80%" />
-						</el-button>
-					</el-row>
-					<el-row>
-						<label @click="ToEduNLP()()" class="name">
-							NLP工具
-						</label>
-					</el-row>
-					<el-row class="description">
-						<span>为教育类数据（如试题、试卷等）提供自然语言处理工具</span>
-					</el-row>
-				</el-col>
-			</el-row>
-		</section>
-	</div>
+  <div>
+    <div class="summary">
+      <div class="AIlab_title">AI<span style="color: white">实验室</span></div>
+      <div class="AIlab_text">
+        本平台由LUNA团队提供和维护，依托领先的技术实力，我们为用户提供高品质的教育产品及服务，全面分析试题，提升学习效率，目前推出了包括图片转写、属性预估、相似度分析等多款在线服务，旨在为用户提供智能练习、难题解析等多元化的智能教育服务。
+      </div>
+      <div class="AIlab_photo"></div>
+    </div>
+    <div class="service">
+      <div class="service_title">
+        API<span style="color: black"> 服务</span>
+      </div>
+      <div class="service_text">
+        API服务概述 API服务概述 API服务概述 API服务概述 API服务概述 API服务概述
+        API服务概述 API服务概述 API服务概述 API服务概述 API服务概述 API服务概述
+        API服务概述 API服务概述
+      </div>
+      <div class="API" style="left: 400px; top: 303px">
+        <div
+          class="API_photo"
+          :style="{
+            'background-image':
+              'url(' + require('@/assets/AIlab_Home/2.jpg') + ')',
+          }"
+        ></div>
+        <div class="title">图片转写</div>
+        <div class="desc">
+          识别图片中的文字、公式与图例，并将其中的公式转化为统一标准的排版语言（如latex）
+        </div>
+      </div>
+      <div class="API" style="right: 400px; top: 303px">
+        <div
+          class="API_photo"
+          :style="{
+            'background-image':
+              'url(' + require('@/assets/AIlab_Home/3.jpg') + ')',
+            'background-position': '0px -25px',
+          }"
+        ></div>
+        <div class="title">属性预估</div>
+        <div class="desc">
+          自动预测试题的难度、信效度和知识点等属性，提高学生的做题效率和提升组卷的质量
+        </div>
+      </div>
+      <div class="API" style="left: 400px; top: 648px">
+        <div
+          class="API_photo"
+          :style="{
+            'background-image':
+              'url(' + require('@/assets/AIlab_Home/4.jpg') + ')',
+            'background-position': '0px -50px',
+          }"
+        ></div>
+        <div class="title">相似度估计</div>
+        <div class="desc">基于人工智能算法，判断两个题目之间的相似程度</div>
+      </div>
+      <div class="API" style="right: 400px; top: 648px">
+        <div
+          class="API_photo"
+          :style="{
+            'background-image':
+              'url(' + require('@/assets/AIlab_Home/5.jpg') + ')',
+            'background-position': '0px -50px',
+          }"
+        ></div>
+        <div class="title">试卷打散入库</div>
+        <div class="desc">
+          将试卷切分为题目、答案、解析等部分，提取其中的试题并入数据库
+        </div>
+      </div>
+    </div>
+    <div class="algorithm">
+      <div class="algo_title">开源服务与算法</div>
+      <div class="algo_text">
+        开源服务与算法概述 开源服务与算法概述 开源服务与算法概述
+        开源服务与算法概述 开源服务与算法概述 开源服务与算法概述
+        开源服务与算法概述 开源服务与算法概述
+      </div>
+      <div class="algo1_title">
+        教育<span style="color: #409eff">数据</span>集
+      </div>
+      <div class="algo1_text">
+        提供教育数据集、便利的下载接口和预处理教育数据集的界面
+      </div>
+      <div class="algo1_use" @click="ToEduDate">
+        <span class="button">点击使用</span>
+      </div>
+      <div class="algo1_photo"></div>
+      <div class="algo2_title">
+        <span style="color: #409eff">NLP</span>工具
+      </div>
+      <div class="algo2_text">
+        为教育类数据（如试题、试卷等）提供自然语言处理工具
+      </div>
+      <div class="algo2_use" @click="ToEduNLP">
+        <span class="button">点击使用</span>
+      </div>
+      <div class="algo2_photo"></div>
+    </div>
+  </div>
 </template>
 
 <script>
-	export default {
-		name: "PublicPlatform",
-		activated() {
-			this.ToTop();
-		},
-		methods: {
-			ToTop() {
-				window.scrollTo(0, 0);
-			},
-			ToImageTranscription() {
-				this.$router.push({
-					path: "/PublicPlatform/ImageTranscription"
-				});
-				this.ToTop();
-			},
-			ToEstimate() {
-				this.$router.push({
-					path: "/PublicPlatform/Estimate"
-				});
-				this.ToTop();
-			},
-			ToSimilarity() {
-				this.$router.push({
-					path: "/PublicPlatform/Similarity"
-				});
-				this.ToTop();
-			},
-			ToSegmentation() {
-				this.$router.push({
-					path: "/PublicPlatform/segmentation"
-				});
-				this.ToTop();
-			},
-			ToEduDate() {
-				window.location = "https://github.com/bigdata-ustc/EduData"
-			},
-			ToEduNLP() {
-				window.location = "https://github.com/bigdata-ustc/EduNLP"
-			},
-		}
-	}
+export default {
+  name: "PublicPlatform",
+  activated() {
+    this.ToTop();
+  },
+  methods: {
+    ToTop() {
+      window.scrollTo(0, 0);
+    },
+    ToImageTranscription() {
+      this.$router.push({
+        path: "/PublicPlatform/ImageTranscription",
+      });
+      this.ToTop();
+    },
+    ToEstimate() {
+      this.$router.push({
+        path: "/PublicPlatform/Estimate",
+      });
+      this.ToTop();
+    },
+    ToSimilarity() {
+      this.$router.push({
+        path: "/PublicPlatform/Similarity",
+      });
+      this.ToTop();
+    },
+    ToSegmentation() {
+      this.$router.push({
+        path: "/PublicPlatform/segmentation",
+      });
+      this.ToTop();
+    },
+    ToEduDate() {
+      window.location = "https://github.com/bigdata-ustc/EduData";
+    },
+    ToEduNLP() {
+      window.location = "https://github.com/bigdata-ustc/EduNLP";
+    },
+  },
+};
 </script>
 
-<style scoped>
-	.API-area {
-		padding-top: 50px;
-		background: #EEF5FE;
-		background-size: 100%;
-		position: relative;
-		min-height: 600px;
-		background-position: center;
-		background-size: cover;
-		z-index: 1;
-	}
+<style scoped lang="scss">
+.summary {
+  position: relative;
+  width: 100%;
+  min-width: 1440px;
+  // overflow: scroll;
+  height: 780px;
+  left: 0px;
+  background: #23242a;
+}
 
-	.algorithm-area {
-		padding-top: 50px;
-		padding-bottom: 50px;
-	}
+.AIlab_title {
+  position: absolute;
+  left: 9.93%;
+  top: 25.9%;
 
-	.name {
-		margin-top: 30px;
-		font-size: 20px;
-	}
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 58px;
+  line-height: 56px;
+  /* or 97% */
+  letter-spacing: 0.06em;
+  color: #409eff;
+}
 
-	.name:hover {
-		cursor: pointer;
-	}
+.AIlab_text {
+  position: absolute;
+  left: 9.93%;
+  right: 57.85%;
+  top: 37.8%;
+  text-align: left;
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: 290;
+  font-size: 18px;
+  line-height: 32px;
+  /* or 178% */
+  color: #e5e5e5;
+  mix-blend-mode: normal;
+}
 
-	.description {
-		margin-top: 15px;
-		font-size: 10px;
-		width: 200px;
-		margin: auto;
-	}
+.AIlab_photo {
+  position: absolute;
+  left: 47.36%;
+  right: 6.88%;
+  top: 14.1%;
+  bottom: 17.4%;
 
-	.el-divider__text {
-		position: absolute;
-		background-color: rgba(0, 0, 0, 0);
-		padding: 0 20px;
-		font-weight: 500;
-		color: #303133;
-		font-size: 14px
-	}
+  background-image: url("~@/assets/AIlab_Home/1.jpg");
+  background-size: cover;
+  border-radius: 12px;
+}
 
-	.el-divider--horizontal {
-		display: block;
-		height: 4px;
-		width: 100%;
-		margin: 24px 0
-	}
+.service {
+  position: relative;
+  width: 100%;
+  height: 1100px;
+  min-width: 1440px;
+  // overflow: scroll;
+  left: 0px;
+  background: #e5e5e5;
+}
+
+.service_title {
+  position: absolute;
+  left: 500px;
+  right: 500px;
+  top: 80px;
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 56px;
+  /* identical to box height, or 156% */
+  text-align: center;
+  letter-spacing: 0.06em;
+  color: #409eff;
+  mix-blend-mode: normal;
+}
+
+.service_text {
+  position: absolute;
+  left: 150px;
+  right: 150px;
+  top: 159px;
+
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: 290;
+  font-size: 18px;
+  line-height: 30px;
+  text-align: center;
+  color: #7d7987;
+  mix-blend-mode: normal;
+}
+
+.API {
+  position: absolute;
+  width: 306.32px;
+  height: 309.82px;
+  background: #ffffff;
+  box-shadow: 10px 40px 50px rgba(229, 233, 246, 0.4);
+  border-radius: 20px;
+  .API_photo {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 136px;
+    background-size: cover;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+  .title {
+    position: absolute;
+    left: 22.76px;
+    top: 148px;
+    width: 180px;
+    height: 44px;
+    text-align: left;
+    font-family: Mulish;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 56px;
+    letter-spacing: 0.02em;
+    color: #000000;
+    mix-blend-mode: normal;
+  }
+  .desc {
+    position: absolute;
+    text-align: left;
+    left: 23px;
+    top: 202px;
+    width: 241px;
+    height: 66px;
+    font-family: Mulish;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 28px;
+    color: #7d7987;
+    mix-blend-mode: normal;
+  }
+}
+
+.algorithm {
+  position: relative;
+  width: 100%;
+  height: 1400px;
+  left: 0px;
+  min-width: 1440px;
+  background: #232426;
+}
+
+.algo_title {
+  position: absolute;
+  left: 555px;
+  right: 555px;
+  top: 120px;
+  height: 67px;
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 56px;
+  /* or 156% */
+  text-align: center;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  mix-blend-mode: normal;
+}
+
+.algo_text {
+  position: absolute;
+  left: 150px;
+  right: 150px;
+  top: 200px;
+  height: 72px;
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: 290;
+  font-size: 18px;
+  line-height: 30px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.88);
+  mix-blend-mode: normal;
+}
+
+.algo1_title {
+  position: absolute;
+  left: 200px;
+  width: 300px;
+  top: 400px;
+  height: 100px;
+  text-align: left;
+
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 48px;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  mix-blend-mode: normal;
+}
+
+.algo1_text {
+  position: absolute;
+  left: 200px;
+  width: 440px;
+  top: 493px;
+  height: 79px;
+  text-align: left;
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: 290;
+  font-size: 18px;
+  line-height: 30px;
+  /* or 167% */
+
+  color: rgba(255, 255, 255, 0.88);
+
+  mix-blend-mode: normal;
+}
+
+.algo1_use {
+  position: absolute;
+  left: 200px;
+  width: 167px;
+  top: 600px;
+  height: 60px;
+  cursor: pointer;
+  border: 1.4px solid #0e6fff;
+  box-sizing: border-box;
+  border-radius: 55px;
+  .button {
+    font-family: Mulish;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 57.2px;
+    /* or 333% */
+    text-align: center;
+    align-items: center;
+
+    color: #0e6fff;
+    letter-spacing: 2px;
+    mix-blend-mode: normal;
+  }
+}
+
+.algo1_photo {
+  position: absolute;
+  width: 564px;
+  height: 359px;
+  left: 745px;
+  top: 366px;
+
+  background-image: url("~@/assets/AIlab_Home/6.jpg");
+  background-size: cover;
+  border-radius: 12px;
+}
+
+.algo2_title {
+  position: absolute;
+  left: 860px;
+  width: 300px;
+  top: 860px;
+  height: 100px;
+  text-align: left;
+
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 48px;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  mix-blend-mode: normal;
+}
+
+.algo2_text {
+  position: absolute;
+  left: 860px;
+  width: 440px;
+  top: 957px;
+  height: 79px;
+  text-align: left;
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: 290;
+  font-size: 18px;
+  line-height: 30px;
+  /* or 167% */
+
+  color: rgba(255, 255, 255, 0.88);
+
+  mix-blend-mode: normal;
+}
+
+.algo2_use {
+  position: absolute;
+  left: 860px;
+  width: 167px;
+  top: 1076px;
+  height: 60px;
+  cursor: pointer;
+  border: 1.4px solid #0e6fff;
+  box-sizing: border-box;
+  border-radius: 55px;
+  .button {
+    font-family: Mulish;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 57.2px;
+    /* or 333% */
+    text-align: center;
+    align-items: center;
+
+    color: #0e6fff;
+    letter-spacing: 2px;
+    mix-blend-mode: normal;
+  }
+}
+
+.algo2_photo {
+  position: absolute;
+  width: 564px;
+  height: 359px;
+  left: 170px;
+  top: 830px;
+
+  background-image: url("~@/assets/AIlab_Home/7.jpg");
+  background-size: cover;
+  border-radius: 12px;
+}
 </style>
