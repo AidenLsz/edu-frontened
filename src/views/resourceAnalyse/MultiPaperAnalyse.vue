@@ -7,21 +7,14 @@
       padding-right: 10%;
       padding-top: 10px;
     "
-    v-loading="Download_loading"
-    :element-loading-text="'正在处理下载报告，请稍等...'"
+    v-loading="Question_Analysing || Download_loading"
+    :element-loading-text="
+      Question_Analysing
+        ? progress + '/' + chosen_paper_List.length + '分析中，请等待...'
+        : '正在处理下载报告，请稍等...'
+    "
     element-loading-spinner="el-icon-loading"
   >
-    <LunaProgress
-      v-if="Question_Analysing"
-      :Loading_Text="'正在分析，请稍后，当前进度（' + progress + '/' + chosen_paper_List.length + '）...'"
-      :Bar_Type="'page'"
-      :Duration_Time="3"
-      :Full_Count.sync="chosen_paper_List.length"
-      :Now_Count.sync="progress"
-      @Finish_Loading="Finish_Loading()"
-    >
-
-    </LunaProgress>
     <div id="Top_Nav" class="Top_Nav"></div>
     <!-- <div class="panel"> -->
     <el-row justify="start" type="flex">
@@ -339,10 +332,9 @@ import * as echarts from "echarts";
 // import "echarts-wordcloud";
 import { commonAjax } from "@/common/utils/ajax";
 import $ from "jquery";
-import LunaProgress from '../../common/components/LunaProgress.vue';
 
 export default {
-  components: { SearchPaper, LunaProgress},
+  components: { SearchPaper },
   name: "MultiPaperAnalyse",
   data() {
     return {
@@ -507,12 +499,11 @@ export default {
     },
     // 分析试卷
     Analyse() {
-      console.log(this.checkList)
-      this.progress = 0;
+      let status = [];
       // console.log("length", this.chosen_paper_List.length);
       this.analyse_result.length = this.chosen_paper_List.length;
-      // for (let i = 0; i < this.chosen_paper_List.length; i++)
-      //   status.push(false);
+      for (let i = 0; i < this.chosen_paper_List.length; i++)
+        status.push(false);
       // console.log("status", status);
       // return;
       for (let i = 0; i < this.chosen_paper_List.length; i++) {
@@ -528,51 +519,55 @@ export default {
           let index = this.chosen_paper_List.findIndex(
             (x) => x.ID === data.Paper_Json.id
           );
+          status[index] = true;
+          // console.log("status[" + index + "] has been true");
+          //this.analyse_result.push(data.Paper_Json);
           this.analyse_result[index] = data.Paper_Json;
-          this.progress++;
         });
       }
-      // this.status_Listener = setInterval(this.test_status(status), 200);
-    },
-    // 2021/12/26更新，修改进度条的外貌
-    // 结束监听
-    Finish_Loading(){
-      this.progress = 0;
-      this.Question_Analysing = false;
-      setTimeout(()=>{
-        if (this.checkList.indexOf("数字属性") > -1) this.Init_word_cnt_Bar();
-        if (this.checkList.indexOf("关键词") > -1) this.Init_Word_Cloud();
-        if (this.checkList.indexOf("知识点分值") > -1) this.Init_Radar();
-        if (this.checkList.indexOf("难度变化") > -1) this.Init_difficulty_change();
-        this.analyse_finished = true;
-      }, 100)
-      
+      this.status_Listener = setInterval(this.test_status(status), 200);
     },
     // 状态监听函数
-    // test_status(status) {
-    //   //这里一定要用函数闭包，否则setinterval只会执行一次
-    //   return () => {
-    //     let flag = true;
-    //     this.progress = 0;
-    //     //console.log("flag status", flag, status);
-    //     for (let i = 0; i < status.length; i++) {
-    //       flag = flag && status[i];
-    //       if (status[i]) this.progress++;
-    //     }
-    //     //console.log("flag", flag);
-    //     if (flag) {
-    //       clearInterval(this.status_Listener);
-    //       this.Question_Analysing = false;
-    //       if (this.checkList.indexOf("数字属性") > -1) this.Init_word_cnt_Bar();
-    //       if (this.checkList.indexOf("关键词") > -1) this.Init_Word_Cloud();
-    //       if (this.checkList.indexOf("知识点分值") > -1) this.Init_Radar();
-    //       if (this.checkList.indexOf("难度变化") > -1)
-    //         this.Init_difficulty_change();
-    //       this.analyse_finished = true;
-    //       // console.log("finish", this.analyse_finished);
-    //     }
-    //   };
-    // },
+    test_status(status) {
+      //这里一定要用函数闭包，否则setinterval只会执行一次
+      return () => {
+        let flag = true;
+        this.progress = 0;
+        //console.log("flag status", flag, status);
+        for (let i = 0; i < status.length; i++) {
+          flag = flag && status[i];
+          if (status[i]) this.progress++;
+        }
+        //console.log("flag", flag);
+        if (flag) {
+          clearInterval(this.status_Listener);
+          this.Question_Analysing = false;
+          // if (this.checkList.indexOf("数字属性") > -1) this.Init_word_cnt_Bar();
+          // if (this.checkList.indexOf("关键词") > -1) this.Init_Word_Cloud();
+          // if (this.checkList.indexOf("知识点分值") > -1) this.Init_Radar();
+          // if (this.checkList.indexOf("难度变化") > -1)
+          //   this.Init_difficulty_change();
+          this.Init_word_cnt_Bar();
+          this.Init_Word_Cloud();
+          this.Init_Radar();
+          this.Init_difficulty_change();
+          this.analyse_finished = true;
+          // console.log("finish", this.analyse_finished);
+        }
+      };
+    },
+    Show_All() {
+      this.show_word_cnt_Bar = true;
+      this.show_Word_Cloud = true;
+      this.show_knowledge2score = true;
+      this.show_difficulty_change = true;
+    },
+    Close_All() {
+      this.show_word_cnt_Bar = false;
+      this.show_Word_Cloud = false;
+      this.show_knowledge2score = false;
+      this.show_difficulty_change = false;
+    },
     // 初始化词云
     Init_Word_Cloud() {
       this.title0 = this.analyse_result[0].title;
@@ -888,7 +883,6 @@ export default {
         option.series[1].data.push(this.analyse_result[i].figure_cnt);
         option.series[2].data.push(this.analyse_result[i].equation_cnt);
       }
-      console.log(option.series)
       myChart.setOption(option);
 
       //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
