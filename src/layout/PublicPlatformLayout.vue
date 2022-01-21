@@ -14,7 +14,7 @@
         <p>AI实验室</p>
       </div>
       <div class="vertical_line"></div>
-      <div class="page" style="left: calc(50% - 3% - 90px)">
+      <div class="page" style="left: calc(50% - 30px)">
         <el-button
           type="text"
           class="navbar"
@@ -23,12 +23,12 @@
           >首页</el-button
         >
       </div>
-      <div class="page" style="left: calc(50% - 30px)">
+      <!-- <div class="page" style="left: calc(50% - 30px)">
         <el-button type="text" class="navbar">页面1</el-button>
       </div>
       <div class="page" style="left: calc(50% + 3% + 30px)">
         <el-button type="text" class="navbar">页面2</el-button>
-      </div>
+      </div> -->
       <!-- <div class="icon-search">
         <i class="el-icon-search" style="font-size: 32px"></i>
       </div> -->

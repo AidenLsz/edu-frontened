@@ -23,11 +23,16 @@
             'background-image':
               'url(' + require('@/assets/AIlab_Home/2.jpg') + ')',
           }"
+          @click="ToImageTranscription"
         ></div>
-        <div class="title">图片转写</div>
+        <div class="title" @click="ToImageTranscription">图片转写</div>
         <div class="desc">
           识别图片中的文字、公式与图例，并将其中的公式转化为统一标准的排版语言（如latex）
         </div>
+        <el-link class="link" type="primary" @click="ToImageTranscription"
+          >了解更多
+          <i class="el-icon-right"></i>
+        </el-link>
       </div>
       <div class="API" style="right: 400px; top: 303px">
         <div
@@ -37,13 +42,18 @@
               'url(' + require('@/assets/AIlab_Home/3.jpg') + ')',
             'background-position': '0px -25px',
           }"
+          @click="ToEstimate"
         ></div>
-        <div class="title">属性预估</div>
+        <div class="title" @click="ToEstimate">属性预估</div>
         <div class="desc">
           自动预测试题的难度、信效度和知识点等属性，提高学生的做题效率和提升组卷的质量
         </div>
+        <el-link class="link" type="primary" @click="ToEstimate"
+          >了解更多
+          <i class="el-icon-right"></i>
+        </el-link>
       </div>
-      <div class="API" style="left: 400px; top: 648px">
+      <div class="API" style="left: 400px; top: 700px">
         <div
           class="API_photo"
           :style="{
@@ -51,11 +61,16 @@
               'url(' + require('@/assets/AIlab_Home/4.jpg') + ')',
             'background-position': '0px -50px',
           }"
+          @click="ToSimilarity"
         ></div>
-        <div class="title">相似度估计</div>
+        <div class="title" @click="ToSimilarity">相似度估计</div>
         <div class="desc">基于人工智能算法，判断两个题目之间的相似程度</div>
+        <el-link class="link" type="primary" @click="ToSimilarity"
+          >了解更多
+          <i class="el-icon-right"></i>
+        </el-link>
       </div>
-      <div class="API" style="right: 400px; top: 648px">
+      <div class="API" style="right: 400px; top: 700px">
         <div
           class="API_photo"
           :style="{
@@ -63,11 +78,16 @@
               'url(' + require('@/assets/AIlab_Home/5.jpg') + ')',
             'background-position': '0px -50px',
           }"
+          @click="ToSegmentation"
         ></div>
-        <div class="title">试卷打散入库</div>
+        <div class="title" @click="ToSegmentation">试卷打散入库</div>
         <div class="desc">
           将试卷切分为题目、答案、解析等部分，提取其中的试题并入数据库
         </div>
+        <el-link class="link" type="primary" @click="ToSegmentation"
+          >了解更多
+          <i class="el-icon-right"></i>
+        </el-link>
       </div>
     </div>
     <div class="algorithm">
@@ -87,9 +107,7 @@
         <span class="button">点击使用</span>
       </div>
       <div class="algo1_photo"></div>
-      <div class="algo2_title">
-        <span style="color: #409eff">NLP</span>工具
-      </div>
+      <div class="algo2_title"><span style="color: #409eff">NLP</span>工具</div>
       <div class="algo2_text">
         为教育类数据（如试题、试卷等）提供自然语言处理工具
       </div>
@@ -245,7 +263,7 @@ export default {
 .API {
   position: absolute;
   width: 306.32px;
-  height: 309.82px;
+  height: 360px;
   background: #ffffff;
   box-shadow: 10px 40px 50px rgba(229, 233, 246, 0.4);
   border-radius: 20px;
@@ -258,6 +276,19 @@ export default {
     background-size: cover;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
+    transition: width 0.2s, height 0.2s, left 0.2s, top 0.2s;
+    -webkit-transition: width 0.2s, height 0.2s, left 0.2s, top 0.2s;
+  }
+  .API_photo:hover {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: calc(100% + 20px);
+    height: 156px;
+    // background-size: cover;
+    // border-top-left-radius: 20px;
+    // border-top-right-radius: 20px;
+    cursor: pointer;
   }
   .title {
     position: absolute;
@@ -275,6 +306,10 @@ export default {
     color: #000000;
     mix-blend-mode: normal;
   }
+  .title:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
   .desc {
     position: absolute;
     text-align: left;
@@ -289,6 +324,18 @@ export default {
     line-height: 28px;
     color: #7d7987;
     mix-blend-mode: normal;
+  }
+  .link {
+    position: absolute;
+    text-align: left;
+    left: 23px;
+    bottom: 30px;
+    height: 28px;
+    font-family: Mulish;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 28px;
   }
 }
 
@@ -398,6 +445,13 @@ export default {
   }
 }
 
+.algo1_use:hover {
+  background-color: #458ff6;
+  .button {
+    color: #ffffff;
+  }
+}
+
 .algo1_photo {
   position: absolute;
   width: 564px;
@@ -470,6 +524,13 @@ export default {
     color: #0e6fff;
     letter-spacing: 2px;
     mix-blend-mode: normal;
+  }
+}
+
+.algo2_use:hover {
+  background-color: #458ff6;
+  .button {
+    color: #ffffff;
   }
 }
 

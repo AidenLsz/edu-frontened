@@ -129,7 +129,7 @@
               v-else
               style="font-size: 24px; line-height: 30px; margin-right: 20px"
             ></i>
-            数字属性比较
+            表述分析
           </el-row>
         </el-col>
       </el-row>
@@ -142,6 +142,12 @@
         {{ equation_cnt_aver }}
         个以上的公式。不同模式的信息载体能更为全面地考查学生获取和整合信息的能力，要求学生联系并充分利用公式、图像与文本之间的关系。
       </el-row>
+      <el-radio-group v-model="tabPosition" style="margin-bottom: 30px">
+        <el-radio-button label="top">top</el-radio-button>
+        <el-radio-button label="right">right</el-radio-button>
+        <el-radio-button label="bottom">bottom</el-radio-button>
+        <el-radio-button label="left">left</el-radio-button>
+      </el-radio-group>
       <!-- 图表 -->
       <el-row v-show="show_word_cnt_Bar" type="flex" justify="center">
         <div id="word_cnt_Bar" class="word_cnt_Bar"></div>
