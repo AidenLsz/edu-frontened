@@ -47,7 +47,7 @@ export default {
   }
 };
 </script>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .upload-btn {
   padding: 6px 6px;
   height: 40px;
