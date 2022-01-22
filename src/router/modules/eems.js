@@ -5,12 +5,12 @@ const router=[
   },
   {
     path: "exercise",
-    name: "Exercise",
+    name: "eems/Exercise",
     component:()=> import("@/views/resourceQuery/Exercise/index"),
   },
   {
     path: "multiSourceSearch",
-    name: "MultiSourceSearch",
+    name: "eems/MultiSourceSearch",
     component:()=> import("@/views/resourceQuery/Exercise/MultiSourceSearch"),
   },
   // {
@@ -20,12 +20,12 @@ const router=[
   // },
   {
     path: "searchPaper",
-    name: "SearchPaper",
+    name: "eems/SearchPaper",
     component:()=> import("@/views/resourceQuery/SearchPaper"),
   },
   {
     path: "paperDetailShow",
-    name: "PaperDetailShow",
+    name: "eems/PaperDetailShow",
     component:()=> import("@/views/resourceQuery/components/PaperDetailShow"),
   },
   //开放平台
@@ -41,7 +41,7 @@ const router=[
   // },
   {
     path: "inputMarked",
-    name: "inputMarked",
+    name: "eems/inputMarked",
     component:()=> import("@/views/resourceInput/InputMarked"),
   },
   // {
@@ -56,30 +56,30 @@ const router=[
 	// },
   {
     path: "paperAnalyse",
-    name: "PaperAnalyse",
+    name: "eems/PaperAnalyse",
     component:()=> import("@/views/resourceAnalyse/PaperAnalyse")
   },
   {
     path: "paperAnalyseInput",
-    name: "PaperAnalyseInput",
+    name: "eems/PaperAnalyseInput",
     component:()=> import("@/views/resourceAnalyse/PaperAnalyseInput"),
   },
   {
     path: "questionAnalyse",
-    name: "QuestionAnalyse",
+    name: "eems/QuestionAnalyse",
     component:()=> import("@/views/resourceAnalyse/QuestionAnalyse")
   },
   {
     path: "questionAnalyseInput",
-    name: "QuestionAnalyseInput",
+    name: "eems/QuestionAnalyseInput",
     component:()=> import("@/views/resourceAnalyse/QuestionAnalyseInput")
   },
   {
     path: "inputPaper",
-    name: "inputPaper",
+    name: "eems/inputPaper",
     component:()=> import("@/views/resourceInput/InputPaper"),
   },
-]
+  ]
 
 
 export default router

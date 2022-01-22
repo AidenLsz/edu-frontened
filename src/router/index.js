@@ -37,25 +37,21 @@ const router = new Router({
   routes: [
     {
       path: "/itas",
-      name: "ITAS",
       component: ITASLayout,
       children:UserRouter.concat(ITASRouter)
     },
     {
       path: "/eems",
-      name: "EEMS",
       component: EEMSLayout,
       children:UserRouter.concat(EEMSRouter)
     },
     {
       path: "/publicPlatform",
-      name: "publicPlatform",
       component: PublicPlatformLayout,
       children:UserRouter.concat(PublicPlatformRouter)
     },
     {
       path: "/",
-      name: "Home",
       component: BasicLayout,
       children:UserRouter.concat(VisitorRouter)
     }
@@ -69,7 +65,7 @@ router.beforeEach((to, from, next) => {
     next()
     openLoginDialog()
   }else if((!switchToEEMS(to.path)||!switchToITAS(to.path))&&!validateLoginPermission(to.path)){
-    if(from.path=='/'){
+    if(from.path === '/'){
       //输入url跳转时
       next('/')
     }else{

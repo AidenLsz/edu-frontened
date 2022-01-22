@@ -5,7 +5,7 @@ const router=[
 },
 {
     path: "exercise",
-    name: "Exercise",
+    name: "itas/Exercise",
     component:()=> import("@/views/resourceQuery/Exercise/index"),
   },
   // {
@@ -15,12 +15,12 @@ const router=[
   // },
   {
     path: "searchPaper",
-    name: "SearchPaper",
+    name: "itas/SearchPaper",
     component:()=> import("@/views/resourceQuery/SearchPaper"),
   },
   {
     path: "paperDetailShow",
-    name: "PaperDetailShow",
+    name: "itas/PaperDetailShow",
     component:()=> import("@/views/resourceQuery/components/PaperDetailShow"),
   },
   //开放平台
@@ -36,12 +36,12 @@ const router=[
   // },
   {
     path: "inputMarked",
-    name: "inputMarked",
+    name: "itas/inputMarked",
     component:()=> import("@/views/resourceInput/InputMarked"),
   },
   {
     path: "members",
-    name: "Members",
+    name: "itas/Members",
     component:()=> import("@/views/Members_Introduce")
   },
 // {
@@ -51,42 +51,42 @@ const router=[
 // },
   {
     path: "paperAnalyse",
-    name: "PaperAnalyse",
+    name: "itas/PaperAnalyse",
     component:()=> import("@/views/resourceAnalyse/PaperAnalyse")
   },
   {
     path: "paperAnalyseInput",
-    name: "PaperAnalyseInput",
+    name: "itas/PaperAnalyseInput",
     component:()=> import("@/views/resourceAnalyse/PaperAnalyseInput"),
   },
   {
     path: "questionAnalyse",
-    name: "QuestionAnalyse",
+    name: "itas/QuestionAnalyse",
     component:()=> import("@/views/resourceAnalyse/QuestionAnalyse")
   },
   {
     path: "questionAnalyseInput",
-    name: "QuestionAnalyseInput",
+    name: "itas/QuestionAnalyseInput",
     component:()=> import("@/views/resourceAnalyse/QuestionAnalyseInput")
   },
   {
     path: "MultiPaperAnalyse",
-    name: "MultiPaperAnalyse",
+    name: "itas/MultiPaperAnalyse",
     component: () => import("@/views/resourceAnalyse/MultiPaperAnalyse.vue"),
   },
   {
     path: "inputPaper",
-    name: "inputPaper",
+    name: "itas/inputPaper",
     component:()=> import("@/views/resourceInput/InputPaper"),
   },
   {
     path: "paperCombine",
-    name: "paperCombine",
+    name: "itas/paperCombine",
     component:()=> import("@/views/paperCombine/PaperCombine")
   },
   {
     path: "ku",
-    name: "ku",
+    name: "itas/ku",
     component:()=> import("@/views/resourceQuery/KU/index")
   }
 ]

@@ -435,8 +435,11 @@ export default {
 <style lang="scss" scoped>
 .pd-container {
   position: relative;
-  margin: 0 10vw;
+  padding: 0 10vw;
+  overflow: hidden;
   text-align: left;
+  padding-top: 32px;
+  min-height: 600px;
 
   &:before {
     content: "";
@@ -444,7 +447,7 @@ export default {
     width: 100vw;
     height: 100vw;
     top: -60vw;
-    right: -55vw;
+    right: -56vw;
     border-radius: 50px;
     transform: rotate(10deg);
     background: #d9e9fe;

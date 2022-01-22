@@ -4,7 +4,7 @@
 // import Admin from "@/views/Admin";
 // import Estimate from "@/views/publicPlatform/Estimate.vue";
 // import Segmentation from "@/views/publicPlatform/Segmentation.vue";
-// import Home from "@/views/Home";
+import Home from "@/views/Home";
 // import Members from "@/views/Members_Introduce";
 // import Similarity from "@/views/publicPlatform/Similarity.vue";
 // import ImageTranscription from "@/views/publicPlatform/ImageTranscription.vue"
@@ -50,46 +50,46 @@
 const visitorRouter=[
   {
     path: '/',
-    component: () => import("@/views/Home"),
+    component: Home, // 首页不需要模块化
   },
   {
     path:'/paperdivide',
-    name: "Paperdivide",
+    name: "visitor/Paperdivide",
     component: () => import("@/views/labelManage/Paperdivide")
   },
   {
     path: "/ku",
-    name: "Knowledge Unit",
+    name: "visitor/Knowledge Unit",
     component: () => import("@/views/resourceQuery/KU/index.vue"),
   },
   {
     path: "/paperCombine",
-    name: "PaperCombine",
+    name: "visitor/PaperCombine",
     component: () => import("@/views/paperCombine/PaperCombine.vue"),
   },
   {
     path: "/answerCard",
-    name: "AnswerCard",
+    name: "visitor/AnswerCard",
     component: () => import("@/views/paperCombine/AnswerCard"),
   },
   {
     path: "/exercise",
-    name: "Exercise",
+    name: "visitor/Exercise",
     component: () => import("@/views/resourceQuery/Exercise/index.vue"),
   },
   {
     path: "/searchPaper",
-    name: "SearchPaper",
+    name: "visitor/SearchPaper",
     component: () => import("@/views/resourceQuery/SearchPaper"),
   },
   {
     path: "/paperDetailShow",
-    name: "PaperDetailShow",
+    name: "visitor/PaperDetailShow",
     component: () => import("@/views/resourceQuery/components/PaperDetailShow"),
   },
   {
     path: "/resources",
-    name: "Resources",
+    name: "visitor/Resources",
     component: () => import("@/views/resourceQuery/Resources"),
   },
   // {
@@ -114,27 +114,27 @@ const visitorRouter=[
   // },
   {
     path: "/MultiPaperAnalyse",
-    name: "MultiPaperAnalyse",
+    name: "visitor/MultiPaperAnalyse",
     component: () => import("@/views/resourceAnalyse/MultiPaperAnalyse.vue"),
   },
   {
     path: "/inputMarked",
-    name: "inputMarked",
+    name: "visitor/inputMarked",
     component: () => import("@/views/resourceInput/InputMarked"),
   },
   {
     path: "/testPage",
-    name: "TestPage",
+    name: "visitor/TestPage",
     component: () => import("@/views/testPage/TestPage"),
   },
   {
     path: "/testPageList",
-    name: "TestPageList",
+    name: "visitor/TestPageList",
     component: () => import("@/views/testPage/TestPageList"),
   },
   {
     path: "/vditorTest",
-    name: "vditorTest",
+    name: "visitor/vditorTest",
     component: () => import("@/views/testPage/vditorTest"),
   },
   // {
@@ -149,52 +149,52 @@ const visitorRouter=[
   // },
   {
     path: "/members",
-    name: "Members",
+    name: "visitor/Members",
     component: () => import("@/views/Members_Introduce"),
   },
   {
     path: "/publicPlatform",
-    name: "PublicPlatform",
+    name: "visitor/PublicPlatform",
     component: () => import("@/views/Home_PublicPlatform"),
   },
   {
     path: "/paperAnalyse",
-    name: "PaperAnalyse",
+    name: "visitor/PaperAnalyse",
     component: () => import("@/views/resourceAnalyse/PaperAnalyse"),
   },
   {
     path: "/paperAnalyseInput",
-    name: "PaperAnalyseInput",
+    name: "visitor/PaperAnalyseInput",
     component: () => import("@/views/resourceAnalyse/PaperAnalyseInput"),
   },
   {
     path: "/questionAnalyse",
-    name: "QuestionAnalyse",
+    name: "visitor/QuestionAnalyse",
     component: () => import("@/views/resourceAnalyse/QuestionAnalyse"),
   },
   {
     path: "/questionAnalyseInput",
-    name: "QuestionAnalyseInput",
+    name: "visitor/QuestionAnalyseInput",
     component: () => import("@/views/resourceAnalyse/QuestionAnalyseInput"),
   },
   {
     path: "/inputPaper",
-    name: "inputPaper",
+    name: "visitor/inputPaper",
     component: () => import("@/views/resourceInput/InputPaper"),
   },
   {
     path: "/questionUpdate",
-    name: "questionUpdate",
+    name: "visitor/questionUpdate",
     component: () => import("@/views/labelManage/QuestionUpdate"),
   },
   {
     path: "/Agreement",
-    name: "UserAgreement",
+    name: "visitor/UserAgreement",
     component: () => import("@/layout/components/UserAgreement"),
   },
   {
     path: "/privacyPolicy",
-    name: "PrivacyPolicy",
+    name: "visitor/PrivacyPolicy",
     component: () => import("@/layout/components/PrivacyPolicy"),
   },
   // {
@@ -229,42 +229,42 @@ const visitorRouter=[
     children: [
       {
         path: "/eduData",
-        name: "eduData",
+        name: "visitor/admin/eduData",
         component: () => import("@/views/admin/EduData.vue"),
       },
       {
         path: "/concept",
-        name: "concept",
+        name: "visitor/admin/concept",
         component: () => import("@/views/admin/concept.vue"),
       },
       {
         path: "/knowledgePoint",
-        name: "knowledgePoint",
+        name: "visitor/admin/knowledgePoint",
         component: () => import("@/views/admin/knowledgePoint.vue"),
       },
       {
         path: "/KPNew",
-        name: "KPNew",
+        name: "visitor/admin/KPNew",
         component: () => import("@/views/admin/KPNew.vue"),
       },
       {
         path: "/relation",
-        name: "relation",
+        name: "visitor/admin/relation",
         component: () => import("@/views/admin/relation.vue"),
       },
       {
         path: "/neeaNode",
-        name: "neeaNode",
+        name: "visitor/admin/neeaNode",
         component: () => import("@/views/admin/neeaNode.vue"),
       },
       {
         path: "/importNode",
-        name: "importNode",
+        name: "visitor/admin/importNode",
         component: () => import("@/views/admin/importNode.vue"),
       },
       {
         path: "/importEdge",
-        name: "importEdge",
+        name: "visitor/admin/importEdge",
         component: () => import("@/views/admin/importEdge.vue"),
       },
       // {
@@ -289,12 +289,12 @@ const visitorRouter=[
       // },
       {
         path: "/bulkImport",
-        name: "bulkImport",
+        name: "visitor/admin/bulkImport",
         component: () => import("@/views/admin/bulkImport.vue"),
       },
       {
         path: "/checkExercise",
-        name: "checkExercise",
+        name: "visitor/admin/checkExercise",
         component: () => import("@/views/admin/checkExercise.vue"),
       },
     ],

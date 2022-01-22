@@ -5,13 +5,9 @@ import router from './router/index'
 import './plugins/element.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@/common/styles/index.scss' // global css
-// import 'bootstrap/dist/js/bootstrap.min.js'
 
 import VueResource from "vue-resource";
 Vue.use(VueResource);
-
-// import echarts from "echarts";
-// Vue.prototype.$echarts = echarts;
 
 import VueCropper from 'vue-cropper'
 Vue.use(VueCropper)

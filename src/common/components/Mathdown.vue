@@ -107,15 +107,17 @@ export default {
   }
 };
 </script>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 ::v-deep .latex mjx-container[jax="SVG"][display="true"] {
   display: block;
   margin: 0;
 }
+
 ::v-deep .inline mjx-container[jax="SVG"][display="true"] {
   display: inline-block !important;
   margin: 0;
 }
+
 .i-editor-md {
   color: #000;
   text-align: left;
