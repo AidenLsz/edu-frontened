@@ -4,32 +4,32 @@ const PublicPlatformRouter = [{
   },
   {
     path: "estimate",
-    name: "Estimate",
+    name: "pb/Estimate",
     component: () => import("@/views/publicPlatform/Estimate.vue"),
   },
   {
     path: "segmentation",
-    name: "Segmentation",
+    name: "pb/Segmentation",
     component: () => import("@/views/publicPlatform/Segmentation.vue"),
   },
   {
     path: "similarity",
-    name: "Similarity",
+    name: "pb/Similarity",
     component: () => import("@/views/publicPlatform/Similarity.vue"),
   },
   {
     path: "ImageTranscription",
-    name: "ImageTranscription",
+    name: "pb/ImageTranscription",
     component: () => import("@/views/publicPlatform/ImageTranscription.vue"),
   },
   {
     path: "AILabLogin",
-    name: "AILabLogin",
+    name: "pb/AILabLogin",
     component: () => import("@/views/publicPlatform/AILabLogin.vue"),
   },
   {
     path: "AILabRegister",
-    name: "AILabRegister",
+    name: "pb/AILabRegister",
     component: () => import("@/views/publicPlatform/AILabRegister.vue"),
   },
 ]

@@ -10,13 +10,11 @@ const UserRouter=[
       {
         path:'userInfo',
         component: () => import('@/views/manage/userMessage/userInfo'),
-        name: '',
         meta: { title: '个人信息', icon: '' }
       },
       {
         path:'userGroup',
         component: () => import('@/views/manage/userMessage/userGroup'),
-        name: '',
         meta: { title: '组织架构', icon: '' }
       },
     ]
@@ -29,7 +27,6 @@ const UserRouter=[
       {
         path:'dashboard',
         component: () => import('@/views/DashBoard'),
-        name: 'Dashboard',
         meta: { title: '我的数据', icon: 'el-icon-s-home' }
       },
       // {
@@ -138,6 +135,5 @@ const UserRouter=[
 
     ]
   },
-
 ]
 export default UserRouter
