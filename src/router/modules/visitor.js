@@ -4,7 +4,7 @@
 // import Admin from "@/views/Admin";
 // import Estimate from "@/views/publicPlatform/Estimate.vue";
 // import Segmentation from "@/views/publicPlatform/Segmentation.vue";
-// import Home from "@/views/Home";
+import Home from "@/views/Home";
 // import Members from "@/views/Members_Introduce";
 // import Similarity from "@/views/publicPlatform/Similarity.vue";
 // import ImageTranscription from "@/views/publicPlatform/ImageTranscription.vue"
@@ -50,7 +50,7 @@
 const visitorRouter=[
   {
     path: '/',
-    component: () => import("@/views/Home"),
+    component: Home, // 首页不需要模块化
   },
   {
     path:'/paperdivide',

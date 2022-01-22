@@ -784,9 +784,6 @@
 
 import $ from "jquery";
 import statistics from '@/common/components/statistics'
-// import * as echarts from 'echarts';
-
-// var BarChart;
 
 export default {
   components: { statistics},
