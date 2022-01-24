@@ -142,15 +142,32 @@
         {{ equation_cnt_aver }}
         个以上的公式。不同模式的信息载体能更为全面地考查学生获取和整合信息的能力，要求学生联系并充分利用公式、图像与文本之间的关系。
       </el-row>
-      <el-radio-group v-model="tabPosition" style="margin-bottom: 30px">
-        <el-radio-button label="top">top</el-radio-button>
-        <el-radio-button label="right">right</el-radio-button>
-        <el-radio-button label="bottom">bottom</el-radio-button>
-        <el-radio-button label="left">left</el-radio-button>
+      <el-radio-group v-show="show_word_cnt_Bar" v-model="tablekind" style="margin-top: 30px;">
+        <el-radio-button label="word">字数统计</el-radio-button>
+        <el-radio-button label="figure">图表统计</el-radio-button>
+        <el-radio-button label="equation">公式统计</el-radio-button>
       </el-radio-group>
       <!-- 图表 -->
-      <el-row v-show="show_word_cnt_Bar" type="flex" justify="center">
+      <el-row
+        v-show="show_word_cnt_Bar && tablekind == 'word'"
+        type="flex"
+        justify="center"
+      >
         <div id="word_cnt_Bar" class="word_cnt_Bar"></div>
+      </el-row>
+      <el-row
+        v-show="show_word_cnt_Bar && tablekind == 'figure'"
+        type="flex"
+        justify="center"
+      >
+        <div id="figure_cnt_Bar" class="word_cnt_Bar"></div>
+      </el-row>
+      <el-row
+        v-show="show_word_cnt_Bar && tablekind == 'equation'"
+        type="flex"
+        justify="center"
+      >
+        <div id="equation_cnt_Bar" class="word_cnt_Bar"></div>
       </el-row>
 
       <!-- <el-divider v-if="show_Word_Cloud"></el-divider> -->
@@ -369,6 +386,8 @@ export default {
       show_difficulty_change: true,
       // 比较属性
       // checkList: ["数字属性", "关键词", "知识点分值", "难度变化"],
+      // 目前选择的表述分析中选择的图表种类
+      tablekind: "word",
       // 选中的试卷的ID
       chosen_paper_List: [
         // {
@@ -552,6 +571,8 @@ export default {
       this.Question_Analysing = false;
       setTimeout(() => {
         this.Init_word_cnt_Bar();
+        this.Init_figure_cnt_Bar();
+        this.Init_equation_cnt_Bar();
         this.Init_Word_Cloud();
         this.Init_Radar();
         this.Init_difficulty_change();
@@ -728,15 +749,187 @@ export default {
       for (let i = 0; i < 10; i++)
         this.keyword_total.push(keyword_list[i].word);
     },
+    // // 初始化试卷字数的柱状图的方法
+    // Init_word_cnt_Bar() {
+    //   this.show_word_cnt_Bar = true;
+    //   this.word_cnt_aver = this.Get_word_cnt_aver();
+    //   this.figure_cnt_aver = this.Get_figure_cnt_aver();
+    //   this.equation_cnt_aver = this.Get_equation_cnt_aver();
+    //   //console.log("0 wordcnt", this.analyse_result[0].word_cnt);
+    //   let myChart = echarts.init(document.getElementById("word_cnt_Bar"));
+    //   let colors = ["#EE6666", "#5470C6", "#91CC75"];
+    //   let option = {
+    //     grid: {
+    //       x: 70,
+    //       y: 90,
+    //       x2: 150,
+    //       y2: 75,
+    //     },
+    //     title: {
+    //       text: "数字属性比较",
+    //       x: "center",
+    //       y: "top",
+    //       textStyle: {
+    //         fontSize: 16,
+    //         fontStyle: "normal",
+    //         fontWeight: "bold",
+    //       },
+    //       padding: [5, 5, 40, 25],
+    //     },
+    //     color: colors,
+    //     tooltip: {
+    //       trigger: "axis",
+    //       axisPointer: {
+    //         type: "shadow",
+    //         label: {
+    //           show: true,
+    //         },
+    //       },
+    //       textStyle: {
+    //         fontSize: 14,
+    //         fontStyle: "normal",
+    //         align: "left",
+    //       },
+    //     },
+    //     calculable: true,
+    //     legend: {
+    //       data: ["字数", "图片数", "公式数"],
+    //       itemGap: 20,
+    //       x: "right",
+    //       y: "top",
+    //       padding: [5, 30, 40, 5],
+    //       textStyle: {
+    //         fontSize: 14,
+    //         fontStyle: "normal",
+    //       },
+    //     },
+    //     xAxis: [
+    //       {
+    //         type: "category",
+    //         data: [],
+    //         axisTick: {
+    //           alignWithLabel: true,
+    //         },
+    //         axisLabel: {
+    //           show: true, //这里的show用于设置是否显示x轴下的字体 默认为true
+    //           interval: 0, //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
+    //           textStyle: {
+    //             //textStyle里面写x轴下的字体的样式
+    //             color: "black",
+    //             fontSize: 14,
+    //           },
+    //         },
+    //       },
+    //     ],
+    //     yAxis: [
+    //       {
+    //         type: "value",
+    //         name: "字数",
+    //         position: "left",
+    //         min: 0,
+    //         axisLine: {
+    //           show: true,
+    //           lineStyle: {
+    //             color: colors[0],
+    //           },
+    //         },
+    //         nameTextStyle: {
+    //           //color: "black",
+    //           fontSize: 14,
+    //           padding: [30, 35, 15, 10],
+    //         },
+    //       },
+    //       {
+    //         type: "value",
+    //         name: "图片数",
+    //         position: "right",
+    //         min: 0,
+    //         axisLine: {
+    //           show: true,
+    //           lineStyle: {
+    //             color: colors[1],
+    //           },
+    //         },
+    //         nameTextStyle: {
+    //           //color: "black",
+    //           fontSize: 14,
+    //           padding: [30, 0, 15, 40],
+    //         },
+    //       },
+    //       {
+    //         type: "value",
+    //         name: "公式数",
+    //         position: "right",
+    //         min: 0,
+    //         offset: 80,
+    //         axisLine: {
+    //           show: true,
+    //           lineStyle: {
+    //             color: colors[2],
+    //           },
+    //         },
+    //         nameTextStyle: {
+    //           //color: "black",
+    //           fontSize: 14,
+    //           padding: [30, 0, 15, 40],
+    //         },
+    //       },
+    //     ],
+    //     series: [
+    //       {
+    //         name: "字数",
+    //         type: "line",
+    //         yAxisIndex: 0,
+    //         data: [],
+    //       },
+    //       {
+    //         name: "图片数",
+    //         type: "bar",
+    //         yAxisIndex: 1,
+    //         barWidth: "20%",
+    //         data: [],
+    //       },
+    //       {
+    //         name: "公式数",
+    //         type: "bar",
+    //         yAxisIndex: 2,
+    //         barWidth: "20%",
+    //         data: [],
+    //       },
+    //     ],
+    //     dataZoom: [
+    //       {
+    //         type: "slider",
+    //         show: true,
+    //         xAxisIndex: [0],
+    //         start: 0, //百分比
+    //         end: 60, //百分比
+    //         bottom: 5,
+    //       },
+    //     ],
+    //   };
+
+    //   for (let i = 0; i < this.analyse_result.length; i++) {
+    //     option.xAxis[0].data.push(
+    //       this.resize_title(this.analyse_result[i].title)
+    //     );
+    //     option.series[0].data.push(this.analyse_result[i].word_cnt);
+    //     option.series[1].data.push(this.analyse_result[i].figure_cnt);
+    //     option.series[2].data.push(this.analyse_result[i].equation_cnt);
+    //   }
+    //   myChart.setOption(option);
+
+    //   //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+    //   window.addEventListener("resize", function () {
+    //     myChart.resize();
+    //   });
+    // },
     // 初始化试卷字数的柱状图的方法
     Init_word_cnt_Bar() {
       this.show_word_cnt_Bar = true;
       this.word_cnt_aver = this.Get_word_cnt_aver();
-      this.figure_cnt_aver = this.Get_figure_cnt_aver();
-      this.equation_cnt_aver = this.Get_equation_cnt_aver();
-      //console.log("0 wordcnt", this.analyse_result[0].word_cnt);
       let myChart = echarts.init(document.getElementById("word_cnt_Bar"));
-      let colors = ["#EE6666", "#5470C6", "#91CC75"];
+      // let colors = ["#EE6666", "#5470C6", "#91CC75"];
       let option = {
         grid: {
           x: 70,
@@ -745,7 +938,7 @@ export default {
           y2: 75,
         },
         title: {
-          text: "数字属性比较",
+          text: "字数统计",
           x: "center",
           y: "top",
           textStyle: {
@@ -755,7 +948,7 @@ export default {
           },
           padding: [5, 5, 40, 25],
         },
-        color: colors,
+        // color: colors,
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -772,15 +965,7 @@ export default {
         },
         calculable: true,
         legend: {
-          data: ["字数", "图片数", "公式数"],
-          itemGap: 20,
-          x: "right",
-          y: "top",
-          padding: [5, 30, 40, 5],
-          textStyle: {
-            fontSize: 14,
-            fontStyle: "normal",
-          },
+          show: false,
         },
         xAxis: [
           {
@@ -798,121 +983,28 @@ export default {
                 fontSize: 14,
               },
             },
-          },
-        ],
-        yAxis: [
-          {
-            type: "value",
-            name: "字数",
-            position: "left",
-            min: 0,
-            axisLine: {
-              show: true,
-              lineStyle: {
-                color: colors[0],
-              },
-            },
             nameTextStyle: {
-              //color: "black",
-              fontSize: 14,
-              padding: [30, 35, 15, 10],
-            },
-          },
-          {
-            type: "value",
-            name: "图片数",
-            position: "right",
-            min: 0,
-            axisLine: {
-              show: true,
-              lineStyle: {
-                color: colors[1],
-              },
-            },
-            nameTextStyle: {
-              //color: "black",
-              fontSize: 14,
-              padding: [30, 0, 15, 40],
-            },
-          },
-          {
-            type: "value",
-            name: "公式数",
-            position: "right",
-            min: 0,
-            offset: 80,
-            axisLine: {
-              show: true,
-              lineStyle: {
-                color: colors[2],
-              },
-            },
-            nameTextStyle: {
-              //color: "black",
-              fontSize: 14,
-              padding: [30, 0, 15, 40],
+              overflow: "break",
             },
           },
         ],
+        yAxis: {},
         series: [
           {
             name: "字数",
-            type: "line",
+            type: "bar",
+            barWidth: "20%",
             yAxisIndex: 0,
             data: [],
           },
-          {
-            name: "图片数",
-            type: "bar",
-            yAxisIndex: 1,
-            barWidth: "20%",
-            data: [],
-          },
-          {
-            name: "公式数",
-            type: "bar",
-            yAxisIndex: 2,
-            barWidth: "20%",
-            data: [],
-          },
-        ],
-        dataZoom: [
-          {
-            type: "slider",
-            show: true,
-            xAxisIndex: [0],
-            start: 0, //百分比
-            end: 60, //百分比
-            bottom: 5,
-          },
         ],
       };
-
-      // for (
-      //   let i = 0;
-      //   i < this.Paper_Json_Question_Bundle_Info.sub_question.length;
-      //   i++
-      // ) {
-      //   option.xAxis[0].data.push("第" + (i + 1) + "小题");
-      //   if (this.Paper_Json_Question_Bundle_Info.sub_question[i].difficulty) {
-      //     option.series[0].data.push(
-      //       this.Paper_Json_Question_Bundle_Info.sub_question[i].difficulty
-      //     );
-      //   } else {
-      //     option.series[0].data.push(
-      //       this.Paper_Json_Question_Bundle_Info.sub_question[i]
-      //         .difficulty_statistics.mean
-      //     );
-      //   }
-      // }
 
       for (let i = 0; i < this.analyse_result.length; i++) {
         option.xAxis[0].data.push(
           this.resize_title(this.analyse_result[i].title)
         );
         option.series[0].data.push(this.analyse_result[i].word_cnt);
-        option.series[1].data.push(this.analyse_result[i].figure_cnt);
-        option.series[2].data.push(this.analyse_result[i].equation_cnt);
       }
       myChart.setOption(option);
 
@@ -921,6 +1013,183 @@ export default {
         myChart.resize();
       });
     },
+    // 初始化试卷图表数的柱状图的方法
+    Init_figure_cnt_Bar() {
+      this.show_word_cnt_Bar = true;
+      let myChart = echarts.init(document.getElementById("figure_cnt_Bar"));
+      // let colors = ["#EE6666", "#5470C6", "#91CC75"];
+      let option = {
+        grid: {
+          x: 70,
+          y: 90,
+          x2: 150,
+          y2: 75,
+        },
+        title: {
+          text: "图表统计",
+          x: "center",
+          y: "top",
+          textStyle: {
+            fontSize: 16,
+            fontStyle: "normal",
+            fontWeight: "bold",
+          },
+          padding: [5, 5, 40, 25],
+        },
+        // color: colors,
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow",
+            label: {
+              show: true,
+            },
+          },
+          textStyle: {
+            fontSize: 14,
+            fontStyle: "normal",
+            align: "left",
+          },
+        },
+        calculable: true,
+        legend: {
+          show: false,
+        },
+        xAxis: [
+          {
+            type: "category",
+            data: [],
+            axisTick: {
+              alignWithLabel: true,
+            },
+            axisLabel: {
+              show: true, //这里的show用于设置是否显示x轴下的字体 默认为true
+              interval: 0, //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
+              textStyle: {
+                //textStyle里面写x轴下的字体的样式
+                color: "black",
+                fontSize: 14,
+              },
+            },
+            nameTextStyle: {
+              overflow: "break",
+            },
+          },
+        ],
+        yAxis: {},
+        series: [
+          {
+            name: "图表数",
+            type: "bar",
+            barWidth: "20%",
+            yAxisIndex: 0,
+            data: [],
+          },
+        ],
+      };
+
+      for (let i = 0; i < this.analyse_result.length; i++) {
+        option.xAxis[0].data.push(
+          this.resize_title(this.analyse_result[i].title)
+        );
+        option.series[0].data.push(this.analyse_result[i].figure_cnt);
+      }
+      myChart.setOption(option);
+
+      //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+      window.addEventListener("resize", function () {
+        myChart.resize();
+      });
+    },
+    // 初始化试卷公式数的柱状图的方法
+    Init_equation_cnt_Bar() {
+      this.show_word_cnt_Bar = true;
+      let myChart = echarts.init(document.getElementById("equation_cnt_Bar"));
+      // let colors = ["#EE6666", "#5470C6", "#91CC75"];
+      let option = {
+        grid: {
+          x: 70,
+          y: 90,
+          x2: 150,
+          y2: 75,
+        },
+        title: {
+          text: "公式统计",
+          x: "center",
+          y: "top",
+          textStyle: {
+            fontSize: 16,
+            fontStyle: "normal",
+            fontWeight: "bold",
+          },
+          padding: [5, 5, 40, 25],
+        },
+        // color: colors,
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow",
+            label: {
+              show: true,
+            },
+          },
+          textStyle: {
+            fontSize: 14,
+            fontStyle: "normal",
+            align: "left",
+          },
+        },
+        calculable: true,
+        legend: {
+          show: false,
+        },
+        xAxis: [
+          {
+            type: "category",
+            data: [],
+            axisTick: {
+              alignWithLabel: true,
+            },
+            axisLabel: {
+              show: true, //这里的show用于设置是否显示x轴下的字体 默认为true
+              interval: 0, //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
+              textStyle: {
+                //textStyle里面写x轴下的字体的样式
+                color: "black",
+                fontSize: 14,
+              },
+            },
+            nameTextStyle: {
+              overflow: "break",
+            },
+          },
+        ],
+        yAxis: {},
+        series: [
+          {
+            name: "公式数",
+            type: "bar",
+            barWidth: "20%",
+            yAxisIndex: 0,
+            data: [],
+          },
+        ],
+      };
+
+      for (let i = 0; i < this.analyse_result.length; i++) {
+        option.xAxis[0].data.push(
+          this.resize_title(this.analyse_result[i].title)
+        );
+        option.series[0].data.push(this.analyse_result[i].equation_cnt);
+      }
+      myChart.setOption(option);
+
+      //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+      window.addEventListener("resize", function () {
+        myChart.resize();
+      });
+    },
+
     Init_Radar() {
       this.paper_num = this.analyse_result.length;
       this.show_knowledge2score = true;

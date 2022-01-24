@@ -456,7 +456,7 @@ export default {
   position: absolute;
   width: 564px;
   height: 359px;
-  left: 745px;
+  right: 170px;
   top: 366px;
 
   background-image: url("~@/assets/AIlab_Home/6.jpg");
