@@ -1,4 +1,5 @@
-const PublicPlatformRouter = [{
+const PublicPlatformRouter = [
+  {
     path: '',
     component: () => import("@/views/Home_PublicPlatform"),
   },

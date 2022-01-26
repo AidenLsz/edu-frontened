@@ -147,7 +147,7 @@ export default {
   width: 89%;
   height: 100%;
   left: 5.5%;
-  background-color: #23242A;
+  background-color: white;
 }
 
 .logo {
@@ -156,7 +156,7 @@ export default {
   height: 42px;
   left: 12%;
   top: 19px;
-  // background-color: #23242A;
+  // background-color: white;
   cursor: pointer;
 }
 
@@ -166,7 +166,7 @@ export default {
   height: 40px;
   left: calc(12% + 168px);
   top: 20px;
-  border-left: 2px solid #23242A;
+  border-left: 2px solid #ffffff;
   // transform: rotate(90deg);
 }
 
@@ -186,7 +186,7 @@ export default {
   /* identical to box height */
   letter-spacing: 0.06em;
   cursor: pointer;
-  color: #23242A;
+  color: #ffffff;
 }
 
 .page {
@@ -206,7 +206,7 @@ export default {
   font-size: 20px;
   line-height: 25px;
   letter-spacing: 0.02em;
-  color: #23242A;
+  color: #ffffff;
 }
 
 .icon-search {
@@ -215,7 +215,7 @@ export default {
   height: 32px;
   left: 72.3%;
   top: 24px;
-  color: #23242A;
+  color: white;
   cursor: pointer;
 }
 
@@ -224,7 +224,7 @@ export default {
   height: 22px;
   left: calc(72.3% + 84px);
   top: 17px;
-  color: #ffffff;
+  color: white;
   cursor: pointer;
 }
 
@@ -235,7 +235,7 @@ export default {
   font-size: 18px;
   line-height: 22px;
   letter-spacing: 0.02em;
-  color: #23242A;
+  color: #ffffff;
 }
 
 .login {
@@ -246,10 +246,10 @@ export default {
   // background-color: rgba(0, 0, 0, 0);
   cursor: pointer;
   .el-button {
-    background-color: #ffffff;
-    color: #23242A;
+    background-color: #23242A;
+    color: white;
     font-size: 18px;
-    border: 2px solid #23242A;
+    border: 2px solid #ffffff;
     box-sizing: border-box;
     border-radius: 55px;
   }
@@ -297,6 +297,6 @@ export default {
   /*统一设置高度为100%*/
   height: 100%;
   width: 100%;
-  background: #ffffff;
+  background: #23242A;
 }
 </style>

@@ -1,5 +1,7 @@
 <template>
   <div>
+    <div id="Top_Nav" class="Top_Nav"></div>
+    <!-- <Layout></Layout> -->
     <div class="summary">
       <div class="AIlab_title">AI<span style="color: white">实验室</span></div>
       <div class="AIlab_text">
@@ -8,15 +10,13 @@
       <div class="AIlab_photo"></div>
     </div>
     <div class="service">
-      <div class="service_title">
-        API<span style="color: black"> 服务</span>
-      </div>
-      <div class="service_text">
+      <div class="service_title">智能教育功能体验</div>
+      <!-- <div class="service_text">
         API服务概述 API服务概述 API服务概述 API服务概述 API服务概述 API服务概述
         API服务概述 API服务概述 API服务概述 API服务概述 API服务概述 API服务概述
         API服务概述 API服务概述
-      </div>
-      <div class="API" style="left: 400px; top: 303px">
+      </div> -->
+      <div class="API" style="left: 25%; top: 220px">
         <div
           class="API_photo"
           :style="{
@@ -27,14 +27,14 @@
         ></div>
         <div class="title" @click="ToImageTranscription">图片转写</div>
         <div class="desc">
-          识别图片中的文字、公式与图例，并将其中的公式转化为统一标准的排版语言（如latex）
+          精准识别试题照片中的文字、公式以及附图附表，适用于试题录入、试题搜索和复杂公式识别等场景。
         </div>
         <el-link class="link" type="primary" @click="ToImageTranscription"
           >了解更多
           <i class="el-icon-right"></i>
         </el-link>
       </div>
-      <div class="API" style="right: 400px; top: 303px">
+      <div class="API" style="right: 25%; top: 220px">
         <div
           class="API_photo"
           :style="{
@@ -46,14 +46,14 @@
         ></div>
         <div class="title" @click="ToEstimate">属性预估</div>
         <div class="desc">
-          自动预测试题的难度、信效度和知识点等属性，提高学生的做题效率和提升组卷的质量
+          从包含复杂语义的试题文本出发，挖掘试题的难度、区分度和知识点等属性，实现高效、客观的自动化属性预估。
         </div>
         <el-link class="link" type="primary" @click="ToEstimate"
           >了解更多
           <i class="el-icon-right"></i>
         </el-link>
       </div>
-      <div class="API" style="left: 400px; top: 700px">
+      <div class="API" style="left: 25%; top: 650px">
         <div
           class="API_photo"
           :style="{
@@ -64,13 +64,16 @@
           @click="ToSimilarity"
         ></div>
         <div class="title" @click="ToSimilarity">相似度估计</div>
-        <div class="desc">基于人工智能算法，判断两个题目之间的相似程度</div>
+        <div class="desc">
+          基于人工智能算法，给出两个题目之间的多维度相似度预估，并提供预估结果的可解释性理由。
+          打散入库
+        </div>
         <el-link class="link" type="primary" @click="ToSimilarity"
           >了解更多
           <i class="el-icon-right"></i>
         </el-link>
       </div>
-      <div class="API" style="right: 400px; top: 700px">
+      <div class="API" style="right: 25%; top: 650px">
         <div
           class="API_photo"
           :style="{
@@ -82,7 +85,7 @@
         ></div>
         <div class="title" @click="ToSegmentation">试卷打散入库</div>
         <div class="desc">
-          将试卷切分为题目、答案、解析等部分，提取其中的试题并入数据库
+          从试卷中切分出题目、答案、解析等部分。基于深度学习算法，保证在面对特征复杂、题型多、文本长等难以切分的试卷时，依然有很好的切分效果。
         </div>
         <el-link class="link" type="primary" @click="ToSegmentation"
           >了解更多
@@ -91,12 +94,12 @@
       </div>
     </div>
     <div class="algorithm">
-      <div class="algo_title">开源服务与算法</div>
-      <div class="algo_text">
+      <div class="algo_title">开源工具与数据集</div>
+      <!-- <div class="algo_text">
         开源服务与算法概述 开源服务与算法概述 开源服务与算法概述
         开源服务与算法概述 开源服务与算法概述 开源服务与算法概述
         开源服务与算法概述 开源服务与算法概述
-      </div>
+      </div> -->
       <div class="algo1_title">
         教育<span style="color: #409eff">数据</span>集
       </div>
@@ -120,14 +123,26 @@
 </template>
 
 <script>
+// import Layout from "../layout/PublicPlatformLayout_B.vue"
+
 export default {
   name: "PublicPlatform",
+  components: {
+    // Layout
+  },
   activated() {
+    this.ToTop();
+  },
+  mounted () {
     this.ToTop();
   },
   methods: {
     ToTop() {
-      window.scrollTo(0, 0);
+      document.getElementById("Top_Nav").scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
     },
     ToImageTranscription() {
       this.$router.push({
@@ -240,7 +255,7 @@ export default {
   /* identical to box height, or 156% */
   text-align: center;
   letter-spacing: 0.06em;
-  color: #409eff;
+  color: #000;
   mix-blend-mode: normal;
 }
 
@@ -263,7 +278,7 @@ export default {
 .API {
   position: absolute;
   width: 306.32px;
-  height: 360px;
+  height: 400px;
   background: #ffffff;
   box-shadow: 10px 40px 50px rgba(229, 233, 246, 0.4);
   border-radius: 20px;
@@ -384,7 +399,7 @@ export default {
 
 .algo1_title {
   position: absolute;
-  left: 200px;
+  left: 14%;
   width: 300px;
   top: 400px;
   height: 100px;
@@ -402,7 +417,7 @@ export default {
 
 .algo1_text {
   position: absolute;
-  left: 200px;
+  left: 14%;
   width: 440px;
   top: 493px;
   height: 79px;
@@ -421,7 +436,7 @@ export default {
 
 .algo1_use {
   position: absolute;
-  left: 200px;
+  left: 14%;
   width: 167px;
   top: 600px;
   height: 60px;
@@ -456,7 +471,7 @@ export default {
   position: absolute;
   width: 564px;
   height: 359px;
-  right: 170px;
+  right: 9%;
   top: 366px;
 
   background-image: url("~@/assets/AIlab_Home/6.jpg");
@@ -466,7 +481,7 @@ export default {
 
 .algo2_title {
   position: absolute;
-  left: 860px;
+  left: 60%;
   width: 300px;
   top: 860px;
   height: 100px;
@@ -484,7 +499,7 @@ export default {
 
 .algo2_text {
   position: absolute;
-  left: 860px;
+  left: 60%;
   width: 440px;
   top: 957px;
   height: 79px;
@@ -503,7 +518,7 @@ export default {
 
 .algo2_use {
   position: absolute;
-  left: 860px;
+  left: 60%;
   width: 167px;
   top: 1076px;
   height: 60px;
@@ -538,11 +553,19 @@ export default {
   position: absolute;
   width: 564px;
   height: 359px;
-  left: 170px;
+  left: 9%;
   top: 830px;
 
   background-image: url("~@/assets/AIlab_Home/7.jpg");
   background-size: cover;
   border-radius: 12px;
+}
+
+.Top_Nav {
+  position: relative;
+  top: -90px;
+  width: 10px;
+  height: 0px;
+  background: transparent;
 }
 </style>

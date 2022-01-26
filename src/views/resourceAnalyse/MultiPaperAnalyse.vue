@@ -1016,6 +1016,7 @@ export default {
     // 初始化试卷图表数的柱状图的方法
     Init_figure_cnt_Bar() {
       this.show_word_cnt_Bar = true;
+      this.figure_cnt_aver = this.Get_figure_cnt_aver();
       let myChart = echarts.init(document.getElementById("figure_cnt_Bar"));
       // let colors = ["#EE6666", "#5470C6", "#91CC75"];
       let option = {
@@ -1104,6 +1105,7 @@ export default {
     // 初始化试卷公式数的柱状图的方法
     Init_equation_cnt_Bar() {
       this.show_word_cnt_Bar = true;
+      this.equation_cnt_aver = this.Get_equation_cnt_aver();
       let myChart = echarts.init(document.getElementById("equation_cnt_Bar"));
       // let colors = ["#EE6666", "#5470C6", "#91CC75"];
       let option = {
@@ -1745,7 +1747,7 @@ export default {
             });
             let objectUrl = URL.createObjectURL(blob);
             link.href = objectUrl;
-            link.download = "试卷分析报告.docx";
+            link.download = "多卷分析报告.docx";
             link.click();
             URL.revokeObjectURL(objectUrl);
           }

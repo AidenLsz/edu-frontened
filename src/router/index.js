@@ -5,12 +5,14 @@ import UserRouter from '@/router/modules/user.js'
 import EEMSRouter from '@/router/modules/eems.js'
 import ITASRouter from '@/router/modules/itas.js'
 import PublicPlatformRouter from '@/router/modules/PublicPlatformRouter.js'
+import PublicPlatformRouter_B from '@/router/modules/PublicPlatformRouter_B.js'
 import store from '@/store'
 import {Message } from 'element-ui'
 import BasicLayout from '@/layout/Basic'
 import EEMSLayout from '@/layout/EEMS'
 import ITASLayout from '@/layout/ITAS'
 import PublicPlatformLayout from '@/layout/PublicPlatformLayout'
+import PublicPlatformLayout_B from '@/layout/PublicPlatformLayout_B'
 
 // import  AppMain from '@/layout/components/AppMain'
 
@@ -47,6 +49,16 @@ const router = new Router({
     },
     {
       path: "/publicPlatform",
+<<<<<<< HEAD
+=======
+      name: "publicPlatform_B",
+      component: PublicPlatformLayout_B,
+      children:UserRouter.concat(PublicPlatformRouter_B)
+    },
+    {
+      path: "/publicPlatform",
+      name: "publicPlatform",
+>>>>>>> 2c9d461 ([feature] divide layout black & white)
       component: PublicPlatformLayout,
       children:UserRouter.concat(PublicPlatformRouter)
     },
