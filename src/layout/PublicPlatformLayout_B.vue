@@ -32,12 +32,31 @@
       <!-- <div class="icon-search">
         <i class="el-icon-search" style="font-size: 32px"></i>
       </div> -->
-      <div class="reg">
-        <el-button type="text" icon="el-icon-user-solid" class="reg_text" @click="goToLogin">
+      <div v-if="$store.state.AIlab_user.AIname" class="user">
+        <el-dropdown trigger="hover">
+          <span class="el-dropdown-link">
+            {{ $store.state.AIlab_user.AIname
+            }}<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="checkUserInfo"
+              >个人中心</el-dropdown-item
+            >
+            <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+      <div v-if="!$store.state.AIlab_user.AIname" class="reg">
+        <el-button
+          type="text"
+          icon="el-icon-user-solid"
+          class="reg_text"
+          @click="goToLogin"
+        >
           登陆
         </el-button>
       </div>
-      <div class="login">
+      <div v-if="!$store.state.AIlab_user.AIname" class="login">
         <el-button round @click="goToRegister">注册</el-button>
       </div>
     </el-header>
@@ -137,6 +156,11 @@ export default {
       });
       this.ToTop();
     },
+    async logout() {
+      await this.$store.dispatch("AIlab_user/logout");
+      this.$router.push("/PublicPlatform");
+      location.reload();
+    },
   },
 };
 </script>
@@ -217,6 +241,21 @@ export default {
   top: 24px;
   color: white;
   cursor: pointer;
+}
+
+.user {
+  position: absolute;
+  height: 22px;
+  color: white;
+  left: calc(72.3% + 150px);
+  top: 28.5px;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .reg {

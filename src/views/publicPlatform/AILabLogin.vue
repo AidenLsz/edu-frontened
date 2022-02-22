@@ -12,7 +12,7 @@
           ></el-input>
         </div>
         <div class="password-input">
-          <p class="text" style="text-align:left;">密码</p>
+          <p class="text" style="text-align: left">密码</p>
           <el-input
             v-model="password"
             placeholder="请输入密码"
@@ -51,13 +51,11 @@ export default {
   },
   methods: {
     ToTop() {
-      document
-        .getElementById("Top_Nav")
-        .scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-          inline: "nearest",
-        });
+      document.getElementById("Top_Nav").scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
     },
     goToRegister() {
       this.$router.push({
@@ -72,6 +70,10 @@ export default {
       this.ToTop();
     },
     Login() {
+      if (!this.username || !this.password) {
+        alert("用户名和密码不能为空");
+        return;
+      }
       commonAjax(
         "https://ailab-api-275-production.env.bdaa.pro/v1/user/login",
         {
@@ -81,14 +83,22 @@ export default {
       ).then((data) => {
         console.log("login", data);
         if (data.success) {
-          this.$message({
-            showClose: true,
-            message: "登录成功，3s后将跳转至主界面",
-            type: "success",
+          let userInfo = {
+            token: "111",
+            name: this.username,
+            // isAdmin:data.body.isAdmin,
+          };
+          this.$store.dispatch("AIlab_user/setUserData", userInfo).then(() => {
+            console.log(userInfo);
+            this.$message({
+              showClose: true,
+              message: "登录成功，3s后将跳转至主界面",
+              type: "success",
+            });
+            setTimeout(() => {
+              this.goToMainPage();
+            }, 3000);
           });
-          setTimeout(() => {
-            this.goToMainPage();
-          }, 3000);
         } else {
           console.log(data.errMsg);
           this.$message({
@@ -269,11 +279,11 @@ export default {
   border-radius: 6px;
 }
 
-.Top_Nav{
-    position: relative;
-    top: -90px;
-    width: 10px;
-    height: 10px;
-    background: transparent;
+.Top_Nav {
+  position: relative;
+  top: -90px;
+  width: 10px;
+  height: 10px;
+  background: transparent;
 }
 </style>

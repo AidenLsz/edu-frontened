@@ -2,6 +2,7 @@
   <el-container id="app">
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <el-header style="height: 80px">
+      <!-- <div @click="test"> 测试 </div> -->
       <div class="logo">
         <img
           src="@/assets/luna_icon.png"
@@ -32,12 +33,31 @@
       <!-- <div class="icon-search">
         <i class="el-icon-search" style="font-size: 32px"></i>
       </div> -->
-      <div class="reg">
-        <el-button type="text" icon="el-icon-user-solid" class="reg_text" @click="goToLogin">
+      <div v-if="$store.state.AIlab_user.AIname" class="user">
+        <el-dropdown trigger="hover">
+          <span class="el-dropdown-link">
+            {{ $store.state.AIlab_user.AIname
+            }}<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="checkUserInfo"
+              >个人中心</el-dropdown-item
+            >
+            <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+      <div v-if="!$store.state.AIlab_user.AIname" class="reg">
+        <el-button
+          type="text"
+          icon="el-icon-user-solid"
+          class="reg_text"
+          @click="goToLogin"
+        >
           登陆
         </el-button>
       </div>
-      <div class="login">
+      <div v-if="!$store.state.AIlab_user.AIname" class="login">
         <el-button round @click="goToRegister">注册</el-button>
       </div>
     </el-header>
@@ -87,7 +107,7 @@ export default {
   },
   mounted() {
     // this.getGroups();
-    console.log("@" + this.$route.path);
+    // console.log("@" + this.$route.path);
   },
   updated() {
     var user = sessionStorage.getItem("user");
@@ -137,6 +157,16 @@ export default {
       });
       this.ToTop();
     },
+    async logout() {
+      await this.$store.dispatch("AIlab_user/logout");
+      this.$router.push("/PublicPlatform");
+      location.reload();
+    },
+    // only for test
+    test() {
+      console.log(this.$store.state.user.name);
+      console.log(this.$store.state.AIlab_user.AIname);
+    }
   },
 };
 </script>
@@ -147,7 +177,7 @@ export default {
   width: 89%;
   height: 100%;
   left: 5.5%;
-  background-color: #23242A;
+  background-color: #23242a;
 }
 
 .logo {
@@ -166,7 +196,7 @@ export default {
   height: 40px;
   left: calc(12% + 168px);
   top: 20px;
-  border-left: 2px solid #23242A;
+  border-left: 2px solid #23242a;
   // transform: rotate(90deg);
 }
 
@@ -186,7 +216,7 @@ export default {
   /* identical to box height */
   letter-spacing: 0.06em;
   cursor: pointer;
-  color: #23242A;
+  color: #23242a;
 }
 
 .page {
@@ -206,7 +236,7 @@ export default {
   font-size: 20px;
   line-height: 25px;
   letter-spacing: 0.02em;
-  color: #23242A;
+  color: #23242a;
 }
 
 .icon-search {
@@ -215,8 +245,23 @@ export default {
   height: 32px;
   left: 72.3%;
   top: 24px;
-  color: #23242A;
+  color: #23242a;
   cursor: pointer;
+}
+
+.user {
+  position: absolute;
+  height: 22px;
+  color: #23242a;
+  left: calc(72.3% + 150px);
+  top: 28.5px;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: #23242a;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .reg {
@@ -235,7 +280,7 @@ export default {
   font-size: 18px;
   line-height: 22px;
   letter-spacing: 0.02em;
-  color: #23242A;
+  color: #23242a;
 }
 
 .login {
@@ -247,13 +292,13 @@ export default {
   cursor: pointer;
   .el-button {
     background-color: #ffffff;
-    color: #23242A;
+    color: #23242a;
     font-size: 18px;
-    border: 2px solid #23242A;
+    border: 2px solid #23242a;
     box-sizing: border-box;
     border-radius: 55px;
   }
-  .el-button:hover{
+  .el-button:hover {
     color: #66b1ff;
   }
 }
