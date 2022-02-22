@@ -340,7 +340,7 @@
                 style="width: 100px;">
                 <el-menu
                   mode="horizontal"
-                  style="margin-top: -6px; background: transparent; border-bottom: none"
+                  style="background: transparent; height: 100%"
                 >
                   <el-submenu index="0">
                     <template slot="title">
@@ -938,7 +938,7 @@ export default {
   font-weight: 900;
 }
 </style>
-<style scoped>
+<style scoped lang="scss">
 .el-dropdown-menu__item:focus,
 .el-dropdown-menu__item:not(.is-disable):hover {
   background-color: #1a2930 !important;
@@ -1015,9 +1015,12 @@ export default {
 .NarbarItem{
   width: 80px;
   height: 70px;
-  padding-top: 10px;
   box-sizing: border-box;
   background: transparent;
+
+  button, ul {
+    height: 100%;
+  }
 }
 
 .NavBarButton{
@@ -1090,5 +1093,11 @@ export default {
     width: 1px;
     height: 1px;
     background: transparent;
+}
+
+::v-deep .el-submenu {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 </style>
