@@ -3,16 +3,15 @@ import App from './App.vue'
 import store from './store'
 import router from './router/index'
 import './plugins/element.js'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import '@/common/styles/index.scss' // global css
 
 import VueResource from "vue-resource";
 Vue.use(VueResource);
 
 import VueCropper from 'vue-cropper'
-Vue.use(VueCropper)
+Vue.use(VueCropper);
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 if (process.env.NODE_ENV === "production") {
 
@@ -37,4 +36,4 @@ new Vue({
   router,
   store,
   render:h=> h(App),
-}).$mount('#app')
+}).$mount('#app');
