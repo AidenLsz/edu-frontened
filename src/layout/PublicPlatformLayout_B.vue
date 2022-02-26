@@ -7,6 +7,7 @@
           src="@/assets/luna_icon.png"
           height="100%"
           alt="Logo"
+          style="position: absolute; top: 0px; left: 0px"
           @click="goToMainPage"
         />
       </div>
@@ -144,6 +145,12 @@ export default {
       });
       this.ToTop();
     },
+    // 查看用户个人信息
+    checkUserInfo() {
+      this.$router.push({
+        path: "/PublicPlatform/user/userInfo",
+      });
+    },
     composePaperSystem() {
       this.$router.push({
         path: this.rootPath + "paperCombine",
@@ -246,9 +253,16 @@ export default {
 .user {
   position: absolute;
   height: 22px;
+  width:100px;
   color: white;
   left: calc(72.3% + 150px);
   top: 28.5px;
+}
+
+.el-dropdown {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .el-dropdown-link {
@@ -262,12 +276,15 @@ export default {
   position: absolute;
   height: 22px;
   left: calc(72.3% + 84px);
-  top: 17px;
+  top: 16px;
   color: white;
   cursor: pointer;
 }
 
 .reg_text {
+  position: absolute;
+  left: 0;
+  top: 0;
   font-family: Microsoft YaHei UI;
   font-style: normal;
   font-weight: normal;
@@ -279,20 +296,24 @@ export default {
 
 .login {
   position: absolute;
-  height: 22px;
+  height: 10px;
+  width: 10px;
   left: calc(72.3% + 169px);
-  top: 20px;
+  top: 17px;
   // background-color: rgba(0, 0, 0, 0);
   cursor: pointer;
   .el-button {
-    background-color: #23242A;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #23242a;
     color: white;
     font-size: 18px;
     border: 2px solid #ffffff;
     box-sizing: border-box;
     border-radius: 55px;
   }
-  .el-button:hover{
+  .el-button:hover {
     color: #66b1ff;
   }
 }
@@ -336,6 +357,6 @@ export default {
   /*统一设置高度为100%*/
   height: 100%;
   width: 100%;
-  background: #23242A;
+  background: #23242a;
 }
 </style>

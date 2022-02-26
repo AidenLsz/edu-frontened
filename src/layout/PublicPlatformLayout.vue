@@ -8,6 +8,7 @@
           src="@/assets/luna_icon.png"
           height="100%"
           alt="Logo"
+          style="position: absolute; top: 0px; left: 0px"
           @click="goToMainPage"
         />
       </div>
@@ -145,6 +146,12 @@ export default {
       });
       this.ToTop();
     },
+    // 查看用户个人信息
+    checkUserInfo() {
+      this.$router.push({
+        path: "/PublicPlatform/user/userInfo",
+      });
+    },
     composePaperSystem() {
       this.$router.push({
         path: this.rootPath + "paperCombine",
@@ -252,9 +259,16 @@ export default {
 .user {
   position: absolute;
   height: 22px;
+  width:100px;
   color: #23242a;
   left: calc(72.3% + 150px);
   top: 28.5px;
+}
+
+.el-dropdown {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .el-dropdown-link {
@@ -268,12 +282,15 @@ export default {
   position: absolute;
   height: 22px;
   left: calc(72.3% + 84px);
-  top: 17px;
+  top: 16px;
   color: #ffffff;
   cursor: pointer;
 }
 
 .reg_text {
+  position: absolute;
+  left: 0;
+  top: 0;
   font-family: Microsoft YaHei UI;
   font-style: normal;
   font-weight: normal;
@@ -291,6 +308,9 @@ export default {
   // background-color: rgba(0, 0, 0, 0);
   cursor: pointer;
   .el-button {
+    position: absolute;
+    left: 0;
+    top: 0;
     background-color: #ffffff;
     color: #23242a;
     font-size: 18px;

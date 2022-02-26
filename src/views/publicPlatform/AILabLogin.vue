@@ -89,15 +89,16 @@ export default {
             // isAdmin:data.body.isAdmin,
           };
           this.$store.dispatch("AIlab_user/setUserData", userInfo).then(() => {
-            console.log(userInfo);
+            // console.log(userInfo);
             this.$message({
               showClose: true,
-              message: "登录成功，3s后将跳转至主界面",
+              message: "登录成功",
               type: "success",
             });
             setTimeout(() => {
               this.goToMainPage();
-            }, 3000);
+            }, 10);
+            // this.goToMainPage();
           });
         } else {
           console.log(data.errMsg);
