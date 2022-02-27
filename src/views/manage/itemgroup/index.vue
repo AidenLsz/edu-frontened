@@ -174,11 +174,11 @@ export default {
     GET_IG_INFO() {
       this.itemTypeList = []
       this.itemTypeList.push({
-        'key': 3,
+        'key': '3',
         'val': variable.itemType[3]
       })
       this.itemTypeList.push({
-        'key': 4,
+        'key': '4',
         'val': variable.itemType[4]
       })
       commonAjax(this.backendIP + '/api/get_user_ig_info', {}).then((res) => {
