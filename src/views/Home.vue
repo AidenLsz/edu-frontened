@@ -867,7 +867,7 @@ export default {
     },
     submit() {
       this.$router.push({
-        name: "Knowledge Unit",
+        name: "visitor/Knowledge Unit",
         params: { name: this.ku_name, knowledgeSystem: "neea" }
       });
     },
