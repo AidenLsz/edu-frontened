@@ -57,8 +57,6 @@ const router = new Router({
     },
     {
       path: "/publicPlatform",
-<<<<<<< HEAD
-=======
       name: "publicPlatform_B",
       component: PublicPlatformLayout_B,
       children:UserRouter.concat(PublicPlatformRouter_B)
@@ -66,7 +64,6 @@ const router = new Router({
     {
       path: "/publicPlatform",
       name: "publicPlatform",
->>>>>>> 2c9d461 ([feature] divide layout black & white)
       component: PublicPlatformLayout,
       children:UserRouter.concat(PublicPlatformRouter)
     },
