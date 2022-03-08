@@ -3596,10 +3596,11 @@ export default {
 
             let Have_List = this.Paper_Json.level_one_knowledge_point;
 
-            let R = parseFloat(Have_List.length / Check_List.length) * 100 + ""
+            // let R = parseFloat(Have_List.length / Check_List.length) * 100 + ""
 
-            let Pos = R.indexOf(".");
-            R = R.substring(0, Pos + 3) + "%";
+            // let Pos = R.indexOf(".");
+            // R = R.substring(0, Pos + 3) + "%";
+            let R = parseInt(Have_List.length * 100 / Check_List.length)+ "%"
 
             return R
         },

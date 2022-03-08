@@ -1,5 +1,5 @@
 <template>
-  <el-container style="height: 100%; border: 1px solid #eee">
+  <el-container style="height: 100%; border: 1px solid #eee" id="app">
     <el-header style="height: 72px">
       <div class="search">
         <el-input
@@ -38,14 +38,22 @@
     </el-header>
     <el-container style="min-height: 100vh">
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-        <el-menu default-active="1-1" :default-openeds="['1', '2']" class="menu">
+        <el-menu
+          default-active="1-1"
+          :default-openeds="['1', '2']"
+          class="menu"
+        >
           <el-submenu index="1">
             <template slot="title"
               ><i class="el-icon-s-home"></i>个人中心</template
             >
             <el-menu-item-group>
-              <el-menu-item index="1-1">账号信息</el-menu-item>
-              <el-menu-item index="1-2">修改密码</el-menu-item>
+              <el-menu-item index="1-1" @click="ToUserInfo"
+                >账号信息</el-menu-item
+              >
+              <el-menu-item index="1-2" @click="ToChangePass"
+                >修改密码</el-menu-item
+              >
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="2">
@@ -53,12 +61,19 @@
               ><i class="el-icon-menu"></i>项目管理</template
             >
             <el-menu-item-group>
-              <el-menu-item index="2-1">我的项目</el-menu-item>
-              <el-menu-item index="2-2">使用统计</el-menu-item>
+              <el-menu-item index="2-1" @click="ToMyPro">我的项目</el-menu-item>
+              <el-menu-item index="2-2" @click="ToStatistics"
+                >使用统计</el-menu-item
+              >
             </el-menu-item-group>
           </el-submenu>
         </el-menu>
       </el-aside>
+      <el-main style="padding:0 0 0 0">
+        <div>
+          <router-view :key="$route.fullPath"></router-view>
+        </div>
+      </el-main>
     </el-container>
     <basic-footer />
   </el-container>
@@ -68,18 +83,13 @@
 import BasicFooter from "@/layout/components/footer.vue";
 
 export default {
-  name: "AIlabUser",
+  name: "App",
   components: {
     BasicFooter,
   },
   data() {
-    const item = {
-      date: "2016-05-02",
-      name: "王小虎",
-      address: "上海市普陀区金沙江路 1518 弄",
-    };
     return {
-      tableData: Array(20).fill(item),
+      input: "",
     };
   },
   methods: {
@@ -102,6 +112,26 @@ export default {
       await this.$store.dispatch("AIlab_user/logout");
       this.$router.push("/PublicPlatform");
       location.reload();
+    },
+    ToUserInfo() {
+      this.$router.push({
+        path: "/PublicPlatform/user/userInfo",
+      });
+    },
+    ToChangePass() {
+      this.$router.push({
+        path: "/PublicPlatform/user/ChangePass",
+      });
+    },
+    ToMyPro() {
+      this.$router.push({
+        path: "/PublicPlatform/user/MyPro",
+      });
+    },
+    ToStatistics() {
+      this.$router.push({
+        path: "/PublicPlatform/user/Statistics",
+      });
     },
   },
 };
@@ -196,5 +226,4 @@ export default {
   margin-left: 40px;
   padding-left: 30px !important;
 }
-
 </style>
