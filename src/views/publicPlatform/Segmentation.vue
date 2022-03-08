@@ -57,7 +57,7 @@
             <el-col>
               <!-- 学段选择 -->
               <el-row type="flex" justify="start" style="margin-bottom: 32px">
-                <el-col :span="3">
+                <el-col :span="3" style="min-width:80px;">
                   <el-row
                     type="flex"
                     justify="start"
@@ -82,7 +82,7 @@
               </el-row>
               <!-- 科目选择 -->
               <el-row type="flex" justify="start" style="margin-bottom: 32px">
-                <el-col :span="3">
+                <el-col :span="3" style="min-width:80px;">
                   <el-row
                     type="flex"
                     justify="start"
@@ -130,7 +130,7 @@
                 </el-col>
               </el-row> -->
               <el-row type="flex" justify="start">
-                <el-col :span="3">
+                <el-col :span="3" style="min-width:80px;">
                   <el-row
                     type="flex"
                     justify="start"

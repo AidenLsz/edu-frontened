@@ -1,9 +1,11 @@
 <template>
-  <div 
-    v-loading="content=='识别中...'"
+  <div
+    v-loading="content == '识别中...'"
     element-loading-text="识别中，请等待..."
     element-loading-spinner="el-icon-loading"
-    class="estimate" style="padding-top: 10px">
+    class="estimate"
+    style="padding-top: 10px"
+  >
     <div id="Top_Nav" class="Top_Nav"></div>
     <div class="panel">
       <el-row justify="start" type="flex">
@@ -20,77 +22,7 @@
           </el-breadcrumb>
         </el-col>
       </el-row>
-      <instruction ref="instruction" />
-      <!-- 
-			<el-row style="margin: 30px 0px 10px 0px">
-				<label style="font-size: 30px">属性预估</label>
-			</el-row>
-
-			<el-row style="margin: 50px 200px 10px 200px">
-				<p style="font-size: 18px;">
-					试题属性预估旨在自动预测试题的难度、信效度和知识点等属性，以提高学生的做题效率和提升组卷的质量。我们从包含复杂语义的试题文本出发，从大量数据中挖掘属性相关的重要信息，实现高效、客观的自动化属性预估。
-				</p>
-			</el-row> -->
-
-      <el-row style="padding-top: 4vh; padding-left: 5vw">
-        <el-col :span="4">
-          <el-select v-model="subject_id" placeholder="请先在此选择学科">
-            <el-option
-              v-for="subject in options"
-              :key="subject.value_id"
-              :label="subject.label"
-              :value="subject.value_id"
-            >
-            </el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="4" :offset="1">
-          <el-select
-            v-model="type_id"
-            placeholder="选择学科后选择题型"
-            :disabled="subject_id == ''"
-          >
-            <el-option
-              v-for="type in type_options"
-              :key="type.value_id"
-              :label="type.label"
-              :value="type.value_id"
-            >
-            </el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="2" :offset="1">
-          <el-button
-            type="primary"
-            value="提交"
-            @click="submit"
-            :disabled="Estimate_Check()"
-            >评估
-          </el-button>
-        </el-col>
-        <!-- <el-col :span="10" style="font-size: 16px; color: grey; padding-top:6px; ">
-					<span>*选择学科、类别，并填写题目后方可提交*</span>
-				</el-col> -->
-      </el-row>
-
-      <el-row
-        type="flex"
-        justify="start"
-        style="padding-top: 3vh; padding-left: 5vw"
-      >
-        <el-col :span="2.5">
-          <span>预测属性勾选：</span>
-        </el-col>
-        <el-col :span="7">
-          <el-checkbox-group v-model="checkList" id="checkbox">
-            <el-checkbox label="难度"></el-checkbox>
-            <el-checkbox label="知识点"></el-checkbox>
-            <el-checkbox label="区分度"></el-checkbox>
-            <el-checkbox label="信度"></el-checkbox>
-            <el-checkbox label="素养"></el-checkbox>
-          </el-checkbox-group>
-        </el-col>
-      </el-row>
+      <!-- <instruction ref="instruction" /> -->
 
       <div id="main">
         <!-- <div class="introduction" style="top:0px;">
@@ -101,17 +33,79 @@
 					API示例
 				</div> -->
 
-        <div id="exercise">
-          <!-- <ComplexInput @Update_CI="UCI" @Update_Image="UCII"></ComplexInput> -->
-          <Dialogue
-            style="height: 100%; width: 100%"
-            :optional_image="optional_image"
-            @Update_CI="UCI"
-          >
-          </Dialogue>
-        </div>
+        <!-- <div id="exercise"> -->
+        <!-- <ComplexInput @Update_CI="UCI" @Update_Image="UCII"></ComplexInput> -->
+        <Dialogue
+          style="height: 440px; width: 760px; margin: 0 auto"
+          :optional_image="optional_image"
+          @Update_CI="UCI"
+        >
+        </Dialogue>
 
-        <div id="result">
+        <div class="option">
+          <div
+            style="
+              position: relative;
+              width: 100%;
+              height: 40px;
+              margin-top: 25px;
+            "
+          >
+            <span
+              class="font1"
+              style="position: absolute; left: 24px; line-height: 40px"
+              >预测学科：</span
+            >
+            <el-radio-group
+              v-model="subject_id"
+              style="position: absolute; left: 110px"
+            >
+              <el-radio-button label="语文">语文</el-radio-button>
+              <el-radio-button label="数学">数学</el-radio-button>
+              <el-radio-button label="英语">英语</el-radio-button>
+              <el-radio-button label="物理">物理</el-radio-button>
+              <el-radio-button label="化学">化学</el-radio-button>
+              <el-radio-button label="生物">生物</el-radio-button>
+              <el-radio-button label="政治">政治</el-radio-button>
+              <el-radio-button label="历史">历史</el-radio-button>
+              <el-radio-button label="地理">地理</el-radio-button>
+            </el-radio-group>
+          </div>
+
+          <div
+            style="
+              position: relative;
+              width: 100%;
+              height: 40px;
+              margin-top: 25px;
+            "
+          >
+            <span
+              class="font1"
+              style="position: absolute; left: 24px; line-height: 40px"
+              >试题类型：</span
+            >
+            <el-radio-group
+              v-model="type_id"
+              style="position: absolute; left: 110px"
+            >
+              <el-radio-button label="选择">选择</el-radio-button>
+              <el-radio-button label="填空">填空</el-radio-button>
+              <el-radio-button label="解答">解答</el-radio-button>
+            </el-radio-group>
+            <el-button
+              style="position: absolute; right: 20px"
+              type="primary"
+              value="提交"
+              @click="submit"
+              :disabled="Estimate_Check()"
+              >属性预估
+            </el-button>
+          </div>
+        </div>
+        <!-- </div> -->
+
+        <!-- <div id="result">
           <div
             style="
               font-size: 30px;
@@ -245,9 +239,6 @@
                         </el-badge>
                       </el-tag>
                     </div>
-                    <!-- <div style="text-align:left; background: #a7cdff" v-if="subject_id != '数学'">
-											<el-tag style="background: #a7cdff" class="kp_tag" effect="plain">暂不支持数学以外的知识点查询</el-tag>
-										</div> -->
                   </el-card>
                 </el-col>
                 <el-col
@@ -265,13 +256,98 @@
                       :props="defaultProps"
                     >
                     </el-tree>
-                    <!-- <el-tag style="background: #a7cdff" class="kp_tag" effect="plain"
-											v-if="subject_id != '数学'">暂不支持数学以外的知识结构查询</el-tag> -->
                   </el-card>
                 </el-col>
               </el-row>
             </div>
           </el-row>
+        </div> -->
+      </div>
+      <div v-show="show_result" id="result">
+        <div
+          style="
+            font-weight: 500;
+            font-size: 36px;
+            line-height: 22px;
+            text-align: center;
+            letter-spacing: 0.05em;
+          "
+        >
+          属性预估结果
+        </div>
+        <Expand
+          style="margin-top: 60px"
+          :title="'基本属性'"
+          @ChangeShow="
+            () => {
+              show_BasicProp = !show_BasicProp;
+            }
+          "
+        ></Expand>
+        <div
+          v-show="show_BasicProp"
+          style="position: relative; height: 250px; width: 100%"
+        >
+          <div id="gauge1" class="gauge" style="left: 80px"></div>
+          <div id="gauge2" class="gauge" style="left: 360px"></div>
+          <div id="gauge3" class="gauge" style="left: 640px"></div>
+          <div class="gauge" style="left: 920px">
+            <div
+              style="
+                font-size: 24px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 17px;
+              "
+            >
+              素养
+            </div>
+            <div
+              style="
+                position: absolute;
+                font-size: 24px;
+                margin-left: 32px;
+                margin-right: 32px;
+                background: #5297ff;
+                border-radius: 30px;
+                width: 136px;
+                height: 44px;
+                line-height: 44px;
+                top: 50%;
+                color: white;
+              "
+            >
+              {{ lp_result }}
+            </div>
+          </div>
+        </div>
+
+        <Expand
+          style="margin-top: 60px"
+          :title="'知识点'"
+          @ChangeShow="
+            () => {
+              show_KP = !show_KP;
+            }
+          "
+        ></Expand>
+
+        <div v-show="show_KP">
+          <div id="pie" class="pie"></div>
+        </div>
+
+        <Expand
+          style="margin-top: 60px"
+          :title="'知识树状结构'"
+          @ChangeShow="
+            () => {
+              show_tree = !show_tree;
+            }
+          "
+        ></Expand>
+
+        <div v-show="show_tree">
+          <div id="tree" class="tree"></div>
         </div>
       </div>
     </div>
@@ -394,22 +470,25 @@ print(json.loads(r.content)["data"])</code></pre>
 // import UploadImg from "./UploadImg.vue";
 // import ComplexInput from "@/common/components/ComplexInput.vue";
 import Dialogue from "./components/Dialogue.vue";
-import Instruction from "./components/InstructionEstimate.vue";
+// import Instruction from "./components/InstructionEstimate.vue";
 import $ from "jquery";
+import * as echarts from "echarts";
+import Expand from "./components/ExpandBar.vue";
 export default {
   components: {
     //ComplexInput,
-    Instruction,
+    // Instruction,
     Dialogue,
+    Expand,
   },
   name: "estimate",
   data() {
     return {
       content: "", // 用户输入试题文本
-      difficulty_result: "", // 难度预估返回值
-      rel_result: "", // 信度预估返回值
-      disc_result: "", // 区分度预估返回值
-      kp_result: "", // 知识点返回值
+      difficulty_result: 0, // 难度预估返回值
+      rel_result: 0, // 信度预估返回值
+      disc_result: 0, // 区分度预估返回值
+      kp_result: 0, // 知识点返回值
       kp_layer: "",
       lp_result: "",
       kp_priority: [],
@@ -516,6 +595,9 @@ export default {
       ],
       // 浏览器高度
       winHeight: window.innerHeight,
+      show_BasicProp: true, //打开基本属性展开栏
+      show_KP: true, //打开知识点展开栏
+      show_tree: true, // 打开知识树状结构
     };
   },
   watch: {
@@ -581,13 +663,11 @@ export default {
   },
   methods: {
     ToTop() {
-      document
-        .getElementById("Top_Nav")
-        .scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-          inline: "nearest",
-        });
+      document.getElementById("Top_Nav").scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
     },
     openInstructionDialog() {
       this.$refs.instruction.openDialog();
@@ -636,52 +716,53 @@ export default {
       if (this.checkList.indexOf("难度") > -1) {
         // 请求难度属性接口
         this.$http
-          .post(
-            this.backendIP + "/api/difficulty",
-            param,
-            config,
-            {
-              emulateJSON: true,
-            }
-          )
+          .post(this.backendIP + "/api/difficulty", param, config, {
+            emulateJSON: true,
+          })
           .then(function (data) {
-            this.difficulty_result = data.data.difficulty;
+            this.difficulty_result = parseFloat(data.data.difficulty).toFixed(
+              2
+            );
+            this.Init_gauge("gauge1", "难度", this.difficulty_result);
             this.loading = false;
           });
       }
       if (this.checkList.indexOf("区分度") > -1) {
         // 请求区分度属性接口
         this.$http
-          .post(
-            this.backendIP + "/api/disc",
-            param,
-            config,
-            {
-              emulateJSON: true,
-            }
-          )
+          .post(this.backendIP + "/api/disc", param, config, {
+            emulateJSON: true,
+          })
           .then(function (data) {
-            this.disc_result = data.data.disc;
+            this.disc_result = parseFloat(data.data.disc).toFixed(2);
+            this.Init_gauge("gauge2", "区分度", this.disc_result);
             this.loading = false;
           });
       }
       if (this.checkList.indexOf("信度") > -1) {
         // 请求信度属性接口
         this.$http
-          .post(
-            this.backendIP + "/api/rel",
-            param,
-            config,
-            {
-              emulateJSON: true,
-            }
-          )
+          .post(this.backendIP + "/api/rel", param, config, {
+            emulateJSON: true,
+          })
           .then(function (data) {
-            this.rel_result = data.data.rel;
+            this.rel_result = parseFloat(data.data.rel).toFixed(2);
+            this.Init_gauge("gauge3", "信度", this.rel_result);
             this.loading = false;
           });
       }
 
+      if (this.checkList.indexOf("素养") > -1) {
+        // 请求知识点属性接口
+        this.$http
+          .post(this.backendIP + "/api/lp", param, config, {
+            emulateJSON: true,
+          })
+          .then(function (data) {
+            this.lp_result = data.data.literacy;
+            this.loading = false;
+          });
+      }
       if (this.checkList.indexOf("知识点") > -1) {
         // 请求知识点属性接口
         this.$http
@@ -692,49 +773,14 @@ export default {
             this.kp_result = data.data.knowledge_point.kp;
             this.kp_layer = data.data.knowledge_point.kp_layer;
             this.kp_priority = data.data.knowledge_point.kp_priority;
+            this.Init_pie();
+            this.Init_tree();
             this.loading = false;
           });
       }
 
-      if (this.checkList.indexOf("素养") > -1) {
-        // 请求知识点属性接口
-        this.$http
-          .post(
-            this.backendIP + "/api/lp",
-            param,
-            config,
-            {
-              emulateJSON: true,
-            }
-          )
-          .then(function (data) {
-            this.lp_result = data.data.literacy;
-            this.loading = false;
-          });
-      }
       //document.getElementById("result").scrollIntoView();
     },
-    // imgInfo(e) {
-    //   this.src = e.src;
-    //   this.filelists = e.filelists;
-    //   console.log(e.src);
-    //   console.log(e.filelists);
-    // },
-    // // 删除图片并保持图片数组顺序
-    // forkImage(index) {
-    //   this.src.splice(index, 1);
-    //   for (var i = 0; i < this.filelists.length; i++) {
-    //     if (typeof this.filelists[i] === "undefined") {
-    //       this.filelists.splice(i, 1);
-    //       i = i - 1;
-    //     }
-    //   }
-    //   this.filelists.splice(index, 1);
-    //   document.getElementsByTagName("input").value = "";
-    //   // console.log(this.src);
-    //   // console.log(this.filelists);
-    //   // console.log(document.getElementsByTagName("input").value);
-    // },
     Estimate_Check() {
       if (this.subject_id == "" || this.type_id == "" || this.content == "") {
         return true;
@@ -751,7 +797,203 @@ export default {
     UCII(val) {
       this.filelists = val;
     },
+    Init_gauge(id, name, value) {
+      console.log(id, name, value);
+      let mygauge = echarts.init(document.getElementById(id));
+      const gaugeData = [
+        {
+          value: value,
+          name: name,
+          title: {
+            offsetCenter: [0, -110],
+            fontSize: 24,
+          },
+          detail: {
+            valueAnimation: true,
+            offsetCenter: ["0", "0"],
+            fontSize: 30,
+          },
+        },
+      ];
+      let option = {
+        series: [
+          {
+            center: ["50%", "60%"],
+            type: "gauge",
+            max: 1,
+            clockwise: false,
+            startAngle: 90,
+            endAngle: -270,
+            pointer: {
+              show: false,
+            },
+            progress: {
+              show: true,
+              overlap: false,
+              roundCap: true,
+              clip: false,
+              itemStyle: {
+                borderWidth: 1,
+                borderColor: "#464646",
+              },
+            },
+            axisLine: {
+              lineStyle: {
+                width: 10,
+              },
+            },
+            splitLine: {
+              show: false,
+              distance: 0,
+              length: 10,
+            },
+            axisTick: {
+              show: false,
+            },
+            axisLabel: {
+              show: false,
+              distance: 50,
+            },
+            data: gaugeData,
+            title: {
+              fontSize: 14,
+            },
+            detail: {
+              width: 50,
+              height: 14,
+              fontSize: 14,
+              color: "auto",
+              borderColor: "auto",
+              formatter: "{value}",
+            },
+          },
+        ],
+      };
+      mygauge.setOption(option);
+      //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+      window.addEventListener("resize", function () {
+        mygauge.resize();
+      });
+    },
+    Init_pie() {
+      // console.log("Init_pie");
+      console.log("kp_result", this.kp_result);
+      console.log("kp_layer", this.kp_layer);
+      console.log("kp_prior", this.kp_priority);
+      let mypie = echarts.init(document.getElementById("pie"));
+      let option = {
+        title: {
+          text: "知识点权重占比分布",
+          left: "center",
+          top: "52",
+        },
+        legend: {
+          right: "15%",
+          top: "40%",
+          orient: "vertical",
+          selectedMode: false,
+          icon: "circle",
+          itemGap: 30,
+          textStyle: {
+            fontSize: 24,
+          },
+        },
+        series: [
+          {
+            left: "-20%",
+            top: "10%",
+            // name: "Access From",
+            type: "pie",
+            radius: ["40%", "70%"],
+            avoidLabelOverlap: false,
+            label: {
+              show: false,
+              // position: 'center'
+            },
+            labelLine: {
+              show: false,
+            },
+            data: [
+              // { value: 1048, name: "Search Engine" },
+              // { value: 735, name: "Direct" },
+              // { value: 580, name: "Email" },
+              // { value: 484, name: "Union Ads" },
+              // { value: 300, name: "Video Ads" },
+            ],
+          },
+        ],
+      };
 
+      let rate = [];
+      let total = 0;
+      for (let i = 0; i < this.kp_result.length; i++) {
+        rate[i] = this.kp_priority.indexOf(this.kp_result[i]) + 1;
+        total += rate[i];
+      }
+      for (let i = 0; i < this.kp_result.length; i++) {
+        rate[i] = rate[i] / total;
+        option.series[0].data[i] = {
+          value: 1 - rate[i],
+          name: this.kp_result[i],
+        };
+        // console.log(option.series.data[i]);
+      }
+      mypie.setOption(option);
+      //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
+      window.addEventListener("resize", function () {
+        mypie.resize();
+      });
+    },
+    Init_tree() {
+      let mytree = echarts.init(document.getElementById("tree"));
+      let option = {
+        title: {
+          text: "知识点树状结构",
+          top: "52px",
+          left: "center",
+        },
+        series: [
+          {
+            top: "22%",
+            type: "tree",
+            expandAndCollapse: false,
+            data: [
+              {
+                name: "知识结构",
+                children: [],
+              },
+            ],
+            label: {
+              position: "inside",
+              show: true,
+              borderWidth: 1,
+              backgroundColor: "rgba(231, 244, 255, 1)",
+              borderColor: "rgba(32, 151, 246, 1)",
+              padding: [10, 10, 10, 10],
+              shadowColor: "rgba(131, 196, 248, 1)",
+              shadowBlur: 4,
+              shadowOffsetX: 4,
+              shadowOffsetY: 4,
+              overflow: "breakAll",
+            },
+            labelLayout: {
+              width: 80,
+              hideOverlap: false,
+            },
+            orient: "TB",
+          },
+        ],
+      };
+
+      let temp = JSON.stringify(this.kp_layer);
+      temp = temp.split("label").join("name");
+      option.series[0].data[0].children = JSON.parse(temp);
+      console.log(option.series[0].data);
+      mytree.setOption(option);
+      window.addEventListener("resize", function () {
+        mytree.resize();
+      });
+    },
     openPanel() {
       $(".box-card.left").animate(
         {
@@ -798,7 +1040,8 @@ export default {
 .panel {
   background-color: #fff;
   border-radius: 4px;
-  min-height: 1000px;
+  min-height: 1200px;
+  min-width: 1440px;
   box-shadow: none;
 }
 
@@ -845,9 +1088,18 @@ export default {
   position: relative;
   height: 650px;
   width: 1200px;
-  margin-bottom: 100px;
-  margin-left: 80px;
-  margin-top: 40px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.option {
+  height: 155px;
+  margin-top: 16px;
+  border: 1px solid #409eff;
+  box-sizing: border-box;
+  border-radius: 16px;
+  margin-left: 130px;
+  margin-right: 130px;
 }
 
 .introduction,
@@ -871,15 +1123,47 @@ export default {
 }
 
 #result {
+  // position: relative;
+  width: 1200px;
+  // height: 260px;
+  margin: auto;
+  margin-top: 50px;
+  // border: 1px solid rgba(0, 0, 0, 0.1);
+  // box-sizing: border-box;
+  // border-radius: 16px;
+}
+
+.gauge {
   position: absolute;
-  padding-left: 5px;
-  padding-right: 5px;
-  left: 800px;
-  top: 0px;
-  width: 520px;
-  height: 650px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
-  border-radius: 4px;
+  top: 30px;
+  width: 200px;
+  height: 244px;
+  border: 1px solid #d0d0d0;
+  // box-sizing: border-box;
+  box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+}
+
+.pie {
+  position: relative;
+  margin: 60px auto;
+  width: 1000px;
+  height: 560px;
+  border: 1px solid #d0d0d0;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12);
+  border-radius: 20px;
+}
+
+.tree {
+  position: relative;
+  margin: 60px auto;
+  width: 1000px;
+  height: 560px;
+  border: 1px solid #d0d0d0;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12);
+  border-radius: 20px;
 }
 
 .box-card {
@@ -990,6 +1274,15 @@ export default {
 </style>
 
 <style scoped>
+.font1 {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  letter-spacing: 0.03em;
+  font-weight: bold;
+}
+
 .img-list-item {
   position: relative;
   margin: auto;
@@ -1060,11 +1353,11 @@ input[type="file"] {
   background-color: #9cd6f1;
 }
 
-.Top_Nav{
-    position: relative;
-    top: -90px;
-    width: 10px;
-    height: 10px;
-    background: transparent;
+.Top_Nav {
+  position: relative;
+  top: -90px;
+  width: 10px;
+  height: 10px;
+  background: transparent;
 }
 </style>

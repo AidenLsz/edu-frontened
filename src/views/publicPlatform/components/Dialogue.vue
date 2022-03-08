@@ -145,6 +145,7 @@
       :visible.sync="picSearchDialogShow"
       title="图片检索"
       width="80%"
+      top="auto"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
       @close="Reset_Interval()"
@@ -260,7 +261,7 @@
 </template>
 
 <script>
-import ComplexInput from "@/common/components/ComplexInput.vue";
+import ComplexInput from "./ComplexInput.vue";
 import Mathdown from "@/common/components/Mathdown.vue";
 import { commonAjax } from "@/common/utils/ajax";
 import $ from "jquery";
@@ -329,6 +330,8 @@ export default {
       type: "",
       base64_code: "",
       result: {}, //存储转写返回的结果
+      // API最大等待时长
+      TimeLimit: 30000,
     };
   },
   props: {
@@ -543,7 +546,7 @@ export default {
     },
 
     getBase64(url) {
-      return new Promise((resolve,reject) => {
+      return new Promise((resolve, reject) => {
         var Img = new Image();
         var dataURL = "";
         Img.setAttribute("crossOrigin", "Anonymous");
@@ -566,12 +569,29 @@ export default {
         };
         Img.onerror = (e) => {
           reject(e);
-        }
+        };
       });
     },
 
+    // 识别失败处理
+    Identify_Fail() {
+      this.identified = false;
+      this.$message({
+        showClose: true,
+        message: "抱歉，识别失败了",
+        type: "error",
+      });
+      this.confirmed_content = "";
+      this.tableData.length = 0;
+    },
     async identify() {
       //let reader = new FileReader();
+      var timer = setTimeout(() => {
+        if (this.confirmed_content == "识别中...") {
+          this.Identify_Fail();
+        }
+      }, this.TimeLimit);
+
       this.identified = true;
       this.tableData = [];
       this.content = "";
@@ -596,7 +616,13 @@ export default {
 
       console.log("size", this.base64_code.length);
       if (this.base64_code.length / 1024 > 1024) {
-        alert("抱歉，您上传的图片过大，请重新上传");
+        // this.$error.alert("抱歉，您上传的图片过大，请重新上传");
+        this.$message({
+          showClose: true,
+          message: "抱歉，您上传的图片过大，请重新上传",
+          type: "error",
+        });
+        this.confirmed_content = "";
         return;
       }
 
@@ -610,6 +636,10 @@ export default {
         );
       } catch (err) {
         console.log(err);
+        this.Identify_Fail();
+        return;
+      } finally {
+        clearTimeout(timer);
       }
 
       //console.log(data);
@@ -638,8 +668,7 @@ export default {
         this.confirmed_content = this.content;
       } else {
         console.log("fail!");
-        this.confirmed_content = "识别失败";
-        this.tableData.length = 0;
+        this.Identify_Fail();
       }
       //console.log(this.tableData[0].content);
     },
@@ -816,5 +845,12 @@ export default {
 
 #image :hover {
   cursor: pointer;
+}
+
+.el-dialog__wrapper ::v-deep .el-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

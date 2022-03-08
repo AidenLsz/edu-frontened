@@ -2,7 +2,6 @@
   <el-container id="app">
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <el-header style="height: 80px">
-      <!-- <div @click="test"> 测试 </div> -->
       <div class="logo">
         <img
           src="@/assets/luna_icon.png"
@@ -108,7 +107,7 @@ export default {
   },
   mounted() {
     // this.getGroups();
-    // console.log("@" + this.$route.path);
+    console.log("@" + this.$route.path);
   },
   updated() {
     var user = sessionStorage.getItem("user");
@@ -169,11 +168,6 @@ export default {
       this.$router.push("/PublicPlatform");
       location.reload();
     },
-    // only for test
-    test() {
-      console.log(this.$store.state.user.name);
-      console.log(this.$store.state.AIlab_user.AIname);
-    }
   },
 };
 </script>
@@ -184,7 +178,7 @@ export default {
   width: 89%;
   height: 100%;
   left: 5.5%;
-  background-color: #23242a;
+  background-color: white;
 }
 
 .logo {
@@ -193,7 +187,7 @@ export default {
   height: 42px;
   left: 12%;
   top: 19px;
-  // background-color: #23242A;
+  // background-color: white;
   cursor: pointer;
 }
 
@@ -203,7 +197,7 @@ export default {
   height: 40px;
   left: calc(12% + 168px);
   top: 20px;
-  border-left: 2px solid #23242a;
+  border-left: 2px solid #ffffff;
   // transform: rotate(90deg);
 }
 
@@ -223,7 +217,7 @@ export default {
   /* identical to box height */
   letter-spacing: 0.06em;
   cursor: pointer;
-  color: #23242a;
+  color: #ffffff;
 }
 
 .page {
@@ -243,7 +237,7 @@ export default {
   font-size: 20px;
   line-height: 25px;
   letter-spacing: 0.02em;
-  color: #23242a;
+  color: #ffffff;
 }
 
 .icon-search {
@@ -252,7 +246,7 @@ export default {
   height: 32px;
   left: 72.3%;
   top: 24px;
-  color: #23242a;
+  color: white;
   cursor: pointer;
 }
 
@@ -260,7 +254,7 @@ export default {
   position: absolute;
   height: 22px;
   width:100px;
-  color: #23242a;
+  color: white;
   left: calc(72.3% + 150px);
   top: 28.5px;
 }
@@ -273,7 +267,7 @@ export default {
 
 .el-dropdown-link {
   cursor: pointer;
-  color: #23242a;
+  color: white;
   font-size: 18px;
   font-weight: bold;
 }
@@ -283,7 +277,7 @@ export default {
   height: 22px;
   left: calc(72.3% + 84px);
   top: 16px;
-  color: #ffffff;
+  color: white;
   cursor: pointer;
 }
 
@@ -297,24 +291,25 @@ export default {
   font-size: 18px;
   line-height: 22px;
   letter-spacing: 0.02em;
-  color: #23242a;
+  color: #ffffff;
 }
 
 .login {
   position: absolute;
-  height: 22px;
+  height: 10px;
+  width: 10px;
   left: calc(72.3% + 169px);
-  top: 20px;
+  top: 17px;
   // background-color: rgba(0, 0, 0, 0);
   cursor: pointer;
   .el-button {
     position: absolute;
     left: 0;
     top: 0;
-    background-color: #ffffff;
-    color: #23242a;
+    background-color: #23242a;
+    color: white;
     font-size: 18px;
-    border: 2px solid #23242a;
+    border: 2px solid #ffffff;
     box-sizing: border-box;
     border-radius: 55px;
   }
@@ -362,6 +357,6 @@ export default {
   /*统一设置高度为100%*/
   height: 100%;
   width: 100%;
-  background: #ffffff;
+  background: #23242a;
 }
 </style>

@@ -5,12 +5,16 @@ import UserRouter from '@/router/modules/user.js'
 import EEMSRouter from '@/router/modules/eems.js'
 import ITASRouter from '@/router/modules/itas.js'
 import PublicPlatformRouter from '@/router/modules/PublicPlatformRouter.js'
+import PublicPlatformRouter_B from '@/router/modules/PublicPlatformRouter_B.js'
+import AIlabUserRouter from '@/router/modules/AIlabUserRouter.js'
 import store from '@/store'
 import {Message } from 'element-ui'
 import BasicLayout from '@/layout/Basic'
 import EEMSLayout from '@/layout/EEMS'
 import ITASLayout from '@/layout/ITAS'
 import PublicPlatformLayout from '@/layout/PublicPlatformLayout'
+import PublicPlatformLayout_B from '@/layout/PublicPlatformLayout_B'
+import AIlabUserLayout from '@/layout/AIlabUser'
 
 // import  AppMain from '@/layout/components/AppMain'
 
@@ -46,7 +50,20 @@ const router = new Router({
       children:UserRouter.concat(EEMSRouter)
     },
     {
+      path: "/publicPlatform/user",
+      name: "AIlabUser",
+      component: AIlabUserLayout,
+      children:UserRouter.concat(AIlabUserRouter)
+    },
+    {
       path: "/publicPlatform",
+      name: "publicPlatform_B",
+      component: PublicPlatformLayout_B,
+      children:UserRouter.concat(PublicPlatformRouter_B)
+    },
+    {
+      path: "/publicPlatform",
+      name: "publicPlatform",
       component: PublicPlatformLayout,
       children:UserRouter.concat(PublicPlatformRouter)
     },
@@ -61,6 +78,19 @@ const router = new Router({
 // 路由控制
 
 router.beforeEach((to, from, next) => {
+  console.log(to.path.includes('/user/') && !store.state.AIlab_user.AIname);
+  if (switchtoAIlab(to.path)){
+    if (to.path.includes('/user/') && !store.state.AIlab_user.AIname)
+    {
+      Message({
+        message: '您需要登录后才能进行相关操作！',
+        type: 'error',
+        duration: 5 * 1000
+      });
+      next('/PublicPlatform/AILablogin');// 重定向到登陆界面
+    } else
+    next();// 验证导航
+  } else
   if(!validatePermission(to.path)){
     next()
     openLoginDialog()
@@ -82,6 +112,9 @@ function switchToEEMS(path){
 }
 function switchToITAS(path){
   return path&&(path.endsWith('/itas')||path.includes('/itas/'))
+}
+function switchtoAIlab(path){
+  return path&&(path.endsWith('/PublicPlatform')||path.includes('/PublicPlatform/'))
 }
 function openLoginDialog(){
   store.dispatch('app/openLoginDialog').then(()=>{
@@ -115,6 +148,11 @@ function validatePermission(path){
     if (!store.state.user.token) {
       return false
     }
+  // }else if(switchtoAIlab(path)) {
+  //   store.dispatch('app/setSysState',{rootPath:'/PublicPlatform/',isLuna:false,systemType:3})
+  //   if (!store.state.user.token) {
+  //     return false
+  //   }
   }else{
     //切换为普通版
     store.dispatch('app/setSysState',{rootPath:'/',isLuna:true,systemType:0})
