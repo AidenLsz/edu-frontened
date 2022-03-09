@@ -466,24 +466,9 @@
 							"intro": "211唯一指定废物\n专业浪费纳税人的钱\ngood luck and fair sea"
 						},
 						{
-							"name": "龚政",
-							"mail": "gz70229@mail.ustc.edu.cn",
-							"intro": "208三亚渔民"
-						},
-						{
 							"name": "何理扬",
 							"mail": "heliyang@mail.ustc.edu.cn",
 							"intro": "中国科学技术大学研究生一年级\n感兴趣的方向是信息检索"
-						},
-						{
-							"name": "房松涛",
-							"mail": "songtao@mail.ustc.edu.cn",
-							"intro": "不怕山高路远，只怕中途偷懒"
-						},
-						{
-							"name": "黄杰",
-							"mail": "jiehuang@mail.ustc.edu.cn",
-							"intro": "Work hard.\nBe strong.\nDon't complain."
 						},
 						{
 							"name": "吕瑞",
@@ -573,11 +558,6 @@
 							"name": "邬靖宇",
 							"mail": "wujingyu@mail.ustc.edu.cn",
 							"intro": "干啥啥不行，吃啥啥不剩，\n学啥啥不会，写啥啥bug。"
-						}
-						,{
-							"name": "王季璐",
-							"mail": "wjl2001@mail.ustc.edu.cn",
-							"intro": "中国科学技术大学18级金融本科生\n不断尝试的人生体验家"
 						}
 						,{
 							"name": "林嘉滢",
@@ -697,7 +677,23 @@
 							"name": "高海涵",
 							"mail": "kd193104@mail.ustc.edu.cn",
 							"intro": "中科大18级本科，现从事数据挖掘、机器学习和NLP方面的科研"
-						}
+						},{
+							"name": "王季璐",
+							"mail": "wjl2001@mail.ustc.edu.cn",
+							"intro": "中国科学技术大学18级金融本科生\n不断尝试的人生体验家"
+						},{
+							"name": "龚政",
+							"mail": "gz70229@mail.ustc.edu.cn",
+							"intro": "208三亚渔民"
+						},{
+							"name": "房松涛",
+							"mail": "songtao@mail.ustc.edu.cn",
+							"intro": "不怕山高路远，只怕中途偷懒"
+						},{
+							"name": "黄杰",
+							"mail": "jiehuang@mail.ustc.edu.cn",
+							"intro": "Work hard.\nBe strong.\nDon't complain."
+						},
 					],
 					"img_path": {
 						// 指导教师
@@ -709,7 +705,6 @@
 						"吕瑞": "/members/吕瑞.jpg",
 						"宁雨亭": "/members/宁雨亭.jpg",
 						"张鑫": "/members/张鑫.jpg",
-						"房松涛": "/members/房松涛.jpg",
 						"曹智": "/members/曹智.jpg",
 						"杨哲": "/members/杨哲.jpg",
 						"洪玉婷": "/members/洪玉婷.jpg",
@@ -720,9 +715,7 @@
 						"项子扬": "/members/项子扬.jpg",
 						"马一潇": "/members/马一潇.jpg",
 						"黄威": "/members/黄威.jpg",
-						"黄杰": "/members/黄杰.jpg",
 						"黄野": "/members/黄野.jpg",
-						"龚政": "/members/龚政.jpg",
 						"黄小青": "/members/黄小青.jpg",
 						"单明晖": "/members/单明晖.jpeg",
 						"姚方舟": "/members/姚方舟.jpeg",
@@ -734,7 +727,6 @@
 						"黄炜喆": "/members/黄炜喆.png",
 						"肖桐": "/members/肖桐.png",
 						"邬靖宇": "/members/邬靖宇.jpg",
-						"王季璐": "/members/王季璐.jpg",
 						"林嘉滢": "/members/林嘉滢.jpg",
 						"李佳桐": "/members/李佳桐.jpg",
 						"胡子睿": "/members/胡子睿.jpg",
@@ -765,6 +757,10 @@
 						"包美凯": "/members/包美凯.jpg",
 						"金鑫": "/members/金鑫.jpg",
 						"高海涵": "/members/高海涵.jpeg",
+						"王季璐": "/members/王季璐.jpg",
+						"龚政": "/members/龚政.jpg",
+						"房松涛": "/members/房松涛.jpg",
+						"黄杰": "/members/黄杰.jpg",
 					}
 				}
 			}
