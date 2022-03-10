@@ -403,7 +403,7 @@ export default {
           "https://ailab-api-275-production.env.bdaa.pro/v1/signup/captcha",
           {
             user_name: this.username,
-            mail: this.mail,
+            email: this.mail,
           }
         ).then((data) => {
           console.log("SendCaptcha", data);

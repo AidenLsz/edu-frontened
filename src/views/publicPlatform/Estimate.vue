@@ -880,7 +880,10 @@ export default {
       console.log("kp_result", this.kp_result);
       console.log("kp_layer", this.kp_layer);
       console.log("kp_prior", this.kp_priority);
-      let mypie = echarts.init(document.getElementById("pie"));
+      let mypie = echarts.init(document.getElementById("pie"), null, {
+        rendered: "svg",
+        // devicePixelRatio:2.5
+      });
       let option = {
         title: {
           text: "知识点权重占比分布",
@@ -945,7 +948,9 @@ export default {
       });
     },
     Init_tree() {
-      let mytree = echarts.init(document.getElementById("tree"));
+      let mytree = echarts.init(document.getElementById("tree"), null, {
+        rendered: "svg",
+      });
       let option = {
         title: {
           text: "知识点树状结构",
