@@ -491,11 +491,6 @@
 							"intro": "略懂音乐，审美过关，经常面向ddl编程"
 						},
 						{
-							"name": "项子扬",
-							"mail": "xiangzy@mail.ustc.edu.cn",
-							"intro": "纯音乐爱好者\n愿世人都能睡到自然醒"
-						},
-						{
 							"name": "洪玉婷",
 							"mail": "1044653353@qq.com",
 							"intro": "大闸蟹爱好者"
@@ -693,6 +688,10 @@
 							"name": "黄杰",
 							"mail": "jiehuang@mail.ustc.edu.cn",
 							"intro": "Work hard.\nBe strong.\nDon't complain."
+						},{
+							"name": "项子扬",
+							"mail": "xiangzy@mail.ustc.edu.cn",
+							"intro": "纯音乐爱好者\n愿世人都能睡到自然醒"
 						},
 					],
 					"img_path": {
@@ -712,7 +711,6 @@
 						"覃龙虎": "/members/覃龙虎.jpg",
 						"雷思琦": "/members/雷思琦.jpg",
 						"韩子勤": "/members/韩子勤.jpg",
-						"项子扬": "/members/项子扬.jpg",
 						"马一潇": "/members/马一潇.jpg",
 						"黄威": "/members/黄威.jpg",
 						"黄野": "/members/黄野.jpg",
@@ -761,6 +759,8 @@
 						"龚政": "/members/龚政.jpg",
 						"房松涛": "/members/房松涛.jpg",
 						"黄杰": "/members/黄杰.jpg",
+						
+						"项子扬": "/members/项子扬.jpg",
 					}
 				}
 			}
