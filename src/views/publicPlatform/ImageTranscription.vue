@@ -826,6 +826,13 @@ export default {
         else if (typeof this.result.latex == "string") {
           this.content = this.result.latex;
         }
+        this.$nextTick(() => {
+          document.getElementById("result").scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+            inline: "nearest",
+          });
+        });
       } else {
         this.tableData.length = 0;
       }

@@ -1,5 +1,5 @@
 <template>
-  <el-container id="app">
+  <el-container style="min-width: 1440px" id="app">
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <el-header style="height: 80px">
       <!-- <div @click="test"> 测试 </div> -->

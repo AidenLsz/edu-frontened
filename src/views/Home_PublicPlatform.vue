@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <div id="Top_Nav" class="Top_Nav"></div>
     <!-- <Layout></Layout> -->
     <div class="summary">
@@ -133,7 +133,7 @@ export default {
   activated() {
     this.ToTop();
   },
-  mounted () {
+  mounted() {
     this.ToTop();
   },
   methods: {
@@ -445,11 +445,13 @@ export default {
   box-sizing: border-box;
   border-radius: 55px;
   .button {
+    display: block;
     font-family: Mulish;
     font-style: normal;
     font-weight: bold;
     font-size: 18px;
     line-height: 57.2px;
+    width: 100%;
     /* or 333% */
     text-align: center;
     align-items: center;
@@ -527,6 +529,8 @@ export default {
   box-sizing: border-box;
   border-radius: 55px;
   .button {
+    display: block;
+    width:100%;
     font-family: Mulish;
     font-style: normal;
     font-weight: bold;
