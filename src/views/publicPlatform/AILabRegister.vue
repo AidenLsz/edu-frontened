@@ -472,8 +472,10 @@ export default {
           {
             user_name: this.username,
             password: sha1(this.password),
-            mail: this.mail,
+            email: this.mail,
             captcha: this.captcha,
+            full_name: "",
+            phone_number: this.phone
           }
         ).then((data) => {
           console.log("Register", data);

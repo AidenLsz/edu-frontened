@@ -1,5 +1,5 @@
 <template>
-  <el-container id="app">
+  <el-container style="min-width: 1440px" id="app">
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <el-header style="height: 80px">
       <div class="logo">
@@ -63,7 +63,7 @@
     </el-header>
     <!-- <basic-header/> -->
     <el-main>
-      <div style="min-height: 100vh">
+      <div>
         <router-view :key="$route.fullPath"></router-view>
       </div>
       <basic-footer />
@@ -253,7 +253,7 @@ export default {
 .user {
   position: absolute;
   height: 22px;
-  width:100px;
+  width: 100px;
   color: white;
   left: calc(72.3% + 150px);
   top: 28.5px;
@@ -350,6 +350,8 @@ export default {
 }
 
 .el-header {
+  position: fixed;
+  z-index: 10;
   /*设置内部填充为0，几个布局元素之间没有间距*/
   padding: 0px 0px 0px 0px;
   /*外部间距也是如此设置*/

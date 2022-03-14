@@ -38,13 +38,23 @@
               $store.getters.systemType == 2 ? "智能" : ""
             }}分析</el-breadcrumb-item
           >
-          <el-breadcrumb-item>多卷分析</el-breadcrumb-item>
+          <el-breadcrumb-item
+            >多卷分析
+            <span
+              v-if="chosen_paper_List.length == 0"
+              @click="openInstructionDialog"
+              style="cursor: pointer"
+            >
+              <i class="el-icon-question"></i>
+            </span>
+          </el-breadcrumb-item>
           <el-breadcrumb-item v-if="chosen_paper_List.length > 0"
             >分析报告</el-breadcrumb-item
           >
         </el-breadcrumb>
       </el-col>
     </el-row>
+    <instruction ref="instruction" />
     <!-- <el-row class="description" justify="center">
       <div  >
       所选各试卷卷内各小题难度变化情况如下图所示。总的来看，卷内题目的难度由前至后总体呈递增趋势，中间穿插几道较难的题目，以体现试题的区分度和层次性。在所选的这张试卷中，这张试卷的平均难度最高，其难度为，这张试卷中的第小题是难度最高的一个小题，其难度为。
@@ -142,7 +152,11 @@
         {{ equation_cnt_aver }}
         个以上的公式。不同模式的信息载体能更为全面地考查学生获取和整合信息的能力，要求学生联系并充分利用公式、图像与文本之间的关系。
       </el-row>
-      <el-radio-group v-show="show_word_cnt_Bar" v-model="tablekind" style="margin-top: 30px;">
+      <el-radio-group
+        v-show="show_word_cnt_Bar"
+        v-model="tablekind"
+        style="margin-top: 30px"
+      >
         <el-radio-button label="word">字数统计</el-radio-button>
         <el-radio-button label="figure">图表统计</el-radio-button>
         <el-radio-button label="equation">公式统计</el-radio-button>
@@ -368,9 +382,10 @@ import * as echarts from "echarts";
 import { commonAjax } from "@/common/utils/ajax";
 import $ from "jquery";
 import LunaProgress from "../../common/components/LunaProgress.vue";
+import Instruction from "./components/InstructionMultiPaper.vue";
 
 export default {
-  components: { SearchPaper, LunaProgress },
+  components: { SearchPaper, LunaProgress, Instruction },
   name: "MultiPaperAnalyse",
   data() {
     return {
@@ -502,6 +517,10 @@ export default {
         block: "start",
         inline: "nearest",
       });
+    },
+    // 打开使用指南
+    openInstructionDialog() {
+      this.$refs.instruction.openDialog();
     },
     // 打开试卷库
     Open_Paper_Base() {

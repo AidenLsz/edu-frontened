@@ -22,7 +22,7 @@
           </el-breadcrumb>
         </el-col>
       </el-row>
-      <!-- <instruction ref="instruction" /> -->
+      <instruction ref="instruction" />
 
       <div id="main">
         <!-- <div class="introduction" style="top:0px;">
@@ -470,14 +470,14 @@ print(json.loads(r.content)["data"])</code></pre>
 // import UploadImg from "./UploadImg.vue";
 // import ComplexInput from "@/common/components/ComplexInput.vue";
 import Dialogue from "./components/Dialogue.vue";
-// import Instruction from "./components/InstructionEstimate.vue";
+import Instruction from "./components/InstructionEstimate.vue";
 import $ from "jquery";
 import * as echarts from "echarts";
 import Expand from "./components/ExpandBar.vue";
 export default {
   components: {
     //ComplexInput,
-    // Instruction,
+    Instruction,
     Dialogue,
     Expand,
   },
