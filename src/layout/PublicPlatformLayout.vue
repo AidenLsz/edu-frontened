@@ -1,8 +1,7 @@
 <template>
-  <el-container style="min-width: 1440px" id="app">
+  <div style="min-width: 1440px" id="app">
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
-    <el-header style="height: 80px">
-      <!-- <div @click="test"> 测试 </div> -->
+    <div class="header" style="height: 80px">
       <div class="logo">
         <img
           src="@/assets/luna_icon.png"
@@ -16,7 +15,7 @@
         <p>AI实验室</p>
       </div>
       <div class="vertical_line"></div>
-      <div class="page" style="left: calc(50% - 30px)">
+      <div class="page">
         <el-button
           type="text"
           class="navbar"
@@ -61,15 +60,69 @@
       <div v-if="!$store.state.AIlab_user.AIname" class="login">
         <el-button round @click="goToRegister">注册</el-button>
       </div>
-    </el-header>
+      <div
+        v-if="!$store.state.AIlab_user.AIname"
+        class="menu"
+        @click="
+          () => {
+            OpenNarrowMenu = true;
+          }
+        "
+      >
+        <i
+          class="el-icon-menu"
+          style="font-size: 30px; height: 40px; line-height: 40px"
+        ></i>
+      </div>
+      <el-drawer
+        :append-to-body="true"
+        :modal-append-to-body="false"
+        style="overflow: scroll"
+        :visible.sync="OpenNarrowMenu"
+        size="260px"
+      >
+        <el-row slot="title" type="flex" justify="start">
+          <span style="font-size: 20px; color: black; padding-left: 5%"
+            >LUNA-AI实验室</span
+          >
+        </el-row>
+        <div style="padding: 0px 10%">
+          <!-- 首页 -->
+          <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+            <el-button
+              type="text"
+              @click="goToAILab"
+              class="Narrow_Navbar_Button"
+              >首页</el-button
+            >
+          </el-row>
+          <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+            <el-button
+              type="text"
+              @click="goToLogin"
+              class="Narrow_Navbar_Button"
+              >登陆</el-button
+            >
+          </el-row>
+          <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+            <el-button
+              type="text"
+              @click="goToRegister"
+              class="Narrow_Navbar_Button"
+              >注册</el-button
+            >
+          </el-row>
+        </div>
+      </el-drawer>
+    </div>
     <!-- <basic-header/> -->
-    <el-main>
-      <div style="min-height: 100vh">
+    <div>
+      <div>
         <router-view :key="$route.fullPath"></router-view>
       </div>
       <basic-footer />
-    </el-main>
-  </el-container>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -98,6 +151,7 @@ export default {
       PaperAnalyseSwitchFlag: false,
       QuestionAnalyseSwitchFlag: false,
       isGroup: false,
+      OpenNarrowMenu: false,
     };
   },
   computed: {
@@ -108,7 +162,7 @@ export default {
   },
   mounted() {
     // this.getGroups();
-    // console.log("@" + this.$route.path);
+    console.log("@" + this.$route.path);
   },
   updated() {
     var user = sessionStorage.getItem("user");
@@ -169,11 +223,6 @@ export default {
       this.$router.push("/PublicPlatform");
       location.reload();
     },
-    // only for test
-    test() {
-      console.log(this.$store.state.user.name);
-      console.log(this.$store.state.AIlab_user.AIname);
-    }
   },
 };
 </script>
@@ -193,7 +242,7 @@ export default {
   height: 42px;
   left: 12%;
   top: 19px;
-  // background-color: #23242A;
+  // background-color: #23242a;
   cursor: pointer;
 }
 
@@ -231,6 +280,7 @@ export default {
   width: 60px;
   height: 25px;
   // left: calc(50% - 90px);
+  left: max(calc(50% - 30px), calc(12% + 280px));
   top: 12px;
   cursor: pointer;
 }
@@ -259,9 +309,10 @@ export default {
 .user {
   position: absolute;
   height: 22px;
-  width:100px;
+  width: 100px;
   color: #23242a;
-  left: calc(72.3% + 150px);
+  right: 6%;
+  // left: calc(72.3% + 150px);
   top: 28.5px;
 }
 
@@ -283,7 +334,7 @@ export default {
   height: 22px;
   left: calc(72.3% + 84px);
   top: 16px;
-  color: #ffffff;
+  color: #23242a;
   cursor: pointer;
 }
 
@@ -302,16 +353,17 @@ export default {
 
 .login {
   position: absolute;
-  height: 22px;
+  height: 10px;
+  width: 10px;
   left: calc(72.3% + 169px);
-  top: 20px;
+  top: 17px;
   // background-color: rgba(0, 0, 0, 0);
   cursor: pointer;
   .el-button {
     position: absolute;
     left: 0;
     top: 0;
-    background-color: #ffffff;
+    background-color: white;
     color: #23242a;
     font-size: 18px;
     border: 2px solid #23242a;
@@ -330,6 +382,47 @@ export default {
   text-align: center;
   color: #2c3e50;
   // min-width: 1440px;
+}
+
+.Narrow_Navbar_Item {
+  width: 100%;
+  border-top: 1px solid #ccc;
+  min-height: 80px;
+  line-height: 80px;
+  font-size: 18px;
+}
+
+.Narrow_Navbar_Button {
+  font-size: 18px;
+  color: black;
+  transition: 200ms;
+}
+
+.menu {
+  display: none;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  color: #23242a;
+  cursor: pointer;
+}
+
+.menu:hover {
+  color: #66b1ff;
+}
+@media screen and (max-width: 980px) {
+  .reg {
+    display: none;
+  }
+  .login {
+    display: none;
+  }
+  .page {
+    display: none;
+  }
+  .menu {
+    display: inline;
+  }
 }
 </style>
 <style scoped>
@@ -355,6 +448,8 @@ export default {
 }
 
 .el-header {
+  position: fixed;
+  z-index: 10;
   /*设置内部填充为0，几个布局元素之间没有间距*/
   padding: 0px 0px 0px 0px;
   /*外部间距也是如此设置*/
@@ -362,6 +457,13 @@ export default {
   /*统一设置高度为100%*/
   height: 100%;
   width: 100%;
-  background: #ffffff;
+  background: white;
+}
+
+.header {
+  position: fixed;
+  z-index: 10;
+  width: 100%;
+  background: white;
 }
 </style>

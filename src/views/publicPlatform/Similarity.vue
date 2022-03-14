@@ -295,13 +295,11 @@ export default {
   },
   methods: {
     ToTop() {
-      document
-        .getElementById("Top_Nav")
-        .scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-          inline: "nearest",
-        });
+      document.getElementById("Top_Nav").scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
     },
     openInstructionDialog() {
       this.$refs.instruction.openDialog();
@@ -332,7 +330,7 @@ export default {
       document.documentElement.scrollTop = 200;
       this.loading = true;
       this.show_result = true;
-      let param = new FormData();
+      // let param = new FormData();
       let config = {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -350,15 +348,30 @@ export default {
         temp_image_right.push(this.images_Right[j]);
       }
 
-      param.append("image_left", JSON.stringify(temp_image_left));
-      param.append("image_right", JSON.stringify(temp_image_right));
-      param.append("content_1", this.content_1); // 后端接收content1字段
-      param.append("content_2", this.content_2); // 后端接收content2字段
-      // 请求相似度预估接口
+      // param.append("image_left", JSON.stringify(temp_image_left));
+      // param.append("image_right", JSON.stringify(temp_image_right));
+      // param.append("content_1", this.content_1); // 后端接收content1字段
+      // param.append("content_2", this.content_2); // 后端接收content2字段
+      // // 请求相似度预估接口
+      // this.$http
+      //   .post(this.backendIP + "/api/similarity", param, config, {
+      //     emulateJSON: true,
+      //   })
+      //   .then(function (data) {
+      //     this.similarity_result = data.data.similarity;
+      //     this.loading = false;
+      //   });
+
+      let param = [[{ text: this.content_1 }, { text: this.content_2 }]];
       this.$http
-        .post(this.backendIP + "/api/similarity", param, config, {
-          emulateJSON: true,
-        })
+        .post(
+          "https://math-text-similarity-128-production.env.bdaa.pro/v1",
+          param,
+          config,
+          {
+            emulateJSON: true,
+          }
+        )
         .then(function (data) {
           this.similarity_result = data.data.similarity;
           this.loading = false;
@@ -591,11 +604,11 @@ export default {
 		border-color: #c5c1c0 !important;
 	} */
 
-.Top_Nav{
-    position: relative;
-    top: -90px;
-    width: 10px;
-    height: 10px;
-    background: transparent;
+.Top_Nav {
+  position: relative;
+  top: -90px;
+  width: 10px;
+  height: 10px;
+  background: transparent;
 }
 </style>

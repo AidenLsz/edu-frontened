@@ -182,7 +182,7 @@ export default {
 .summary {
   position: relative;
   width: 100%;
-  min-width: 1440px;
+  // min-width: 1440px;
   // overflow: scroll;
   height: 780px;
   left: 0px;
@@ -236,7 +236,7 @@ export default {
   position: relative;
   width: 100%;
   height: 1100px;
-  min-width: 1440px;
+  // min-width: 1440px;
   // overflow: scroll;
   left: 0px;
   background: #e5e5e5;
@@ -359,7 +359,7 @@ export default {
   width: 100%;
   height: 1400px;
   left: 0px;
-  min-width: 1440px;
+  // min-width: 1440px;
   background: #232426;
 }
 
