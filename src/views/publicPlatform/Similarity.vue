@@ -1,5 +1,5 @@
 <template>
-  <div class="similarity" style="margin-top: 10px">
+  <div class="similarity" style="margin-top: 10px; margin-bottom: 100px">
     <div id="Top_Nav" class="Top_Nav"></div>
     <div class="panel">
       <el-row justify="start" type="flex">
@@ -40,34 +40,101 @@
 				</el-row>
 			</el-row> -->
 
-      <el-row style="padding: 4vh 5vw 0 5vw" :gutter="20">
-        <el-col :span="12" style="height: 500px">
-          <!-- <ComplexInput @Update_CI="UCI_Left" @Update_Image="UCII_Left" @Full_Change="FullChange_L" :Mathdown_Special="'_0'" ref="CI_Left" :class="OpacityCheck(0)"></ComplexInput> -->
-          <Dialogue
-            style="height: 100%; width: 100%"
-            :optional_image="optional_image_left"
-            @Update_CI="UCI_Left"
-          ></Dialogue>
-        </el-col>
-        <!-- <img style="position: absolute; left: 660px; top:150px;" width="13%" src="../../assets/arrow.png"
+      <div v-for="cnt in pairs" :key="cnt">
+        <el-row
+          type="flex"
+          justify="start"
+          style="margin-top: 40px; height: 40px; line-height: 40px"
+        >
+          <el-col
+            :span="4"
+            style="
+              font-size: 16px;
+              width: 110px;
+              border: 1px solid rgba(0, 0, 0, 0.3);
+              box-shadow: 0px 2px 14px rgba(0, 0, 0, 0.04);
+              border-radius: 6px;
+              margin-left: 80px;
+            "
+          >
+            题对{{ cnt }}
+          </el-col>
+          <el-col
+            v-if="show_result"
+            :span="1"
+            style="margin-left: 60px; width: 40px"
+          >
+            <i
+              class="el-icon-caret-right"
+              style="font-size: 30px; line-height: 40px; height: 40px"
+            ></i>
+          </el-col>
+          <el-col v-if="show_result" :span="4" style="text-align: left">
+            <div
+              style="
+                display: inline-block;
+                height: 40px;
+                width: 200px;
+                font-family: 'Roboto';
+                font-style: normal;
+                font-weight: 400;
+                font-size: 24px;
+                line-height: 40px;
+              "
+            >
+              相似度：<span style="color: rgb(110, 202, 122)">{{
+                similarity_result[cnt - 1]
+              }}</span>
+            </div></el-col
+          >
+        </el-row>
+        <el-row style="padding: 4vh 5vw 0 5vw">
+          <el-col :span="12" style="height: 500px">
+            <!-- <ComplexInput @Update_CI="UCI_Left" @Update_Image="UCII_Left" @Full_Change="FullChange_L" :Mathdown_Special="'_0'" ref="CI_Left" :class="OpacityCheck(0)"></ComplexInput> -->
+            <Dialogue
+              style="height: 100%; width: 90%"
+              :optional_image="optional_image_left"
+              :name="'left'"
+              @Update_CI="UCI_Left($event, cnt - 1)"
+            ></Dialogue>
+          </el-col>
+          <!-- <img style="position: absolute; left: 660px; top:150px;" width="13%" src="../../assets/arrow.png"
 					alt="图片显示错误" /> -->
-        <el-col :span="12" style="height: 500px">
-          <!-- <ComplexInput @Update_CI="UCI_Right" @Update_Image="UCII_Right" @Full_Change="FullChange_R"
+          <el-col :span="12" style="height: 500px">
+            <!-- <ComplexInput @Update_CI="UCI_Right" @Update_Image="UCII_Right" @Full_Change="FullChange_R"
 						:Mathdown_Special="'_1'" ref="CI_Right" :class="OpacityCheck(1)"></ComplexInput> -->
-          <Dialogue
-            style="height: 100%; width: 100%"
-            :optional_image="optional_image_right"
-            @Update_CI="UCI_Right"
-          ></Dialogue>
+            <Dialogue
+              style="height: 100%; width: 90%"
+              :optional_image="optional_image_right"
+              :name="'right'"
+              @Update_CI="UCI_Right($event, cnt - 1)"
+            ></Dialogue>
+          </el-col>
+        </el-row>
+      </div>
+
+      <el-row type="flex" justify="center" style="margin-top: 40px">
+        <el-col :span="6"></el-col>
+        <el-col :span="6">
+          <el-button
+            type="success"
+            @click="
+              () => {
+                pairs++;
+              }
+            "
+            >继续添加</el-button
+          >
         </el-col>
+        <el-col :span="6">
+          <el-button type="primary" @click="submit" :disabled="disabled"
+            >开始评估</el-button
+          >
+        </el-col>
+        <el-col :span="6"></el-col>
       </el-row>
 
-      <el-row
-        style="padding: 4vh 5vw 0 5vw"
-        type="flex"
-        justify="start"
-        :gutter="20"
-      >
+      <!-- <el-row style="padding: 4vh 5vw 0 5vw" type="flex" justify="start">
         <el-col :span="2">
           <el-button
             type="primary"
@@ -102,7 +169,7 @@
           </el-card>
         </el-col>
         <el-col :span="16"></el-col>
-      </el-row>
+      </el-row> -->
     </div>
 
     <!-- 侧边对话框 -->
@@ -229,18 +296,23 @@ if __name__ == '__main__':
 import Dialogue from "./components/Dialogue.vue";
 import Instruction from "./components/InstructionSimilarity.vue";
 import $ from "jquery";
+// import LunaProgress from "../../common/components/LunaProgress.vue";
+// import { commonAjax } from "@/common/utils/ajax";
 export default {
   components: {
     //ComplexInput,
     Dialogue,
     Instruction,
+    // LunaProgress,
   },
   name: "similarity",
   data() {
     return {
-      content_1: "", // 用户输入试题1文本
-      content_2: "", // 用户输入试题2文本
-      similarity_result: "", // 相似度预估返回值
+      content_left: [], // 左侧文本
+      content_right: [], // 右侧文本
+      //content_left[0] compares with content_right[0]
+      pairs: 1, //题对数
+      similarity_result: [], // 相似度预估返回值
       show_result: false,
       loading: false,
       // src_0: [],
@@ -279,6 +351,9 @@ export default {
       ],
       // 浏览器高度
       winHeight: window.innerHeight,
+      timer: "", //监听器，控制数字动画
+      timer_cnt: 0, // 控制anim函数触发次数
+      disabled: true, //控制是否可以使用评估按钮
     };
   },
   mounted() {
@@ -292,6 +367,16 @@ export default {
         that.winHeight = window.innerHeight;
       })();
     };
+  },
+  watch: {
+    content_left() {
+      console.log("content_left");
+      this.disabled = this.DisableCheck();
+    },
+    content_right() {
+      console.log("content_left");
+      this.disabled = this.DisableCheck();
+    },
   },
   methods: {
     ToTop() {
@@ -310,14 +395,24 @@ export default {
       }
     },
     DisableCheck() {
-      if (
-        this.content_1 != "" &&
-        this.content_1 != "识别中..." &&
-        this.content_2 != "" &&
-        this.content_2 != "识别中..."
-      )
-        return false;
-      else return true;
+      // if (
+      //   this.content_1 != "" &&
+      //   this.content_1 != "识别中..." &&
+      //   this.content_2 != "" &&
+      //   this.content_2 != "识别中..."
+      // )
+      //   return false;
+      // else return true;
+      if (this.content_left.length != this.content_right.length) return true;
+      if (this.content_left.length == 0 || this.content_right.length == 0)
+        return true;
+      for (let i = 0; i < this.content_left.length; i++)
+        if (this.content_left[i] == "" || this.content_left[i] == "识别中...")
+          return true;
+      for (let i = 0; i < this.content_right.length; i++)
+        if (this.content_right[i] == "" || this.content_right[i] == "识别中...")
+          return true;
+      return false;
     },
     FullChange_L(val) {
       this.visibleList.splice(1, 1, val);
@@ -327,13 +422,13 @@ export default {
     },
     // 提交评估按钮，向后端发送请求
     submit() {
-      document.documentElement.scrollTop = 200;
+      this.ToTop();
       this.loading = true;
       this.show_result = true;
       // let param = new FormData();
       let config = {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       };
 
@@ -362,7 +457,21 @@ export default {
       //     this.loading = false;
       //   });
 
-      let param = [[{ text: this.content_1 }, { text: this.content_2 }]];
+      let param = [
+        {
+          data: [],
+          model: "textcnn",
+        },
+      ];
+      for (let i = 0; i < this.content_left.length; i++) {
+        console.log("content_left", i, this.content_left[i]);
+        console.log("content_right", i, this.content_right[i]);
+        param[0].data.push([
+          { text: this.content_left[i] },
+          { text: this.content_right[i] },
+        ]);
+      }
+      // console.log(JSON.stringify(param));
       this.$http
         .post(
           "https://math-text-similarity-128-production.env.bdaa.pro/v1",
@@ -373,9 +482,34 @@ export default {
           }
         )
         .then(function (data) {
-          this.similarity_result = data.data.similarity;
+          let temp = JSON.parse(data.body.data.similarity);
+          console.log(temp);
+          //console.log(temp[0]);
+          //console.log(temp[0][0]);
+          this.similarity_result.length = 0;
+          this.timer_cnt = 0;
+          for (let i = 0; i < temp.length; i++) {
+            this.similarity_result.push("0%");
+            // this.similarity_result.push(temp[i][0].toFixed(4) *100 + "%");
+          }
+          this.timer = setInterval(this.anim(temp), 10);
+          //console.log(this.similarity_result);
           this.loading = false;
         });
+    },
+    anim(temp) {
+      return () => {
+        console.log(this.similarity_result[0]);
+        this.timer_cnt++;
+        this.similarity_result.length = 0;
+        for (let i = 0; i < temp.length; i++) {
+          // console.log(typeof temp[i][0], temp[i][0]);
+          this.similarity_result.push(
+            (temp[i][0] * this.timer_cnt).toFixed(2) + "%"
+          );
+        }
+        if (this.timer_cnt == 100) clearInterval(this.timer);
+      };
     },
     // imgInfo_0(e) {
     //   this.src_0 = e.src;
@@ -399,14 +533,16 @@ export default {
     // change_index_1: function(key1){
     //   this.index_1 = key1;
     // },
-    UCI_Left(val) {
-      this.content_1 = val;
+    UCI_Left(val, cnt) {
+      // this.content_left[cnt] = val;
+      this.content_left.splice(cnt, 1, val);
     },
     UCII_Left(val) {
       this.images_Left = val;
     },
-    UCI_Right(val) {
-      this.content_2 = val;
+    UCI_Right(val, cnt) {
+      // this.content_right[cnt] = val;
+      this.content_right.splice(cnt, 1, val);
     },
     UCII_Right(val) {
       this.images_Right = val;

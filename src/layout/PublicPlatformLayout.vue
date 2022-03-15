@@ -117,7 +117,7 @@
     </div>
     <!-- <basic-header/> -->
     <div>
-      <div>
+      <div style="margin-top:80px;">
         <router-view :key="$route.fullPath"></router-view>
       </div>
       <basic-footer />
@@ -462,6 +462,7 @@ export default {
 
 .header {
   position: fixed;
+  top:0;
   z-index: 10;
   width: 100%;
   background: white;

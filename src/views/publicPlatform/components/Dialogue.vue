@@ -37,7 +37,7 @@
         >
           <el-col
             :span="24"
-            id="upload_area"
+            :id="name + '_upload_area'"
             style="position: absolute; z-index: 5; display: block"
           >
             <el-row>
@@ -335,6 +335,10 @@ export default {
     };
   },
   props: {
+    name: {
+      type: String,
+      default: "main",
+    }, //组件名，只有当父组件多次调用时才需要设置这个参数
     optional_image: [
       // require("@/assets/default_image/0.png"),
       // require("@/assets/default_image/1.png"),
@@ -400,7 +404,7 @@ export default {
       window.addEventListener("paste", this.Paste_Function);
     },
     Init_Upload() {
-      var uploadbox = document.getElementById("upload_area");
+      var uploadbox = document.getElementById(this.name + "_upload_area");
       uploadbox.addEventListener("mouseenter", this.FadeIn);
       //console.log("mouseover");
       uploadbox.addEventListener("mouseleave", this.FadeOut);
@@ -409,7 +413,7 @@ export default {
     FadeIn() {
       //console.log("mouseenter");
       if (this.image)
-        $("#upload_area").animate(
+        $("#" + this.name + "_upload_area").animate(
           {
             opacity: 1,
           },
@@ -420,7 +424,7 @@ export default {
     FadeOut() {
       //console.log("mouseleave");
       if (this.image)
-        $("#upload_area").animate(
+        $("#" + this.name + "_upload_area").animate(
           {
             opacity: 0.1,
           },
@@ -660,7 +664,7 @@ export default {
               content: this.result.latex[i],
               num: i + 1,
             });
-            this.content += "$" + this.result.latex[i] + "$\\";
+            this.content += "$" + this.result.latex[i] + "$\n";
           }
         } else if (typeof this.result.latex == "string") {
           this.content = "$" + this.result.latex + "$";
