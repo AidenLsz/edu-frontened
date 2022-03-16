@@ -179,27 +179,27 @@
             "area": "未知",
             "pastpaper": "非真题"
           },
-          {
-            "stem": "\n定义在$R$上的函数$f(x)$在区间($-\\infty,2)$上是增函数,且$f(x+2)$的图象关于$y$轴对称,则（   ）\n",
-            "options": [
-              "$f(0)>f(3)$",
-              "$f(0)=f(3)$",
-              "$f(-1)=f(3)$",
-              "$f(-1)<f(3)$"
-            ],
-            "answer": "$D$",
-            "analysis": "$\\because y=f(x+2)$是由$y=f(x)$向左平移$2$个单位得到,$f(x+2)$的图象关于$y$轴对称\n$\\therefore y=f(x)$的图象关于$x=2$对称则$f(2+x)=f(2-x)$\n$\\therefore f(3)=f(1)$\n而函数$f(x)$在区间($-\\infty,2)$上是增函数,\n$\\therefore f(-1)<f(0)<f(1)=f(3)$\n故选$D.$\n",
-            "type": "单选题",
-            "subject": "数学",
-            "period": "高中",
-            "database": "LUNA题库",
-            "id": "58c6555a-e4cc-11eb-a817-d46a6a0f329c",
-            "difficulty": 0.509959,
-            "pattern": "text",
-            "file_name": null,
-            "area": "未知",
-            "pastpaper": "非真题"
-          },
+          // {
+          //   "stem": "\n定义在$R$上的函数$f(x)$在区间($-\\infty,2)$上是增函数,且$f(x+2)$的图象关于$y$轴对称,则（   ）\n",
+          //   "options": [
+          //     "$f(0)>f(3)$",
+          //     "$f(0)=f(3)$",
+          //     "$f(-1)=f(3)$",
+          //     "$f(-1)<f(3)$"
+          //   ],
+          //   "answer": "$D$",
+          //   "analysis": "$\\because y=f(x+2)$是由$y=f(x)$向左平移$2$个单位得到,$f(x+2)$的图象关于$y$轴对称\n$\\therefore y=f(x)$的图象关于$x=2$对称则$f(2+x)=f(2-x)$\n$\\therefore f(3)=f(1)$\n而函数$f(x)$在区间($-\\infty,2)$上是增函数,\n$\\therefore f(-1)<f(0)<f(1)=f(3)$\n故选$D.$\n",
+          //   "type": "单选题",
+          //   "subject": "数学",
+          //   "period": "高中",
+          //   "database": "LUNA题库",
+          //   "id": "58c6555a-e4cc-11eb-a817-d46a6a0f329c",
+          //   "difficulty": 0.509959,
+          //   "pattern": "text",
+          //   "file_name": null,
+          //   "area": "未知",
+          //   "pastpaper": "非真题"
+          // },
           {
             "stem": "\n已知数列{$a_{n}$}是首项为$a_{1}$的等比数列,则能保证$4a_{1},a_{5},-2a_{3}$成等差数列的公比$q$的个数为（   ）\n",
             "options": [
@@ -221,27 +221,27 @@
             "area": "未知",
             "pastpaper": "非真题"
           },
-          {
-            "stem": "\n长虹网络蓝光电视机自投放市场以来,经过两次降价,单价由原来的$10000$元降到$6400$元,则这种电视机平均每次降价的百分率是（   ）\n",
-            "options": [
-              "$10\\% $",
-              "$15\\% $",
-              "$18\\% $",
-              "$20\\% $"
-            ],
-            "answer": "$D$",
-            "analysis": "设这种电视机平均每次降价的百分率是$x$\n$\\therefore 10000(1+x)^{2}=6400$\n$\\therefore 1+x=0.8$\n$\\therefore x=0.2$\n$\\therefore $这种电视机平均每次降价的百分率是$20\\% $\n故选$D.$\n",
-            "type": "单选题",
-            "subject": "数学",
-            "period": "高中",
-            "database": "LUNA题库",
-            "id": "590dd10a-e4c9-11eb-bf0a-d46a6a0f329c",
-            "difficulty": 0.491619,
-            "pattern": "text",
-            "file_name": null,
-            "area": "未知",
-            "pastpaper": "非真题"
-          },
+          // {
+          //   "stem": "\n长虹网络蓝光电视机自投放市场以来,经过两次降价,单价由原来的$10000$元降到$6400$元,则这种电视机平均每次降价的百分率是（   ）\n",
+          //   "options": [
+          //     "$10\\% $",
+          //     "$15\\% $",
+          //     "$18\\% $",
+          //     "$20\\% $"
+          //   ],
+          //   "answer": "$D$",
+          //   "analysis": "设这种电视机平均每次降价的百分率是$x$\n$\\therefore 10000(1+x)^{2}=6400$\n$\\therefore 1+x=0.8$\n$\\therefore x=0.2$\n$\\therefore $这种电视机平均每次降价的百分率是$20\\% $\n故选$D.$\n",
+          //   "type": "单选题",
+          //   "subject": "数学",
+          //   "period": "高中",
+          //   "database": "LUNA题库",
+          //   "id": "590dd10a-e4c9-11eb-bf0a-d46a6a0f329c",
+          //   "difficulty": 0.491619,
+          //   "pattern": "text",
+          //   "file_name": null,
+          //   "area": "未知",
+          //   "pastpaper": "非真题"
+          // },
           {
             "stem": "\n已知函数$f(x)=ax+sinx$存在极值点,则实数$a$的取值范围是（   ）\n",
             "options": [

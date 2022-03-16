@@ -44,11 +44,14 @@
             class="table"
             :data="tableData"
             border
-            style="width: 100%">
+            style="width: 100%"
+            @row-click="view"
+            >
             <el-table-column
               prop="id"
               label="考试编号"
-              width="180">
+              width="180"
+              >
             </el-table-column>
             <el-table-column
               prop="time"
@@ -61,7 +64,8 @@
             </el-table-column>
             <el-table-column
               prop="score"
-              label="分数">
+              label="分数"
+              >
             </el-table-column>
           </el-table>
         </div>
@@ -93,6 +97,9 @@ export default{
       if(this.input=='201900013'){
         this.visible=true
       }
+    },
+    view(){
+      this.$router.push({'path':'/report'})
     }
   }
 }
