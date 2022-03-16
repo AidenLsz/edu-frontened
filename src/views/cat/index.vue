@@ -328,7 +328,6 @@
     margin:228px 206px 0 134px;
   }
   .ques-index{
-
     height: 50px;
     width: 300px;
     font-family: PingFang SC;
