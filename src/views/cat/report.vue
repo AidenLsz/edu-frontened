@@ -86,6 +86,9 @@ export default{
       ]
     }
   },
+  mounted(){
+    window.addEventListener('scroll', this.scrollToTop)
+  },
   methods:{
     search(){
       if(this.input=='201900013'){
