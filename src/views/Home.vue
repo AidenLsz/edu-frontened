@@ -1,6 +1,6 @@
 <template>
   <!--todo: polish the format-->
-  <div class="home">
+  <div class="home" style="min-width: 1366px;">
     <div id="Top_Nav" class="Top_Nav">
 
     </div>
@@ -549,24 +549,24 @@
 
     <!-- about-area -->
     <section class="about-area">
-      <el-row>
-        <el-col :span="4" :offset="5">
-          <el-divider></el-divider>
-        </el-col>
-        <el-col :span="6">
-          <h1 style="padding-left: 5vw; padding-right: 4vw; letter-spacing: 1vw; margin-top: 5px">简介</h1>
-        </el-col>
-        <el-col :span="4">
-          <el-divider></el-divider>
-        </el-col>
+      <el-row class="Label_Line">
+        <div class="Divider_Line" style="margin-right: 1.5rem">
+
+        </div>
+        <span class="Inner_Text">
+          简介
+        </span>
+        <div class="Divider_Line">
+        
+        </div>
       </el-row>
       <el-row>
         <el-col :span="8" :offset="2">
           <img src="../assets/intro.png" width="70%"/>
         </el-col>
         <el-col :span="9">
-          <p style="font-size: 20px; line-height: 200%; padding-left: 30px; margin-top: 7vh; text-align: left">
-          智慧教育知识图谱（LUNA）致力于为广大师生提供智能且直观的知识组织、呈现、应用等多维度功能。通过对海量教材、题库、考纲等教育教学资源进行深层次的数据挖掘与建模。LUNA具有其他知识图谱所不具备的而丰富内容和多样化的智能接口。LUNA不仅提供了简单、直观、易用的知识、资源查询功能，还提供了如自动考卷分析、试题难度评估等智慧化分析、评估接口，可满足广大师生、学校管理者丰富的教育教学需求。
+          <p style="font-size: 20px; line-height: 200%; padding-left: 30px; margin-top: 7vh; text-align: justify">
+          智慧教育知识图谱（LUNA）致力于为广大师生提供智能且直观的智慧教育辅助工具，它包括知识组织、呈现、应用等多维度功能。LUNA通过对海量教材、题库、考纲等跨模态教育教学资源进行深层次的数据挖掘，建立覆盖小初高至大学的知识结构模型。同时，LUNA具有其他智慧教育工具所不具备的海量内容和多样化智能接口，它不仅提供了简单、直观、易用的知识、资源查询功能，还提供了自动考卷分析、试题难度评估等智慧化分析、自动评估接口，可满足广大师生、学校管理者丰富的教育教学需求。
           </p>
         </el-col>
       </el-row>
@@ -575,16 +575,16 @@
 
     <section class="link-bg">
       <!-- 试题检索卡片跳转 -->
-      <el-row style="margin-bottom: 50px">
-        <el-col :span="4" :offset="5">
-          <el-divider></el-divider>
-        </el-col>
-        <el-col :span="6">
-          <span style="padding-left: 4vw; padding-right: 3vw; letter-spacing: 1vw; font-size: 36px;">资源与功能</span>
-        </el-col>
-        <el-col :span="4">
-          <el-divider></el-divider>
-        </el-col>
+      <el-row class="Label_Line">
+        <div class="Divider_Line" style="margin-right: 1.5rem">
+
+        </div>
+        <span class="Inner_Text">
+          资源与功能
+        </span>
+        <div class="Divider_Line">
+        
+        </div>
       </el-row>
       <el-row>
         <el-col :span="20" :offset="2">
@@ -713,69 +713,18 @@
 
     <!-- 图标区域-area -->
     <section>
-      <el-row style="margin-top: 50px;">
-        <el-col :span="4" :offset="5">
-          <el-divider></el-divider>
-        </el-col>
-        <el-col :span="6">
-          <span style="padding-left: 5vw; padding-right: 4vw; letter-spacing: 1vw; font-size: 36px;">数据统计</span>
-        </el-col>
-        <el-col :span="4">
-          <el-divider></el-divider>
-        </el-col>
+      <el-row class="Label_Line">
+        <div class="Divider_Line" style="margin-right: 1.5rem">
+
+        </div>
+        <span class="Inner_Text">
+          数据统计
+        </span>
+        <div class="Divider_Line">
+        
+        </div>
       </el-row>
       <statistics/>
-      <!-- <el-row style="margin-top: 40px; padding-bottom: 40px">
-        <el-col :span="4" :offset="4" class="partData">
-          <el-row>
-            <el-col :span="12">
-              <img src="../assets/dataIcon1.png" width="60px" style="padding-top: 30px"/>
-            </el-col>
-            <el-col :span="12" style="padding-top: 30px">
-              <p style="font-weight:bold; font-size: 18px; color: black">试题</p>
-              <p style="font-weight:bold; font-size: 18px; color: black">{{Num_Question}}</p>
-            </el-col>
-          </el-row>
-        </el-col>
-        <el-col :span="4" :offset="2" class="partData">
-          <el-row>
-            <el-col :span="12">
-              <img src="../assets/dataIcon2.png" width="60px" style="padding-top: 30px"/>
-            </el-col>
-            <el-col :span="12" style="padding-top: 30px">
-              <p style="font-weight:bold; font-size: 18px; color: black">试卷</p>
-              <p style="font-weight:bold; font-size: 18px; color: black">{{Num_Paper}}</p>
-            </el-col>
-          </el-row>
-        </el-col>
-        <el-col :span="4" :offset="2" class="partData">
-          <el-row>
-            <el-col :span="12">
-              <img src="../assets/dataIcon3.png" width="60px" style="padding-top: 30px"/>
-            </el-col>
-            <el-col :span="12" style="padding-top: 30px">
-              <p style="font-weight:bold; font-size: 18px; color: black">知识单元</p>
-              <p style="font-weight:bold; font-size: 18px; color: black">{{Num_KU}}</p>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-      <el-row type="flex" justify="center" style="margin-bottom: 40px">
-        <el-button-group>
-          <el-button round @click="changeCountButton('Question')" ref="countButtonQuestion" :class="Get_Count_Style('Question')">
-            试题资源
-          </el-button>
-          <el-button round @click="changeCountButton('Paper')" ref="countButtonPaper" :class="Get_Count_Style('Paper')">
-            试卷资源
-          </el-button>
-          <el-button round @click="changeCountButton('KU')" ref="countButtonKU" :class="Get_Count_Style('KU')">
-            知识单元
-          </el-button>
-        </el-button-group>
-      </el-row>
-      <el-row>
-        <div id="data_chart" class="data_chart"></div>
-      </el-row> -->
     </section>
     <!-- cta-area-end -->
   </div>
@@ -1059,8 +1008,36 @@ export default {
 };
 </script>
 <style scoped>
+/* 手搓水平分割线 */
+.Divider_Line{
+  height: 30px;
+  margin-top: 29px;
+  display: inline-block;
+  width:calc((100%-400px)/2);
+  max-width: 250px;
+  border-top: 4px solid #dcdfe6;
+}
+/* 分割线中间的文字 */
+.Inner_Text{
+  display: inline-block;
+  letter-spacing: 1vw; 
+  width: 400px;
+  font-size: 40px;
+  margin-top: 0px;
+  padding-top: 0px;
+  height: 60px;
+  line-height: 60px;
+  vertical-align: top;
+}
+/* 区块行 */
+.Label_Line{
+  width: 1344px; 
+  align: center;
+  margin: 30px auto 30px auto; 
+  height: 60px;
+}
 .link-bg {
-  padding-top: 50px;
+  padding-top: 30px;
   background: #EEF5FE;
   background-size: 100%;
   position: relative;
