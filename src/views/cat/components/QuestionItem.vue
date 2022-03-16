@@ -4,7 +4,7 @@
   <div style="border-radius: 10px; background: white" class="ques-text">
     <el-row style="text-align: left; padding-left: 30px; background: white; padding-top: 15px; border-radius: 10px">
         <el-col style="padding-bottom: 8px" >
-            {{Question_Index+1}}、
+            <!-- {{Question_Index+1}}、 -->
             <Mathdown style="display:inline-block" :content="Question.stem" :name="'Q_' + Question_Index + '_Stem'"></Mathdown>
         </el-col>
     </el-row>

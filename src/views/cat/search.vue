@@ -11,7 +11,7 @@
       </el-breadcrumb>
     </el-row>
     <div class="search-container">
-      <el-row style="margin-top:201px;height:46px;display:flex;justify-content: center;align-items:center;">
+      <el-row style="height:46px;display:flex;justify-content: center;align-items:center;">
         <div class="">
           <img
             src="@/assets/icon.png"
@@ -32,7 +32,7 @@
           >
         </el-input>
       </el-row>
-      <el-row class="res" v-if="visible">
+      <el-row class="res" v-show="visible">
         <div class="title">
           查询结果
         </div>
@@ -99,8 +99,8 @@ export default{
 </script>
 <style scoped lang="scss">
   .container{
-    // min-height: calc(100vh + 70px);
-    min-height: calc(100vh + 160px);
+    min-height: 1000px;
+    // min-height: calc(100vh + 160px);
     // margin:70px 206px 200px 134px;
     margin-top:70px;
   }
@@ -116,7 +116,7 @@ export default{
     height:400px;
     display:flex;
     flex-direction: column;
-    justify-content: center;
+    // justify-content: center;
     align-items:center;
     .title{
       height: 45px;
@@ -161,6 +161,7 @@ export default{
       margin:10px auto;
     }
     .stuID{
+      margin-top:37px;
       margin-bottom: 15px;
       font-family: Roboto;
       font-size: 20px;
