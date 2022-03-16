@@ -15,8 +15,8 @@
             </el-row>
         </el-col>
     </el-row>
-    <el-row 
-        v-if="Expand" 
+    <el-row
+        v-if="Expand"
         style="text-align: left; padding-left: 40px; line-height:30px; padding-top: 20px;">
         <el-col>
             <span :style="'margin-bottom: 10px; display: ' + $store.state.user.name ? ' block': ' inline-block'">答案：</span>
@@ -24,8 +24,8 @@
             <Mathdown v-show="$store.state.user.name" :content="Question.answer" :name="'Q_' + Question_Index + '_Answer'"></Mathdown>
         </el-col>
     </el-row>
-    <el-row 
-        v-if="Expand" 
+    <el-row
+        v-if="Expand"
         style="text-align: left; padding-left: 40px; padding-bottom: 20px">
         <el-col>
             <span style="margin-bottom: 20px; display: block">解析：</span>
@@ -34,9 +34,9 @@
     </el-row>
     <el-row class="Detail_Line">
         <div
-            class="Detail_Line_Left" 
+            class="Detail_Line_Left"
             style="line-height: 44px; padding: 0px 16px 0px 16px; border-radius: 10px; background: #F8F8F8">
-                <div 
+                <div
                     align="left"
                     class="Detail_Line_Expand">
                     <el-button type="text" @click="Expand = !Expand; Expand_Aim()" style="height: 44px;">
@@ -45,7 +45,7 @@
                     </el-button>
                 </div>
                 <div
-                    align="right" 
+                    align="right"
                     class="Detail_Line_Infos">
                     <span class="Extra_Info_Item">
                         地区：{{Question.area}}
@@ -66,7 +66,7 @@
         </div>
         <div
             class="Detail_Line_Right">
-            <el-button 
+            <el-button
                 size="medium"
                 type="primary"
                 class="Search_Button"
@@ -92,14 +92,14 @@ export default {
         type: Object,
         default: function(){
             return {
-                "analysis": "", 
-                "answer": "", 
-                "database": "", 
-                "id": "", 
-                "options": [], 
-                "period": "", 
-                "stem": "", 
-                "subject": "", 
+                "analysis": "",
+                "answer": "",
+                "database": "",
+                "id": "",
+                "options": [],
+                "period": "",
+                "stem": "",
+                "subject": "",
                 "type": "",
                 "pattern": "text",
                 "file_name": null,
