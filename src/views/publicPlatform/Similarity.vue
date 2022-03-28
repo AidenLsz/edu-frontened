@@ -133,43 +133,6 @@
         </el-col>
         <el-col :span="6"></el-col>
       </el-row>
-
-      <!-- <el-row style="padding: 4vh 5vw 0 5vw" type="flex" justify="start">
-        <el-col :span="2">
-          <el-button
-            type="primary"
-            value="提交"
-            @click="submit"
-            :disabled="DisableCheck()"
-            >评估</el-button
-          >
-        </el-col>
-
-        <el-col :span="6">
-          <el-card v-if="show_result" style="background: #a7cdff">
-            <div slot="header" style="text-align: left">
-              <span>相似度</span>
-            </div>
-            <div style="text-align: left">
-              <el-tag
-                style="
-                  background: #a7cdff;
-                  border: 0px;
-                  color: #2c07ff;
-                  font-size: 14px;
-                "
-                v-for="(item, index) in similarity_result"
-                :key="index"
-                effect="plain"
-                id="tag"
-              >
-                {{ item }}
-              </el-tag>
-            </div>
-          </el-card>
-        </el-col>
-        <el-col :span="16"></el-col>
-      </el-row> -->
     </div>
 
     <!-- 侧边对话框 -->
