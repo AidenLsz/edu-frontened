@@ -117,10 +117,11 @@ export default {
 
 <style scoped>
 .dialogue {
-  position: absolute;
+  position: relative;
   width: 444px;
   height: 386px;
-  top: 180px;
+  margin-top: 180px;
+  margin-bottom: 180px;
 
   background: #ffffff;
   border: 1px solid #e9e9e9;
