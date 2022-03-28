@@ -62,7 +62,7 @@
             class="content"
           ></Mathdown>
         </el-row>
-        <el-button v-show="editable" id="edit" @click="Open_Edit()"
+        <el-button v-show="editable" style="z-index: 6;" id="edit" @click="Open_Edit()"
           >编辑
         </el-button>
         <!-- <div id="shadow">

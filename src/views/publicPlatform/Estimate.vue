@@ -286,7 +286,7 @@
         ></Expand>
         <div
           v-show="show_BasicProp"
-          style="position: relative; height: 250px; width: 100%"
+          style="position: relative; height: 274px; width: 100%"
         >
           <div id="gauge1" class="gauge" style="left: 80px"></div>
           <div id="gauge2" class="gauge" style="left: 360px"></div>
