@@ -92,6 +92,21 @@ const visitorRouter=[
     name: "visitor/Resources",
     component: () => import("@/views/resourceQuery/Resources"),
   },
+  {
+    path: "/cat",
+    name: "visitor/cat",
+    component: () => import("@/views/cat/index"),
+  },
+  {
+    path: "/report",
+    name: "visitor/report",
+    component: () => import("@/views/cat/report"),
+  },
+  {
+    path: "/search",
+    name: "visitor/report",
+    component: () => import("@/views/cat/search"),
+  },
   // {
   //   path: "/ImageTranscription",
   //   name: "ImageTranscription",
