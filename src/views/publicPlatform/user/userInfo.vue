@@ -7,20 +7,22 @@
     <div class="main">
       <div class="line"></div>
       <div class="text">基本信息</div>
+
       <div class="key" style="left: 70px; top: 82px">账号昵称：</div>
-      <div class="key" style="left: 70px; top: 144px">账号ID：</div>
-      <div class="key" style="left: 70px; top: 206px">APPID：</div>
-      <div class="key" style="left: 580px; top: 82px">APPKEY：</div>
-      <div class="key" style="left: 580px; top: 144px">联系手机：</div>
-      <div class="key" style="left: 580px; top: 206px">账号邮箱：</div>
+      <div class="key" style="left: 580px; top: 82px">用户名：</div>
+      <div class="key" style="left: 70px; top: 144px">联系手机：</div>
+      <div class="key" style="left: 580px; top: 144px">账号邮箱：</div>
+      <div class="key" style="left: 70px; top: 206px">注册日期：</div>
+
       <div class="value" style="left: 170px; top: 82px" v-show="!change">
-        {{ name }}
+        {{ full_name }}
       </div>
-      <div class="value" style="left: 170px; top: 144px">{{ ID }}</div>
-      <div class="value" style="left: 170px; top: 206px">{{ APPID }}</div>
-      <div class="value" style="left: 675px; top: 82px">{{ APPKEY }}</div>
-      <div class="value" style="left: 675px; top: 144px">{{ phone }}</div>
-      <div class="value" style="left: 675px; top: 206px">{{ mail }}</div>
+      <div class="value" style="left: 675px; top: 82px">{{ user_name }}</div>
+      <div class="value" style="left: 170px; top: 144px">{{ phone }}</div>
+      <div class="value" style="left: 675px; top: 144px">
+        {{ mail }}
+      </div>
+      <div class="value" style="left: 170px; top: 206px">{{register_date}}</div>
       <el-link
         icon="el-icon-edit"
         type="primary"
@@ -31,30 +33,95 @@
       <el-input
         v-show="change"
         class="input"
-        v-model="name"
+        v-model="full_name"
         ref="inputRef"
         @blur="confirm"
       >
       </el-input>
-      <el-link v-show="change" type="primary" class="change" style="left:400px;" @click="confirm">完成</el-link>
+      <el-link
+        v-show="change"
+        type="primary"
+        class="change"
+        style="left: 400px"
+        @click="confirm"
+        >完成</el-link
+      >
     </div>
   </div>
 </template>
 
 <script>
+// import { commonAjax } from "@/common/utils/ajax";
+import Axios from "axios";
 export default {
   mounted() {
     this.ToTop();
+    Axios.get(
+      "https://ailab-api-275-production.env.bdaa.pro/v1/user/profile"
+    ).then((data) => {
+      this.data = data.data;
+      console.log(this.data);
+      this.mail = this.data.email;
+      this.user_name = this.data.user_name;
+      this.full_name = this.data.full_name;
+      this.phone = this.data.phone_number;
+      let temp = this.data.register_date.split(" ");
+      let month;
+      switch (temp[2]) {
+        case "Jan":
+          month = "01";
+          break;
+        case "Feb":
+          month = "02";
+          break;
+        case "Mar":
+          month = "03";
+          break;
+        case "Apr":
+          month = "04";
+          break;
+        case "May":
+          month = "05";
+          break;
+        case "Jun":
+          month = "06";
+          break;
+        case "Jul":
+          month = "07";
+          break;
+        case "Agu":
+          month = "08";
+          break;
+        case "Sep":
+          month = "09";
+          break;
+        case "Oct":
+          month = "10";
+          break;
+        case "Nov":
+          month = "11";
+          break;
+        case "Dec":
+          month = "12";
+          break;
+      }
+      this.register_date = temp[3] + "-" + month + "-" + temp[1];
+    });
+    // let cookie = document.cookie;
+    // console.log(cookie);
   },
   data() {
     return {
-      name: "小明",
-      ID: "123456",
-      APPID: "123456",
-      APPKEY: "abcd",
-      phone: "123****4567",
-      mail: "123456@aaa.com",
+      full_name: "",
+      user_name: "",
+      // ID: "123456",
+      // APPID: "123456",
+      // APPKEY: "abcd",
+      phone: "",
+      mail: "",
+      register_date: "",
       change: false,
+      data: {},
     };
   },
   methods: {
@@ -72,6 +139,26 @@ export default {
       }); //这里需要使用nextTick是因为要让el-input先show出来才能让它focus
     },
     confirm() {
+      Axios.post(
+        "https://ailab-api-275-production.env.bdaa.pro/v1/user/newName",
+        { new_full_name: this.full_name }
+      ).then((data) => {
+        if (data.data.success) {
+          this.$message({
+            showClose: true,
+            message: "昵称修改成功",
+            type: "success",
+          });
+        } 
+        else {
+          console.log(data.data.errMsg);
+          this.$message({
+            showClose: true,
+            message: "昵称修改失败",
+            type: "error",
+          });
+        }
+      });
       console.log("confirm");
       this.change = false;
     },
