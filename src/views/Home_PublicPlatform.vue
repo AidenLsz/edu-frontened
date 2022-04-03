@@ -92,6 +92,26 @@
           <i class="el-icon-right"></i>
         </el-link>
       </div>
+      <div class="API" style="left: 25%; top: 1080px">
+        <div
+            class="API_photo"
+            :style="{
+            'background-image':
+              'url(' + require('@/assets/AIlab_Home/6.jpg') + ')',
+            'background-position': '0px -50px',
+          }"
+            @click="ToQues"
+        ></div>
+        <div class="title" @click="ToQues">试题比较</div>
+        <div class="desc">
+          从难度、区分度、相似度等多个角度出发，提供多维度的试题成对比较标注管理平台，助力题目质量提升和优质试题筛选。
+        </div>
+        <el-link class="link" type="primary" @click="ToQues"
+        >了解更多
+          <i class="el-icon-right"></i>
+        </el-link>
+      </div>
+
     </div>
     <div class="algorithm">
       <div class="algo_title">开源工具与数据集</div>
@@ -168,6 +188,12 @@ export default {
       });
       this.ToTop();
     },
+    ToQues() {
+      this.$router.push({
+        path: "/PublicPlatform/ques-paired-quality",
+      });
+      this.ToTop();
+    },
     ToEduDate() {
       window.location = "https://github.com/bigdata-ustc/EduData";
     },
@@ -235,7 +261,7 @@ export default {
 .service {
   position: relative;
   width: 100%;
-  height: 1100px;
+  height: 1600px;
   // min-width: 1440px;
   // overflow: scroll;
   left: 0px;
@@ -276,6 +302,7 @@ export default {
 }
 
 .API {
+  overflow: hidden;
   position: absolute;
   width: 306.32px;
   height: 400px;
@@ -294,7 +321,7 @@ export default {
     transition: width 0.2s, height 0.2s, left 0.2s, top 0.2s;
     -webkit-transition: width 0.2s, height 0.2s, left 0.2s, top 0.2s;
   }
-  .API_photo:hover {
+  &:hover .API_photo {
     position: absolute;
     top: -10px;
     left: -10px;

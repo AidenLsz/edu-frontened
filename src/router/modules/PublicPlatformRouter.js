@@ -14,6 +14,11 @@ const PublicPlatformRouter = [
     component: () => import("@/views/publicPlatform/Segmentation.vue"),
   },
   {
+    path: "ques-paired-quality",
+    name: "pb/ques-paired-quality",
+    component: () => import("@/views/publicPlatform/QuesPairedQuality/QuesPairedQuality.vue"),
+  },
+  {
     path: "similarity",
     name: "pb/Similarity",
     component: () => import("@/views/publicPlatform/Similarity.vue"),
