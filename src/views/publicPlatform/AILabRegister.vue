@@ -27,7 +27,7 @@
           padding: 0px;
           position: absolute;
           width: 420px;
-          height: 542px;
+          height: 720px;
           left: 42px;
           top: 98px;
         "
@@ -49,7 +49,7 @@
             "
           >
             <el-input
-              v-model="username"
+              v-model="user_name"
               placeholder="请设置用户名"
               style="
                 display: flex;
@@ -133,6 +133,16 @@
             placeholder="请再次输入密码"
             style="width: 420px"
             show-password
+          >
+          </el-input>
+        </div>
+        <!-- 昵称 -->
+        <div class="input">
+          <p class="text">昵称</p>
+          <el-input
+            v-model="full_name"
+            placeholder="请输入用户昵称"
+            style="width: 420px"
           >
           </el-input>
         </div>
@@ -299,7 +309,7 @@
           width: 420px;
           height: 44px;
           left: 42px;
-          top: 701px;
+          bottom: 25px;
           background: #ffffff;
         "
       >
@@ -331,7 +341,8 @@ export default {
     return {
       // 是否选择同意《服务协议》
       checked: false,
-      username: "",
+      user_name: "",
+      full_name: "",
       password: "",
       repeat_password: "",
       mail: "",
@@ -344,7 +355,7 @@ export default {
     };
   },
   watch: {
-    username(val) {
+    user_name(val) {
       var reg = /(_|[a-z]|[A-Z]|[0-9])*/;
       return reg.test(val);
     },
@@ -379,7 +390,7 @@ export default {
     },
     SendCaptcha() {
       var emreg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
-      if (this.username == "") {
+      if (this.user_name == "") {
         this.$message({
           showClose: true,
           message: "请输入用户名",
@@ -402,7 +413,7 @@ export default {
         commonAjax(
           "https://ailab-api-275-production.env.bdaa.pro/v1/signup/captcha",
           {
-            user_name: this.username,
+            user_name: this.user_name,
             email: this.mail,
           }
         ).then((data) => {
@@ -442,7 +453,7 @@ export default {
           message: "两次输入的密码不相同",
           type: "error",
         });
-      } else if (this.username == "") {
+      } else if (this.user_name == "") {
         this.$message({
           showClose: true,
           message: "请输入用户名",
@@ -470,11 +481,11 @@ export default {
         commonAjax(
           "https://ailab-api-275-production.env.bdaa.pro/v1/signup/signup",
           {
-            user_name: this.username,
+            user_name: this.user_name,
             password: sha1(this.password),
             email: this.mail,
             captcha: this.captcha,
-            full_name: "",
+            full_name: this.full_name,
             phone_number: this.phone
           }
         ).then((data) => {
@@ -492,7 +503,7 @@ export default {
             console.log(data.errMsg);
             this.$message({
               showClose: true,
-              message: "注册失败，请尝试其他用户名",
+              message: data.errMsg,
               type: "error",
             });
           }
@@ -507,7 +518,7 @@ export default {
 .dialogue {
   position: relative;
   width: 504px;
-  height: 790px;
+  height: 865px;
   margin-top: 55px;
   margin-bottom: 55px;
   background: #ffffff;
@@ -528,7 +539,7 @@ export default {
   width: 336px;
   height: 19px;
   left: 42px;
-  top: 661px;
+  bottom: 90px;
 }
 .input {
   display: flex;
