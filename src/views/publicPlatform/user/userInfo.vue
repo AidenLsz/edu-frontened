@@ -36,15 +36,31 @@
         @blur="confirm"
       >
       </el-input>
-      <el-link v-show="change" type="primary" class="change" style="left:400px;" @click="confirm">完成</el-link>
+      <el-link
+        v-show="change"
+        type="primary"
+        class="change"
+        style="left: 400px"
+        @click="confirm"
+        >完成</el-link
+      >
     </div>
   </div>
 </template>
 
 <script>
+// import { commonAjax } from "@/common/utils/ajax";
+import Axios from "axios";
 export default {
   mounted() {
     this.ToTop();
+    Axios.get("https://ailab-api-275-production.env.bdaa.pro/v1/user/profile", {
+      withCredentials: true,
+    }).then((data) => {
+      this.data = data;
+    });
+    // let cookie = document.cookie;
+    // console.log(cookie);
   },
   data() {
     return {
@@ -55,6 +71,7 @@ export default {
       phone: "123****4567",
       mail: "123456@aaa.com",
       change: false,
+      data: {},
     };
   },
   methods: {

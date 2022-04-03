@@ -38,8 +38,9 @@
 </template>
 
 <script>
-import { commonAjax } from "@/common/utils/ajax";
+// import { commonAjax } from "@/common/utils/ajax";
 import sha1 from "sha1";
+import Axios from "axios";
 
 export default {
   name: "AILabLogin",
@@ -74,15 +75,22 @@ export default {
         alert("用户名和密码不能为空");
         return;
       }
-      commonAjax(
+      // commonAjax(
+      //   "https://ailab-api-275-production.env.bdaa.pro/v1/user/login",
+      //   {
+      //     user_name: this.username,
+      //     password: sha1(this.password),
+      //   }
+      // )
+      Axios.post(
         "https://ailab-api-275-production.env.bdaa.pro/v1/user/login",
         {
           user_name: this.username,
           password: sha1(this.password),
-        }
+        },
       ).then((data) => {
         console.log("login", data);
-        if (data.success) {
+        if (data.data.success) {
           let userInfo = {
             token: "111",
             name: this.username,
