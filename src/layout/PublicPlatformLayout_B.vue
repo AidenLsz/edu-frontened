@@ -2,19 +2,20 @@
   <div style="min-width: 1440px" id="app">
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <div class="header" style="height: 80px">
-      <div class="logo">
-        <img
-          src="@/assets/luna_icon.png"
-          height="100%"
-          alt="Logo"
-          style="position: absolute; top: 0px; left: 0px"
-          @click="goToMainPage"
-        />
+      <div class="logo-wrapper">
+        <div class="logo">
+          <img
+              src="@/assets/luna_icon.png"
+              height="100%"
+              alt="Logo"
+              @click="goToMainPage"
+          />
+        </div>
+        <div class="vertical_line"/>
+        <div id="ailab" @click="goToAILab">
+          <p class="ailab">AI实验室</p>
+        </div>
       </div>
-      <div id="ailab" @click="goToAILab">
-        <p>AI实验室</p>
-      </div>
-      <div class="vertical_line"></div>
       <div class="page">
         <el-button
           type="text"
@@ -24,96 +25,90 @@
           >首页</el-button
         >
       </div>
-      <!-- <div class="page" style="left: calc(50% - 30px)">
-        <el-button type="text" class="navbar">页面1</el-button>
-      </div>
-      <div class="page" style="left: calc(50% + 3% + 30px)">
-        <el-button type="text" class="navbar">页面2</el-button>
-      </div> -->
-      <!-- <div class="icon-search">
-        <i class="el-icon-search" style="font-size: 32px"></i>
-      </div> -->
-      <div v-if="$store.state.AIlab_user.AIname" class="user">
-        <el-dropdown trigger="hover">
+      <div class="flex-placeholder"/>
+      <div>
+        <div v-if="$store.state.AIlab_user.AIname" class="user">
+          <el-dropdown trigger="hover">
           <span class="el-dropdown-link">
             {{ $store.state.AIlab_user.AIname
             }}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="checkUserInfo"
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="checkUserInfo"
               >个人中心</el-dropdown-item
-            >
-            <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </div>
-      <div v-if="!$store.state.AIlab_user.AIname" class="reg">
-        <el-button
-          type="text"
-          icon="el-icon-user-solid"
-          class="reg_text"
-          @click="goToLogin"
-        >
-          登陆
-        </el-button>
-      </div>
-      <div v-if="!$store.state.AIlab_user.AIname" class="login">
-        <el-button round @click="goToRegister">注册</el-button>
-      </div>
-      <div
-        v-if="!$store.state.AIlab_user.AIname"
-        class="menu"
-        @click="
+              >
+              <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+        <div v-if="!$store.state.AIlab_user.AIname" class="reg">
+          <el-button
+              type="text"
+              icon="el-icon-user-solid"
+              class="reg_text"
+              @click="goToLogin"
+          >
+            登陆
+          </el-button>
+        </div>
+        <div v-if="!$store.state.AIlab_user.AIname" class="login">
+          <el-button round @click="goToRegister">注册</el-button>
+        </div>
+        <div
+            v-if="!$store.state.AIlab_user.AIname"
+            class="menu"
+            @click="
           () => {
             OpenNarrowMenu = true;
           }
         "
-      >
-        <i
-          class="el-icon-menu"
-          style="font-size: 30px; height: 40px; line-height: 40px"
-        ></i>
-      </div>
-      <el-drawer
-        :append-to-body="true"
-        :modal-append-to-body="false"
-        style="overflow: scroll"
-        :visible.sync="OpenNarrowMenu"
-        size="260px"
-      >
-        <el-row slot="title" type="flex" justify="start">
-          <span style="font-size: 20px; color: black; padding-left: 5%"
-            >LUNA-AI实验室</span
-          >
-        </el-row>
-        <div style="padding: 0px 10%">
-          <!-- 首页 -->
-          <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
-            <el-button
-              type="text"
-              @click="goToAILab"
-              class="Narrow_Navbar_Button"
-              >首页</el-button
-            >
-          </el-row>
-          <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
-            <el-button
-              type="text"
-              @click="goToLogin"
-              class="Narrow_Navbar_Button"
-              >登陆</el-button
-            >
-          </el-row>
-          <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
-            <el-button
-              type="text"
-              @click="goToRegister"
-              class="Narrow_Navbar_Button"
-              >注册</el-button
-            >
-          </el-row>
+        >
+          <i
+              class="el-icon-menu"
+              style="font-size: 30px; height: 40px; line-height: 40px"
+          ></i>
         </div>
-      </el-drawer>
+        <el-drawer
+            :append-to-body="true"
+            :modal-append-to-body="false"
+            style="overflow: scroll"
+            :visible.sync="OpenNarrowMenu"
+            size="260px"
+        >
+          <el-row slot="title" type="flex" justify="start">
+          <span style="font-size: 20px; color: black; padding-left: 5%"
+          >LUNA-AI实验室</span
+          >
+          </el-row>
+          <div style="padding: 0px 10%">
+            <!-- 首页 -->
+            <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+              <el-button
+                  type="text"
+                  @click="goToAILab"
+                  class="Narrow_Navbar_Button"
+              >首页</el-button
+              >
+            </el-row>
+            <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+              <el-button
+                  type="text"
+                  @click="goToLogin"
+                  class="Narrow_Navbar_Button"
+              >登陆</el-button
+              >
+            </el-row>
+            <el-row type="flex" justify="start" class="Narrow_Navbar_Item">
+              <el-button
+                  type="text"
+                  @click="goToRegister"
+                  class="Narrow_Navbar_Button"
+              >注册</el-button
+              >
+            </el-row>
+          </div>
+        </el-drawer>
+      </div>
     </div>
     <!-- <basic-header/> -->
     <div>
@@ -228,6 +223,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.flex-placeholder {
+
+}
 .sticky-menu {
   position: absolute;
   width: 89%;
@@ -237,32 +235,29 @@ export default {
 }
 
 .logo {
-  position: absolute;
-  width: 168px;
-  height: 42px;
-  left: 12%;
-  top: 19px;
   // background-color: white;
   cursor: pointer;
+  height: 100%;
+  padding: 19px 0;
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
 }
 
 .vertical_line {
-  position: absolute;
-  width: 0px;
-  height: 40px;
-  left: calc(12% + 168px);
-  top: 20px;
   border-left: 2px solid white;
+  height: 40px;
   // transform: rotate(90deg);
 }
 
+.ailab {
+  margin: 0;
+  margin-left: 15px;
+}
+
 #ailab {
-  position: absolute;
-  width: 80px;
-  height: 23px;
-  left: calc(12% + 168px);
-  margin-left: 17px;
-  top: 28.5px;
 
   font-family: Microsoft YaHei UI;
   font-style: normal;
@@ -276,13 +271,11 @@ export default {
 }
 
 .page {
-  position: absolute;
-  width: 60px;
-  height: 25px;
-  // left: calc(50% - 90px);
-  left: max(calc(50% - 30px), calc(12% + 280px));
-  top: 12px;
+  display: flex;
   cursor: pointer;
+  height: 70%;
+  position: relative;
+  top: 15%;
 }
 
 .navbar {
@@ -410,6 +403,16 @@ export default {
 .menu:hover {
   color: #66b1ff;
 }
+
+.header {
+  display: flex;
+  position: fixed;
+  top:0;
+  justify-content: space-around;
+  z-index: 10;
+  width: 100%;
+  background: #23242a;
+}
 @media screen and (max-width: 980px) {
   .reg {
     display: none;
@@ -456,14 +459,6 @@ export default {
   margin: 0px;
   /*统一设置高度为100%*/
   height: 100%;
-  width: 100%;
-  background: #23242a;
-}
-
-.header {
-  position: fixed;
-  top:0;
-  z-index: 10;
   width: 100%;
   background: #23242a;
 }

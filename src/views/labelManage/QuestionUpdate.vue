@@ -297,7 +297,7 @@
 </template>
 
 <script>
-import Mathdown from "../../common/components/Mathdown.vue";
+import Mathdown from "@/common/components/Mathdown.vue";
 import Clipboard from 'clipboard'
 
 //后端api正式上线后修改
