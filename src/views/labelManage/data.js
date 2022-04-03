@@ -78,7 +78,7 @@ export const questionTypes = [{
   }, {
     value: 12,
     label: '听力题'
-  }]
+  }];
 
 export const eventList = {
   fileChange: 'paper-divide-file-change',
