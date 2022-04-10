@@ -582,6 +582,10 @@
 							"name": "毛雪菲",
 							"mail": "maoxuefeifinnie@gmail.com",
 							"intro": "不知名小美工Finnie"
+						}, {
+							"name": "王童",
+							"mail": "twangg@umich.edu",
+							"intro": "密西根大学MSI2023级研究生"
 						}
 					],
 					// 特邀工程师
@@ -731,6 +735,7 @@
 						"刘正韬": "/members/刘正韬.jpg",
 						"郭禹祥": "/members/郭禹祥.jpg",
 						"毛雪菲": "/members/毛雪菲.jpg",
+						"王童": "/members/王童.jpg",
 						// 特邀工程师
 
 						// 实习生
