@@ -78,7 +78,6 @@ const router = new Router({
 // 路由控制
 
 router.beforeEach((to, from, next) => {
-  console.log(to.path.includes('/user/') && !store.state.AIlab_user.AIname);
   if (switchtoAIlab(to.path)){
     if (to.path.includes('/user/') && !store.state.AIlab_user.AIname)
     {
