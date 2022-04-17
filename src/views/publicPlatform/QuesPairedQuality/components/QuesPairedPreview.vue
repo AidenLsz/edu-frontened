@@ -24,9 +24,6 @@ export default {
     figures: Array,
     prefix: String,
   },
-  mounted() {
-    console.log(this.question);
-  },
   methods: {
     parseImg(str) {
       return str.replace(/\$\\FigureID{([0-9a-z-]*)?}\$/g, ($1, $2) => `<img src="${this.figures.find(ele => ele.figure_ID === $2).img}">`);

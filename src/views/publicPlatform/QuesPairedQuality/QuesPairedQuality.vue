@@ -1,9 +1,14 @@
 <template>
   <div class="qp-container"
-       v-loading="isLoading"
-       element-loading-text="加载中"
-       element-loading-spinner="el-icon-loading"
   >
+    <div class="qp-loading-layer"
+         v-loading="isLoading"
+         element-loading-text="加载中"
+         element-loading-spinner="el-icon-loading"
+         v-show="isLoading"
+    >
+
+    </div>
     <el-row class="qp-bread" justify="start" type="flex">
       <el-col :span="6">
         <el-row type="flex" justify="start">
@@ -31,14 +36,17 @@
         <div id="qp-body__anchor"></div>
         <div v-for="(pair, idx) in questionPairs" :key="pair.question_ID0 + pair.question_ID1" class="qp-question">
           <ques-paired-header :pair="pair" :idx="idx + 1"/>
-          <ques-paired-body :prefix="idx + 1" :left-question="getQuestion(pair.question_ID0)" :right-question="getQuestion(pair.question_ID1)" :figures="figures"/>
+          <ques-paired-body :prefix="`${idx + 1}`" :left-question="getQuestion(pair.question_ID0)" :right-question="getQuestion(pair.question_ID1)" :figures="figures"/>
         </div>
 
         <div class="qp-pagination">
           <el-pagination
               background
               layout="prev, pager, next"
-              :total="1000">
+              :total="pageTotal"
+              :current-page="pageNum"
+              @current-change="onPageChange"
+          >
           </el-pagination>
         </div>
       </div>
@@ -66,6 +74,7 @@ export default {
       isLoading: false,
       UUID: ``,
       pageNum: 1,
+      pageTotal: 1,
       currentPage: 1,
       questionPairs: [],
       questions: [],
@@ -76,11 +85,10 @@ export default {
     async onPair() {
       this.isLoading = true;
 
-      const res = await getQuestionPair();
-      console.log(res)
+      const res = await getQuestionPair(this.pageNum);
       this.questions = res.questions;
       this.questionPairs = res.question_pairs;
-      this.pageNum = res.page_num;
+      this.pageTotal = res.page_num;
       this.figures = res.figures;
 
       this.isUploaded = true;
@@ -100,14 +108,14 @@ export default {
     getQuestion(questionID) {
       return this.questions.find(ele => ele.question_ID === questionID);
     },
+    async onPageChange(pageNum) {
+      this.scrollToPaper();
+      this.pageNum = pageNum;
+      await this.onPair();
+
+    },
     async mounted() {
       await this.getUserUUID();
-      try {
-        const res = await getQuestionPair();
-        console.log(res)
-      } catch (e) {
-        this.$message.error("获取试题对数据失败，请检查是否登录，或稍后再试。")
-      }
     },
     scrollToPaper() {
       document.getElementById("qp-body__anchor").scrollIntoView({
@@ -121,6 +129,15 @@ export default {
 <style scoped lang="scss">
   .qp-bread {
     padding-top: 4rem;
+  }
+
+  .qp-loading-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
   }
 
   #qp-body__anchor {

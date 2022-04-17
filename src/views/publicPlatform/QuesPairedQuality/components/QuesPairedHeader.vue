@@ -37,11 +37,11 @@
             </el-select>
           </div>
           <div class="qp-block">
-            <el-button type="primary" size="medium" @click="postPairedData">确认</el-button>
+            <el-button size="medium" @click="postPairedData" :loading="isPosting" :type="isPosted ? `success` : `primary`" icon="el-icon-upload" :disabled="isPosting">确认</el-button>
           </div>
         </div>
         <p class="qp-text">
-          * 请选择您认为该项质量较高的题目，双击可取消
+          * 请选择您认为该项质量较高的题目，双击可取消 <span :class="isPosted ? `qp-uploaded`: `qp-not-uploaded`">标注{{isPosted ? `已` : `未`}}上传</span>
         </p>
       </div>
     </div>
@@ -60,6 +60,8 @@ export default {
   data() {
     return {
       scenarios,
+      isPosted: false,
+      isPosting: false,
     }
   },
   methods: {
@@ -71,15 +73,33 @@ export default {
       }
     },
     async postPairedData() {
+      this.isPosting = true;
+      this.isPosted = false;
       let res;
-      try {
-        res = await postQuestionPair(this.pair.question_ID0, this.pair.question_ID1, this.pair.better, this.pair.score0, this.pair.score1, this.pair.scenario);
-      } catch (e) {
-        console.log(e);
+      if (this.pair.better === null) {
+        this.$message.error(`请选择试题质量`);
+      } else if (this.pair.score0 === 0) {
+        this.$message.error(`请选择左题评分`);
+      } else if (this.pair.score1 === 0) {
+        this.$message.error(`请选择左题评分`);
+      } else if (this.pair.scenario === null) {
+        this.$message.error(`请选择场景`);
+      } else {
+        try {
+          res = await postQuestionPair(this.pair.question_ID0, this.pair.question_ID1, this.pair.better, this.pair.score0, this.pair.score1, this.pair.scenario);
+        } catch (e) {
+          console.log(e);
+          this.isPosting = false;
+          this.$message.error(`服务器似乎出现了一点问题`);
+        }
+        if (res.error !== '') {
+          this.$message.error(res.error);
+        } else {
+          this.$message.success('上传结果成功');
+        }
+        this.isPosted = true;
       }
-      if (res.error !== '') {
-        this.$message.error(res.error);
-      }
+      this.isPosting = false;
     }
   },
 }
@@ -161,6 +181,19 @@ export default {
     text-align: center;
     margin: 0;
     margin-top: 10px;
+
+    span {
+      margin-left: 8px;
+      font-weight: bold;
+    }
+
+    .qp-uploaded {
+      color: green;
+    }
+
+    .qp-not-uploaded {
+      color: red;
+    }
   }
 
   .qp-slider {
