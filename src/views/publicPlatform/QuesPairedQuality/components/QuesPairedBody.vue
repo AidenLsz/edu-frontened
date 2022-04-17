@@ -17,9 +17,6 @@ export default {
   components: {
     QuesPairedPreview,
   },
-  mounted() {
-    console.log(this.rightQuestion)
-  },
   props: {
     rightQuestion: Object,
     leftQuestion: Object,
@@ -33,8 +30,8 @@ export default {
   .qp-body-container {
     display: flex;
     justify-content: space-between;
-    margin-top: 2rem;
-    margin-bottom: 6rem;
+    padding-top: 2rem;
+    padding-bottom: 6rem;
   }
 
   .qp-left,
