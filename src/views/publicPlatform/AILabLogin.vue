@@ -93,7 +93,7 @@ export default {
           console.log("login", data);
           if (data.data.success) {
             let userInfo = {
-              token: "111",
+              token: data.data.access_token,
               name: this.username,
               // isAdmin:data.body.isAdmin,
             };
@@ -112,7 +112,7 @@ export default {
                 // this.goToMainPage();
               });
           } else {
-            console.log(data.errMsg);
+            console.log(data.data.errMsg);
             this.$message({
               showClose: true,
               message: "登录失败，用户名或密码错误",

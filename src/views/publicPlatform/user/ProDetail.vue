@@ -120,9 +120,17 @@ export default {
   mounted() {
     this.project_id = this.$route.query.project_id;
     this.ToTop();
-    Axios.post("https://ailab-api-275-production.env.bdaa.pro/v1/prog/detail", {
-      project_id: this.project_id,
-    }).then((data) => {
+    Axios.post(
+      "https://ailab-api-275-production.env.bdaa.pro/v1/prog/detail",
+      {
+        project_id: this.project_id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+        },
+      }
+    ).then((data) => {
       if (data.data.success) {
         this.project_id = data.data.project_id;
         this.project_name = data.data.project_name;
@@ -159,11 +167,19 @@ export default {
     },
     confirm() {
       console.log("confirm");
-      Axios.post("https://ailab-api-275-production.env.bdaa.pro/v1/prog/edit", {
-        project_id: this.project_id,
-        services: this.services,
-        new_project_name: this.new_project_name,
-      }).then((data) => {
+      Axios.post(
+        "https://ailab-api-275-production.env.bdaa.pro/v1/prog/edit",
+        {
+          project_id: this.project_id,
+          services: this.services,
+          new_project_name: this.new_project_name,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+          },
+        }
+      ).then((data) => {
         if (this.project_name != this.new_project_name)
           if (data.data.success) {
             this.$message({
@@ -172,7 +188,6 @@ export default {
               type: "success",
             });
             this.project_name = this.new_project_name;
-            location.reload();
           } else {
             console.log(data.data.errMsg);
             this.$message({
@@ -196,11 +211,19 @@ export default {
       this.services.length = 0;
       for (let i = 0; i < this.all_services.length; i++)
         if (this.checklist[i]) this.services.push(this.all_services[i]);
-      Axios.post("https://ailab-api-275-production.env.bdaa.pro/v1/prog/edit", {
-        project_id: this.project_id,
-        services: this.services,
-        // new_project_name: this.new_project_name,
-      }).then((data) => {
+      Axios.post(
+        "https://ailab-api-275-production.env.bdaa.pro/v1/prog/edit",
+        {
+          project_id: this.project_id,
+          services: this.services,
+          // new_project_name: this.new_project_name,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+          },
+        }
+      ).then((data) => {
         if (data.data.success) {
           this.$message({
             showClose: true,

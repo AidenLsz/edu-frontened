@@ -39,7 +39,12 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="services" label="服务类型" align="center" :formatter="Formatter">
+        <el-table-column
+          prop="services"
+          label="服务类型"
+          align="center"
+          :formatter="Formatter"
+        >
         </el-table-column>
         <el-table-column label="操作" align="center" min-width="120">
           <template slot-scope="scope">
@@ -98,24 +103,30 @@ export default {
   },
   mounted() {
     this.ToTop();
-    Axios.post("https://ailab-api-275-production.env.bdaa.pro/v1/prog/my").then(
-      (data) => {
-        if (data.data.success) {
-          this.tableData = data.data.projects;
-          for (let i = 0; i < this.tableData.length; i++) {
-            this.tableData[i].create_time = this.DateTrans(
-              this.tableData[i].create_time
-            );
-          }
-        } else {
-          this.$message({
-            showClose: true,
-            message: data.data.errMsg,
-            type: "error",
-          });
-        }
+    Axios.post(
+      "https://ailab-api-275-production.env.bdaa.pro/v1/prog/my",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+        },
       }
-    );
+    ).then((data) => {
+      if (data.data.success) {
+        this.tableData = data.data.projects;
+        for (let i = 0; i < this.tableData.length; i++) {
+          this.tableData[i].create_time = this.DateTrans(
+            this.tableData[i].create_time
+          );
+        }
+      } else {
+        this.$message({
+          showClose: true,
+          message: data.data.errMsg,
+          type: "error",
+        });
+      }
+    });
   },
   methods: {
     ToTop() {
@@ -192,21 +203,59 @@ export default {
           type: "warning",
         })
         .then(() => {
-          console.log(index, data);
-          this.tableData[index].state = 1;
-          this.$message({
-            type: "success",
-            message: "禁用成功，您可以点击启用按钮重新启用该项目",
+          Axios.post(
+            "https://ailab-api-275-production.env.bdaa.pro/v1/prog/stat",
+            {
+              project_id: data.project_id,
+              state: 1,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+              },
+            }
+          ).then((data) => {
+            if (data.data.success) {
+              this.tableData[index].state = 1;
+              this.$message({
+                type: "success",
+                message: "禁用成功，您可以点击启用按钮重新启用该项目",
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: data.data.errMsg,
+              });
+            }
           });
         });
     },
     Able(index, data) {
       this.$msgbox.confirm("确认启用该项目吗？", "提示", {}).then(() => {
-        console.log(index, data);
-        this.tableData[index].state = 0;
-        this.$message({
-          type: "success",
-          message: "启用成功",
+        Axios.post(
+          "https://ailab-api-275-production.env.bdaa.pro/v1/prog/stat",
+          {
+            project_id: data.project_id,
+            state: 0,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+            },
+          }
+        ).then((data) => {
+          if (data.data.success) {
+            this.tableData[index].state = 0;
+            this.$message({
+              type: "success",
+              message: "启用成功",
+            });
+          } else {
+            this.$message({
+              type: "error",
+              message: data.data.errMsg,
+            });
+          }
         });
       });
     },
@@ -217,18 +266,38 @@ export default {
           type: "error",
         })
         .then(() => {
-          console.log(index, data);
-          this.tableData.splice(index, 1);
-          this.$message({
-            type: "success",
-            message: "删除成功",
+          Axios.post(
+            "https://ailab-api-275-production.env.bdaa.pro/v1/prog/stat",
+            {
+              project_id: data.project_id,
+              state: 2,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+              },
+            }
+          ).then((data) => {
+            if (data.data.success) {
+              this.tableData.splice(index, 1);
+              this.$message({
+                type: "success",
+                message: "项目删除成功",
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: data.data.errMsg,
+              });
+            }
           });
         });
+    
     },
     // 格式化服务类型数据
     Formatter(row) {
       return row.services.join(";");
-    }
+    },
   },
 };
 </script>

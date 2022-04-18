@@ -244,23 +244,29 @@ export default {
     this.InitCate();
     let now = new Date();
     this.fliter.end_time = this.DateTrans(now);
-    Axios
-      .post("https://ailab-api-275-production.env.bdaa.pro/v1/api/usage", {
+    Axios.post(
+      "https://ailab-api-275-production.env.bdaa.pro/v1/api/usage",
+      {
         start_time: this.fliter.start_time,
         end_time: this.fliter.end_time,
-      })
-      .then((data) => {
-        if (data.data.success) {
-          this.records = data.data.records;
-          this.tableData = this.records;
-        } else {
-          this.$message({
-            showClose: true,
-            message: data.data.errMsg,
-            type: "error",
-          });
-        }
-      });
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+        },
+      }
+    ).then((data) => {
+      if (data.data.success) {
+        this.records = data.data.records;
+        this.tableData = this.records;
+      } else {
+        this.$message({
+          showClose: true,
+          message: data.data.errMsg,
+          type: "error",
+        });
+      }
+    });
   },
   methods: {
     ToTop() {

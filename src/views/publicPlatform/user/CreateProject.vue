@@ -98,6 +98,11 @@ export default {
             {
               project_name: this.form.project_name,
               description: this.form.description,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+              },
             }
           ).then((data) => {
             if (data.data.success) {

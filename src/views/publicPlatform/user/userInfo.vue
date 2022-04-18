@@ -67,9 +67,11 @@ import Axios from "axios";
 export default {
   mounted() {
     this.ToTop();
-    Axios.get(
-      "https://ailab-api-275-production.env.bdaa.pro/v1/user/profile"
-    ).then((data) => {
+    Axios.get("https://ailab-api-275-production.env.bdaa.pro/v1/user/profile", {
+      headers: {
+        Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+      },
+    }).then((data) => {
       this.data = data.data;
       console.log(this.data);
       this.mail = this.data.email;
@@ -155,7 +157,12 @@ export default {
       if (this.new_full_name != this.full_name) {
         Axios.post(
           "https://ailab-api-275-production.env.bdaa.pro/v1/user/newName",
-          { new_full_name: this.new_full_name }
+          { new_full_name: this.new_full_name },
+          {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+            },
+          }
         ).then((data) => {
           if (data.data.success) {
             this.$message({

@@ -61,13 +61,11 @@ export default {
   },
   methods: {
     ToTop() {
-      document
-        .getElementById("Top_Nav")
-        .scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-          inline: "nearest",
-        });
+      document.getElementById("Top_Nav").scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
     },
     confirm() {
       if (this.new_pwd == this.old_pwd) {
@@ -85,7 +83,12 @@ export default {
       } else {
         Axios.post(
           "https://ailab-api-275-production.env.bdaa.pro/v1/user/newPwd",
-          { old_pwd: sha1(this.old_pwd), new_pwd: sha1(this.new_pwd) }
+          { old_pwd: sha1(this.old_pwd), new_pwd: sha1(this.new_pwd) },
+          {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+            },
+          }
         ).then((data) => {
           if (data.data.success) {
             this.$message({
@@ -93,12 +96,11 @@ export default {
               message: "密码修改成功",
               type: "success",
             });
-          location.reload();
+            location.reload();
           } else {
-            console.log(data.data.errMsg);
             this.$message({
               showClose: true,
-              message: "密码修改失败",
+              message: data.data.errMsg,
               type: "error",
             });
           }
