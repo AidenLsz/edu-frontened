@@ -526,23 +526,23 @@
                 </el-col>
                 <el-col :span="12">
                   <el-row type="flex" justify="center">
-                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Unfinish()">
-                      <i class="el-icon-document-checked"></i>
-                      <span>保存试卷</span>
-                    </el-button>
-                  </el-row>
-                </el-col>
-              </el-row>
-
-              <el-row type="flex" justify="start">
-                <el-col :span="12">
-                  <el-row type="flex" justify="center">
                     <el-button type="text" style="font-size: 14px; color: grey" @click.native="Check_Answer_Card()">
                       <i class="el-icon-s-claim"></i>
                       <span>查看答题卡</span>
                     </el-button>
                   </el-row>
                 </el-col>
+                <!-- <el-col :span="12">
+                  <el-row type="flex" justify="center" style="display: none">
+                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Unfinish()">
+                      <i class="el-icon-document-checked"></i>
+                      <span>保存试卷</span>
+                    </el-button>
+                  </el-row>
+                </el-col> -->
+              </el-row>
+
+              <el-row type="flex" justify="start">
                 <el-col :span="12">
                   <el-row type="flex" justify="center">
                     <el-button type="text" style="font-size: 14px; color: grey" @click.native="Auto_Compare_Combine_Paper()">
