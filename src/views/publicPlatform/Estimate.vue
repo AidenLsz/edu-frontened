@@ -8,7 +8,7 @@
   >
     <div id="Top_Nav" class="Top_Nav"></div>
     <div class="panel">
-      <el-row justify="start" type="flex">
+      <!-- <el-row justify="start" type="flex">
         <el-col style="padding-left: 5vw">
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -21,7 +21,7 @@
             </el-breadcrumb-item>
           </el-breadcrumb>
         </el-col>
-      </el-row>
+      </el-row> -->
       <instruction ref="instruction" />
 
       <div id="main">
