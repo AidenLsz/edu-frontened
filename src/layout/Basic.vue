@@ -427,7 +427,7 @@
 
               </div>
 
-              <div
+              <!-- <div
                 style="width: 100px;"
                 class="NarbarItem">
                 <el-button type="text" @click="PublicPlatform" class="navbar"
@@ -440,7 +440,7 @@
                 <el-button type="text" @click="show_members" class="navbar"
                   >成员</el-button
                 >
-              </div>
+              </div> -->
               <div style="width: 1px; height: 18px; margin-top: 25px; border-right: 2px solid #aaa; margin-left: 15px; margin-right: 12px">
 
               </div>
