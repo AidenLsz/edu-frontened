@@ -5,7 +5,7 @@
       <el-col :span="10" :offset="2">
         <el-row>
           <span style="font-weight: bold; color: #47A2FF; font-size: 24px">
-            欢迎使用LUNA智慧教育知识图谱
+            欢迎使用智慧教育知识图谱
           </span>
         </el-row>
         <!-- <el-row style="margin: 50px 0px 20px 0px;">

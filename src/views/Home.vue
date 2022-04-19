@@ -529,7 +529,10 @@
     </el-dialog>
 
     <section class="slider-bg" >
-      <el-row type="flex" justify="center" style="padding-top: 400px;">
+      <el-row type="flex" justify="center" style="padding-top: 260px;">
+        <label class="Temp_Label">智慧教育知识图谱</label>
+      </el-row>
+      <el-row type="flex" justify="center" style="padding-top: 40px;">
         <el-col :span="10">
           <el-input
             v-model="ku_name"
@@ -1047,7 +1050,7 @@ export default {
   z-index: 1;
 }
 .slider-bg {
-  background: url("../assets/bg.png");
+  background: url("../assets/temp_bg.jpg");
   background-size: 100%;
   position: relative;
   min-height: 653px;
@@ -1215,5 +1218,11 @@ a {
     width: 10px;
     height: 10px;
     background: transparent;
+}
+
+.Temp_Label{
+  font-size: 40px;
+  letter-spacing: 20px;
+  color: white;
 }
 </style>
