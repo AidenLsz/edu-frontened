@@ -13,7 +13,7 @@
     <div id="Top_Nav" class="Top_Nav"></div>
     <!-- <div class="panel"> -->
     <div style="position: relative; padding-left: 10%; padding-right: 10%">
-      <el-row justify="start" type="flex">
+      <!-- <el-row justify="start" type="flex">
         <el-col>
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -21,7 +21,7 @@
             <el-breadcrumb-item></el-breadcrumb-item>
           </el-breadcrumb>
         </el-col>
-      </el-row>
+      </el-row> -->
 
       <el-row
         justify="start"
