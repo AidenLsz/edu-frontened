@@ -1,14 +1,25 @@
 <template>
   <el-container style="height: 100%; border: 1px solid #eee" id="app">
     <el-header style="height: 72px">
-      <div class="search">
+      <!-- <div class="logo">
+        <img
+          src="@/assets/luna_icon.png"
+          height="100%"
+          alt="Logo"
+          @click="goToMainPage"
+        />
+      </div>
+      <div class="vertical_line" />
+      <div id="ailab" @click="goToAILab">AI实验室</div> -->
+      <!-- 暂时用不到 -->
+      <!-- <div class="search">
         <el-input
           v-model="input"
           placeholder="Search"
           prefix-icon="el-icon-search"
           style="height: 36px"
         ></el-input>
-      </div>
+      </div> -->
       <div class="text">控制台</div>
       <div class="line"></div>
       <div v-if="$store.state.AIlab_user.AIname" class="user">
@@ -36,10 +47,10 @@
         </el-dropdown>
       </div>
     </el-header>
-    <el-container style="min-height: 100vh">
+    <el-container>
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
         <el-menu
-          default-active="1-1"
+          :default-active="CurrPage()"
           :default-openeds="['1', '2']"
           class="menu"
         >
@@ -69,7 +80,7 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main style="padding:0 0 0 0">
+      <el-main style="padding: 0 0 0 0">
         <div>
           <router-view :key="$route.fullPath"></router-view>
         </div>
@@ -87,12 +98,35 @@ export default {
   components: {
     BasicFooter,
   },
+  mounted() {
+    console.log("@" + this.$route.path);
+  },
   data() {
     return {
       input: "",
     };
   },
   methods: {
+    // 根据当前的url获取应该默认激活的选项
+    CurrPage() {
+      let path = this.$route.path;
+      if (path.includes("userInfo")) return "1-1";
+      else if (path.includes("ChangePass")) return "1-2";
+      else if (path.includes("Pro")) return "2-1";
+      else if (path.includes("Statistics")) return "2-2";
+    },
+    goToMainPage() {
+      this.$router.push({
+        path: this.rootPath,
+      });
+      this.ToTop();
+    },
+    goToAILab() {
+      this.$router.push({
+        path: "/PublicPlatform",
+      });
+      this.ToTop();
+    },
     // 查看用户个人信息
     checkUserInfo() {
       this.$router.push({
@@ -138,6 +172,40 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.logo {
+  // background-color: white;
+  position: absolute;
+  left: 80px;
+  top: 15px;
+  cursor: pointer;
+  height: 42px;
+}
+
+.vertical_line {
+  position: absolute;
+  left: 242px;
+  top: 24px;
+  border-left: 2px solid white;
+  height: 24px;
+  // transform: rotate(90deg);
+}
+
+#ailab {
+  position: absolute;
+  left: 258px;
+  top: 18.5px;
+  height: 35px;
+  line-height: 35px;
+  font-family: Microsoft YaHei UI;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  /* identical to box height */
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  color: white;
+}
+
 .search {
   position: absolute;
   top: 18px;
@@ -195,7 +263,7 @@ export default {
   line-height: 29px;
 }
 .el-header {
-  background: #3e89e0;
+  background: #23242a;
   // height: 72px;
 }
 

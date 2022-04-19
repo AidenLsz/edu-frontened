@@ -11,11 +11,11 @@ Vue.use(VueResource);
 import VueCropper from 'vue-cropper'
 Vue.use(VueCropper);
 
-import axios from 'axios'
+// import axios from 'axios'
 
-axios.defaults.withCredentials=true;//让ajax携带cookie
+// axios.defaults.withCredentials=true;//让ajax携带cookie
 
-Vue.prototype.$axios = axios;
+// Vue.prototype.$axios = axios;
 
 Vue.config.productionTip = false;
 

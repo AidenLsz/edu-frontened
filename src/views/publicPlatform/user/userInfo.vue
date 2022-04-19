@@ -1,29 +1,40 @@
 <template>
   <div style="min-width: 1240px">
     <div id="Top_Nav" class="Top_Nav"></div>
-    <div class="head">
-      <div class="text">个人中心 / 账户信息</div>
-    </div>
-    <div class="main">
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="head">
+      <el-breadcrumb-item
+        ><span style="color: rgba(0, 0, 0, 0.5)"
+          >个人中心</span
+        ></el-breadcrumb-item
+      >
+      <el-breadcrumb-item
+        ><span style="color: black">账号信息</span></el-breadcrumb-item
+      >
+    </el-breadcrumb>
+    <div class="title">
       <div class="line"></div>
       <div class="text">基本信息</div>
+    </div>
+    <div class="main">
+      <div class="key" style="left: 70px; top: 64px">账号昵称：</div>
+      <div class="key" style="left: 580px; top: 64px">用户名：</div>
+      <div class="key" style="left: 70px; top: 126px">联系手机：</div>
+      <div class="key" style="left: 580px; top: 126px">账号邮箱：</div>
+      <div class="key" style="left: 70px; top: 188px">注册日期：</div>
 
-      <div class="key" style="left: 70px; top: 82px">账号昵称：</div>
-      <div class="key" style="left: 580px; top: 82px">用户名：</div>
-      <div class="key" style="left: 70px; top: 144px">联系手机：</div>
-      <div class="key" style="left: 580px; top: 144px">账号邮箱：</div>
-      <div class="key" style="left: 70px; top: 206px">注册日期：</div>
-
-      <div class="value" style="left: 170px; top: 82px" v-show="!change">
+      <div class="value" style="left: 170px; top: 64px" v-show="!change">
         {{ full_name }}
       </div>
-      <div class="value" style="left: 675px; top: 82px">{{ user_name }}</div>
-      <div class="value" style="left: 170px; top: 144px">{{ phone }}</div>
-      <div class="value" style="left: 675px; top: 144px">
+      <div class="value" style="left: 675px; top: 64px">{{ user_name }}</div>
+      <div class="value" style="left: 170px; top: 126px">{{ phone }}</div>
+      <div class="value" style="left: 675px; top: 126px">
         {{ mail }}
       </div>
-      <div class="value" style="left: 170px; top: 206px">{{register_date}}</div>
+      <div class="value" style="left: 170px; top: 188px">
+        {{ register_date }}
+      </div>
       <el-link
+        v-show="!change"
         icon="el-icon-edit"
         type="primary"
         class="change"
@@ -33,7 +44,7 @@
       <el-input
         v-show="change"
         class="input"
-        v-model="full_name"
+        v-model="new_full_name"
         ref="inputRef"
         @blur="confirm"
       >
@@ -56,14 +67,17 @@ import Axios from "axios";
 export default {
   mounted() {
     this.ToTop();
-    Axios.get(
-      "https://ailab-api-275-production.env.bdaa.pro/v1/user/profile"
-    ).then((data) => {
+    Axios.get("https://ailab-api-275-production.env.bdaa.pro/v1/user/profile", {
+      headers: {
+        Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+      },
+    }).then((data) => {
       this.data = data.data;
       console.log(this.data);
       this.mail = this.data.email;
       this.user_name = this.data.user_name;
       this.full_name = this.data.full_name;
+      this.new_full_name = this.full_name;
       this.phone = this.data.phone_number;
       let temp = this.data.register_date.split(" ");
       let month;
@@ -114,6 +128,7 @@ export default {
     return {
       full_name: "",
       user_name: "",
+      new_full_name: "",
       // ID: "123456",
       // APPID: "123456",
       // APPKEY: "abcd",
@@ -139,26 +154,33 @@ export default {
       }); //这里需要使用nextTick是因为要让el-input先show出来才能让它focus
     },
     confirm() {
-      Axios.post(
-        "https://ailab-api-275-production.env.bdaa.pro/v1/user/newName",
-        { new_full_name: this.full_name }
-      ).then((data) => {
-        if (data.data.success) {
-          this.$message({
-            showClose: true,
-            message: "昵称修改成功",
-            type: "success",
-          });
-        } 
-        else {
-          console.log(data.data.errMsg);
-          this.$message({
-            showClose: true,
-            message: "昵称修改失败",
-            type: "error",
-          });
-        }
-      });
+      if (this.new_full_name != this.full_name) {
+        Axios.post(
+          "https://ailab-api-275-production.env.bdaa.pro/v1/user/newName",
+          { new_full_name: this.new_full_name },
+          {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+            },
+          }
+        ).then((data) => {
+          if (data.data.success) {
+            this.$message({
+              showClose: true,
+              message: "昵称修改成功",
+              type: "success",
+            });
+            this.full_name = this.new_full_name;
+          } else {
+            console.log(data.data.errMsg);
+            this.$message({
+              showClose: true,
+              message: "昵称修改失败",
+              type: "error",
+            });
+          }
+        });
+      }
       console.log("confirm");
       this.change = false;
     },
@@ -171,38 +193,20 @@ export default {
   position: relative;
   width: 100%;
   height: 40px;
-  background: #bfdbfe;
-  .text {
-    position: absolute;
-    width: 150px;
-    height: 22px;
-    left: 40px;
-    top: 9px;
-
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 22px;
-    /* identical to box height, or 137% */
-    color: #000000;
-    // border: 0.3px solid #000000;
-  }
+  line-height: 40px;
+  padding-left: 40px;
 }
 
-.main {
+.title {
   position: relative;
-  width: 1150px;
-  height: 278px;
-  margin: 20px auto;
-  background: #f7fbff;
-  border: 1px solid rgba(62, 137, 224, 0.25);
+  margin-top: 35px;
+  height: 22px;
+  width: 100%;
   .line {
     position: absolute;
     width: 5.56px;
     height: 22px;
     left: 40px;
-    top: 30px;
 
     background-color: #000000;
   }
@@ -211,7 +215,6 @@ export default {
     width: 88.89px;
     height: 22px;
     left: 51.11px;
-    top: 30px;
 
     font-family: Roboto;
     font-style: normal;
@@ -222,6 +225,16 @@ export default {
 
     color: #000000;
   }
+}
+
+.main {
+  position: relative;
+  width: calc(100% - 80px);
+  height: 278px;
+  margin: 20px 40px;
+  background: #ffffff;
+  border: 1px solid #a6a6a6;
+  border-radius: 8px;
   .key {
     position: absolute;
     width: 80px;
@@ -257,14 +270,14 @@ export default {
     width: 200px;
     height: 22px;
     left: 170px;
-    top: 72px;
+    top: 58px;
   }
   .change {
     position: absolute;
     width: 62px;
     height: 22px;
     left: 268px;
-    top: 82px;
+    top: 64px;
 
     font-family: Roboto;
     font-style: normal;

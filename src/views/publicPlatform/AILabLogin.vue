@@ -87,36 +87,47 @@ export default {
         {
           user_name: this.username,
           password: sha1(this.password),
-        },
-      ).then((data) => {
-        console.log("login", data);
-        if (data.data.success) {
-          let userInfo = {
-            token: "111",
-            name: this.username,
-            // isAdmin:data.body.isAdmin,
-          };
-          this.$store.dispatch("AIlab_user/setUserData", userInfo).then(() => {
-            // console.log(userInfo);
+        }
+      )
+        .then((data) => {
+          console.log("login", data);
+          if (data.data.success) {
+            let userInfo = {
+              token: data.data.access_token,
+              name: this.username,
+              // isAdmin:data.body.isAdmin,
+            };
+            this.$store
+              .dispatch("AIlab_user/setUserData", userInfo)
+              .then(() => {
+                // console.log(userInfo);
+                this.$message({
+                  showClose: true,
+                  message: "登录成功",
+                  type: "success",
+                });
+                setTimeout(() => {
+                  this.goToMainPage();
+                }, 10);
+                // this.goToMainPage();
+              });
+          } else {
+            console.log(data.data.errMsg);
             this.$message({
               showClose: true,
-              message: "登录成功",
-              type: "success",
+              message: "登录失败，用户名或密码错误",
+              type: "error",
             });
-            setTimeout(() => {
-              this.goToMainPage();
-            }, 10);
-            // this.goToMainPage();
-          });
-        } else {
-          console.log(data.errMsg);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
           this.$message({
             showClose: true,
-            message: "登录失败，用户名或密码错误",
+            message: "登录失败，服务器繁忙",
             type: "error",
           });
-        }
-      });
+        });
     },
   },
 };
