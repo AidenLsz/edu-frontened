@@ -9,7 +9,7 @@
           <el-divider direction="vertical"></el-divider>
           <el-link :underline="false" style="color: #9B9EA4; font-size: 16px">联系我们</el-link>
       </el-row>
-      <el-row  type="flex" justify="center" style="margin-top: 15px">
+      <el-row  type="flex" justify="center" style="margin-top: 15px; display: none">
         <el-link @click="TeMethod()" :underline="false" style="padding-right: 10px; color: #9B9EA4; font-size: 16px">LUNA水镜智能</el-link>
         ©
         <el-link href="http://bigdata.ustc.edu.cn/" target="_blank" :underline="false" style="padding-left: 10px; color: #9B9EA4; font-size: 16px">大数据分析与应用安徽省重点实验室</el-link>
