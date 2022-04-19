@@ -1,7 +1,7 @@
 <template>
   <el-container style="height: 100%; border: 1px solid #eee" id="app">
     <el-header style="height: 72px">
-      <div class="logo">
+      <!-- <div class="logo">
         <img
           src="@/assets/luna_icon.png"
           height="100%"
@@ -10,7 +10,7 @@
         />
       </div>
       <div class="vertical_line" />
-      <div id="ailab" @click="goToAILab">AI实验室</div>
+      <div id="ailab" @click="goToAILab">AI实验室</div> -->
       <!-- 暂时用不到 -->
       <!-- <div class="search">
         <el-input
