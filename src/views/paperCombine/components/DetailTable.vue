@@ -641,7 +641,7 @@ export default {
       }
 
       var data = {
-          "content": Info.stem ? Info.stem : "",
+          // "content": Info.stem ? Info.stem : "",
           "database": database,
           "page_count": 1,
           "score": Info.score,
