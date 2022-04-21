@@ -4,11 +4,11 @@
     <el-breadcrumb separator-class="el-icon-arrow-right" class="head">
       <el-breadcrumb-item
         ><span style="color: rgba(0, 0, 0, 0.5)"
-          >个人中心</span
+          >项目管理</span
         ></el-breadcrumb-item
       >
       <el-breadcrumb-item
-        ><span style="color: black">统计信息</span></el-breadcrumb-item
+        ><span style="color: black">使用统计</span></el-breadcrumb-item
       >
     </el-breadcrumb>
 
@@ -72,7 +72,7 @@
           </div>
         </div>
         <el-button
-          type="primary"
+          type="success"
           @click="Query"
           style="position: absolute; right: 20px; bottom: 0"
           >查询</el-button
@@ -131,7 +131,7 @@ export default {
   name: "Statistics",
   data() {
     return {
-      stastics: [
+      statistics: [
         [20, 21, 22, 23, 34, 1, 2], //"图片转写"服务六天前的使用次数到今天的使用次数（按照时间顺序，20是六天前的使用次数，2是今天的使用次数）
         [2, 1, 32, 13, 24, 5, 6], //"属性预估"
         [0, 5, 9, 13, 17, 19, 21], //"相似度估计"
@@ -228,6 +228,7 @@ export default {
       },
       currentPage: 1,
       pagesize: 10,
+      observer: [],
     };
   },
   created() {
@@ -241,7 +242,17 @@ export default {
   },
   mounted() {
     this.ToTop();
-    this.InitCate();
+    Axios.get(
+      "https://ailab-api-275-production.env.bdaa.pro/v1/api/Sevendays",
+      {
+        headers: {
+          Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
+        },
+      }
+    ).then((data) => {
+      this.statistics = data.data;
+      this.InitCate();
+    });
     let now = new Date();
     this.fliter.end_time = this.DateTrans(now);
     Axios.post(
@@ -267,6 +278,11 @@ export default {
         });
       }
     });
+  },
+  beforeDestroy() {
+    // 停止观测
+    this.observer.disconnect();
+    this.observer = null;
   },
   methods: {
     ToTop() {
@@ -324,31 +340,39 @@ export default {
         series: [
           {
             name: "图片转写",
-            data: this.stastics[0],
+            data: this.statistics[0],
             type: "line",
           },
           {
             name: "属性预估",
-            data: this.stastics[1],
+            data: this.statistics[1],
             type: "line",
           },
           {
             name: "相似度估计",
-            data: this.stastics[2],
+            data: this.statistics[2],
             type: "line",
           },
           {
             name: "试卷打散入库",
-            data: this.stastics[3],
+            data: this.statistics[3],
             type: "line",
           },
         ],
       };
       mycate.setOption(option);
       //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-      window.addEventListener("resize", function () {
-        mycate.resize();
+      this.observer = new ResizeObserver((entries) => {
+        entries.forEach(() => {
+          // console.log("大小位置", entry.contentRect);
+          // console.log("监听的DOM", entry.target);
+          mycate.resize();
+        });
       });
+      this.observer.observe(document.getElementById("category"));
+      // window.addEventListener("resize", function () {
+      //   mycate.resize();
+      // });
     },
     Query() {
       this.fliter.start_time = this.DateTrans(this.timerange[0]);
