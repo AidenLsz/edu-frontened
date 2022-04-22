@@ -402,7 +402,7 @@ export default {
           stem: Aim.stem,
           options: Aim.options,
           answer: Aim.answer,
-          analyse: Aim.analysis
+          analysis: Aim.analysis
         }
         
         this.Ques_List.push(Question_Show_Infos)

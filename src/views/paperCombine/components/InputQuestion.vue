@@ -223,6 +223,8 @@ import Mathdown from '@/common/components/Mathdown'
 
 import {commonAjax} from '@/common/utils/ajax'
 
+import FileSaver from 'file-saver'
+
 export default {
   name: "inputMarked",
   components: {
@@ -413,6 +415,13 @@ export default {
             this.$http
             .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
             .then(function(data) {
+
+                let file = new File(
+                    [JSON.stringify(data.data, null, 4)],
+                    "切分返回的数据格式.json",
+                    { type: "text/plain;charset=utf-8" }
+                    );
+                FileSaver.saveAs(file);
                 // 切分出来的文字部分
                 this.Paper_Content = data.data.paper
                 // 切分出来的图片部分，注意在显然的时候，需要从这里找到对应的图片内容
@@ -546,12 +555,27 @@ export default {
             // 把累积到的最后一组也压进去
             Out_JSON.push(JSON.parse(JSON.stringify(Item)))
 
+            let file = new File(
+                [JSON.stringify(Out_JSON, null, 4)],
+                "题目识别过程中，用于识别的数据格式.json",
+                { type: "text/plain;charset=utf-8" }
+                );
+            FileSaver.saveAs(file);
+
             let Param = {
                 'Paper_Cut_Result': JSON.stringify(Out_JSON, null, 4)
             }
 
             commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param)
             .then((res)=>{
+
+                file = new File(
+                    [JSON.stringify(res.data, null, 4)],
+                    "切分识别后的试题数据.json",
+                    { type: "text/plain;charset=utf-8" }
+                );
+                FileSaver.saveAs(file);
+
                 this.Question_Infos = []
                 let Result = res.data
                 this.Question_Infos_Fill(Result);
@@ -572,7 +596,7 @@ export default {
                     stem: Result[i].stem,
                     options: Result[i].options,
                     answer:  Result[i].answer,
-                    analyse:  Result[i].analysis,
+                    analysis:  Result[i].analysis,
                     score:  Result[i].score,
                     type: Result[i].type == "选择题" ? "单选题" : Result[i].type == "综合题" ? "简答题" : Result[i].type
                 }
@@ -1104,7 +1128,7 @@ export default {
         stem: "",
         options: [],
         answer: "",
-        analyse: ""
+        analysis: ""
       }
 
       if(Submit_JSON.type != "大题"){
@@ -1119,9 +1143,9 @@ export default {
           Question_Show_Infos.answer += "<img src='" + Submit_JSON.answer_image[i] + "'>"
         }
 
-        Question_Show_Infos.analyse = Submit_JSON.analysis
+        Question_Show_Infos.analysis = Submit_JSON.analysis
         for(let i = 0; i < Submit_JSON.analysis_image.length; i++){
-          Question_Show_Infos.analyse += "<img src='" + Submit_JSON.analysis_image[i] + "'>"
+          Question_Show_Infos.analysis += "<img src='" + Submit_JSON.analysis_image[i] + "'>"
         }
 
         Question_Show_Infos.options = Submit_JSON.options;
@@ -1153,9 +1177,9 @@ export default {
           Question_Show_Infos.answer += "<img src='" + Submit_JSON.answer_image[i] + "'>"
         }
 
-        Question_Show_Infos.analyse = Submit_JSON.analysis
+        Question_Show_Infos.analysis = Submit_JSON.analysis
         for(let i = 0; i < Submit_JSON.analysis_image.length; i++){
-          Question_Show_Infos.analyse += "<img src='" + Submit_JSON.analysis_image[i] + "'>"
+          Question_Show_Infos.analysis += "<img src='" + Submit_JSON.analysis_image[i] + "'>"
         }
 
       }

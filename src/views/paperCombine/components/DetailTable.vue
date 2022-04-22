@@ -444,7 +444,7 @@
 import {commonAjax} from '@/common/utils/ajax'
 import * as variable from '@/common/utils/variable'
 
-// import FileSaver from 'file-saver'
+import FileSaver from 'file-saver'
 
 import * as echarts from 'echarts';
 
@@ -669,7 +669,7 @@ export default {
           stem: Aim.stem,
           options: Aim.options,
           answer: Aim.answer,
-          analyse: Aim.analysis
+          analysis: Aim.analysis
         }
         
         this.Ques_List.push(Question_Show_Infos)
@@ -712,6 +712,12 @@ export default {
             'detail_table': JSON.stringify(this.Searching_Question_Info, null, 4)
           })
           .then((data)=>{
+            let file = new File(
+                 [JSON.stringify(data, null, 4)],
+                 "双向细目表返回的试题列表结果.json",
+                 { type: "text/plain;charset=utf-8" }
+                 );
+            FileSaver.saveAs(file);
             for(let i = 0; i < data.length; i++){
               this.Add_New_Ques_To_Cart(data[i])
             }

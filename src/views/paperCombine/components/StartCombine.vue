@@ -64,7 +64,7 @@
             </el-col>
             <el-col :span="20">
               <el-row type="flex" justify="start">
-                <Mathdown :content="Checked_Question_Info.analyse" :name="'Checked_Question_Analyse'"></Mathdown>
+                <Mathdown :content="Checked_Question_Info.analysis" :name="'Checked_Question_Analyse'"></Mathdown>
               </el-row>
             </el-col>
           </el-row>
@@ -941,7 +941,7 @@
                           style="margin-bottom: 5px;"
                           @mouseenter.native="Hover_Question(Index, IndexIn)">
                           <Mathdown 
-                            :content="'(' + Question.score + '分) '+ (IndexIn + 1) + '. $ $ '+ Question.stem" 
+                            :content="'(' + Question.score + '分)$ $ '+ Question.stem" 
                             :name="'Question_Stem_' + Index + '_' + IndexIn"></Mathdown>
                         </el-row>
                         <el-row 
@@ -1202,7 +1202,7 @@ export default {
             stem: Question.stem,
             options: Question.options,
             answer: Question.answer,
-            analyse: Question.analysis,
+            analysis: Question.analysis,
             score: this.Combine_Replace_Question_Info.score,
             type: this.Combine_Replace_Question_Info.type
         }
@@ -1462,7 +1462,7 @@ export default {
             stem: this.Question_List[i].list[j].stem,
             options: this.Question_List[i].list[j].options,
             answer: this.Question_List[i].list[j].answer,
-            analysis: this.Question_List[i].list[j].analyse
+            analysis: this.Question_List[i].list[j].analysis
           }
           Bundle_Format.content.push(Question_Item)
         }
@@ -1617,7 +1617,7 @@ export default {
             stem: this.Question_List[i].list[j].stem,
             options: this.Question_List[i].list[j].options,
             answer: this.Question_List[i].list[j].answer,
-            analysis: this.Question_List[i].list[j].analyse
+            analysis: this.Question_List[i].list[j].analysis
           }
           Bundle_Format.content.push(Question_Item)
         }
@@ -1936,7 +1936,7 @@ export default {
               stem: this.Question_List[i].list[j].stem,
               options: this.Question_List[i].list[j].options,
               answer: this.Question_List[i].list[j].answer,
-              analysis: this.Question_List[i].list[j].analyse
+              analysis: this.Question_List[i].list[j].analysis
           }
           Questions_Format.questions.push(Question_Item)
         }
@@ -2018,7 +2018,7 @@ export default {
         stem: "",
         options: [],
         answer: "",
-        analyse: ""
+        analysis: ""
       }
       if(['单选题', '多选题', '判断题'].indexOf(Item.type) != -1){
         Question_Show_Infos.type = "选择题";
@@ -2035,7 +2035,7 @@ export default {
       Question_Show_Infos.options = Item.options;
       Question_Show_Infos.stem = Item.stem;
       Question_Show_Infos.answer = Item.answer;
-      Question_Show_Infos.analyse = Item.analysis;
+      Question_Show_Infos.analysis = Item.analysis;
 
       this.Question_List[this.Replace_Question_Bundle_Index].list.splice(this.Replace_Question_Index, 1, Question_Show_Infos);
       this.Replace_Dialog_Show = false;
@@ -2152,7 +2152,7 @@ export default {
             stem: Question.stem,
             options: Question.options,
             answer: Question.answer,
-            analysis: Question.analyse,
+            analysis: Question.analysis,
             score: Question.score,
             type: Question.type,
             knowledgePointInfos: {
