@@ -1390,6 +1390,7 @@ export default {
     },
     // 类比组卷结果检索
     Add_To_Compare_Cart(val){
+      console.log(val)
       let Item = JSON.parse(val)
       let Flag = false;
       for(let i = 0; i < this.Compare_Paper_Questions.length; i++){
@@ -1443,37 +1444,33 @@ export default {
       this.waiting_text = "正在获取分析报告，请稍后..."
       this.waiting = true;
 
-      let Analyse_Paper_JSON = {
-        subject: this.Subject,
-        period: this.Period,
-        title: this.Setting_Info.title,
-        data: []
-      }
+      // let Analyse_Paper_JSON = {
+      //   subject: this.Subject,
+      //   period: this.Period,
+      //   title: this.Setting_Info.title,
+      //   data: []
+      // }
 
-      for(let i = 0; i < this.Question_List.length; i++){
-        let Bundle_Format = {
-          is_longques: 2,
-          desc: this.Question_List[i].type,
-          content: []
-        }
-        for(let j = 0; j < this.Question_List[i].list.length; j++){
-          let Question_Item = {
-            score: this.Question_List[i].list[j].score,
-            stem: this.Question_List[i].list[j].stem,
-            options: this.Question_List[i].list[j].options,
-            answer: this.Question_List[i].list[j].answer,
-            analysis: this.Question_List[i].list[j].analysis
-          }
-          Bundle_Format.content.push(Question_Item)
-        }
-        Analyse_Paper_JSON.data.push(Bundle_Format);
-      }
+      // for(let i = 0; i < this.Question_List.length; i++){
+      //   let Bundle_Format = {
+      //     is_longques: 2,
+      //     desc: this.Question_List[i].type,
+      //     content: []
+      //   }
+      //   for(let j = 0; j < this.Question_List[i].list.length; j++){
+      //     let Question_Item = {
+      //       score: this.Question_List[i].list[j].score,
+      //       stem: this.Question_List[i].list[j].stem,
+      //       options: this.Question_List[i].list[j].options,
+      //       answer: this.Question_List[i].list[j].answer,
+      //       analysis: this.Question_List[i].list[j].analysis
+      //     }
+      //     Bundle_Format.content.push(Question_Item)
+      //   }
+      //   Analyse_Paper_JSON.data.push(Bundle_Format);
+      // }
 
-      commonAjax(this.backendIP+'/api/combinePaperAnalyseReport',
-        {
-          Paper_Data: JSON.stringify(Analyse_Paper_JSON)
-        }
-      ).then((data)=>{
+      commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/detail_table_temp',).then((data)=>{
         let Changing_Info = []
         let Bundle_Item = {}
         for(let Bundle_Index = 0; Bundle_Index < data.sub_question.length; Bundle_Index++){
@@ -1598,37 +1595,33 @@ export default {
       this.waiting_text = "正在组织类比试卷，请稍后..."
       this.waiting = true;
 
-      let Analyse_Paper_JSON = {
-        subject: this.Subject,
-        period: this.Period,
-        title: this.Setting_Info.title,
-        data: []
-      }
+      // let Analyse_Paper_JSON = {
+      //   subject: this.Subject,
+      //   period: this.Period,
+      //   title: this.Setting_Info.title,
+      //   data: []
+      // }
 
-      for(let i = 0; i < this.Question_List.length; i++){
-        let Bundle_Format = {
-          is_longques: 2,
-          desc: this.Question_List[i].type,
-          content: []
-        }
-        for(let j = 0; j < this.Question_List[i].list.length; j++){
-          let Question_Item = {
-            score: this.Question_List[i].list[j].score,
-            stem: this.Question_List[i].list[j].stem,
-            options: this.Question_List[i].list[j].options,
-            answer: this.Question_List[i].list[j].answer,
-            analysis: this.Question_List[i].list[j].analysis
-          }
-          Bundle_Format.content.push(Question_Item)
-        }
-        Analyse_Paper_JSON.data.push(Bundle_Format);
-      }
+      // for(let i = 0; i < this.Question_List.length; i++){
+      //   let Bundle_Format = {
+      //     is_longques: 2,
+      //     desc: this.Question_List[i].type,
+      //     content: []
+      //   }
+      //   for(let j = 0; j < this.Question_List[i].list.length; j++){
+      //     let Question_Item = {
+      //       score: this.Question_List[i].list[j].score,
+      //       stem: this.Question_List[i].list[j].stem,
+      //       options: this.Question_List[i].list[j].options,
+      //       answer: this.Question_List[i].list[j].answer,
+      //       analysis: this.Question_List[i].list[j].analysis
+      //     }
+      //     Bundle_Format.content.push(Question_Item)
+      //   }
+      //   Analyse_Paper_JSON.data.push(Bundle_Format);
+      // }
 
-      commonAjax(this.backendIP+'/api/combinePaperAnalyseReport',
-        {
-          Paper_Data: JSON.stringify(Analyse_Paper_JSON)
-        }
-      ).then((data)=>{
+      commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/detail_table_temp',).then((data)=>{
         let Changing_Info = []
         let Bundle_Item = {}
         for(let Bundle_Index = 0; Bundle_Index < data.sub_question.length; Bundle_Index++){

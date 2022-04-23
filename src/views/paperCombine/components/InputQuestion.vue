@@ -223,7 +223,7 @@ import Mathdown from '@/common/components/Mathdown'
 
 import {commonAjax} from '@/common/utils/ajax'
 
-import FileSaver from 'file-saver'
+// import FileSaver from 'file-saver'
 
 export default {
   name: "inputMarked",
@@ -412,33 +412,27 @@ export default {
         // 选择上传
         File_Cutting(formData, config) {
 
-            this.$http
-            .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
-            .then(function(data) {
+            formData, config
 
-                let file = new File(
-                    [JSON.stringify(data.data, null, 4)],
-                    "切分返回的数据格式.json",
-                    { type: "text/plain;charset=utf-8" }
-                    );
-                FileSaver.saveAs(file);
-                // 切分出来的文字部分
-                this.Paper_Content = data.data.paper
+            commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/paper_split_temp')
+            .then((data)=>{
+                console.log(data)
+                this.Paper_Content = data.paper
                 // 切分出来的图片部分，注意在显然的时候，需要从这里找到对应的图片内容
-                this.Paper_Image_Dict = data.data.image_dict
+                this.Paper_Image_Dict = data.image_dict
                 // 空列表，用来存放元素
                 let Lists = []
-                for(let i = 0; i < data.data.paper.length; i++){
-                    for(let j = 0; j < data.data.paper[i].sub_para.length; j++){
+                for(let i = 0; i < data.paper.length; i++){
+                    for(let j = 0; j < data.paper[i].sub_para.length; j++){
                         // 这是切分格式的结果，我也不知道为什么sub_para会是一个数组，但是这样读取就没问题
-                        let Para = data.data.paper[i].sub_para[j]
+                        let Para = data.paper[i].sub_para[j]
                         // 把每个大段里面的每个小内容抽出来，单独塞到List里面
                         for(let k = 0; k < Para.length; k++){
                             Lists.push(Para[k])
                         }
                     }
                     // 只要不是最后一个大段，那么就往里面塞一个“切分线”元素
-                    if(i != data.data.paper.length - 1){
+                    if(i != data.paper.length - 1){
                         Lists.push("DIVIDER_LINES")
                     }
                 }
@@ -446,11 +440,54 @@ export default {
                 this.Paper_Content = Lists
                 this.Paper_Content_BackUp = Lists
                 this.File_Uploading = false;
-            }).catch(() => {
-                this.$alert("切分过程出现错误，这可能是由于服务器原因导致目前暂时无法提供服务，请重新提交文件或稍后再试。", "提示")
-                this.File_Uploading = false;
-                this.File_Name = ""
-            });
+            }).catch(
+                ()=>{
+                    this.$message.error("解析出现异常，请重试。")
+                }
+            ).finally(()=>{
+                this.File_Uploading = false
+                this.File_Uploading_Text = ""
+            })
+
+            // this.$http
+            // .post("https://file-upload-backend-88-production.env.bdaa.pro/v1/paperProcessing/upload", formData, config)
+            // .then(function(data) {
+
+            //     let file = new File(
+            //         [JSON.stringify(data.data, null, 4)],
+            //         "切分返回的数据格式.json",
+            //         { type: "text/plain;charset=utf-8" }
+            //         );
+            //     FileSaver.saveAs(file);
+            //     // 切分出来的文字部分
+            //     this.Paper_Content = data.data.paper
+            //     // 切分出来的图片部分，注意在显然的时候，需要从这里找到对应的图片内容
+            //     this.Paper_Image_Dict = data.data.image_dict
+            //     // 空列表，用来存放元素
+            //     let Lists = []
+            //     for(let i = 0; i < data.data.paper.length; i++){
+            //         for(let j = 0; j < data.data.paper[i].sub_para.length; j++){
+            //             // 这是切分格式的结果，我也不知道为什么sub_para会是一个数组，但是这样读取就没问题
+            //             let Para = data.data.paper[i].sub_para[j]
+            //             // 把每个大段里面的每个小内容抽出来，单独塞到List里面
+            //             for(let k = 0; k < Para.length; k++){
+            //                 Lists.push(Para[k])
+            //             }
+            //         }
+            //         // 只要不是最后一个大段，那么就往里面塞一个“切分线”元素
+            //         if(i != data.data.paper.length - 1){
+            //             Lists.push("DIVIDER_LINES")
+            //         }
+            //     }
+            //     // 把转化结果丢给显示区域，同时留一个备份
+            //     this.Paper_Content = Lists
+            //     this.Paper_Content_BackUp = Lists
+            //     this.File_Uploading = false;
+            // }).catch(() => {
+            //     this.$alert("切分过程出现错误，这可能是由于服务器原因导致目前暂时无法提供服务，请重新提交文件或稍后再试。", "提示")
+            //     this.File_Uploading = false;
+            //     this.File_Name = ""
+            // });
         },
         // 更新表格中的图片文件
         Table_Img_Get(Table_Html){
@@ -506,78 +543,65 @@ export default {
             this.File_Uploading = true;
             this.File_Uploading_Text = "正在从切分结果中识别题目，请稍后..."
 
-            let Reg_C = new RegExp('&#xa0;', 'g')
+            // let Reg_C = new RegExp('&#xa0;', 'g')
 
-            let Out_JSON = []
-            let ID = 0
-            let Item = {
-                id: ID,
-                subject: this.Subject,
-                period: this.Period,
-                content: []
-            }
-            for(let i = 0; i < this.Paper_Content.length; i++){
-                if(this.Paper_Content[i] == "DIVIDER_LINES"){
-                    // 每次遇到切分线，就把当前累积的内容推进去，然后将内容重置一下，再给序号加一
-                    Out_JSON.push(JSON.parse(JSON.stringify(Item)))
-                    ID = ID + 1;
-                    Item = {
-                    id: ID,
-                    subject: this.Subject,
-                    period: this.Period,
-                    content: []
-                }
-            }else{
-                // 0 代表文字和图片内容
-                // 1 代表试卷中的表格内容（不太清楚要怎么办，但总之应该是这么返回才对……吧？）
-                if(this.Paper_Content[i].para_type == '0'){
-                let Content = ""
-                for(let j = 0; j < this.Paper_Content[i].runs.length; j++){
-                    if(this.Paper_Content[i].runs[j].run_type == '0'){
-                        Content = Content + this.Paper_Content[i].runs[j].run_text
-                    }else if(this.Paper_Content[i].runs[j].run_type == '1'){
-                        Content = Content 
-                            + "<img src='" + this.Paper_Image_Dict[this.Paper_Content[i].runs[j].image.src] + "' " 
-                            + " width='" + this.Paper_Content[i].runs[j].image.width + "' " 
-                            + " height='" + this.Paper_Content[i].runs[j].image.height + "' " 
-                            + " style='" + this.Paper_Content[i].runs[j].image.style + "' " 
-                            + " alt='" + this.Paper_Content[i].runs[j].image.alt + "' " 
-                            + ">"
-                    }
-                }
-                    Content = Content.replace(Reg_C, "")
-                    Item.content.push(Content)
-                }else{
-                    Item.content.push(this.Table_Img_Get(this.Paper_Content[i].table_raw_html))
-                }
-            }
-            }
-            // 把累积到的最后一组也压进去
-            Out_JSON.push(JSON.parse(JSON.stringify(Item)))
+            // let Out_JSON = []
+            // let ID = 0
+            // let Item = {
+            //     id: ID,
+            //     subject: this.Subject,
+            //     period: this.Period,
+            //     content: []
+            // }
+            // for(let i = 0; i < this.Paper_Content.length; i++){
+            //     if(this.Paper_Content[i] == "DIVIDER_LINES"){
+            //         // 每次遇到切分线，就把当前累积的内容推进去，然后将内容重置一下，再给序号加一
+            //         Out_JSON.push(JSON.parse(JSON.stringify(Item)))
+            //         ID = ID + 1;
+            //         Item = {
+            //         id: ID,
+            //         subject: this.Subject,
+            //         period: this.Period,
+            //         content: []
+            //     }
+            // }else{
+            //     // 0 代表文字和图片内容
+            //     // 1 代表试卷中的表格内容（不太清楚要怎么办，但总之应该是这么返回才对……吧？）
+            //     if(this.Paper_Content[i].para_type == '0'){
+            //     let Content = ""
+            //     for(let j = 0; j < this.Paper_Content[i].runs.length; j++){
+            //         if(this.Paper_Content[i].runs[j].run_type == '0'){
+            //             Content = Content + this.Paper_Content[i].runs[j].run_text
+            //         }else if(this.Paper_Content[i].runs[j].run_type == '1'){
+            //             Content = Content 
+            //                 + "<img src='" + this.Paper_Image_Dict[this.Paper_Content[i].runs[j].image.src] + "' " 
+            //                 + " width='" + this.Paper_Content[i].runs[j].image.width + "' " 
+            //                 + " height='" + this.Paper_Content[i].runs[j].image.height + "' " 
+            //                 + " style='" + this.Paper_Content[i].runs[j].image.style + "' " 
+            //                 + " alt='" + this.Paper_Content[i].runs[j].image.alt + "' " 
+            //                 + ">"
+            //         }
+            //     }
+            //         Content = Content.replace(Reg_C, "")
+            //         Item.content.push(Content)
+            //     }else{
+            //         Item.content.push(this.Table_Img_Get(this.Paper_Content[i].table_raw_html))
+            //     }
+            // }
+            // }
+            // // 把累积到的最后一组也压进去
+            // Out_JSON.push(JSON.parse(JSON.stringify(Item)))
 
-            let file = new File(
-                [JSON.stringify(Out_JSON, null, 4)],
-                "题目识别过程中，用于识别的数据格式.json",
-                { type: "text/plain;charset=utf-8" }
-                );
-            FileSaver.saveAs(file);
 
-            let Param = {
-                'Paper_Cut_Result': JSON.stringify(Out_JSON, null, 4)
-            }
+            // let Param = {
+            //     'Paper_Cut_Result': JSON.stringify(Out_JSON, null, 4)
+            // }
 
-            commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param)
+            commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/question_distinguish_temp')
             .then((res)=>{
-
-                file = new File(
-                    [JSON.stringify(res.data, null, 4)],
-                    "切分识别后的试题数据.json",
-                    { type: "text/plain;charset=utf-8" }
-                );
-                FileSaver.saveAs(file);
-
+                console.log(res)
                 this.Question_Infos = []
-                let Result = res.data
+                let Result = res
                 this.Question_Infos_Fill(Result);
                 this.File_Step = "Question_Checking"
             }).catch(
@@ -590,6 +614,7 @@ export default {
             })
         },
         Question_Infos_Fill(Result){
+
             for(let i = 0; i < Result.length; i++){
                 let Item = {
                     id: Result[i].id,

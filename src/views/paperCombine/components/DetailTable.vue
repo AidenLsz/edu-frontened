@@ -444,7 +444,7 @@
 import {commonAjax} from '@/common/utils/ajax'
 import * as variable from '@/common/utils/variable'
 
-import FileSaver from 'file-saver'
+// import FileSaver from 'file-saver'
 
 import * as echarts from 'echarts';
 
@@ -712,12 +712,6 @@ export default {
             'detail_table': JSON.stringify(this.Searching_Question_Info, null, 4)
           })
           .then((data)=>{
-            let file = new File(
-                 [JSON.stringify(data, null, 4)],
-                 "双向细目表返回的试题列表结果.json",
-                 { type: "text/plain;charset=utf-8" }
-                 );
-            FileSaver.saveAs(file);
             for(let i = 0; i < data.length; i++){
               this.Add_New_Ques_To_Cart(data[i])
             }
@@ -740,9 +734,7 @@ export default {
           }
         }
         this.$emit("Clear_List", true)
-        commonAjax(this.backendIP+'/api/detail_table_generate', {
-          'detail_table': JSON.stringify(this.Searching_Question_Info, null, 4)
-        })
+        commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/compare_combine_temp')
         .then((data)=>{
           for(let i = 0; i < data.length; i++){
             this.Add_New_Ques_To_Cart(data[i])
