@@ -410,7 +410,7 @@
             <i class="el-icon-circle-plus" style="margin-top: 40px; margin-right: 20px;"></i> 添加大题
           </el-row>
           <el-row type="flex" justify="center" style="margin-top: 30px;">
-            <el-button type="primary" @click="Use_Table_Info()">生成试卷</el-button>
+            <el-button type="primary" @click="Use_Table_Info(-1)">生成试卷</el-button>
           </el-row>
         </el-col>
         <el-col :span="5" :offset="1" style="padding: 20px 30px;" class="Shadow_Border">
@@ -734,7 +734,10 @@ export default {
           }
         }
         this.$emit("Clear_List", true)
-        commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/compare_combine_temp')
+        let Param = {
+          page: sessionStorage.getItem("Compare_Page")
+        }
+        commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/compare_combine_temp', Param)
         .then((data)=>{
           for(let i = 0; i < data.length; i++){
             this.Add_New_Ques_To_Cart(data[i])

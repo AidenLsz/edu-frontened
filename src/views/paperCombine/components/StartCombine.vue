@@ -1157,7 +1157,9 @@ export default {
       // 难度筛选列表
       Difficulty_List: ['全部', '容易', '较易', '中等', '较难', '困难', "自定义"],
       Page_Index: 1,
-      Extra_Keyword: ""
+      Extra_Keyword: "",
+      // 组卷推荐“翻页”
+      Compare_Page: 1
     }
   },
   watch:{
@@ -1362,6 +1364,8 @@ export default {
     // 再换一组
     Get_Another_Paper(){
       this.Compare_Paper_Questions = [];
+      sessionStorage.setItem("Compare_Page", this.Compare_Page);
+      this.Compare_Page = this.Compare_Page + 1;
       this.$refs.DetailTable.Use_Table_Info();
     },
     Clear_List(){
