@@ -756,7 +756,7 @@ export default {
         }
         this.$emit("Clear_List", true)
         let Param = {
-          page: sessionStorage.getItem("Compare_Page")
+          page: (sessionStorage.getItem("Compare_Page") ? sessionStorage.getItem("Compare_Page") : 1)
         }
         commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/compare_combine_temp', Param)
         .then((data)=>{

@@ -1241,6 +1241,8 @@ export default {
     // 检索替换题目用的题目
     Search_Replace_Question(){
 
+      console.log("检索替换试题")
+
         this.Extra_Keyword = LRStrip(this.Extra_Keyword);
 
         this.Question_Loading = true;
@@ -1274,11 +1276,11 @@ export default {
 
         Param.data=data
 
-        commonAjax(this.backendIP+'/api/search', Param)
+        commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/replace_single_temp', Param)
         .then((data)=>{
+          console.log(data)
             this.Replace_Question_List = data.results
             this.Question_Loading = false;
-            
         }).catch(() => {
             this.$message.error("服务器过忙，请稍后再试。")
             this.Question_Loading = false;
@@ -1384,8 +1386,8 @@ export default {
     // 再换一组
     Get_Another_Paper(){
       this.Compare_Paper_Questions = [];
-      sessionStorage.setItem("Compare_Page", this.Compare_Page);
       this.Compare_Page = this.Compare_Page + 1;
+      sessionStorage.setItem("Compare_Page", this.Compare_Page);
       this.$refs.DetailTable.Use_Table_Info();
     },
     Clear_List(){
@@ -1618,6 +1620,8 @@ export default {
 
       this.waiting_text = "正在组织类比试卷，请稍后..."
       this.waiting = true;
+
+      sessionStorage.setItem("Compare_Page", this.Compare_Page);
 
       // let Analyse_Paper_JSON = {
       //   subject: this.Subject,
