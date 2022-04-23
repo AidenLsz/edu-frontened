@@ -94,7 +94,8 @@ export const scenarios = [{
 
 export const BASE_REQUEST_URL = "https://kg-edu-backend-44-review-quality-la-jktgx0.env.bdaa.pro/v1";
 
-export const getQuestionPair = async (page = 1, size=5, test=false) => {
+export const getQuestionPair = async (page = 1, test=false, size=5) => {
+  console.log(test)
   return commonAjax(`${BASE_REQUEST_URL}/api/get_quality_question_pair`, {
     page,
     size,

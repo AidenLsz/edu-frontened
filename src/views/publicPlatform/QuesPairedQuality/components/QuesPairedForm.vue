@@ -44,6 +44,9 @@ import {periodList, questionTypes, subjectList, questionDatabases, testDatabases
 
 export default {
   name: 'Form',
+  props: {
+    selected: Object,
+  },
   data() {
     return {
       subjectList,
@@ -51,13 +54,6 @@ export default {
       questionTypes,
       questionDatabases,
       testDatabases,
-      selected: {
-        subject: 1,
-        period: 2,
-        questionType: 6,
-        questionDatabase: 0,
-        isTest: true,
-      }
     }
   }
 }

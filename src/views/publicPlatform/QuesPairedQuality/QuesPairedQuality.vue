@@ -21,7 +21,7 @@
     </el-row>
     <h1 class="qp-title">试题标注</h1>
     <div class="qp-form">
-      <ques-paired-form/>
+      <ques-paired-form :selected="options"/>
     </div>
     <div class="qp-confirm">
       <el-button type="primary" icon="el-icon-s-operation">单题评分</el-button>
@@ -35,8 +35,9 @@
       <div class="qp-questions">
         <div id="qp-body__anchor"></div>
         <div v-for="(pair, idx) in questionPairs" :key="pair.question_ID0 + pair.question_ID1" class="qp-question">
-          <ques-paired-header :pair="pair" :idx="idx + 1"/>
+          <ques-paired-header :pair="pair" :idx="idx + 1" :is-test="options.isTest"/>
           <ques-paired-body :prefix="`${idx + 1}`" :left-question="getQuestion(pair.question_ID0)" :right-question="getQuestion(pair.question_ID1)" :figures="figures"/>
+
         </div>
 
         <div class="qp-pagination">
@@ -79,13 +80,19 @@ export default {
       questionPairs: [],
       questions: [],
       figures: [],
+      options: {
+        subject: 1,
+        period: 2,
+        questionType: 6,
+        questionDatabase: 0,
+        isTest: false,
+      }
     }
   },
   methods: {
     async onPair() {
       this.isLoading = true;
-
-      const res = await getQuestionPair(this.pageNum);
+      const res = await getQuestionPair(this.pageNum, this.options.isTest);
       this.questions = res.questions;
       this.questionPairs = res.question_pairs;
       this.pageTotal = res.page_num;

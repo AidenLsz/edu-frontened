@@ -6,11 +6,11 @@
         <div>
           <div class="qp-block qp-sld">
             <p>左题评分({{pair.score0}} 分)</p>
-            <el-slider :show-tooltip="false" :step="1" :max="10" show-stops class="qp-slider" v-model="pair.score0" ></el-slider>
+            <el-slider :show-tooltip="false" :step="1" :max="5" show-stops class="qp-slider" v-model="pair.score0" ></el-slider>
           </div>
           <div class="qp-block qp-sld">
             <p>右题评分({{pair.score1}} 分)</p>
-            <el-slider :show-tooltip="false" :step="1" :max="10" show-stops class="qp-slider" v-model="pair.score1" ></el-slider>
+            <el-slider :show-tooltip="false" :step="1" :max="5" show-stops class="qp-slider" v-model="pair.score1" ></el-slider>
           </div>
         </div>
       </div>
@@ -56,6 +56,7 @@ export default {
   props: {
     pair: Object,
     idx: Number,
+    isTest: Boolean,
   },
   data() {
     return {
@@ -82,11 +83,9 @@ export default {
         this.$message.error(`请选择左题评分`);
       } else if (this.pair.score1 === 0) {
         this.$message.error(`请选择左题评分`);
-      } else if (this.pair.scenario === null) {
-        this.$message.error(`请选择场景`);
       } else {
         try {
-          res = await postQuestionPair(this.pair.question_ID0, this.pair.question_ID1, this.pair.better, this.pair.score0, this.pair.score1, this.pair.scenario);
+          res = await postQuestionPair(this.pair.question_ID0, this.pair.question_ID1, this.pair.better, this.pair.score0, this.pair.score1, this.pair.scenario, this.isTest);
         } catch (e) {
           console.log(e);
           this.isPosting = false;
