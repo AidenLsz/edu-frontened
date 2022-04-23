@@ -1384,6 +1384,8 @@ export default {
     // 再换一组
     Get_Another_Paper(){
       this.Compare_Paper_Questions = [];
+      sessionStorage.setItem("Compare_Page", this.Compare_Page);
+      this.Compare_Page = this.Compare_Page + 1;
       this.$refs.DetailTable.Use_Table_Info();
     },
     Clear_List(){
