@@ -1016,7 +1016,7 @@
 <script>
 
 import Mathdown from '@/common/components/Mathdown'
-import DetailTable from '@/views/paperCombine/components/DetailTable'
+import DetailTable from '@/views/paperCombination/components/DetailTable'
 import {commonAjax} from '@/common/utils/ajax'
 import {LRStrip} from '@/common/utils/strip'
 

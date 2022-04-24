@@ -180,13 +180,13 @@
 </template>
 <script>
 
-import Keyword from '@/views/paperCombine/components/Keyword'
-import KnowledgePoint from '@/views/paperCombine/components/KnowledgePoint'
-import InputQuestion from '@/views/paperCombine/components/InputQuestion'
-import DetailTable from '@/views/paperCombine/components/DetailTable'
-import StartCombine from '@/views/paperCombine/components/StartCombine'
-import FromDatabasePaper from '@/views/paperCombine/components/FromDatabasePaper'
-import AutoCombine from '@/views/paperCombine/components/AutoCombine'
+import Keyword from '@/views/paperCombination/components/Keyword'
+import KnowledgePoint from '@/views/paperCombination/components/KnowledgePoint'
+import InputQuestion from '@/views/paperCombination/components/InputQuestion'
+import DetailTable from '@/views/paperCombination/components/DetailTable'
+import StartCombine from '@/views/paperCombination/components/StartCombine'
+import FromDatabasePaper from '@/views/paperCombination/components/FromDatabasePaper'
+import AutoCombine from '@/views/paperCombination/components/AutoCombine'
 
 import * as echarts from 'echarts';
 
