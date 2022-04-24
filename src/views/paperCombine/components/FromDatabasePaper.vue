@@ -8,7 +8,7 @@
     element-loading-background="rgba(211, 211, 211, 0.4)">
     <!-- 查看分析报告 -->
     <el-dialog
-        :visible.sync="analyseReport"
+        :visible.sync="analysisReport"
         width="90%"
         :modal-append-to-body="false"
         :close-on-click-modal="true"
@@ -16,7 +16,7 @@
         <template slot="title"></template>
         <el-row
           style="margin: 0px">
-          <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
+          <QuestionAnalyse :Ques="analysisData"></QuestionAnalyse>
         </el-row>
     </el-dialog>
     <el-dialog
@@ -270,8 +270,8 @@ export default {
       // 题目是否展开
       Expand_List: [],
       // 单题分析报告
-      analyseReport: false,
-      analyseData: {},
+      analysisReport: false,
+      analysisData: {},
       Refresh: false
     };
   },
@@ -316,7 +316,7 @@ export default {
         stem: "",
         options: [],
         answer: "",
-        analyse: ""
+        analysis: ""
       }
       if(['单选题', '多选题', '判断题'].indexOf(Aim.type) != -1){
         Question_Show_Infos.type = Aim.type;
@@ -344,7 +344,7 @@ export default {
       Question_Show_Infos.options = Aim.options;
       Question_Show_Infos.stem = Aim.stem;
       Question_Show_Infos.answer = Aim.answer;
-      Question_Show_Infos.analyse = Aim.analysis;
+      Question_Show_Infos.analysis = Aim.analysis;
 
       this.$emit("Add_To_Cart", JSON.stringify(Question_Show_Infos));
     },
@@ -360,8 +360,8 @@ export default {
         }
       ).then((data)=>{
         this.Refresh = !this.Refresh;
-        this.analyseData = data.que_dic;
-        this.analyseReport = true;
+        this.analysisData = data.que_dic;
+        this.analysisReport = true;
       })
     },
     // 获取是否应当展开

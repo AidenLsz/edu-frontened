@@ -64,7 +64,7 @@
             </el-col>
             <el-col :span="20">
               <el-row type="flex" justify="start">
-                <Mathdown :content="Checked_Question_Info.analyse" :name="'Checked_Question_Analyse'"></Mathdown>
+                <Mathdown :content="Checked_Question_Info.analysis" :name="'Checked_Question_Analyse'"></Mathdown>
               </el-row>
             </el-col>
           </el-row>
@@ -950,7 +950,7 @@
                           style="margin-bottom: 5px;"
                           @mouseenter.native="Hover_Question(Index, IndexIn)">
                           <Mathdown 
-                            :content="'(' + Question.score + '分) '+ (IndexIn + 1) + '. $ $ '+ Question.stem" 
+                            :content="'(' + Question.score + '分)$ $ '+ Question.stem" 
                             :name="'Question_Stem_' + Index + '_' + IndexIn"></Mathdown>
                         </el-row>
                         <el-row 
@@ -1223,7 +1223,7 @@ export default {
             stem: Question.stem,
             options: Question.options,
             answer: Question.answer,
-            analyse: Question.analysis,
+            analysis: Question.analysis,
             score: this.Combine_Replace_Question_Info.score,
             type: this.Combine_Replace_Question_Info.type
         }
@@ -1240,6 +1240,8 @@ export default {
     },
     // 检索替换题目用的题目
     Search_Replace_Question(){
+
+      console.log("检索替换试题")
 
         this.Extra_Keyword = LRStrip(this.Extra_Keyword);
 
@@ -1274,11 +1276,11 @@ export default {
 
         Param.data=data
 
-        commonAjax(this.backendIP+'/api/search', Param)
+        commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/replace_single_temp', Param)
         .then((data)=>{
+          console.log(data)
             this.Replace_Question_List = data.results
             this.Question_Loading = false;
-            
         }).catch(() => {
             this.$message.error("服务器过忙，请稍后再试。")
             this.Question_Loading = false;
@@ -1384,6 +1386,8 @@ export default {
     // 再换一组
     Get_Another_Paper(){
       this.Compare_Paper_Questions = [];
+      this.Compare_Page = this.Compare_Page + 1;
+      sessionStorage.setItem("Compare_Page", this.Compare_Page);
       this.$refs.DetailTable.Use_Table_Info();
     },
     Clear_List(){
@@ -1412,6 +1416,7 @@ export default {
     },
     // 类比组卷结果检索
     Add_To_Compare_Cart(val){
+      console.log(val)
       let Item = JSON.parse(val)
       let Flag = false;
       for(let i = 0; i < this.Compare_Paper_Questions.length; i++){
@@ -1465,37 +1470,33 @@ export default {
       this.waiting_text = "正在获取分析报告，请稍后..."
       this.waiting = true;
 
-      let Analyse_Paper_JSON = {
-        subject: this.Subject,
-        period: this.Period,
-        title: this.Setting_Info.title,
-        data: []
-      }
+      // let Analyse_Paper_JSON = {
+      //   subject: this.Subject,
+      //   period: this.Period,
+      //   title: this.Setting_Info.title,
+      //   data: []
+      // }
 
-      for(let i = 0; i < this.Question_List.length; i++){
-        let Bundle_Format = {
-          is_longques: 2,
-          desc: this.Question_List[i].type,
-          content: []
-        }
-        for(let j = 0; j < this.Question_List[i].list.length; j++){
-          let Question_Item = {
-            score: this.Question_List[i].list[j].score,
-            stem: this.Question_List[i].list[j].stem,
-            options: this.Question_List[i].list[j].options,
-            answer: this.Question_List[i].list[j].answer,
-            analysis: this.Question_List[i].list[j].analyse
-          }
-          Bundle_Format.content.push(Question_Item)
-        }
-        Analyse_Paper_JSON.data.push(Bundle_Format);
-      }
+      // for(let i = 0; i < this.Question_List.length; i++){
+      //   let Bundle_Format = {
+      //     is_longques: 2,
+      //     desc: this.Question_List[i].type,
+      //     content: []
+      //   }
+      //   for(let j = 0; j < this.Question_List[i].list.length; j++){
+      //     let Question_Item = {
+      //       score: this.Question_List[i].list[j].score,
+      //       stem: this.Question_List[i].list[j].stem,
+      //       options: this.Question_List[i].list[j].options,
+      //       answer: this.Question_List[i].list[j].answer,
+      //       analysis: this.Question_List[i].list[j].analysis
+      //     }
+      //     Bundle_Format.content.push(Question_Item)
+      //   }
+      //   Analyse_Paper_JSON.data.push(Bundle_Format);
+      // }
 
-      commonAjax(this.backendIP+'/api/combinePaperAnalyseReport',
-        {
-          Paper_Data: JSON.stringify(Analyse_Paper_JSON)
-        }
-      ).then((data)=>{
+      commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/detail_table_temp',).then((data)=>{
         let Changing_Info = []
         let Bundle_Item = {}
         for(let Bundle_Index = 0; Bundle_Index < data.sub_question.length; Bundle_Index++){
@@ -1620,37 +1621,35 @@ export default {
       this.waiting_text = "正在组织类比试卷，请稍后..."
       this.waiting = true;
 
-      let Analyse_Paper_JSON = {
-        subject: this.Subject,
-        period: this.Period,
-        title: this.Setting_Info.title,
-        data: []
-      }
+      sessionStorage.setItem("Compare_Page", this.Compare_Page);
 
-      for(let i = 0; i < this.Question_List.length; i++){
-        let Bundle_Format = {
-          is_longques: 2,
-          desc: this.Question_List[i].type,
-          content: []
-        }
-        for(let j = 0; j < this.Question_List[i].list.length; j++){
-          let Question_Item = {
-            score: this.Question_List[i].list[j].score,
-            stem: this.Question_List[i].list[j].stem,
-            options: this.Question_List[i].list[j].options,
-            answer: this.Question_List[i].list[j].answer,
-            analysis: this.Question_List[i].list[j].analyse
-          }
-          Bundle_Format.content.push(Question_Item)
-        }
-        Analyse_Paper_JSON.data.push(Bundle_Format);
-      }
+      // let Analyse_Paper_JSON = {
+      //   subject: this.Subject,
+      //   period: this.Period,
+      //   title: this.Setting_Info.title,
+      //   data: []
+      // }
 
-      commonAjax(this.backendIP+'/api/combinePaperAnalyseReport',
-        {
-          Paper_Data: JSON.stringify(Analyse_Paper_JSON)
-        }
-      ).then((data)=>{
+      // for(let i = 0; i < this.Question_List.length; i++){
+      //   let Bundle_Format = {
+      //     is_longques: 2,
+      //     desc: this.Question_List[i].type,
+      //     content: []
+      //   }
+      //   for(let j = 0; j < this.Question_List[i].list.length; j++){
+      //     let Question_Item = {
+      //       score: this.Question_List[i].list[j].score,
+      //       stem: this.Question_List[i].list[j].stem,
+      //       options: this.Question_List[i].list[j].options,
+      //       answer: this.Question_List[i].list[j].answer,
+      //       analysis: this.Question_List[i].list[j].analysis
+      //     }
+      //     Bundle_Format.content.push(Question_Item)
+      //   }
+      //   Analyse_Paper_JSON.data.push(Bundle_Format);
+      // }
+
+      commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/detail_table_temp',).then((data)=>{
         let Changing_Info = []
         let Bundle_Item = {}
         for(let Bundle_Index = 0; Bundle_Index < data.sub_question.length; Bundle_Index++){
@@ -1986,7 +1985,7 @@ export default {
               stem: this.Question_List[i].list[j].stem,
               options: this.Question_List[i].list[j].options,
               answer: this.Question_List[i].list[j].answer,
-              analysis: this.Question_List[i].list[j].analyse
+              analysis: this.Question_List[i].list[j].analysis
           }
           Questions_Format.questions.push(Question_Item)
         }
@@ -2068,7 +2067,7 @@ export default {
         stem: "",
         options: [],
         answer: "",
-        analyse: ""
+        analysis: ""
       }
       if(['单选题', '多选题', '判断题'].indexOf(Item.type) != -1){
         Question_Show_Infos.type = "选择题";
@@ -2085,7 +2084,7 @@ export default {
       Question_Show_Infos.options = Item.options;
       Question_Show_Infos.stem = Item.stem;
       Question_Show_Infos.answer = Item.answer;
-      Question_Show_Infos.analyse = Item.analysis;
+      Question_Show_Infos.analysis = Item.analysis;
 
       this.Question_List[this.Replace_Question_Bundle_Index].list.splice(this.Replace_Question_Index, 1, Question_Show_Infos);
       this.Replace_Dialog_Show = false;
@@ -2203,7 +2202,7 @@ export default {
             stem: Question.stem,
             options: Question.options,
             answer: Question.answer,
-            analysis: Question.analyse,
+            analysis: Question.analysis,
             score: Question.score,
             type: Question.type,
             knowledgePointInfos: {
