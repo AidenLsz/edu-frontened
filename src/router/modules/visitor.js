@@ -68,6 +68,11 @@ const visitorRouter=[
     component: () => import("@/views/paperCombine/PaperCombine.vue"),
   },
   {
+    path: "/PaperCombination",
+    name: "visitor/PaperCombination",
+    component: () => import("@/views/paperCombination/PaperCombine.vue"),
+  },
+  {
     path: "/answerCard",
     name: "visitor/AnswerCard",
     component: () => import("@/views/paperCombine/AnswerCard"),
