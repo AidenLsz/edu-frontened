@@ -13,7 +13,7 @@
           <span style="font-weight: bold; color: #47A2FF; font-size: 24px">
             欢迎使用
             <template v-if="systemType === 0">
-              智慧教育知识图谱
+              LUNA智慧教育知识图谱
             </template>
             <template v-else-if="systemType === 1">
               智慧考试管理系统

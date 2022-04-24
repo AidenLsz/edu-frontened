@@ -302,7 +302,7 @@
         'sticky-menu': true,
         'Little_Shadow': Get_Current_Path()}" style="height: 70px;">
         <el-row class="NavBarArea Normal_Navbar" type="flex" justify="center">
-          <!-- <el-col :span="4" style="padding-top: 15px;">
+          <el-col :span="4" style="padding-top: 15px;">
             <el-row type="flex" justify="start">
               <img
                 src="@/assets/luna_icon.png"
@@ -312,14 +312,9 @@
                 @click="goToMainPage"
               />
             </el-row>
-          </el-col> -->
-          <el-col :span="24">
+          </el-col>
+          <el-col :span="20">
             <el-row type="flex" justify="end">
-              <!--
-							<el-col :span="4" style="padding-top: 15px;">
-								<el-button type="text" @click="goTolalala" class="navbar">啦啦啦</el-button>
-							</el-col>
-							-->
               <div
                 v-if="$store.state.user.name"
                 class="NarbarItem"
@@ -427,7 +422,7 @@
 
               </div>
 
-              <!-- <div
+              <div
                 style="width: 100px;"
                 class="NarbarItem">
                 <el-button type="text" @click="PublicPlatform" class="navbar"
@@ -440,7 +435,7 @@
                 <el-button type="text" @click="show_members" class="navbar"
                   >成员</el-button
                 >
-              </div> -->
+              </div>
               <div style="width: 1px; height: 18px; margin-top: 25px; border-right: 2px solid #aaa; margin-left: 15px; margin-right: 12px">
 
               </div>
