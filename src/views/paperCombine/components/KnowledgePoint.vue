@@ -25,10 +25,13 @@
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
             </el-row>
-            <el-row type="flex" justify="center" v-show="Subject == '数学' && Period == '高中'">
+            <el-row type="flex" justify="center" v-show="KnowledgeGroup_List.length > 1">
               <el-select v-model="KnowledgeGroup" placeholder="请选择知识体系">
-                <el-option :value="'tiku'" :label="'知识体系v1'"></el-option>
-                <el-option :value="'neea'" :label="'知识体系v2'"></el-option>
+                <el-option 
+                  v-for="KnowledgeSystem in KnowledgeGroup_List" 
+                  :value="KnowledgeSystem.name" 
+                  :label="KnowledgeSystem.view_name"
+                  :key="KnowledgeSystem.view_name"></el-option>
               </el-select>
             </el-row>
             <el-row type="flex" justify="start" style="margin-top: 20px; margin-left: 1.5vw">
@@ -327,6 +330,7 @@ export default {
         },
         // 知识体系名
         KnowledgeGroup: "tiku",
+        KnowledgeGroup_List: [],
         // 知识体系单选或多选
         KnowledgeSelectType: "单选",
         // 知识点交集或并集
@@ -385,6 +389,10 @@ export default {
       }
     },
     KnowledgeGroup(){
+      this.KnowledgeUnitList = [];
+      this.KnowledgeUnitIDList = [];
+      this.KnowledgeUnitLevelList = [];
+      this.$refs.tree.setCheckedKeys([])
       this.Init();
     },
     Period(newVal, oldVal){
@@ -393,6 +401,7 @@ export default {
         this.KnowledgeUnitIDList = [];
         this.KnowledgeUnitLevelList = [];
         this.$refs.tree.setCheckedKeys([])
+        this.Init_KP_System_Name();
         this.Init();
       }
     },
@@ -402,12 +411,14 @@ export default {
         this.KnowledgeUnitIDList = [];
         this.KnowledgeUnitLevelList = [];
         this.$refs.tree.setCheckedKeys([])
+        this.Init_KP_System_Name();
         this.Init();
       }
     },
   },
   mounted() {
       this.initDatabaseList();
+      this.Init_KP_System_Name();
       this.Init();
   },
   methods: {
@@ -536,6 +547,26 @@ export default {
         return label
       }
     },
+    // 获取当前学科学段所能用的知识体系版本
+    Init_KP_System_Name(){
+
+      this.waiting = true;
+
+      let Param = {
+        subject: this.Subject,
+        period: this.Period
+      }
+
+      commonAjax(this.backendIP + '/api/getKnowledgeSystemName', Param)
+        .then((data)=>{
+          this.KnowledgeGroup_List = data;
+          this.KnowledgeGroup = this.KnowledgeGroup_List[0].name;
+        }).catch(()=>{
+
+        }).finally(() => {
+          this.waiting = false;
+        })
+    },
     // 获取知识树
     Init(){
 
@@ -546,10 +577,6 @@ export default {
               "Content-Type": "multipart/form-data"
           },
           emulateJSON: true
-      }
-
-      if(this.Subject != '数学' || this.Period != '高中'){
-        this.KnowledgeGroup = 'tiku'
       }
 
       let param = new FormData();
