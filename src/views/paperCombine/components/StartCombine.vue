@@ -64,7 +64,7 @@
             </el-col>
             <el-col :span="20">
               <el-row type="flex" justify="start">
-                <Mathdown :content="Checked_Question_Info.analysis" :name="'Checked_Question_Analyse'"></Mathdown>
+                <Mathdown :content="Checked_Question_Info.analyse" :name="'Checked_Question_Analyse'"></Mathdown>
               </el-row>
             </el-col>
           </el-row>
@@ -281,6 +281,15 @@
                         v-model="filterText_Question_KPTree">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
+                </el-row>
+                <el-row type="flex" justify="center" v-show="KnowledgeGroup_List.length > 1" style="width: 90%; padding-left: 10%; margin-bottom: 20px;">
+                  <el-select v-model="KnowledgeGroup" placeholder="请选择知识体系">
+                    <el-option 
+                      v-for="KnowledgeSystem in KnowledgeGroup_List" 
+                      :value="KnowledgeSystem.name" 
+                      :label="KnowledgeSystem.view_name"
+                      :key="KnowledgeSystem.view_name"></el-option>
+                  </el-select>
                 </el-row>
                 <el-row type="flex" justify="start">
                     <el-tree 
@@ -941,7 +950,7 @@
                           style="margin-bottom: 5px;"
                           @mouseenter.native="Hover_Question(Index, IndexIn)">
                           <Mathdown 
-                            :content="'(' + Question.score + '分)$ $ '+ Question.stem" 
+                            :content="'(' + Question.score + '分) '+ (IndexIn + 1) + '. $ $ '+ Question.stem" 
                             :name="'Question_Stem_' + Index + '_' + IndexIn"></Mathdown>
                         </el-row>
                         <el-row 
@@ -1158,16 +1167,21 @@ export default {
       Difficulty_List: ['全部', '容易', '较易', '中等', '较难', '困难', "自定义"],
       Page_Index: 1,
       Extra_Keyword: "",
-      // 组卷推荐“翻页”
-      Compare_Page: 1
+      // 筛选知识体系名称
+      KnowledgeGroup: 'tiku',
+      KnowledgeGroup_List: []
     }
   },
   watch:{
     Subject(){
       this.Init_Setting_Info();
+      this.Init_KP_System_Name();
+      this.Init_KP_Tree();
     },
     Period(){
       this.Init_Setting_Info();
+      this.Init_KP_System_Name();
+      this.Init_KP_Tree();
     },
     Export_Setting_Type(){
       this.Init_Setting_CheckBox();
@@ -1175,11 +1189,16 @@ export default {
     filterText_Question_KPTree(val) {
         this.$refs.Question_KPTree.filter(val);
     },
+    KnowledgeGroup(){
+      this.Init_Setting_Info();
+      this.Init_KP_Tree();
+    }
   },
   mounted() {
     this.Init_Setting_CheckBox();
     this.Init_Setting_Info();
     this.Init_User_Database_List();
+    this.Init_KP_System_Name();
     this.Init_KP_Tree();
     this.Init_Database_List();
   },
@@ -1204,7 +1223,7 @@ export default {
             stem: Question.stem,
             options: Question.options,
             answer: Question.answer,
-            analysis: Question.analysis,
+            analyse: Question.analysis,
             score: this.Combine_Replace_Question_Info.score,
             type: this.Combine_Replace_Question_Info.type
         }
@@ -1221,8 +1240,6 @@ export default {
     },
     // 检索替换题目用的题目
     Search_Replace_Question(){
-
-      console.log("检索替换试题")
 
         this.Extra_Keyword = LRStrip(this.Extra_Keyword);
 
@@ -1241,6 +1258,7 @@ export default {
             "content": this.Extra_Keyword.length > 0 ? this.Extra_Keyword : this.Combine_Replace_Question_Info.stem.substring(0, 30),
             "size": 5,
             "database": this.filterKPTree_Question.Database,
+            "knowledge_version": this.KnowledgeGroup,
             "page_count": this.Page_Index,
             "subject": [this.Subject],
             "period": [this.Period],
@@ -1256,11 +1274,11 @@ export default {
 
         Param.data=data
 
-        commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/replace_single_temp', Param)
+        commonAjax(this.backendIP+'/api/search', Param)
         .then((data)=>{
-          console.log(data)
             this.Replace_Question_List = data.results
             this.Question_Loading = false;
+            
         }).catch(() => {
             this.$message.error("服务器过忙，请稍后再试。")
             this.Question_Loading = false;
@@ -1366,8 +1384,6 @@ export default {
     // 再换一组
     Get_Another_Paper(){
       this.Compare_Paper_Questions = [];
-      this.Compare_Page = this.Compare_Page + 1;
-      sessionStorage.setItem("Compare_Page", this.Compare_Page);
       this.$refs.DetailTable.Use_Table_Info();
     },
     Clear_List(){
@@ -1396,7 +1412,6 @@ export default {
     },
     // 类比组卷结果检索
     Add_To_Compare_Cart(val){
-      console.log(val)
       let Item = JSON.parse(val)
       let Flag = false;
       for(let i = 0; i < this.Compare_Paper_Questions.length; i++){
@@ -1450,33 +1465,37 @@ export default {
       this.waiting_text = "正在获取分析报告，请稍后..."
       this.waiting = true;
 
-      // let Analyse_Paper_JSON = {
-      //   subject: this.Subject,
-      //   period: this.Period,
-      //   title: this.Setting_Info.title,
-      //   data: []
-      // }
+      let Analyse_Paper_JSON = {
+        subject: this.Subject,
+        period: this.Period,
+        title: this.Setting_Info.title,
+        data: []
+      }
 
-      // for(let i = 0; i < this.Question_List.length; i++){
-      //   let Bundle_Format = {
-      //     is_longques: 2,
-      //     desc: this.Question_List[i].type,
-      //     content: []
-      //   }
-      //   for(let j = 0; j < this.Question_List[i].list.length; j++){
-      //     let Question_Item = {
-      //       score: this.Question_List[i].list[j].score,
-      //       stem: this.Question_List[i].list[j].stem,
-      //       options: this.Question_List[i].list[j].options,
-      //       answer: this.Question_List[i].list[j].answer,
-      //       analysis: this.Question_List[i].list[j].analysis
-      //     }
-      //     Bundle_Format.content.push(Question_Item)
-      //   }
-      //   Analyse_Paper_JSON.data.push(Bundle_Format);
-      // }
+      for(let i = 0; i < this.Question_List.length; i++){
+        let Bundle_Format = {
+          is_longques: 2,
+          desc: this.Question_List[i].type,
+          content: []
+        }
+        for(let j = 0; j < this.Question_List[i].list.length; j++){
+          let Question_Item = {
+            score: this.Question_List[i].list[j].score,
+            stem: this.Question_List[i].list[j].stem,
+            options: this.Question_List[i].list[j].options,
+            answer: this.Question_List[i].list[j].answer,
+            analysis: this.Question_List[i].list[j].analyse
+          }
+          Bundle_Format.content.push(Question_Item)
+        }
+        Analyse_Paper_JSON.data.push(Bundle_Format);
+      }
 
-      commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/detail_table_temp',).then((data)=>{
+      commonAjax(this.backendIP+'/api/combinePaperAnalyseReport',
+        {
+          Paper_Data: JSON.stringify(Analyse_Paper_JSON)
+        }
+      ).then((data)=>{
         let Changing_Info = []
         let Bundle_Item = {}
         for(let Bundle_Index = 0; Bundle_Index < data.sub_question.length; Bundle_Index++){
@@ -1601,35 +1620,37 @@ export default {
       this.waiting_text = "正在组织类比试卷，请稍后..."
       this.waiting = true;
 
-      sessionStorage.setItem("Compare_Page", this.Compare_Page);
+      let Analyse_Paper_JSON = {
+        subject: this.Subject,
+        period: this.Period,
+        title: this.Setting_Info.title,
+        data: []
+      }
 
-      // let Analyse_Paper_JSON = {
-      //   subject: this.Subject,
-      //   period: this.Period,
-      //   title: this.Setting_Info.title,
-      //   data: []
-      // }
+      for(let i = 0; i < this.Question_List.length; i++){
+        let Bundle_Format = {
+          is_longques: 2,
+          desc: this.Question_List[i].type,
+          content: []
+        }
+        for(let j = 0; j < this.Question_List[i].list.length; j++){
+          let Question_Item = {
+            score: this.Question_List[i].list[j].score,
+            stem: this.Question_List[i].list[j].stem,
+            options: this.Question_List[i].list[j].options,
+            answer: this.Question_List[i].list[j].answer,
+            analysis: this.Question_List[i].list[j].analyse
+          }
+          Bundle_Format.content.push(Question_Item)
+        }
+        Analyse_Paper_JSON.data.push(Bundle_Format);
+      }
 
-      // for(let i = 0; i < this.Question_List.length; i++){
-      //   let Bundle_Format = {
-      //     is_longques: 2,
-      //     desc: this.Question_List[i].type,
-      //     content: []
-      //   }
-      //   for(let j = 0; j < this.Question_List[i].list.length; j++){
-      //     let Question_Item = {
-      //       score: this.Question_List[i].list[j].score,
-      //       stem: this.Question_List[i].list[j].stem,
-      //       options: this.Question_List[i].list[j].options,
-      //       answer: this.Question_List[i].list[j].answer,
-      //       analysis: this.Question_List[i].list[j].analysis
-      //     }
-      //     Bundle_Format.content.push(Question_Item)
-      //   }
-      //   Analyse_Paper_JSON.data.push(Bundle_Format);
-      // }
-
-      commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/detail_table_temp',).then((data)=>{
+      commonAjax(this.backendIP+'/api/combinePaperAnalyseReport',
+        {
+          Paper_Data: JSON.stringify(Analyse_Paper_JSON)
+        }
+      ).then((data)=>{
         let Changing_Info = []
         let Bundle_Item = {}
         for(let Bundle_Index = 0; Bundle_Index < data.sub_question.length; Bundle_Index++){
@@ -1763,6 +1784,7 @@ export default {
         "period": [this.Period],
         "difficulty": [Info.difficulty[0], Info.difficulty[1]],
         "type": type,
+        "knowledge_version": this.KnowledgeGroup,
         "knowledge": knowledge_Dict
       }
 
@@ -1872,6 +1894,26 @@ export default {
         }
       }
     },
+    // 获取当前学科学段所能用的知识体系版本
+    Init_KP_System_Name(){
+
+      this.waiting = true;
+
+      let Param = {
+        subject: this.Subject,
+        period: this.Period
+      }
+
+      commonAjax(this.backendIP + '/api/getKnowledgeSystemName', Param)
+        .then((data)=>{
+          this.KnowledgeGroup_List = data;
+          this.KnowledgeGroup = this.KnowledgeGroup_List[0].name;
+        }).catch(()=>{
+
+        }).finally(() => {
+          this.waiting = false;
+        })
+    },
     // 获取知识树
     Init_KP_Tree(){
 
@@ -1882,9 +1924,15 @@ export default {
           emulateJSON: true
       }
 
+      this.Combine_Replace_Question_Info.knowledgePointInfos = {
+        ID: [],
+        Label: [],
+        Layer: []
+      }
+
       let param = new FormData();
 
-      param.append('system', 'tiku');
+      param.append('system', this.KnowledgeGroup);
       param.append('subject', this.Subject);
       param.append('period', this.Period);
 
@@ -1892,6 +1940,7 @@ export default {
           .post(this.backendIP + "/api/getKnowledgeSystem", param, config)
           .then(function(data) {
             this.TreeData = data.body.knowledge_system
+            this.$refs.Question_KPTree.setCheckedKeys([])
           })
     },
     // 开始导出用于下载的数据
@@ -1937,7 +1986,7 @@ export default {
               stem: this.Question_List[i].list[j].stem,
               options: this.Question_List[i].list[j].options,
               answer: this.Question_List[i].list[j].answer,
-              analysis: this.Question_List[i].list[j].analysis
+              analysis: this.Question_List[i].list[j].analyse
           }
           Questions_Format.questions.push(Question_Item)
         }
@@ -2019,7 +2068,7 @@ export default {
         stem: "",
         options: [],
         answer: "",
-        analysis: ""
+        analyse: ""
       }
       if(['单选题', '多选题', '判断题'].indexOf(Item.type) != -1){
         Question_Show_Infos.type = "选择题";
@@ -2036,7 +2085,7 @@ export default {
       Question_Show_Infos.options = Item.options;
       Question_Show_Infos.stem = Item.stem;
       Question_Show_Infos.answer = Item.answer;
-      Question_Show_Infos.analysis = Item.analysis;
+      Question_Show_Infos.analyse = Item.analysis;
 
       this.Question_List[this.Replace_Question_Bundle_Index].list.splice(this.Replace_Question_Index, 1, Question_Show_Infos);
       this.Replace_Dialog_Show = false;
@@ -2079,53 +2128,53 @@ export default {
     },
     // 准备开始做一下“换一题”
     // 检索试题内容
-    replace_with_another_question(Index, IndexIn) {
+    // replace_with_another_question(Index, IndexIn) {
 
-        this.Replace_Dialog_Show = true;
-        this.loading = true;
+    //     this.Replace_Dialog_Show = true;
+    //     this.loading = true;
 
-        let param = {}
+    //     let param = {}
 
-        let type = [];
-        if(this.Question_List[Index].list[IndexIn].type == "选择题"){
-          type = ["单选题", "多选题", "判断题"]
-        }else if(this.Question_List[Index].list[IndexIn].type == "填空题"){
-          type = ["填空题"]
-        }else if(this.Question_List[Index].list[IndexIn].type == "解答题"){
-          type = ["简答题", "计算题"]
-        }else{
-          type = [this.Question_List[Index].list[IndexIn].type]
-        }
+    //     let type = [];
+    //     if(this.Question_List[Index].list[IndexIn].type == "选择题"){
+    //       type = ["单选题", "多选题", "判断题"]
+    //     }else if(this.Question_List[Index].list[IndexIn].type == "填空题"){
+    //       type = ["填空题"]
+    //     }else if(this.Question_List[Index].list[IndexIn].type == "解答题"){
+    //       type = ["简答题", "计算题"]
+    //     }else{
+    //       type = [this.Question_List[Index].list[IndexIn].type]
+    //     }
 
-        var data = JSON.stringify({
-          "content": this.Question_List[Index].list[IndexIn].stem,
-          "size": 6,
-          "database": this.databaseAim,
-          "page_count": 1,
-          "subject": [this.Subject],
-          "period": [this.Period],
-          "difficulty": [0.0, 1.0],
-          "type": type,
-          "semantic": 0
-        })
+    //     var data = JSON.stringify({
+    //       "content": this.Question_List[Index].list[IndexIn].stem,
+    //       "size": 6,
+    //       "database": this.databaseAim,
+    //       "page_count": 1,
+    //       "subject": [this.Subject],
+    //       "period": [this.Period],
+    //       "difficulty": [0.0, 1.0],
+    //       "type": type,
+    //       "semantic": 0
+    //     })
 
-        // param.append("data", data);
-        param.data=data
+    //     // param.append("data", data);
+    //     param.data=data
 
-        commonAjax(this.backendIP+'/api/search', param)
-        .then((data)=>{
-            this.Replace_Question_List = [];
-            for(var i = 1; i < data.results.length; i++){
-                this.Replace_Question_List.push(data.results[i])
-            }
-            this.Replace_Question_Bundle_Index = Index;
-            this.Replace_Question_Index = IndexIn;
-            this.loading = false
-        }).catch(() => {
-            this.$message.error("服务器过忙，请稍后再试。")
-            this.loading = false;
-        })
-    },
+    //     commonAjax(this.backendIP+'/api/search', param)
+    //     .then((data)=>{
+    //         this.Replace_Question_List = [];
+    //         for(var i = 1; i < data.results.length; i++){
+    //             this.Replace_Question_List.push(data.results[i])
+    //         }
+    //         this.Replace_Question_Bundle_Index = Index;
+    //         this.Replace_Question_Index = IndexIn;
+    //         this.loading = false
+    //     }).catch(() => {
+    //         this.$message.error("服务器过忙，请稍后再试。")
+    //         this.loading = false;
+    //     })
+    // },
     // 检索难度和知识点用于替换
     Get_Question_Difficulty_And_KP(Index, IndexIn){
 
@@ -2140,6 +2189,7 @@ export default {
         "Question_Data": JSON.stringify({
           "subject": this.Subject,
           "period": this.Period,
+          "system": this.KnowledgeGroup,
           "questions": [{
             "stem": Question.stem
           }]
@@ -2153,7 +2203,7 @@ export default {
             stem: Question.stem,
             options: Question.options,
             answer: Question.answer,
-            analysis: Question.analysis,
+            analysis: Question.analyse,
             score: Question.score,
             type: Question.type,
             knowledgePointInfos: {

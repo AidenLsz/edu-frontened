@@ -2,7 +2,7 @@
   <div style=" margin-top: 5vh; margin-bottom: 5vh;">
     <!-- 查看分析报告 -->
     <el-dialog
-        :visible.sync="analysisReport"
+        :visible.sync="analyseReport"
         width="90%"
         :modal-append-to-body="false"
         :close-on-click-modal="true"
@@ -10,7 +10,7 @@
         <template slot="title"></template>
         <el-row
           style="margin: 0px">
-          <QuestionAnalyse :Ques="analysisData"></QuestionAnalyse>
+          <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
         </el-row>
     </el-dialog>
     <!-- 搜索框行 -->
@@ -25,10 +25,13 @@
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
             </el-row>
-            <el-row type="flex" justify="center" style="display: none">
+            <el-row type="flex" justify="center" v-show="KnowledgeGroup_List.length > 1">
               <el-select v-model="KnowledgeGroup" placeholder="请选择知识体系">
-                <el-option :value="'KnowledgeGroup_1'" :label="'知识体系一号'"></el-option>
-                <el-option :value="'KnowledgeGroup_2'" :label="'知识体系二号'"></el-option>
+                <el-option 
+                  v-for="KnowledgeSystem in KnowledgeGroup_List" 
+                  :value="KnowledgeSystem.name" 
+                  :label="KnowledgeSystem.view_name"
+                  :key="KnowledgeSystem.view_name"></el-option>
               </el-select>
             </el-row>
             <el-row type="flex" justify="start" style="margin-top: 20px; margin-left: 1.5vw">
@@ -326,7 +329,8 @@ export default {
           label: 'label'
         },
         // 知识体系名
-        KnowledgeGroup: "KnowledgeGroup_1",
+        KnowledgeGroup: "tiku",
+        KnowledgeGroup_List: [],
         // 知识体系单选或多选
         KnowledgeSelectType: "单选",
         // 知识点交集或并集
@@ -336,9 +340,9 @@ export default {
         // 刷新分析报告
         Refresh: false,
         // 打开分析报告
-        analysisReport: false,
+        analyseReport: false,
         // 分析数据
-        analysisData: {},
+        analyseData: {},
         // 复杂输入框是否打开
         complexInput: false,
         // 页码
@@ -384,12 +388,20 @@ export default {
         this.KnowledgeUnitLevelList.splice(0, this.KnowledgeUnitLevelList.length)
       }
     },
+    KnowledgeGroup(){
+      this.KnowledgeUnitList = [];
+      this.KnowledgeUnitIDList = [];
+      this.KnowledgeUnitLevelList = [];
+      this.$refs.tree.setCheckedKeys([])
+      this.Init();
+    },
     Period(newVal, oldVal){
       if(newVal!= oldVal){
         this.KnowledgeUnitList = [];
         this.KnowledgeUnitIDList = [];
         this.KnowledgeUnitLevelList = [];
         this.$refs.tree.setCheckedKeys([])
+        this.Init_KP_System_Name();
         this.Init();
       }
     },
@@ -399,12 +411,14 @@ export default {
         this.KnowledgeUnitIDList = [];
         this.KnowledgeUnitLevelList = [];
         this.$refs.tree.setCheckedKeys([])
+        this.Init_KP_System_Name();
         this.Init();
       }
     },
   },
   mounted() {
       this.initDatabaseList();
+      this.Init_KP_System_Name();
       this.Init();
   },
   methods: {
@@ -461,6 +475,7 @@ export default {
           "subject": [this.Subject],
           "period": [this.Period],
           "difficulty": this.filterRecord.difficulty,
+          "knowledge_version": this.KnowledgeGroup,
           "type": type,
           "knowledge": {
             "knowledge_list": kl,
@@ -532,6 +547,26 @@ export default {
         return label
       }
     },
+    // 获取当前学科学段所能用的知识体系版本
+    Init_KP_System_Name(){
+
+      this.waiting = true;
+
+      let Param = {
+        subject: this.Subject,
+        period: this.Period
+      }
+
+      commonAjax(this.backendIP + '/api/getKnowledgeSystemName', Param)
+        .then((data)=>{
+          this.KnowledgeGroup_List = data;
+          this.KnowledgeGroup = this.KnowledgeGroup_List[0].name;
+        }).catch(()=>{
+
+        }).finally(() => {
+          this.waiting = false;
+        })
+    },
     // 获取知识树
     Init(){
 
@@ -546,7 +581,7 @@ export default {
 
       let param = new FormData();
 
-      param.append('system', 'tiku');
+      param.append('system', this.KnowledgeGroup);
       param.append('subject', this.Subject);
       param.append('period', this.Period);
 
@@ -601,7 +636,7 @@ export default {
           stem: "",
           options: [],
           answer: "",
-          analysis: ""
+          analyse: ""
         }
         if(['单选题', '多选题', '判断题'].indexOf(Aim.type) != -1){
           Question_Show_Infos.type = Aim.type;
@@ -618,7 +653,7 @@ export default {
         Question_Show_Infos.options = Aim.options;
         Question_Show_Infos.stem = Aim.stem;
         Question_Show_Infos.answer = Aim.answer;
-        Question_Show_Infos.analysis = Aim.analysis;
+        Question_Show_Infos.analyse = Aim.analysis;
         
         this.$emit("Add_To_Cart", JSON.stringify(Question_Show_Infos));
       },
@@ -793,8 +828,8 @@ export default {
         }
       ).then((data)=>{
         this.Refresh = !this.Refresh;
-        this.analysisData = data.que_dic;
-        this.analysisReport = true;
+        this.analyseData = data.que_dic;
+        this.analyseReport = true;
       })
     },
   },

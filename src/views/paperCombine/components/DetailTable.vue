@@ -118,6 +118,15 @@
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
             </el-row>
+            <el-row type="flex" justify="center" v-show="KnowledgeGroup_List.length > 1">
+              <el-select v-model="KnowledgeGroup" placeholder="请选择知识体系" style="width: 94%">
+                <el-option 
+                  v-for="KnowledgeSystem in KnowledgeGroup_List" 
+                  :value="KnowledgeSystem.name" 
+                  :label="KnowledgeSystem.view_name"
+                  :key="KnowledgeSystem.view_name"></el-option>
+              </el-select>
+            </el-row>
             <el-row type="flex" justify="start" style="margin-top: 20px; margin-left: 1.5vw">
               <label style="margin-top: -3px; margin-right: 10px;">
                 选择方式：
@@ -410,7 +419,7 @@
             <i class="el-icon-circle-plus" style="margin-top: 40px; margin-right: 20px;"></i> 添加大题
           </el-row>
           <el-row type="flex" justify="center" style="margin-top: 30px;">
-            <el-button type="primary" @click="Use_Table_Info(-1)">生成试卷</el-button>
+            <el-button type="primary" @click="Use_Table_Info()">生成试卷</el-button>
           </el-row>
         </el-col>
         <el-col :span="5" :offset="1" style="padding: 20px 30px;" class="Shadow_Border">
@@ -531,7 +540,9 @@ export default {
       // 用于暂存要发送到主页面的试题
       Ques_List: [],
       // 用于进行检索的信息保存
-      Searching_Question_Info: []
+      Searching_Question_Info: [],
+      KnowledgeGroup: 'tiku',
+      KnowledgeGroup_List: []
     }
   },
   watch:{
@@ -567,6 +578,7 @@ export default {
       if(newVal!= oldVal){
         this.Edit_Bundle_Dialog = false;
         this.Editing_Reset();
+        this.Init_KP_System_Name();
         this.Init();
       }
     },
@@ -574,11 +586,20 @@ export default {
       if(newVal!= oldVal){
         this.Edit_Bundle_Dialog = false;
         this.Editing_Reset();
+        this.Init_KP_System_Name();
         this.Init();
       }
     },
+    KnowledgeGroup(){
+      this.$refs.tree.setCheckedKeys([])
+      this.Editing_Info.knowledgePoints = [];
+      this.Editing_Info.knowledgePointsIDs = [];
+      this.Editing_Info.knowledgePointsLevels = [];
+      this.Init();
+    }
   },
   mounted() {
+    
     if(sessionStorage.getItem("Table_Info")){
       this.Table_Info = JSON.parse(sessionStorage.getItem("Table_Info"))
     }
@@ -592,7 +613,7 @@ export default {
         this.Editing_Reset();
       }, 100)
     }
-    
+    this.Init_KP_System_Name();
     this.Init();
   },
   methods: {
@@ -648,7 +669,7 @@ export default {
           "subject": [this.Subject],
           "period": [this.Period],
           "difficulty": [parseFloat(Info.difficulty[0]), parseFloat(Info.difficulty[1])],
-          // "difficulty": [0, 1],
+          "knowledge_version": this.KnowledgeGroup,
           "type": type,
           "knowledge": knowledge_Dict,
           "semantic": 0
@@ -669,7 +690,7 @@ export default {
           stem: Aim.stem,
           options: Aim.options,
           answer: Aim.answer,
-          analysis: Aim.analysis
+          analyse: Aim.analysis
         }
         
         this.Ques_List.push(Question_Show_Infos)
@@ -734,10 +755,9 @@ export default {
           }
         }
         this.$emit("Clear_List", true)
-        let Param = {
-          page: (sessionStorage.getItem("Compare_Page") ? sessionStorage.getItem("Compare_Page") : 1)
-        }
-        commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/compare_combine_temp', Param)
+        commonAjax(this.backendIP+'/api/detail_table_generate', {
+          'detail_table': JSON.stringify(this.Searching_Question_Info, null, 4)
+        })
         .then((data)=>{
           for(let i = 0; i < data.length; i++){
             this.Add_New_Ques_To_Cart(data[i])
@@ -967,6 +987,25 @@ export default {
             }
         })
     },
+    Init_KP_System_Name(){
+
+      this.waiting = true;
+
+      let Param = {
+        subject: this.Subject,
+        period: this.Period
+      }
+
+      commonAjax(this.backendIP + '/api/getKnowledgeSystemName', Param)
+        .then((data)=>{
+          this.KnowledgeGroup_List = data;
+          this.KnowledgeGroup = this.KnowledgeGroup_List[0].name;
+        }).catch(()=>{
+
+        }).finally(() => {
+          this.waiting = false;
+        })
+    },
     // 获取知识树
     Init(){
 
@@ -980,8 +1019,7 @@ export default {
       }
 
       let param = new FormData();
-
-      param.append('system', 'tiku');
+      param.append('system', this.KnowledgeGroup);
       param.append('subject', this.Subject);
       param.append('period', this.Period);
 
