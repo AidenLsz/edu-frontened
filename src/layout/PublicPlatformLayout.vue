@@ -2,7 +2,7 @@
   <div style="min-width: 1440px" id="app">
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <div class="header" style="height: 80px">
-      <div class="logo">
+      <!-- <div class="logo">
         <img
           src="@/assets/luna_icon.png"
           height="100%"
@@ -14,7 +14,7 @@
       <div id="ailab" @click="goToAILab">
         <p>AI实验室</p>
       </div>
-      <div class="vertical_line"></div>
+      <div class="vertical_line"></div> -->
       <div class="page">
         <el-button
           type="text"

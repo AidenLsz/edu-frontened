@@ -19,7 +19,7 @@
                 <i class="el-icon-question"></i>
               </span>
             </el-breadcrumb-item>
-          </el-breadcrumb>
+          </el-breadcrumb>“”
         </el-col>
       </el-row> -->
       <instruction ref="instruction" />
@@ -693,7 +693,7 @@ export default {
       this.loading = false;
     },
     // 提交评估按钮，向后端发送请求
-    submit() {
+    async submit() {
       if (this.checkList.length === 0) {
         return;
       }
@@ -736,7 +736,7 @@ export default {
       if (this.checkList.indexOf("难度") > -1) {
         // 请求难度属性接口
         
-        this.sleep(2000)
+        await this.sleep(200)
         let diff = 0.68
         this.difficulty_result = parseFloat(diff).toFixed(2);
         this.Init_gauge("gauge1", "难度", this.difficulty_result);
@@ -745,7 +745,7 @@ export default {
       if (this.checkList.indexOf("区分度") > -1) {
         
         // 请求区分度属性接口
-        this.sleep(2000)
+        await this.sleep(200)
         let disc = 0.71
         this.disc_result = parseFloat(disc).toFixed(2);
         this.Init_gauge("gauge2", "区分度", this.disc_result);
@@ -755,7 +755,7 @@ export default {
       if (this.checkList.indexOf("信度") > -1) {
         // 请求信度属性接口
         
-        this.sleep(2000)
+        await this.sleep(200)
         let rel = 0.55
         this.rel_result = parseFloat(rel).toFixed(2);
         this.Init_gauge("gauge3", "信度", this.rel_result);
@@ -766,13 +766,13 @@ export default {
       if (this.checkList.indexOf("素养") > -1) {
         // 请求知识点属性接口
         
-        this.sleep(2000)
+        await this.sleep(200)
         this.lp_result = '理性思维';
         this.loading = false;
       }
       if (this.checkList.indexOf("知识点") > -1) {
         // 请求知识点属性接口
-        this.sleep(10000)
+        await this.sleep(800);
         let knowledge_point = {
           kp: ["三角函数", "函数图像的应用", "常用逻辑用语"],
           kp_layer:[
