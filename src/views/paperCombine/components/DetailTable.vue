@@ -599,6 +599,7 @@ export default {
     }
   },
   mounted() {
+    
     if(sessionStorage.getItem("Table_Info")){
       this.Table_Info = JSON.parse(sessionStorage.getItem("Table_Info"))
     }
@@ -612,7 +613,7 @@ export default {
         this.Editing_Reset();
       }, 100)
     }
-    
+    this.Init_KP_System_Name();
     this.Init();
   },
   methods: {

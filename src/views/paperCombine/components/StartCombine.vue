@@ -282,7 +282,6 @@
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-row>
-                 "
                 <el-row type="flex" justify="center" v-show="KnowledgeGroup_List.length > 1" style="width: 90%; padding-left: 10%; margin-bottom: 20px;">
                   <el-select v-model="KnowledgeGroup" placeholder="请选择知识体系">
                     <el-option 
@@ -1200,6 +1199,7 @@ export default {
     this.Init_Setting_CheckBox();
     this.Init_Setting_Info();
     this.Init_User_Database_List();
+    this.Init_KP_System_Name();
     this.Init_KP_Tree();
     this.Init_Database_List();
   },
