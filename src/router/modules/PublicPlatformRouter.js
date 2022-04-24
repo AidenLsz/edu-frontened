@@ -9,6 +9,11 @@ const PublicPlatformRouter = [
     component: () => import("@/views/publicPlatform/Estimate.vue"),
   },
   {
+    path: "QuesEstimate",
+    name: "pb/QuesEstimate",
+    component: () => import("@/views/publicPlatform/QuesEstimate.vue"),
+  },
+  {
     path: "segmentation",
     name: "pb/Segmentation",
     component: () => import("@/views/publicPlatform/Segmentation.vue"),
