@@ -282,6 +282,12 @@
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-row>
+                <el-row type="flex" justify="center" v-show="Subject == '数学' && Period == '高中'" style="width: 90%; padding-left: 10%; margin-bottom: 20px;">
+                  <el-select v-model="KnowledgeGroup" placeholder="请选择知识体系">
+                    <el-option :value="'tiku'" :label="'知识体系v1'"></el-option>
+                    <el-option :value="'neea'" :label="'知识体系v2'"></el-option>
+                  </el-select>
+                </el-row>
                 <el-row type="flex" justify="start">
                     <el-tree 
                         :data="TreeData"
@@ -1157,15 +1163,19 @@ export default {
       // 难度筛选列表
       Difficulty_List: ['全部', '容易', '较易', '中等', '较难', '困难', "自定义"],
       Page_Index: 1,
-      Extra_Keyword: ""
+      Extra_Keyword: "",
+      // 筛选知识体系名称
+      KnowledgeGroup: 'tiku'
     }
   },
   watch:{
     Subject(){
       this.Init_Setting_Info();
+      this.Init_KP_Tree();
     },
     Period(){
       this.Init_Setting_Info();
+      this.Init_KP_Tree();
     },
     Export_Setting_Type(){
       this.Init_Setting_CheckBox();
@@ -1173,6 +1183,10 @@ export default {
     filterText_Question_KPTree(val) {
         this.$refs.Question_KPTree.filter(val);
     },
+    KnowledgeGroup(){
+      this.Init_Setting_Info();
+      this.Init_KP_Tree();
+    }
   },
   mounted() {
     this.Init_Setting_CheckBox();
@@ -1237,6 +1251,7 @@ export default {
             "content": this.Extra_Keyword.length > 0 ? this.Extra_Keyword : this.Combine_Replace_Question_Info.stem.substring(0, 30),
             "size": 5,
             "database": this.filterKPTree_Question.Database,
+            "knowledge_version": this.KnowledgeGroup,
             "page_count": this.Page_Index,
             "subject": [this.Subject],
             "period": [this.Period],
@@ -1762,6 +1777,7 @@ export default {
         "period": [this.Period],
         "difficulty": [Info.difficulty[0], Info.difficulty[1]],
         "type": type,
+        "knowledge_version": this.KnowledgeGroup,
         "knowledge": knowledge_Dict
       }
 
@@ -1881,9 +1897,19 @@ export default {
           emulateJSON: true
       }
 
+      this.Combine_Replace_Question_Info.knowledgePointInfos = {
+        ID: [],
+        Label: [],
+        Layer: []
+      }
+
       let param = new FormData();
 
-      param.append('system', 'tiku');
+      if(this.Subject != '数学' || this.Period != '高中'){
+        this.KnowledgeGroup = 'tiku'
+      }
+
+      param.append('system', this.KnowledgeGroup);
       param.append('subject', this.Subject);
       param.append('period', this.Period);
 
@@ -1891,6 +1917,7 @@ export default {
           .post(this.backendIP + "/api/getKnowledgeSystem", param, config)
           .then(function(data) {
             this.TreeData = data.body.knowledge_system
+            this.$refs.Question_KPTree.setCheckedKeys([])
           })
     },
     // 开始导出用于下载的数据
@@ -2078,53 +2105,53 @@ export default {
     },
     // 准备开始做一下“换一题”
     // 检索试题内容
-    replace_with_another_question(Index, IndexIn) {
+    // replace_with_another_question(Index, IndexIn) {
 
-        this.Replace_Dialog_Show = true;
-        this.loading = true;
+    //     this.Replace_Dialog_Show = true;
+    //     this.loading = true;
 
-        let param = {}
+    //     let param = {}
 
-        let type = [];
-        if(this.Question_List[Index].list[IndexIn].type == "选择题"){
-          type = ["单选题", "多选题", "判断题"]
-        }else if(this.Question_List[Index].list[IndexIn].type == "填空题"){
-          type = ["填空题"]
-        }else if(this.Question_List[Index].list[IndexIn].type == "解答题"){
-          type = ["简答题", "计算题"]
-        }else{
-          type = [this.Question_List[Index].list[IndexIn].type]
-        }
+    //     let type = [];
+    //     if(this.Question_List[Index].list[IndexIn].type == "选择题"){
+    //       type = ["单选题", "多选题", "判断题"]
+    //     }else if(this.Question_List[Index].list[IndexIn].type == "填空题"){
+    //       type = ["填空题"]
+    //     }else if(this.Question_List[Index].list[IndexIn].type == "解答题"){
+    //       type = ["简答题", "计算题"]
+    //     }else{
+    //       type = [this.Question_List[Index].list[IndexIn].type]
+    //     }
 
-        var data = JSON.stringify({
-          "content": this.Question_List[Index].list[IndexIn].stem,
-          "size": 6,
-          "database": this.databaseAim,
-          "page_count": 1,
-          "subject": [this.Subject],
-          "period": [this.Period],
-          "difficulty": [0.0, 1.0],
-          "type": type,
-          "semantic": 0
-        })
+    //     var data = JSON.stringify({
+    //       "content": this.Question_List[Index].list[IndexIn].stem,
+    //       "size": 6,
+    //       "database": this.databaseAim,
+    //       "page_count": 1,
+    //       "subject": [this.Subject],
+    //       "period": [this.Period],
+    //       "difficulty": [0.0, 1.0],
+    //       "type": type,
+    //       "semantic": 0
+    //     })
 
-        // param.append("data", data);
-        param.data=data
+    //     // param.append("data", data);
+    //     param.data=data
 
-        commonAjax(this.backendIP+'/api/search', param)
-        .then((data)=>{
-            this.Replace_Question_List = [];
-            for(var i = 1; i < data.results.length; i++){
-                this.Replace_Question_List.push(data.results[i])
-            }
-            this.Replace_Question_Bundle_Index = Index;
-            this.Replace_Question_Index = IndexIn;
-            this.loading = false
-        }).catch(() => {
-            this.$message.error("服务器过忙，请稍后再试。")
-            this.loading = false;
-        })
-    },
+    //     commonAjax(this.backendIP+'/api/search', param)
+    //     .then((data)=>{
+    //         this.Replace_Question_List = [];
+    //         for(var i = 1; i < data.results.length; i++){
+    //             this.Replace_Question_List.push(data.results[i])
+    //         }
+    //         this.Replace_Question_Bundle_Index = Index;
+    //         this.Replace_Question_Index = IndexIn;
+    //         this.loading = false
+    //     }).catch(() => {
+    //         this.$message.error("服务器过忙，请稍后再试。")
+    //         this.loading = false;
+    //     })
+    // },
     // 检索难度和知识点用于替换
     Get_Question_Difficulty_And_KP(Index, IndexIn){
 
@@ -2139,6 +2166,7 @@ export default {
         "Question_Data": JSON.stringify({
           "subject": this.Subject,
           "period": this.Period,
+          "system": this.KnowledgeGroup,
           "questions": [{
             "stem": Question.stem
           }]

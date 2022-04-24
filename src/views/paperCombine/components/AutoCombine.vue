@@ -15,6 +15,12 @@
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
             </el-row>
+            <el-row type="flex" justify="center" v-show="Subject == '数学' && Period == '高中'">
+              <el-select v-model="KnowledgeGroup" placeholder="请选择知识体系">
+                <el-option :value="'tiku'" :label="'知识体系v1'"></el-option>
+                <el-option :value="'neea'" :label="'知识体系v2'"></el-option>
+              </el-select>
+            </el-row>
             <el-row 
               type="flex" 
               justify="start" 
@@ -240,7 +246,7 @@ export default {
           label: 'label'
         },
         // 知识体系名
-        KnowledgeGroup: "KnowledgeGroup_1",
+        KnowledgeGroup: "tiku",
         // 正在加载
         loading: false,
         // 用于保存检索条件的Json
@@ -295,6 +301,9 @@ export default {
         this.Init();
       }
     },
+    KnowledgeGroup(){
+      this.Init();
+    }
   },
   mounted() {
       this.initDatabaseList();
@@ -345,6 +354,7 @@ export default {
             period: this.Period,
             difficulty: this.filterRecord.difficulty,
             numbers: this.filterRecord.numbers,
+            knowledge_version: this.KnowledgeGroup,
             database: [],
             knowledgePoint: [[0], [1], [2]]
         }
@@ -437,71 +447,6 @@ export default {
       this.KnowledgeUnitList.splice(index, 1);
       this.KnowledgeUnitLevelList.splice(index, 1)
       this.$refs.tree.setCheckedKeys(this.KnowledgeUnitIDList);
-
-        // let Temp_List = [
-        //   {
-        //     label: this.KnowledgeUnitList[index],
-        //     level: this.KnowledgeUnitLevelList[index]
-        //   }
-        // ]
-
-        // let Result_List = []
-
-        // while(Temp_List.length > 0){
-        //     let Key_Item = Temp_List.shift()
-        //     for(let i = 0; i < this.TreeData.length; i++){
-        //         let Layer_0 = this.TreeData[i]
-        //         if(Layer_0.label == Key_Item.label && Layer_0.level == Key_Item.level){
-        //             if(Result_List.indexOf(Layer_0.id) == -1){
-        //                 Result_List.push(Layer_0.id)
-        //             }
-        //             for(let j = 0; j < Layer_0.children.length; j++){
-        //                 Temp_List.push({
-        //                   label: Layer_0.children[j].label, 
-        //                   level: Layer_0.children[j].level})
-        //                 if(Result_List.indexOf(Layer_0.children[j].id) == -1){
-        //                     Result_List.push(Layer_0.children[j].id)
-        //                 }
-        //             }
-        //         }else{
-        //             for(let j = 0; j < Layer_0.children.length; j++){
-        //                 let Layer_1 = Layer_0.children[j]
-        //                 if(Layer_1.label == Key_Item.label && Layer_1.level == Key_Item.level){
-        //                     if(Result_List.indexOf(Layer_1.id) == -1){
-        //                         Result_List.push(Layer_1.id)
-        //                     }
-        //                     for(let k = 0; k < Layer_1.children.length; k++){
-        //                       Temp_List.push({
-        //                         label: Layer_1.children[k].label, 
-        //                         level: Layer_1.children[k].level})
-        //                     }
-        //                 }else{
-        //                     for(let k = 0; k < Layer_1.children.length; k++){
-        //                         let Layer_2 = Layer_1.children[k]
-        //                         if(Layer_2.label == Key_Item.label && Layer_2.level == Key_Item.level){
-        //                             if(Result_List.indexOf(Layer_2.id) == -1){
-        //                                 Result_List.push(Layer_2.id)
-        //                             }
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-        // for(let i = 0; i < Result_List.length; i++){
-        //     this.KnowledgeUnitIDList.splice(this.KnowledgeUnitIDList.indexOf(Result_List[i]), 1);
-        // }
-
-        // this.$refs.tree.setCheckedKeys(this.KnowledgeUnitIDList);
-
-        // let Items = this.$refs.tree.getCheckedNodes()
-        // this.KnowledgeUnitList = [];
-        // this.KnowledgeUnitLevelList = []
-        // for(let i = 0; i < Items.length; i++){
-        //     this.KnowledgeUnitList.push(Items[i].label)
-        //     this.KnowledgeUnitLevelList.push(Items[i].level)
-        // }
     },
     // 获取知识点显示内容
     Get_Show(label = ""){
@@ -525,7 +470,11 @@ export default {
 
       let param = new FormData();
 
-      param.append('system', 'tiku');
+      if(this.Subject != '数学' || this.Period != '高中'){
+        this.KnowledgeGroup = 'tiku'
+      }
+
+      param.append('system', this.KnowledgeGroup);
       param.append('subject', this.Subject);
       param.append('period', this.Period);
 

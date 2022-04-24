@@ -25,10 +25,10 @@
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
             </el-row>
-            <el-row type="flex" justify="center" style="display: none">
+            <el-row type="flex" justify="center" v-show="Subject == '数学' && Period == '高中'">
               <el-select v-model="KnowledgeGroup" placeholder="请选择知识体系">
-                <el-option :value="'KnowledgeGroup_1'" :label="'知识体系一号'"></el-option>
-                <el-option :value="'KnowledgeGroup_2'" :label="'知识体系二号'"></el-option>
+                <el-option :value="'tiku'" :label="'知识体系v1'"></el-option>
+                <el-option :value="'neea'" :label="'知识体系v2'"></el-option>
               </el-select>
             </el-row>
             <el-row type="flex" justify="start" style="margin-top: 20px; margin-left: 1.5vw">
@@ -326,7 +326,7 @@ export default {
           label: 'label'
         },
         // 知识体系名
-        KnowledgeGroup: "KnowledgeGroup_1",
+        KnowledgeGroup: "tiku",
         // 知识体系单选或多选
         KnowledgeSelectType: "单选",
         // 知识点交集或并集
@@ -383,6 +383,9 @@ export default {
         this.KnowledgeUnitIDList.splice(0, this.KnowledgeUnitIDList.length)
         this.KnowledgeUnitLevelList.splice(0, this.KnowledgeUnitLevelList.length)
       }
+    },
+    KnowledgeGroup(){
+      this.Init();
     },
     Period(newVal, oldVal){
       if(newVal!= oldVal){
@@ -461,6 +464,7 @@ export default {
           "subject": [this.Subject],
           "period": [this.Period],
           "difficulty": this.filterRecord.difficulty,
+          "knowledge_version": this.KnowledgeGroup,
           "type": type,
           "knowledge": {
             "knowledge_list": kl,
@@ -544,9 +548,13 @@ export default {
           emulateJSON: true
       }
 
+      if(this.Subject != '数学' || this.Period != '高中'){
+        this.KnowledgeGroup = 'tiku'
+      }
+
       let param = new FormData();
 
-      param.append('system', 'tiku');
+      param.append('system', this.KnowledgeGroup);
       param.append('subject', this.Subject);
       param.append('period', this.Period);
 

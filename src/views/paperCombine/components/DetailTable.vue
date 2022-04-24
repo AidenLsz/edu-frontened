@@ -118,6 +118,12 @@
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
             </el-row>
+            <el-row type="flex" justify="center" v-show="Subject == '数学' && Period == '高中'">
+              <el-select v-model="KnowledgeGroup" placeholder="请选择知识体系" style="width: 94%">
+                <el-option :value="'tiku'" :label="'知识体系v1'"></el-option>
+                <el-option :value="'neea'" :label="'知识体系v2'"></el-option>
+              </el-select>
+            </el-row>
             <el-row type="flex" justify="start" style="margin-top: 20px; margin-left: 1.5vw">
               <label style="margin-top: -3px; margin-right: 10px;">
                 选择方式：
@@ -531,7 +537,8 @@ export default {
       // 用于暂存要发送到主页面的试题
       Ques_List: [],
       // 用于进行检索的信息保存
-      Searching_Question_Info: []
+      Searching_Question_Info: [],
+      KnowledgeGroup: 'tiku'
     }
   },
   watch:{
@@ -577,6 +584,9 @@ export default {
         this.Init();
       }
     },
+    KnowledgeGroup(){
+      this.Init();
+    }
   },
   mounted() {
     if(sessionStorage.getItem("Table_Info")){
@@ -648,7 +658,7 @@ export default {
           "subject": [this.Subject],
           "period": [this.Period],
           "difficulty": [parseFloat(Info.difficulty[0]), parseFloat(Info.difficulty[1])],
-          // "difficulty": [0, 1],
+          "knowledge_version": this.KnowledgeGroup,
           "type": type,
           "knowledge": knowledge_Dict,
           "semantic": 0
@@ -980,7 +990,11 @@ export default {
 
       let param = new FormData();
 
-      param.append('system', 'tiku');
+      if(this.Subject != '数学' || this.Period != '高中'){
+        this.KnowledgeGroup = 'tiku'
+      }
+
+      param.append('system', this.KnowledgeGroup);
       param.append('subject', this.Subject);
       param.append('period', this.Period);
 
