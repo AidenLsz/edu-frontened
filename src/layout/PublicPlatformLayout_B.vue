@@ -223,9 +223,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.flex-placeholder {
-
-}
 .sticky-menu {
   position: absolute;
   width: 89%;

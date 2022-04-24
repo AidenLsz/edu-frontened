@@ -13,8 +13,8 @@
       </div>
       <div id="ailab" @click="goToAILab">
         <p>AI实验室</p>
-      </div> -->
-      <!-- <div class="vertical_line"></div> -->
+      </div>
+      <div class="vertical_line"></div> -->
       <div class="page">
         <el-button
           type="text"

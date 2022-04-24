@@ -37,7 +37,7 @@
         ></el-input>
       </div>
       <div class="buttonbox">
-        <el-button type="primary" class="confirm_btn" @click="confirm"
+        <el-button type="success" class="confirm_btn" @click="confirm"
           ><span style="font-family: Roboto; font-weight: bold; color: white"
             >确定</span
           ></el-button
