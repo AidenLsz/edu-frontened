@@ -95,7 +95,7 @@ export default {
       const res = await getQuestionPair(this.pageNum, this.options.isTest);
       this.questions = res.questions;
       this.questionPairs = res.question_pairs;
-      this.pageTotal = res.page_num * 5;
+      this.pageTotal = res.page_num * 10;
       this.figures = res.figures;
 
       this.isUploaded = true;
