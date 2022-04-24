@@ -11,7 +11,7 @@
     </el-dialog>
     <!-- 查看分析报告 -->
     <el-dialog
-        :visible.sync="analysisReport"
+        :visible.sync="analyseReport"
         width="90%"
         :modal-append-to-body="false"
         :close-on-click-modal="true"
@@ -19,7 +19,7 @@
         <template slot="title"></template>
         <el-row
           style="margin: 0px">
-          <QuestionAnalyse :Ques="analysisData"></QuestionAnalyse>
+          <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
         </el-row>
     </el-dialog>
       <!-- 搜索框行 -->
@@ -217,9 +217,9 @@ export default {
         // 刷新分析报告
         Refresh: false,
         // 打开分析报告
-        analysisReport: false,
+        analyseReport: false,
         // 分析数据
-        analysisData: {},
+        analyseData: {},
         // 复杂输入框是否打开
         complexInput: false,
         // 检索的关键字，缓存的检索关键字，用于和新词进行比对
@@ -273,7 +273,7 @@ export default {
           stem: "",
           options: [],
           answer: "",
-          analysis: ""
+          analyse: ""
         }
         if(['单选题', '多选题', '判断题'].indexOf(Aim.type) != -1){
           Question_Show_Infos.type = Aim.type;
@@ -290,7 +290,7 @@ export default {
         Question_Show_Infos.options = Aim.options;
         Question_Show_Infos.stem = Aim.stem;
         Question_Show_Infos.answer = Aim.answer;
-        Question_Show_Infos.analysis = Aim.analysis;
+        Question_Show_Infos.analyse = Aim.analysis;
         
         this.$emit("Add_To_Cart", JSON.stringify(Question_Show_Infos));
       },
@@ -546,8 +546,8 @@ export default {
         }
       ).then((data)=>{
         this.Refresh = !this.Refresh;
-        this.analysisData = data.que_dic;
-        this.analysisReport = true;
+        this.analyseData = data.que_dic;
+        this.analyseReport = true;
       })
     },
   },
