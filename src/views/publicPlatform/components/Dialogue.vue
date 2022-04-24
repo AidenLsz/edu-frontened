@@ -387,6 +387,7 @@ export default {
       this.EditShow = false;
       this.confirmed_content = this.content;
       this.identified = true;
+      this.FadeOut();
     },
 
     Open_Pic_Search() {
@@ -412,7 +413,7 @@ export default {
     //淡入效果
     FadeIn() {
       //console.log("mouseenter");
-      if (this.image)
+      if (this.image || this.confirmed_content)
         $("#" + this.name + "_upload_area").animate(
           {
             opacity: 1,
@@ -423,7 +424,7 @@ export default {
     //淡出效果
     FadeOut() {
       //console.log("mouseleave");
-      if (this.image)
+      if (this.image || this.confirmed_content)
         $("#" + this.name + "_upload_area").animate(
           {
             opacity: 0.1,
