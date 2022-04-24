@@ -340,40 +340,38 @@ export default {
 
         this.$emit("Clear_Cart", true)
 
-        let data = {
-            subject: this.Subject,
-            period: this.Period,
-            difficulty: this.filterRecord.difficulty,
-            numbers: this.filterRecord.numbers,
-            database: [],
-            knowledgePoint: [[0], [1], [2]]
-        }
+        // let data = {
+        //     subject: this.Subject,
+        //     period: this.Period,
+        //     difficulty: this.filterRecord.difficulty,
+        //     numbers: this.filterRecord.numbers,
+        //     database: [],
+        //     knowledgePoint: [[0], [1], [2]]
+        // }
 
-        if(this.filterRecord.database.indexOf(true) != -1){
-          for(let i = 0 ; i < this.filterRecord.database.length; i++){
-              if(this.filterRecord.database[i]){
-                  data.database.push(this.databaseAim[i+1].name)
-              }
-          }
-        }else{
-          for(let i = 0 ; i < this.filterRecord.database.length; i++){
-            data.database.push(this.databaseAim[i+1].name)
-          }
-        }
+        // if(this.filterRecord.database.indexOf(true) != -1){
+        //   for(let i = 0 ; i < this.filterRecord.database.length; i++){
+        //       if(this.filterRecord.database[i]){
+        //           data.database.push(this.databaseAim[i+1].name)
+        //       }
+        //   }
+        // }else{
+        //   for(let i = 0 ; i < this.filterRecord.database.length; i++){
+        //     data.database.push(this.databaseAim[i+1].name)
+        //   }
+        // }
 
-        for(let i = 0; i < this.KnowledgeUnitLevelList.length; i++){
-          data.knowledgePoint[this.KnowledgeUnitLevelList[i]].push(this.KnowledgeUnitList[i])
-        }
+        // for(let i = 0; i < this.KnowledgeUnitLevelList.length; i++){
+        //   data.knowledgePoint[this.KnowledgeUnitLevelList[i]].push(this.KnowledgeUnitList[i])
+        // }
 
-        for(let i = 2; i >= 0; i--){
-          if(data.knowledgePoint[i].length == 1){
-            data.knowledgePoint.splice(i, 1)
-          }
-        }
+        // for(let i = 2; i >= 0; i--){
+        //   if(data.knowledgePoint[i].length == 1){
+        //     data.knowledgePoint.splice(i, 1)
+        //   }
+        // }
 
-        commonAjax(this.backendIP + '/api/paperAutoGenerate', {
-          'Paper_Data': JSON.stringify(data, null, 4)
-        })
+        commonAjax('https://kg-edu-backend-44-review-master-8dyme2.env.bdaa.pro/v1/api/smart_generation_temp')
         .then((data)=>{
           for(let i = 0; i < data.length; i++){
             this.Add_New_Ques_To_Cart(data[i])
@@ -402,7 +400,7 @@ export default {
           stem: Aim.stem,
           options: Aim.options,
           answer: Aim.answer,
-          analyse: Aim.analysis
+          analysis: Aim.analysis
         }
         
         this.Ques_List.push(Question_Show_Infos)
