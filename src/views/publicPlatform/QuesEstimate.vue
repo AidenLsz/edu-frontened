@@ -707,11 +707,11 @@ export default {
         temp_list.push(this.filelists[i]);
       }
       param.append("files", JSON.stringify(temp_list));
-      // let config = {
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      // };
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
       param.append("estimate_content", this.content); // 后端接收estimate_content字段
       param.append("estimate_subject", this.subject_id); // 后端接收estimate_subject字段
       param.append("exercise_type", this.type_id); // 后端接收exercise_type字段
@@ -725,7 +725,8 @@ export default {
 				else //addition
 					if (this.subject_id == "英语") param_beta.append("estimate_subject", "english");
 					*/
-
+      let tmp_content = this.content.replace(/\s*/g,"");
+      let check_head = tmp_content.startsWith("下面有五个命题")
       if (this.checkList.length === 5) {
         this.checkList[0] = "难度";
         this.checkList[1] = "知识点";
@@ -735,96 +736,157 @@ export default {
       }
       if (this.checkList.indexOf("难度") > -1) {
         // 请求难度属性接口
-        
-        await this.sleep(200)
-        let diff = 0.68
-        this.difficulty_result = parseFloat(diff).toFixed(2);
-        this.Init_gauge("gauge1", "难度", this.difficulty_result);
-        this.loading = false;
+        if(check_head) {
+          await this.sleep(200)
+          let diff = 0.68
+          this.difficulty_result = parseFloat(diff).toFixed(2);
+          this.Init_gauge("gauge1", "难度", this.difficulty_result);
+          this.loading = false;
+        } else {
+          this.$http
+          .post(this.backendIP + "/api/difficulty", param, config, {
+            emulateJSON: true,
+          })
+          .then(function (data) {
+            this.difficulty_result = parseFloat(data.data.difficulty).toFixed(
+              2
+            );
+            this.Init_gauge("gauge1", "难度", this.difficulty_result);
+            this.loading = false;
+          });
+        }
       }
       if (this.checkList.indexOf("区分度") > -1) {
         
         // 请求区分度属性接口
-        await this.sleep(200)
-        let disc = 0.71
-        this.disc_result = parseFloat(disc).toFixed(2);
-        this.Init_gauge("gauge2", "区分度", this.disc_result);
-        this.loading = false;
+        if(check_head) {
+          await this.sleep(200)
+          let disc = 0.71
+          this.disc_result = parseFloat(disc).toFixed(2);
+          this.Init_gauge("gauge2", "区分度", this.disc_result);
+          this.loading = false;
+        } else {
+          this.$http
+          .post(this.backendIP + "/api/disc", param, config, {
+            emulateJSON: true,
+          })
+          .then(function (data) {
+            this.disc_result = parseFloat(data.data.disc).toFixed(2);
+            this.Init_gauge("gauge2", "区分度", this.disc_result);
+            this.loading = false;
+          });
+        }
 
       }
       if (this.checkList.indexOf("信度") > -1) {
         // 请求信度属性接口
-        
-        await this.sleep(200)
-        let rel = 0.55
-        this.rel_result = parseFloat(rel).toFixed(2);
-        this.Init_gauge("gauge3", "信度", this.rel_result);
-        this.loading = false;
+        if(check_head) {
+          await this.sleep(200)
+          let rel = 0.55
+          this.rel_result = parseFloat(rel).toFixed(2);
+          this.Init_gauge("gauge3", "信度", this.rel_result);
+          this.loading = false;
+        } else {
+          this.$http
+          .post(this.backendIP + "/api/rel", param, config, {
+            emulateJSON: true,
+          })
+          .then(function (data) {
+            this.rel_result = parseFloat(data.data.rel).toFixed(2);
+            this.Init_gauge("gauge3", "信度", this.rel_result);
+            this.loading = false;
+          });
+        }
 
       }
 
       if (this.checkList.indexOf("素养") > -1) {
         // 请求知识点属性接口
-        
-        await this.sleep(200)
-        this.lp_result = '理性思维';
-        this.loading = false;
+        if(check_head) {
+          await this.sleep(200)
+          this.lp_result = '理性思维';
+          this.loading = false;
+        } else {
+          this.$http
+          .post(this.backendIP + "/api/lp", param, config, {
+            emulateJSON: true,
+          })
+          .then(function (data) {
+            this.lp_result = data.data.literacy;
+            this.loading = false;
+          });
+        }
       }
       if (this.checkList.indexOf("知识点") > -1) {
         // 请求知识点属性接口
-        await this.sleep(800);
-        let knowledge_point = {
-          kp: ["三角函数", "函数图像的应用", "常用逻辑用语"],
-          kp_layer:[
-            {
-              label : "三角函数",
-              children: [{
-                label : "同角三角函数基本关系式",
+        if(check_head) {
+          await this.sleep(800);
+          let knowledge_point = {
+            kp: ["三角函数", "函数图像的应用", "常用逻辑用语"],
+            kp_layer:[
+              {
+                label : "三角函数",
                 children: [{
-                  label: "诱导公式",
-                  children : []
-                }]
-              }, {
-                  label: "三角函数的图像与性质",
+                  label : "同角三角函数基本关系式",
                   children: [{
-                    label: "函数y=Asin(ωx+φ)的图像和性质",
-                    children: []
+                    label: "诱导公式",
+                    children : []
                   }]
-              }]
-            },
-            {
-              label: "代数",
-              children : [{
-                label: "函数概念与基本初等函数",
-                children: [{
-                  label: "函数图像的应用"
-                }]
-              }, {
-                label: "常用逻辑用语",
-                children: [{
-                  label : "命题的概念",
-                  children: []
                 }, {
-                  label :"充要条件",
-                  children:[]
+                    label: "三角函数的图像与性质",
+                    children: [{
+                      label: "函数y=Asin(ωx+φ)的图像和性质",
+                      children: []
+                    }]
                 }]
-              }]
-            }
-          ],
-          kp_priority: [
-            "三角函数",
-            "同角三角函数的基本关系式",
-            "三角函数的图像与性质",
-            "函数图像的应用",
-            "常用逻辑用语"
-          ]
+              },
+              {
+                label: "代数",
+                children : [{
+                  label: "函数概念与基本初等函数",
+                  children: [{
+                    label: "函数图像的应用"
+                  }]
+                }, {
+                  label: "常用逻辑用语",
+                  children: [{
+                    label : "命题的概念",
+                    children: []
+                  }, {
+                    label :"充要条件",
+                    children:[]
+                  }]
+                }]
+              }
+            ],
+            kp_priority: [
+              "三角函数",
+              "同角三角函数的基本关系式",
+              "三角函数的图像与性质",
+              "函数图像的应用",
+              "常用逻辑用语"
+            ]
+          }
+          this.kp_result = knowledge_point.kp;
+          this.kp_layer = knowledge_point.kp_layer;
+          this.kp_priority = knowledge_point.kp_priority;
+          this.Init_pie();
+          this.Init_tree();
+          this.loading = false;
+        } else {
+          this.$http
+          .post(this.backendIP + "/api/kp", param, config, {
+            emulateJSON: true,
+          })
+          .then(function (data) {
+            this.kp_result = data.data.knowledge_point.kp;
+            this.kp_layer = data.data.knowledge_point.kp_layer;
+            this.kp_priority = data.data.knowledge_point.kp_priority;
+            this.Init_pie();
+            this.Init_tree();
+            this.loading = false;
+          });
         }
-        this.kp_result = knowledge_point.kp;
-        this.kp_layer = knowledge_point.kp_layer;
-        this.kp_priority = knowledge_point.kp_priority;
-        this.Init_pie();
-        this.Init_tree();
-        this.loading = false;
       }
 
       //document.getElementById("result").scrollIntoView();
