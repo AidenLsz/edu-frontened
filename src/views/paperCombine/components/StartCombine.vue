@@ -1191,7 +1191,6 @@ export default {
     },
     KnowledgeGroup(){
       this.Init_Setting_Info();
-      this.Init_KP_System_Name();
       this.Init_KP_Tree();
     }
   },
