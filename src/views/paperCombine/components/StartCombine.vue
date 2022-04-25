@@ -1,5 +1,21 @@
 <template>
   <div style=" padding-top: 5vh; padding-bottom: 5vh; min-height: 40vh; padding-left: 5vw; padding-right: 5vw; background: #EEF5FE">
+    <el-dialog 
+      :visible.sync="Save_Dialog"
+      title="确认保存题库"
+      width="40%"
+      style="margin-top: 20vh; padding: 0px"
+      :modal-append-to-body="false"
+      :close-on-click-modal="true">
+      <label style="margin-right: 40px;">请确认要保存的数据库名</label>
+      <!-- <el-option-group v-for="Database in Write_Anthority_Database" :key="Database" v-model="Write_Database_Aim">
+        <el-option :label="Database" :value="Database"></el-option>
+      </el-option-group> -->
+      <el-select v-model="Write_Database_Aim" placeholder="请选择要保存的数据库">
+        <el-option v-for="Database in Write_Anthority_Database" :key="Database" :label="Database" :value="Database"></el-option>
+      </el-select>
+      <el-button style="margin-left: 40px" type="primary" @click="Save_Combine_History(Write_Database_Aim)">确认</el-button>
+    </el-dialog>
     <!-- 题目内容检查 -->
     <el-dialog 
       :visible.sync="Question_Check_Switch"
@@ -69,6 +85,30 @@
             </el-col>
           </el-row>
         </el-col>
+      </el-row>
+    </el-dialog>
+    <!-- 下载成绩空表 -->
+    <el-dialog 
+      :visible.sync="Empty_Sheet_Dialog"
+      title="下载成绩空表"
+      width="40%"
+      style="margin-top: 20vh; padding: 0px"
+      :modal-append-to-body="false"
+      :close-on-click-modal="true">
+      <label style="margin-right: 40px;">请输入学生人数</label>
+      <el-input-number v-model="Student_Num" placeholder="0" :min="1"></el-input-number>
+      <el-button style="margin-left: 40px" type="primary" @click="Download_Empty_Sheet()">确认</el-button>
+    </el-dialog>
+    <!-- 保存历史结果的模拟confirm -->
+    <el-dialog
+      :visible.sync="Save_Aim_Check_Dialog"
+      title="要作为新数据保存吗？"
+      width="500px"
+      :modal-append-to-body="false"
+      :close-on-click-modal="true">
+      <el-row type="flex" justify="center">
+        <el-button type="primary" @click="Save_New_Or_Old(true)" style="margin-right: 30px">是的，作为新数据保存</el-button>
+        <el-button type="error" @click="Save_New_Or_Old(false)">不是，覆盖原有数据就好</el-button>
       </el-row>
     </el-dialog>
     <!-- 试卷下载 -->
@@ -535,28 +575,39 @@
                 </el-col>
                 <el-col :span="12">
                   <el-row type="flex" justify="center">
+                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Save_Dialog_Open()">
+                      <i class="el-icon-document-checked"></i>
+                      <span>保存试卷</span>
+                    </el-button>
+                  </el-row>
+                </el-col>
+              </el-row>
+
+              <el-row type="flex" justify="start">
+                <el-col :span="12">
+                  <el-row type="flex" justify="center">
                     <el-button type="text" style="font-size: 14px; color: grey" @click.native="Check_Answer_Card()">
                       <i class="el-icon-s-claim"></i>
                       <span>查看答题卡</span>
                     </el-button>
                   </el-row>
                 </el-col>
-                <!-- <el-col :span="12">
-                  <el-row type="flex" justify="center" style="display: none">
-                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Unfinish()">
-                      <i class="el-icon-document-checked"></i>
-                      <span>保存试卷</span>
-                    </el-button>
-                  </el-row>
-                </el-col> -->
-              </el-row>
-
-              <el-row type="flex" justify="start">
                 <el-col :span="12">
                   <el-row type="flex" justify="center">
                     <el-button type="text" style="font-size: 14px; color: grey" @click.native="Auto_Compare_Combine_Paper()">
                       <i class="el-icon-s-opportunity"></i>
                       <span>类比组卷</span>
+                    </el-button>
+                  </el-row>
+                </el-col>
+              </el-row>
+
+              <el-row type="flex" justify="start">
+                <el-col :span="12">
+                  <el-row type="flex" justify="center">
+                    <el-button type="text" style="font-size: 14px; color: grey" @click.native="Get_Empty_Sheet()">
+                      <i class="el-icon-download"></i>
+                      <span>下载成绩空表</span>
                     </el-button>
                   </el-row>
                 </el-col>
@@ -1169,7 +1220,19 @@ export default {
       Extra_Keyword: "",
       // 筛选知识体系名称
       KnowledgeGroup: 'tiku',
-      KnowledgeGroup_List: []
+      KnowledgeGroup_List: [],
+      // 空白成绩表
+      Empty_Sheet_Dialog: false,
+      // 空白成绩表上的学生人数
+      Student_Num: 1,
+      // 允许保存历史记录的数据库名
+      Write_Anthority_Database: [],
+      // 历史记录保存目标
+      Write_Database_Aim: "",
+      // 选择允许保存的数据库用的对话框
+      Save_Dialog: false,
+      // 模拟confirm，确认是指向新纪录还是覆盖旧记录
+      Save_Aim_Check_Dialog: false
     }
   },
   watch:{
@@ -1198,13 +1261,123 @@ export default {
     this.Init_Setting_CheckBox();
     this.Init_Setting_Info();
     this.Init_User_Database_List();
+    this.Init_User_Write_Anthority();
     this.Init_KP_System_Name();
     this.Init_KP_Tree();
     this.Init_Database_List();
   },
   methods: {
+    Init_User_Write_Anthority(){
+      this.Write_Anthority_Database = [];
+      commonAjax(this.backendIP+'/api/get_user_ig_name',
+        {
+          type:'Question',
+          action:'W',
+        }
+      ).then((res)=>{
+        this.Write_Anthority_Database = res.ig_name;
+        this.Write_Database_Aim = this.Write_Anthority_Database[0];
+      })
+    },
     Page_Index_Change(){
       this.Search_Replace_Question();
+    },
+    Save_Dialog_Open(){
+      if(this.Write_Anthority_Database.length > 1){
+        this.Save_Dialog = true;
+      }else if(this.Write_Anthority_Database.length == 1){
+        this.Save_Combine_History(this.Write_Anthority_Database[0]);
+      }else if(this.Write_Anthority_Database.length == 0){
+        this.$message.error("此账号为特殊账号，没有历史记录保存的权限")
+      }
+    },
+    Save_New_Or_Old(IsNew){
+
+      let ID = sessionStorage.getItem("paperRecordID");
+
+      if(IsNew){
+        ID = "";
+        sessionStorage.setItem("paperRecordID", null);
+      }
+
+      this.Save_History_Do(ID, this.Write_Database_Aim);
+      this.Save_Aim_Check_Dialog = false;
+
+    },
+    Save_Combine_History(Database_Name){
+
+      let ID = sessionStorage.getItem("paperRecordID");
+
+      if(ID == null || ID == ""){
+        ID = "";
+        this.Save_Dialog = false;
+        this.Save_History_Do(ID, Database_Name);
+      }else{
+        this.Save_Dialog = false;
+        this.Save_Aim_Check_Dialog = true;
+      }
+
+    },
+    Save_History_Do(ID, Database_Name){
+
+      let Param = {
+        'data': ""
+      }
+
+      let Data = {
+        "paperRecordID": ID, 
+        "database": Database_Name, 
+        "subject": this.Subject, 
+        "period": this.Period, 
+        "paperformat": [],
+        "formatinfo": {
+            title: this.Setting_Info.title,
+            subtitle: this.Setting_Info.subTitle,
+            examInfo: "考试总分: " + this.Setting_Info.examInfo.score + "分，考试时间: " + this.Setting_Info.examInfo.time + "分钟。",
+            sealLabel: "绝密 ★ 启用前",
+            gutter: "学校：____________ 班级：____________ 姓名：____________ 考号：___________",
+            studentInput: this.Setting_Info.studentWrite,
+            cautions: this.Setting_Info.cautions
+          },
+        "questions": [] 
+      }
+      let Label_Using = ['title', 'subtitle', 'examInfo', 'sealLabel', 'gutter', 'studentInput', 'cautions', 'partInfo', 'bundleInfo'];
+      for(let i = 0; i < this.Setting_CheckBox_List.length; i++){
+        Data.paperformat.push(Label_Using[this.Setting_CheckBox_Label.indexOf(this.Setting_CheckBox_List[i])])
+      }
+
+      for(let i = 0; i < this.Question_List.length; i++){
+        let Questions_Format = {
+            type: this.Question_List[i].type,
+            partInfo: this.Getting_Part_Introduce(i),
+            bundleInfo: this.Getting_Bundle_Introduce(i) + "）",
+            questions: []
+        }
+        for(let j = 0; j < this.Question_List[i].list.length; j++){
+          let Question_Item = {
+              id: this.Question_List[i].list[j].id,
+              score: this.Question_List[i].list[j].score,
+              stem: this.Question_List[i].list[j].stem,
+              options: this.Question_List[i].list[j].options,
+              answer: this.Question_List[i].list[j].answer,
+              analysis: this.Question_List[i].list[j].analyse
+          }
+          Questions_Format.questions.push(Question_Item)
+        }
+        Data.questions.push(Questions_Format)
+      }
+
+      Param.data = JSON.stringify(Data)
+
+      commonAjax(this.backendIP+'/api/save_paper', Param)
+      .then(()=>{
+        this.$message.success("保存成功。")
+      }).catch(() => {
+
+      }).finally(() => {
+        
+        this.Write_Database_Aim = "";
+      })
     },
     // 更新数据库选择情况
     database_Change(Keyword, Database){

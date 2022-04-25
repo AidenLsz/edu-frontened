@@ -86,7 +86,12 @@
                 智能组卷
             </el-row>
         </el-col>
-        <el-col :span="3" :offset="4" class="Question_Shopping_Card">
+        <el-col :span="2" :class="Menu_Now('combineHistory')" @click.native="Jump_To('combineHistory')">
+            <el-row type="flex" justify="center">
+                组卷历史
+            </el-row>
+        </el-col>
+        <el-col :span="3" :offset="2" class="Question_Shopping_Card">
             <el-popover
                 trigger="click"
                 width="400"
@@ -166,6 +171,14 @@
             :Subject.sync="Selected_Subject"
             :Database_List.sync="Database_List"></AutoCombine>
     </el-row>
+    <el-row v-if="Using_Menu_Index == 'combineHistory'">
+        <CombineHistory 
+            @Replace_Cart="Replace_Cart"
+            @Clear_Cart="Clear_Cart"
+            :Period.sync="Selected_Period" 
+            :Subject.sync="Selected_Subject"
+            :Database_List.sync="Database_List"></CombineHistory>
+    </el-row>
     <el-row v-if="Using_Menu_Index == 'startCombine'">
         <StartCombine 
             @Update_Question_List="Update_Question_List"
@@ -187,6 +200,7 @@ import DetailTable from '@/views/paperCombine/components/DetailTable'
 import StartCombine from '@/views/paperCombine/components/StartCombine'
 import FromDatabasePaper from '@/views/paperCombine/components/FromDatabasePaper'
 import AutoCombine from '@/views/paperCombine/components/AutoCombine'
+import CombineHistory from '@/views/paperCombine/components/CombineHistory'
 
 import * as echarts from 'echarts';
 
@@ -202,7 +216,7 @@ export default {
   components: {
         Keyword, KnowledgePoint,
         InputQuestion, DetailTable, StartCombine,
-        FromDatabasePaper, AutoCombine
+        FromDatabasePaper, AutoCombine, CombineHistory
   },
   data() {
     return {
@@ -252,6 +266,11 @@ export default {
       },
       Jump_To_SC(){
           this.Combine_Paper()
+      },
+      // 整体更换试题篮
+      Replace_Cart(val){
+          this.Question_List = JSON.parse(val);
+          this.Jump_To_SC();
       },
       // 清空试题篮
       Clear_Cart(){
