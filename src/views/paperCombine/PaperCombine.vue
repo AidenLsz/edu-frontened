@@ -177,7 +177,8 @@
             @Clear_Cart="Clear_Cart"
             :Period.sync="Selected_Period" 
             :Subject.sync="Selected_Subject"
-            :Database_List.sync="Database_List"></CombineHistory>
+            :Database_List.sync="Database_List"
+            @Edit_Paper="Edit_Paper"></CombineHistory>
     </el-row>
     <el-row v-if="Using_Menu_Index == 'startCombine'">
         <StartCombine 
@@ -261,6 +262,12 @@ export default {
       this.To_Top();
   },
   methods: {
+      // 历史记录更新学科学段
+      Edit_Paper(Val){
+          let Aim = JSON.parse(Val)
+          this.Selected_Subject = Aim.Subject;
+        this.Selected_Period = Aim.Period;
+      },
       To_Top(){
           document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
       },

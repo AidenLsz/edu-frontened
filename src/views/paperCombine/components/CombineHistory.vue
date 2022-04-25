@@ -534,7 +534,7 @@ export default {
             if(Func == 'Preview'){
               this.Paper_Preview = true;
             }else if(Func == 'Edit_Paper'){
-              this.Edit_Paper();
+              this.Edit_Paper(History);
             }else if(Func == 'Answer_Card'){
               this.Check_Answer_Card();
             }
@@ -607,7 +607,7 @@ export default {
 
         })
       },
-      Edit_Paper(){
+      Edit_Paper(History){
           this.$confirm("如果编辑这份试卷，则会清空当前试题篮并用这份试卷的试题篮进行覆盖，因此建议您先前往组卷中心进行保存，确定要继续吗？", "提示", {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -615,6 +615,11 @@ export default {
             })
             .then(() => {
                 this.$emit("Clear_Cart", true)
+                let Aim = {
+                  Subject: History.subject,
+                  Period: History.period
+                }
+                this.$emit("Edit_Paper", JSON.stringify(Aim));
                 this.$emit("Replace_Cart", JSON.stringify(this.Question_List))
             })
       },
