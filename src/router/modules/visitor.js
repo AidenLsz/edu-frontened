@@ -70,6 +70,9 @@ const visitorRouter=[
   {
     path: "/PaperCombination",
     name: "visitor/PaperCombination",
+    meta:{
+      title:"教育部教育考试院"
+    },
     component: () => import("@/views/paperCombination/PaperCombine.vue"),
   },
   {

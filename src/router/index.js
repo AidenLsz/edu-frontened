@@ -78,6 +78,11 @@ const router = new Router({
 // 路由控制
 
 router.beforeEach((to, from, next) => {
+  if (to.meta.title){
+    document.title = to.meta.title
+  } else {
+    document.title = "LUNA"
+  }
   if (switchtoAIlab(to.path)){
     if (to.path.includes('/user/') && !store.state.AIlab_user.AIname)
     {
