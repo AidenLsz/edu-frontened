@@ -826,19 +826,7 @@ export default {
             kp_layer:[
               {
                 label : "三角函数",
-                children: [{
-                  label : "同角三角函数基本关系式",
-                  children: [{
-                    label: "诱导公式",
-                    children : []
-                  }]
-                }, {
-                    label: "三角函数的图像与性质",
-                    children: [{
-                      label: "函数y=Asin(ωx+φ)的图像和性质",
-                      children: []
-                    }]
-                }]
+                children: []
               },
               {
                 label: "代数",
@@ -849,13 +837,7 @@ export default {
                   }]
                 }, {
                   label: "常用逻辑用语",
-                  children: [{
-                    label : "命题的概念",
-                    children: []
-                  }, {
-                    label :"充要条件",
-                    children:[]
-                  }]
+                  children: []
                 }]
               }
             ],
@@ -1089,7 +1071,7 @@ export default {
               shadowBlur: 4,
               shadowOffsetX: 4,
               shadowOffsetY: 4,
-              // overflow: "breakAll"
+              overflow: "breakAll"
             },
             // labelLayout: function (params) {
             //   return {
@@ -1101,7 +1083,7 @@ export default {
             // },
             labelLayout: {
               hideOverlap: false,
-              // width: 85
+              width: 85
             },
             orient: "TB",
           },
