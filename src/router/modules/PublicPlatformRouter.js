@@ -11,6 +11,9 @@ const PublicPlatformRouter = [
   {
     path: "QuesEstimate",
     name: "pb/QuesEstimate",
+    meta:{
+      title:"教育部教育考试院"
+    },
     component: () => import("@/views/publicPlatform/QuesEstimate.vue"),
   },
   {
