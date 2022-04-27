@@ -1,6 +1,6 @@
 <template>
   <!--todo: polish the format-->
-  <div class="home" style="min-width: 1366px;">
+  <div style="min-width: 1366px; margin-top: -90px;">
     <div id="Top_Nav" class="Top_Nav">
 
     </div>
@@ -527,215 +527,235 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <div class="Normal_Home_Page">
+      <section class="main_page" >
+        <el-row type="flex" justify="center">
+          <div style="display: inline-block">
+            <img src="@/assets/Luna_Home_Page_Icon.svg">
+          </div>
+          <div style="display: inline-block; padding-top: 10px">
+            <span class="Temp_Label">L U N A</span><br>
+            <label style="font-size: 24px">智慧教育知识图谱</label>
+          </div>
+        </el-row>
+        <el-row type="flex" justify="center" style="margin-top: 174px;">
+          <div class="Self_Input_Area_Left" align="left">
+            <i class="el-icon-search" style="font-size: 30px; display: inline-block; margin-top: 18px; margin-right: 30px; margin-left: 20px;"></i>
+          </div>
+          <div class="Self_Input_Area_Middle" align="left">
+            <input 
+              v-model="ku_name" 
+              class="Self_Input" 
+              placeholder="在此输入知识点名称">
+          </div>
+          <div class="Self_Input_Area_Right" align="right">
+            <button 
+              class="Self_Search_Button"
+              @click="submit">搜索</button>
+          </div>
+        </el-row>
+      </section>
 
-    <section class="slider-bg" >
-      <el-row type="flex" justify="center" style="padding-top: 260px;">
-        <label class="Temp_Label">智慧教育知识图谱</label>
-      </el-row>
-      <el-row type="flex" justify="center" style="padding-top: 40px;">
-        <el-col :span="10">
-          <el-input
-            v-model="ku_name"
-            placeholder="三角函数"
-            class="SearchInput"
-          ></el-input>
-        </el-col>
-        <el-col :span="2">
-          <el-row type="flex" justify="start">
-            <el-button type="primary" @click="submit" plain class="SearchButton"
-              ><i class="el-icon-search" style="margin-right: 15px"></i>检索</el-button
-            >
-          </el-row>
-        </el-col>
-      </el-row>
-    </section>
-
-    <!-- about-area -->
-    <section class="about-area">
-      <el-row class="Label_Line">
-        <div class="Divider_Line" style="margin-right: 1.5rem">
-
+      <!-- about-area -->
+      <section class="about-area">
+        <div class="about_triangle">
+          <div style="padding-top: 200px;">
+            <label style="font-size: 48px;">寓智于教，致知未来</label>
+          </div>
+          <div style="width: 760px; margin: 0 auto; margin-top: 40px;">
+            <span style="font-size: 20px; letter-spacing: break-all">
+              智慧教育知识图谱（LUNA）致力于为广大师生提供深层次、多维度的海量教育资源处理分析工具，与智能、个性化的教育资源组织、分析与评估服务
+            </span>
+          </div>
         </div>
-        <span class="Inner_Text">
-          简介
-        </span>
-        <div class="Divider_Line">
-        
-        </div>
-      </el-row>
-      <el-row>
-        <el-col :span="8" :offset="2">
-          <img src="../assets/intro.png" width="70%"/>
-        </el-col>
-        <el-col :span="9">
-          <p style="font-size: 20px; line-height: 200%; padding-left: 30px; margin-top: 7vh; text-align: justify">
-          智慧教育知识图谱（LUNA）致力于为广大师生提供智能且直观的智慧教育辅助工具，它包括知识组织、呈现、应用等多维度功能。LUNA通过对海量教材、题库、考纲等跨模态教育教学资源进行深层次的数据挖掘，建立覆盖小初高至大学的知识结构模型。同时，LUNA具有其他智慧教育工具所不具备的海量内容和多样化智能接口，它不仅提供了简单、直观、易用的知识、资源查询功能，还提供了自动考卷分析、试题难度评估等智慧化分析、自动评估接口，可满足广大师生、学校管理者丰富的教育教学需求。
-          </p>
-        </el-col>
-      </el-row>
+      </section>
 
-    </section>
+      <!-- 图标区域-area -->
+      <section class="statistics_area">
+        <el-row style="width: 1280px; margin: 0 auto">
+          <el-col :span="13">
+            <statistics/>
+          </el-col>
+          <el-col :span="11" class="Part_Right">
+            <div class="statistics_Title" align="left">
+              <span class="statistics_Colored_Title_1">海量</span>教学资源，<span class="statistics_Colored_Title_2">智能</span>处理
+            </div>
+            <div>
+              <ul style="text-align: left" class="statistics_List">
+                <li style="margin-bottom: 16px;">
+                  海量标准化、体系化的教学资源
+                </li>
+                <li style="margin-bottom: 16px;">
+                  基于高效准确的试题相似度评估算法的高质量资源库
+                </li>
+                <li style="margin-bottom: 40px;">
+                  智能与个性化的资源录入、查询和管理服务
+                </li>
+              </ul>
+            </div>
+            <div align="left">
+              <button class="statistics_Self_Button statistics_Button_Color1">
+                <i class="el-icon-edit" style="margin-right: 10px"></i>试题录入
+              </button>
+              <button class="statistics_Self_Button statistics_Button_Color2">
+                <i class="el-icon-search" style="margin-right: 10px"></i>试题检索
+              </button>
+              <button class="statistics_Self_Button statistics_Button_Color3">
+                <i class="el-icon-reading" style="margin-right: 10px"></i>试题分析
+              </button>
+            </div>
+          </el-col>
+        </el-row>
+      </section>
 
-    <section class="link-bg">
-      <!-- 试题检索卡片跳转 -->
-      <el-row class="Label_Line">
-        <div class="Divider_Line" style="margin-right: 1.5rem">
+      <section class="link-bg">
+        <!-- 试题检索卡片跳转 -->
+        <el-row class="Label_Line">
+          <div class="Divider_Line" style="margin-right: 1.5rem">
 
-        </div>
-        <span class="Inner_Text">
-          资源与功能
-        </span>
-        <div class="Divider_Line">
-        
-        </div>
-      </el-row>
-      <el-row>
-        <el-col :span="20" :offset="2">
-          <el-row type="flex" justify="center" style="padding-bottom: 50px">
-            <el-button-group>
-              <el-button round @click="changeToolsLabel(0)" ref="resourceButton" :class="Get_TL_Style(0)">
-                资源
-              </el-button>
-              <el-button round @click="changeToolsLabel(1)" ref="functionButton" :class="Get_TL_Style(1)">
-                功能
-              </el-button>
-            </el-button-group>
-          </el-row>
-          <el-row v-if="ToolsLabelNow == '资源'" style="padding-top: 30px; padding-bottom: 30px">
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenResources(0)" circle style="height: 200px; width: 200px;"><img src="../assets/icon7.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenResources(0)" style="margin-top: 30px; font-size: 20px">
-                  学习资源
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenResources(1)" circle style="height: 200px; width: 200px"><img src="../assets/icon6.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenResources(1)" style="margin-top: 30px; font-size: 20px; color: black">
-                  试题资源
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenResources(2)" circle style="height: 200px; width: 200px"><img src="../assets/icon8.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenResources(2)" style="margin-top: 30px; font-size: 20px; color: black">
-                  试卷资源
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenResources(3)" circle style="height: 200px; width: 200px"><img src="../assets/icon5.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenResources(3)" style="margin-top: 30px; font-size: 20px">
-                  知识体系
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-          </el-row>
-          <!-- 第二段 -->
-          <el-row v-else-if="ToolsLabelNow == '功能'"  style="padding-top: 30px; padding-bottom: 30px">
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenFunctions(0)" circle style="height: 200px; width: 200px;"><img src="../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenFunctions(0)" style="margin-top: 30px; font-size: 20px">
-                  资源录入
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenFunctions(1)" circle style="height: 200px; width: 200px"><img src="../assets/icon3.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenFunctions(1)" style="margin-top: 30px; font-size: 20px">
-                  查询
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenFunctions(3)" circle style="height: 200px; width: 200px"><img src="../assets/icon2.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenFunctions(3)" style="margin-top: 30px; font-size: 20px">
-                  管理
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenFunctions(2)" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenFunctions(2)" style="margin-top: 30px; font-size: 20px">
-                  分析
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-    </section>
+          </div>
+          <span class="Inner_Text">
+            资源与功能
+          </span>
+          <div class="Divider_Line">
+          
+          </div>
+        </el-row>
+        <el-row>
+          <el-col :span="20" :offset="2">
+            <el-row type="flex" justify="center" style="padding-bottom: 50px">
+              <el-button-group>
+                <el-button round @click="changeToolsLabel(0)" ref="resourceButton" :class="Get_TL_Style(0)">
+                  资源
+                </el-button>
+                <el-button round @click="changeToolsLabel(1)" ref="functionButton" :class="Get_TL_Style(1)">
+                  功能
+                </el-button>
+              </el-button-group>
+            </el-row>
+            <el-row v-if="ToolsLabelNow == '资源'" style="padding-top: 30px; padding-bottom: 30px">
+              <el-col :span="6">
+                <el-row>
+                  <el-button @click="OpenResources(0)" circle style="height: 200px; width: 200px;"><img src="../assets/icon7.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+                </el-row>
+                <el-row>
+                  <label @click="OpenResources(0)" style="margin-top: 30px; font-size: 20px">
+                    学习资源
+                  </label>
+                </el-row>
+                <!-- <el-row  style="margin-top: 15px; font-size: 10px">
+                  <span>介绍文字</span>
+                </el-row> -->
+              </el-col>
+              <el-col :span="6">
+                <el-row>
+                  <el-button @click="OpenResources(1)" circle style="height: 200px; width: 200px"><img src="../assets/icon6.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+                </el-row>
+                <el-row>
+                  <label @click="OpenResources(1)" style="margin-top: 30px; font-size: 20px; color: black">
+                    试题资源
+                  </label>
+                </el-row>
+                <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
+                  <span>介绍文字</span>
+                </el-row> -->
+              </el-col>
+              <el-col :span="6">
+                <el-row>
+                  <el-button @click="OpenResources(2)" circle style="height: 200px; width: 200px"><img src="../assets/icon8.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+                </el-row>
+                <el-row>
+                  <label @click="OpenResources(2)" style="margin-top: 30px; font-size: 20px; color: black">
+                    试卷资源
+                  </label>
+                </el-row>
+                <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
+                  <span>介绍文字</span>
+                </el-row> -->
+              </el-col>
+              <el-col :span="6">
+                <el-row>
+                  <el-button @click="OpenResources(3)" circle style="height: 200px; width: 200px"><img src="../assets/icon5.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+                </el-row>
+                <el-row>
+                  <label @click="OpenResources(3)" style="margin-top: 30px; font-size: 20px">
+                    知识体系
+                  </label>
+                </el-row>
+                <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
+                  <span>介绍文字</span>
+                </el-row> -->
+              </el-col>
+            </el-row>
+            <!-- 第二段 -->
+            <el-row v-else-if="ToolsLabelNow == '功能'"  style="padding-top: 30px; padding-bottom: 30px">
+              <el-col :span="6">
+                <el-row>
+                  <el-button @click="OpenFunctions(0)" circle style="height: 200px; width: 200px;"><img src="../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+                </el-row>
+                <el-row>
+                  <label @click="OpenFunctions(0)" style="margin-top: 30px; font-size: 20px">
+                    资源录入
+                  </label>
+                </el-row>
+                <!-- <el-row  style="margin-top: 15px; font-size: 10px">
+                  <span>介绍文字</span>
+                </el-row> -->
+              </el-col>
+              <el-col :span="6">
+                <el-row>
+                  <el-button @click="OpenFunctions(1)" circle style="height: 200px; width: 200px"><img src="../assets/icon3.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+                </el-row>
+                <el-row>
+                  <label @click="OpenFunctions(1)" style="margin-top: 30px; font-size: 20px">
+                    查询
+                  </label>
+                </el-row>
+                <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
+                  <span>介绍文字</span>
+                </el-row> -->
+              </el-col>
+              <el-col :span="6">
+                <el-row>
+                  <el-button @click="OpenFunctions(3)" circle style="height: 200px; width: 200px"><img src="../assets/icon2.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+                </el-row>
+                <el-row>
+                  <label @click="OpenFunctions(3)" style="margin-top: 30px; font-size: 20px">
+                    管理
+                  </label>
+                </el-row>
+                <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
+                  <span>介绍文字</span>
+                </el-row> -->
+              </el-col>
+              <el-col :span="6">
+                <el-row>
+                  <el-button @click="OpenFunctions(2)" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+                </el-row>
+                <el-row>
+                  <label @click="OpenFunctions(2)" style="margin-top: 30px; font-size: 20px">
+                    分析
+                  </label>
+                </el-row>
+                <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
+                  <span>介绍文字</span>
+                </el-row> -->
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+      </section>
 
-    <!-- 图标区域-area -->
-    <section>
-      <el-row class="Label_Line">
-        <div class="Divider_Line" style="margin-right: 1.5rem">
-
-        </div>
-        <span class="Inner_Text">
-          数据统计
-        </span>
-        <div class="Divider_Line">
-        
-        </div>
-      </el-row>
-      <statistics/>
-    </section>
-    <!-- cta-area-end -->
+      
+      <!-- cta-area-end -->
+    </div>
+    
   </div>
 </template>
 <script>
 
 import $ from "jquery";
-import statistics from '@/common/components/statistics'
+import statistics from '@/common/components/statistics_2'
 
 export default {
   components: { statistics},
@@ -854,159 +874,6 @@ export default {
     OpenResources(index){
       this.resourceStatus.splice(index, 1, true);
     },
-    // 重绘统计表图
-    // Redraw_Bar(){
-    //   if (BarChart != null && BarChart != "" && BarChart != undefined) {
-    //     BarChart.dispose();//销毁
-    //   }
-    //   BarChart = echarts.init(document.getElementById('data_chart'));
-    //     let option = {
-    //       grid: {
-    //         x: 70,
-    //         y: 90,
-    //         x2: 30,
-    //         y2: 35
-    //       },
-    //       title: {
-    //           text: "各学科数据统计",
-    //           x: "center",
-    //           y: "top",
-    //           textStyle: {
-    //               fontSize: 16,
-    //               fontStyle: 'normal',
-    //               fontWeight: 'bold',
-    //           },
-    //           padding: [5,5,40,25]
-    //       },
-    //       color: ['#409EFD'],
-    //       tooltip : {
-    //           trigger: 'axis',
-    //           axisPointer : {
-    //               type : 'shadow',
-    //               label : {
-    //                   show: true
-    //               }
-    //           },
-    //           textStyle: {
-    //               fontSize: 14,
-    //               fontStyle: 'normal',
-    //               align: 'left'
-    //           },
-    //       },
-    //       calculable: true,
-    //       legend: {
-    //           data: [],
-    //           itemGap: 20,
-    //           x: "right",
-    //           y: "top",
-    //           padding: [5,30,40,5],
-    //           textStyle: {
-    //               fontSize: 14,
-    //               fontStyle: 'normal',
-    //           },
-    //       },
-    //       xAxis : [
-    //       {
-    //           type : 'category',
-    //           data : this.Chart_Data.list_sub,
-    //           axisTick: {
-    //               alignWithLabel: true
-    //           },
-    //           axisLabel:{
-    //               show:true,  //这里的show用于设置是否显示x轴下的字体 默认为true
-    //               interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
-    //               textStyle:{   //textStyle里面写x轴下的字体的样式
-    //                   color:'black',
-    //                   fontSize:14
-    //               }
-    //           },
-    //       }
-    //       ],
-    //       yAxis : [
-    //       {
-    //           type : 'value',
-    //           name : '数量',
-    //           axisLabel:{
-    //               show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
-    //               textStyle:{   //textStyle里面写y轴下的字体的样式
-    //                   color:'black',
-    //                   fontSize:14
-    //               }
-    //           },
-    //           nameTextStyle:{
-    //               color:"black",
-    //               fontSize:14,
-    //               padding:[30, 35, 15, 10]
-    //           }
-    //       }
-    //       ],
-    //       series: []
-    //   };
-    //
-    //   if(this.Count_Type == 'Question'){
-    //     option.legend.data = ['试题']
-    //     option.series = [{
-    //           name:'试题',
-    //           type:'bar',
-    //           barWidth: '30%',
-    //           data: this.Question_Data
-    //       }]
-    //   }else if(this.Count_Type == 'Paper'){
-    //     option.legend.data = ['试卷']
-    //     option.series = [{
-    //           name:'试卷',
-    //           type:'bar',
-    //           barWidth: '30%',
-    //           data: this.Paper_Data
-    //       }]
-    //   }else if(this.Count_Type == 'KU'){
-    //     option.legend.data = ['知识单元']
-    //     option.series = [{
-    //           name:'知识单元',
-    //           type:'bar',
-    //           barWidth: '30%',
-    //           data: this.KU_Data
-    //       }]
-    //   }
-    //   console.log(option.series)
-    //   BarChart.setOption(option);
-    //
-    //   //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-    //   window.addEventListener('resize',function() {BarChart.resize()});
-    // },
-    // 初始化统计表图
-    // Init_Bar(){
-    //
-    //   let config = {
-    //       headers: { "Content-Type": "multipart/form-data" }
-    //   };
-    //   let param = new FormData();
-    //
-    //   this.$http
-    //   .post(this.backendIP + "/api/count", param, config, {
-    //     emulateJSON: true
-    //   })
-    //   .then(function(data) {
-    //
-    //     this.Chart_Data = {};
-    //
-    //     this.Paper_Data = [];
-    //     this.Question_Data = [];
-    //     this.KU_Data = [];
-    //
-    //     this.Chart_Data = data.data;
-    //
-    //     this.Num_Paper = this.Chart_Data.num_paper;
-    //     this.Num_Question = this.Chart_Data.num_question;
-    //     this.Num_KU = this.Chart_Data.num_knowledge;
-    //     for(var index = 0; index < this.Chart_Data.num_sub.length; index ++){
-    //       this.Paper_Data.push(this.Chart_Data.num_sub[index].paper);
-    //       this.Question_Data.push(this.Chart_Data.num_sub[index].question);
-    //       this.KU_Data.push(this.Chart_Data.num_sub[index].knowledge);
-    //     }
-    //     this.Redraw_Bar();
-    //   });
-    // }
   }
 };
 </script>
@@ -1049,16 +916,12 @@ export default {
   background-size: cover;
   z-index: 1;
 }
-.slider-bg {
-  background: url("../assets/temp_bg.jpg");
-  background-size: 100%;
-  position: relative;
-  min-height: 653px;
-  background-position: center;
-  background-size: cover;
-  z-index: 1;
+.main_page {
+  background: linear-gradient(to top right, #D5F2F4, #ABC5F3);
+  height: 620px;
+  padding-top: 240px;
 }
-.slider-bg::before {
+.main_page::before {
   content: "";
   position: absolute;
   left: 0;
@@ -1095,9 +958,20 @@ export default {
 }
 /* 5. about */
 .about-area {
-  padding-top: 50px;
-  padding-bottom: 50px;
+  height: 532px;
+  background: #FAFAFC;
+  margin-top: -32px;
 }
+
+.about_triangle{
+  background: url("../assets/Triangle_1440.svg");
+  background-repeat: no-repeat;
+  background-size: auto;
+  height: 100%;
+  width: 1440px;
+  margin: 0px auto;
+}
+
 .about-content h2 {
   font-size: 40px;
   line-height: 1.3;
@@ -1127,6 +1001,11 @@ export default {
 }
 .search-area {
   padding-top: 100px;
+}
+
+.statistics_area{
+  height: 1000px;
+  background: #FAFAFC;
 }
 /* }
 .link-card {
@@ -1221,8 +1100,127 @@ a {
 }
 
 .Temp_Label{
-  font-size: 40px;
-  letter-spacing: 20px;
-  color: white;
+  font-size: 48px;
 }
+
+.Self_Input{
+  border: none;
+  outline: none;
+  height: 64px;
+  width: 420px;
+  font-size: 20px;
+  display: inline-block;
+}
+
+.Self_Search_Button{
+  width: 100%;
+  height: 64px;
+  margin: 0px;
+  background: linear-gradient(to right, #7BAFEE, #7786EB);
+  color: white;
+  font-size: 20px;
+  border: 3px solid white;
+  border-radius: 32px;
+}
+
+.Self_Search_Button:active{
+  transform: scale(0.95) 300ms;
+}
+
+.Self_Input_Area_Left{
+  height: 64px;
+  width: 50px;
+  background: white;
+  border-radius: 32px 0px 0px 32px;
+}
+
+.Self_Input_Area_Middle{
+  height: 64px;
+  width: 440px;
+  background: white;
+  padding-left: 10px;
+  vertical-align: top;
+}
+
+.Self_Input_Area_Right{
+  height: 64px;
+  width: 128px;
+  background: white;
+  border-radius: 0px 32px 32px 0px;
+}
+
+.Part_Right{
+  height: 1000px;
+  width: 580px;
+  padding-top: 320px;
+  padding-left: 60px;
+}
+
+.statistics_Title{
+  width: 100%;
+  font-size: 36px;
+  font-weight: bold;
+  line-height: 36px;
+  letter-spacing: 0.05em;
+}
+
+.statistics_Colored_Title_1{
+  background-image: linear-gradient(to right, #FF4848, #F0BC2D);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.statistics_Colored_Title_2{
+  background-image: linear-gradient(to right, #4CC1F7, #1A52EE);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.statistics_List{
+  font-size: 20px;
+  line-height: 32px;
+  color: #787878;
+  margin-left: -20px;
+  margin-top: 40px;
+}
+
+.statistics_Self_Button{
+  border: none;
+  display: inline-block;
+  color: white;
+  width: 137px;
+  height: 52px;
+  padding: 6px auto;
+  border-radius: 10px;
+  margin-right: 16px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0.05em;
+}
+
+.statistics_Button_Color1{
+  background: linear-gradient(to right, #D46A6A, #D45959);
+}
+
+.statistics_Button_Color2{
+  background: linear-gradient(to right, #6A91D4, #5986D4);
+}
+
+.statistics_Button_Color3{
+  background: linear-gradient(to right, #766AD4, #6759D4);
+}
+
+@media screen and (max-width: 1024px) {
+  .Normal_Home_Page{
+    display: none
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .Narrow_Home_Page{
+    display: none
+  }
+}
+
 </style>
