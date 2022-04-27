@@ -574,7 +574,7 @@
       <section class="statistics_area">
         <el-row style="width: 1280px; margin: 0 auto">
           <el-col :span="13">
-            <statistics/>
+            <statistics @Part_Change="Part_Change"/>
           </el-col>
           <el-col :span="11" class="Part_Right">
             <div class="statistics_Title" align="left">
@@ -594,14 +594,28 @@
               </ul>
             </div>
             <div align="left">
-              <button class="statistics_Self_Button statistics_Button_Color1">
-                <i class="el-icon-edit" style="margin-right: 10px"></i>试题录入
+              <button 
+                class="statistics_Self_Button statistics_Button_Color1" 
+                v-show="Statistics_Part == 'Question' || Statistics_Part == 'Paper'"
+                @click="Resource_Input()">
+                <i class="el-icon-edit" style="margin-right: 10px"></i><span style="cursor: pointer">
+                {{Statistics_Part == "Question" ? "试题" : "试卷" }}录入</span>
               </button>
-              <button class="statistics_Self_Button statistics_Button_Color2">
-                <i class="el-icon-search" style="margin-right: 10px"></i>试题检索
+              <button 
+                class="statistics_Self_Button statistics_Button_Color2"
+                @click="Resource_Search()"
+                :style="Statistics_Part == 'KU' || Statistics_Part == 'Resources' ? 'width: 200px' : ''">
+                <i class="el-icon-search" style="margin-right: 10px"></i><span style="cursor: pointer">
+                {{Statistics_Part == "Question" ? "试题" : 
+                  Statistics_Part == "Paper" ? "试卷" : 
+                  Statistics_Part == "KU" ? "知识单元" : "教材教辅"}}检索</span>
               </button>
-              <button class="statistics_Self_Button statistics_Button_Color3">
-                <i class="el-icon-reading" style="margin-right: 10px"></i>试题分析
+              <button 
+                class="statistics_Self_Button statistics_Button_Color3" 
+                v-show="Statistics_Part == 'Question' || Statistics_Part == 'Paper'"
+                @click="Resource_Analysis()">
+                <i class="el-icon-reading" style="margin-right: 10px"></i><span style="cursor: pointer">
+                {{Statistics_Part == "Question" ? "试题" : "试卷" }}分析</span>
               </button>
             </div>
           </el-col>
@@ -776,7 +790,8 @@ export default {
       Chart_Data: {},
       PaperAnalyseSwitchFlag: false,
       QuestionAnalyseSwitchFlag: false,
-      Count_Type: "Question"
+      Count_Type: "Question",
+      Statistics_Part: "Question"
     };
   },
   mounted() {
@@ -792,6 +807,35 @@ export default {
     document.body.scrollTo(0, 500)
   },
   methods: {
+    Resource_Input(){
+      if(this.Statistics_Part == 'Question'){
+        this.Router_Trans('/inputMarked');
+      }else{
+        this.Router_Trans('/inputPaper');
+      }
+    },
+    Resource_Search(){
+      if(this.Statistics_Part == 'Question'){
+        this.Router_Trans('/exercise');
+      }else if(this.Statistics_Part == 'Paper'){
+        this.Router_Trans('/searchPaper');
+      }else if(this.Statistics_Part == 'KU'){
+        this.Router_Trans('/KU');
+      }else if(this.Statistics_Part == 'Resources'){
+        this.Router_Trans('/Resources');
+      }
+    },
+    Resource_Analysis(){
+      if(this.Statistics_Part == 'Question'){
+        this.QuestionAnalyseSwitchFlag = true;
+      }else{
+        this.PaperAnalyseSwitchFlag = true;
+      }
+    },
+    // 调整主页统计区块的按钮
+    Part_Change(val){
+      this.Statistics_Part = val;
+    },
     To_Top(){
           document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
       },
@@ -1197,6 +1241,7 @@ a {
   font-weight: 500;
   line-height: 18px;
   letter-spacing: 0.05em;
+  cursor: pointer;
 }
 
 .statistics_Button_Color1{

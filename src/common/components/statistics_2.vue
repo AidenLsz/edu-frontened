@@ -69,6 +69,7 @@ export default {
     };
   },
   async mounted() {
+    this.Count_Type = "Question"
     const echarts = await import('echarts');
     this.echarts = echarts;
     this.Init_Bar();
@@ -80,10 +81,12 @@ export default {
       );
     });
     this.ToTop();
+
   },
   methods: {
     // 调整首页统计表格的内容
     changeCountButton(type){
+      this.$emit("Part_Change", type)
       this.Count_Type = type;
       this.Redraw_Bar();
     },
@@ -355,6 +358,7 @@ a {
 
 .resourceButton{
   border-bottom: 1px solid black;
+  
 }
 .el-button:focus{
   background: #48a6f3;
@@ -433,5 +437,6 @@ a {
   transition-duration: 3000ms;
   transition: ease;
   margin-right: 20px;
+  cursor: pointer;
 }
 </style>
