@@ -288,8 +288,8 @@
           v-show="show_BasicProp"
           style="position: relative; height: 274px; width: 100%"
         >
-          <div id="gauge1" class="gauge" style="left: 80px"></div>
-          <div id="gauge2" class="gauge" style="left: 360px"></div>
+          <div id="gauge1" class="gauge" style="left: 80px" onclick="window.open('/PatentDifficulty.pdf')"></div>
+          <div id="gauge2" class="gauge" style="left: 360px" onclick="window.open('/PatentKnowledge.pdf')"></div>
           <div id="gauge3" class="gauge" style="left: 640px"></div>
           <div class="gauge" style="left: 920px">
             <div
@@ -474,6 +474,7 @@ import Instruction from "./components/InstructionEstimate.vue";
 import $ from "jquery";
 import * as echarts from "echarts";
 import Expand from "./components/ExpandBar.vue";
+
 export default {
   components: {
     //ComplexInput,
