@@ -1375,6 +1375,8 @@ export default {
       if(Self_Input_Flag && Database_Name == ""){
         this.$message.error("您没有保存自定义试题的权限，请修改后重试。")
         return
+      }else if(!Self_Input_Flag){
+        Data.database = "";
       }
 
       Param.data = JSON.stringify(Data)
