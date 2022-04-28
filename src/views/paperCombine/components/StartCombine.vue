@@ -80,7 +80,7 @@
             </el-col>
             <el-col :span="20">
               <el-row type="flex" justify="start">
-                <Mathdown :content="Checked_Question_Info.analyse" :name="'Checked_Question_Analyse'"></Mathdown>
+                <Mathdown :content="Checked_Question_Info.analysis" :name="'Checked_Question_Analyse'"></Mathdown>
               </el-row>
             </el-col>
           </el-row>
@@ -1276,7 +1276,7 @@ export default {
         }
       ).then((res)=>{
         this.Write_Anthority_Database = res.ig_name;
-        this.Write_Database_Aim = this.Write_Anthority_Database[0];
+        this.Write_Database_Aim = this.Write_Anthority_Database[0] ? this.Write_Anthority_Database[0] : "";
       })
     },
     Page_Index_Change(){
@@ -1288,7 +1288,7 @@ export default {
       }else if(this.Write_Anthority_Database.length == 1){
         this.Save_Combine_History(this.Write_Anthority_Database[0]);
       }else if(this.Write_Anthority_Database.length == 0){
-        this.$message.error("此账号为特殊账号，没有历史记录保存的权限")
+        this.Save_Combine_History("");
       }
     },
     Save_New_Or_Old(IsNew){
@@ -1346,6 +1346,8 @@ export default {
         Data.paperformat.push(Label_Using[this.Setting_CheckBox_Label.indexOf(this.Setting_CheckBox_List[i])])
       }
 
+      let Self_Input_Flag = false;
+
       for(let i = 0; i < this.Question_List.length; i++){
         let Questions_Format = {
             type: this.Question_List[i].type,
@@ -1354,17 +1356,25 @@ export default {
             questions: []
         }
         for(let j = 0; j < this.Question_List[i].list.length; j++){
+          if(!Self_Input_Flag && this.Question_List[i].list[j].id == ""){
+            Self_Input_Flag = true;
+          }
           let Question_Item = {
               id: this.Question_List[i].list[j].id,
               score: this.Question_List[i].list[j].score,
               stem: this.Question_List[i].list[j].stem,
               options: this.Question_List[i].list[j].options,
               answer: this.Question_List[i].list[j].answer,
-              analysis: this.Question_List[i].list[j].analyse
+              analysis: this.Question_List[i].list[j].analysis
           }
           Questions_Format.questions.push(Question_Item)
         }
         Data.questions.push(Questions_Format)
+      }
+
+      if(Self_Input_Flag && Database_Name == ""){
+        this.$message.error("您没有保存自定义试题的权限，请修改后重试。")
+        return
       }
 
       Param.data = JSON.stringify(Data)
@@ -1375,7 +1385,6 @@ export default {
       }).catch(() => {
 
       }).finally(() => {
-        
         this.Write_Database_Aim = "";
       })
     },
@@ -1396,7 +1405,7 @@ export default {
             stem: Question.stem,
             options: Question.options,
             answer: Question.answer,
-            analyse: Question.analysis,
+            analysis: Question.analysis,
             score: this.Combine_Replace_Question_Info.score,
             type: this.Combine_Replace_Question_Info.type
         }
@@ -1657,7 +1666,7 @@ export default {
             stem: this.Question_List[i].list[j].stem,
             options: this.Question_List[i].list[j].options,
             answer: this.Question_List[i].list[j].answer,
-            analysis: this.Question_List[i].list[j].analyse
+            analysis: this.Question_List[i].list[j].analysis
           }
           Bundle_Format.content.push(Question_Item)
         }
@@ -1812,7 +1821,7 @@ export default {
             stem: this.Question_List[i].list[j].stem,
             options: this.Question_List[i].list[j].options,
             answer: this.Question_List[i].list[j].answer,
-            analysis: this.Question_List[i].list[j].analyse
+            analysis: this.Question_List[i].list[j].analysis
           }
           Bundle_Format.content.push(Question_Item)
         }
@@ -2159,7 +2168,7 @@ export default {
               stem: this.Question_List[i].list[j].stem,
               options: this.Question_List[i].list[j].options,
               answer: this.Question_List[i].list[j].answer,
-              analysis: this.Question_List[i].list[j].analyse
+              analysis: this.Question_List[i].list[j].analysis
           }
           Questions_Format.questions.push(Question_Item)
         }
@@ -2241,7 +2250,7 @@ export default {
         stem: "",
         options: [],
         answer: "",
-        analyse: ""
+        analysis: ""
       }
       if(['单选题', '多选题', '判断题'].indexOf(Item.type) != -1){
         Question_Show_Infos.type = "选择题";
@@ -2258,7 +2267,7 @@ export default {
       Question_Show_Infos.options = Item.options;
       Question_Show_Infos.stem = Item.stem;
       Question_Show_Infos.answer = Item.answer;
-      Question_Show_Infos.analyse = Item.analysis;
+      Question_Show_Infos.analysis = Item.analysis;
 
       this.Question_List[this.Replace_Question_Bundle_Index].list.splice(this.Replace_Question_Index, 1, Question_Show_Infos);
       this.Replace_Dialog_Show = false;
@@ -2376,7 +2385,7 @@ export default {
             stem: Question.stem,
             options: Question.options,
             answer: Question.answer,
-            analysis: Question.analyse,
+            analysis: Question.analysis,
             score: Question.score,
             type: Question.type,
             knowledgePointInfos: {
