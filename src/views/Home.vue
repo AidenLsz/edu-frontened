@@ -1529,26 +1529,27 @@ a {
   height: 150px;
   border-radius: 24px 24px 0px 0px;
   cursor: pointer;
+  background-repeat: no-repeat;
 }
 
 .Func_Card_1_Img{
-  /* background: url('@/assets/Home_Page_Link_Card_1.png'); */
-  background: red;
+  background: url('../assets/Home_Page_Link_Card_1.jpg');
+  background-size: 100% 150px;
 }
 
 .Func_Card_2_Img{
-  /* background: url('@/assets/Home_Page_Link_Card_1.png'); */
-  background: aqua;
+  background: url('../assets/Home_Page_Link_Card_2.jpg');
+  background-size: 100% 150px;
 }
 
 .Func_Card_3_Img{
-  /* background: url('@/assets/Home_Page_Link_Card_1.png'); */
-  background: lemonchiffon;
+  background: url('../assets/Home_Page_Link_Card_3.jpg');
+  background-size: 100% 150px;
 }
 
 .Func_Card_4_Img{
-  /* background: url('@/assets/Home_Page_Link_Card_1.png'); */
-  background: greenyellow;
+  background: url('../assets/Home_Page_Link_Card_4.jpg');
+  background-size: 100% 150px;
 }
 
 @media screen and (max-width: 1200px) {
