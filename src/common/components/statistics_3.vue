@@ -24,7 +24,7 @@
         @change="handleClick(value1)">
       </el-switch>
 
-      <div id="data_chart_2" class="data_chart_2">
+      <div id="data_chart_3" class="data_chart_3">
 
       </div>
     </div>
@@ -125,7 +125,7 @@ export default {
       if (!this.echarts) {
         return;
       }
-      BarChart = this.echarts.init(document.getElementById('data_chart_2'));
+      BarChart = this.echarts.init(document.getElementById('data_chart_3'));
         let option = {
           grid: {
             x: 80, //x=70时y轴坐标可能显示不全，可以改成百分比
@@ -408,7 +408,7 @@ a {
    padding: 10px;
    box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.08);
 }
-.data_chart_2{
+.data_chart_3{
   margin-top:20px;/*如果没有，则放在框里面的switch按钮点不到*/
   height:300px;
   background: white;
