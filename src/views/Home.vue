@@ -561,160 +561,302 @@
 
       <!-- about-area -->
       <section class="about-area">
-        <div class="about_triangle">
-          <div style="padding-top: 200px;">
-            <label style="font-size: 48px;">寓智于教，致知未来</label>
-          </div>
-          <div style="width: 760px; margin: 0 auto; margin-top: 40px;">
-            <span style="font-size: 20px; letter-spacing: break-all">
-              智慧教育知识图谱（LUNA）致力于为广大师生提供深层次、多维度的海量教育资源处理分析工具，与智能、个性化的教育资源组织、分析与评估服务
-            </span>
-          </div>
+        <div style="padding-top: 200px;">
+          <label style="font-size: 48px;">寓智于教，致知未来</label>
+        </div>
+        <div style="width: 760px; margin: 0 auto; margin-top: 40px;">
+          <span style="font-size: 20px; letter-spacing: break-all">
+            智慧教育知识图谱（LUNA）致力于为广大师生提供深层次、多维度的海量教育资源处理分析工具，与智能、个性化的教育资源组织、分析与评估服务
+          </span>
         </div>
       </section>
 
       <!-- 图标区域-area -->
       <section class="statistics_area">
-        <el-row style="min-width: 1366px; margin: 0 auto">
-          <el-col :span="13">
-            <statistics @Part_Change="Part_Change" id="Normal_Chart"/>
-          </el-col>
-          <el-col :span="11" class="Part_Right">
-            <div class="statistics_Title" align="left">
-              <span class="statistics_Colored_Title_1">海量</span>教学资源，<span class="statistics_Colored_Title_2">智能</span>处理
+        <div class="Normal_Normal">
+          <el-row style="width: 1280px; margin: 0 auto">
+            <el-col :span="13">
+              <statistics
+                @Part_Change_Type="Part_Change_Type" id="Normal_Chart"/>
+            </el-col>
+            <el-col :span="11" class="Part_Right">
+              <div class="statistics_Title" align="left">
+                <span class="statistics_Colored_Title_1">海量</span>教学资源，<span class="statistics_Colored_Title_2">智能</span>处理
+              </div>
+              <div>
+                <ul style="text-align: left" class="statistics_List">
+                  <li style="margin-bottom: 16px;">
+                    海量标准化、体系化的教学资源
+                  </li>
+                  <li style="margin-bottom: 16px;">
+                    基于高效准确的试题相似度评估算法的高质量资源库
+                  </li>
+                  <li style="margin-bottom: 40px;">
+                    智能与个性化的资源录入、查询和管理服务
+                  </li>
+                </ul>
+              </div>
+              <div align="left">
+                <button 
+                  class="statistics_Self_Button statistics_Button_Color1" 
+                  v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
+                  @click="Resource_Input()">
+                  <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  {{Count_Part_Status == "Question" ? "试题" : "试卷" }}录入</span>
+                </button>
+                <button 
+                  class="statistics_Self_Button statistics_Button_Color2"
+                  @click="Resource_Search()"
+                  :style="Count_Part_Status == 'KU' || Count_Part_Status == 'Resources' ? 'width: 180px' : ''">
+                  <i class="el-icon-search" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  {{Count_Part_Status == "Question" ? "试题" : 
+                    Count_Part_Status == "Paper" ? "试卷" : 
+                    Count_Part_Status == "KU" ? "知识单元" : "教材教辅"}}检索</span>
+                </button>
+                <button 
+                  class="statistics_Self_Button statistics_Button_Color3" 
+                  v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
+                  @click="Resource_Analysis()">
+                  <i class="el-icon-reading" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  {{Count_Part_Status == "Question" ? "试题" : "试卷" }}分析</span>
+                </button>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="Normal_Narrow">
+          <el-row style="width: 768px; margin: 0 auto; padding-top: 160px;">
+            <div align="center">
+              <div class="statistics_Title">
+                <span class="statistics_Colored_Title_1">海量</span>教学资源，<span class="statistics_Colored_Title_2">智能</span>处理
+              </div>
+              <div>
+                <ul class="statistics_List">
+                  <li style="margin-bottom: 16px;">
+                    海量标准化、体系化的教学资源
+                  </li>
+                  <li style="margin-bottom: 16px;">
+                    基于高效准确的试题相似度评估算法的高质量资源库
+                  </li>
+                  <li style="margin-bottom: 40px;">
+                    智能与个性化的资源录入、查询和管理服务
+                  </li>
+                </ul>
+              </div>
+              <div align="center">
+                <button 
+                  class="statistics_Self_Button statistics_Button_Color1" 
+                  v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
+                  @click="Resource_Input()">
+                  <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  {{Count_Part_Status == "Question" ? "试题" : "试卷" }}录入</span>
+                </button>
+                <button 
+                  class="statistics_Self_Button statistics_Button_Color2"
+                  @click="Resource_Search()"
+                  :style="Count_Part_Status == 'KU' || Count_Part_Status == 'Resources' ? 'width: 180px' : ''">
+                  <i class="el-icon-search" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  {{Count_Part_Status == "Question" ? "试题" : 
+                    Count_Part_Status == "Paper" ? "试卷" : 
+                    Count_Part_Status == "KU" ? "知识单元" : "教材教辅"}}检索</span>
+                </button>
+                <button 
+                  class="statistics_Self_Button statistics_Button_Color3" 
+                  v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
+                  @click="Resource_Analysis()">
+                  <i class="el-icon-reading" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  {{Count_Part_Status == "Question" ? "试题" : "试卷" }}分析</span>
+                </button>
+              </div>
             </div>
-            <div>
-              <ul style="text-align: left" class="statistics_List">
-                <li style="margin-bottom: 16px;">
-                  海量标准化、体系化的教学资源
-                </li>
-                <li style="margin-bottom: 16px;">
-                  基于高效准确的试题相似度评估算法的高质量资源库
-                </li>
-                <li style="margin-bottom: 40px;">
-                  智能与个性化的资源录入、查询和管理服务
-                </li>
-              </ul>
-            </div>
-            <div align="left">
-              <button 
-                class="statistics_Self_Button statistics_Button_Color1" 
-                v-show="Statistics_Part == 'Question' || Statistics_Part == 'Paper'"
-                @click="Resource_Input()">
-                <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
-                {{Statistics_Part == "Question" ? "试题" : "试卷" }}录入</span>
-              </button>
-              <button 
-                class="statistics_Self_Button statistics_Button_Color2"
-                @click="Resource_Search()"
-                :style="Statistics_Part == 'KU' || Statistics_Part == 'Resources' ? 'width: 180px' : ''">
-                <i class="el-icon-search" style="margin-right: 2px"></i><span style="cursor: pointer">
-                {{Statistics_Part == "Question" ? "试题" : 
-                  Statistics_Part == "Paper" ? "试卷" : 
-                  Statistics_Part == "KU" ? "知识单元" : "教材教辅"}}检索</span>
-              </button>
-              <button 
-                class="statistics_Self_Button statistics_Button_Color3" 
-                v-show="Statistics_Part == 'Question' || Statistics_Part == 'Paper'"
-                @click="Resource_Analysis()">
-                <i class="el-icon-reading" style="margin-right: 2px"></i><span style="cursor: pointer">
-                {{Statistics_Part == "Question" ? "试题" : "试卷" }}分析</span>
-              </button>
-            </div>
-          </el-col>
-        </el-row>
+            <statistics2 
+                @Part_Change_Type="Part_Change_Type" id="Narrow_Chart" style="margin-top: -80px;"/>
+          </el-row>
+        </div>
       </section>
 
       <!-- 图标区域-area -->
       <section class="ku_area">
-        <el-row style="min-width: 1366px; margin: 0 auto">
-          
-          <el-col :span="13" class="Part_Right">
-            <div class="statistics_Title" align="left">
-              <span class="KU_Colored_Title_1">多元</span>知识点，<span class="KU_Colored_Title_2">直观</span>呈现
+        <div class="Normal_Normal">
+          <el-row style="width: 1280px; margin: 0 auto">
+            <el-col :span="13" class="Part_Right">
+              <div class="statistics_Title" align="left">
+                <span class="KU_Colored_Title_1">多元</span>知识点，<span class="KU_Colored_Title_2">直观</span>呈现
+              </div>
+              <div>
+                <ul style="text-align: left" class="statistics_List">
+                  <li style="margin-bottom: 16px;">
+                    知识点智能化组织与展示
+                  </li>
+                  <li style="margin-bottom: 16px;">
+                    结构清晰，辅助学生梳理知识
+                  </li>
+                  <li style="margin-bottom: 40px;">
+                    前驱后继、共同学习和层级关系三种知识关系展示
+                  </li>
+                </ul>
+              </div>
+              <div align="left">
+                <button 
+                  class="statistics_Self_Button KU_Button_Color1"
+                  @click="Router_Trans('\KU')">
+                  <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  立即前往</span>
+                </button>
+              </div>
+            </el-col>
+            <el-col :span="11">
+              <div class="Ku_Part_Right" align="left">
+                <img src="@/assets/Home_Page_Ku.png" class="Ku_Image" @click="submit('三角函数')">
+                <label class="Ku_Title">
+                  三角函数
+                </label><br>
+                <span class="Ku_Description">三角函数是基本初等函数之一，是以角度（数学上最常用弧度制，下同）为自变量，角度对应任意角终边与单位圆交点坐标或其比值为因变量的函数...</span>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="Normal_Narrow">
+          <el-row style="width: 768px; margin: 0 auto;">
+            <div align="center">
+              <div class="statistics_Title" style="margin-top: 200px;">
+                <span class="KU_Colored_Title_1">多元</span>知识点，<span class="KU_Colored_Title_2">直观</span>呈现
+              </div>
+              <div>
+                <ul class="statistics_List">
+                  <li style="margin-bottom: 16px;">
+                    知识点智能化组织与展示
+                  </li>
+                  <li style="margin-bottom: 16px;">
+                    结构清晰，辅助学生梳理知识
+                  </li>
+                  <li style="margin-bottom: 40px;">
+                    前驱后继、共同学习和层级关系三种知识关系展示
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <button 
+                  class="statistics_Self_Button KU_Button_Color1"
+                  @click="Router_Trans('\KU')">
+                  <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  立即前往</span>
+                </button>
+              </div>
+              <div class="Ku_Part_Right" align="left">
+                <img src="@/assets/Home_Page_Ku.png" class="Ku_Image" @click="submit('三角函数')">
+                <label class="Ku_Title">
+                  三角函数
+                </label><br>
+                <span class="Ku_Description">三角函数是基本初等函数之一，是以角度（数学上最常用弧度制，下同）为自变量，角度对应任意角终边与单位圆交点坐标或其比值为因变量的函数...</span>
+              </div>
             </div>
-            <div>
-              <ul style="text-align: left" class="statistics_List">
-                <li style="margin-bottom: 16px;">
-                  知识点智能化组织与展示
-                </li>
-                <li style="margin-bottom: 16px;">
-                  结构清晰，辅助学生梳理知识
-                </li>
-                <li style="margin-bottom: 40px;">
-                  前驱后继、共同学习和层级关系三种知识关系展示
-                </li>
-              </ul>
-            </div>
-            <div align="left">
-              <button 
-                class="statistics_Self_Button KU_Button_Color1"
-                @click="Router_Trans('\KU')">
-                <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
-                立即前往</span>
-              </button>
-            </div>
-          </el-col>
-          <el-col :span="11">
-            <div class="Ku_Part_Right" align="left">
-              <img src="@/assets/Home_Page_Ku.png" class="Ku_Image" @click="submit('三角函数')">
-              <label class="Ku_Title">
-                三角函数
-              </label><br>
-              <span class="Ku_Description">三角函数是基本初等函数之一，是以角度（数学上最常用弧度制，下同）为自变量，角度对应任意角终边与单位圆交点坐标或其比值为因变量的函数...</span>
-            </div>
-          </el-col>
-        </el-row>
+          </el-row>
+        </div>
+        
       </section>
 
       <section class="link-area">
-        <el-row style="min-width: 1366px; margin: 0 auto">
-          <div class="statistics_Title" align="left">
-            <span class="Func_Colored_Title_1">特色</span>教育功能，<span class="Func_Colored_Title_2">倾力</span>打造
-          </div>
-        </el-row>
-        <el-row style="min-width: 1366px; margin: 0 auto" type="flex" justify="center">
-          <div class="Func_Card" align="left">
-            <div class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
-
+        <div class="Normal_Normal">
+          <el-row style="width: 1280px; margin: 0 auto">
+            <div class="statistics_Title" align="left">
+              <span class="Func_Colored_Title_1">特色</span>教育功能，<span class="Func_Colored_Title_2">倾力</span>打造
             </div>
-            <label class="Func_Card_Label" @click="Resource_Analysis('Paper')">试卷分析</label>
-            <br>
-            <div class="Func_Card_Span">使用人工智能和数据挖掘技术在多个层次和维度上分析试卷，如各题型占比、知识点分值和难度变化</div>
-            <br>
-            <div class="Func_Card_Text_Button" @click="Resource_Analysis('Paper')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
-          </div>
-          <div class="Func_Card" align="left">
-            <div class="Func_Card_2_Img Func_Card_Img" @click="Router_Trans('/paperCombine')">
+          </el-row>
+          <el-row style="min-width: 1366px; margin: 0 auto" type="flex" justify="center">
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
 
+              </div>
+              <label class="Func_Card_Label" @click="Resource_Analysis('Paper')">试卷分析</label>
+              <br>
+              <div class="Func_Card_Span">使用人工智能和数据挖掘技术在多个层次和维度上分析试卷，如各题型占比、知识点分值和难度变化</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Resource_Analysis('Paper')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
             </div>
-            <label class="Func_Card_Label" @click="Router_Trans('/paperCombine')">组卷系统</label>
-            <br>
-            <div class="Func_Card_Span">智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能</div>
-            <br>
-            <div class="Func_Card_Text_Button" @click="Router_Trans('/paperCombine')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
-          </div>
-          <div class="Func_Card" align="left">
-            <div class="Func_Card_3_Img Func_Card_Img" @click="Router_Trans('/PublicPlatform')">
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_2_Img Func_Card_Img" @click="Router_Trans('/paperCombine')">
 
+              </div>
+              <label class="Func_Card_Label" @click="Router_Trans('/paperCombine')">组卷系统</label>
+              <br>
+              <div class="Func_Card_Span">智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/paperCombine')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
             </div>
-            <label class="Func_Card_Label" @click="Router_Trans('/PublicPlatform')">AI实验室</label>
-            <br>
-            <div class="Func_Card_Span">由LUNA团队提供和维护，依托领先的技术实力，为用户提供高品质的教育产品及服务</div>
-            <br>
-            <div class="Func_Card_Text_Button" @click="Router_Trans('/PublicPlatform')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
-          </div>
-          <div class="Func_Card" align="left">
-            <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_3_Img Func_Card_Img" @click="Router_Trans('/PublicPlatform')">
 
+              </div>
+              <label class="Func_Card_Label" @click="Router_Trans('/PublicPlatform')">AI实验室</label>
+              <br>
+              <div class="Func_Card_Span">由LUNA团队提供和维护，依托领先的技术实力，为用户提供高品质的教育产品及服务</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/PublicPlatform')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
             </div>
-            <label class="Func_Card_Label" @click="Router_Trans('/Resources')">智能教辅平台</label>
-            <br>
-            <div class="Func_Card_Span">深层次多维度海量教育资源分析，个性化资源管理、组织功能，为教师提供智能化教学服务</div>
-            <br>
-            <div class="Func_Card_Text_Button" @click="Router_Trans('/Resources')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
-          </div>
-        </el-row>
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
+
+              </div>
+              <label class="Func_Card_Label" @click="Router_Trans('/Resources')">智能教辅平台</label>
+              <br>
+              <div class="Func_Card_Span">深层次多维度海量教育资源分析，个性化资源管理、组织功能，为教师提供智能化教学服务</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/Resources')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+          </el-row>
+        </div>
+        <div class="Normal_Narrow">
+          <el-row style="width: 768px; margin: 0 auto" align="center">
+            <div class="statistics_Title" align="left">
+              <span class="Func_Colored_Title_1">特色</span>教育功能，<span class="Func_Colored_Title_2">倾力</span>打造
+            </div>
+          </el-row>
+          <el-row style="width: 780px; margin: 0 auto" type="flex" justify="center">
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
+
+              </div>
+              <label class="Func_Card_Label" @click="Resource_Analysis('Paper')">试卷分析</label>
+              <br>
+              <div class="Func_Card_Span">使用人工智能和数据挖掘技术在多个层次和维度上分析试卷，如各题型占比、知识点分值和难度变化</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Resource_Analysis('Paper')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_2_Img Func_Card_Img" @click="Router_Trans('/paperCombine')">
+
+              </div>
+              <label class="Func_Card_Label" @click="Router_Trans('/paperCombine')">组卷系统</label>
+              <br>
+              <div class="Func_Card_Span">智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/paperCombine')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+          </el-row>
+          <el-row style="width: 780px; margin: 0 auto" type="flex" justify="center">
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_3_Img Func_Card_Img" @click="Router_Trans('/PublicPlatform')">
+
+              </div>
+              <label class="Func_Card_Label" @click="Router_Trans('/PublicPlatform')">AI实验室</label>
+              <br>
+              <div class="Func_Card_Span">由LUNA团队提供和维护，依托领先的技术实力，为用户提供高品质的教育产品及服务</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/PublicPlatform')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
+
+              </div>
+              <label class="Func_Card_Label" @click="Router_Trans('/Resources')">智能教辅平台</label>
+              <br>
+              <div class="Func_Card_Span">深层次多维度海量教育资源分析，个性化资源管理、组织功能，为教师提供智能化教学服务</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/Resources')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+          </el-row>
+        </div>
       </section>
       <!-- cta-area-end -->
     </div>
@@ -785,30 +927,31 @@
             <div align="center">
               <button 
                 class="statistics_Self_Button statistics_Button_Color1" 
-                v-show="Statistics_Part == 'Question' || Statistics_Part == 'Paper'"
+                v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
                 @click="Resource_Input()">
                 <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
-                {{Statistics_Part == "Question" ? "试题" : "试卷" }}录入</span>
+                {{Count_Part_Status == "Question" ? "试题" : "试卷" }}录入</span>
               </button>
               <button 
                 class="statistics_Self_Button statistics_Button_Color2"
                 @click="Resource_Search()"
-                :style="Statistics_Part == 'KU' || Statistics_Part == 'Resources' ? 'width: 180px' : ''">
+                :style="Count_Part_Status == 'KU' || Count_Part_Status == 'Resources' ? 'width: 180px' : ''">
                 <i class="el-icon-search" style="margin-right: 2px"></i><span style="cursor: pointer">
-                {{Statistics_Part == "Question" ? "试题" : 
-                  Statistics_Part == "Paper" ? "试卷" : 
-                  Statistics_Part == "KU" ? "知识单元" : "教材教辅"}}检索</span>
+                {{Count_Part_Status == "Question" ? "试题" : 
+                  Count_Part_Status == "Paper" ? "试卷" : 
+                  Count_Part_Status == "KU" ? "知识单元" : "教材教辅"}}检索</span>
               </button>
               <button 
                 class="statistics_Self_Button statistics_Button_Color3" 
-                v-show="Statistics_Part == 'Question' || Statistics_Part == 'Paper'"
+                v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
                 @click="Resource_Analysis()">
                 <i class="el-icon-reading" style="margin-right: 2px"></i><span style="cursor: pointer">
-                {{Statistics_Part == "Question" ? "试题" : "试卷" }}分析</span>
+                {{Count_Part_Status == "Question" ? "试题" : "试卷" }}分析</span>
               </button>
             </div>
           </div>
-          <statistics2 @Part_Change="Part_Change" id="Narrow_Chart" style="margin-top: -80px;"/>
+          <statistics3 
+                @Part_Change_Type="Part_Change_Type" id="Narrow_Chart" style="margin-top: -80px;"/>
         </el-row>
       </section>
 
@@ -907,10 +1050,10 @@
 import $ from "jquery";
 import statistics from '@/common/components/statistics_2'
 import statistics2 from '@/common/components/statistics_3'
-
+import statistics3 from '@/common/components/statistics_4'
 
 export default {
-  components: { statistics, statistics2},
+  components: { statistics, statistics2, statistics3},
   name: "Home",
   data() {
     return {
@@ -929,7 +1072,9 @@ export default {
       PaperAnalyseSwitchFlag: false,
       QuestionAnalyseSwitchFlag: false,
       Count_Type: "Question",
-      Statistics_Part: "Question"
+      // 统计项的项目和是否打开学段区分
+      Count_Part_Status: "Question",
+      Period_switch_status: false
     };
   },
   mounted() {
@@ -946,20 +1091,20 @@ export default {
   },
   methods: {
     Resource_Input(){
-      if(this.Statistics_Part == 'Question'){
+      if(this.Count_Part_Status == 'Question'){
         this.Router_Trans('/inputMarked');
       }else{
         this.Router_Trans('/inputPaper');
       }
     },
     Resource_Search(){
-      if(this.Statistics_Part == 'Question'){
+      if(this.Count_Part_Status == 'Question'){
         this.Router_Trans('/exercise');
-      }else if(this.Statistics_Part == 'Paper'){
+      }else if(this.Count_Part_Status == 'Paper'){
         this.Router_Trans('/searchPaper');
-      }else if(this.Statistics_Part == 'KU'){
+      }else if(this.Count_Part_Status == 'KU'){
         this.Router_Trans('/KU');
-      }else if(this.Statistics_Part == 'Resources'){
+      }else if(this.Count_Part_Status == 'Resources'){
         this.Router_Trans('/Resources');
       }
     },
@@ -968,15 +1113,18 @@ export default {
         this.QuestionAnalyseSwitchFlag = true;
       }else if(Part == 'Paper'){
         this.PaperAnalyseSwitchFlag = true;
-      }else if(this.Statistics_Part == 'Question'){
+      }else if(this.Count_Part_Status == 'Question'){
         this.QuestionAnalyseSwitchFlag = true;
-      }else if(this.Statistics_Part == 'Paper'){
+      }else if(this.Count_Part_Status == 'Paper'){
         this.PaperAnalyseSwitchFlag = true;
       }
     },
     // 调整主页统计区块的按钮
-    Part_Change(val){
-      this.Statistics_Part = val;
+    Part_Change_Type(val){
+      this.Count_Part_Status = val;
+    },
+    Part_Change_Period(val){
+      this.Period_switch_status = val;
     },
     To_Top(){
           document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
@@ -1066,7 +1214,7 @@ export default {
 <style scoped>
 
 .main_area {
-  min-width: 1366px;
+  min-width: 768px;
   background: linear-gradient(to top right, #D5F2F4, #ABC5F3);
   height: 620px;
   padding-top: 240px;
@@ -1109,7 +1257,7 @@ export default {
 }
 /* 5. about */
 .about-area {
-  min-width: 1366px;
+  min-width: 768px;
   height: 532px;
   background: #FAFAFC;
   margin-top: -32px;
@@ -1157,20 +1305,20 @@ export default {
 }
 
 .statistics_area{
-  min-width: 1366px;
+  min-width: 768px;
   height: 1300px;
   background: #FAFAFC;
 }
 
 .link-area {
-  min-width: 1366px;
+  min-width: 768px;
   height: 1000px;
   padding-top: 260px;
   background: linear-gradient(71deg, #F5F6FA 0%, #FFFBFB 90%);
 }
 
 .ku_area{
-  min-width: 1366px;
+  min-width: 768px;
   height: 1300px;
   background: linear-gradient(109deg, #FFF5F5 0%, #DDE2F6 90%);
 }
@@ -1531,6 +1679,7 @@ a {
 }
 
 @media screen and (max-width: 768px) {
+
   .Normal_Home_Page{
     display: none
   }
@@ -1602,7 +1751,56 @@ a {
   }
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 769px) and (max-width: 1280px) {
+  .Narrow_Home_Page{
+    display: none
+  }
+
+  .Normal_Normal{
+    display: none;
+  }
+
+  .statistics_List{
+    list-style-type: none;
+  }
+
+  .link-area{
+    min-width: 768px;
+    height: 1200px;
+    margin: 0 auto;
+    padding-top: 120px;
+  }
+
+  .Func_Card{
+    width: 355px;
+    height: 400px;
+    border-radius: 24px;
+    background: #FFFFFF;
+    box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.08);
+    margin: 48px auto 0px auto;
+  }
+
+  .Func_Card_Img{
+    width: 355px;
+    height: 150px;
+    border-radius: 24px 24px 0px 0px;
+    cursor: pointer;
+  }
+
+  .Func_Card_Text_Button{
+    margin-top: 20px;
+  }
+
+  .Func_Card_Span{
+    height: 96px;
+  }
+}
+
+@media screen and (min-width: 1280px){
+  .Normal_Narrow{
+    display: none
+  }
+
   .Narrow_Home_Page{
     display: none
   }

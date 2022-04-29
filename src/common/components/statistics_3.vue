@@ -17,13 +17,11 @@
     </el-row>
 
     <div class="left_Part" align="left">
-      <el-switch
-        v-model="value1"
-        style="display: inline-block"
-        active-text="显示学段细分"
-        @change="handleClick(value1)">
-      </el-switch>
-
+      <div class="Float_Button"
+          style="display: inline-block"
+          @click="handleClick(!period_switch)">
+          {{period_switch ? '隐藏' : '显示'}}学科细分
+      </div>
       <div id="data_chart_3" class="data_chart_3">
 
       </div>
@@ -62,14 +60,17 @@ export default {
       Resources_Data_Per: [],
 
       Chart_Data: {},
-      Count_Type: "Question",
+      Count_Part: "Question",
       List:[],
-      value1 : false,  //显示学段细分开关点击时的返回值
+      period_switch : false,  //显示学段细分开关点击时的返回值
       echarts: null,
     };
   },
+  created(){
+    this.Chart_Part = sessionStorage.getItem("Count_Part") ? sessionStorage.getItem("Count_Part") : "Question"
+    this.period_switch = sessionStorage.getItem("period_switch") ? sessionStorage.getItem("period_switch") : false
+  },
   async mounted() {
-    this.Count_Type = "Question"
     const echarts = await import('echarts');
     this.echarts = echarts;
     this.Init_Bar();
@@ -86,20 +87,21 @@ export default {
   methods: {
     // 调整首页统计表格的内容
     changeCountButton(type){
-      this.$emit("Part_Change", type)
-      this.Count_Type = type;
+      this.$emit("Part_Change_Type", type)
+      sessionStorage.setItem("Count_Part", type);
+      this.Count_Part = type;
       this.Redraw_Bar();
     },
     Get_Count_Style(type){
-      if(type == this.Count_Type){
+      if(type == this.Count_Part){
         return "resourceButton"
       }else{
         return "sleepingButton"
       }
     },
-
     handleClick(event) {  //点击学段细分开关调用函数
-      this.value1 = event;
+      this.period_switch = event;
+      sessionStorage.setItem("period_switch", event);
       this.Redraw_Bar();
     },
 
@@ -212,29 +214,29 @@ export default {
           animationEasing: 'linear',
 
       };
-      if(this.value1 == false){
+      if(this.period_switch == false){
           option.series = [{
                 //name:'',
                 type:'bar',
                 barWidth: '30%',
                 //data:[]
             }]
-        if(this.Count_Type == 'Question' ){
+        if(this.Count_Part == 'Question' ){
           option.series[0].name = '试题'
           option.series[0].data = this.Question_Data_Sub
-        }else if(this.Count_Type == 'Paper'){
+        }else if(this.Count_Part == 'Paper'){
           option.series[0].name = '试卷'
           option.series[0].data = this.Paper_Data_Sub
-        }else if(this.Count_Type == 'KU'){
+        }else if(this.Count_Part == 'KU'){
           option.series[0].name = '知识单元'
           option.series[0].data = this.KU_Data_Sub
-        }else if(this.Count_Type == 'Resources'){
+        }else if(this.Count_Part == 'Resources'){
           option.series[0].name = '教辅教材'
           option.series[0].data = this.Resources_Data_Sub
         }
       }
 
-      else if(this.value1 == true){
+      else if(this.period_switch == true){
          option.legend.orient = 'vertical';
          option.legend.itemGap = 8;//图列间隔
          var storeName = new Array();//用于存储反转后的List列表
@@ -244,13 +246,13 @@ export default {
            option.series[ind].name = this.List[ind];
            option.series[ind].type = 'bar';
            option.series[ind].barWidth = '30%';
-           option.series[ind].stack = this.Count_Type;
+           option.series[ind].stack = this.Count_Part;
            option.series[ind].animationDelay = ind * 400;
            option.series[ind].animationDuration = 400;  //控制图像动画速度来达到欺骗眼睛的效果
-           if(this.Count_Type == 'Question' )            option.series[ind].data = this.Question_Data_Per[ind];
-           else if(this.Count_Type == 'Paper')           option.series[ind].data = this.Paper_Data_Per[ind];
-           else if(this.Count_Type == 'KU')              option.series[ind].data = this.KU_Data_Per[ind];
-           else if(this.Count_Type == 'Resources')       option.series[ind].data = this.Resources_Data_Per[ind];
+           if(this.Count_Part == 'Question' )            option.series[ind].data = this.Question_Data_Per[ind];
+           else if(this.Count_Part == 'Paper')           option.series[ind].data = this.Paper_Data_Per[ind];
+           else if(this.Count_Part == 'KU')              option.series[ind].data = this.KU_Data_Per[ind];
+           else if(this.Count_Part == 'Resources')       option.series[ind].data = this.Resources_Data_Per[ind];
          }
          option.legend.data = storeName;
          option.series[ind] = {
@@ -263,13 +265,13 @@ export default {
                   color: 'rgba(128, 128, 128, 0)'  // 设置背景颜色为透明
                 }      //此块目的为在堆叠柱形图中显示总量，采用的方法为新加一个总量的bar，与现有的堆叠柱重叠摆放并调整其颜色为透明
          }
-        if(this.Count_Type == 'Question' )
+        if(this.Count_Part == 'Question' )
           option.series[ind].data = this.Question_Data_Sub
-        else if(this.Count_Type == 'Paper')
+        else if(this.Count_Part == 'Paper')
           option.series[ind].data = this.Paper_Data_Sub
-        else if(this.Count_Type == 'KU')
+        else if(this.Count_Part == 'KU')
           option.series[ind].data = this.KU_Data_Sub
-        else if(this.Count_Type == 'Resources')
+        else if(this.Count_Part == 'Resources')
           option.series[ind].data = this.Resources_Data_Sub
       }
       // console.log(option.series)
@@ -408,10 +410,27 @@ a {
    padding: 10px;
    box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.08);
 }
+
+.Float_Button{
+  position: relative;
+  cursor: pointer;
+  width: 124px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 16px;
+  color: #5c87bf;
+  background: #f7f7f7;
+  border-radius: 12px;
+  text-align: center;
+  z-index: 2;
+}
+
 .data_chart_3{
-  margin-top:20px;/*如果没有，则放在框里面的switch按钮点不到*/
-  height:300px;
+  position: relative;
+  margin-top:-30px;/*如果没有，则放在框里面的switch按钮点不到*/
+  height:350px;
   background: white;
+  z-index: 1;
 }
 
 .Right_Part{
@@ -439,4 +458,6 @@ a {
   margin-right: 20px;
   cursor: pointer;
 }
+
+
 </style>

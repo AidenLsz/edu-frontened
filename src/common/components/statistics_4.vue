@@ -22,7 +22,7 @@
           @click="handleClick(!period_switch)">
           {{period_switch ? '隐藏' : '显示'}}学科细分
       </div>
-      <div id="data_chart_2" class="data_chart_2">
+      <div id="data_chart_4" class="data_chart_4">
 
       </div>
     </div>
@@ -88,9 +88,9 @@ export default {
     },
     // 调整首页统计表格的内容
     changeCountButton(type){
-      this.Count_Part = type;
       this.$emit("Part_Change_Type", type)
       sessionStorage.setItem("Count_Part", type);
+      this.Count_Part = type;
       this.Redraw_Bar();
     },
     Get_Count_Style(type){
@@ -128,7 +128,7 @@ export default {
       if (!this.echarts) {
         return;
       }
-      BarChart = this.echarts.init(document.getElementById('data_chart_2'));
+      BarChart = this.echarts.init(document.getElementById('data_chart_4'));
         let option = {
           grid: {
             x: 80, //x=70时y轴坐标可能显示不全，可以改成百分比
@@ -426,7 +426,7 @@ a {
   z-index: 2;
 }
 
-.data_chart_2{
+.data_chart_4{
   position: relative;
   margin-top:-30px;/*如果没有，则放在框里面的switch按钮点不到*/
   height:350px;
