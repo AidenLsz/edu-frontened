@@ -1306,7 +1306,7 @@ export default {
 
 .statistics_area{
   min-width: 768px;
-  height: 1300px;
+  height: 1000px;
   background: #FAFAFC;
 }
 
@@ -1319,7 +1319,7 @@ export default {
 
 .ku_area{
   min-width: 768px;
-  height: 1300px;
+  height: 1000px;
   background: linear-gradient(109deg, #FFF5F5 0%, #DDE2F6 90%);
 }
 /* }
@@ -1693,6 +1693,7 @@ a {
   }
 
   .ku_area{
+    height: 1300px;
     min-width: 768px;
   }
 
@@ -1703,6 +1704,7 @@ a {
   }
 
   .statistics_area{
+    height: 1300px;
     min-width: 768px;
   }
 
@@ -1769,6 +1771,21 @@ a {
     height: 1200px;
     margin: 0 auto;
     padding-top: 120px;
+  }
+
+  .ku_area{
+    height: 1300px;
+    min-width: 768px;
+  }
+
+  .Ku_Part_Right{
+    text-align: left;
+    margin-top: 124px;
+  }
+
+  .statistics_area{
+    height: 1300px;
+    min-width: 768px;
   }
 
   .Func_Card{
