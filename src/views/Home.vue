@@ -1,6 +1,6 @@
 <template>
   <!--todo: polish the format-->
-  <div style="min-width: 1366px; margin-top: -90px;">
+  <div style="margin-top: -90px;">
     <div id="Top_Nav" class="Top_Nav">
 
     </div>
@@ -575,7 +575,7 @@
 
       <!-- 图标区域-area -->
       <section class="statistics_area">
-        <el-row style="width: 1280px; margin: 0 auto">
+        <el-row style="min-width: 1366px; margin: 0 auto">
           <el-col :span="13">
             <statistics @Part_Change="Part_Change" id="Normal_Chart"/>
           </el-col>
@@ -627,7 +627,7 @@
 
       <!-- 图标区域-area -->
       <section class="ku_area">
-        <el-row style="width: 1280px; margin: 0 auto">
+        <el-row style="min-width: 1366px; margin: 0 auto">
           
           <el-col :span="13" class="Part_Right">
             <div class="statistics_Title" align="left">
@@ -668,12 +668,12 @@
       </section>
 
       <section class="link-area">
-        <el-row style="width: 1280px; margin: 0 auto">
+        <el-row style="min-width: 1366px; margin: 0 auto">
           <div class="statistics_Title" align="left">
             <span class="Func_Colored_Title_1">特色</span>教育功能，<span class="Func_Colored_Title_2">倾力</span>打造
           </div>
         </el-row>
-        <el-row style="width: 1280px; margin: 0 auto" type="flex" justify="center">
+        <el-row style="min-width: 1366px; margin: 0 auto" type="flex" justify="center">
           <div class="Func_Card" align="left">
             <div class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
 
@@ -764,7 +764,7 @@
 
       <!-- 图标区域-area -->
       <section class="statistics_area">
-        <el-row style="width: 1024px; margin: 0 auto; padding-top: 160px;">
+        <el-row style="width: 768px; margin: 0 auto; padding-top: 160px;">
           <div align="center">
             <div class="statistics_Title">
               <span class="statistics_Colored_Title_1">海量</span>教学资源，<span class="statistics_Colored_Title_2">智能</span>处理
@@ -814,7 +814,7 @@
 
       <!-- 图标区域-area -->
       <section class="ku_area">
-        <el-row style="width: 1024px; margin: 0 auto;">
+        <el-row style="width: 768px; margin: 0 auto;">
           <div align="center">
             <div class="statistics_Title" style="margin-top: 200px;">
               <span class="KU_Colored_Title_1">多元</span>知识点，<span class="KU_Colored_Title_2">直观</span>呈现
@@ -852,7 +852,7 @@
       </section>
 
       <section class="link-area">
-        <el-row style="width: 1024px; margin: 0 auto" align="center">
+        <el-row style="width: 768px; margin: 0 auto" align="center">
           <div class="statistics_Title">
             <span class="Func_Colored_Title_1">特色</span>教育功能，<span class="Func_Colored_Title_2">倾力</span>打造
           </div>
@@ -1064,36 +1064,9 @@ export default {
 };
 </script>
 <style scoped>
-/* 手搓水平分割线 */
-.Divider_Line{
-  height: 30px;
-  margin-top: 29px;
-  display: inline-block;
-  width:calc((100%-400px)/2);
-  max-width: 250px;
-  border-top: 4px solid #dcdfe6;
-}
-/* 分割线中间的文字 */
-.Inner_Text{
-  display: inline-block;
-  letter-spacing: 1vw; 
-  width: 400px;
-  font-size: 40px;
-  margin-top: 0px;
-  padding-top: 0px;
-  height: 60px;
-  line-height: 60px;
-  vertical-align: top;
-}
-/* 区块行 */
-.Label_Line{
-  width: 1344px; 
-  align: center;
-  margin: 30px auto 30px auto; 
-  height: 60px;
-}
 
 .main_area {
+  min-width: 1366px;
   background: linear-gradient(to top right, #D5F2F4, #ABC5F3);
   height: 620px;
   padding-top: 240px;
@@ -1136,6 +1109,7 @@ export default {
 }
 /* 5. about */
 .about-area {
+  min-width: 1366px;
   height: 532px;
   background: #FAFAFC;
   margin-top: -32px;
@@ -1146,7 +1120,7 @@ export default {
   background-repeat: no-repeat;
   background-size: auto;
   height: 100%;
-  width: 1440px;
+  max-width: 1440px;
   margin: 0px auto;
 }
 
@@ -1178,21 +1152,25 @@ export default {
   margin-left: -130px;
 }
 .search-area {
+  min-width: 1366px;
   padding-top: 100px;
 }
 
 .statistics_area{
+  min-width: 1366px;
   height: 1300px;
   background: #FAFAFC;
 }
 
 .link-area {
+  min-width: 1366px;
   height: 1000px;
   padding-top: 260px;
   background: linear-gradient(71deg, #F5F6FA 0%, #FFFBFB 90%);
 }
 
 .ku_area{
+  min-width: 1366px;
   height: 1300px;
   background: linear-gradient(109deg, #FFF5F5 0%, #DDE2F6 90%);
 }
@@ -1552,36 +1530,37 @@ a {
   background-size: 100% 150px;
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 768px) {
   .Normal_Home_Page{
     display: none
   }
 
   .main_area{
-    width: 1024px;
+    min-width: 768px;
   }
 
   .about-area{
-    width: 1024px;
+    min-width: 768px;
   }
 
   .ku_area{
-    width: 1024px;
+    min-width: 768px;
   }
 
   .link-area{
-    width: 1024px;
+    min-width: 768px;
     height: 2000px;
     padding-top: 120px;
   }
 
   .statistics_area{
-    width: 1024px;
+    min-width: 768px;
   }
 
   .about_triangle{
-    width: 1024px;
+    width: 768px;
     background: url("../assets/Triangle.svg");
+    overflow: hidden;
     background-repeat: no-repeat;
     background-size: auto;
     background-position: right;
@@ -1623,7 +1602,7 @@ a {
   }
 }
 
-@media screen and (min-width: 1201px) {
+@media screen and (min-width: 769px) {
   .Narrow_Home_Page{
     display: none
   }
