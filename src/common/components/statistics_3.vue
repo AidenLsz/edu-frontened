@@ -66,10 +66,6 @@ export default {
       echarts: null,
     };
   },
-  created(){
-    this.Chart_Part = sessionStorage.getItem("Count_Part") ? sessionStorage.getItem("Count_Part") : "Question"
-    this.period_switch = sessionStorage.getItem("period_switch") ? sessionStorage.getItem("period_switch") : false
-  },
   async mounted() {
     const echarts = await import('echarts');
     this.echarts = echarts;
@@ -81,15 +77,18 @@ export default {
         "url(" + $(this).attr("data-background") + ")"
       );
     });
-    this.ToTop();
-
   },
   methods: {
+    Refresh_Setting(){
+      this.Chart_Part = sessionStorage.getItem("Count_Part") ? sessionStorage.getItem("Count_Part") : "Question"
+      this.changeCountButton(this.Chart_Part);
+      this.period_switch = sessionStorage.getItem("period_switch") ? sessionStorage.getItem("period_switch") : false
+    },
     // 调整首页统计表格的内容
     changeCountButton(type){
+      this.Count_Part = type;
       this.$emit("Part_Change_Type", type)
       sessionStorage.setItem("Count_Part", type);
-      this.Count_Part = type;
       this.Redraw_Bar();
     },
     Get_Count_Style(type){
@@ -103,10 +102,6 @@ export default {
       this.period_switch = event;
       sessionStorage.setItem("period_switch", event);
       this.Redraw_Bar();
-    },
-
-    ToTop(){
-      window.scrollTo(0,0);
     },
     submit() {
       this.$router.push({

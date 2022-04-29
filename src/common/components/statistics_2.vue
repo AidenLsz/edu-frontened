@@ -77,8 +77,6 @@ export default {
         "url(" + $(this).attr("data-background") + ")"
       );
     });
-    this.Refresh_Setting();
-    this.ToTop();
   },
   methods: {
     Refresh_Setting(){
@@ -104,10 +102,6 @@ export default {
       this.period_switch = event;
       sessionStorage.setItem("period_switch", event);
       this.Redraw_Bar();
-    },
-
-    ToTop(){
-      window.scrollTo(0,0);
     },
     submit() {
       this.$router.push({

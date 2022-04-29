@@ -77,8 +77,6 @@ export default {
         "url(" + $(this).attr("data-background") + ")"
       );
     });
-    this.Refresh_Setting();
-    this.ToTop();
   },
   methods: {
     Refresh_Setting(){
@@ -88,9 +86,9 @@ export default {
     },
     // 调整首页统计表格的内容
     changeCountButton(type){
+      this.Count_Part = type;
       this.$emit("Part_Change_Type", type)
       sessionStorage.setItem("Count_Part", type);
-      this.Count_Part = type;
       this.Redraw_Bar();
     },
     Get_Count_Style(type){
@@ -104,10 +102,6 @@ export default {
       this.period_switch = event;
       sessionStorage.setItem("period_switch", event);
       this.Redraw_Bar();
-    },
-
-    ToTop(){
-      window.scrollTo(0,0);
     },
     submit() {
       this.$router.push({
