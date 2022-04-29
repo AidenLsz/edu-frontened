@@ -1813,7 +1813,7 @@ a {
   }
 }
 
-@media screen and (min-width: 1280px){
+@media screen and (min-width: 1281px){
   .Normal_Narrow{
     display: none
   }
