@@ -27,6 +27,7 @@
       </div>
       <div class="flex-placeholder"/>
       <div>
+        <div v-if="$store.state.AIlab_user.AIname" class="console">控制台</div>
         <div v-if="$store.state.AIlab_user.AIname" class="user">
           <el-dropdown trigger="hover">
           <span class="el-dropdown-link">
@@ -298,10 +299,24 @@ export default {
   cursor: pointer;
 }
 
+.console {
+  position: absolute;
+  height: 22px;
+  vertical-align: middle;
+  line-height: 22px;
+  font-size: 18px;
+  width: 100px;
+  color: white;
+  right: calc(6% + 170px);
+  // left: calc(72.3% + 150px);
+  top: 28.5px;
+  border-right: 2px solid white;
+}
+
 .user {
   position: absolute;
   height: 22px;
-  width: 100px;
+  width: 150px;
   color: white;
   right: 6%;
   // left: calc(72.3% + 150px);
@@ -424,6 +439,9 @@ export default {
   }
   .menu {
     display: inline;
+  }
+  .console {
+    display: none;
   }
 }
 </style>
