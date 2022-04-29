@@ -72,54 +72,63 @@ export default {
         Authorization: `Bearer ${this.$store.state.AIlab_user.AItoken}`,
       },
     }).then((data) => {
-      this.data = data.data;
-      console.log(this.data);
-      this.mail = this.data.email;
-      this.user_name = this.data.user_name;
-      this.full_name = this.data.full_name;
-      this.new_full_name = this.full_name;
-      this.phone = this.data.phone_number;
-      let temp = this.data.register_date.split(" ");
-      let month;
-      switch (temp[2]) {
-        case "Jan":
-          month = "01";
-          break;
-        case "Feb":
-          month = "02";
-          break;
-        case "Mar":
-          month = "03";
-          break;
-        case "Apr":
-          month = "04";
-          break;
-        case "May":
-          month = "05";
-          break;
-        case "Jun":
-          month = "06";
-          break;
-        case "Jul":
-          month = "07";
-          break;
-        case "Agu":
-          month = "08";
-          break;
-        case "Sep":
-          month = "09";
-          break;
-        case "Oct":
-          month = "10";
-          break;
-        case "Nov":
-          month = "11";
-          break;
-        case "Dec":
-          month = "12";
-          break;
+      if (data.data.success) {
+        this.data = data.data;
+        console.log(this.data);
+        this.mail = this.data.email;
+        this.user_name = this.data.user_name;
+        this.full_name = this.data.full_name;
+        this.new_full_name = this.full_name;
+        this.phone = this.data.phone_number;
+        let temp = this.data.register_date.split(" ");
+        let month;
+        switch (temp[2]) {
+          case "Jan":
+            month = "01";
+            break;
+          case "Feb":
+            month = "02";
+            break;
+          case "Mar":
+            month = "03";
+            break;
+          case "Apr":
+            month = "04";
+            break;
+          case "May":
+            month = "05";
+            break;
+          case "Jun":
+            month = "06";
+            break;
+          case "Jul":
+            month = "07";
+            break;
+          case "Agu":
+            month = "08";
+            break;
+          case "Sep":
+            month = "09";
+            break;
+          case "Oct":
+            month = "10";
+            break;
+          case "Nov":
+            month = "11";
+            break;
+          case "Dec":
+            month = "12";
+            break;
+        }
+        this.register_date = temp[3] + "-" + month + "-" + temp[1];
+      } else {
+        console.log(data.data.errMsg);
+        this.$message({
+          showClose: true,
+          message: data.data.errMsg,
+          type: "error",
+        });
       }
-      this.register_date = temp[3] + "-" + month + "-" + temp[1];
     });
     // let cookie = document.cookie;
     // console.log(cookie);

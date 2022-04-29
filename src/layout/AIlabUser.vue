@@ -1,5 +1,5 @@
 <template>
-  <el-container style="height: 100%; border: 1px solid #eee" id="app">
+  <el-container style="height: 100%;">
     <el-header style="height: 72px">
       <div class="logo">
         <img
@@ -20,8 +20,8 @@
           style="height: 36px"
         ></el-input>
       </div> -->
-      <div class="text">控制台</div>
-      <div class="line"></div>
+      <!-- <div class="text">控制台</div> -->
+      <!-- <div class="line"></div> -->
       <div v-if="$store.state.AIlab_user.AIname" class="user">
         <el-dropdown trigger="hover">
           <span class="el-dropdown-link">
