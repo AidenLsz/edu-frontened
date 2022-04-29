@@ -871,7 +871,7 @@
             <label style="font-size: 24px; filter: drop-shadow(1px 4px 4px rgba(0, 0, 0, 0.12));">智慧教育知识图谱</label>
           </div>
         </el-row>
-        <div justify="center" class="Search_Area">
+        <div align="center" class="Search_Area">
           <div class="Self_Input_Area_Left" align="left">
             <i class="el-icon-search" style="font-size: 30px; margin-top: 18px; margin-right: 30px; margin-left: 20px;"></i>
           </div>
@@ -1679,6 +1679,11 @@ a {
 }
 
 @media screen and (max-width: 768px) {
+
+  .Search_Area{
+    max-width: 640px;
+    width: 83%;
+  }
 
   .Normal_Home_Page{
     display: none
