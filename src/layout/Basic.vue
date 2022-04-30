@@ -134,7 +134,7 @@
       :visible.sync="Narrow_Navbar_Drawer"
       :direction="'rtl'"
       size="260px">
-      <el-row slot="title" type="flex" justify="start" class="Drawer_Header" style="display: none">
+      <el-row slot="title" type="flex" justify="start" class="Drawer_Header">
         <span style="font-size: 20px; color: black; padding-left: 5%">LUNA水镜智能</span>
       </el-row>
       <div style="padding: 0px 10%">

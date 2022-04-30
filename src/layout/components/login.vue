@@ -11,7 +11,7 @@
       <el-col :span="10" :offset="2">
         <el-row>
           <span style="font-weight: bold; color: #47A2FF; font-size: 24px">
-            欢迎使用
+            欢迎使用LUNA
             <template v-if="systemType === 0">
               LUNA智慧教育知识图谱
             </template>

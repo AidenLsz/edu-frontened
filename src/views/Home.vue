@@ -795,14 +795,14 @@
               <div class="Func_Card_Text_Button" @click="Router_Trans('/PublicPlatform')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
             </div>
             <div class="Func_Card" align="left">
-              <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/itas')">
+              <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
 
               </div>
-              <label class="Func_Card_Label" @click="Router_Trans('/itas')">智能教辅平台</label>
+              <label class="Func_Card_Label" @click="Router_Trans('/Resources')">智能教辅平台</label>
               <br>
               <div class="Func_Card_Span">深层次多维度海量教育资源分析，个性化资源管理、组织功能，为教师提供智能化教学服务</div>
               <br>
-              <div class="Func_Card_Text_Button" @click="Router_Trans('/itas')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/Resources')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
             </div>
           </el-row>
         </div>
@@ -846,14 +846,14 @@
               <div class="Func_Card_Text_Button" @click="Router_Trans('/PublicPlatform')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
             </div>
             <div class="Func_Card" align="left">
-              <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/itas')">
+              <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
 
               </div>
-              <label class="Func_Card_Label" @click="Router_Trans('/itas')">智能教辅平台</label>
+              <label class="Func_Card_Label" @click="Router_Trans('/Resources')">智能教辅平台</label>
               <br>
               <div class="Func_Card_Span">深层次多维度海量教育资源分析，个性化资源管理、组织功能，为教师提供智能化教学服务</div>
               <br>
-              <div class="Func_Card_Text_Button" @click="Router_Trans('/itas')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/Resources')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
             </div>
           </el-row>
         </div>
@@ -1031,14 +1031,14 @@
             <div class="Func_Card_Text_Button" @click="Router_Trans('/PublicPlatform')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
           </div>
           <div class="Func_Card" align="left">
-            <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/itas')">
+            <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
 
             </div>
-            <label class="Func_Card_Label" @click="Router_Trans('/itas')">智能教辅平台</label>
+            <label class="Func_Card_Label" @click="Router_Trans('/Resources')">智能教辅平台</label>
             <br>
             <div class="Func_Card_Span">深层次多维度海量教育资源分析，个性化资源管理、组织功能，为教师提供智能化教学服务</div>
             <br>
-            <div class="Func_Card_Text_Button" @click="Router_Trans('/itas')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            <div class="Func_Card_Text_Button" @click="Router_Trans('/Resources')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
           </div>
       </section>
       <!-- cta-area-end -->
