@@ -722,11 +722,11 @@ export default {
 
 #block_container {
   position: absolute;
-  right: -2%;
+  right: 0%;
   top: -30%;
   width: 100%;
   height: 200%;
-  //overflow: hidden;
+  overflow: hidden;
   z-index: -10;
 }
 
@@ -734,6 +734,7 @@ export default {
   position: absolute;
   right: 0;
   top: 0;
+  overflow: hidden;
   width: 60%;
   height: 80%;
   background-color: #c9dffc;
