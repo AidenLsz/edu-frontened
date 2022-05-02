@@ -2,19 +2,20 @@
   <div style="min-width: 1440px" id="app">
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <div class="header" style="height: 80px">
-      <!-- <div class="logo">
-        <img
-          src="@/assets/luna_icon.png"
-          height="100%"
-          alt="Logo"
-          style="position: absolute; top: 0px; left: 0px"
-          @click="goToMainPage"
-        />
+      <div class="logo-wrapper">
+        <div class="logo">
+          <img
+              src="@/assets/luna_icon.png"
+              height="100%"
+              alt="Logo"
+              @click="goToMainPage"
+          />
+        </div>
+        <div class="vertical_line"/>
+        <div id="ailab" @click="goToAILab">
+          <p class="ailab">AI实验室</p>
+        </div>
       </div>
-      <div id="ailab" @click="goToAILab">
-        <p>AI实验室</p>
-      </div>
-      <div class="vertical_line"></div> -->
       <div class="page">
         <el-button
           type="text"
@@ -26,7 +27,7 @@
       </div>
       <div class="flex-placeholder"/>
       <div>
-        <div v-if="$store.state.AIlab_user.AIname" class="console">控制台</div>
+        <div v-if="$store.state.AIlab_user.AIname" class="console" @click="ToMyPro">控制台</div>
         <div v-if="$store.state.AIlab_user.AIname" class="user">
           <el-dropdown trigger="hover">
           <span class="el-dropdown-link">
@@ -201,6 +202,11 @@ export default {
         path: "/PublicPlatform/user/userInfo",
       });
     },
+    ToMyPro() {
+      this.$router.push({
+        path: "/PublicPlatform/user/MyPro",
+      });
+    },
     composePaperSystem() {
       this.$router.push({
         path: this.rootPath + "paperCombine",
@@ -310,6 +316,10 @@ export default {
   // left: calc(72.3% + 150px);
   top: 28.5px;
   border-right: 2px solid black;
+}
+
+.console:hover{
+  cursor: pointer;
 }
 
 .user {
