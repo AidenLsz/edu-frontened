@@ -2,7 +2,7 @@
   <div style="min-width: 1440px" id="app">
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <div class="header" style="height: 80px">
-      <!-- <div class="logo-wrapper">
+      <div class="logo-wrapper">
         <div class="logo">
           <img
               src="@/assets/luna_icon.png"
@@ -15,7 +15,7 @@
         <div id="ailab" @click="goToAILab">
           <p class="ailab">AI实验室</p>
         </div>
-      </div> -->
+      </div>
       <div class="page">
         <el-button
           type="text"
@@ -27,6 +27,7 @@
       </div>
       <div class="flex-placeholder"/>
       <div>
+        <div v-if="$store.state.AIlab_user.AIname" class="console" @click="ToMyPro">控制台</div>
         <div v-if="$store.state.AIlab_user.AIname" class="user">
           <el-dropdown trigger="hover">
           <span class="el-dropdown-link">
@@ -201,6 +202,11 @@ export default {
         path: "/PublicPlatform/user/userInfo",
       });
     },
+    ToMyPro() {
+      this.$router.push({
+        path: "/PublicPlatform/user/MyPro",
+      });
+    },
     composePaperSystem() {
       this.$router.push({
         path: this.rootPath + "paperCombine",
@@ -298,10 +304,28 @@ export default {
   cursor: pointer;
 }
 
+.console {
+  position: absolute;
+  height: 22px;
+  vertical-align: middle;
+  line-height: 22px;
+  font-size: 18px;
+  width: 100px;
+  color: white;
+  right: calc(6% + 170px);
+  // left: calc(72.3% + 150px);
+  top: 28.5px;
+  border-right: 2px solid white;
+}
+
+.console:hover{
+  cursor: pointer;
+}
+
 .user {
   position: absolute;
   height: 22px;
-  width: 100px;
+  width: 150px;
   color: white;
   right: 6%;
   // left: calc(72.3% + 150px);
@@ -424,6 +448,9 @@ export default {
   }
   .menu {
     display: inline;
+  }
+  .console {
+    display: none;
   }
 }
 </style>
