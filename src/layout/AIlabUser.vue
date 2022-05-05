@@ -1,5 +1,5 @@
 <template>
-  <el-container style="height: 100%;">
+  <el-container style="height: 100%;" class="container">
     <el-header style="height: 72px">
       <div class="logo">
         <img
@@ -50,7 +50,7 @@
     <el-container>
       <el-aside
         :width="isCollapse ? '75px' : '212px'"
-        style="background-color: #E5E5E5; position: relative"
+        style="background-color: #FAFBFC; position: relative"
       >
         <el-menu
           :default-active="CurrPage()"
@@ -99,7 +99,7 @@
           ></i>
         </div>
       </el-aside>
-      <el-main style="padding: 0 0 0 0; background: #e5e5e5">
+      <el-main style="padding: 0 0 0 0; background: #FAFBFC">
         <div>
           <router-view :key="$route.fullPath"></router-view>
         </div>
@@ -284,9 +284,11 @@ export default {
   top: 250px;
   // left: 100%;
   right: 0%;
-  background: white;
+  background: #FFFFFF;
   clip-path: polygon(0 0, 100% 20%, 100% 80%, 0 100%);
   z-index: 10;
+  // box-shadow: 10px 10px 5px #888888;
+  // border-right: 1px solid rgb(129, 124, 124);
 }
 
 .arrow-box:hover {
@@ -333,5 +335,9 @@ export default {
 .el-menu ::v-deep .el-menu-item {
   margin-left: 40px;
   padding-left: 30px !important;
+}
+
+.container ::v-deep .footer-wrap {
+  background: #ffffff;
 }
 </style>

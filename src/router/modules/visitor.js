@@ -141,6 +141,11 @@ const visitorRouter=[
     component: () => import("@/views/resourceAnalyse/MultiPaperAnalyse.vue"),
   },
   {
+    path: "/SearchAnalyse",
+    name: "visitor/SearchAnalyse",
+    component: () => import("@/views/resourceAnalyse/SearchAnalyse.vue"),
+  },
+  {
     path: "/inputMarked",
     name: "visitor/inputMarked",
     component: () => import("@/views/resourceInput/InputMarked"),

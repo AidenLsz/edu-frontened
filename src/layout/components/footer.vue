@@ -1,7 +1,7 @@
 <template lang="html">
   <!-- footer -->
   <el-footer>
-    <el-col class="footer-wrap" style="color: #9B9EA4; padding: 30px; font-size: 16px; background: #E4E7ED">
+    <el-col class="footer-wrap">
       <el-row type="flex" justify="center">
           <el-link :underline="false" style="color: #9B9EA4; font-size: 16px" @click="Router_Trans(0)">服务条款</el-link>
           <el-divider direction="vertical"></el-divider>
@@ -21,27 +21,33 @@
 
 <script>
 export default {
-  methods:{
-    TeMethod(){
+  methods: {
+    TeMethod() {
       this.$router.push({ path: "/" });
       location.reload();
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
     },
-    Router_Trans(index){
-      let Routes = ['/Agreement', '/privacyPolicy'];
+    Router_Trans(index) {
+      let Routes = ["/Agreement", "/privacyPolicy"];
       let Aim = Routes[index];
       sessionStorage.setItem("OnlyCheck", "1");
       let routeData = this.$router.resolve({ path: Aim });
-      window.open(routeData.href, '_blank');
-    }
-  }
-}
+      window.open(routeData.href, "_blank");
+    },
+  },
+};
 </script>
 
 <style lang="css" scoped>
 /* footer */
+.footer-wrap {
+  color: #9b9ea4;
+  padding: 30px;
+  font-size: 16px;
+  background: #e4e7ed;
+}
 .theme-bg {
- /* background: #1a2930; */
+  /* background: #1a2930; */
   background: black;
 }
 .footer-trext p {
@@ -79,19 +85,19 @@ export default {
   color: #fff;
 }
 
-.el-footer{
+.el-footer {
   /*设置内部填充为0，几个布局元素之间没有间距*/
   padding: 0px;
-    /*外部间距也是如此设置*/
+  /*外部间距也是如此设置*/
   margin: 0px;
   /*统一设置高度为100%*/
   height: 100%;
   width: 100%;
 }
-.el-divider--vertical{
-  display:block;
-  width:2px;
-  margin:3px 49px;
-  background-color: #9B9EA4;
+.el-divider--vertical {
+  display: block;
+  width: 2px;
+  margin: 3px 49px;
+  background-color: #9b9ea4;
 }
 </style>
