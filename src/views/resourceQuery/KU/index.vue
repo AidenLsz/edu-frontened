@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 <template>
-  <div 
-    class="ku" 
-    style="padding-top: 32px; overflow: auto" 
+  <div
+    class="ku"
+    style="padding-top: 32px; overflow: auto"
     v-loading="loading"
     element-loading-text="正在读取知识点网络，请稍后..."
     element-loading-spinner="el-icon-loading"
@@ -51,11 +51,11 @@
       <label>学科</label>
     </el-row>
     <div class="SearchArea" align="left" style="margin-bottom: 20px;">
-      <div 
-        v-for="(Subject, Subject_Index) in Subject_List_All" 
+      <div
+        v-for="(Subject, Subject_Index) in Subject_List_All"
         :key="'Subject_' + Subject_Index"
         align="center"
-        :class="Get_Subject_Button_Class(Subject)" 
+        :class="Get_Subject_Button_Class(Subject)"
         @click="Change_Subject_List(Subject)">
         <span>{{Subject}}</span>
       </div>
@@ -66,23 +66,23 @@
       <label>学段</label>
     </el-row>
     <div class="SearchArea" align="left" style="margin-bottom: 20px;">
-      <div 
-        v-for="(Period, Period_Index) in Period_List_All" 
+      <div
+        v-for="(Period, Period_Index) in Period_List_All"
         :key="'Period_' + Period_Index"
         align="center"
-        :class="Get_Period_Button_Class(Period)" 
+        :class="Get_Period_Button_Class(Period)"
         @click="Change_Period_List(Period)">
         <span>{{Period}}</span>
       </div>
     </div>
-    
+
     <!-- 搜索框行 -->
     <el-row id="Search_Bar" type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;">
       <label>检索</label>
     </el-row>
     <el-row type="flex" justify="start" class="SearchArea">
       <div class="SearchInputDIV">
-        <el-input 
+        <el-input
           prefix-icon="el-icon-search"
           placeholder="请输入知识单元名称"
           class="SearchInput" v-model="ku_name" type="text" @keyup.enter.native="Search_KU_Info(ku_name)">
@@ -102,11 +102,11 @@
         <label style="cursor: pointer">{{Transition_Show ? "仅看相关度最高的结果" : "查看更多结果"}}</label>
       </el-button>
     </el-row>
-    <el-row 
+    <el-row
       v-show="Search_KU"
-      type="flex" 
-      justify="start" 
-      style="margin: 0; margin-bottom: 24px" 
+      type="flex"
+      justify="start"
+      style="margin: 0; margin-bottom: 24px"
       class="KU_Point_Card">
       <KnowledgePointCard @Search_This_KU="Search_KU_Do" :KnowledgePoint="KU_Search_List[0]">
 
@@ -124,15 +124,15 @@
 
             </KnowledgePointCard>
           </div> -->
-          <el-row 
-            v-for="KU_Index in (KU_Search_List.length - (Page_Index - 1) * 5) >= 5 ? 5 : (KU_Search_List.length - (Page_Index - 1) * 5)" 
+          <el-row
+            v-for="KU_Index in (KU_Search_List.length - (Page_Index - 1) * 5) >= 5 ? 5 : (KU_Search_List.length - (Page_Index - 1) * 5)"
             v-show="KU_Index + (Page_Index - 1) * 5 - 1< KU_Search_List.length"
-            :key="'Similar_' + KU_Index" 
-            type="flex" 
+            :key="'Similar_' + KU_Index"
+            type="flex"
             justify="start"
             class="KU_Point_Card">
-            <KnowledgePointCard  
-              @Search_This_KU="Search_KU_Do" 
+            <KnowledgePointCard
+              @Search_This_KU="Search_KU_Do"
               :KnowledgePoint="KU_Search_List[KU_Index + (Page_Index - 1) * 5]">
 
             </KnowledgePointCard>
@@ -160,8 +160,8 @@
           <el-button class="info-btn" size="medium" type="info" plain >
             {{getSimilarNodesElement(_row, _rol)}}
           </el-button>
-        </el-col>          
-      </el-row>        
+        </el-col>
+      </el-row>
     </el-row> -->
     <el-row>
       <div class="KU_Detail_Aim" id="History_Aim"></div>
@@ -172,11 +172,11 @@
         <span style="margin-left: 30px; font-size: 14px; padding-top: 3px; color: #aaa">点击可检索详情</span>
       </el-row>
       <el-row>
-        <div 
-          align="center" 
+        <div
+          align="center"
           class="History_Graph"
-          :style="KU == History_KU_Now ? 'border: 1px solid #E6A23C; color: #E6A23C; background-color: LightYellow;' : ''" 
-          v-for="(KU, KU_Index) in History_Graph" 
+          :style="KU == History_KU_Now ? 'border: 1px solid #E6A23C; color: #E6A23C; background-color: LightYellow;' : ''"
+          v-for="(KU, KU_Index) in History_Graph"
           :key="'History_Graph_' + KU_Index"
           @click="submit(KU)">
           {{KU}}
@@ -255,7 +255,7 @@
         </div>
       </div>
 
-      
+
     </el-row>
     <el-row v-show="!Search_Result" style="height: 300px; width: 100%;">
       <label style="font-size: 24px; margin-top: 60px; color: #ccc">{{Search_KU ? "点击按钮查看详情信息" : "尚未检索知识点"}}</label>
@@ -776,6 +776,7 @@ export default {
       }else{
         hierarchyData.children.push(mid_data)
       }
+      console.log(hierarchyData);
       this.$refs.hierarchy.draw_graph(hierarchyData)
     },
     drawGraph(){
