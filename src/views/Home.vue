@@ -1,6 +1,6 @@
 <template>
   <!--todo: polish the format-->
-  <div class="home" style="min-width: 1366px;">
+  <div style="margin-top: -90px;">
     <div id="Top_Nav" class="Top_Nav">
 
     </div>
@@ -54,6 +54,7 @@
         </el-col>
       </el-row>
     </el-dialog>
+
     <!-- 功能 - 资源录入的统一接口 -->
     <el-dialog
       :visible.sync="functionStatus[0]"
@@ -527,218 +528,532 @@
         </el-col>
       </el-row>
     </el-dialog>
-
-    <section class="slider-bg" >
-      <!-- <el-row type="flex" justify="center" style="padding-top: 260px;">
-        <label class="Temp_Label">智慧教育知识图谱</label>
-      </el-row> -->
-      <el-row type="flex" justify="center" style="padding-top: 400px;">
-        <el-col :span="10">
-          <el-input
-            v-model="ku_name"
-            placeholder="三角函数"
-            class="SearchInput"
-          ></el-input>
-        </el-col>
-        <el-col :span="2">
-          <el-row type="flex" justify="start">
-            <el-button type="primary" @click="submit" plain class="SearchButton"
-              ><i class="el-icon-search" style="margin-right: 15px"></i>检索</el-button
-            >
-          </el-row>
-        </el-col>
-      </el-row>
-    </section>
-
-    <!-- about-area -->
-    <section class="about-area">
-      <el-row class="Label_Line">
-        <div class="Divider_Line" style="margin-right: 1.5rem">
-
+    
+    <div class="Normal_Home_Page">
+      <section class="main_area" >
+        <el-row type="flex" justify="center">
+          <div style="display: inline-block">
+            <img src="@/assets/Luna_Home_Page_Icon.svg">
+          </div>
+          <div style="display: inline-block; padding-top: 10px">
+            <span class="Temp_Label">L U N A</span><br>
+            <label style="font-size: 24px; filter: drop-shadow(1px 4px 4px rgba(0, 0, 0, 0.12));">智慧教育知识图谱</label>
+          </div>
+        </el-row>
+        <div justify="center" class="Search_Area">
+          <div class="Self_Input_Area_Left" align="left">
+            <i class="el-icon-search" style="font-size: 30px; margin-top: 18px; margin-right: 30px; margin-left: 20px;"></i>
+          </div>
+          <div class="Self_Input_Area_Middle" align="left">
+            <input 
+              v-model="ku_name" 
+              class="Self_Input" 
+              placeholder="在此输入知识点名称"
+              @keyup.enter="submit(ku_name)">
+          </div>
+          <div class="Self_Input_Area_Right" align="right">
+            <button 
+              class="Self_Search_Button"
+              @click="submit(ku_name)">搜索</button>
+          </div>
         </div>
-        <span class="Inner_Text">
-          简介
-        </span>
-        <div class="Divider_Line">
+      </section>
+
+      <!-- about-area -->
+      <section class="about-area">
+        <div style="padding-top: 200px;">
+          <label style="font-size: 48px;">寓智于教，致知未来</label>
+        </div>
+        <div style="width: 760px; margin: 0 auto; margin-top: 40px;">
+          <span style="font-size: 20px; letter-spacing: break-all">
+            智慧教育知识图谱（LUNA）致力于为广大师生提供深层次、多维度的海量教育资源处理分析工具，与智能、个性化的教育资源组织、分析与评估服务
+          </span>
+        </div>
+      </section>
+
+      <!-- 图标区域-area -->
+      <section class="statistics_area">
+        <div class="Normal_Normal">
+          <el-row style="width: 1280px; margin: 0 auto">
+            <el-col :span="13">
+              <statistics
+                @Part_Change_Type="Part_Change_Type" id="Normal_Chart"/>
+            </el-col>
+            <el-col :span="11" class="Part_Right">
+              <div class="statistics_Title" align="left">
+                <span class="statistics_Colored_Title_1">海量</span>教学资源，<span class="statistics_Colored_Title_2">智能</span>处理
+              </div>
+              <div>
+                <ul style="text-align: left" class="statistics_List">
+                  <li style="margin-bottom: 16px;">
+                    海量标准化、体系化的教学资源
+                  </li>
+                  <li style="margin-bottom: 16px;">
+                    基于高效准确的试题相似度评估算法的高质量资源库
+                  </li>
+                  <li style="margin-bottom: 40px;">
+                    智能与个性化的资源录入、查询和管理服务
+                  </li>
+                </ul>
+              </div>
+              <div align="left">
+                <button 
+                  class="statistics_Self_Button statistics_Button_Color1" 
+                  v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
+                  @click="Resource_Input()">
+                  <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  {{Count_Part_Status == "Question" ? "试题" : "试卷" }}录入</span>
+                </button>
+                <button 
+                  class="statistics_Self_Button statistics_Button_Color2"
+                  @click="Resource_Search()"
+                  :style="Count_Part_Status == 'KU' || Count_Part_Status == 'Resources' ? 'width: 180px' : ''">
+                  <i class="el-icon-search" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  {{Count_Part_Status == "Question" ? "试题" : 
+                    Count_Part_Status == "Paper" ? "试卷" : 
+                    Count_Part_Status == "KU" ? "知识单元" : "教材教辅"}}检索</span>
+                </button>
+                <button 
+                  class="statistics_Self_Button statistics_Button_Color3" 
+                  v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
+                  @click="Resource_Analysis()">
+                  <i class="el-icon-reading" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  {{Count_Part_Status == "Question" ? "试题" : "试卷" }}分析</span>
+                </button>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="Normal_Narrow">
+          <el-row style="width: 768px; margin: 0 auto; padding-top: 160px;">
+            <div align="center">
+              <div class="statistics_Title">
+                <span class="statistics_Colored_Title_1">海量</span>教学资源，<span class="statistics_Colored_Title_2">智能</span>处理
+              </div>
+              <div>
+                <ul class="statistics_List">
+                  <li style="margin-bottom: 16px;">
+                    海量标准化、体系化的教学资源
+                  </li>
+                  <li style="margin-bottom: 16px;">
+                    基于高效准确的试题相似度评估算法的高质量资源库
+                  </li>
+                  <li style="margin-bottom: 40px;">
+                    智能与个性化的资源录入、查询和管理服务
+                  </li>
+                </ul>
+              </div>
+              <div align="center">
+                <button 
+                  class="statistics_Self_Button statistics_Button_Color1" 
+                  v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
+                  @click="Resource_Input()">
+                  <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  {{Count_Part_Status == "Question" ? "试题" : "试卷" }}录入</span>
+                </button>
+                <button 
+                  class="statistics_Self_Button statistics_Button_Color2"
+                  @click="Resource_Search()"
+                  :style="Count_Part_Status == 'KU' || Count_Part_Status == 'Resources' ? 'width: 180px' : ''">
+                  <i class="el-icon-search" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  {{Count_Part_Status == "Question" ? "试题" : 
+                    Count_Part_Status == "Paper" ? "试卷" : 
+                    Count_Part_Status == "KU" ? "知识单元" : "教材教辅"}}检索</span>
+                </button>
+                <button 
+                  class="statistics_Self_Button statistics_Button_Color3" 
+                  v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
+                  @click="Resource_Analysis()">
+                  <i class="el-icon-reading" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  {{Count_Part_Status == "Question" ? "试题" : "试卷" }}分析</span>
+                </button>
+              </div>
+            </div>
+            <statistics2 
+                @Part_Change_Type="Part_Change_Type" id="Narrow_Chart" style="margin-top: -80px;"/>
+          </el-row>
+        </div>
+      </section>
+
+      <!-- 图标区域-area -->
+      <section class="ku_area">
+        <div class="Normal_Normal">
+          <el-row style="width: 1280px; margin: 0 auto">
+            <el-col :span="13" class="Part_Right">
+              <div class="statistics_Title" align="left">
+                <span class="KU_Colored_Title_1">多元</span>知识点，<span class="KU_Colored_Title_2">直观</span>呈现
+              </div>
+              <div>
+                <ul style="text-align: left" class="statistics_List">
+                  <li style="margin-bottom: 16px;">
+                    知识点智能化组织与展示
+                  </li>
+                  <li style="margin-bottom: 16px;">
+                    结构清晰，辅助学生梳理知识
+                  </li>
+                  <li style="margin-bottom: 40px;">
+                    前驱后继、共同学习和层级关系三种知识关系展示
+                  </li>
+                </ul>
+              </div>
+              <div align="left">
+                <button 
+                  class="statistics_Self_Button KU_Button_Color1"
+                  @click="Router_Trans('\KU')">
+                  <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  立即前往</span>
+                </button>
+              </div>
+            </el-col>
+            <el-col :span="11">
+              <div class="Ku_Part_Right" align="left">
+                <img src="@/assets/Home_Page_Ku.png" class="Ku_Image" @click="submit('三角函数')">
+                <label class="Ku_Title">
+                  三角函数
+                </label><br>
+                <span class="Ku_Description">三角函数是基本初等函数之一，是以角度（数学上最常用弧度制，下同）为自变量，角度对应任意角终边与单位圆交点坐标或其比值为因变量的函数...</span>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="Normal_Narrow">
+          <el-row style="width: 768px; margin: 0 auto;">
+            <div align="center">
+              <div class="statistics_Title" style="margin-top: 200px;">
+                <span class="KU_Colored_Title_1">多元</span>知识点，<span class="KU_Colored_Title_2">直观</span>呈现
+              </div>
+              <div>
+                <ul class="statistics_List">
+                  <li style="margin-bottom: 16px;">
+                    知识点智能化组织与展示
+                  </li>
+                  <li style="margin-bottom: 16px;">
+                    结构清晰，辅助学生梳理知识
+                  </li>
+                  <li style="margin-bottom: 40px;">
+                    前驱后继、共同学习和层级关系三种知识关系展示
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <button 
+                  class="statistics_Self_Button KU_Button_Color1"
+                  @click="Router_Trans('\KU')">
+                  <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
+                  立即前往</span>
+                </button>
+              </div>
+              <div class="Ku_Part_Right" align="left">
+                <img src="@/assets/Home_Page_Ku.png" class="Ku_Image" @click="submit('三角函数')">
+                <label class="Ku_Title">
+                  三角函数
+                </label><br>
+                <span class="Ku_Description">三角函数是基本初等函数之一，是以角度（数学上最常用弧度制，下同）为自变量，角度对应任意角终边与单位圆交点坐标或其比值为因变量的函数...</span>
+              </div>
+            </div>
+          </el-row>
+        </div>
         
-        </div>
-      </el-row>
-      <el-row>
-        <el-col :span="8" :offset="2">
-          <img src="../assets/intro.png" width="70%"/>
-        </el-col>
-        <el-col :span="9">
-          <p style="font-size: 20px; line-height: 200%; padding-left: 30px; margin-top: 7vh; text-align: justify">
-          智慧教育知识图谱（LUNA）致力于为广大师生提供智能且直观的智慧教育辅助工具，它包括知识组织、呈现、应用等多维度功能。LUNA通过对海量教材、题库、考纲等跨模态教育教学资源进行深层次的数据挖掘，建立覆盖小初高至大学的知识结构模型。同时，LUNA具有其他智慧教育工具所不具备的海量内容和多样化智能接口，它不仅提供了简单、直观、易用的知识、资源查询功能，还提供了自动考卷分析、试题难度评估等智慧化分析、自动评估接口，可满足广大师生、学校管理者丰富的教育教学需求。
-          </p>
-        </el-col>
-      </el-row>
+      </section>
 
-    </section>
-
-    <section class="link-bg">
-      <!-- 试题检索卡片跳转 -->
-      <el-row class="Label_Line">
-        <div class="Divider_Line" style="margin-right: 1.5rem">
-
-        </div>
-        <span class="Inner_Text">
-          资源与功能
-        </span>
-        <div class="Divider_Line">
-        
-        </div>
-      </el-row>
-      <el-row>
-        <el-col :span="20" :offset="2">
-          <el-row type="flex" justify="center" style="padding-bottom: 50px">
-            <el-button-group>
-              <el-button round @click="changeToolsLabel(0)" ref="resourceButton" :class="Get_TL_Style(0)">
-                资源
-              </el-button>
-              <el-button round @click="changeToolsLabel(1)" ref="functionButton" :class="Get_TL_Style(1)">
-                功能
-              </el-button>
-            </el-button-group>
+      <section class="link-area">
+        <div class="Normal_Normal">
+          <el-row style="width: 1280px; margin: 0 auto">
+            <div class="statistics_Title" align="left">
+              <span class="Func_Colored_Title_1">特色</span>教育功能，<span class="Func_Colored_Title_2">倾力</span>打造
+            </div>
           </el-row>
-          <el-row v-if="ToolsLabelNow == '资源'" style="padding-top: 30px; padding-bottom: 30px">
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenResources(0)" circle style="height: 200px; width: 200px;"><img src="../assets/icon7.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenResources(0)" style="margin-top: 30px; font-size: 20px">
-                  学习资源
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenResources(1)" circle style="height: 200px; width: 200px"><img src="../assets/icon6.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenResources(1)" style="margin-top: 30px; font-size: 20px; color: black">
-                  试题资源
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenResources(2)" circle style="height: 200px; width: 200px"><img src="../assets/icon8.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenResources(2)" style="margin-top: 30px; font-size: 20px; color: black">
-                  试卷资源
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenResources(3)" circle style="height: 200px; width: 200px"><img src="../assets/icon5.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenResources(3)" style="margin-top: 30px; font-size: 20px">
-                  知识体系
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-          </el-row>
-          <!-- 第二段 -->
-          <el-row v-else-if="ToolsLabelNow == '功能'"  style="padding-top: 30px; padding-bottom: 30px">
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenFunctions(0)" circle style="height: 200px; width: 200px;"><img src="../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenFunctions(0)" style="margin-top: 30px; font-size: 20px">
-                  资源录入
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenFunctions(1)" circle style="height: 200px; width: 200px"><img src="../assets/icon3.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenFunctions(1)" style="margin-top: 30px; font-size: 20px">
-                  查询
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenFunctions(3)" circle style="height: 200px; width: 200px"><img src="../assets/icon2.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenFunctions(3)" style="margin-top: 30px; font-size: 20px">
-                  管理
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-            <el-col :span="6">
-              <el-row>
-                <el-button @click="OpenFunctions(2)" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
-              </el-row>
-              <el-row>
-                <label @click="OpenFunctions(2)" style="margin-top: 30px; font-size: 20px">
-                  分析
-                </label>
-              </el-row>
-              <!-- <el-row  style="margin-top: 15px; font-size: 10px; margin-bottom: 15px">
-                <span>介绍文字</span>
-              </el-row> -->
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-    </section>
+          <el-row style="min-width: 1366px; margin: 0 auto" type="flex" justify="center">
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
 
-    <!-- 图标区域-area -->
-    <section>
-      <el-row class="Label_Line">
-        <div class="Divider_Line" style="margin-right: 1.5rem">
+              </div>
+              <label class="Func_Card_Label" @click="Resource_Analysis('Paper')">试卷分析</label>
+              <br>
+              <div class="Func_Card_Span">使用人工智能和数据挖掘技术在多个层次和维度上分析试卷，如各题型占比、知识点分值和难度变化</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Resource_Analysis('Paper')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_2_Img Func_Card_Img" @click="Router_Trans('/paperCombine')">
 
+              </div>
+              <label class="Func_Card_Label" @click="Router_Trans('/paperCombine')">组卷系统</label>
+              <br>
+              <div class="Func_Card_Span">智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/paperCombine')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_3_Img Func_Card_Img" @click="Router_Trans('/PublicPlatform')">
+
+              </div>
+              <label class="Func_Card_Label" @click="Router_Trans('/PublicPlatform')">AI实验室</label>
+              <br>
+              <div class="Func_Card_Span">由LUNA团队提供和维护，依托领先的技术实力，为用户提供高品质的教育产品及服务</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/PublicPlatform')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
+
+              </div>
+              <label class="Func_Card_Label" @click="Router_Trans('/Resources')">智能教辅平台</label>
+              <br>
+              <div class="Func_Card_Span">深层次多维度海量教育资源分析，个性化资源管理、组织功能，为教师提供智能化教学服务</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/Resources')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+          </el-row>
         </div>
-        <span class="Inner_Text">
-          数据统计
-        </span>
-        <div class="Divider_Line">
-        
+        <div class="Normal_Narrow">
+          <el-row style="width: 768px; margin: 0 auto" align="center">
+            <div class="statistics_Title" align="left">
+              <span class="Func_Colored_Title_1">特色</span>教育功能，<span class="Func_Colored_Title_2">倾力</span>打造
+            </div>
+          </el-row>
+          <el-row style="width: 780px; margin: 0 auto" type="flex" justify="center">
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
+
+              </div>
+              <label class="Func_Card_Label" @click="Resource_Analysis('Paper')">试卷分析</label>
+              <br>
+              <div class="Func_Card_Span">使用人工智能和数据挖掘技术在多个层次和维度上分析试卷，如各题型占比、知识点分值和难度变化</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Resource_Analysis('Paper')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_2_Img Func_Card_Img" @click="Router_Trans('/paperCombine')">
+
+              </div>
+              <label class="Func_Card_Label" @click="Router_Trans('/paperCombine')">组卷系统</label>
+              <br>
+              <div class="Func_Card_Span">智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/paperCombine')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+          </el-row>
+          <el-row style="width: 780px; margin: 0 auto" type="flex" justify="center">
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_3_Img Func_Card_Img" @click="Router_Trans('/PublicPlatform')">
+
+              </div>
+              <label class="Func_Card_Label" @click="Router_Trans('/PublicPlatform')">AI实验室</label>
+              <br>
+              <div class="Func_Card_Span">由LUNA团队提供和维护，依托领先的技术实力，为用户提供高品质的教育产品及服务</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/PublicPlatform')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+            <div class="Func_Card" align="left">
+              <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
+
+              </div>
+              <label class="Func_Card_Label" @click="Router_Trans('/Resources')">智能教辅平台</label>
+              <br>
+              <div class="Func_Card_Span">深层次多维度海量教育资源分析，个性化资源管理、组织功能，为教师提供智能化教学服务</div>
+              <br>
+              <div class="Func_Card_Text_Button" @click="Router_Trans('/Resources')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
+            </div>
+          </el-row>
         </div>
-      </el-row>
-      <statistics/>
-    </section>
-    <!-- cta-area-end -->
+      </section>
+      <!-- cta-area-end -->
+    </div>
+    <div class="Narrow_Home_Page">
+      <section class="main_area" >
+        <el-row type="flex" justify="center">
+          <div style="display: inline-block">
+            <img src="@/assets/Luna_Home_Page_Icon.svg">
+          </div>
+          <div style="display: inline-block; padding-top: 10px">
+            <span class="Temp_Label">L U N A</span><br>
+            <label style="font-size: 24px; filter: drop-shadow(1px 4px 4px rgba(0, 0, 0, 0.12));">智慧教育知识图谱</label>
+          </div>
+        </el-row>
+        <div align="center" class="Search_Area">
+          <div class="Self_Input_Area_Left" align="left">
+            <i class="el-icon-search" style="font-size: 30px; margin-top: 18px; margin-right: 30px; margin-left: 20px;"></i>
+          </div>
+          <div class="Self_Input_Area_Middle" align="left">
+            <input 
+              v-model="ku_name" 
+              class="Self_Input" 
+              placeholder="在此输入知识点名称"
+              @keyup.enter="submit(ku_name)">
+          </div>
+          <div class="Self_Input_Area_Right" align="right">
+            <button 
+              class="Self_Search_Button"
+              @click="submit(ku_name)">搜索</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- about-area -->
+      <section class="about-area">
+        <div class="about_triangle">
+          <div style="padding-top: 200px;">
+            <label style="font-size: 48px;">寓智于教，致知未来</label>
+          </div>
+          <div style="width: 760px; margin: 0 auto; margin-top: 40px;">
+            <span style="font-size: 20px; letter-spacing: break-all">
+              智慧教育知识图谱（LUNA）致力于为广大师生提供深层次、多维度的海量教育资源处理分析工具，与智能、个性化的教育资源组织、分析与评估服务
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 图标区域-area -->
+      <section class="statistics_area">
+        <el-row style="width: 768px; margin: 0 auto; padding-top: 160px;">
+          <div align="center">
+            <div class="statistics_Title">
+              <span class="statistics_Colored_Title_1">海量</span>教学资源，<span class="statistics_Colored_Title_2">智能</span>处理
+            </div>
+            <div>
+              <ul class="statistics_List">
+                <li style="margin-bottom: 16px;">
+                  海量标准化、体系化的教学资源
+                </li>
+                <li style="margin-bottom: 16px;">
+                  基于高效准确的试题相似度评估算法的高质量资源库
+                </li>
+                <li style="margin-bottom: 40px;">
+                  智能与个性化的资源录入、查询和管理服务
+                </li>
+              </ul>
+            </div>
+            <div align="center">
+              <button 
+                class="statistics_Self_Button statistics_Button_Color1" 
+                v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
+                @click="Resource_Input()">
+                <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
+                {{Count_Part_Status == "Question" ? "试题" : "试卷" }}录入</span>
+              </button>
+              <button 
+                class="statistics_Self_Button statistics_Button_Color2"
+                @click="Resource_Search()"
+                :style="Count_Part_Status == 'KU' || Count_Part_Status == 'Resources' ? 'width: 180px' : ''">
+                <i class="el-icon-search" style="margin-right: 2px"></i><span style="cursor: pointer">
+                {{Count_Part_Status == "Question" ? "试题" : 
+                  Count_Part_Status == "Paper" ? "试卷" : 
+                  Count_Part_Status == "KU" ? "知识单元" : "教材教辅"}}检索</span>
+              </button>
+              <button 
+                class="statistics_Self_Button statistics_Button_Color3" 
+                v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
+                @click="Resource_Analysis()">
+                <i class="el-icon-reading" style="margin-right: 2px"></i><span style="cursor: pointer">
+                {{Count_Part_Status == "Question" ? "试题" : "试卷" }}分析</span>
+              </button>
+            </div>
+          </div>
+          <statistics3 
+                @Part_Change_Type="Part_Change_Type" id="Narrow_Chart" style="margin-top: -80px;"/>
+        </el-row>
+      </section>
+
+      <!-- 图标区域-area -->
+      <section class="ku_area">
+        <el-row style="width: 768px; margin: 0 auto;">
+          <div align="center">
+            <div class="statistics_Title" style="margin-top: 200px;">
+              <span class="KU_Colored_Title_1">多元</span>知识点，<span class="KU_Colored_Title_2">直观</span>呈现
+            </div>
+            <div>
+              <ul class="statistics_List">
+                <li style="margin-bottom: 16px;">
+                  知识点智能化组织与展示
+                </li>
+                <li style="margin-bottom: 16px;">
+                  结构清晰，辅助学生梳理知识
+                </li>
+                <li style="margin-bottom: 40px;">
+                  前驱后继、共同学习和层级关系三种知识关系展示
+                </li>
+              </ul>
+            </div>
+            <div>
+              <button 
+                class="statistics_Self_Button KU_Button_Color1"
+                @click="Router_Trans('\KU')">
+                <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
+                立即前往</span>
+              </button>
+            </div>
+            <div class="Ku_Part_Right" align="left">
+              <img src="@/assets/Home_Page_Ku.png" class="Ku_Image" @click="submit('三角函数')">
+              <label class="Ku_Title">
+                三角函数
+              </label><br>
+              <span class="Ku_Description">三角函数是基本初等函数之一，是以角度（数学上最常用弧度制，下同）为自变量，角度对应任意角终边与单位圆交点坐标或其比值为因变量的函数...</span>
+            </div>
+          </div>
+        </el-row>
+      </section>
+
+      <section class="link-area">
+        <el-row style="width: 768px; margin: 0 auto" align="center">
+          <div class="statistics_Title">
+            <span class="Func_Colored_Title_1">特色</span>教育功能，<span class="Func_Colored_Title_2">倾力</span>打造
+          </div>
+        </el-row>
+          <div class="Func_Card" align="left">
+            <div class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
+
+            </div>
+            <label class="Func_Card_Label" @click="Resource_Analysis('Paper')">试卷分析</label>
+            <br>
+            <div class="Func_Card_Span">使用人工智能和数据挖掘技术在多个层次和维度上分析试卷，如各题型占比、知识点分值和难度变化</div>
+            <br>
+            <div class="Func_Card_Text_Button" @click="Resource_Analysis('Paper')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
+          </div>
+          <div class="Func_Card" align="left">
+            <div class="Func_Card_2_Img Func_Card_Img" @click="Router_Trans('/paperCombine')">
+
+            </div>
+            <label class="Func_Card_Label" @click="Router_Trans('/paperCombine')">组卷系统</label>
+            <br>
+            <div class="Func_Card_Span">智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能</div>
+            <br>
+            <div class="Func_Card_Text_Button" @click="Router_Trans('/paperCombine')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
+          </div>
+          <div class="Func_Card" align="left">
+            <div class="Func_Card_3_Img Func_Card_Img" @click="Router_Trans('/PublicPlatform')">
+
+            </div>
+            <label class="Func_Card_Label" @click="Router_Trans('/PublicPlatform')">AI实验室</label>
+            <br>
+            <div class="Func_Card_Span">由LUNA团队提供和维护，依托领先的技术实力，为用户提供高品质的教育产品及服务</div>
+            <br>
+            <div class="Func_Card_Text_Button" @click="Router_Trans('/PublicPlatform')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
+          </div>
+          <div class="Func_Card" align="left">
+            <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
+
+            </div>
+            <label class="Func_Card_Label" @click="Router_Trans('/Resources')">智能教辅平台</label>
+            <br>
+            <div class="Func_Card_Span">深层次多维度海量教育资源分析，个性化资源管理、组织功能，为教师提供智能化教学服务</div>
+            <br>
+            <div class="Func_Card_Text_Button" @click="Router_Trans('/Resources')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
+          </div>
+      </section>
+      <!-- cta-area-end -->
+    </div>
   </div>
 </template>
 <script>
 
 import $ from "jquery";
-import statistics from '@/common/components/statistics'
+import statistics from '@/common/components/statistics_2'
+import statistics2 from '@/common/components/statistics_3'
+import statistics3 from '@/common/components/statistics_4'
 
 export default {
-  components: { statistics},
+  components: { statistics, statistics2, statistics3},
   name: "Home",
   data() {
     return {
@@ -756,7 +1071,10 @@ export default {
       Chart_Data: {},
       PaperAnalyseSwitchFlag: false,
       QuestionAnalyseSwitchFlag: false,
-      Count_Type: "Question"
+      Count_Type: "Question",
+      // 统计项的项目和是否打开学段区分
+      Count_Part_Status: "Question",
+      Period_switch_status: false
     };
   },
   mounted() {
@@ -772,6 +1090,42 @@ export default {
     document.body.scrollTo(0, 500)
   },
   methods: {
+    Resource_Input(){
+      if(this.Count_Part_Status == 'Question'){
+        this.Router_Trans('/inputMarked');
+      }else{
+        this.Router_Trans('/inputPaper');
+      }
+    },
+    Resource_Search(){
+      if(this.Count_Part_Status == 'Question'){
+        this.Router_Trans('/exercise');
+      }else if(this.Count_Part_Status == 'Paper'){
+        this.Router_Trans('/searchPaper');
+      }else if(this.Count_Part_Status == 'KU'){
+        this.Router_Trans('/KU');
+      }else if(this.Count_Part_Status == 'Resources'){
+        this.Router_Trans('/Resources');
+      }
+    },
+    Resource_Analysis(Part){
+      if(Part == 'Question'){
+        this.QuestionAnalyseSwitchFlag = true;
+      }else if(Part == 'Paper'){
+        this.PaperAnalyseSwitchFlag = true;
+      }else if(this.Count_Part_Status == 'Question'){
+        this.QuestionAnalyseSwitchFlag = true;
+      }else if(this.Count_Part_Status == 'Paper'){
+        this.PaperAnalyseSwitchFlag = true;
+      }
+    },
+    // 调整主页统计区块的按钮
+    Part_Change_Type(val){
+      this.Count_Part_Status = val;
+    },
+    Part_Change_Period(val){
+      this.Period_switch_status = val;
+    },
     To_Top(){
           document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
       },
@@ -817,10 +1171,10 @@ export default {
     ToTop(){
       window.scrollTo(0,0);
     },
-    submit() {
+    submit(Ku_Name) {
       this.$router.push({
         name: "visitor/Knowledge Unit",
-        params: { name: this.ku_name, knowledgeSystem: "neea" }
+        params: { name: Ku_Name ? Ku_Name : this.ku_name, knowledgeSystem: "neea" }
       });
     },
     CloseFunctions(){
@@ -854,211 +1208,19 @@ export default {
     OpenResources(index){
       this.resourceStatus.splice(index, 1, true);
     },
-    // 重绘统计表图
-    // Redraw_Bar(){
-    //   if (BarChart != null && BarChart != "" && BarChart != undefined) {
-    //     BarChart.dispose();//销毁
-    //   }
-    //   BarChart = echarts.init(document.getElementById('data_chart'));
-    //     let option = {
-    //       grid: {
-    //         x: 70,
-    //         y: 90,
-    //         x2: 30,
-    //         y2: 35
-    //       },
-    //       title: {
-    //           text: "各学科数据统计",
-    //           x: "center",
-    //           y: "top",
-    //           textStyle: {
-    //               fontSize: 16,
-    //               fontStyle: 'normal',
-    //               fontWeight: 'bold',
-    //           },
-    //           padding: [5,5,40,25]
-    //       },
-    //       color: ['#409EFD'],
-    //       tooltip : {
-    //           trigger: 'axis',
-    //           axisPointer : {
-    //               type : 'shadow',
-    //               label : {
-    //                   show: true
-    //               }
-    //           },
-    //           textStyle: {
-    //               fontSize: 14,
-    //               fontStyle: 'normal',
-    //               align: 'left'
-    //           },
-    //       },
-    //       calculable: true,
-    //       legend: {
-    //           data: [],
-    //           itemGap: 20,
-    //           x: "right",
-    //           y: "top",
-    //           padding: [5,30,40,5],
-    //           textStyle: {
-    //               fontSize: 14,
-    //               fontStyle: 'normal',
-    //           },
-    //       },
-    //       xAxis : [
-    //       {
-    //           type : 'category',
-    //           data : this.Chart_Data.list_sub,
-    //           axisTick: {
-    //               alignWithLabel: true
-    //           },
-    //           axisLabel:{
-    //               show:true,  //这里的show用于设置是否显示x轴下的字体 默认为true
-    //               interval:0,  //可以设置成 0 强制显示所有标签。如果设置为 1，表示『隔一个标签显示一个标签』，如果值为 2，表示隔两个标签显示一个标签，以此类推。
-    //               textStyle:{   //textStyle里面写x轴下的字体的样式
-    //                   color:'black',
-    //                   fontSize:14
-    //               }
-    //           },
-    //       }
-    //       ],
-    //       yAxis : [
-    //       {
-    //           type : 'value',
-    //           name : '数量',
-    //           axisLabel:{
-    //               show:true,  //这里的show用于设置是否显示y轴下的字体 默认为true
-    //               textStyle:{   //textStyle里面写y轴下的字体的样式
-    //                   color:'black',
-    //                   fontSize:14
-    //               }
-    //           },
-    //           nameTextStyle:{
-    //               color:"black",
-    //               fontSize:14,
-    //               padding:[30, 35, 15, 10]
-    //           }
-    //       }
-    //       ],
-    //       series: []
-    //   };
-    //
-    //   if(this.Count_Type == 'Question'){
-    //     option.legend.data = ['试题']
-    //     option.series = [{
-    //           name:'试题',
-    //           type:'bar',
-    //           barWidth: '30%',
-    //           data: this.Question_Data
-    //       }]
-    //   }else if(this.Count_Type == 'Paper'){
-    //     option.legend.data = ['试卷']
-    //     option.series = [{
-    //           name:'试卷',
-    //           type:'bar',
-    //           barWidth: '30%',
-    //           data: this.Paper_Data
-    //       }]
-    //   }else if(this.Count_Type == 'KU'){
-    //     option.legend.data = ['知识单元']
-    //     option.series = [{
-    //           name:'知识单元',
-    //           type:'bar',
-    //           barWidth: '30%',
-    //           data: this.KU_Data
-    //       }]
-    //   }
-    //   console.log(option.series)
-    //   BarChart.setOption(option);
-    //
-    //   //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
-    //   window.addEventListener('resize',function() {BarChart.resize()});
-    // },
-    // 初始化统计表图
-    // Init_Bar(){
-    //
-    //   let config = {
-    //       headers: { "Content-Type": "multipart/form-data" }
-    //   };
-    //   let param = new FormData();
-    //
-    //   this.$http
-    //   .post(this.backendIP + "/api/count", param, config, {
-    //     emulateJSON: true
-    //   })
-    //   .then(function(data) {
-    //
-    //     this.Chart_Data = {};
-    //
-    //     this.Paper_Data = [];
-    //     this.Question_Data = [];
-    //     this.KU_Data = [];
-    //
-    //     this.Chart_Data = data.data;
-    //
-    //     this.Num_Paper = this.Chart_Data.num_paper;
-    //     this.Num_Question = this.Chart_Data.num_question;
-    //     this.Num_KU = this.Chart_Data.num_knowledge;
-    //     for(var index = 0; index < this.Chart_Data.num_sub.length; index ++){
-    //       this.Paper_Data.push(this.Chart_Data.num_sub[index].paper);
-    //       this.Question_Data.push(this.Chart_Data.num_sub[index].question);
-    //       this.KU_Data.push(this.Chart_Data.num_sub[index].knowledge);
-    //     }
-    //     this.Redraw_Bar();
-    //   });
-    // }
   }
 };
 </script>
 <style scoped>
-/* 手搓水平分割线 */
-.Divider_Line{
-  height: 30px;
-  margin-top: 29px;
-  display: inline-block;
-  width:calc((100%-400px)/2);
-  max-width: 250px;
-  border-top: 4px solid #dcdfe6;
+
+.main_area {
+  min-width: 768px;
+  background: linear-gradient(to top right, #D5F2F4, #ABC5F3);
+  height: 620px;
+  padding-top: 240px;
+  text-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.12);
 }
-/* 分割线中间的文字 */
-.Inner_Text{
-  display: inline-block;
-  letter-spacing: 1vw; 
-  width: 400px;
-  font-size: 40px;
-  margin-top: 0px;
-  padding-top: 0px;
-  height: 60px;
-  line-height: 60px;
-  vertical-align: top;
-}
-/* 区块行 */
-.Label_Line{
-  width: 1344px; 
-  align: center;
-  margin: 30px auto 30px auto; 
-  height: 60px;
-}
-.link-bg {
-  padding-top: 30px;
-  background: #EEF5FE;
-  background-size: 100%;
-  position: relative;
-  min-height: 700px;
-  background-position: center;
-  background-size: cover;
-  z-index: 1;
-}
-.slider-bg {
-  background: url("../assets/bg.png");
-  background-size: 100%;
-  position: relative;
-  min-height: 653px;
-  background-position: center;
-  background-size: cover;
-  z-index: 1;
-}
-.slider-bg::before {
+.main_area::before {
   content: "";
   position: absolute;
   left: 0;
@@ -1095,9 +1257,21 @@ export default {
 }
 /* 5. about */
 .about-area {
-  padding-top: 50px;
-  padding-bottom: 50px;
+  min-width: 768px;
+  height: 532px;
+  background: #FAFAFC;
+  margin-top: -32px;
 }
+
+.about_triangle{
+  background: url("../assets/Triangle_1440.svg");
+  background-repeat: no-repeat;
+  background-size: auto;
+  height: 100%;
+  max-width: 1440px;
+  margin: 0px auto;
+}
+
 .about-content h2 {
   font-size: 40px;
   line-height: 1.3;
@@ -1126,7 +1300,27 @@ export default {
   margin-left: -130px;
 }
 .search-area {
+  min-width: 1366px;
   padding-top: 100px;
+}
+
+.statistics_area{
+  min-width: 768px;
+  height: 1000px;
+  background: #FAFAFC;
+}
+
+.link-area {
+  min-width: 768px;
+  height: 1000px;
+  padding-top: 260px;
+  background: linear-gradient(71deg, #F5F6FA 0%, #FFFBFB 90%);
+}
+
+.ku_area{
+  min-width: 768px;
+  height: 1000px;
+  background: linear-gradient(109deg, #FFF5F5 0%, #DDE2F6 90%);
 }
 /* }
 .link-card {
@@ -1221,8 +1415,417 @@ a {
 }
 
 .Temp_Label{
-  font-size: 40px;
-  letter-spacing: 20px;
-  color: white;
+  font-size: 48px;
+  filter: drop-shadow(1px 4px 4px rgba(0, 0, 0, 0.12));
 }
+
+.Self_Input{
+  border: none;
+  outline: none;
+  height: 64px;
+  width: 420px;
+  font-size: 20px;
+  display: inline-block;
+}
+
+.Search_Area{
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 174px;
+  box-shadow: 0px 6px 32px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 32px;
+}
+
+.Self_Search_Button{
+  width: 100%;
+  height: 64px;
+  margin: 0px;
+  background: linear-gradient(to right, #7BAFEE, #7786EB);
+  color: white;
+  font-size: 20px;
+  border: 3px solid white;
+  border-radius: 32px;
+}
+
+.Self_Search_Button:active{
+  transform: scale(0.95) 300ms;
+}
+
+.Self_Input_Area_Left{
+  height: 64px;
+  width: 50px;
+  background: white;
+  border-radius: 32px 0px 0px 32px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.Self_Input_Area_Middle{
+  height: 64px;
+  width: 440px;
+  background: white;
+  padding-left: 10px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.Self_Input_Area_Right{
+  height: 64px;
+  width: 128px;
+  background: white;
+  border-radius: 0px 32px 32px 0px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.Part_Right{
+  height: 1000px;
+  padding-top: 320px;
+  padding-left: 60px;
+}
+
+.Ku_Part_Right{
+  height: 520px;
+  width: 552px;
+  margin-top: 224px;
+  padding: 32px;
+  border-radius: 24px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.06);
+}
+
+.Ku_Image{
+  width: auto;
+  height: auto;
+  max-height: 100%;
+  max-width: 100%;
+  cursor: pointer;
+}
+
+.Ku_Title{
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 32px;
+  letter-spacing: 0.05em;
+  margin-top: 36px;
+  margin-bottom: 16px;
+}
+
+.Ku_Description{
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 32px;
+  letter-spacing: 0.05em;
+  color: #9E9E9E;
+}
+
+.statistics_Title{
+  width: 100%;
+  font-size: 36px;
+  font-weight: bold;
+  line-height: 36px;
+  letter-spacing: 0.05em;
+}
+
+.statistics_Colored_Title_1{
+  background-image: linear-gradient(to right, #FF4848, #F0BC2D);
+  background-clip: text;
+  color: transparent;
+}
+
+.statistics_Colored_Title_2{
+  background-image: linear-gradient(to right, #4CC1F7, #1A52EE);
+  background-clip: text;
+  color: transparent;
+}
+
+.KU_Colored_Title_1{
+  background-image: linear-gradient(to right, #23A1CB, #3AF4EB);
+  background-clip: text;
+  color: transparent;
+}
+
+.KU_Colored_Title_2{
+  background-image: linear-gradient(to right, #F74CBE, #1A52EE);
+  background-clip: text;
+  color: transparent;
+}
+
+.Func_Colored_Title_1{
+  background-image: linear-gradient(to right, #F74C88, #CA0F9E);
+  background-clip: text;
+  color: transparent;
+}
+
+.Func_Colored_Title_2{
+  background-image: linear-gradient(to right, #FF3C3C, #663CFF);
+  background-clip: text;
+  color: transparent;
+}
+
+.statistics_List{
+  font-size: 20px;
+  line-height: 32px;
+  color: #787878;
+  margin-left: -20px;
+  margin-top: 40px;
+}
+
+.statistics_Self_Button{
+  border: none;
+  display: inline-block;
+  color: white;
+  width: 137px;
+  height: 52px;
+  padding: 6px auto;
+  border-radius: 10px;
+  margin-right: 16px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+.statistics_Button_Color1{
+  background: linear-gradient(to right, #D46A6A, #D45959);
+}
+
+.statistics_Button_Color2{
+  background: linear-gradient(to right, #6A91D4, #5986D4);
+}
+
+.statistics_Button_Color3{
+  background: linear-gradient(to right, #766AD4, #6759D4);
+}
+
+.KU_Button_Color1{
+  background: linear-gradient(270deg, #6291C4 0%, #4F87C2 100%);
+}
+
+.Func_Card{
+  width: 300px;
+  height: 400px;
+  border-radius: 24px;
+  background: #FFFFFF;
+  box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.08);
+  margin: 0 16px;
+  margin-top: 48px;
+}
+
+.Func_Card_Label{
+  cursor: pointer;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 32px;
+  letter-spacing: 0.05em;
+  color: #000000;
+  margin: 20px 20px 10px 20px;
+}
+
+.Func_Card_Label:hover{
+  color: rgba( 0, 0, 0, 0.6)
+}
+
+.Func_Card_Span{
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 32px;
+  letter-spacing: 0.05em;
+  color: #9E9E9E;
+  margin: 0px 20px 10px 20px;
+  word-break: break-all;
+}
+
+.Func_Card_Text_Button{
+  width: fit-content;
+  cursor: pointer;
+  color: #409EFF;
+  font-size: 18px;
+  margin-left: 20px;
+  margin-top: -10px;
+}
+
+.Func_Card_Text_Button:hover{
+  color: rgba( 64, 158, 255, 0.72);
+}
+
+.Func_Card_Img{
+  width: 300px;
+  height: 150px;
+  border-radius: 24px 24px 0px 0px;
+  cursor: pointer;
+  background-repeat: no-repeat;
+}
+
+.Func_Card_1_Img{
+  background: url('../assets/Home_Page_Link_Card_1.jpg');
+  background-size: 100% 150px;
+}
+
+.Func_Card_2_Img{
+  background: url('../assets/Home_Page_Link_Card_2.jpg');
+  background-size: 100% 150px;
+}
+
+.Func_Card_3_Img{
+  background: url('../assets/Home_Page_Link_Card_3.jpg');
+  background-size: 100% 150px;
+}
+
+.Func_Card_4_Img{
+  background: url('../assets/Home_Page_Link_Card_4.jpg');
+  background-size: 100% 150px;
+}
+
+@media screen and (max-width: 768px) {
+
+  .Search_Area{
+    max-width: 640px;
+    width: 83%;
+  }
+
+  .Normal_Home_Page{
+    display: none
+  }
+
+  .main_area{
+    min-width: 768px;
+  }
+
+  .about-area{
+    min-width: 768px;
+  }
+
+  .ku_area{
+    height: 1300px;
+    min-width: 768px;
+  }
+
+  .link-area{
+    min-width: 768px;
+    height: 2000px;
+    padding-top: 120px;
+  }
+
+  .statistics_area{
+    height: 1300px;
+    min-width: 768px;
+  }
+
+  .about_triangle{
+    width: 768px;
+    background: url("../assets/Triangle.svg");
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-size: auto;
+    background-position: right;
+    height: 100%;
+    margin: 0px auto;
+  }
+
+  .Ku_Part_Right{
+    text-align: left;
+    margin-top: 124px;
+  }
+
+  .statistics_List{
+    list-style-type: none;
+  }
+
+  .Func_Card{
+    width: 480px;
+    height: 400px;
+    border-radius: 24px;
+    background: #FFFFFF;
+    box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.08);
+    margin: 48px auto 0px auto;
+  }
+
+  .Func_Card_Img{
+    width: 480px;
+    height: 150px;
+    border-radius: 24px 24px 0px 0px;
+    cursor: pointer;
+  }
+
+  .Func_Card_Text_Button{
+    margin-top: 20px;
+  }
+
+  .Func_Card_Span{
+    height: 96px;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1280px) {
+  .Narrow_Home_Page{
+    display: none
+  }
+
+  .Normal_Normal{
+    display: none;
+  }
+
+  .statistics_List{
+    list-style-type: none;
+  }
+
+  .link-area{
+    min-width: 768px;
+    height: 1200px;
+    margin: 0 auto;
+    padding-top: 120px;
+  }
+
+  .ku_area{
+    height: 1300px;
+    min-width: 768px;
+  }
+
+  .Ku_Part_Right{
+    text-align: left;
+    margin-top: 124px;
+  }
+
+  .statistics_area{
+    height: 1300px;
+    min-width: 768px;
+  }
+
+  .Func_Card{
+    width: 355px;
+    height: 400px;
+    border-radius: 24px;
+    background: #FFFFFF;
+    box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.08);
+    margin: 48px auto 0px auto;
+  }
+
+  .Func_Card_Img{
+    width: 355px;
+    height: 150px;
+    border-radius: 24px 24px 0px 0px;
+    cursor: pointer;
+  }
+
+  .Func_Card_Text_Button{
+    margin-top: 20px;
+  }
+
+  .Func_Card_Span{
+    height: 96px;
+  }
+}
+
+@media screen and (min-width: 1281px){
+  .Normal_Narrow{
+    display: none
+  }
+
+  .Narrow_Home_Page{
+    display: none
+  }
+}
+
 </style>

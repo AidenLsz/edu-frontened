@@ -297,10 +297,10 @@
 
     </el-header> -->
     <!-- <basic-header/> -->
-    <el-main style="overflow: auto">
+    <el-main style="overflow: auto;">
       <div id="header-sticky" :class="{
         'sticky-menu': true,
-        'Little_Shadow': Get_Current_Path()}" style="height: 70px;">
+        'Little_Shadow': Get_Current_Path()}" style="height: 70px; overflow: hidden">
         <el-row class="NavBarArea Normal_Navbar" type="flex" justify="center">
           <el-col :span="4" style="padding-top: 15px;">
             <el-row type="flex" justify="start">
@@ -315,11 +315,6 @@
           </el-col>
           <el-col :span="20">
             <el-row type="flex" justify="end">
-              <!--
-							<el-col :span="4" style="padding-top: 15px;">
-								<el-button type="text" @click="goTolalala" class="navbar">啦啦啦</el-button>
-							</el-col>
-							-->
               <div
                 v-if="$store.state.user.name"
                 class="NarbarItem"
@@ -510,7 +505,7 @@
           </el-col>
         </el-row>
       </div>
-      <div style="padding-top: 59px">
+      <div style="padding-top: 59px;">
         <div id="Top_Nav" class="Top_Nav">
         </div>
         <router-view :key="$route.fullPath"></router-view>
