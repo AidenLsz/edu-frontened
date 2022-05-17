@@ -531,9 +531,9 @@
 
     <div class="Normal_Home_Page">
       <section class="main_area" >
-        <el-row type="flex" justify="center">
+        <el-row type="flex" justify="center" >
           <div style="display: inline-block">
-            <img src="@/assets/Luna_Home_Page_Icon.svg" class="Home-Page-Icon" draggable="false" >
+            <img src="@/assets/LUNA-HOMEPAGE-LOGO.png" class="Home-Page-Icon" draggable="false" >
           </div>
           <div style="display: inline-block; padding-top: 10px">
             <span class="Temp_Label">L U N A</span><br>
@@ -864,7 +864,7 @@
       <section class="main_area" >
         <el-row type="flex" justify="center">
           <div style="display: inline-block">
-            <img src="@/assets/Luna_Home_Page_Icon.svg" class="Home-Page-Icon" draggable="false" >
+            <img src="@/assets/LUNA-HOMEPAGE-LOGO.png" class="Home-Page-Icon" draggable="false" >
           </div>
           <div style="display: inline-block; padding-top: 10px">
             <span class="Temp_Label">L U N A</span><br>
@@ -1057,6 +1057,7 @@ export default {
   name: "Home",
   data() {
     return {
+		// showTitleBg: false,
       ku_name: "三角函数",
       image_infos: [],
       ToolsLabelNow: "资源",
@@ -1087,9 +1088,17 @@ export default {
       );
     });
     this.To_Top();
-    document.body.scrollTo(0, 500)
+    document.body.scrollTo(0, 500);
+    /* 导航栏 */
+    // window.addEventListener("scroll", this.titleBackground, true)
   },
   methods: {
+    // titleBackground() {
+	// 	let anchor = document.getElementById("anchor")
+	// 	if(anchor.scrollTop > 80 ) this.showTitleBg=true;
+	// 	else if (this.showTitleBg===true) this.showTitleBg=false;
+	// 	console.log(anchor.scrollTop, this.showTitleBg)
+    // },
     Resource_Input(){
       if(this.Count_Part_Status == 'Question'){
         this.Router_Trans('/inputMarked');
@@ -1237,7 +1246,8 @@ export default {
   width: 100%;
   box-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.07);
   z-index: 9999;
-  background: #fff;
+  /*background: #fff;*/
+	/*background: transparent;*/
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
@@ -1448,7 +1458,8 @@ a {
 }
 
 .Self_Search_Button:active{
-  transform: scale(0.95) 300ms;
+  transform: scale(0.95);
+  transition: all ease 300ms;
 }
 
 .Self_Input_Area_Left{

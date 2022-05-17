@@ -307,7 +307,7 @@
               <img
                 src="@/assets/luna_icon.png"
                 alt="Logo"
-                width="150px"
+                width="132px"
                 style="cursor: pointer"
                 @click="goToMainPage"
               />
@@ -485,12 +485,12 @@
           </el-col>
         </el-row>
         <el-row class="NavBarArea Narrow_Navbar" type="flex" justify="center">
-          <el-col :span="4" style="padding-top: 20px;">
+          <el-col :span="4" style="padding-top: 16px;">
             <el-row type="flex" justify="start">
               <img
                 src="@/assets/luna_icon.png"
                 alt="Logo"
-                width="150px"
+                width="132px"
                 style="cursor: pointer"
                 @click="goToMainPage"
               />
