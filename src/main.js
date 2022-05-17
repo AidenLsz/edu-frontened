@@ -11,6 +11,10 @@ Vue.use(VueResource);
 import VueCropper from 'vue-cropper'
 Vue.use(VueCropper);
 
+import VueLazyload from "vue-lazyload";
+Vue.use(VueLazyload);
+
+
 // import axios from 'axios'
 
 // axios.defaults.withCredentials=true;//让ajax携带cookie
