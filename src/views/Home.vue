@@ -9,7 +9,7 @@
       <el-row>
         <el-col :span="12">
           <el-row>
-            <el-button @click="PAS(0)" circle style="height: 200px; width: 200px;"><img src="../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+            <el-button @click="PAS(0)" circle style="height: 200px; width: 200px;"><img v-lazy="require('../assets/icon4.png')" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
             <el-button type="text" @click="PAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
@@ -19,7 +19,7 @@
         </el-col>
         <el-col :span="12">
           <el-row>
-            <el-button @click="PAS(1)" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+            <el-button @click="PAS(1)" circle style="height: 200px; width: 200px"><img v-lazy="require('../assets/icon1.png')" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
             <el-button type="text" @click="PAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
@@ -34,7 +34,7 @@
       <el-row>
         <el-col :span="12">
           <el-row>
-            <el-button @click="QAS(0)" circle style="height: 200px; width: 200px;"><img src="../assets/icon4.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+            <el-button @click="QAS(0)" circle style="height: 200px; width: 200px;"><img v-lazy="require('../assets/icon4.png')" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
             <el-button type="text" @click="QAS(0)" style="margin-top: 30px; font-size: 20px; color: black">
@@ -44,7 +44,7 @@
         </el-col>
         <el-col :span="12">
           <el-row>
-            <el-button @click="QAS(1)" circle style="height: 200px; width: 200px"><img src="../assets/icon1.png" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
+            <el-button @click="QAS(1)" circle style="height: 200px; width: 200px"><img v-lazy="require('../assets/icon1.png')" width="150%" style="margin-left: -46px; margin-top: -46px"/></el-button>
           </el-row>
           <el-row>
             <el-button type="text" @click="QAS(1)" style="margin-top: 30px; font-size: 20px; color: black">
@@ -528,12 +528,12 @@
         </el-col>
       </el-row>
     </el-dialog>
-    
+
     <div class="Normal_Home_Page">
       <section class="main_area" >
         <el-row type="flex" justify="center">
           <div style="display: inline-block">
-            <img src="@/assets/Luna_Home_Page_Icon.svg">
+            <img src="@/assets/Luna_Home_Page_Icon.svg" class="Home-Page-Icon" draggable="false" >
           </div>
           <div style="display: inline-block; padding-top: 10px">
             <span class="Temp_Label">L U N A</span><br>
@@ -545,14 +545,14 @@
             <i class="el-icon-search" style="font-size: 30px; margin-top: 18px; margin-right: 30px; margin-left: 20px;"></i>
           </div>
           <div class="Self_Input_Area_Middle" align="left">
-            <input 
-              v-model="ku_name" 
-              class="Self_Input" 
+            <input
+              v-model="ku_name"
+              class="Self_Input"
               placeholder="在此输入知识点名称"
               @keyup.enter="submit(ku_name)">
           </div>
           <div class="Self_Input_Area_Right" align="right">
-            <button 
+            <button
               class="Self_Search_Button"
               @click="submit(ku_name)">搜索</button>
           </div>
@@ -597,24 +597,24 @@
                 </ul>
               </div>
               <div align="left">
-                <button 
-                  class="statistics_Self_Button statistics_Button_Color1" 
+                <button
+                  class="statistics_Self_Button statistics_Button_Color1"
                   v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
                   @click="Resource_Input()">
                   <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
                   {{Count_Part_Status == "Question" ? "试题" : "试卷" }}录入</span>
                 </button>
-                <button 
+                <button
                   class="statistics_Self_Button statistics_Button_Color2"
                   @click="Resource_Search()"
                   :style="Count_Part_Status == 'KU' || Count_Part_Status == 'Resources' ? 'width: 180px' : ''">
                   <i class="el-icon-search" style="margin-right: 2px"></i><span style="cursor: pointer">
-                  {{Count_Part_Status == "Question" ? "试题" : 
-                    Count_Part_Status == "Paper" ? "试卷" : 
+                  {{Count_Part_Status == "Question" ? "试题" :
+                    Count_Part_Status == "Paper" ? "试卷" :
                     Count_Part_Status == "KU" ? "知识单元" : "教材教辅"}}检索</span>
                 </button>
-                <button 
-                  class="statistics_Self_Button statistics_Button_Color3" 
+                <button
+                  class="statistics_Self_Button statistics_Button_Color3"
                   v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
                   @click="Resource_Analysis()">
                   <i class="el-icon-reading" style="margin-right: 2px"></i><span style="cursor: pointer">
@@ -644,24 +644,24 @@
                 </ul>
               </div>
               <div align="center">
-                <button 
-                  class="statistics_Self_Button statistics_Button_Color1" 
+                <button
+                  class="statistics_Self_Button statistics_Button_Color1"
                   v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
                   @click="Resource_Input()">
                   <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
                   {{Count_Part_Status == "Question" ? "试题" : "试卷" }}录入</span>
                 </button>
-                <button 
+                <button
                   class="statistics_Self_Button statistics_Button_Color2"
                   @click="Resource_Search()"
                   :style="Count_Part_Status == 'KU' || Count_Part_Status == 'Resources' ? 'width: 180px' : ''">
                   <i class="el-icon-search" style="margin-right: 2px"></i><span style="cursor: pointer">
-                  {{Count_Part_Status == "Question" ? "试题" : 
-                    Count_Part_Status == "Paper" ? "试卷" : 
+                  {{Count_Part_Status == "Question" ? "试题" :
+                    Count_Part_Status == "Paper" ? "试卷" :
                     Count_Part_Status == "KU" ? "知识单元" : "教材教辅"}}检索</span>
                 </button>
-                <button 
-                  class="statistics_Self_Button statistics_Button_Color3" 
+                <button
+                  class="statistics_Self_Button statistics_Button_Color3"
                   v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
                   @click="Resource_Analysis()">
                   <i class="el-icon-reading" style="margin-right: 2px"></i><span style="cursor: pointer">
@@ -669,7 +669,7 @@
                 </button>
               </div>
             </div>
-            <statistics2 
+            <statistics2
                 @Part_Change_Type="Part_Change_Type" id="Narrow_Chart" style="margin-top: -80px;"/>
           </el-row>
         </div>
@@ -697,7 +697,7 @@
                 </ul>
               </div>
               <div align="left">
-                <button 
+                <button
                   class="statistics_Self_Button KU_Button_Color1"
                   @click="Router_Trans('\KU')">
                   <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
@@ -707,7 +707,7 @@
             </el-col>
             <el-col :span="11">
               <div class="Ku_Part_Right" align="left">
-                <img src="@/assets/Home_Page_Ku.png" class="Ku_Image" @click="submit('三角函数')">
+                <img v-lazy="require('@/assets/Home_Page_Ku.png')" alt="" class="Ku_Image" @click="submit('三角函数')">
                 <label class="Ku_Title">
                   三角函数
                 </label><br>
@@ -736,7 +736,7 @@
                 </ul>
               </div>
               <div>
-                <button 
+                <button
                   class="statistics_Self_Button KU_Button_Color1"
                   @click="Router_Trans('\KU')">
                   <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
@@ -744,7 +744,7 @@
                 </button>
               </div>
               <div class="Ku_Part_Right" align="left">
-                <img src="@/assets/Home_Page_Ku.png" class="Ku_Image" @click="submit('三角函数')">
+                <img v-lazy="require('@/assets/Home_Page_Ku.png')" class="Ku_Image" @click="submit('三角函数')">
                 <label class="Ku_Title">
                   三角函数
                 </label><br>
@@ -753,7 +753,7 @@
             </div>
           </el-row>
         </div>
-        
+
       </section>
 
       <section class="link-area">
@@ -765,7 +765,7 @@
           </el-row>
           <el-row style="min-width: 1366px; margin: 0 auto" type="flex" justify="center">
             <div class="Func_Card" align="left">
-              <div class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
+              <div v-lazy:background-image="require('../assets/Home_Page_Link_Card_1.jpg')" class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
 
               </div>
               <label class="Func_Card_Label" @click="Resource_Analysis('Paper')">试卷分析</label>
@@ -775,7 +775,7 @@
               <div class="Func_Card_Text_Button" @click="Resource_Analysis('Paper')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
             </div>
             <div class="Func_Card" align="left">
-              <div class="Func_Card_2_Img Func_Card_Img" @click="Router_Trans('/paperCombine')">
+              <div v-lazy:background-image="require('../assets/Home_Page_Link_Card_2.jpg')" class="Func_Card_2_Img Func_Card_Img" @click="Router_Trans('/paperCombine')">
 
               </div>
               <label class="Func_Card_Label" @click="Router_Trans('/paperCombine')">组卷系统</label>
@@ -785,7 +785,7 @@
               <div class="Func_Card_Text_Button" @click="Router_Trans('/paperCombine')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
             </div>
             <div class="Func_Card" align="left">
-              <div class="Func_Card_3_Img Func_Card_Img" @click="Router_Trans('/PublicPlatform')">
+              <div v-lazy:background-image="require('../assets/Home_Page_Link_Card_3.jpg')" class="Func_Card_3_Img Func_Card_Img" @click="Router_Trans('/PublicPlatform')">
 
               </div>
               <label class="Func_Card_Label" @click="Router_Trans('/PublicPlatform')">AI实验室</label>
@@ -795,7 +795,7 @@
               <div class="Func_Card_Text_Button" @click="Router_Trans('/PublicPlatform')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
             </div>
             <div class="Func_Card" align="left">
-              <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
+              <div v-lazy:background-image="require('../assets/Home_Page_Link_Card_4.jpg')" class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
 
               </div>
               <label class="Func_Card_Label" @click="Router_Trans('/Resources')">智能教辅平台</label>
@@ -814,7 +814,7 @@
           </el-row>
           <el-row style="width: 780px; margin: 0 auto" type="flex" justify="center">
             <div class="Func_Card" align="left">
-              <div class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
+              <div v-lazy:background-image="require('../assets/Home_Page_Link_Card_1.jpg')" class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
 
               </div>
               <label class="Func_Card_Label" @click="Resource_Analysis('Paper')">试卷分析</label>
@@ -824,7 +824,7 @@
               <div class="Func_Card_Text_Button" @click="Resource_Analysis('Paper')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
             </div>
             <div class="Func_Card" align="left">
-              <div class="Func_Card_2_Img Func_Card_Img" @click="Router_Trans('/paperCombine')">
+              <div v-lazy:background-image="require('../assets/Home_Page_Link_Card_2.jpg')" class="Func_Card_2_Img Func_Card_Img" @click="Router_Trans('/paperCombine')">
 
               </div>
               <label class="Func_Card_Label" @click="Router_Trans('/paperCombine')">组卷系统</label>
@@ -836,7 +836,7 @@
           </el-row>
           <el-row style="width: 780px; margin: 0 auto" type="flex" justify="center">
             <div class="Func_Card" align="left">
-              <div class="Func_Card_3_Img Func_Card_Img" @click="Router_Trans('/PublicPlatform')">
+              <div v-lazy:background-image="require('../assets/Home_Page_Link_Card_3.jpg')" class="Func_Card_3_Img Func_Card_Img" @click="Router_Trans('/PublicPlatform')">
 
               </div>
               <label class="Func_Card_Label" @click="Router_Trans('/PublicPlatform')">AI实验室</label>
@@ -846,7 +846,7 @@
               <div class="Func_Card_Text_Button" @click="Router_Trans('/PublicPlatform')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
             </div>
             <div class="Func_Card" align="left">
-              <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
+              <div v-lazy:background-image="require('../assets/Home_Page_Link_Card_4.jpg')" class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
 
               </div>
               <label class="Func_Card_Label" @click="Router_Trans('/Resources')">智能教辅平台</label>
@@ -864,7 +864,7 @@
       <section class="main_area" >
         <el-row type="flex" justify="center">
           <div style="display: inline-block">
-            <img src="@/assets/Luna_Home_Page_Icon.svg">
+            <img src="@/assets/Luna_Home_Page_Icon.svg" class="Home-Page-Icon" draggable="false" >
           </div>
           <div style="display: inline-block; padding-top: 10px">
             <span class="Temp_Label">L U N A</span><br>
@@ -876,14 +876,14 @@
             <i class="el-icon-search" style="font-size: 30px; margin-top: 18px; margin-right: 30px; margin-left: 20px;"></i>
           </div>
           <div class="Self_Input_Area_Middle" align="left">
-            <input 
-              v-model="ku_name" 
-              class="Self_Input" 
+            <input
+              v-model="ku_name"
+              class="Self_Input"
               placeholder="在此输入知识点名称"
               @keyup.enter="submit(ku_name)">
           </div>
           <div class="Self_Input_Area_Right" align="right">
-            <button 
+            <button
               class="Self_Search_Button"
               @click="submit(ku_name)">搜索</button>
           </div>
@@ -925,24 +925,24 @@
               </ul>
             </div>
             <div align="center">
-              <button 
-                class="statistics_Self_Button statistics_Button_Color1" 
+              <button
+                class="statistics_Self_Button statistics_Button_Color1"
                 v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
                 @click="Resource_Input()">
                 <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
                 {{Count_Part_Status == "Question" ? "试题" : "试卷" }}录入</span>
               </button>
-              <button 
+              <button
                 class="statistics_Self_Button statistics_Button_Color2"
                 @click="Resource_Search()"
                 :style="Count_Part_Status == 'KU' || Count_Part_Status == 'Resources' ? 'width: 180px' : ''">
                 <i class="el-icon-search" style="margin-right: 2px"></i><span style="cursor: pointer">
-                {{Count_Part_Status == "Question" ? "试题" : 
-                  Count_Part_Status == "Paper" ? "试卷" : 
+                {{Count_Part_Status == "Question" ? "试题" :
+                  Count_Part_Status == "Paper" ? "试卷" :
                   Count_Part_Status == "KU" ? "知识单元" : "教材教辅"}}检索</span>
               </button>
-              <button 
-                class="statistics_Self_Button statistics_Button_Color3" 
+              <button
+                class="statistics_Self_Button statistics_Button_Color3"
                 v-show="Count_Part_Status == 'Question' || Count_Part_Status == 'Paper'"
                 @click="Resource_Analysis()">
                 <i class="el-icon-reading" style="margin-right: 2px"></i><span style="cursor: pointer">
@@ -950,7 +950,7 @@
               </button>
             </div>
           </div>
-          <statistics3 
+          <statistics3
                 @Part_Change_Type="Part_Change_Type" id="Narrow_Chart" style="margin-top: -80px;"/>
         </el-row>
       </section>
@@ -976,7 +976,7 @@
               </ul>
             </div>
             <div>
-              <button 
+              <button
                 class="statistics_Self_Button KU_Button_Color1"
                 @click="Router_Trans('\KU')">
                 <i class="el-icon-edit" style="margin-right: 2px"></i><span style="cursor: pointer">
@@ -984,7 +984,7 @@
               </button>
             </div>
             <div class="Ku_Part_Right" align="left">
-              <img src="@/assets/Home_Page_Ku.png" class="Ku_Image" @click="submit('三角函数')">
+              <img v-lazy="require('@/assets/Home_Page_Ku.png')" class="Ku_Image" @click="submit('三角函数')">
               <label class="Ku_Title">
                 三角函数
               </label><br>
@@ -1001,7 +1001,7 @@
           </div>
         </el-row>
           <div class="Func_Card" align="left">
-            <div class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
+            <div v-lazy:background-image="require('../assets/Home_Page_Link_Card_1.jpg')" class="Func_Card_1_Img Func_Card_Img" @click="Resource_Analysis('Paper')">
 
             </div>
             <label class="Func_Card_Label" @click="Resource_Analysis('Paper')">试卷分析</label>
@@ -1011,7 +1011,7 @@
             <div class="Func_Card_Text_Button" @click="Resource_Analysis('Paper')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
           </div>
           <div class="Func_Card" align="left">
-            <div class="Func_Card_2_Img Func_Card_Img" @click="Router_Trans('/paperCombine')">
+            <div v-lazy:background-image="require('../assets/Home_Page_Link_Card_2.jpg')" class="Func_Card_2_Img Func_Card_Img" @click="Router_Trans('/paperCombine')">
 
             </div>
             <label class="Func_Card_Label" @click="Router_Trans('/paperCombine')">组卷系统</label>
@@ -1021,7 +1021,7 @@
             <div class="Func_Card_Text_Button" @click="Router_Trans('/paperCombine')">了解更多<i class="el-icon-right" style="margin-left: 4px"></i></div>
           </div>
           <div class="Func_Card" align="left">
-            <div class="Func_Card_3_Img Func_Card_Img" @click="Router_Trans('/PublicPlatform')">
+            <div v-lazy:background-image="require('../assets/Home_Page_Link_Card_3.jpg')" class="Func_Card_3_Img Func_Card_Img" @click="Router_Trans('/PublicPlatform')">
 
             </div>
             <label class="Func_Card_Label" @click="Router_Trans('/PublicPlatform')">AI实验室</label>
@@ -1031,7 +1031,7 @@
             <div class="Func_Card_Text_Button" @click="Router_Trans('/PublicPlatform')">立即前往<i class="el-icon-right" style="margin-left: 4px"></i></div>
           </div>
           <div class="Func_Card" align="left">
-            <div class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
+            <div v-lazy:background-image="require('../assets/Home_Page_Link_Card_4.jpg')" class="Func_Card_4_Img Func_Card_Img" @click="Router_Trans('/Resources')">
 
             </div>
             <label class="Func_Card_Label" @click="Router_Trans('/Resources')">智能教辅平台</label>
@@ -1659,23 +1659,56 @@ a {
 }
 
 .Func_Card_1_Img{
-  background: url('../assets/Home_Page_Link_Card_1.jpg');
+  /*background: url('../assets/Home_Page_Link_Card_1.jpg');*/
   background-size: 100% 150px;
 }
 
 .Func_Card_2_Img{
-  background: url('../assets/Home_Page_Link_Card_2.jpg');
+  /*background: url('../assets/Home_Page_Link_Card_2.jpg');*/
   background-size: 100% 150px;
 }
 
 .Func_Card_3_Img{
-  background: url('../assets/Home_Page_Link_Card_3.jpg');
+  /*background: url('../assets/Home_Page_Link_Card_3.jpg');*/
   background-size: 100% 150px;
 }
 
 .Func_Card_4_Img{
-  background: url('../assets/Home_Page_Link_Card_4.jpg');
+  /*background: url('../assets/Home_Page_Link_Card_4.jpg');*/
   background-size: 100% 150px;
+}
+
+.Home-Page-Icon {
+	width: 10em;
+	height: 10em;
+	user-select: none;
+	cursor: pointer;
+}
+
+.Home-Page-Icon[lazy='loaded'] {
+	animation-duration: .1s;
+}
+
+/* 懒加载动画 */
+.Func_Card_1_Img[lazy='loaded'], .Func_Card_2_Img[lazy='loaded'], .Func_Card_3_Img[lazy='loaded'], .Func_Card_4_Img[lazy='loaded'],
+.Ku_Image[lazy='loaded'], .Home-Page-Icon[lazy='loaded'] {
+	opacity: 0;
+	animation-name: fadein;
+	animation-duration: .1s;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+	animation-direction: normal;
+	animation-timing-function: ease-in;
+}
+
+
+@keyframes fadein {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }
 
 @media screen and (max-width: 768px) {
