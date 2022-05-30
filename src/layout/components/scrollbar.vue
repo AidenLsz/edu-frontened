@@ -1,3 +1,7 @@
+<!--
+自适应滚动条 by 张鑫
+使用时设置 html, body 等 overflow: hidden 设置滚动区域容器的 overflow: scroll或auto 并设置
+-->
 <template>
 	<div id="scrollbar-container"
 		:style="{'opacity': scrollHover||scrollMoving||scrollVisibleCounter < 2?'1':'0'}"
@@ -8,8 +12,6 @@
 			draggable="true" @dragstart="start($event)" @dragend="end($event)" @dragover="over($event)" @dragleave="leave($event)"
 			@mousedown="down($event)" @mouseenter="scrollHover = true" @mouseleave="scrollHover = false"
 		/>
-		<!--	@mousedown="down($event)"  @mouseleave="" @mousemove="" draggable="true" @mouseup="scrollMoving=false" @mousemove="scrollMove($event)"-->
-		<!--	@dragstart="dragStart($event)"  :style="{'margin-top': scrollTop+'px', 'margin-bottom': scrollSize+'px'}" scrollMove($event)	-->
 		<span :style="{'height': (scrollSize+4)+'px'}" :class="{'scrollbar-block': !scrollMoving&&!scrollMoving}" />
 	</div>
 </template>

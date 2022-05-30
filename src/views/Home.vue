@@ -530,7 +530,7 @@
     </el-dialog>
 
     <div class="Normal_Home_Page">
-      <section class="main_area" >
+      <section class="main_area" style="scroll-snap-align: center" >
         <el-row type="flex" justify="center" >
           <div style="display: inline-block">
             <img src="@/assets/LUNA-HOMEPAGE-LOGO.png" class="Home-Page-Icon" draggable="false" >
@@ -560,7 +560,7 @@
       </section>
 
       <!-- about-area -->
-      <section class="about-area">
+      <section class="about-area" style="scroll-snap-align: center" >
         <div style="padding-top: 200px;">
           <label style="font-size: 48px;">寓智于教，致知未来</label>
         </div>
@@ -572,7 +572,7 @@
       </section>
 
       <!-- 图标区域-area -->
-      <section class="statistics_area">
+      <section class="statistics_area" style="scroll-snap-align: center" >
         <div class="Normal_Normal">
           <el-row style="width: 1280px; margin: 0 auto">
             <el-col :span="13">
@@ -1221,7 +1221,7 @@ export default {
 };
 </script>
 <style scoped>
-#home-container {
+#home-container, .Normal_Home_Page, .Narrow_Home_Page {
 	scroll-snap-type: y mandatory;
 }
 .main_area {
