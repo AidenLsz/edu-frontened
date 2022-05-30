@@ -87,6 +87,7 @@ export default {
 		},
 		refreshSize() {
 			const scrollAnchor = document.getElementById(this.$props.anchor)
+			// console.log(scrollAnchor.scrollTop, scrollAnchor.scrollHeight)
 			this.scrollTop = (scrollAnchor.scrollTop / scrollAnchor.scrollHeight) * scrollAnchor.clientHeight
 			this.scrollSize = ((scrollAnchor.scrollHeight - scrollAnchor.scrollTop - scrollAnchor.clientHeight) / scrollAnchor.scrollHeight) * scrollAnchor.clientHeight
 		},
@@ -131,7 +132,7 @@ export default {
 };
 </script>
 
-<style  scoped>
+<style scoped>
 #scrollbar-container {
 	transition: all 300ms ease;
 	z-index: 110;
@@ -154,13 +155,13 @@ export default {
 	/*transition-delay: 25ms;*/
 	transition-property: height, width;
 	outline: none;
-	background: rgba(44,44,44, .7);
-	/*border: 1px outset rgba(224,224,224, .5);*/
+	background: rgba(94,94,94, .7);
+	/*box-shadow: 0 0 1px rgba(224,224,224, .3);*/
 	border: none;
 	flex-grow: 1;
 	border-radius: 100vw;
 	width: min(.5rem, 1.5vw);
-	margin-right: min(.5rem, 1vw);
+	margin-right: min(.75rem, 1.5vw);
 }
 #scrollbar-thumb:hover, .scrollbar-thumb-hover {
 	width: min(.75rem, 1.75vw)

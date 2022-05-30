@@ -1,5 +1,6 @@
 <template>
-  <div style="min-width: 1440px" id="app">
+  <div style="min-width: 1440px;width: 100%;height: 100%; overflow-y: scroll" id="app-b">
+    <scrollbar anchor="app-b" />
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <div class="header" style="height: 80px">
       <div class="logo-wrapper">
@@ -111,8 +112,8 @@
         </el-drawer>
       </div>
     </div>
-    <!-- <basic-header/> -->
-    <div>
+	<!-- <basic-header/> -->
+    <div >
       <div style="margin-top:80px;">
         <router-view :key="$route.fullPath"></router-view>
       </div>
@@ -124,6 +125,7 @@
 <script>
 // import $ from "jquery";
 import BasicFooter from "@/layout/components/footer.vue";
+import Scrollbar from "./components/scrollbar";
 // import login from "@/layout/components/login.vue";
 // import register from "@/layout/components/register.vue";
 // import { commonAjax } from "@/common/utils/ajax";
@@ -132,6 +134,7 @@ import BasicFooter from "@/layout/components/footer.vue";
 export default {
   name: "App",
   components: {
+    Scrollbar,
     // vueImgVerify,
     BasicFooter,
     // login,
@@ -391,13 +394,17 @@ export default {
   }
 }
 
-#app {
+#app-b {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   // min-width: 1440px;
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 }
 
 .Narrow_Navbar_Item {

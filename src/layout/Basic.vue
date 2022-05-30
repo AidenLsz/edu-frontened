@@ -753,7 +753,7 @@ export default {
 #main-container::-webkit-scrollbar {
 	width: 0;
 	height: 0;
- }
+}
 
 html, body {
 	width: 100%;
