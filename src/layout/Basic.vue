@@ -302,7 +302,7 @@
       <div id="header-sticky" :class="{
         'sticky-menu': true,
         'Little_Shadow': Get_Current_Path()}" style="height: 70px; overflow: hidden">
-        <el-row class="NavBarArea Normal_Navbar" type="flex" justify="center">
+        <el-row class="NavBarArea Normal_Navbar" class="" type="flex" justify="center">
           <el-col :span="4" style="padding-top: 15px;">
             <el-row type="flex" justify="start">
               <img

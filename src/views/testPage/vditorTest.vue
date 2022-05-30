@@ -14,7 +14,8 @@
 </template>
 <script>
 import Vditor from "vditor";
-import "vditor/src/assets/scss/index.scss";
+// 注释这一行 因为路径问题无法导入该scss 且本.vue组件并未实际使用
+// import "vditor/src/assets/scss/index.scss";
 export default {
     data(){
         return{
@@ -117,7 +118,7 @@ export default {
             _this.contentEditor.setValue(_this.defaultString)
           }
         })
-    }  
+    }
 }
 </script>
 <style>
