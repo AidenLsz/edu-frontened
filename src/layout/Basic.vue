@@ -297,7 +297,7 @@
 
     </el-header> -->
     <!-- <basic-header/> -->
-    <el-main style="overflow: auto" id="main-container" >
+    <el-main style="overflow-y: auto; overflow-x: hidden" id="main-container" >
       <scrollbar anchor="main-container" />
       <div id="header-sticky" :class="{
 		'nav-trans': scrollTop < 170 && !Get_Current_Path(),

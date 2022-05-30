@@ -1,5 +1,5 @@
 <template>
-  <div style="min-width: 1440px;width: 100%;height: 100%; overflow-y: scroll" id="app-b">
+  <div style="min-width: 1440px;width: 100%;height: 100%; overflow-y: scroll;overflow-x: hidden" id="app-b">
     <scrollbar anchor="app-b" />
     <!-- <el-header style="height: 70px;" v-show="$route.name!='user'"> -->
     <div class="header" style="height: 80px">
