@@ -1,6 +1,6 @@
 <template>
   <!--todo: polish the format-->
-  <div style="margin-top: -90px;">
+  <div style="margin-top: -90px;" id="home-container" >
     <div id="Top_Nav" class="Top_Nav">
 
     </div>
@@ -1221,7 +1221,9 @@ export default {
 };
 </script>
 <style scoped>
-
+#home-container {
+	scroll-snap-type: y mandatory;
+}
 .main_area {
   min-width: 768px;
   background: linear-gradient(to top right, #D5F2F4, #ABC5F3);

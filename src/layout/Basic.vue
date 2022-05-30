@@ -297,7 +297,8 @@
 
     </el-header> -->
     <!-- <basic-header/> -->
-    <el-main style="overflow: auto;">
+    <el-main style="overflow: auto" id="main-container" >
+      <scrollbar anchor="main-container" />
       <div id="header-sticky" :class="{
         'sticky-menu': true,
         'Little_Shadow': Get_Current_Path()}" style="height: 70px; overflow: hidden">
@@ -522,11 +523,13 @@ import login from "@/layout/components/login.vue";
 import forgetPass from "@/layout/components/forgetPass.vue";
 import register from "@/layout/components/register.vue";
 import { commonAjax } from "@/common/utils/ajax";
+import Scrollbar from "./components/scrollbar";
 // import BasicHeader from '@/layout/header.vue'
 // import vueImgVerify from "@/common/components/vue-img-verify.vue";
 export default {
   name: "App",
   components: {
+    Scrollbar,
     // vueImgVerify,
     BasicFooter,
     login,
@@ -737,6 +740,21 @@ export default {
   },
 };
 </script>
+
+<style>
+/* 导航栏&滚动条优化 */
+#main-container::-webkit-scrollbar {
+	width: 0;
+	height: 0;
+ }
+
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+</style>
+
 <style scoped lang="scss">
 .el-main
   .el-menu--horizontal
@@ -883,9 +901,9 @@ export default {
   position: absolute;
   height: 80px;
   top: 0;
-  width: calc(100vw - 16px);
-  padding-left: 16px;
-  z-index: 999;
+  width: 100vw; //calc(100vw - 16px);
+  //padding-left: 16px;
+  z-index: 100;
   background: rgba($color: white, $alpha: 0.76);
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
@@ -1065,7 +1083,7 @@ export default {
 
 @media screen and (max-width: 768px) {
   .Narrow_Navbar{
-    padding: "0px 32px";
+    padding: 0px 32px;
     margin-right: 30px;
     display: block;
   }
