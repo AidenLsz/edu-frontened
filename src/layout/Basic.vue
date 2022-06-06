@@ -297,8 +297,10 @@
 
     </el-header> -->
     <!-- <basic-header/> -->
-    <el-main style="overflow: auto;">
+    <el-main style="overflow-y: auto; overflow-x: hidden" id="main-container" >
+      <scrollbar anchor="main-container" />
       <div id="header-sticky" :class="{
+		'nav-trans': scrollTop < 170 && !Get_Current_Path(),
         'sticky-menu': true,
         'Little_Shadow': Get_Current_Path()}" style="height: 70px; overflow: hidden">
         <el-row class="NavBarArea Normal_Navbar" type="flex" justify="center">
@@ -335,12 +337,14 @@
                 style="width: 100px;">
                 <el-menu
                   mode="horizontal"
-                  style="background: transparent; height: 100%"
+                  style="background: transparent; height: 100%; border: none"
+                  class="navbar-menu-bg"
                 >
-                  <el-submenu index="0">
+                  <el-submenu index="0" style="" >
                     <template slot="title">
-                      <span :style="Title_Pos()">功能</span>
+                      <span :style="Title_Pos()" >功能</span>
                     </template>
+
                     <el-submenu index="1">
                       <template slot="title"
                         ><span style="color: black">资源录入</span></template
@@ -357,7 +361,7 @@
                       <el-menu-item index="1-4"
                         ><span style="color: Gainsboro">知识体系</span>
                       </el-menu-item>
-                    </el-submenu>
+                  </el-submenu>
                     <el-submenu index="2">
                       <template slot="title"
                         ><span style="color: black">查询</span></template
@@ -522,11 +526,13 @@ import login from "@/layout/components/login.vue";
 import forgetPass from "@/layout/components/forgetPass.vue";
 import register from "@/layout/components/register.vue";
 import { commonAjax } from "@/common/utils/ajax";
+import Scrollbar from "./components/scrollbar";
 // import BasicHeader from '@/layout/header.vue'
 // import vueImgVerify from "@/common/components/vue-img-verify.vue";
 export default {
   name: "App",
   components: {
+    Scrollbar,
     // vueImgVerify,
     BasicFooter,
     login,
@@ -551,12 +557,16 @@ export default {
       Width_Now: 0,
       Narrow_Navbar_Drawer: false,
       // 展开的菜单
-      Expand_Navbar_Drawer_Part: ""
-    };
+      Expand_Navbar_Drawer_Part: "",
+      // 页面滚动位置
+      scrollTop: 0,
+    }
   },
   mounted() {
     this.getGroups();
     this.To_Top();
+    const scrollAnchor = document.getElementById("main-container")
+    addEventListener("scroll", ()=>{this.$nextTick(() => {this.scrollTop=scrollAnchor.scrollTop})}, true)
   },
   watch:{
 
@@ -737,6 +747,29 @@ export default {
   },
 };
 </script>
+
+<style>
+/* 导航栏&滚动条优化 */
+#main-container::-webkit-scrollbar {
+	width: 0;
+	height: 0;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.navbar-menu-bg {
+	background: transparent;
+	border: none;
+}
+.navbar-menu-bg:hover {
+	background: transparent !important;
+}
+</style>
+
 <style scoped lang="scss">
 .el-main
   .el-menu--horizontal
@@ -744,6 +777,15 @@ export default {
   .el-submenu.is-active
   .el-submenu__title {
   border-bottom: none;
+}
+
+// 导航栏功能按下不显示背景色
+::v-deep .el-submenu__title {
+	background: transparent;
+
+	&:hover {
+		background: transparent !important;
+	}
 }
 
 .el-header .el-menu--horizontal ::v-deep .el-submenu .el-submenu__title {
@@ -883,20 +925,27 @@ export default {
   position: absolute;
   height: 80px;
   top: 0;
-  width: calc(100vw - 16px);
-  padding-left: 16px;
-  z-index: 999;
+  width: 100vw; //calc(100vw - 16px);
+  //padding-left: 16px;
+  z-index: 100;
   background: rgba($color: white, $alpha: 0.76);
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
   animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
-  margin-top: 0px;
+  margin-top: 0;
+  transition: background-color 200ms ease;
 }
 
 .Little_Shadow{
   border-bottom: 1px solid rgba(196, 196, 196, 0.4);
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.nav-trans {
+	background: rgba(255,255,255,0) !important;
+	backdrop-filter: blur(2px);
+	-webkit-backdrop-filter: blur(2px);
 }
 
 /* scrollUp */
@@ -1065,7 +1114,7 @@ export default {
 
 @media screen and (max-width: 768px) {
   .Narrow_Navbar{
-    padding: "0px 32px";
+    padding: 0px 32px;
     margin-right: 30px;
     display: block;
   }

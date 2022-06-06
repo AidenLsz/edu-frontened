@@ -1,6 +1,6 @@
 <template>
   <!--todo: polish the format-->
-  <div style="margin-top: -90px;">
+  <div style="margin-top: -90px;" id="home-container" >
     <div id="Top_Nav" class="Top_Nav">
 
     </div>
@@ -560,7 +560,7 @@
       </section>
 
       <!-- about-area -->
-      <section class="about-area">
+      <section class="about-area" >
         <div style="padding-top: 200px;">
           <label style="font-size: 48px;">寓智于教，致知未来</label>
         </div>
@@ -572,7 +572,7 @@
       </section>
 
       <!-- 图标区域-area -->
-      <section class="statistics_area">
+      <section class="statistics_area" >
         <div class="Normal_Normal">
           <el-row style="width: 1280px; margin: 0 auto">
             <el-col :span="13">
@@ -1221,7 +1221,9 @@ export default {
 };
 </script>
 <style scoped>
-
+#home-container, .Normal_Home_Page, .Narrow_Home_Page {
+	/*scroll-snap-type: y mandatory;*/
+}
 .main_area {
   min-width: 768px;
   background: linear-gradient(to top right, #D5F2F4, #ABC5F3);
