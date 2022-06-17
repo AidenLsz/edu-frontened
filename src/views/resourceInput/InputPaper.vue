@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     style="padding-top: 10px; padding-left: 5vw; padding-right: 5vw"
     v-loading="File_Uploading"
     element-loading-text="加载中，请等待..."
@@ -14,8 +14,8 @@
         :modal-append-to-body="false"
         :close-on-click-modal="false">
         <div v-html="Wrong_Char_Info"></div>
-        <el-button 
-            type="danger" 
+        <el-button
+            type="danger"
             @click="Wrong_Char_Dialog = false"
             style="margin-top: 30px;"
             >确认</el-button>
@@ -55,9 +55,9 @@
             </el-row>
           </el-col>
         </el-row>
-        <el-row 
-          type="flex" 
-          justify="start" 
+        <el-row
+          type="flex"
+          justify="start"
           v-for="(Info, Info_Index) in Multi_Info"
           :key="'Multi_' + Info_Index"
           :class="Multi_Choise_Table_Row(Info_Index)"
@@ -85,14 +85,14 @@
           </el-col>
           <el-col :span="3">
             <el-row type="flex" justify="center" style="height: 40px; line-height: 40px">
-              <el-button 
-                type="text" 
+              <el-button
+                type="text"
                 @click="Waiting_Insert(Info.index)"
                 >添加</el-button>
             </el-row>
           </el-col>
         </el-row>
-        
+
     </el-dialog>
     <el-row justify="start" type="flex">
       <el-col :span="6">
@@ -170,23 +170,23 @@
         <!-- 学段选择 -->
         <el-row type="flex" justify="start" style="margin-top: 7vh; margin-bottom: -1vh">
           <el-col :span="4">
-            <el-row type="flex" justify="start">  
+            <el-row type="flex" justify="start">
               <el-button type="primary" style="width: 100px;" @click="Submit()">开始入库</el-button>
             </el-row>
           </el-col>
           <el-col :span="4">
-            <el-row type="flex" justify="start">  
+            <el-row type="flex" justify="start">
               <input type="file" accept=".doc, .docx" id="fileSelect" :multiple="false" style="display: none">
               <el-button type="primary" style="width: 100px;" @click="File_Import()">文件导入</el-button>
             </el-row>
           </el-col>
           <el-col :span="15" v-show="File_Name != ''" style="margin-bottom: 10px">
-            <el-row type="flex" justify="start" style="overflow: hidden; height: 40px; line-height: 40px; ">  
+            <el-row type="flex" justify="start" style="overflow: hidden; height: 40px; line-height: 40px; ">
               文件名称：{{File_Name}}
             </el-row>
           </el-col>
           <el-col :span="1" v-show="File_Name != ''">
-            <el-row type="flex" justify="start">  
+            <el-row type="flex" justify="start">
               <el-button type="text" @click="Paper_Data_Clear()" style="margin: 0px; padding: 10px"><i class="el-icon-close" style="font-size: 20px;"></i></el-button>
             </el-row>
           </el-col>
@@ -204,9 +204,9 @@
               <el-col :span="12">
                 <el-row type="flex" justify="end">
                   <el-select v-model="Add_Bundle_Type" placeholder="">
-                    <el-option 
-                      v-for="Type in Type_List" 
-                      :label="Type.label" 
+                    <el-option
+                      v-for="Type in Type_List"
+                      :label="Type.label"
                       :value="Type.value"
                       :key="'Add_Bundle_Of_' + Type.label"></el-option>
                   </el-select>
@@ -253,9 +253,9 @@
                 </el-row>
               </el-col>
             </el-row>
-            <el-row 
-              type="flex" 
-              justify="start" 
+            <el-row
+              type="flex"
+              justify="start"
               v-for="(Bundle, Bundle_Index) in Question_Bundle"
               :key="'Total_Bundle_' + Bundle_Index">
               <el-col>
@@ -272,8 +272,8 @@
                       <el-col :span="8">
                         <el-row type="flex" justify="center">
                           <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="题包向上移动一位" placement="top">
-                            <el-button 
-                              type="text" 
+                            <el-button
+                              type="text"
                               style="margin: 0px; padding: 0px;"
                               :disabled="Bundle_Index == 0 || Editing_Position != ''"
                               @click="Bundle_Move_Front(Bundle_Index)"><i class="el-icon-top" style="color: #409EFF; font-size: 18px"></i></el-button>
@@ -283,8 +283,8 @@
                       <el-col :span="8">
                         <el-row type="flex" justify="center">
                           <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="题包向下移动一位" placement="top">
-                            <el-button 
-                              type="text" 
+                            <el-button
+                              type="text"
                               style="margin: 0px; padding: 0px;"
                               :disabled="Bundle_Index == Question_Bundle.length - 1 || Editing_Position != ''"
                               @click="Bundle_Move_Back(Bundle_Index)"><i class="el-icon-bottom" style="color: #409EFF; font-size: 18px"></i></el-button>
@@ -294,8 +294,8 @@
                       <el-col :span="8">
                         <el-row type="flex" justify="center">
                           <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="删除此题包" placement="top">
-                            <el-button 
-                              type="text" 
+                            <el-button
+                              type="text"
                               style="margin: 0px; padding: 0px;"
                               :disabled="Editing_Position != ''"
                               @click="Bundle_Delete(Bundle_Index)"><i class="el-icon-close" style="color: #409EFF; font-size: 18px"></i></el-button>
@@ -304,7 +304,7 @@
                       </el-col>
                     </el-row>
                   </el-col>
-                  <el-col 
+                  <el-col
                     :span="6"
                     :offset="2"
                     v-show="Focusing_Questions_Position.x != 0 && Focusing_Questions_Position.y != 0 && Bundle_Index == Focusing_Index">
@@ -312,8 +312,8 @@
                       <el-col :span="4">
                         <el-row type="flex" justify="center">
                           <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="标记题目前移一位" placement="top">
-                            <el-button 
-                              type="text" 
+                            <el-button
+                              type="text"
                               style="margin: 0px; padding: 0px;"
                               :disabled="Editing_Position != ''"
                               @click="Focus_Question_Move_Front(Bundle_Index)"><i class="el-icon-arrow-left" style="color: #409EFF; font-size: 18px"></i></el-button>
@@ -323,8 +323,8 @@
                       <el-col :span="4" :offset="1">
                         <el-row type="flex" justify="center">
                           <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="标记题目后移一位" placement="top">
-                            <el-button 
-                              type="text" 
+                            <el-button
+                              type="text"
                               style="margin: 0px; padding: 0px;"
                               :disabled="Editing_Position != ''"
                               @click="Focus_Question_Move_Back(Bundle_Index)"><i class="el-icon-arrow-right" style="color: #409EFF; font-size: 18px"></i></el-button>
@@ -334,8 +334,8 @@
                       <el-col :span="4" :offset="1">
                         <el-row type="flex" justify="center">
                           <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="标记题目删除" placement="top">
-                            <el-button 
-                              type="text" 
+                            <el-button
+                              type="text"
                               style="margin: 0px; padding: 0px;"
                               :disabled="Editing_Position != ''"
                               @click="Focus_Question_Delete(Bundle_Index)"><i class="el-icon-delete" style="color: #409EFF; font-size: 18px"></i></el-button>
@@ -345,8 +345,8 @@
                       <el-col :span="4" :offset="1">
                         <el-row type="flex" justify="center">
                           <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="标记题目导入编辑区" placement="top">
-                            <el-button 
-                              type="text" 
+                            <el-button
+                              type="text"
                               style="margin: 0px; padding: 0px;"
                               @click="Focus_Question_Edit(Bundle_Index)"><i class="el-icon-edit" style="color: #409EFF; font-size: 18px"></i></el-button>
                           </el-tooltip>
@@ -355,8 +355,8 @@
                       <el-col :span="4" :offset="1" v-show="Focus_Jump_Check(Bundle.type)">
                         <el-row type="flex" justify="center">
                           <el-tooltip :hide-after="300" :enterable="false" class="item" effect="dark" content="移动至某个同类型题包" placement="top">
-                            <el-button 
-                              type="text" 
+                            <el-button
+                              type="text"
                               style="margin: 0px; padding: 0px;"
                               @click="Focus_Question_Jump(Bundle_Index)"><i class="el-icon-position" style="color: #409EFF; font-size: 18px"></i></el-button>
                           </el-tooltip>
@@ -380,17 +380,17 @@
                 <!-- 每道题都搞一下， -->
                 <el-row type="flex" justify="start" style="margin-bottom: 5px; width: 100%">
                   <el-col>
-                    <el-row 
+                    <el-row
                       v-for="TBQ_Row_Index in Math.ceil(Bundle.list.length/24)"
                       :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index"
                       type="flex" justify="start"
                       style="width: 100%">
-                      <el-col 
-                        v-for="Question_Index in Get_Question_Row_Length(Bundle.list.length, TBQ_Row_Index)" 
+                      <el-col
+                        v-for="Question_Index in Get_Question_Row_Length(Bundle.list.length, TBQ_Row_Index)"
                         :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index"
                         :span="1"
                         >
-                        <el-popover 
+                        <el-popover
                           placement="left"
                           width="800"
                           :open-delay="500"
@@ -407,8 +407,8 @@
                               </el-col>
                               <el-col :span="22">
                                   <el-row type="flex" justify="start">
-                                      <Mathdown 
-                                        :content="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].stem" 
+                                      <Mathdown
+                                        :content="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].stem"
                                         :name="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index +  '_' + Question_Index + '_Stem'"></Mathdown>
                                   </el-row>
                               </el-col>
@@ -416,33 +416,33 @@
                             <!-- 题干的配图部分 -->
                             <el-row type="flex" justify="end" v-show="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].stem_image.length > 0">
                                 <el-col :span="22">
-                                    <el-row 
-                                        type="flex" 
-                                        justify="start" 
+                                    <el-row
+                                        type="flex"
+                                        justify="start"
                                         v-for="TBQ_Stem_Pic_Row_Index in Math.ceil(Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].stem_image.length/12)"
                                         :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Stem_Pic_Row_' + TBQ_Stem_Pic_Row_Index"
                                         style="margin-bottom: 10px">
-                                        <el-col 
-                                            :span="2" 
-                                            v-for="TBQ_Stem_Pic_Col_Index in 12" 
+                                        <el-col
+                                            :span="2"
+                                            v-for="TBQ_Stem_Pic_Col_Index in 12"
                                             :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Stem_Pic_Row_' + TBQ_Stem_Pic_Row_Index + '_' + TBQ_Stem_Pic_Col_Index">
-                                            <el-row 
-                                                type="flex" 
-                                                justify="center" 
+                                            <el-row
+                                                type="flex"
+                                                justify="center"
                                                 v-if="(TBQ_Stem_Pic_Row_Index - 1) * 12 + TBQ_Stem_Pic_Col_Index - 1 < Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].stem_image.length"
                                                 >
-                                                <img height="30" :src="Get_Picture_Src('stem_image', Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, TBQ_Stem_Pic_Row_Index, TBQ_Stem_Pic_Col_Index)">   
+                                                <img height="30" :src="Get_Picture_Src('stem_image', Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, TBQ_Stem_Pic_Row_Index, TBQ_Stem_Pic_Col_Index)">
                                             </el-row>
                                         </el-col>
                                     </el-row>
                                 </el-col>
                             </el-row>
-                            
+
                             <!-- 选项部分 -->
-                            <el-row 
-                                type="flex" 
-                                justify="start" 
-                                v-for="(Option, Option_Index) in Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].options" 
+                            <el-row
+                                type="flex"
+                                justify="start"
+                                v-for="(Option, Option_Index) in Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].options"
                                 :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Opt_' + Option_Index"
                                 style="margin-bottom: 10px;">
                                 <el-col>
@@ -455,26 +455,26 @@
                                         </el-col>
                                         <el-col :span="22">
                                             <el-row type="flex" justify="start">
-                                                <Mathdown 
-                                                  :content="Option" 
+                                                <Mathdown
+                                                  :content="Option"
                                                   :name="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Opt_' + Option_Index"></Mathdown>
                                             </el-row>
                                         </el-col>
                                     </el-row>
                                     <el-row style="margin-top: 10px;" v-show="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].options_image[Option_Index].length > 0">
                                         <el-col :span="22" :offset="2">
-                                            <el-row 
-                                                type="flex" 
+                                            <el-row
+                                                type="flex"
                                                 justify="start"
                                                 v-for="TBQ_Option_Pic_Row_Index in Math.ceil(Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].options_image[Option_Index].length/12)"
                                                 :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Opt_' + Option_Index + '_Pic_Row_' + TBQ_Option_Pic_Row_Index">
-                                                <el-col 
+                                                <el-col
                                                     :span="2"
                                                     v-for="TBQ_Option_Pic_Col_Index in 12"
                                                     :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Opt_' + Option_Index + '_Pic_Row_' + TBQ_Option_Pic_Row_Index + 'Col_' + TBQ_Option_Pic_Col_Index">
-                                                    <el-row 
-                                                        type="flex" 
-                                                        justify="center" 
+                                                    <el-row
+                                                        type="flex"
+                                                        justify="center"
                                                         v-if="(TBQ_Option_Pic_Row_Index - 1) * 12 + TBQ_Option_Pic_Col_Index - 1 < Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].options_image[Option_Index].length"
                                                         >
                                                         <img height="30" :src="Get_Picture_Src('options_image ' + Option_Index , Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, TBQ_Option_Pic_Row_Index, TBQ_Option_Pic_Col_Index)">
@@ -493,7 +493,7 @@
                               <el-col>
                                 <!-- 每道小题都是独立题目 -->
                                 <!-- 小题部分 -->
-                                <el-row 
+                                <el-row
                                     type="flex"
                                     justify="end"
                                     v-for="(Big_Sub_Question, Big_Sub_Question_Index) in Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions"
@@ -502,12 +502,12 @@
                                     <!-- 退一格 -->
                                     <el-col :span="22">
                                         <!-- 题干 -->
-                                        <el-row 
-                                            type="flex" 
-                                            justify="start" 
+                                        <el-row
+                                            type="flex"
+                                            justify="start"
                                             :style="
-                                                ['单选题', '多选题', '判断题', '简答题', '计算题'].indexOf(Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].type) != -1 
-                                                ? 'margin-bottom: 10px' 
+                                                ['单选题', '多选题', '判断题', '简答题', '计算题'].indexOf(Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].type) != -1
+                                                ? 'margin-bottom: 10px'
                                                 : ''">
                                             <el-col :span="2">
                                                 <el-row type="flex" justify="start" style="font-weight: bold;">
@@ -516,32 +516,32 @@
                                             </el-col>
                                             <el-col :span="22">
                                                 <el-row type="flex" justify="start">
-                                                    <Mathdown 
-                                                      :content="Big_Sub_Question.stem" 
+                                                    <Mathdown
+                                                      :content="Big_Sub_Question.stem"
                                                       :name="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Stem'"></Mathdown>
                                                 </el-row>
                                             </el-col>
                                         </el-row>
                                         <!-- 题干配图 -->
-                                        <el-row 
-                                            type="flex" 
-                                            justify="end" 
+                                        <el-row
+                                            type="flex"
+                                            justify="end"
                                             style="margin-top: 5px; margin-bottom: 5px"
                                             v-show="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].stem_image.length > 0">
                                             <el-col :span="22">
-                                                <el-row 
-                                                    type="flex" 
+                                                <el-row
+                                                    type="flex"
                                                     justify="start"
                                                     style="margin-top: 5px; margin-bottom: 5px"
                                                     v-for="Pre_Mix_Stem_Pic_Row_Index in Math.ceil(Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].stem_image.length/12)"
                                                     :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Stem_Pic_Row_' + Pre_Mix_Stem_Pic_Row_Index">
-                                                    <el-col 
+                                                    <el-col
                                                         :span="2"
                                                         v-for="Pre_Mix_Stem_Pic_Col_Index in 12"
                                                         :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Stem_Pic_Row_' + Pre_Mix_Stem_Pic_Row_Index + 'Col_' + Pre_Mix_Stem_Pic_Col_Index">
-                                                        <el-row 
-                                                            type="flex" 
-                                                            justify="center" 
+                                                        <el-row
+                                                            type="flex"
+                                                            justify="center"
                                                             v-if="(Pre_Mix_Stem_Pic_Row_Index - 1) * 12 + Pre_Mix_Stem_Pic_Col_Index - 1 < Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].stem_image.length"
                                                             >
                                                             <img height="30" :src="Get_Picture_Src('stem_image ' + Big_Sub_Question_Index, Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, Pre_Mix_Stem_Pic_Row_Index, Pre_Mix_Stem_Pic_Col_Index)">
@@ -551,7 +551,7 @@
                                             </el-col>
                                         </el-row>
                                         <!-- 选择题的选项部分 -->
-                                        <el-row 
+                                        <el-row
                                             type="flex"
                                             justify="start"
                                             style="margin-top: 5px; margin-bottom: 5px"
@@ -567,27 +567,27 @@
                                                     </el-col>
                                                     <el-col :span="22">
                                                         <el-row type="flex" justify="start">
-                                                            <Mathdown 
-                                                              :content="Pre_Option" 
+                                                            <Mathdown
+                                                              :content="Pre_Option"
                                                               :name="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Options_' + Pre_Option_Index"></Mathdown>
                                                         </el-row>
                                                     </el-col>
                                                 </el-row>
                                                 <el-row type="flex" justify="end" v-show="Big_Sub_Question.options_image[Pre_Option_Index].length > 0">
                                                     <el-col :span="22">
-                                                        <el-row 
-                                                            type="flex" 
+                                                        <el-row
+                                                            type="flex"
                                                             justify="start"
                                                             style="margin-top: 5px; margin-bottom: 5px"
                                                             v-for="Pre_Mix_Opt_Pic_Row_Index in Math.ceil(Big_Sub_Question.options_image[Pre_Option_Index].length/12)"
                                                             :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index  + '_Options_' + Pre_Option_Index + '_Pic_Row_' + Pre_Mix_Opt_Pic_Row_Index">
-                                                            <el-col 
+                                                            <el-col
                                                                 :span="2"
                                                                 v-for="Pre_Mix_Opt_Pic_Col_Index in 12"
                                                                 :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index  + '_Options_' + Pre_Option_Index + '_Pic_Row_' + Pre_Mix_Opt_Pic_Row_Index + 'Col_' + Pre_Mix_Opt_Pic_Col_Index">
-                                                                <el-row 
-                                                                    type="flex" 
-                                                                    justify="center" 
+                                                                <el-row
+                                                                    type="flex"
+                                                                    justify="center"
                                                                     v-if="(Pre_Mix_Opt_Pic_Row_Index - 1) * 12 + Pre_Mix_Opt_Pic_Col_Index - 1 < Big_Sub_Question.options_image[Pre_Option_Index].length"
                                                                     >
                                                                     <img height="30" :src="Get_Picture_Src('options_image ' + Big_Sub_Question_Index + ' ' + Pre_Option_Index, Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, Pre_Mix_Opt_Pic_Row_Index, Pre_Mix_Opt_Pic_Col_Index)">
@@ -599,7 +599,7 @@
                                             </el-col>
                                         </el-row>
                                         <!-- 简答题，计算题的部分 - 小题 -->
-                                        <el-row 
+                                        <el-row
                                             type="flex"
                                             justify="start"
                                             style="margin-top: 5px; margin-bottom: 5px"
@@ -615,26 +615,26 @@
                                                     </el-col>
                                                     <el-col :span="22">
                                                         <el-row type="flex" justify="start">
-                                                            <Mathdown 
-                                                              :content="Pre_Small_Sub_Question" 
+                                                            <Mathdown
+                                                              :content="Pre_Small_Sub_Question"
                                                               :name="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_S_SQ_' + Pre_Small_Sub_Question_Index"></Mathdown>
                                                         </el-row>
                                                     </el-col>
                                                 </el-row>
                                                 <el-row type="flex" justify="end" v-show="Big_Sub_Question.sub_questions_image[Pre_Small_Sub_Question_Index].length > 0">
                                                     <el-col :span="22">
-                                                        <el-row 
-                                                            type="flex" 
+                                                        <el-row
+                                                            type="flex"
                                                             justify="start"
                                                             v-for="Pre_Mix_S_SQ_Pic_Row_Index in Math.ceil(Big_Sub_Question.sub_questions_image[Pre_Small_Sub_Question_Index].length/12)"
                                                             :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index  + '_S_SQ_' + Pre_Small_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_S_SQ_Pic_Row_Index">
-                                                            <el-col 
+                                                            <el-col
                                                                 :span="2"
                                                                 v-for="Pre_Mix_S_SQ_Pic_Col_Index in 12"
                                                                 :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index  + '_S_SQ_' + Pre_Small_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_S_SQ_Pic_Row_Index + 'Col_' + Pre_Mix_S_SQ_Pic_Col_Index">
-                                                                <el-row 
-                                                                    type="flex" 
-                                                                    justify="center" 
+                                                                <el-row
+                                                                    type="flex"
+                                                                    justify="center"
                                                                     v-if="(Pre_Mix_S_SQ_Pic_Row_Index - 1) * 12 + Pre_Mix_S_SQ_Pic_Col_Index - 1 < Big_Sub_Question.sub_questions_image[Pre_Small_Sub_Question_Index].length"
                                                                     >
                                                                     <img height="30" :src="Get_Picture_Src('sub_questions_image ' + Big_Sub_Question_Index + ' ' + Pre_Small_Sub_Question_Index, Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, Pre_Mix_S_SQ_Pic_Row_Index, Pre_Mix_S_SQ_Pic_Col_Index)">
@@ -646,9 +646,9 @@
                                             </el-col>
                                         </el-row>
                                         <!-- 答案 -->
-                                        <el-row 
-                                            type="flex" 
-                                            justify="start" 
+                                        <el-row
+                                            type="flex"
+                                            justify="start"
                                             style="margin-top: 5px; margin-bottom: 5px"
                                             v-show="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].answer.length > 0">
                                             <el-col :span="2">
@@ -658,31 +658,31 @@
                                             </el-col>
                                             <el-col :span="22">
                                                 <el-row type="flex" justify="start">
-                                                    <Mathdown 
-                                                      :content="Big_Sub_Question.answer" 
+                                                    <Mathdown
+                                                      :content="Big_Sub_Question.answer"
                                                       :name="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Answer'"></Mathdown>
                                                 </el-row>
                                             </el-col>
                                         </el-row>
                                         <!-- 答案配图 -->
-                                        <el-row 
-                                            type="flex" 
-                                            justify="end" 
+                                        <el-row
+                                            type="flex"
+                                            justify="end"
                                             style="margin-top: 5px; margin-bottom: 5px"
                                             v-show="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].answer_image.length > 0">
                                             <el-col :span="22">
-                                                <el-row 
-                                                    type="flex" 
+                                                <el-row
+                                                    type="flex"
                                                     justify="start"
                                                     v-for="Pre_Mix_Answer_Pic_Row_Index in Math.ceil(Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].answer_image.length/12)"
                                                     :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Answer_Pic_Row_Index">
-                                                    <el-col 
+                                                    <el-col
                                                         :span="2"
                                                         v-for="Pre_Mix_Answer_Pic_Col_Index in 12"
                                                         :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Answer_Pic_Row_Index + 'Col_' + Pre_Mix_Answer_Pic_Col_Index">
-                                                        <el-row 
-                                                            type="flex" 
-                                                            justify="center" 
+                                                        <el-row
+                                                            type="flex"
+                                                            justify="center"
                                                             v-if="(Pre_Mix_Answer_Pic_Row_Index - 1) * 12 + Pre_Mix_Answer_Pic_Col_Index - 1 < Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].answer_image.length"
                                                             >
                                                             <img height="30" :src="Get_Picture_Src('answer_image ' + Big_Sub_Question_Index , Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, Pre_Mix_Answer_Pic_Row_Index, Pre_Mix_Answer_Pic_Col_Index)">
@@ -692,9 +692,9 @@
                                             </el-col>
                                         </el-row>
                                         <!-- 解析 -->
-                                        <el-row 
-                                            type="flex" 
-                                            justify="start" 
+                                        <el-row
+                                            type="flex"
+                                            justify="start"
                                             style="margin-top: 5px; margin-bottom: 5px"
                                             v-show="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].analysis.length > 0">
                                             <el-col :span="2">
@@ -709,24 +709,24 @@
                                             </el-col>
                                         </el-row>
                                         <!-- 解析配图 -->
-                                        <el-row 
-                                            type="flex" 
-                                            justify="end" 
+                                        <el-row
+                                            type="flex"
+                                            justify="end"
                                             style="margin-top: 5px; margin-bottom: 5px"
                                             v-show="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].analysis_image.length > 0">
                                             <el-col :span="22">
-                                                <el-row 
-                                                    type="flex" 
+                                                <el-row
+                                                    type="flex"
                                                     justify="start"
                                                     v-for="Pre_Mix_Analysis_Pic_Row_Index in Math.ceil(Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].analysis_image.length/12)"
                                                     :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Analysis_Pic_Row_Index">
-                                                    <el-col 
+                                                    <el-col
                                                         :span="2"
                                                         v-for="Pre_Mix_Analysis_Pic_Col_Index in 12"
                                                         :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Analysis_Pic_Row_Index + 'Col_' + Pre_Mix_Analysis_Pic_Col_Index">
-                                                        <el-row 
-                                                            type="flex" 
-                                                            justify="center" 
+                                                        <el-row
+                                                            type="flex"
+                                                            justify="center"
                                                             v-if="(Pre_Mix_Analysis_Pic_Row_Index - 1) * 12 + Pre_Mix_Analysis_Pic_Col_Index - 1 < Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions[Big_Sub_Question_Index].analysis_image.length"
                                                             >
                                                             <img height="30" :src="Get_Picture_Src('analysis_image ' + Big_Sub_Question_Index, Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, Pre_Mix_Analysis_Pic_Row_Index, Pre_Mix_Analysis_Pic_Col_Index)">
@@ -759,8 +759,8 @@
                                       </el-col>
                                       <el-col :span="22">
                                         <el-row type="flex" justify="start">
-                                          <Mathdown 
-                                            :content="Sub_Question" 
+                                          <Mathdown
+                                            :content="Sub_Question"
                                             :name="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_SQ_' + Sub_Question_Index"></Mathdown>
                                         </el-row>
                                       </el-col>
@@ -769,18 +769,18 @@
                                     <el-row style="margin-top: 5px; margin-bottom: 5px" v-show="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions_image[Sub_Question_Index].length > 0">
                                       <!-- 退两格 -->
                                       <el-col :span="22" :offset="2">
-                                        <el-row 
-                                          type="flex" 
+                                        <el-row
+                                          type="flex"
                                           justify="start"
                                           v-for="TBQ_SQ_Pic_Row_Index in Math.ceil(Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions_image[Sub_Question_Index].length/12)"
                                           :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_SQ_' + Sub_Question_Index + '_Pic_Row_' + TBQ_SQ_Pic_Row_Index">
-                                          <el-col 
+                                          <el-col
                                             :span="2"
                                             v-for="TBQ_SQ_Pic_Col_Index in 12"
                                             :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_SQ_' + Sub_Question_Index + '_Pic_Row_' + TBQ_SQ_Pic_Row_Index + 'Col_' + TBQ_SQ_Pic_Col_Index">
-                                            <el-row 
-                                                type="flex" 
-                                                justify="center" 
+                                            <el-row
+                                                type="flex"
+                                                justify="center"
                                                 v-if="(TBQ_SQ_Pic_Row_Index - 1) * 12 + TBQ_SQ_Pic_Col_Index - 1 < Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].sub_questions_image[Sub_Question_Index].length"
                                                 >
                                                 <img height="30" :src="Get_Picture_Src('sub_questions_image ' + Sub_Question_Index , Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, TBQ_SQ_Pic_Row_Index, TBQ_SQ_Pic_Col_Index)">
@@ -803,8 +803,8 @@
                                 </el-col>
                                 <el-col :span="22">
                                     <el-row type="flex" justify="start">
-                                        <Mathdown 
-                                          :content="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].answer" 
+                                        <Mathdown
+                                          :content="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].answer"
                                           :name="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Answer'"></Mathdown>
                                     </el-row>
                                 </el-col>
@@ -812,28 +812,28 @@
                             <!-- 答案配图 -->
                             <el-row type="flex" justify="end" v-show="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].answer_image.length > 0">
                                 <el-col :span="22">
-                                    <el-row 
-                                        type="flex" 
-                                        justify="start" 
+                                    <el-row
+                                        type="flex"
+                                        justify="start"
                                         v-for="TBQ_Answer_Pic_Row_Index in Math.ceil(Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].answer_image.length/12)"
                                         :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Answer_Pic_Row_' + TBQ_Answer_Pic_Row_Index"
                                         style="margin-bottom: 10px;">
-                                        <el-col 
-                                            :span="2" 
-                                            v-for="TBQ_Answer_Pic_Col_Index in 12" 
+                                        <el-col
+                                            :span="2"
+                                            v-for="TBQ_Answer_Pic_Col_Index in 12"
                                             :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Answer_Pic_Row_' + TBQ_Answer_Pic_Row_Index + '_' + TBQ_Answer_Pic_Col_Index">
-                                            <el-row 
-                                                type="flex" 
-                                                justify="center" 
+                                            <el-row
+                                                type="flex"
+                                                justify="center"
                                                 v-if="(TBQ_Answer_Pic_Row_Index - 1) * 12 + TBQ_Answer_Pic_Col_Index - 1 < Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].answer_image.length"
                                                 >
-                                                <img height="30" :src="Get_Picture_Src('answer_image', Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, TBQ_Answer_Pic_Row_Index, TBQ_Answer_Pic_Col_Index)">   
+                                                <img height="30" :src="Get_Picture_Src('answer_image', Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, TBQ_Answer_Pic_Row_Index, TBQ_Answer_Pic_Col_Index)">
                                             </el-row>
                                         </el-col>
                                     </el-row>
                                 </el-col>
                             </el-row>
-                            
+
                             <!-- 解析部分 -->
                             <el-row type="flex" justify="start" style="margin-bottom: 10px;" v-show="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].analysis_image.length > 0 || Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].analysis.length > 0">
                                 <el-col :span="2">
@@ -843,8 +843,8 @@
                                 </el-col>
                                 <el-col :span="22">
                                     <el-row type="flex" justify="start">
-                                        <Mathdown 
-                                          :content="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].analysis" 
+                                        <Mathdown
+                                          :content="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].analysis"
                                           :name="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Analysis'"></Mathdown>
                                     </el-row>
                                 </el-col>
@@ -852,21 +852,21 @@
                             <!-- 解析部分配图 -->
                             <el-row type="flex" justify="end" v-show="Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].analysis_image.length > 0">
                                 <el-col :span="22">
-                                    <el-row 
-                                        type="flex" 
-                                        justify="start" 
+                                    <el-row
+                                        type="flex"
+                                        justify="start"
                                         v-for="TBQ_Analysis_Pic_Row_Index in Math.ceil(Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].analysis_image.length/12)"
                                         :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Analysis_Pic_Row_' + TBQ_Analysis_Pic_Row_Index">
-                                        <el-col 
-                                            :span="2" 
-                                            v-for="TBQ_Analysis_Pic_Col_Index in 12" 
+                                        <el-col
+                                            :span="2"
+                                            v-for="TBQ_Analysis_Pic_Col_Index in 12"
                                             :key="'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Analysis_Pic_Row_' + TBQ_Analysis_Pic_Row_Index + '_' + TBQ_Analysis_Pic_Col_Index">
-                                            <el-row 
-                                                type="flex" 
-                                                justify="center" 
+                                            <el-row
+                                                type="flex"
+                                                justify="center"
                                                 v-if="(TBQ_Analysis_Pic_Row_Index - 1) * 12 + TBQ_Analysis_Pic_Col_Index - 1 < Bundle.list[(TBQ_Row_Index - 1) * 24 + Question_Index - 1].analysis_image.length"
                                                 >
-                                                <img height="30" :src="Get_Picture_Src('analysis_image', Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, TBQ_Analysis_Pic_Row_Index, TBQ_Analysis_Pic_Col_Index)">   
+                                                <img height="30" :src="Get_Picture_Src('analysis_image', Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1, TBQ_Analysis_Pic_Row_Index, TBQ_Analysis_Pic_Col_Index)">
                                             </el-row>
                                         </el-col>
                                     </el-row>
@@ -874,43 +874,43 @@
                             </el-row>
                           </div>
                           <el-row type="flex" justify="center">
-                            <el-button 
-                              type="primary" 
-                              size="small" 
-                              plain 
-                              style="margin-right: 15px" 
+                            <el-button
+                              type="primary"
+                              size="small"
+                              plain
+                              style="margin-right: 15px"
                               @click="Question_Move_Front(
-                                Bundle_Index, 
+                                Bundle_Index,
                                 (TBQ_Row_Index - 1) * 24 + Question_Index - 1,
-                                'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Pop')" 
+                                'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Pop')"
                               :disabled="Question_Index == 1 || Editing_Position != ''">前移</el-button>
-                            <el-button 
-                              type="primary" 
-                              size="small" 
-                              plain 
-                              style="margin-right: 15px" 
-                              @click="Question_Move_Back(Bundle_Index, 
+                            <el-button
+                              type="primary"
+                              size="small"
+                              plain
+                              style="margin-right: 15px"
+                              @click="Question_Move_Back(Bundle_Index,
                                 (TBQ_Row_Index - 1) * 24 + Question_Index - 1,
-                                'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Pop')" 
+                                'Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Pop')"
                               :disabled="Question_Index == Bundle.list.length || Editing_Position != ''">后移</el-button>
-                            <el-button 
-                              type="warning" 
-                              size="small" 
-                              plain 
+                            <el-button
+                              type="warning"
+                              size="small"
+                              plain
                               style="margin-right: 15px"
                               @click="Question_Edit(Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1)">编辑</el-button>
-                            <el-button 
-                              type="danger" 
-                              size="small" 
-                              plain 
+                            <el-button
+                              type="danger"
+                              size="small"
+                              plain
                               style="margin-right: 15px"
                               :disabled="Editing_Position != ''"
                               @click="Question_Delete(Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1)">删除</el-button>
                           </el-row>
-                          <el-row 
-                            type="flex" 
-                            justify="center" 
-                            class="Ques_Button Un_Selectable" 
+                          <el-row
+                            type="flex"
+                            justify="center"
+                            class="Ques_Button Un_Selectable"
                             :style="Get_Cursor('Total_Bundle_' + Bundle_Index + '_Row_' + TBQ_Row_Index + '_' + Question_Index + '_Label', Bundle_Index, (TBQ_Row_Index - 1) * 24 + Question_Index - 1)"
                             slot="reference"
                             v-if="(TBQ_Row_Index - 1) * 24 + Question_Index - 1 < Bundle.list.length"
@@ -934,9 +934,9 @@
     <el-divider></el-divider>
     <el-row type="flex" justify="center" style="margin-bottom: 4vh">
       <el-col :span="8">
-        <el-row 
-          type="flex" 
-          justify="center" 
+        <el-row
+          type="flex"
+          justify="center"
           :class="Part_Class('Input')"
           @click.native="Change_Using_Part('Input')"
           style="height: 30px; line-height: 30px; width: 100%; border-top-left-radius: 15px; border-bottom-left-radius: 15px">
@@ -944,9 +944,9 @@
         </el-row>
       </el-col>
       <el-col :span="8">
-        <el-row 
-          type="flex" 
-          justify="center" 
+        <el-row
+          type="flex"
+          justify="center"
           :class="Part_Class('Preview')"
           @click.native="Change_Using_Part('Preview')"
           style="height: 30px; line-height: 30px; width: 100%; ">
@@ -954,9 +954,9 @@
         </el-row>
       </el-col>
       <el-col :span="8">
-        <el-row 
-          type="flex" 
-          justify="center" 
+        <el-row
+          type="flex"
+          justify="center"
           :class="Part_Class('Fileinput')"
           @click.native="Change_Using_Part('Fileinput')"
           style="height: 30px; line-height: 30px; width: 100%; border-top-right-radius: 15px; border-bottom-right-radius: 15px">
@@ -975,9 +975,9 @@
           <el-col :span="13">
               <el-row type="flex" justify="start" style="height: 40px; line-height: 40px;">
                   <el-col v-for="Type in Type_List" :key="'Ques_Type_' + Type.label" :span="24/8">
-                      <el-row 
-                          type="flex" 
-                          justify="center" 
+                      <el-row
+                          type="flex"
+                          justify="center"
                           :class="Get_Type_Button_Class(Type)"
                           @click.native="Type_Change(Type.value)">
                           {{Type.label}}
@@ -997,29 +997,29 @@
           </el-col>
       </el-row>
       <el-row type="flex" justify="center" style="border: 3px solid #409EFF; min-height: 30vh; border-radius: 15px; margin-top: 30px; margin-bottom: 30px;">
-          <OptionQuestions 
+          <OptionQuestions
             :key="'Opt_Input_' + Refresh"
-            @Emit_And_Submit="Prepare_For_Submit" 
-            style="width: 100%" 
-            v-if="['单选题', '多选题', '判断题'].indexOf(Type) != -1" 
+            @Emit_And_Submit="Prepare_For_Submit"
+            style="width: 100%"
+            v-if="['单选题', '多选题', '判断题'].indexOf(Type) != -1"
             :detailType.sync="Type"></OptionQuestions>
-          <FillQuestions  
+          <FillQuestions
             :key="'Fill_Input_' + Refresh"
-            @Emit_And_Submit="Prepare_For_Submit" 
-            style="width: 100%" 
-            v-if="['填空题'].indexOf(Type) != -1" 
+            @Emit_And_Submit="Prepare_For_Submit"
+            style="width: 100%"
+            v-if="['填空题'].indexOf(Type) != -1"
             :detailType.sync="Type"></FillQuestions>
-          <AnswerQuestions  
+          <AnswerQuestions
             :key="'Answer_Input_' + Refresh"
-            @Emit_And_Submit="Prepare_For_Submit" 
-            style="width: 100%" 
-            v-if="['简答题', '计算题'].indexOf(Type) != -1" 
+            @Emit_And_Submit="Prepare_For_Submit"
+            style="width: 100%"
+            v-if="['简答题', '计算题'].indexOf(Type) != -1"
             :detailType.sync="Type"></AnswerQuestions>
-          <MixQuestions  
+          <MixQuestions
             :key="'Mix_Input_' + Refresh"
-            @Emit_And_Submit="Prepare_For_Submit" 
-            style="width: 100%" 
-            v-if="['综合题'].indexOf(Type) != -1" 
+            @Emit_And_Submit="Prepare_For_Submit"
+            style="width: 100%"
+            v-if="['综合题'].indexOf(Type) != -1"
             :detailType.sync="Type"></MixQuestions>
       </el-row>
     </div>
@@ -1028,9 +1028,9 @@
       <el-row type="flex" justify="center">
         <label style="font-size: 18px">{{Title == '' ? '暂无试卷标题' : Title}}</label>
       </el-row>
-      <el-row 
-        type="flex" 
-        justify="start" 
+      <el-row
+        type="flex"
+        justify="start"
         v-for="(Bundle, Bundle_Index) in Question_Bundle"
         :key="'Total_Bundle_' + Bundle_Index"
         style="margin-top: 20px;">
@@ -1046,7 +1046,7 @@
           <!-- 每道题都搞一下， -->
           <el-row type="flex" justify="start" style=" width: 100%">
             <el-col>
-              <el-row 
+              <el-row
                 v-for="Question_Index in Bundle.list.length"
                 :key="'Total_Bundle_' + Bundle_Index + '_Row_' + Question_Index"
                 type="flex" justify="start"
@@ -1060,8 +1060,8 @@
                     </el-col>
                     <el-col :span="22">
                         <el-row type="flex" justify="start">
-                            <Mathdown 
-                              :content="Bundle.list[Question_Index - 1].stem" 
+                            <Mathdown
+                              :content="Bundle.list[Question_Index - 1].stem"
                               :name="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Stem'"></Mathdown>
                         </el-row>
                     </el-col>
@@ -1069,33 +1069,33 @@
                   <!-- 题干的配图部分 -->
                   <el-row type="flex" justify="end" v-show="Bundle.list[Question_Index - 1].stem_image.length > 0">
                       <el-col :span="22">
-                          <el-row 
-                              type="flex" 
-                              justify="start" 
+                          <el-row
+                              type="flex"
+                              justify="start"
                               v-for="TBQ_Stem_Pic_Row_Index in Math.ceil(Bundle.list[Question_Index - 1].stem_image.length/12)"
                               :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Stem_Pic_Row_' + TBQ_Stem_Pic_Row_Index"
                               style="margin-bottom: 10px">
-                              <el-col 
-                                  :span="2" 
-                                  v-for="TBQ_Stem_Pic_Col_Index in 12" 
+                              <el-col
+                                  :span="2"
+                                  v-for="TBQ_Stem_Pic_Col_Index in 12"
                                   :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Stem_Pic_Row_' + TBQ_Stem_Pic_Row_Index + '_' + TBQ_Stem_Pic_Col_Index">
-                                  <el-row 
-                                      type="flex" 
-                                      justify="center" 
+                                  <el-row
+                                      type="flex"
+                                      justify="center"
                                       v-if="(TBQ_Stem_Pic_Row_Index - 1) * 12 + TBQ_Stem_Pic_Col_Index - 1 < Bundle.list[Question_Index - 1].stem_image.length"
                                       >
-                                      <img height="30" :src="Get_Picture_Src('stem_image', Bundle_Index, Question_Index - 1, TBQ_Stem_Pic_Row_Index, TBQ_Stem_Pic_Col_Index)">   
+                                      <img height="30" :src="Get_Picture_Src('stem_image', Bundle_Index, Question_Index - 1, TBQ_Stem_Pic_Row_Index, TBQ_Stem_Pic_Col_Index)">
                                   </el-row>
                               </el-col>
                           </el-row>
                       </el-col>
                   </el-row>
-                  
+
                   <!-- 选项部分 -->
-                  <el-row 
-                      type="flex" 
-                      justify="start" 
-                      v-for="(Option, Option_Index) in Bundle.list[Question_Index - 1].options" 
+                  <el-row
+                      type="flex"
+                      justify="start"
+                      v-for="(Option, Option_Index) in Bundle.list[Question_Index - 1].options"
                       :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Opt_' + Option_Index"
                       style="margin-bottom: 10px;">
                       <el-col>
@@ -1107,26 +1107,26 @@
                               </el-col>
                               <el-col :span="22">
                                   <el-row type="flex" justify="start">
-                                      <Mathdown 
-                                        :content="Option" 
+                                      <Mathdown
+                                        :content="Option"
                                         :name="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Opt_' + Option_Index"></Mathdown>
                                   </el-row>
                               </el-col>
                           </el-row>
                           <el-row style="margin-top: 10px;" v-show="Bundle.list[Question_Index - 1].options_image[Option_Index].length > 0">
                               <el-col :span="22" :offset="2">
-                                  <el-row 
-                                      type="flex" 
+                                  <el-row
+                                      type="flex"
                                       justify="start"
                                       v-for="TBQ_Option_Pic_Row_Index in Math.ceil(Bundle.list[Question_Index - 1].options_image[Option_Index].length/12)"
                                       :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Opt_' + Option_Index + '_Pic_Row_' + TBQ_Option_Pic_Row_Index">
-                                      <el-col 
+                                      <el-col
                                           :span="2"
                                           v-for="TBQ_Option_Pic_Col_Index in 12"
                                           :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Opt_' + Option_Index + '_Pic_Row_' + TBQ_Option_Pic_Row_Index + 'Col_' + TBQ_Option_Pic_Col_Index">
-                                          <el-row 
-                                              type="flex" 
-                                              justify="center" 
+                                          <el-row
+                                              type="flex"
+                                              justify="center"
                                               v-if="(TBQ_Option_Pic_Row_Index - 1) * 12 + TBQ_Option_Pic_Col_Index - 1 < Bundle.list[Question_Index - 1].options_image[Option_Index].length"
                                               >
                                               <img height="30" :src="Get_Picture_Src('options_image ' + Option_Index , Bundle_Index, Question_Index - 1, TBQ_Option_Pic_Row_Index, TBQ_Option_Pic_Col_Index)">
@@ -1143,7 +1143,7 @@
                   <!-- 综合题的小题部分 -->
                   <el-row v-if="Bundle.type == '综合题'">
                     <el-col>
-                      <el-row 
+                      <el-row
                           type="flex"
                           justify="end"
                           v-for="(Big_Sub_Question, Big_Sub_Question_Index) in Bundle.list[Question_Index - 1].sub_questions"
@@ -1151,12 +1151,12 @@
                           style="margin-bottom: 20px">
                           <el-col :span="23">
                             <!-- 题干两项 -->
-                              <el-row 
-                                  type="flex" 
-                                  justify="start" 
+                              <el-row
+                                  type="flex"
+                                  justify="start"
                                   :style="
-                                      ['单选题', '多选题', '判断题', '简答题', '计算题'].indexOf(Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].type) != -1 
-                                      ? 'margin-bottom: 10px' 
+                                      ['单选题', '多选题', '判断题', '简答题', '计算题'].indexOf(Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].type) != -1
+                                      ? 'margin-bottom: 10px'
                                       : ''">
                                   <el-col :span="2">
                                       <el-row type="flex" justify="end" style="font-weight: bold;">
@@ -1165,31 +1165,31 @@
                                   </el-col>
                                   <el-col :span="22">
                                       <el-row type="flex" justify="start">
-                                          <Mathdown 
-                                            :content="Big_Sub_Question.stem" 
+                                          <Mathdown
+                                            :content="Big_Sub_Question.stem"
                                             :name="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Stem'"></Mathdown>
                                       </el-row>
                                   </el-col>
                               </el-row>
-                              <el-row 
-                                  type="flex" 
-                                  justify="end" 
+                              <el-row
+                                  type="flex"
+                                  justify="end"
                                   style="margin-top: 5px; margin-bottom: 5px"
                                   v-show="Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].stem_image.length > 0">
                                   <el-col :span="22">
-                                      <el-row 
-                                          type="flex" 
+                                      <el-row
+                                          type="flex"
                                           justify="start"
                                           style="margin-top: 5px; margin-bottom: 5px"
                                           v-for="Pre_Mix_Stem_Pic_Row_Index in Math.ceil(Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].stem_image.length/12)"
                                           :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Stem_Pic_Row_' + Pre_Mix_Stem_Pic_Row_Index">
-                                          <el-col 
+                                          <el-col
                                               :span="2"
                                               v-for="Pre_Mix_Stem_Pic_Col_Index in 12"
                                               :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Stem_Pic_Row_' + Pre_Mix_Stem_Pic_Row_Index + 'Col_' + Pre_Mix_Stem_Pic_Col_Index">
-                                              <el-row 
-                                                  type="flex" 
-                                                  justify="center" 
+                                              <el-row
+                                                  type="flex"
+                                                  justify="center"
                                                   v-if="(Pre_Mix_Stem_Pic_Row_Index - 1) * 12 + Pre_Mix_Stem_Pic_Col_Index - 1 < Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].stem_image.length"
                                                   >
                                                   <img height="30" :src="Get_Picture_Src('stem_image ' + Big_Sub_Question_Index, Bundle_Index, Question_Index - 1, Pre_Mix_Stem_Pic_Row_Index, Pre_Mix_Stem_Pic_Col_Index)">
@@ -1199,7 +1199,7 @@
                                   </el-col>
                               </el-row>
                               <!-- 选择类小题 -->
-                              <el-row 
+                              <el-row
                                   type="flex"
                                   justify="start"
                                   style="margin-top: 5px; margin-bottom: 5px"
@@ -1215,27 +1215,27 @@
                                           </el-col>
                                           <el-col :span="22">
                                               <el-row type="flex" justify="start">
-                                                  <Mathdown 
-                                                    :content="Pre_Option" 
+                                                  <Mathdown
+                                                    :content="Pre_Option"
                                                     :name="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Options_' + Pre_Option_Index"></Mathdown>
                                               </el-row>
                                           </el-col>
                                       </el-row>
                                       <el-row type="flex" justify="end" v-show="Big_Sub_Question.options_image[Pre_Option_Index].length > 0">
                                           <el-col :span="22">
-                                              <el-row 
-                                                  type="flex" 
+                                              <el-row
+                                                  type="flex"
                                                   justify="start"
                                                   style="margin-top: 5px; margin-bottom: 5px"
                                                   v-for="Pre_Mix_Opt_Pic_Row_Index in Math.ceil(Big_Sub_Question.options_image[Pre_Option_Index].length/12)"
                                                   :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index  + '_Options_' + Pre_Option_Index + '_Pic_Row_' + Pre_Mix_Opt_Pic_Row_Index">
-                                                  <el-col 
+                                                  <el-col
                                                       :span="2"
                                                       v-for="Pre_Mix_Opt_Pic_Col_Index in 12"
                                                       :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index  + '_Options_' + Pre_Option_Index + '_Pic_Row_' + Pre_Mix_Opt_Pic_Row_Index + 'Col_' + Pre_Mix_Opt_Pic_Col_Index">
-                                                      <el-row 
-                                                          type="flex" 
-                                                          justify="center" 
+                                                      <el-row
+                                                          type="flex"
+                                                          justify="center"
                                                           v-if="(Pre_Mix_Opt_Pic_Row_Index - 1) * 12 + Pre_Mix_Opt_Pic_Col_Index - 1 < Big_Sub_Question.options_image[Pre_Option_Index].length"
                                                           >
                                                           <img height="30" :src="Get_Picture_Src('options_image ' + Big_Sub_Question_Index + ' ' + Pre_Option_Index, Bundle_Index, Question_Index - 1, Pre_Mix_Opt_Pic_Row_Index, Pre_Mix_Opt_Pic_Col_Index)">
@@ -1247,7 +1247,7 @@
                                   </el-col>
                               </el-row>
                               <!-- 解答类小题 -->
-                              <el-row 
+                              <el-row
                                   type="flex"
                                   justify="start"
                                   style="margin-top: 5px; margin-bottom: 5px"
@@ -1263,26 +1263,26 @@
                                           </el-col>
                                           <el-col :span="22">
                                               <el-row type="flex" justify="start">
-                                                  <Mathdown 
-                                                    :content="Pre_Small_Sub_Question" 
+                                                  <Mathdown
+                                                    :content="Pre_Small_Sub_Question"
                                                     :name="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_S_SQ_' + Pre_Small_Sub_Question_Index"></Mathdown>
                                               </el-row>
                                           </el-col>
                                       </el-row>
                                       <el-row type="flex" justify="end" v-show="Big_Sub_Question.sub_questions_image[Pre_Small_Sub_Question_Index].length > 0">
                                           <el-col :span="22">
-                                              <el-row 
-                                                  type="flex" 
+                                              <el-row
+                                                  type="flex"
                                                   justify="start"
                                                   v-for="Pre_Mix_S_SQ_Pic_Row_Index in Math.ceil(Big_Sub_Question.sub_questions_image[Pre_Small_Sub_Question_Index].length/12)"
                                                   :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index  + '_S_SQ_' + Pre_Small_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_S_SQ_Pic_Row_Index">
-                                                  <el-col 
+                                                  <el-col
                                                       :span="2"
                                                       v-for="Pre_Mix_S_SQ_Pic_Col_Index in 12"
                                                       :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index  + '_S_SQ_' + Pre_Small_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_S_SQ_Pic_Row_Index + 'Col_' + Pre_Mix_S_SQ_Pic_Col_Index">
-                                                      <el-row 
-                                                          type="flex" 
-                                                          justify="center" 
+                                                      <el-row
+                                                          type="flex"
+                                                          justify="center"
                                                           v-if="(Pre_Mix_S_SQ_Pic_Row_Index - 1) * 12 + Pre_Mix_S_SQ_Pic_Col_Index - 1 < Big_Sub_Question.sub_questions_image[Pre_Small_Sub_Question_Index].length"
                                                           >
                                                           <img height="30" :src="Get_Picture_Src('sub_questions_image ' + Big_Sub_Question_Index + ' ' + Pre_Small_Sub_Question_Index, Bundle_Index, Question_Index - 1, Pre_Mix_S_SQ_Pic_Row_Index, Pre_Mix_S_SQ_Pic_Col_Index)">
@@ -1294,9 +1294,9 @@
                                   </el-col>
                               </el-row>
                               <!-- 答案两项 -->
-                              <el-row 
-                                  type="flex" 
-                                  justify="start" 
+                              <el-row
+                                  type="flex"
+                                  justify="start"
                                   style="margin-top: 5px; margin-bottom: 5px"
                                   v-show="Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].answer.length > 0">
                                   <el-col :span="2">
@@ -1306,30 +1306,30 @@
                                   </el-col>
                                   <el-col :span="22">
                                       <el-row type="flex" justify="start">
-                                          <Mathdown 
-                                            :content="Big_Sub_Question.answer" 
+                                          <Mathdown
+                                            :content="Big_Sub_Question.answer"
                                             :name="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Answer'"></Mathdown>
                                       </el-row>
                                   </el-col>
                               </el-row>
-                              <el-row 
-                                  type="flex" 
-                                  justify="end" 
+                              <el-row
+                                  type="flex"
+                                  justify="end"
                                   style="margin-top: 5px; margin-bottom: 5px"
                                   v-show="Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].answer_image.length > 0">
                                   <el-col :span="22">
-                                      <el-row 
-                                          type="flex" 
+                                      <el-row
+                                          type="flex"
                                           justify="start"
                                           v-for="Pre_Mix_Answer_Pic_Row_Index in Math.ceil(Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].answer_image.length/12)"
                                           :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Answer_Pic_Row_Index">
-                                          <el-col 
+                                          <el-col
                                               :span="2"
                                               v-for="Pre_Mix_Answer_Pic_Col_Index in 12"
                                               :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Answer_Pic_Row_Index + 'Col_' + Pre_Mix_Answer_Pic_Col_Index">
-                                              <el-row 
-                                                  type="flex" 
-                                                  justify="center" 
+                                              <el-row
+                                                  type="flex"
+                                                  justify="center"
                                                   v-if="(Pre_Mix_Answer_Pic_Row_Index - 1) * 12 + Pre_Mix_Answer_Pic_Col_Index - 1 < Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].answer_image.length"
                                                   >
                                                   <img height="30" :src="Get_Picture_Src('answer_image ' + Big_Sub_Question_Index , Bundle_Index, Question_Index - 1, Pre_Mix_Answer_Pic_Row_Index, Pre_Mix_Answer_Pic_Col_Index)">
@@ -1339,9 +1339,9 @@
                                   </el-col>
                               </el-row>
                               <!-- 解析两项 -->
-                              <el-row 
-                                  type="flex" 
-                                  justify="start" 
+                              <el-row
+                                  type="flex"
+                                  justify="start"
                                   style="margin-top: 5px; margin-bottom: 5px"
                                   v-show="Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].analysis.length > 0">
                                   <el-col :span="2">
@@ -1355,24 +1355,24 @@
                                       </el-row>
                                   </el-col>
                               </el-row>
-                              <el-row 
-                                  type="flex" 
-                                  justify="end" 
+                              <el-row
+                                  type="flex"
+                                  justify="end"
                                   style="margin-top: 5px; margin-bottom: 5px"
                                   v-show="Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].analysis_image.length > 0">
                                   <el-col :span="22">
-                                      <el-row 
-                                          type="flex" 
+                                      <el-row
+                                          type="flex"
                                           justify="start"
                                           v-for="Pre_Mix_Analysis_Pic_Row_Index in Math.ceil(Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].analysis_image.length/12)"
                                           :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Analysis_Pic_Row_Index">
-                                          <el-col 
+                                          <el-col
                                               :span="2"
                                               v-for="Pre_Mix_Analysis_Pic_Col_Index in 12"
                                               :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_BSQ_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Analysis_Pic_Row_Index + 'Col_' + Pre_Mix_Analysis_Pic_Col_Index">
-                                              <el-row 
-                                                  type="flex" 
-                                                  justify="center" 
+                                              <el-row
+                                                  type="flex"
+                                                  justify="center"
                                                   v-if="(Pre_Mix_Analysis_Pic_Row_Index - 1) * 12 + Pre_Mix_Analysis_Pic_Col_Index - 1 < Bundle.list[Question_Index - 1].sub_questions[Big_Sub_Question_Index].analysis_image.length"
                                                   >
                                                   <img height="30" :src="Get_Picture_Src('analysis_image ' + Big_Sub_Question_Index, Bundle_Index, Question_Index - 1, Pre_Mix_Analysis_Pic_Row_Index, Pre_Mix_Analysis_Pic_Col_Index)">
@@ -1402,26 +1402,26 @@
                             </el-col>
                             <el-col :span="22">
                               <el-row type="flex" justify="start">
-                                <Mathdown 
-                                  :content="Sub_Question" 
+                                <Mathdown
+                                  :content="Sub_Question"
                                   :name="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_SQ_' + Sub_Question_Index"></Mathdown>
                               </el-row>
                             </el-col>
                           </el-row>
                           <el-row style="margin-top: 5px; margin-bottom: 5px" v-show="Bundle.list[Question_Index - 1].sub_questions_image[Sub_Question_Index].length > 0">
                             <el-col :span="22" :offset="2">
-                              <el-row 
-                                type="flex" 
+                              <el-row
+                                type="flex"
                                 justify="start"
                                 v-for="TBQ_SQ_Pic_Row_Index in Math.ceil(Bundle.list[Question_Index - 1].sub_questions_image[Sub_Question_Index].length/12)"
                                 :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_SQ_' + Sub_Question_Index + '_Pic_Row_' + TBQ_SQ_Pic_Row_Index">
-                                <el-col 
+                                <el-col
                                   :span="2"
                                   v-for="TBQ_SQ_Pic_Col_Index in 12"
                                   :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_SQ_' + Sub_Question_Index + '_Pic_Row_' + TBQ_SQ_Pic_Row_Index + 'Col_' + TBQ_SQ_Pic_Col_Index">
-                                  <el-row 
-                                      type="flex" 
-                                      justify="center" 
+                                  <el-row
+                                      type="flex"
+                                      justify="center"
                                       v-if="(TBQ_SQ_Pic_Row_Index - 1) * 12 + TBQ_SQ_Pic_Col_Index - 1 < Bundle.list[Question_Index - 1].sub_questions_image[Sub_Question_Index].length"
                                       >
                                       <img height="30" :src="Get_Picture_Src('sub_questions_image ' + Sub_Question_Index , Bundle_Index, Question_Index - 1, TBQ_SQ_Pic_Row_Index, TBQ_SQ_Pic_Col_Index)">
@@ -1436,8 +1436,8 @@
                   </el-row>
 
                   <!-- 答案部分 -->
-                  <el-row 
-                    type="flex" justify="start" style="margin-bottom: 10px;" 
+                  <el-row
+                    type="flex" justify="start" style="margin-bottom: 10px;"
                     v-show="Bundle.list[Question_Index - 1].answer_image.length > 0 || Bundle.list[Question_Index - 1].answer.length > 0">
                       <el-col :span="2">
                           <el-row type="flex" justify="end" style="font-weight: bold;">
@@ -1446,8 +1446,8 @@
                       </el-col>
                       <el-col :span="22">
                           <el-row type="flex" justify="start">
-                              <Mathdown 
-                                :content="Bundle.list[Question_Index - 1].answer" 
+                              <Mathdown
+                                :content="Bundle.list[Question_Index - 1].answer"
                                 :name="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Answer'"></Mathdown>
                           </el-row>
                       </el-col>
@@ -1455,31 +1455,31 @@
                   <!-- 答案配图 -->
                   <el-row type="flex" justify="end" v-show="Bundle.list[Question_Index - 1].answer_image.length > 0">
                       <el-col :span="22">
-                          <el-row 
-                              type="flex" 
-                              justify="start" 
+                          <el-row
+                              type="flex"
+                              justify="start"
                               v-for="TBQ_Answer_Pic_Row_Index in Math.ceil(Bundle.list[Question_Index - 1].answer_image.length/12)"
                               :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Answer_Pic_Row_' + TBQ_Answer_Pic_Row_Index"
                               style="margin-bottom: 10px;">
-                              <el-col 
-                                  :span="2" 
-                                  v-for="TBQ_Answer_Pic_Col_Index in 12" 
+                              <el-col
+                                  :span="2"
+                                  v-for="TBQ_Answer_Pic_Col_Index in 12"
                                   :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Answer_Pic_Row_' + TBQ_Answer_Pic_Row_Index + '_' + TBQ_Answer_Pic_Col_Index">
-                                  <el-row 
-                                      type="flex" 
-                                      justify="center" 
+                                  <el-row
+                                      type="flex"
+                                      justify="center"
                                       v-if="(TBQ_Answer_Pic_Row_Index - 1) * 12 + TBQ_Answer_Pic_Col_Index - 1 < Bundle.list[Question_Index - 1].answer_image.length"
                                       >
-                                      <img height="30" :src="Get_Picture_Src('answer_image', Bundle_Index, Question_Index - 1, TBQ_Answer_Pic_Row_Index, TBQ_Answer_Pic_Col_Index)">   
+                                      <img height="30" :src="Get_Picture_Src('answer_image', Bundle_Index, Question_Index - 1, TBQ_Answer_Pic_Row_Index, TBQ_Answer_Pic_Col_Index)">
                                   </el-row>
                               </el-col>
                           </el-row>
                       </el-col>
                   </el-row>
-                  
+
                   <!-- 解析部分 -->
-                  <el-row 
-                    type="flex" justify="start" style="margin-bottom: 10px;" 
+                  <el-row
+                    type="flex" justify="start" style="margin-bottom: 10px;"
                     v-show="Bundle.list[Question_Index - 1].analysis_image.length > 0 || Bundle.list[Question_Index - 1].analysis.length > 0">
                       <el-col :span="2">
                           <el-row type="flex" justify="end" style="font-weight: bold;">
@@ -1488,8 +1488,8 @@
                       </el-col>
                       <el-col :span="22">
                           <el-row type="flex" justify="start">
-                              <Mathdown 
-                                :content="Bundle.list[Question_Index - 1].analysis" 
+                              <Mathdown
+                                :content="Bundle.list[Question_Index - 1].analysis"
                                 :name="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Analysis'"></Mathdown>
                           </el-row>
                       </el-col>
@@ -1497,21 +1497,21 @@
                   <!-- 解析部分配图 -->
                   <el-row type="flex" justify="end" v-show="Bundle.list[Question_Index - 1].analysis_image.length > 0" style="margin-bottom: 15px">
                       <el-col :span="22">
-                          <el-row 
-                              type="flex" 
-                              justify="start" 
+                          <el-row
+                              type="flex"
+                              justify="start"
                               v-for="TBQ_Analysis_Pic_Row_Index in Math.ceil(Bundle.list[Question_Index - 1].analysis_image.length/12)"
                               :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Analysis_Pic_Row_' + TBQ_Analysis_Pic_Row_Index">
-                              <el-col 
-                                  :span="2" 
-                                  v-for="TBQ_Analysis_Pic_Col_Index in 12" 
+                              <el-col
+                                  :span="2"
+                                  v-for="TBQ_Analysis_Pic_Col_Index in 12"
                                   :key="'Pre_Total_Bundle_' + Bundle_Index + '_' + Question_Index + '_Analysis_Pic_Row_' + TBQ_Analysis_Pic_Row_Index + '_' + TBQ_Analysis_Pic_Col_Index">
-                                  <el-row 
-                                      type="flex" 
-                                      justify="center" 
+                                  <el-row
+                                      type="flex"
+                                      justify="center"
                                       v-if="(TBQ_Analysis_Pic_Row_Index - 1) * 12 + TBQ_Analysis_Pic_Col_Index - 1 < Bundle.list[Question_Index - 1].analysis_image.length"
                                       >
-                                      <img height="30" :src="Get_Picture_Src('analysis_image', Bundle_Index, Question_Index - 1, TBQ_Analysis_Pic_Row_Index, TBQ_Analysis_Pic_Col_Index)">   
+                                      <img height="30" :src="Get_Picture_Src('analysis_image', Bundle_Index, Question_Index - 1, TBQ_Analysis_Pic_Row_Index, TBQ_Analysis_Pic_Col_Index)">
                                   </el-row>
                               </el-col>
                           </el-row>
@@ -1525,9 +1525,9 @@
       </el-row>
     </div>
     <!-- 试卷切分的显示部分 -->
-    <div 
-      v-show="Using_Part == 'Fileinput'" 
-      @click="Reset_Focus()" 
+    <div
+      v-show="Using_Part == 'Fileinput'"
+      @click="Reset_Focus()"
       style="padding-left: 2vw; min-height: 100vh; padding-top: 20px; padding-right: 2vw; border: 3px solid #409EFF; border-radius: 15px; margin-top: 30px; margin-bottom: 30px;">
       <div style="min-height: 90vh;">
       <el-row
@@ -1564,8 +1564,8 @@
             </el-row>
             <!-- Item == 'DIVIDER_LINES' 这代表这个元素是原试卷内容里面的某一部分的分界线 -->
             <!-- mouse事件的作用是判断当前鼠标悬浮在哪个线上，用来操作的，用不到可以删 -->
-            <el-row 
-              v-if="Item == 'DIVIDER_LINES'" 
+            <el-row
+              v-if="Item == 'DIVIDER_LINES'"
               style="height: 30px; padding-top: 15px; padding-bottom: 15px; cursor: pointer"
               @click.native="Delete_Divider(Item_Index)"
               @mouseenter.native="Paper_Divider_Index = Item_Index"
@@ -1575,9 +1575,9 @@
                 </el-col>
             </el-row>
             <!-- Item != 'DIVIDER_LINES' 即添加新切分线的部分是在试卷元素的后面出现的、其下一个内容不能是切分线、也不能是试卷的最后一个部分 -->
-            <el-row 
-              v-if="Item != 'DIVIDER_LINES' && Item_Index != Paper_Content.length - 1 && Paper_Content[Item_Index + 1] != 'DIVIDER_LINES'" 
-              style="height: 14px; width: 100%; padding-top: 6px; cursor: pointer;" 
+            <el-row
+              v-if="Item != 'DIVIDER_LINES' && Item_Index != Paper_Content.length - 1 && Paper_Content[Item_Index + 1] != 'DIVIDER_LINES'"
+              style="height: 14px; width: 100%; padding-top: 6px; cursor: pointer;"
               @click.native="Add_Divider(Item_Index)"
               @mouseenter.native="Paper_Divider_Index = Item_Index"
               @mouseleave.native="Paper_Divider_Index = -1">
@@ -1673,7 +1673,7 @@ export default {
       //           stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
       //           options: ["1", "2", "3", "4"],
       //           options_image: [
-      //               ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
+      //               ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
       //               [],
       //               [],
       //               []],
@@ -1693,7 +1693,7 @@ export default {
       //           stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
       //           options: ["1", "2", "3", "4"],
       //           options_image: [
-      //               ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
+      //               ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
       //               [],
       //               [],
       //               []],
@@ -1713,7 +1713,7 @@ export default {
       //           stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
       //           options: ["1", "2", "3", "4"],
       //           options_image: [
-      //               ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
+      //               ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
       //               [],
       //               [],
       //               []],
@@ -1733,7 +1733,7 @@ export default {
       //           stem_image: ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
       //           options: ["1", "2", "3", "4"],
       //           options_image: [
-      //               ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="], 
+      //               ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
       //               [],
       //               [],
       //               []],
@@ -1829,7 +1829,7 @@ export default {
       //             score: 5,
       //             stem: "测试用题干$1$,$2$",
       //             stem_image: [
-      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", 
+      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
       //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
       //             options: ["$1$", "2", "3", "4"],
       //             options_image: [
@@ -1837,16 +1837,16 @@ export default {
       //                 "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
       //                 "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
       //                 "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="
-      //               ], 
-      //               [], 
-      //               [], 
+      //               ],
+      //               [],
+      //               [],
       //               []
       //             ],
       //             answer: "A",
       //             answer_image: [],
       //             analysis: "选项",
       //             analysis_image: [
-      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", 
+      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
       //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
       //             // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
       //             sub_questions: [],
@@ -1862,7 +1862,7 @@ export default {
       //             score: 5,
       //             stem: "题干",
       //             stem_image: [
-      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", 
+      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
       //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
       //             options: [],
       //             options_image: [],
@@ -1870,7 +1870,7 @@ export default {
       //             answer_image: [],
       //             analysis: "选项",
       //             analysis_image: [
-      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=", 
+      //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII=",
       //               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEOSURBVHgBnVSBEYIwDHydoG7QERiBDWQD3cARZAPdgBFwA9yAEeoGnBNoeyYSQgtX/u6vd2nyfNIWII2r5+D58Ww8LTbgRgKSHTJhRfHFs/R0nndkoiKRR07RHnFHAS9shMVvDjzgsDqKGWSAW4rRIhMVOeAjP1NsE1oSOopYgXh7huP7xGbAm9bgsCdalcfx6Ay5tRLzuclL2VPMIQGHccCBLYkO4gMNxpO1a0Labi2K2WGBBXCShlEiZ6wgJXQRewNWLqlFfICVEglrvSRUUFKvxLk4/AFKIVhRbpGyz8dsMA6/FXkdptfixEGnNk9CiB+vUS5nH3BKvZ6aHJ9BJP5vaUfq4V0dPJ/EbHwBnONwOOYg16AAAAAASUVORK5CYII="],
       //             // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
       //             sub_questions: ['1'],
@@ -1958,7 +1958,7 @@ export default {
       if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
         this.$message.error("您尚未登录，请登录后使用录入功能。")
         this.$router.push("/")
-        return 
+        return
       }
       this.Get_User_UUID();
       this.Init_File_Selector();
@@ -2054,12 +2054,12 @@ export default {
                 if(this.Paper_Content[i].runs[j].run_type == '0'){
                   Content = Content + this.Paper_Content[i].runs[j].run_text
                 }else if(this.Paper_Content[i].runs[j].run_type == '1'){
-                  Content = Content 
-                    + "<img src='" + this.Paper_Image_Dict[this.Paper_Content[i].runs[j].image.src] + "' " 
-                    + " width='" + this.Paper_Content[i].runs[j].image.width + "' " 
-                    + " height='" + this.Paper_Content[i].runs[j].image.height + "' " 
-                    + " style='" + this.Paper_Content[i].runs[j].image.style + "' " 
-                    + " alt='" + this.Paper_Content[i].runs[j].image.alt + "' " 
+                  Content = Content
+                    + "<img src='" + this.Paper_Image_Dict[this.Paper_Content[i].runs[j].image.src] + "' "
+                    + " width='" + this.Paper_Content[i].runs[j].image.width + "' "
+                    + " height='" + this.Paper_Content[i].runs[j].image.height + "' "
+                    + " style='" + this.Paper_Content[i].runs[j].image.style + "' "
+                    + " alt='" + this.Paper_Content[i].runs[j].image.alt + "' "
                     + ">"
                 }
               }
@@ -2119,7 +2119,7 @@ export default {
         }
 
         commonAjax(this.backendIP + '/api/paperCutResultAnalyse', Param).then((res)=>{
-          
+
           let Result = res.data
 
           // console.log(Result)
@@ -2371,7 +2371,7 @@ export default {
       Get_Bundle_Label(Type, Bundle_Index){
         let Symbol = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
         let String_BI = Bundle_Index + ""
-        
+
         if(Bundle_Index < 10){
           return Symbol[Bundle_Index] + "、" + Type
         }else if(Bundle_Index < 19){
@@ -2418,7 +2418,7 @@ export default {
       // 向前移动
       Focus_Question_Move_Front(Bundle_Index){
         let Index = 0;
-        while(this.Draging_Questions_Rect[Index].x != this.Focusing_Questions_Position.x || 
+        while(this.Draging_Questions_Rect[Index].x != this.Focusing_Questions_Position.x ||
               this.Draging_Questions_Rect[Index].y != this.Focusing_Questions_Position.y){
                 Index = Index + 1
               }
@@ -2436,7 +2436,7 @@ export default {
       // 向后移动
       Focus_Question_Move_Back(Bundle_Index){
         let Index = 0;
-        while(this.Draging_Questions_Rect[Index].x != this.Focusing_Questions_Position.x || 
+        while(this.Draging_Questions_Rect[Index].x != this.Focusing_Questions_Position.x ||
               this.Draging_Questions_Rect[Index].y != this.Focusing_Questions_Position.y){
                 Index = Index + 1
               }
@@ -2454,13 +2454,13 @@ export default {
       // 删除
       Focus_Question_Delete(Bundle_Index){
         let Index = 0;
-        while(this.Draging_Questions_Rect[Index].x != this.Focusing_Questions_Position.x || 
+        while(this.Draging_Questions_Rect[Index].x != this.Focusing_Questions_Position.x ||
               this.Draging_Questions_Rect[Index].y != this.Focusing_Questions_Position.y){
                 Index = Index + 1
               }
-        
+
           this.Question_Bundle[Bundle_Index].list.splice(Index, 1)
-          
+
           this.Reset_Focus();
 
           if(this.Question_Bundle[Bundle_Index].list.length == 0){
@@ -2471,7 +2471,7 @@ export default {
       // 编辑
       Focus_Question_Edit(Bundle_Index){
         let Index = 0;
-        while(this.Draging_Questions_Rect[Index].x != this.Focusing_Questions_Position.x || 
+        while(this.Draging_Questions_Rect[Index].x != this.Focusing_Questions_Position.x ||
               this.Draging_Questions_Rect[Index].y != this.Focusing_Questions_Position.y){
                 Index = Index + 1
               }
@@ -2486,11 +2486,11 @@ export default {
         let Item = JSON.parse(JSON.stringify(this.Question_Bundle[Bundle_Index].list[Question_Index]))
         this.Question_Bundle[Bundle_Index].list.splice(Question_Index, 1)
         this.Question_Bundle[Bundle_Index].list.splice(Question_Index - 1, 0, Item)
-        
+
         this.$refs[Ref_Name][0].doClose();
-        
+
         this.$message.success(this.Question_Bundle[Bundle_Index].type + ' 的第 ' + (Question_Index + 1) + ' 题已向前移动一题。')
-      
+
       },
       // 后移
       Question_Move_Back(Bundle_Index, Question_Index, Ref_Name){
@@ -2635,10 +2635,10 @@ export default {
       },
       // 调整指针样式为抓握和松开
       Get_Cursor(Ref_Name, Bundle_Index, Question_Index){
- 
+
         let Search = this.$refs[Ref_Name]
         if(!Search || Search.length == 0){
-          return 
+          return
         }
         let Document = Search[0].$el.getBoundingClientRect();
         let Aim_Position = {
@@ -2651,8 +2651,8 @@ export default {
         }
 
         // 同一题包，且是拖拽的起点
-        if(this.Draging_Questions_Index == Bundle_Index 
-          && Aim_Position.x == this.Draging_Questions_Position.x 
+        if(this.Draging_Questions_Index == Bundle_Index
+          && Aim_Position.x == this.Draging_Questions_Position.x
           && Aim_Position.y == this.Draging_Questions_Position.y){
           return {
             'cursor': 'grabbing',
@@ -2668,10 +2668,10 @@ export default {
             'border-radius': '5px'
           }
         }
-        // 
-        else if(Aim_Position.x == this.Focusing_Questions_Position.x 
+        //
+        else if(Aim_Position.x == this.Focusing_Questions_Position.x
           && Aim_Position.y == this.Focusing_Questions_Position.y){
-            if(parseInt(this.Editing_Position.split(' ')[0]) == Bundle_Index && 
+            if(parseInt(this.Editing_Position.split(' ')[0]) == Bundle_Index &&
               parseInt(this.Editing_Position.split(' ')[1]) == Question_Index){
               return {
                 'border': '2px solid red',
@@ -2750,9 +2750,9 @@ export default {
                     this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
                 }
                 this.Wrong_Char_Dialog = true
-                return 
+                return
             }
-            
+
             // 开始检测选项部分
             this.Wrong_Char_Info = ""
             for(let i = 0; i < Question.options.length; i++){
@@ -2765,10 +2765,10 @@ export default {
                 this.Wrong_Char_Dialog = true;
                 return
             }
-            
+
             // 内容检测
             for(let i = 0; i < Question.options.length; i++){
-                
+
                 let C_Option_Item = this.Check_Do(Question.options[i])
                 if(C_Option_Item[2]){
                     this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在包裹不完全的 Latex 公式，请修正后重试"
@@ -2782,7 +2782,7 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Option_Item[1][j].position + " 处的 " + C_Option_Item[1][j].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
             }
             // this.$message.success("选项内容格式检测已通过。")
@@ -2801,9 +2801,9 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
-            } 
+            }
             // this.$message.success("答案内容格式检测已通过。")
 
             if(Question.analysis.length != 0){
@@ -2820,10 +2820,10 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
             }
-            
+
             // 小题内容检测 - 必填检测
             this.Wrong_Char_Info = ""
             for(let i = 0; i < Question.sub_questions.length; i++){
@@ -2850,7 +2850,7 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Sub_Ques_Item[1][j].position + " 处的 " + C_Sub_Ques_Item[1][j].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
             }
         }
@@ -2881,7 +2881,7 @@ export default {
                     this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
                 }
                 this.Wrong_Char_Dialog = true
-                return 
+                return
             }
 
             // 检测答案项部分，由于是非必填项，不填也没事
@@ -2899,9 +2899,9 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
-            } 
+            }
 
             // 检测解析字段 - 不填也没事
             if(Question.analysis.length != 0){
@@ -2918,7 +2918,7 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
             }
 
@@ -2968,9 +2968,9 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
-                
+
                 // 开始检测选项部分
                 this.Wrong_Char_Info = ""
                 for(let i = 0; i < Item.options.length; i++){
@@ -2983,10 +2983,10 @@ export default {
                     this.Wrong_Char_Dialog = true;
                     return
                 }
-                
+
                 // 内容检测
                 for(let i = 0; i < Item.options.length; i++){
-                    
+
                     let C_Option_Item = this.Check_Do(Item.options[i])
                     if(C_Option_Item[2]){
                         this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在包裹不完全的 Latex 公式，请修正后重试"
@@ -3000,7 +3000,7 @@ export default {
                             this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Option_Item[1][j].position + " 处的 " + C_Option_Item[1][j].char + " 字符。<br>"
                         }
                         this.Wrong_Char_Dialog = true
-                        return 
+                        return
                     }
                 }
 
@@ -3018,9 +3018,9 @@ export default {
                             this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
                         }
                         this.Wrong_Char_Dialog = true
-                        return 
+                        return
                     }
-                } 
+                }
 
                 if(Item.analysis.length != 0){
                     let C_Analysis = this.Check_Do(Item.analysis);
@@ -3036,10 +3036,10 @@ export default {
                             this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
                         }
                         this.Wrong_Char_Dialog = true
-                        return 
+                        return
                     }
                 }
-                
+
                 // 小题内容检测 - 必填检测
                 this.Wrong_Char_Info = ""
                 for(let i = 0; i < Item.sub_questions.length; i++){
@@ -3066,7 +3066,7 @@ export default {
                             this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Sub_Ques_Item[1][j].position + " 处的 " + C_Sub_Ques_Item[1][j].char + " 字符。<br>"
                         }
                         this.Wrong_Char_Dialog = true
-                        return 
+                        return
                     }
                 }
             }
@@ -3191,7 +3191,7 @@ export default {
                 if (Regx.test(content[i]) || this.math_pun_list.indexOf(content[i]) != -1) {
                     if(remakeContent[remakeContent.length - 1] == '$'){
                         remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
-                    }else if(['i', 'b'].indexOf(content[i]) != -1 && 
+                    }else if(['i', 'b'].indexOf(content[i]) != -1 &&
                         (
                             (content[i - 1] == '/' && content[i - 2] == '<' && content[i + 1] == '>') ||
                             (content[i - 1] == '<' && content[i + 1] == '>')
@@ -3286,7 +3286,7 @@ export default {
           this.$message.error("尚未填写试卷标题或仅有空格，请重新填写。")
           return
         }
-        
+
         let Upload_Json = {
           title: this.Title != "" ? this.Title : "未命名试卷",
           desc: "",
@@ -3295,8 +3295,8 @@ export default {
         for(let i = 0; i < this.Question_Bundle.length; i++){
           let Question_Item = {
             desc : this.Question_Bundle[i].desc,
-            type : ['单选题', '多选题', '判断题'].indexOf(this.Question_Bundle[i].type) != -1 ? 
-                      '选择题' : ['简答题', '计算题'].indexOf(this.Question_Bundle[i].type) != -1 ? 
+            type : ['单选题', '多选题', '判断题'].indexOf(this.Question_Bundle[i].type) != -1 ?
+                      '选择题' : ['简答题', '计算题'].indexOf(this.Question_Bundle[i].type) != -1 ?
                         '解答题' : this.Question_Bundle[i].type == '填空题' ? '填空题' : '综合题',
             material : "",
             questions : []
@@ -3316,6 +3316,7 @@ export default {
                           "subject": this.Subject,
                           "period": this.Period,
                           "questions": JSON.stringify(Upload_Json),
+                          "ig_ID": "0",
                         }, null, 4),
           'questionInput': true
         }
@@ -3329,7 +3330,7 @@ export default {
             this.Uploading = false;
           }
         )
-        
+
       },
       // 开始调用格式转换方法
       Submit_Format_Fix(Ques, Type){
@@ -3382,9 +3383,9 @@ export default {
                     this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
                 }
                 this.Wrong_Char_Dialog = true
-                return 
+                return
             }
-            
+
             // 开始检测选项部分
             this.Wrong_Char_Info = ""
             for(let i = 0; i < Question.options.length; i++){
@@ -3397,10 +3398,10 @@ export default {
                 this.Wrong_Char_Dialog = true;
                 return
             }
-            
+
             // 内容检测
             for(let i = 0; i < Question.options.length; i++){
-                
+
                 let C_Option_Item = this.Check_Do(Question.options[i])
                 if(C_Option_Item[2]){
                     this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在包裹不完全的 Latex 公式，请修正后重试"
@@ -3414,7 +3415,7 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Option_Item[1][j].position + " 处的 " + C_Option_Item[1][j].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
             }
             // this.$message.success("选项内容格式检测已通过。")
@@ -3433,9 +3434,9 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
-            } 
+            }
             // this.$message.success("答案内容格式检测已通过。")
 
             if(Question.analysis.length != 0){
@@ -3452,10 +3453,10 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
             }
-            
+
             // 小题内容检测 - 必填检测
             this.Wrong_Char_Info = ""
             for(let i = 0; i < Question.sub_questions.length; i++){
@@ -3482,7 +3483,7 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Sub_Ques_Item[1][j].position + " 处的 " + C_Sub_Ques_Item[1][j].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
             }
 
@@ -3515,7 +3516,7 @@ export default {
                     this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
                 }
                 this.Wrong_Char_Dialog = true
-                return 
+                return
             }
 
             // 检测答案项部分，由于是非必填项，不填也没事
@@ -3533,9 +3534,9 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
-            } 
+            }
 
             // 检测解析字段 - 不填也没事
             if(Question.analysis.length != 0){
@@ -3552,7 +3553,7 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
             }
 
@@ -3602,9 +3603,9 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
-                
+
                 // 开始检测选项部分
                 this.Wrong_Char_Info = ""
                 for(let i = 0; i < Item.options.length; i++){
@@ -3617,10 +3618,10 @@ export default {
                     this.Wrong_Char_Dialog = true;
                     return
                 }
-                
+
                 // 内容检测
                 for(let i = 0; i < Item.options.length; i++){
-                    
+
                     let C_Option_Item = this.Check_Do(Item.options[i])
                     if(C_Option_Item[2]){
                         this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在包裹不完全的 Latex 公式，请修正后重试"
@@ -3634,7 +3635,7 @@ export default {
                             this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Option_Item[1][j].position + " 处的 " + C_Option_Item[1][j].char + " 字符。<br>"
                         }
                         this.Wrong_Char_Dialog = true
-                        return 
+                        return
                     }
                 }
 
@@ -3652,9 +3653,9 @@ export default {
                             this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
                         }
                         this.Wrong_Char_Dialog = true
-                        return 
+                        return
                     }
-                } 
+                }
 
                 if(Item.analysis.length != 0){
                     let C_Analysis = this.Check_Do(Item.analysis);
@@ -3670,10 +3671,10 @@ export default {
                             this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
                         }
                         this.Wrong_Char_Dialog = true
-                        return 
+                        return
                     }
                 }
-                
+
                 // 小题内容检测 - 必填检测
                 this.Wrong_Char_Info = ""
                 for(let i = 0; i < Item.sub_questions.length; i++){
@@ -3700,7 +3701,7 @@ export default {
                             this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Sub_Ques_Item[1][j].position + " 处的 " + C_Sub_Ques_Item[1][j].char + " 字符。<br>"
                         }
                         this.Wrong_Char_Dialog = true
-                        return 
+                        return
                     }
                 }
             }
@@ -3846,7 +3847,7 @@ export default {
     },
     Focus_Question_Jump(Bundle_Index){
       let Index = 0;
-      while(this.Draging_Questions_Rect[Index].x != this.Focusing_Questions_Position.x || 
+      while(this.Draging_Questions_Rect[Index].x != this.Focusing_Questions_Position.x ||
             this.Draging_Questions_Rect[Index].y != this.Focusing_Questions_Position.y){
               Index = Index + 1
             }
@@ -3888,15 +3889,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .toSingle{
-    height: 40px; 
+    height: 40px;
     line-height: 40px;
-    width: 10vw; 
+    width: 10vw;
     background: #FFE37F;
     font-weight: bold;
     border-radius: 15px;
     cursor: pointer;
 }
-.toSingle:hover{ 
+.toSingle:hover{
     background: #FFF0A0;
     color: #888;
 }
@@ -3914,10 +3915,10 @@ export default {
   box-sizing: border-box;
 }
 .PreviewPaperArea{
-  width: 100%; 
+  width: 100%;
   border: 2px solid #409EFF;
-  border-radius: 10px; 
-  min-height: 400px; 
+  border-radius: 10px;
+  min-height: 400px;
   padding: 20px;
   box-shadow: 2px 3px 4px 0 rgba(64, 158, 255, 0.8);
 }
@@ -4003,19 +4004,19 @@ export default {
   border-top-right-radius: 10px;
 }
 .Multi_Choise_Table_Top_Label{
-  border-right: 1px solid #409eff; 
-  height: 40px; 
+  border-right: 1px solid #409eff;
+  height: 40px;
   line-height: 40px;
   color: #409EFF
 }
 .Multi_Choise_Table_Row_0{
-  height: 40px; 
+  height: 40px;
   line-height: 40px;
   border: 1px solid #409eff;
   border-top: none;
 }
 .Multi_Choise_Table_Row_1{
-  height: 40px; 
+  height: 40px;
   line-height: 40px;
   border: 1px solid #409eff;
   border-top: none;
@@ -4040,7 +4041,7 @@ export default {
 
 
 .Break_Line{
-   word-break:break-all; 
+   word-break:break-all;
    text-align: left
 }
 
