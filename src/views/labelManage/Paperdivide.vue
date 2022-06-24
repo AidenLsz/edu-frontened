@@ -359,11 +359,11 @@ export default {
               if (run.run_type === '0') {
                 runText += run.run_text;
               } else if (run.run_type === '1') {
-                runText += `<img src="${this.dividedRes.imgDict[run.image.src]}" width="${run.image.width}" height="${run.image.height}" style="${run.image.style}" alt="${run.image.alt}"/>`;
+                runText += `<img src="${this.dividedRes.imageDict[run.image.src]}" width="${run.image.width}" height="${run.image.height}" style="${run.image.style}" alt="${run.image.alt}"/>`;
               }
             }
           } else if (paperEle.para_type === '1') {
-            runText += getTableImg(paperEle.table_raw_html, this.dividedRes.imgDict);
+            runText += getTableImg(paperEle.table_raw_html, this.dividedRes.imageDict);
           }
           // 去掉 &#xa0;
           runText = runText.replace(regC, "");
@@ -436,7 +436,6 @@ export default {
 .pd-container {
   position: relative;
   padding: 0 10vw;
-  overflow: hidden;
   text-align: left;
   padding-top: 32px;
   min-height: 600px;
