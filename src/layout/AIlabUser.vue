@@ -1,6 +1,7 @@
 <template>
-  <el-container style="height: 100%;" class="container">
-    <el-header style="height: 72px">
+  <el-container style="height: 100%; overflow-y: scroll;overflow-x: hidden;" class="container" id="ai-user">
+    
+    <el-header style="height: 72px; width:100%; position:fixed; z-index:12">
       <div class="logo">
         <img
           src="@/assets/luna_icon.png"
@@ -47,7 +48,8 @@
         </el-dropdown>
       </div>
     </el-header>
-    <el-container>
+    <el-container style="margin-top:72px;">
+      <!-- <scrollbar anchor="ai-user" /> -->
       <el-aside
         :width="isCollapse ? '75px' : '212px'"
         style="background-color: #FAFBFC; position: relative"
@@ -111,11 +113,13 @@
 
 <script>
 import BasicFooter from "@/layout/components/footer.vue";
+// import Scrollbar from "./components/scrollbar";
 
 export default {
   name: "App",
   components: {
     BasicFooter,
+    // Scrollbar
   },
   mounted() {
     console.log("@" + this.$route.path);
