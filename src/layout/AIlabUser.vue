@@ -1,6 +1,7 @@
 <template>
-  <el-container style="height: 100%;">
-    <el-header style="height: 72px">
+  <el-container style="height: 100%; overflow-y: scroll;overflow-x: hidden;" class="container" id="ai-user">
+    
+    <el-header style="height: 72px; width:100%; position:fixed; z-index:12">
       <div class="logo">
         <img
           src="@/assets/luna_icon.png"
@@ -47,10 +48,11 @@
         </el-dropdown>
       </div>
     </el-header>
-    <el-container>
+    <el-container style="margin-top:72px;">
+      <!-- <scrollbar anchor="ai-user" /> -->
       <el-aside
         :width="isCollapse ? '75px' : '212px'"
-        style="background-color: #E5E5E5; position: relative"
+        style="background-color: #FAFBFC; position: relative"
       >
         <el-menu
           :default-active="CurrPage()"
@@ -99,7 +101,7 @@
           ></i>
         </div>
       </el-aside>
-      <el-main style="padding: 0 0 0 0; background: #e5e5e5">
+      <el-main style="padding: 0 0 0 0; background-color: #FAFBFC">
         <div>
           <router-view :key="$route.fullPath"></router-view>
         </div>
@@ -111,11 +113,13 @@
 
 <script>
 import BasicFooter from "@/layout/components/footer.vue";
+// import Scrollbar from "./components/scrollbar";
 
 export default {
   name: "App",
   components: {
     BasicFooter,
+    // Scrollbar
   },
   mounted() {
     console.log("@" + this.$route.path);
@@ -284,9 +288,11 @@ export default {
   top: 250px;
   // left: 100%;
   right: 0%;
-  background: white;
+  background: #FFFFFF;
   clip-path: polygon(0 0, 100% 20%, 100% 80%, 0 100%);
   z-index: 10;
+  // box-shadow: 10px 10px 5px #888888;
+  // border-right: 1px solid rgb(129, 124, 124);
 }
 
 .arrow-box:hover {
@@ -308,7 +314,7 @@ export default {
 }
 
 .el-aside {
-  color: #333;
+  // color: #333;
   overflow: hidden;
 }
 
@@ -333,5 +339,9 @@ export default {
 .el-menu ::v-deep .el-menu-item {
   margin-left: 40px;
   padding-left: 30px !important;
+}
+
+.container ::v-deep .footer-wrap {
+  background: #ffffff;
 }
 </style>
