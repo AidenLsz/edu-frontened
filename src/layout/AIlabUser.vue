@@ -99,7 +99,7 @@
           ></i>
         </div>
       </el-aside>
-      <el-main style="padding: 0 0 0 0; background: #FAFBFC">
+      <el-main style="padding: 0 0 0 0; background-color: #FAFBFC">
         <div>
           <router-view :key="$route.fullPath"></router-view>
         </div>
@@ -310,7 +310,7 @@ export default {
 }
 
 .el-aside {
-  color: #333;
+  // color: #333;
   overflow: hidden;
 }
 
