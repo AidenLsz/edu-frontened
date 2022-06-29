@@ -441,11 +441,6 @@
 							"intro": "208 腐烂开心果\n糊弄学大师"
 						},
 						{
-							"name": "黄小青",
-							"mail": "xqhuang@mail.ustc.edu.cn",
-							"intro": "中国科学技术大学博士生一年级"
-						},
-						{
 							"name": "雷思琦",
 							"mail": "leisiqi@mail.ustc.edu.cn",
 							"intro": "海纳百川，有啥说啥"
@@ -454,11 +449,6 @@
 							"name": "黄野",
 							"mail": "huangyehy@mail.ustc.edu.cn",
 							"intro": "铁血平台跳跃游戏爱好者"
-						},
-						{
-							"name": "韩子勤",
-							"mail": "hanziqin@mail.ustc.edu.cn",
-							"intro": "前端开发新人。\n减肥与反弹的波动过程中。"
 						},
 						{
 							"name": "马一潇",
@@ -549,12 +539,8 @@
 							"name": "肖桐",
 							"mail": "xt20020109@mail.ustc.edu.cn",
 							"intro": "遇到困难睡大觉"
-						},{
-							"name": "邬靖宇",
-							"mail": "wujingyu@mail.ustc.edu.cn",
-							"intro": "干啥啥不行，吃啥啥不剩，\n学啥啥不会，写啥啥bug。"
-						}
-						,{
+						},
+						{
 							"name": "林嘉滢",
 							"mail": "crystall@mail.ustc.edu.cn",
 							"intro": "什么都想去尝试的好奇鬼\n喜欢笑，喜欢大笑，喜欢捧腹大笑，只是不会微笑"
@@ -565,11 +551,6 @@
 							"intro": "一条仍然怀有梦想的咸鱼，一个喜欢炼丹的厨师"
 						}
 						,{
-							"name": "胡子睿",
-							"mail": "1300985820@qq.com",
-							"intro": "人类高质量研究生\n喜欢听广东话的湖南人∩喜欢吃湖南菜的广东人"
-						}
-						,{
 							"name": "刘正韬",
 							"mail": "ztl223@mail.ustc.edu.cn",
 							"intro": "这个人懒爆了，什么都没有留下"
@@ -578,15 +559,12 @@
 							"name": "郭禹祥",
 							"mail": "guoyx18@mail.ustc.edu.cn",
 							"intro": "喜欢统计的大数据搬砖者"
-						}, {
-							"name": "毛雪菲",
-							"mail": "maoxuefeifinnie@gmail.com",
-							"intro": "不知名小美工Finnie"
-						}, {
-							"name": "王童",
-							"mail": "twangg@umich.edu",
-							"intro": "密西根大学MSI2023级研究生"
 						}
+						,{
+							"name": "李平治",
+							"mail": "pingzhili@mail.ustc.edu.cn",
+							"intro": "什么都想尝试的beginner"
+						}, 
 					],
 					// 特邀工程师
 					"invitedEngineer": [
@@ -595,26 +573,6 @@
 					// 实习生
 					"trainee": [
 						{
-							"name": "桂栋南",
-							"mail": "gdn2001@mail.ustc.edu.cn",
-							"intro": "中科大19级带数据人\n摸鱼时想学习，学习时想摸鱼的渴望成为学术巨巨的菜鸟"
-						}, {
-							"name": "关浩祥",
-							"mail": "ggxx936099147@mail.ustc.edu.cn",
-							"intro": "中科大 20 级本科生\nCS / 摄影 / 游泳 / ……"
-						}, {
-							"name": "李平治",
-							"mail": "pingzhili@mail.ustc.edu.cn",
-							"intro": "什么都想尝试的beginner"
-						}, {
-							"name": "靳浩然",
-							"mail": "jhr584289035@mail.ustc.edu.cn",
-							"intro": "希望能永远对生活怀揣激情和向往"
-						}, {
-							"name": "朱仕哲",
-							"mail": "icarushhh@mail.ustc.edu.cn",
-							"intro": "海边的卡夫卡"
-						}, {
 							"name": "汪先涛",
 							"mail": "wangxiantao@mail.ustc.edu.cn",
 							"intro": "男，程序员，二次元"
@@ -623,10 +581,18 @@
 							"mail": "shenjiahui@mail.ustc.edu.cn",
 							"intro": "退堂鼓表演艺术家"
 						}, {
-							"name": "何晶晶",
-							"mail": "15818636350@163.com",
-							"intro": "中国科学技术大学2020级研究生"
-						}
+							"name": "郭孝璇",
+							"mail": "768552206@qq.com",
+							"intro": "设计/二次元\n互联网冲浪金牌选手"
+						}, {
+							"name": "张子乾",
+							"mail": "757427552@qq.com",
+							"intro": "悉尼科技大学研究生\n信息技术-数字互动媒体专业"
+						}, {
+							"name": "窦紫微",
+							"mail": "douziwei@mail.ustc.edu.cn",
+							"intro": "斯人若彩虹，遇上方知有"
+						}, 
 					],
 					// 技术顾问
 					"techConsultant": [{
@@ -696,6 +662,34 @@
 							"name": "项子扬",
 							"mail": "xiangzy@mail.ustc.edu.cn",
 							"intro": "纯音乐爱好者\n愿世人都能睡到自然醒"
+						},{
+							"name": "黄小青",
+							"mail": "xqhuang@mail.ustc.edu.cn",
+							"intro": "中国科学技术大学博士生一年级"
+						},{
+							"name": "邬靖宇",
+							"mail": "wujingyu@mail.ustc.edu.cn",
+							"intro": "干啥啥不行，吃啥啥不剩，\n学啥啥不会，写啥啥bug。"
+						},{
+							"name": "胡子睿",
+							"mail": "1300985820@qq.com",
+							"intro": "人类高质量研究生\n喜欢听广东话的湖南人∩喜欢吃湖南菜的广东人"
+						},{
+							"name": "毛雪菲",
+							"mail": "maoxuefeifinnie@gmail.com",
+							"intro": "不知名小美工Finnie"
+						},{
+							"name": "王童",
+							"mail": "twangg@umich.edu",
+							"intro": "密西根大学MSI2023级研究生"
+						},{
+							"name": "靳浩然",
+							"mail": "jhr584289035@mail.ustc.edu.cn",
+							"intro": "希望能永远对生活怀揣激情和向往"
+						},{
+							"name": "韩子勤",
+							"mail": "hanziqin@mail.ustc.edu.cn",
+							"intro": "前端开发新人。\n减肥与反弹的波动过程中。"
 						},
 					],
 					"img_path": {
@@ -714,11 +708,9 @@
 						"童世炜": "/members/童世炜.jpg",
 						"覃龙虎": "/members/覃龙虎.jpg",
 						"雷思琦": "/members/雷思琦.jpg",
-						"韩子勤": "/members/韩子勤.jpg",
 						"马一潇": "/members/马一潇.jpg",
 						"黄威": "/members/黄威.jpg",
 						"黄野": "/members/黄野.jpg",
-						"黄小青": "/members/黄小青.jpg",
 						"单明晖": "/members/单明晖.jpeg",
 						"姚方舟": "/members/姚方舟.jpeg",
 						"林鑫": "/members/林鑫.jpeg",
@@ -728,25 +720,20 @@
 						"申一凯": "/members/申一凯.jpg",
 						"黄炜喆": "/members/黄炜喆.png",
 						"肖桐": "/members/肖桐.png",
-						"邬靖宇": "/members/邬靖宇.jpg",
 						"林嘉滢": "/members/林嘉滢.jpg",
 						"李佳桐": "/members/李佳桐.jpg",
-						"胡子睿": "/members/胡子睿.jpg",
 						"刘正韬": "/members/刘正韬.jpg",
 						"郭禹祥": "/members/郭禹祥.jpg",
-						"毛雪菲": "/members/毛雪菲.jpg",
-						"王童": "/members/王童.jpg",
+						"李平治": "/members/李平治.jpg",
 						// 特邀工程师
 
 						// 实习生
-						"桂栋南": "/members/桂栋南.jpg",
-						"关浩祥": "/members/关浩祥.jpg",
-						"李平治": "/members/李平治.jpg",
-						"靳浩然": "/members/靳浩然.jpg",
-						"朱仕哲": "/members/朱仕哲.jpg",
 						"汪先涛": "/members/汪先涛.jpg",
 						"沈嘉徽": "/members/沈嘉徽.jpg",
-						"何晶晶": "/members/何晶晶.jpg",
+						"郭孝璇": "/members/郭孝璇.jpg",
+						"张子乾": "/members/张子乾.jpg",
+						"窦紫微": "/members/窦紫微.jpg",
+
 						// 技术顾问
 						"阴钰": "/members/阴钰.jpg",
 						"高维博": "/members/高维博.jpeg",
@@ -763,9 +750,15 @@
 						"王季璐": "/members/王季璐.jpg",
 						"龚政": "/members/龚政.jpg",
 						"房松涛": "/members/房松涛.jpg",
-						"黄杰": "/members/黄杰.jpg",
-						
+						"黄杰": "/members/黄杰.jpg",		
 						"项子扬": "/members/项子扬.jpg",
+						"黄小青": "/members/黄小青.jpg",
+						"邬靖宇": "/members/邬靖宇.jpg",
+						"胡子睿": "/members/胡子睿.jpg",
+						"毛雪菲": "/members/毛雪菲.jpg",
+						"王童": "/members/王童.jpg",
+						"靳浩然": "/members/靳浩然.jpg",
+						"韩子勤": "/members/韩子勤.jpg",
 					}
 				}
 			}
