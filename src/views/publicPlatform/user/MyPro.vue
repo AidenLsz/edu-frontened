@@ -19,7 +19,7 @@
       <el-table
         :data="tableData"
         stripe
-        :header-cell-style="{ background: '#97A3B7', color: '#555' }"
+        :header-cell-style="{ background: '#97A3B7', color: '#FFFFFF' }"
       >
         <el-table-column prop="project_name" label="项目名称" align="center">
         </el-table-column>
