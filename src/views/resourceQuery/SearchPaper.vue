@@ -8,7 +8,7 @@
         <div id="Filter" class="Top_Nav">
 
     </div>
-        <LunaProgress 
+        <LunaProgress
             v-if="Paper_Analysing"
             :Bar_Type="'time'"
             :Duration_Time="6"
@@ -301,12 +301,12 @@
         </el-row>
         <el-row>
             <el-col>
-                <div 
+                <div
                     v-for="(Paper_Info, Paper_Info_Index) in Paper_Info_List"
                     :style="Get_Card_Background(Paper_Info_Index)"
                     :key="'Question_' + Paper_Info_Index">
                     <el-row>
-                        <div 
+                        <div
                             :id="'Question_' + Paper_Info_Index"
                             style="height: 10px; width: 10px; background: transparent;position: relative; margin-top: -192px">
 
@@ -446,6 +446,16 @@ export default {
     }
   },
   mounted(){
+
+    if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
+      this.$message.error("您尚未登录，请登录后使用录入功能。")
+      this.$router.push("/")
+      return
+    }
+    this.Get_User_UUID();
+    this.Init_File_Selector();
+    this.To_Top();
+
     this.InitDatabaseList()
     this.ImgInput = document.getElementById("ImgInput")
     let ImgSearchArea = document.getElementById('ImgSearchArea');
@@ -708,7 +718,7 @@ export default {
           if (/image\/\w+/.test(event.target.files[0].type)) {
             this.Img_Upload_Input(event)
           }else {
-            return 
+            return
           }
         },
         // Confirm_Paper_Type(){
@@ -867,7 +877,7 @@ export default {
                 "page_count": this.Page_Index,
                 "subject": this.Chosen_Options.Subject,
                 "period": this.Chosen_Options.Period
-            }) 
+            })
 
             Param.data = Data
 
@@ -1017,7 +1027,7 @@ export default {
                 return
             }
 
-          
+
 
           commonAjax(this.backendIP+'/api/paperJsonGet',
             {
