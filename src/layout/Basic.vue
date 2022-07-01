@@ -192,7 +192,7 @@
             </el-row>
             <el-row v-if="Expand_Navbar_Drawer_Part == '功能'" style="padding-left: 20px">
               <el-collapse accordion>
-                <el-collapse-item name="资源录入" title="资源录入">
+                <el-collapse-item  name="资源录入" title="资源录入">
                   <div align="left" class="Navbar_Drawer_Sub">
                     <span style="color: Gainsboro">学习资源</span>
                   </div>
@@ -368,7 +368,7 @@
                       <span :style="Title_Pos()" >功能</span>
                     </template>
 
-                    <el-submenu index="1">
+                    <el-submenu style="display: none" index="1">
                       <template slot="title"
                         ><span style="color: black">资源录入</span></template
                       >
@@ -463,18 +463,25 @@
                   >成员</el-button
                 >
               </div>
+
+              <div
+                  class="NarbarItem">
+                <a target="_blank"  href="https://www.wjx.cn/vm/hC1EkUI.aspx" class="navbar"
+                >反馈</a
+                >
+              </div>
               <div style="width: 1px; height: 18px; margin-top: 25px; border-right: 2px solid #aaa; margin-left: 15px; margin-right: 12px">
 
               </div>
+
               <div
                 class="NarbarItem"
-                style="min-width: 100px; padding-top: 12px"
+                style="min-width: 100px"
                 v-if="$store.state.user.name"
               >
                 <el-row>
                   <el-dropdown
                     trigger="hover"
-                    style="padding-top: 8px"
                     class="navbar"
                   >
                     <span class="el-dropdown-link user-inner">
@@ -1090,9 +1097,23 @@ html, body {
   height: 70px;
   box-sizing: border-box;
   background: transparent;
+  line-height: 70px;
 
   button, ul {
     height: 100%;
+  }
+
+  >a {
+    display: block;
+    height: 100%;
+    width: 100%;
+    transition: .2s;
+
+    &:hover {
+      color: #66b1ff;
+      border-color: transparent;
+      background-color: transparent;
+    }
   }
 }
 

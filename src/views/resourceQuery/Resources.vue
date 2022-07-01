@@ -1,5 +1,5 @@
 <template>
-    <div 
+    <div
         id="Page"
         v-loading="Waiting_Param"
         :element-loading-text="Waiting_Text"
@@ -150,10 +150,10 @@
             </el-col>
         </el-row>
         <div v-if="Resource_Info_List.length != 0">
-            <el-row 
-                type="flex" 
-                justify="center" 
-                class="Padding_Width" 
+            <el-row
+                type="flex"
+                justify="center"
+                class="Padding_Width"
                 style="width: 100%; min-width: 1362px; font-size: 16px;" >
                 <div align="center">
                     <div class="Table_Label" style="width: 60px" align="center">
@@ -182,12 +182,12 @@
                     </div>
                 </div>
             </el-row>
-            <el-row 
-                type="flex" 
-                justify="center" 
-                class="Padding_Width" 
-                style="width: 100%; min-width: 1362px;" 
-                v-for="Resource_Info_Index in 10" 
+            <el-row
+                type="flex"
+                justify="center"
+                class="Padding_Width"
+                style="width: 100%; min-width: 1362px;"
+                v-for="Resource_Info_Index in 10"
                 :key="'Resource_Info_' + Resource_Info_Index">
                 <div align="center" :style="Resource_Info_Index % 2 == 0 ? '' : 'background: #F4F7FC'">
                     <div class="Resource_Label" style="width: 60px" align="center">
@@ -212,7 +212,7 @@
                         {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].date}}
                     </div>
                     <div class="Resource_Label" style="width: 160px" align="center">
-                        <el-button type="success" size="mini" @click="Resource_Preview(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">预览</el-button>
+                        <el-button style="display: none" type="success" size="mini" @click="Resource_Preview(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">预览</el-button>
                         <el-button type="primary" size="mini" @click="Resource_Download(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">下载</el-button>
                     </div>
                 </div>
@@ -230,7 +230,7 @@
             </el-row>
         </div>
     </div>
-    
+
 </template>
 
 <script>
@@ -445,7 +445,7 @@ export default {
                 "size": 200,
                 "subject": SUBJECT,
                 "period": this.Chosen_Options.Resource_Period
-            }) 
+            })
 
             Param.data = Data
 
