@@ -135,7 +135,7 @@
                     ref="BreadCrumb_Line"
                     justify="start">
                     <el-breadcrumb separator-class="el-icon-arrow-right">
-                        <el-breadcrumb-item :to="{ path: $store.getters.systemType==2?'/itas':'/' }">
+                      <el-breadcrumb-item :to="{ path: $store.getters.systemType==2?'/itas':'/' }">
                             首页
                         </el-breadcrumb-item>
                         <el-breadcrumb-item>
@@ -187,6 +187,19 @@
                                 </span>
                             </div>
                         </el-row>
+<!--                      搜索方式-->
+                      <el-row type="flex" justify="start" class="Filter_Line">
+                        <span class="Filter_Label">搜索方式</span>
+                        <div class="Filter_Item_Shadow">
+                                <span
+                                    v-for="(searchMethod_Item, searchMethod_Item_Index) in All_Options.searchMethod" :key="'Filter_search_' + searchMethod_Item_Index"
+                                    :class="Focus_Filter('searchMethod', searchMethod_Item)"
+                                    :style="Filter_Item('searchMethod', searchMethod_Item_Index, searchMethod_Item)"
+                                    @click="Filter_Change('searchMethod', searchMethod_Item)">
+                                    {{searchMethod_Item}}
+                                </span>
+                        </div>
+                      </el-row>
                         <el-row type="flex" justify="start" class="Filter_Line">
                             <span class="Filter_Label">题库</span>
                             <div class="Filter_Item_Shadow">
@@ -370,13 +383,15 @@ export default {
         All_Options:{
             Period: ["小学", "初中", "高中", "大学", "成人"],
             Subject: ["语文", "数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理"],
-            Database: [{name:'public',nick:'公共题库'}]
+            Database: [{name:'public',nick:'公共题库'}],
+            searchMethod: ['试卷内容', '试卷题目']
         },
         // 选中的选项，用于显示样式的调整和检索的时候进行内容转换
         Chosen_Options: {
             Period: ["高中"],
             Subject: ["数学"],
-            Database: ['公共题库']
+            Database: ['公共题库'],
+            searchMethod: ['试卷内容']
         },
         // 换页时使用的变量
         Page_Index: 1,
@@ -670,6 +685,12 @@ export default {
                 }else{
                     return "Chosen_Option"
                 }
+            }else if(Part === 'searchMethod'){
+              if(this.Chosen_Options.searchMethod.indexOf(Item) === -1){
+                return "Unchosen_Option"
+              }else{
+                return "Chosen_Option"
+              }
             }
         },
         // 内容调整，控制选择项的内容
@@ -688,6 +709,13 @@ export default {
                 }else{
                     this.Chosen_Options[Part].splice(this.Chosen_Options[Part].indexOf(Item), 1)
                 }
+            }else if(Part === 'searchMethod'){
+              if(this.Chosen_Options[Part].indexOf(Item) === -1){
+                this.Chosen_Options[Part].pop()
+                this.Chosen_Options[Part].push(Item)
+              }else{
+                this.Chosen_Options[Part].splice(this.Chosen_Options[Part].indexOf(Item), 1)
+              }
             }
         },
         // 老内容，检索用户可以使用的题库范围
@@ -871,7 +899,8 @@ export default {
             }
 
             let Data = JSON.stringify({
-                "content": this.Search_Extra == 'ImgSearch' ? "" : this.Search_Content,
+                'search_type': this.Chosen_Options.searchMethod[0]==='试卷内容' ? 0 : 1,
+                "content": this.Search_Extra === 'ImgSearch' ? "" : this.Search_Content,
                 "size": 5,
                 "database": Database,
                 "page_count": this.Page_Index,
