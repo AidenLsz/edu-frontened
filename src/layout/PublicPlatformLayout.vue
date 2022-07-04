@@ -43,7 +43,7 @@
             </el-dropdown-menu>
           </el-dropdown>
         </div>
-        <div v-if="!$store.state.AIlab_user.AIname" class="reg">
+        <div style="display: none" v-if="!$store.state.AIlab_user.AIname" class="reg">
           <el-button
               type="text"
               icon="el-icon-user-solid"
@@ -53,7 +53,7 @@
             登陆
           </el-button>
         </div>
-        <div v-if="!$store.state.AIlab_user.AIname" class="login">
+        <div style="display: none" v-if="!$store.state.AIlab_user.AIname" class="login">
           <el-button round @click="goToRegister">注册</el-button>
         </div>
         <div

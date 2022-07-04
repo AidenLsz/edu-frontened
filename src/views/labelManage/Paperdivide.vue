@@ -59,7 +59,7 @@ import { commonAjax } from "@/common/utils/ajax";
 
 const QUESTION_INIT_ID = 1;
 const QUESTION_INIT_SIDE_ID = 0;
-const IS_TEST = true;
+const IS_TEST = false;
 
 export default {
   name: "Paperdivide",

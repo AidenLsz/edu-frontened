@@ -75,7 +75,7 @@
               placeholder="请输入邀请码"
             ></el-input>
           </el-form-item>
-          <el-form-item label="用户类型" prop="type" style="margin-bottom: 15px">
+          <el-form-item label="用户类型" prop="type" style="display: none;margin-bottom: 15px">
             <el-radio v-model="ruleForm.type" label="user">个人用户</el-radio>
             <el-radio v-model="ruleForm.type" label="group">组织用户</el-radio>
           </el-form-item>
