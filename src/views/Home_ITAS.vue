@@ -5,7 +5,7 @@
 
     </div>
     <login ref="login" @register_show="register_show" />
-    <register ref="register" />
+    <register ref="register" @login_show="login_show" />
     <!-- 试卷分析路径跳转 -->
     <el-dialog :visible.sync="Analyse_Paper" width="800px">
       <el-row>
@@ -177,10 +177,10 @@
                 <el-row type="flex" justify="start" class="Part_Title" style="font-size: 58px;">
                   <span>智能教辅平台</span>
                 </el-row>
-                <el-row 
-                  type="flex" 
+                <el-row
+                  type="flex"
                   justify="start"
-                  class="Home_Area_Left_Center" 
+                  class="Home_Area_Left_Center"
                   style="word-break: break-all; text-align: left; font-size: 20px; height: 64px; line-height: 32px; color: #595959">
                   深层次、多维度分析处理海量教育资源，智能化、个性化资源管理、组织、查询、分析功能，为教师提供智能化教学服务
                 </el-row>
@@ -294,14 +294,14 @@
                   <div class="Dot"></div>使用高效准确的试题相似度评估算法，提升题库的资源质量
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-top: 44px;">
-                  <div 
-                    class="All_Button Start_Analysis_Button" 
+                  <div
+                    class="All_Button Start_Analysis_Button"
                     style="background: white; width: 144px; padding-left: 16px"
                     @click="Route_Trans('/inputMarked')">
                     试题录入<i class="el-icon-right" style="margin-left: 4px;"></i>
                   </div>
-                  <div 
-                    class="All_Button Start_Analysis_Button" 
+                  <div
+                    class="All_Button Start_Analysis_Button"
                     style="background: white; margin-left: 16px; width: 144px; padding-left: 16px"
                     @click="Route_Trans('/inputPaper')">
                     试卷录入<i class="el-icon-right" style="margin-left: 4px;"></i>
@@ -321,9 +321,9 @@
                 <el-row type="flex" justify="start" class="Part_Title">
                   <span>多样化组卷系统，一应俱全</span>
                 </el-row>
-                <el-row 
-                  type="flex" 
-                  justify="start" 
+                <el-row
+                  type="flex"
+                  justify="start"
                   style="word-break: break-all; text-align: left; margin-top: 24px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
                   智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能
                 </el-row>
@@ -362,7 +362,7 @@
           </div>
         </el-row>
       </div>
-      
+
       <!-- 知识点直观呈现 -->
       <div style="width: 100%; background: #F8F9FA;" align="center" id="Knowledge_Unit_Link">
         <el-row class="Area_Row" style="height: 700px;" type="flex" justify="center">
@@ -373,8 +373,8 @@
             <div style="width: 400px; margin-top: 32px; margin-bottom: 32px" align="center">
               <el-col>
                 <el-row type="flex" justify="start">
-                  <el-button 
-                    type="text" 
+                  <el-button
+                    type="text"
                     style="color: black; font-weight: bold; font-size: 20px"
                     @click="Search_KU('三角函数')">三角函数<i class="el-icon-right" style="margin-left: 10px;"></i></el-button>
                 </el-row>
@@ -400,12 +400,12 @@
                   <div class="Dot"></div>前驱后继、共同学习和层级关系三种知识关系展示
                 </el-row>
                 <el-row type="flex" justify="start">
-                  <el-input 
-                    v-model="Home_Ku" 
+                  <el-input
+                    v-model="Home_Ku"
                     @keydown.enter.native="Search_KU"
-                    placeholder="知识点搜索" 
+                    placeholder="知识点搜索"
                     style="width: 300px; margin-top: 44px;">
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i> 
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
                   </el-input>
                 </el-row>
               </el-col>
@@ -422,9 +422,9 @@
                 <el-row type="flex" justify="start" class="Part_Title">
                   <span>深层次、多维度智能分析</span>
                 </el-row>
-                <el-row 
-                  type="flex" 
-                  justify="start" 
+                <el-row
+                  type="flex"
+                  justify="start"
                   style="word-break: break-all; text-align: left; margin-top: 30px; font-size: 20px; height: 84px; line-height: 28px; color: #595959">
                   使用人工智能和数据挖掘技术对试题和试卷，在各个层次、多个维度上分析，如各题型占比、关键词比较、知识点分值和难度变化
                 </el-row>
@@ -459,10 +459,10 @@
             <el-row type="flex" justify="start" class="Part_Title" style="font-size: 58px; height: 81px; line-height: 81px;">
               <span>智能教辅平台</span>
             </el-row>
-            <el-row 
-              type="flex" 
+            <el-row
+              type="flex"
               justify="start"
-              class="Home_Area_Left_Center" 
+              class="Home_Area_Left_Center"
               style="word-break: break-all; text-align: left; font-size: 20px; line-height: 32px; color: #595959; margin-top: 20px;">
               深层次、多维度分析处理海量教育资源，智能化、个性化资源管理、组织、查询、分析功能，为教师提供智能化教学服务
             </el-row>
@@ -568,17 +568,17 @@
             <el-row type="flex" justify="start" style="margin-top: 44px;">
               <!-- <div>
                 <el-input v-model="Exercise_Content" placeholder="试题检索">
-                  <i slot="prefix" class="el-input__icon el-icon-search"></i> 
+                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
               </div> -->
-              <div 
-                class="All_Button Start_Analysis_Button" 
+              <div
+                class="All_Button Start_Analysis_Button"
                 style="background: white; width: 144px; padding-left: 16px"
                 @click="Route_Trans('/inputMarked')">
                 试题录入<i class="el-icon-right" style="margin-left: 4px;"></i>
               </div>
-              <div 
-                class="All_Button Start_Analysis_Button" 
+              <div
+                class="All_Button Start_Analysis_Button"
                 style="background: white; margin-left: 16px; width: 144px; padding-left: 16px"
                 @click="Route_Trans('/inputPaper')">
                 试卷录入<i class="el-icon-right" style="margin-left: 4px;"></i>
@@ -596,9 +596,9 @@
                 <el-row type="flex" justify="start" class="Part_Title">
                   <span>多样化组卷系统，一应俱全</span>
                 </el-row>
-                <el-row 
-                  type="flex" 
-                  justify="start" 
+                <el-row
+                  type="flex"
+                  justify="start"
                   style="word-break: break-all; text-align: left; margin-top: 24px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
                   智能组卷系统提供丰富的选题方式，自动组卷，以及个性化试卷和答题卡编辑、预览与下载功能
                 </el-row>
@@ -651,8 +651,8 @@
               <div style="width: 100%; margin-top: 32px; margin-bottom: 32px" align="center">
                 <el-col>
                   <el-row type="flex" justify="start">
-                    <el-button 
-                      type="text" 
+                    <el-button
+                      type="text"
                       style="color: black; font-weight: bold; font-size: 20px"
                       @click="Search_KU('三角函数')">三角函数<i class="el-icon-right" style="margin-left: 10px;"></i></el-button>
                   </el-row>
@@ -663,12 +663,12 @@
               </div>
             </div>
             <el-row type="flex" justify="start">
-              <el-input 
-                v-model="Home_Ku" 
+              <el-input
+                v-model="Home_Ku"
                 @keydown.enter.native="Search_KU"
                 placeholder="知识点搜索"
                 style="width: 320px; margin-top: 44px;">
-                <i slot="prefix" class="el-input__icon el-icon-search" style="margin-left: 10px;"></i>  
+                <i slot="prefix" class="el-input__icon el-icon-search" style="margin-left: 10px;"></i>
               </el-input>
             </el-row>
           </div>
@@ -683,9 +683,9 @@
                 <el-row type="flex" justify="start" class="Part_Title">
                   <span>深层次、多维度智能分析</span>
                 </el-row>
-                <el-row 
-                  type="flex" 
-                  justify="start" 
+                <el-row
+                  type="flex"
+                  justify="start"
                   style="word-break: break-all; text-align: left; margin-top: 24px; font-size: 20px; height: 56px; line-height: 28px; color: #595959">
                   使用人工智能和数据挖掘技术对试题和试卷，在各个层次、多个维度上分析，如各题型占比、关键词比较、知识点分值和难度变化
                 </el-row>
@@ -792,7 +792,7 @@ export default {
         },
         legend: {
           show: true,
-          orient: "vertical", 
+          orient: "vertical",
           right: 0,
           bottom: 30,
           itemHeight: 6, //修改icon图形大小
@@ -901,7 +901,7 @@ export default {
         },
         legend: {
           show: true,
-          orient: "vertical", 
+          orient: "vertical",
           right: 0,
           bottom: 30,
           itemHeight: 6, //修改icon图形大小
@@ -1004,8 +1004,8 @@ export default {
     },
     // 注册和登录相关
     login_show() {
-      this.$refs.login.show();
       this.$refs.register.hide();
+      this.$refs.login.show();
     },
     register_show() {
       this.$refs.login.hide();
@@ -1089,11 +1089,11 @@ export default {
 }
 
 .Dot{
-  border-radius: 50%; 
-  height: 7px; 
-  width: 7px; 
-  background: black; 
-  margin-top: 10px; 
+  border-radius: 50%;
+  height: 7px;
+  width: 7px;
+  background: black;
+  margin-top: 10px;
   margin-right: 20px;
   margin-left: 10px;
 }
@@ -1251,10 +1251,10 @@ export default {
 }
 
 .Home_Area_Right_Text{
-  display: inline-block; 
-  width: 90px; 
-  height: 31px; 
-  line-height: 31px; 
+  display: inline-block;
+  width: 90px;
+  height: 31px;
+  line-height: 31px;
   margin-left: 12px;
 }
 

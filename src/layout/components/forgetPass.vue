@@ -1,299 +1,286 @@
 <template>
+  <el-dialog
+      class="usr-card"
+      :visible="visible"
+      @close="hide"
+      top="10vh"
+  >
+    <h2 class="usr-title">
+      找回密码
+    </h2>
+    <el-form
+        class="usr-form"
+        :model="form"
+        v-show="verifyVisible"
+        :rules="formRules"
+        ref="userForgetPass"
+        name="userForgetPass"
+    >
+      <label class="usr-label usr-required">用户名</label>
+      <el-form-item prop="username">
+        <el-input
+            class="usr-input"
+            v-model="form.username"
+            ref="username"
+            placeholder="请输入用户名"
+        />
+      </el-form-item>
+      <label class="usr-label usr-required">邮箱</label>
+      <el-form-item prop="mail">
+        <el-input
+            class="usr-input"
+            v-model="form.mail"
+            ref="mail"
+            placeholder="请输入邮箱"
+        />
+      </el-form-item>
 
-  <!-- 忘记密码 -->
-  <div class="">
-    <el-dialog :visible.sync="CheckAuthorityVisible" width="70%">
-      <el-row>
-        <el-col :span="10" :offset="2">
-          <span style="font-weight: bold; color: #47A2FF; font-size: 24px">
-              身份验证
-            </span>
-          <el-form :model="ruleForm"
-                   status-icon
-                   :rules="rules"
-                   ref="checkAuthorityForm"
-                   label-position="left"
-                   label-width="90px"
-                   class="demo-ruleForm"
-                   style="margin-top:30px">
-            <el-form-item label="账号" prop="username" style="margin-bottom: 15px">
-              <el-input type="text"
-                        v-model="ruleForm.username"
-                        auto-complete="off"
-                        placeholder="请输入您的账号" />
-            </el-form-item>
-            <el-form-item label="邮箱" prop="email" style="margin-bottom: 15px">
-              <el-input type="text"
-                        v-model="ruleForm.email"
-                        auto-complete="off"
-                        placeholder="请输入您的邮箱"></el-input>
-            </el-form-item>
-            <el-form-item label="" label-width="0px" prop="imgCode" style="margin-bottom: 15px">
-              <el-col :span="15">
-                <el-input type="text"
-                          v-model="ruleForm.imgCode"
-                          auto-complete="off"
-                          placeholder="请输入图片验证码"></el-input>
-              </el-col>
-              <el-col :span="8" :offset="1">
-                <el-row type="flex" justify="end">
-                  <vue-img-verify @getImgCode="getimgCodeOrigin" ref="vueImgVerify" />
-                </el-row>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="" label-width="0px" prop="emailCode" style="margin-bottom: 15px">
-              <el-col :span="15">
-                <el-input type="text" maxlength="8" suffix-icon="el-icon-lock" placeholder="请输入邮箱验证码" v-model="ruleForm.emailCode" />
-              </el-col>
-              <el-col :span="8" :offset="1">
-                <el-row type="flex" justify="end">
-                  <el-button class="btn-orange" :disabled="disabled" @click="sendEmailCode">{{valiBtn}}</el-button>
-                </el-row>
-              </el-col>
-            </el-form-item>
-          </el-form>
-          <el-row style="float:right">
-            <el-button type="primary" @click="CheckAuthority">确 定</el-button>
-          </el-row>
-        </el-col>
-        <el-col :span="12">
-          <img src="@/assets/login.png" width="350vh" height="350vh" />
-        </el-col>
-      </el-row>
-    </el-dialog>
-    <el-dialog :visible="resetPassVisible"
-               width="70%"
-               @close="hide()">
-      <el-row>
-        <el-col :span="10" :offset="2">
-          <span style="font-weight: bold; color: #47A2FF; font-size: 24px">
-              密码重置
-            </span>
-          <el-form :model="passRuleForm"
-                   status-icon
-                   :rules="passRules"
-                   ref="resetPassForm"
-                   label-position="left"
-                   label-width="90px"
-                   class="demo-ruleForm"
-                   style="margin-top:80px">
-            <el-form-item label="密码" prop="password" style="margin-bottom: 15px">
-              <el-input type="password" v-model="passRuleForm.password" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="确认密码" prop="checkPass" style="margin-bottom: 15px">
-              <el-input type="password" v-model="passRuleForm.checkPass" autocomplete="off"></el-input>
-            </el-form-item>
-          </el-form>
-          <el-row style="float:right">
-            <el-button type="primary" @click="resetPass">确 定</el-button>
-          </el-row>
-        </el-col>
-        <el-col :span="12">
-          <img src="@/assets/login.png" width="350vh" height="350vh" />
-        </el-col>
-      </el-row>
-    </el-dialog>
-  </div>
 
+      <el-form-item prop="mailCode">
+        <label class="usr-label usr-required">邮箱验证码</label>
+        <div class="usr-mail-verification">
+          <el-input
+              v-model="form.mailCode"
+              ref=""
+              class="usr-input"
+              placeholder="请输入邮箱验证码"
+          />
+
+          <el-button
+              :class="mailCodeValid.enable ? 'usr-btn' : ''"
+              :disabled="!mailCodeValid.enable"
+              class="usr-send-mail usr-btn"
+              @click="sendMailCode"
+          >{{mailBtnCaption}}</el-button>
+        </div>
+      </el-form-item>
+
+      <el-form-item prop="verifyCode">
+        <label class="usr-label usr-required">验证码</label>
+        <div class="usr-verification">
+          <el-input
+              class="usr-input"
+              v-model="form.verifyCode"
+              placeholder="请输入验证码"
+          />
+          <div class="usr-verification-img">
+            <vue-img-verify ref="vueImgVerify" :ht="44" @getImgCode="getImgCode"/>
+          </div>
+        </div>
+      </el-form-item>
+
+      <el-button
+          :class="isFinding ? 'usr-logging' : ''" :loading="isFinding"
+          @click="verify"
+          type="info"
+          class="usr-login usr-btn"
+      >找回密码</el-button>
+
+    </el-form>
+
+    <el-form
+        class="usr-form"
+        :model="resetPassForm"
+        v-show="resetPassVisible"
+        :rules="resetPassRules"
+        ref="userForgetPassReset"
+        name="userForgetPassReset"
+    >
+
+      <el-form-item prop="password">
+        <label class="usr-label usr-required">密码</label>
+        <el-input
+            type="password"
+            v-model="resetPassForm.password"
+            class="usr-input"
+            placeholder="请输入密码"
+        />
+      </el-form-item>
+
+      <el-form-item prop="checkPass">
+        <label class="usr-label usr-required">确认密码</label>
+        <el-input
+            type="password"
+            v-model="resetPassForm.checkPass"
+            class="usr-input"
+            placeholder="请重新输入密码"
+        />
+      </el-form-item>
+
+      <el-button
+          :class="isResetting ? 'usr-logging' : ''" :loading="isResetting"
+          @click="resetPass"
+          type="info"
+          class="usr-login usr-btn"
+      >找回密码</el-button>
+    </el-form>
+
+  </el-dialog>
 </template>
 
 <script>
+import vueImgVerify from "@/common/components/vue-img-verify.vue";
+import {commonAjax} from '@/common/utils/ajax';
+import loginFormMixin from '@/layout/components/loginFormMixin';
 
-  // import {commonAjax} from "@/common/utils/ajax";
-  import vueImgVerify from '@/common/components/vue-img-verify.vue'
-  import axios from 'axios'
-  import { commonAjax } from '@/common/utils/ajax'
-  import { Message } from 'element-ui'
-  import md5 from 'js-md5'
-  export default {
-    components: { vueImgVerify },
-    data() {
-      var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'))
-        } else {
-          if (this.passRuleForm.checkPass !== '') {
-            this.$refs['resetPassForm'].validateField('checkPass')
+export default {
+  name: 'forgetPass',
+  components: {vueImgVerify},
+  mixins: [loginFormMixin],
+  data() {
+    return {
+      verifyVisible: true,
+      resetPassVisible: false,
+      isFinding: false,
+      isResetting: false,
+      form: {
+        username: '',
+        mail: '',
+        verifyCode: '',
+        mailCode: '',
+      },
+      formRules: {
+        username: [this.ruleGenerator('请输入用户名')],
+        mail: [
+            this.ruleGenerator('请输入邮箱地址'),
+          {
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: ['blur', 'change'],
           }
-          callback()
-        }
-      }
-      var validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'))
-        } else if (value !== this.passRuleForm.password) {
-          callback(new Error('两次输入密码不一致!'))
-        } else {
-          callback()
-        }
-      }
-      var validateImgCode = (rule, value, callback) => {
-        if (value.toUpperCase() !== this.imgCodeOrigin.toUpperCase()) {
-          callback(new Error('图片验证码错误！'))
-        } else {
-          callback()
-        }
-      }
-      var validateEmailCode = (rule, value, callback) => {
-        if (md5(value) !== this.emailCodeOrigin) {
-          callback(new Error('邮箱验证码错误！'))
-        } else {
-          callback()
-        }
-      }
-      return {
-        access_token: '',
-        CheckAuthorityVisible: false,
-        resetPassVisible: false,
-        imgCodeOrigin: '',
-        emailCodeOrigin: '',
-        disabled: false,
-        valiBtn: '获取验证码',
-        ruleForm: {
-          // email: '',
-          username: '',
-          email: ''
-        },
-        rules: {
-          username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-          email: [
-            { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-          ],
-          imgCode: [
-            { required: true, message: '请输入图形验证码', trigger: 'blur' },
-            { validator: validateImgCode, trigger: ['blur'] }
-          ],
-          emailCode: [
-            { required: true, message: '请输入邮箱验证码', trigger: 'blur' },
-            { validator: validateEmailCode, trigger: ['blur'] }
-            // { required: false, message: '请输入手机验证码', trigger: 'blur' },
-            // { validator: validatePhoneCode, trigger: ['blur'] }
-          ]
-        },
-        passRuleForm: {
-          password: '',
-          checkPass: ''
-        },
-        passRules: {
-          password: [
-            { required: true, message: '请输入密码', trigger: 'blur' },
-            { validator: validatePass, trigger: 'blur' }
-          ],
-          checkPass: [
-            { required: true, message: '请再次输入密码', trigger: 'blur' },
-            { validator: validatePass2, trigger: ['blur', 'change'] }
-          ]
-        }
-      }
-    },
-    computed: {
-      isLuna() {
-        return this.$store.getters.isLuna
+        ],
+        verifyCode: [
+            this.ruleGenerator('请输入验证码'),
+            this.codeValidator()
+        ],
+        mailCode: [
+            this.ruleGenerator('请输入邮箱验证码'),
+            this.mailCodeValidator(),
+        ]
       },
-      systemType() {
-        return this.$store.getters.systemType
-      }
-    },
-    methods: {
-      show() {
-        this.CheckAuthorityVisible = true
-        // this.resetPassVisible = true
+      access_token: '',
+      resetPassForm: {
+        password: '',
+        checkPass: '',
       },
-      getimgCodeOrigin(code) {
-        this.imgCodeOrigin = code
-      },
-      resetPass() {
-        this.$refs['resetPassForm'].validate(valid => {
-          if (!valid) {
-            return false
-          }
-          let fd = new FormData()
-          fd.append('password', this.passRuleForm.password)
-          axios({
-            url: this.backendIP + '/api/reset_password',
-            method: 'POST',
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${this.access_token}`
+      resetPassRules: {
+        password: [this.ruleGenerator('请输入密码')],
+        checkPass: [this.ruleGenerator('请再次输入密码'),
+          {
+            validator: (rule, value, callback) => {
+              if (value !== this.resetPassForm.password) {
+                callback(new Error('两次输入密码不一致'));
+              }
+              callback();
             },
-            data: fd
-          })
-            .then(res => {
-              console.log(res)
-              this.resetPassVisible = false
-              this.$store.dispatch('app/openLoginDialog')
-            })
-            .catch(err => {
-              console.log(err)
-            })
-        })
-      },
-      CheckAuthority() {
-        this.$refs['checkAuthorityForm'].validate(valid => {
-          if (!valid) {
-            return false
+            trigger: ['blur', 'change'],
           }
-          let fd = {
-            username: this.ruleForm.username,
-            email: this.ruleForm.email
-          }
-          commonAjax(this.backendIP + '/api/forget_pass_check', fd)
-            .then(res => {
-              this.access_token = res.access_token
-              this.CheckAuthorityVisible = false
-              this.resetPassVisible = true
-            })
-            .catch(err => {
-              console.log(err)
-              Message({
-                message: '用户名或邮箱错误，身份验证失败！',
-                type: 'error',
-                duration: 5 * 1000
-              })
-            })
-        })
+        ]
       },
-      sendEmailCode() {
-        let validateList = []
-        this.$refs['checkAuthorityForm'].validateField(['email', 'imgCode'], err => {
-          validateList.push(err)
-        })
-        if (validateList.every(err => err === '')) {
-          this.tackBtn() //验证码倒数60秒
-          commonAjax(this.backendIP + '/api/send_email_code', { dest_email: this.ruleForm.email })
-            .then(data => {
-              this.emailCodeOrigin = data.code
-            })
-            .catch(err => {
-              console.log(err)
-              Message({
-                message: '验证码发送失败！',
-                type: 'error',
-                duration: 5 * 1000
-              })
-            })
-        }
-      },
-      tackBtn() {
-        //验证码倒数60秒
-        let time = 60
-        let timer = setInterval(() => {
-          if (time == 0) {
-            clearInterval(timer)
-            this.valiBtn = '获取验证码'
-            this.disabled = false
-          } else {
-            this.disabled = true
-            this.valiBtn = time + '秒后重试'
-            time--
-          }
-        }, 1000)
-      }
     }
-  }
+  },
+  methods: {
+    show() {
+      this.visible = true;
+      this.resetPassVisible = false;
+      this.verifyVisible = true;
+      setTimeout(()=>{
+            try {
+              this.$refs.vueImgVerify.handleDraw();
+              this.$refs.username.focus();
+            } catch (e) {
+              return;
+            }
+          },
+          250);
 
+      if (!window.forgetCallback) {
+        window.forgetCallback = (e) => {
+          if (e.code === 'Enter') {
+            if (this.resetPassVisible) {
+              this.resetPass()
+            } else if (this.verifyVisible) {
+              this.verify();
+            }
+          }
+        }
+        document.addEventListener('keydown', window.forgetCallback);
+      }
+    },
+    hide() {
+      if (window.forgetCallback) {
+        document.removeEventListener('keydown', window.forgetCallback);
+        window.forgetCallback = null;
+      }
+      this.visible = false;
+    },
+    async sendMailCode() {
+      let isError = false;
+      this.$refs.userForgetPass.validateField(['mail', 'verifyCode'], (err) => {
+        if (err !== '') {
+          isError = true;
+        }
+      });
+      if (isError) {
+        this.$message.error('请在完成验证码并检查格式后尝试发送邮箱验证码');
+        return;
+      }
+
+      this.tackCoolDown();
+      let data;
+      try {
+        data = await commonAjax(this.backendIP + '/api/send_email_code', {
+          'dest_email': this.form.mail,
+        });
+      } catch (e) {
+        this.$message.error('验证码发送失败，请稍后再试');
+      }
+      this.mailCodeValid.emailCodeOrigin = data.code;
+    },
+    async verify() {
+      this.$refs.userForgetPass.validate(async (valid) => {
+        if (valid) {
+          let data;
+          try {
+            data = await commonAjax(`${this.backendIP}/api/forget_pass_check`, {
+              username: this.form.username,
+              email: this.form.mail,
+            });
+          } catch (e) {
+            this.$message.error('用户名或邮箱错误')
+          }
+          this.access_token = data.access_token;
+          this.resetPassVisible = true;
+          this.verifyVisible = false;
+        }
+      })
+    },
+    resetPass() {
+      this.resetPassForm.validate(async (valid) => {
+        if (valid) {
+          try {
+            commonAjax(`${this.backendIP}/api/reset_password`, {
+              password: this.resetPassForm.password,
+            });
+            this.resetPassVisible = false;
+            this.verifyVisible = true;
+            await this.$store.dispatch('app/openLoginDialog');
+          } catch (e) {
+            this.$message.error('重置密码失败，请稍后再试');
+          }
+        }
+      })
+    }
+  },
+}
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
+  $form-gap: 24px;
+  $card-max-width: 500px;
+  @import "form";
+
+  .usr-login {
+    margin-top: $form-gap;
+  }
 </style>
