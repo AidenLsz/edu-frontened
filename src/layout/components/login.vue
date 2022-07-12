@@ -1,168 +1,166 @@
 <template>
-  <!-- 登录 -->
-  <el-dialog :visible="$store.getters.loginDialog.opened"
-    width="70%" @close="hide()" @opened="draw()"
-    :show-close="isLuna"
-    :close-on-click-modal="isLuna"
-    :close-on-press-escape="isLuna"
-    @open="draw()"
-    >
-    <el-row>
-      <el-col :span="10" :offset="2">
-        <el-row>
-          <span style="font-weight: bold; color: #47A2FF; font-size: 24px">
-            欢迎使用LUNA
-            <template v-if="systemType === 0">
-              LUNA智慧教育知识图谱
-            </template>
-            <template v-else-if="systemType === 1">
-              智慧考试管理系统
-            </template>
-            <template v-else-if="systemType === 2">
-              智能教辅系统
-            </template>
-          </span>
-        </el-row>
-        <el-row style="margin: 50px 0px 30px 0px;">
+  <el-dialog
+      class="usr-card"
+      :visible="$store.getters.loginDialog.opened"
+      @close="hide"
+  >
+    <h2 class="usr-title">
+      LUNA 智慧教育知识图谱
+    </h2>
+    <el-form class="usr-form">
+      <label class="usr-label">用户名</label>
+      <el-input
+          class="usr-input"
+          v-model="account"
+          ref="username"
+          placeholder="用户名或手机号"
+      />
+
+      <label class="usr-label">密码</label>
+      <el-input
+          type="password"
+          v-model="password"
+          class="usr-input"
+          placeholder="密码"
+      />
+
+        <label class="usr-label">验证码</label>
+        <div class="usr-verification">
           <el-input
-            type="text"
-            v-model="account"
-            auto-complete="off"
-            placeholder="账号"
-          ></el-input>
-        </el-row>
-        <el-row style="margin: 30px 0px">
-          <el-input
-            type="password"
-            v-model="password"
-            auto-complete="off"
-            placeholder="密码"
-          ></el-input>
-        </el-row>
-        <el-row style="margin: 30px 0px">
-          <el-col :span="15">
-            <el-input
-              type="text"
+              class="usr-input"
               v-model="verifyCode"
-              auto-complete="off"
-              placeholder="请输入验证码"
-            ></el-input>
-          </el-col>
-          <el-col :span="8" :offset="1">
-            <el-row type="flex" justify="end" >
-              <vue-img-verify @getImgCode="getImgCode" ref="vueImgVerify" />
-            </el-row>
-          </el-col>
-        </el-row>
-        <el-row style="margin: 30px 0px">
-          <el-col :span="8">
-            <el-button type="primary" style="width: 8vw" round @click="login">登录</el-button>
-          </el-col>
-          <el-col :span="6" :offset="1">
-            <el-button type="text" style="color: #aaa" @click="forget_pass">忘记密码？</el-button>
-          </el-col>
-          <el-col v-if="isLuna" :span="6" :offset="3">
-            <el-row type="flex" justify="end" >
-              <el-button type="text" @click="register_show">注册新用户</el-button>
-            </el-row>
-          </el-col>
-        </el-row>
-      </el-col>
-      <el-col :span="12">
-        <img src="@/assets/login.png" width="350vh" height="350vh"/>
-      </el-col>
-    </el-row>
+              placeholder="验证码"
+          />
+          <div class="usr-verification-img">
+            <vue-img-verify :ht="44" @getImgCode="getImgCode"/>
+          </div>
+        </div>
+
+      <div class="usr-action">
+        <el-button
+            class="usr-re-pass"
+            @click="forgetPwd"
+            type="text"
+        >忘记密码？</el-button>
+        <el-button
+            @click="registerNew"
+            type="text"
+        >新用户注册</el-button>
+      </div>
+      <el-button
+          :class="isLogging ? 'usr-logging' : ''" :loading="isLogging"
+          @click="login"
+          type="info"
+          class="usr-login usr-btn"
+      >登录</el-button>
+      </el-form>
   </el-dialog>
 </template>
 
 <script>
 import vueImgVerify from "@/common/components/vue-img-verify.vue";
-import {commonAjax} from "@/common/utils/ajax";
+import { commonAjax } from "@/common/utils/ajax";
+
 export default {
+  name: 'login',
   components: { vueImgVerify },
-  data(){
+  data() {
     return {
-      account:"",
-      password:"",
-      verifyCode:"",
-      imgCode: "",
-    }
+      account: '',
+      password: '',
+      verifyCode: '',
+      imgCode: '',
+      isLogging: false,
+    };
   },
-  computed: {
-    isLuna() {
-      return this.$store.getters.isLuna;
-    },
-    systemType(){
-      return this.$store.getters.systemType;
-    }
-
-  },
-  methods:{
-    show(){
-      this.$store.dispatch('app/openLoginDialog')
-    },
-    draw(){
-      this.$refs.vueImgVerify.handleDraw();
-    },
-    hide(){
-      this.$store.dispatch('app/closeLoginDialog')
-      this.account = "";
-      this.password = "";
-      this.imgCode = "";
-    },
-    register_show(){
-      this.$emit('register_show');
-    },
-    forget_pass(){
-      this.$emit('forget_pass_show');
-    },
-    login() {
-      if(!this.account||!this.password){
-        alert("用户名和密码不能为空");
-        return;
-      }
-      if (this.verifyCode.toUpperCase() !== this.imgCode.toUpperCase()) {
-        console.log(1,this.verifyCode.toUpperCase(),2,this.imgCode.toUpperCase());
-        alert("验证码错误");
-        return;
-      }
-      // console.log(md5(this.password))
-      commonAjax(this.backendIP + "/api/login",{
-        username: this.account,
-        // password: md5(this.password)
-        password: this.password
-      }).then((data)=>{
-        // if(!this.isLuna&&this.account!='NEEA'){
-        //   this.$message.error('您没有访问考试系统的权限!')
-        // }else{
-        //
-        // }
-        let userInfo={
-          token:data.access_token,
-          name:this.account,
-          // isAdmin:data.body.isAdmin,
+  methods: {
+    show() {
+      if (!window.enterCallback) {
+        window.enterCallback = (e) => {
+          if (e.code === 'Enter') {
+            this.login();
+          }
         }
-        this.$store.dispatch('user/setUserData', userInfo).then(() => {
-          this.$router.go()
-          this.hide()
-        })
-
-
-      }).catch((res)=>{
-        if(res.status==401){
-          this.$message.error('用户名或密码不正确！')
-        }else {
-          this.$message.error('网络或服务器发生错误！')
-        }
-      })
+        document.addEventListener('keydown', window.enterCallback);
+      }
+      this.$store.dispatch('app/openLoginDialog');
+      setTimeout(()=>{
+        this.$refs.username.focus();
+      }, 250);
+    },
+    hide() {
+      if (window.enterCallback) {
+        document.removeEventListener('keydown', window.enterCallback);
+        window.enterCallback = null;
+      }
+      this.enterCallback = false;
+      this.$store.dispatch('app/closeLoginDialog');
+      this.password = '';
     },
     getImgCode(code) {
       this.imgCode = code;
     },
+    async login() {
+      if (this.isLogging) return;
+      if (!this.account || !this.password) {
+        this.$message.error('用户名和密码不能为空');
+        return;
+      }
+      if (this.verifyCode.toLowerCase() !== this.imgCode.toLowerCase()) {
+        this.$message.error('验证码错误');
+        return;
+      }
+      this.isLogging = true;
 
+      let data = null;
+      try {
+        data = await commonAjax(`${this.backendIP}/api/login`, {
+          username: this.account,
+          password: this.password,
+        });
+      } catch (e) {
+        if (e && e.status && e.status === 401) {
+          this.$message.error('用户名或密码错误');
+        } else {
+          this.$message.error('服务器繁忙，请稍后再试');
+        }
+
+        this.isLogging = false;
+        return;
+      }
+
+      await this.$store.dispatch('user/setUserData', {
+        token: data.access_token,
+        name: this.account,
+      });
+      this.$message.success('登录成功，跳转中');
+      this.isLogging = false;
+      setTimeout(()=>{
+        this.$router.go();
+        this.hide();
+      }, 500);
+
+      this.isLogging = false;
+    },
+    forgetPwd() {
+      this.$emit('forget_pass_show');
+    },
+    registerNew() {
+      this.$emit('register_show');
+    },
   }
 }
 </script>
 
-<style lang="css" scoped>
+<style scoped lang="scss">
+$form-gap: 24px;
+$card-max-width: 500px;
+@import "form";
+
+.usr-action {
+  margin-top: 20px;
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+}
 </style>

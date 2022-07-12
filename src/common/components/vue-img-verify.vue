@@ -11,11 +11,15 @@
 
 <script type="text/ecmascript-6">
 export default {
+  props: {
+    wd: Number,
+    ht: Number,
+  },
   data() {
     return {
       pool: 'ABCDEFGHJKLMNPQRSTUVWXYZ1234567890', // 字符串
-      width: 120,
-      height: 40,
+      width: this.wd ? this.wd : 120,
+      height: this.ht ? this.ht : 40,
       imgCode: ''
     }
   },
@@ -112,6 +116,10 @@ export default {
 }
 </script>
 <style type="text/css">
+.img-verify {
+  height: 44px;
+}
+
 .img-verify canvas {
   cursor: pointer;
 }
