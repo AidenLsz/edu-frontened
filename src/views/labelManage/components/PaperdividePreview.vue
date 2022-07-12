@@ -66,7 +66,7 @@ export default {
       for(const key in this.imgDict){
         const Img_Name_Catcher = new RegExp('<img src="' + key + '"');
         if (Img_Name_Catcher.exec(tableHtml) !== null) {
-          tableHtml = tableHtml.replace(Img_Name_Catcher,'<img src="' + this.json_content.img[key] + '"');
+          tableHtml = tableHtml.replace(Img_Name_Catcher,'<img src="' + this.imgDict[key] + '"');
         }
       }
       return tableHtml;

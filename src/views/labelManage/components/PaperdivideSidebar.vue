@@ -20,6 +20,8 @@
       <el-card @click.native="scrollToPaper" class="pd-tool"
         ><i class="el-icon-top"></i
       ></el-card>
+      <el-card @click.native="downloadJSON" class="pd-tool download-json"><i class="el-icon-refresh"></i
+      ><span class="show-desktop">下载 JSON</span></el-card>
       <el-card @click.native="reset" class="pd-tool"><i class="el-icon-refresh"></i
         ><span class="show-desktop">重置</span></el-card>
       <el-card @click.native="submit" class="pd-tool"><i class="el-icon-monitor"></i><span class="show-desktop">提交切分</span></el-card>
@@ -52,6 +54,9 @@ export default {
     // 发送入库信号
     submit() {
       this.$root.$emit(eventList.submit);
+    },
+    downloadJSON() {
+      this.$root.$emit(eventList.downloadJSON);
     },
     toggleNumber(index) {
       this.$root.$emit(eventList.reorder, {
@@ -147,7 +152,11 @@ $width-threshold: 800px;
   white-space: nowrap;
   flex: 2;
   font-size: 1.5rem;
-  margin: 10px;
+  margin: 5px;
+
+  &.download-json {
+    flex: 3;
+  }
 
   i {
     margin-right: 4px;

@@ -10,8 +10,8 @@
         :modal-append-to-body="false"
         :close-on-click-modal="false">
         <div v-html="Wrong_Char_Info"></div>
-        <el-button 
-            type="danger" 
+        <el-button
+            type="danger"
             @click="Wrong_Char_Dialog = false"
             style="margin-top: 30px;"
             >确认</el-button>
@@ -83,9 +83,9 @@
         <el-col :span="13">
             <el-row type="flex" justify="start" style="height: 40px; line-height: 40px;">
                 <el-col v-for="Type in Type_List" :key="'Ques_Type_' + Type.label" :span="24/8">
-                    <el-row 
-                        type="flex" 
-                        justify="center" 
+                    <el-row
+                        type="flex"
+                        justify="center"
                         :class="Get_Type_Button_Class(Type)"
                         @click.native="Type_Change(Type.value)">
                         {{Type.label}}
@@ -173,7 +173,7 @@ export default {
       if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
         this.$message.error("您尚未登录，请登录后使用录入式资源分析功能。")
         this.$router.push("/")
-        return 
+        return
       }
       this.Get_User_UUID();
       this.To_Top();
@@ -195,11 +195,7 @@ export default {
         },
       // 跳转至整卷录入页面
       toPaper(){
-        let _path = "/"
-        if(this.$route.path.indexOf("itas")||this.$route.path.indexOf("eems")){
-          _path = this.$route.path.toLowerCase().replace(this.$route.name.toLowerCase(), "")
-        }
-        this.$router.push({path: _path + "paperAnalyseInput"})
+        this.$router.push({path: "/paperAnalyseInput"})
       },
       // 返回按钮样式
       Get_Type_Button_Class(Type){
@@ -264,9 +260,9 @@ export default {
                     this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
                 }
                 this.Wrong_Char_Dialog = true
-                return 
+                return
             }
-            
+
             // 开始检测选项部分
             this.Wrong_Char_Info = ""
             for(let i = 0; i < Question.options.length; i++){
@@ -279,10 +275,10 @@ export default {
                 this.Wrong_Char_Dialog = true;
                 return
             }
-            
+
             // 内容检测
             for(let i = 0; i < Question.options.length; i++){
-                
+
                 let C_Option_Item = this.Check_Do(Question.options[i])
                 if(C_Option_Item[2]){
                     this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在包裹不完全的 Latex 公式，请修正后重试"
@@ -296,7 +292,7 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Option_Item[1][j].position + " 处的 " + C_Option_Item[1][j].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
             }
             // this.$message.success("选项内容格式检测已通过。")
@@ -315,9 +311,9 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
-            } 
+            }
             // this.$message.success("答案内容格式检测已通过。")
 
             if(Question.analysis.length != 0){
@@ -334,10 +330,10 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
             }
-            
+
             // 小题内容检测 - 必填检测
             this.Wrong_Char_Info = ""
             for(let i = 0; i < Question.sub_questions.length; i++){
@@ -364,7 +360,7 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Sub_Ques_Item[1][j].position + " 处的 " + C_Sub_Ques_Item[1][j].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
             }
 
@@ -397,7 +393,7 @@ export default {
                     this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
                 }
                 this.Wrong_Char_Dialog = true
-                return 
+                return
             }
 
             // 检测答案项部分，由于是非必填项，不填也没事
@@ -415,9 +411,9 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
-            } 
+            }
 
             // 检测解析字段 - 不填也没事
             if(Question.analysis.length != 0){
@@ -434,7 +430,7 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
             }
 
@@ -484,9 +480,9 @@ export default {
                         this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Stem[1][i].position + " 处的 " + C_Stem[1][i].char + " 字符。<br>"
                     }
                     this.Wrong_Char_Dialog = true
-                    return 
+                    return
                 }
-                
+
                 // 开始检测选项部分
                 this.Wrong_Char_Info = ""
                 for(let i = 0; i < Item.options.length; i++){
@@ -499,10 +495,10 @@ export default {
                     this.Wrong_Char_Dialog = true;
                     return
                 }
-                
+
                 // 内容检测
                 for(let i = 0; i < Item.options.length; i++){
-                    
+
                     let C_Option_Item = this.Check_Do(Item.options[i])
                     if(C_Option_Item[2]){
                         this.Wrong_Char_Info = "选项" + String.fromCharCode( 65 + i ) + "部分存在包裹不完全的 Latex 公式，请修正后重试"
@@ -516,7 +512,7 @@ export default {
                             this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Option_Item[1][j].position + " 处的 " + C_Option_Item[1][j].char + " 字符。<br>"
                         }
                         this.Wrong_Char_Dialog = true
-                        return 
+                        return
                     }
                 }
 
@@ -534,9 +530,9 @@ export default {
                             this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Answer[1][i].position + " 处的 " + C_Answer[1][i].char + " 字符。<br>"
                         }
                         this.Wrong_Char_Dialog = true
-                        return 
+                        return
                     }
-                } 
+                }
 
                 if(Item.analysis.length != 0){
                     let C_Analysis = this.Check_Do(Item.analysis);
@@ -552,10 +548,10 @@ export default {
                             this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Analysis[1][i].position + " 处的 " + C_Analysis[1][i].char + " 字符。<br>"
                         }
                         this.Wrong_Char_Dialog = true
-                        return 
+                        return
                     }
                 }
-                
+
                 // 小题内容检测 - 必填检测
                 this.Wrong_Char_Info = ""
                 for(let i = 0; i < Item.sub_questions.length; i++){
@@ -582,7 +578,7 @@ export default {
                             this.Wrong_Char_Info = this.Wrong_Char_Info + "位于第 " + C_Sub_Ques_Item[1][j].position + " 处的 " + C_Sub_Ques_Item[1][j].char + " 字符。<br>"
                         }
                         this.Wrong_Char_Dialog = true
-                        return 
+                        return
                     }
                 }
             }
@@ -744,7 +740,7 @@ export default {
                 if (Regx.test(content[i]) || this.math_pun_list.indexOf(content[i]) != -1) {
                     if(remakeContent[remakeContent.length - 1] == '$'){
                         remakeContent = remakeContent.substring(0, remakeContent.length - 1) + content[i] + "$";
-                    }else if(['i', 'b'].indexOf(content[i]) != -1 && 
+                    }else if(['i', 'b'].indexOf(content[i]) != -1 &&
                         (
                             (content[i - 1] == '/' && content[i - 2] == '<' && content[i + 1] == '>') ||
                             (content[i - 1] == '<' && content[i + 1] == '>')
@@ -785,15 +781,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .toPaper{
-    height: 40px; 
+    height: 40px;
     line-height: 40px;
-    width: 10vw; 
+    width: 10vw;
     background: #FFE37F;
     font-weight: bold;
     border-radius: 15px;
     cursor: pointer;
 }
-.toPaper:hover{ 
+.toPaper:hover{
     background: #FFF0A0;
     color: #888;
 }
