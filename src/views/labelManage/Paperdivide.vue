@@ -112,6 +112,7 @@ export default {
         paper: [],
       },
       UUID: "",
+      data: {},
       isLoading: false,
       isUploaded: false,
     };
@@ -162,6 +163,7 @@ export default {
         this.dividedRes.paper = data.data.paper;
         this.backupRes.imageDict = data.data.image_dict;
         this.backupRes.paper = data.data.paper;
+        this.data = data.data;
         this.isUploaded = true;
       } catch (e) {
         await this.$alert(
@@ -332,8 +334,7 @@ export default {
     },
     // 入库
     downloadJSON() {
-      const submitForm = this.getSubmitJSON();
-      console.log(submitForm)
+      const submitForm = this.data;
       const eleLink = document.createElement('a');
       eleLink.download = 'data.json';
       eleLink.style.display = 'none';
