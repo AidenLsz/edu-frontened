@@ -85,4 +85,5 @@ export const eventList = {
   reset: 'paper-divide-reset',
   reorder: 'paper-divide-reorder',
   submit: 'paper-divide-submit',
+  downloadJSON: 'paper-divide-downloadJSON',
 };

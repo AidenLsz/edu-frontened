@@ -59,7 +59,7 @@ import { commonAjax } from "@/common/utils/ajax";
 
 const QUESTION_INIT_ID = 1;
 const QUESTION_INIT_SIDE_ID = 0;
-const IS_TEST = true;
+const IS_TEST = false;
 
 export default {
   name: "Paperdivide",
@@ -112,6 +112,7 @@ export default {
         paper: [],
       },
       UUID: "",
+      data: {},
       isLoading: false,
       isUploaded: false,
     };
@@ -162,6 +163,7 @@ export default {
         this.dividedRes.paper = data.data.paper;
         this.backupRes.imageDict = data.data.image_dict;
         this.backupRes.paper = data.data.paper;
+        this.data = data.data;
         this.isUploaded = true;
       } catch (e) {
         await this.$alert(
@@ -300,6 +302,9 @@ export default {
       // 监听到重置事件，重置预览
       this.$root.$on(eventList.reset, this.reset);
 
+      // 监听用户事件，下载 JSON
+      this.$root.$on(eventList.downloadJSON, this.downloadJSON);
+
       // 监听到用户划线，更改题目编号
       this.$root.$on(eventList.reorder, this.reorder);
 
@@ -328,7 +333,19 @@ export default {
       }
     },
     // 入库
-    async submit() {
+    downloadJSON() {
+      const submitForm = this.data;
+      const eleLink = document.createElement('a');
+      eleLink.download = 'data.json';
+      eleLink.style.display = 'none';
+      const blob = new Blob([JSON.stringify(submitForm)]);
+      eleLink.href = URL.createObjectURL(blob);
+      document.body.appendChild(eleLink);
+      eleLink.click();
+      document.body.removeChild(eleLink);
+    },
+    getSubmitJSON() {
+
       const submitForm = {
         test: IS_TEST,
         title: this.pdForm.title,
@@ -342,7 +359,7 @@ export default {
         for(const key in imgDict){
           const Img_Name_Catcher = new RegExp('<img src="' + key + '"');
           if (Img_Name_Catcher.exec(tableHtml) !== null) {
-            tableHtml = tableHtml.replace(Img_Name_Catcher,'<img src="' + this.json_content.img[key] + '"');
+            tableHtml = tableHtml.replace(Img_Name_Catcher,'<img src="' + imgDict[key] + '"');
           }
         }
         return tableHtml;
@@ -376,43 +393,39 @@ export default {
       const papermanualdivide_list = [];
       let currentNum = 1;
       for (const paperEle of this.processedRes.paper) {
-         if (paperEle.divide) {
-            if (paperEle.active) {
-              // 有未标注题目
-              if (paperEle.type === null) {
-                await this.$alert(
-                    `第 ${paperEle.questionID}-${paperEle.questionSideID} 题未标注题目类型，请完成标注后提交`,
-                    "提示",
-                );
-                return;
-              }
-              let content_type = 1;
-              if (paperEle.questionSideID === QUESTION_INIT_SIDE_ID) {
-                content_type = 0;
-              }
-              const lastItem = papermanualdivide_list[papermanualdivide_list.length - 1];
-              if (lastItem) {
-                lastItem.end_line = currentNum - 1;
-              }
-              papermanualdivide_list.push({
-                question_num: paperEle.questionID,
-                sub_question_num: paperEle.questionSideID,
-                start_line: currentNum,
-                end_line: -1,
-                content_type,
-                type: paperEle.type,
-              })
+        if (paperEle.divide) {
+          if (paperEle.active) {
+            let content_type = 1;
+            if (paperEle.questionSideID === QUESTION_INIT_SIDE_ID) {
+              content_type = 0;
             }
-         } else {
-            currentNum += 1;
-         }
+            const lastItem = papermanualdivide_list[papermanualdivide_list.length - 1];
+            if (lastItem) {
+              lastItem.end_line = currentNum - 1;
+            }
+            const paperDivideElement = {
+              question_num: paperEle.questionID,
+              sub_question_num: paperEle.questionSideID,
+              start_line: currentNum,
+              end_line: -1,
+              content_type,
+              type: paperEle.type
+            };
+            papermanualdivide_list.push(paperDivideElement);
+          }
+        } else {
+          currentNum += 1;
+        }
       }
       if (papermanualdivide_list.length !== 0) {
         papermanualdivide_list[papermanualdivide_list.length - 1].end_line = currentNum;
       }
       submitForm.papermanualdivide_list = JSON.stringify(papermanualdivide_list);
-
+      return submitForm;
+    },
+    async submit() {
       // 上传
+      const submitForm = this.getSubmitJSON();
       try {
         const res = await commonAjax(this.backendIP + '/api/input_paper', submitForm);
         if (res.success) {

@@ -1,476 +1,394 @@
-<template lang="html">
-  <!-- 注册 -->
-  <el-dialog :visible.sync="visible"  width="70%" style="margin-top: -13vh;">
-    <el-row>
-      <el-col :span="10" :offset="2">
-        <el-row>
-          <span style="font-weight: bold; color: #47A2FF; font-size: 24px">
-            欢迎使用LUNA智慧教育知识图谱
-          </span>
-        </el-row>
-        <!-- <el-row style="margin: 50px 0px 20px 0px;">
-          <el-col :span="5"  style="text-align-last: justify; display: inline-block; text-align: justify; padding: 1.5vh 1vw 0 0">
-            <span style="font-weight: bold">账号</span>
-          </el-col>
-          <el-col :span="18" :offset="1">
+<template>
+  <el-dialog
+      class="usr-card"
+      :visible="visible"
+      top="10vh"
+      @close="hide"
+  >
+    <h2 class="usr-title">
+      新用户注册
+    </h2>
+    <el-form
+        :model="form"
+        :rules="formRules"
+        class="usr-form"
+        ref="userRegister"
+        name="userRegister"
+    >
+      <div class="usr-form-left">
+        <label class="usr-label usr-required">用户名</label>
+        <el-form-item prop="username">
+          <el-input
+              class="usr-input"
+              v-model="form.username"
+              ref="username"
+              placeholder="请输入用户名"
+          />
+        </el-form-item>
+
+        <el-form-item prop="password">
+          <label class="usr-label usr-required">密码</label>
+          <el-input
+              type="password"
+              v-model="form.password"
+              class="usr-input"
+              placeholder="请输入密码"
+          />
+        </el-form-item>
+
+        <el-form-item prop="checkPass">
+          <label class="usr-label usr-required">确认密码</label>
+          <el-input
+              type="password"
+              v-model="form.checkPass"
+              class="usr-input"
+              placeholder="请重新输入密码"
+          />
+        </el-form-item>
+
+        <el-form-item prop="phone">
+          <label class="usr-label usr-required">手机号码</label>
+          <el-input
+              v-model="form.phone"
+              class="usr-input"
+              placeholder="请输入手机号码"
+          />
+        </el-form-item>
+
+        <el-form-item prop="mail">
+          <label class="usr-label usr-required">邮箱</label>
+          <el-input
+              v-model="form.mail"
+              class="usr-input"
+              placeholder="请输入邮箱"
+          />
+
+        </el-form-item>
+
+        <el-form-item prop="mailCode">
+          <label class="usr-label usr-required">邮箱验证码</label>
+          <div class="usr-mail-verification">
             <el-input
-              type="text"
-              v-model="account_reg"
-              auto-complete="off"
-              placeholder="请输入账号名称"
-            ></el-input>
-          </el-col>
-        </el-row> -->
-        <el-form :model="ruleForm" status-icon :rules="rules" :ref="formName" label-position="left" label-width="90px" class="demo-ruleForm"
-          style="margin-top:30px">
-          <el-form-item label="账号"  prop="username" style="margin-bottom: 15px">
-            <el-input
-              type="text"
-              v-model="ruleForm.username"
-              auto-complete="off"
-              placeholder="请输入账号名称"
+                v-model="form.mailCode"
+                ref=""
+                class="usr-input"
+                placeholder="请输入邮箱验证码"
             />
-          </el-form-item>
-          <el-form-item label="密码"  prop="password" style="margin-bottom: 15px">
-            <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="确认密码" prop="checkPass" style="margin-bottom: 15px">
-            <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱" prop="email" style="margin-bottom: 15px">
-            <el-input
-              type="text"
-              v-model="ruleForm.email"
-              auto-complete="off"
-              placeholder="请输入您的邮箱"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="手机号码" prop="phone" style="margin-bottom: 15px">
-            <el-input
-              type="text"
-              v-model="ruleForm.phone"
-              auto-complete="off"
-              placeholder="请输入您的手机号码"
-            ></el-input>
-          </el-form-item>
-          <el-form-item prop="inviteCode" style="margin-bottom: 15px">
-            <template slot="label">
-              邀请码
-              <el-tooltip  class="item" effect="dark" placement="right">
-                <div class="instruction" slot="content">
-                  <p>
-                    1、请发送邮件至tongsw@mail.ustc.edu.cn获取邀请码。
-                  </p>
-                  <p>
-                    2、邮件中须说明申请人姓名，手机，邮箱，工作单位和用途等信息。
-                  </p>
-                </div>
-                <i class="el-icon-question"></i>
-              </el-tooltip>
-            </template>
-            <el-input
-              type="text"
-              v-model="ruleForm.inviteCode"
-              auto-complete="off"
+
+            <el-button
+                :class="mailCodeValid.enable ? 'usr-btn' : ''"
+                :disabled="!mailCodeValid.enable"
+                class="usr-send-mail usr-btn"
+                @click="sendMailCode"
+            >{{mailBtnCaption}}</el-button>
+          </div>
+        </el-form-item>
+
+      </div>
+
+      <div class="usr-form-right">
+
+        <el-form-item prop="inviteCode">
+          <label class="usr-label usr-required">邀请码</label>
+          <el-tooltip class="usr-tooltip" effect="dark" placement="right">
+            <div class="instruction" slot="content">
+              <p>
+                1、请发送邮件至tongsw@mail.ustc.edu.cn获取邀请码。
+              </p>
+              <p>
+                2、邮件中须说明申请人姓名，手机，邮箱，工作单位和用途等信息。
+              </p>
+            </div>
+            <i class="el-icon-question"></i>
+          </el-tooltip>
+          <el-input
+              class="usr-input"
+              v-model="form.inviteCode"
               placeholder="请输入邀请码"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="用户类型" prop="type" style="margin-bottom: 15px">
-            <el-radio v-model="ruleForm.type" label="user">个人用户</el-radio>
-            <el-radio v-model="ruleForm.type" label="group">组织用户</el-radio>
-          </el-form-item>
-          <el-form-item label="组织名称" v-show="ruleForm.type=='group'" prop="groupname" style="margin-bottom: 15px">
+          />
+        </el-form-item>
+
+        <el-form-item prop="verifyCode">
+          <label class="usr-label usr-required">验证码</label>
+          <div class="usr-verification">
             <el-input
-              type="text"
-              v-model="ruleForm.groupname"
-              auto-complete="off"
+                class="usr-input"
+                v-model="form.verifyCode"
+                placeholder="请输入验证码"
+            />
+            <div class="usr-verification-img">
+              <vue-img-verify ref="vueImgVerify" :ht="44" @getImgCode="getImgCode"/>
+            </div>
+          </div>
+        </el-form-item>
+
+        <el-form-item prop="type">
+          <label class="usr-label usr-required">用户类型</label>
+          <div>
+            <el-button-group>
+              <el-button
+                  class="usr-btn-group"
+                  @click="()=>toggleUser('user')"
+                  :class="form.type === 'user' ? 'usr-active' : ''"
+              >个人用户</el-button>
+              <el-button
+                  class="usr-btn-group"
+                  @click="()=>toggleUser('group')" :class="form.type === 'group' ? 'usr-active' : ''"
+              >组织用户</el-button>
+            </el-button-group>
+          </div>
+        </el-form-item>
+
+
+        <el-form-item v-show="form.type === 'group'" prop="groupName">
+          <label class="usr-label usr-required">组织名称</label>
+          <el-input
+              class="usr-input"
+              v-model="form.groupName"
               placeholder="请输入组织名称"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="" label-width="0px" prop="imgCode" style="margin-bottom: 15px">
-            <el-col :span="15">
-              <el-input
-                type="text"
-                v-model="ruleForm.imgCode"
-                auto-complete="off"
-                placeholder="请输入图片验证码"
-              ></el-input>
-            </el-col>
-            <el-col :span="8" :offset="1">
-              <el-row type="flex" justify="end" >
-                <vue-img-verify @getImgCode="getimgCodeOrigin" ref="vueImgVerify"/>
-              </el-row>
-            </el-col>
-          </el-form-item>
-          <!-- <el-form-item label="" label-width="0px" prop="phoneCode" style="margin-bottom: 15px">
-            <el-col :span="15">
-              <el-input type="text" maxlength="6" suffix-icon="el-icon-lock" placeholder="请输入手机验证码" v-model="ruleForm.phoneCode"/>
-            </el-col>
-            <el-col :span="8" :offset="1">
-              <el-row type="flex" justify="end" >
-                <el-button class="btn-orange" :disabled="disabled" @click="getPhoneCode">{{valiBtn}}</el-button>
-              </el-row>
-            </el-col>
-          </el-form-item> -->
-          <el-form-item label="" label-width="0px" prop="emailCode" style="margin-bottom: 15px">
-            <el-col :span="15">
-              <el-input type="text" maxlength="8" suffix-icon="el-icon-lock" placeholder="请输入邮箱验证码" v-model="ruleForm.emailCode"/>
-            </el-col>
-            <el-col :span="8" :offset="1">
-              <el-row type="flex" justify="end" >
-                <el-button class="btn-orange" :disabled="disabled" @click="sendEmailCode">{{valiBtn}}</el-button>
-              </el-row>
-            </el-col>
-          </el-form-item>
-        </el-form>
-        <el-row style="margin-top: 10px; line-height: 39px; height: 39px">
-          <el-col :span="10">
-            <el-row type="flex" justify="start">
-              <span>完整阅读后方可注册</span>
-            </el-row>
-          </el-col>
-          <el-col :span="7">
-            <el-row type="flex" justify="start">
-              <i v-if="!UserAgreement" class="el-icon-search" @click="OpenUserAgreement()" style="line-height: 39px; color: #409EFD; cursor: pointer"></i>
-              <i v-if="UserAgreement" class="el-icon-check" style="line-height: 39px; color: #409EFD"></i>
-              <el-button type="text" @click="OpenUserAgreement()" style="margin-left: 10px">用户协议</el-button>
-            </el-row>
-          </el-col>
-          <el-col :span="7">
-            <el-row type="flex" justify="start">
-              <i v-if="!PrivacyPolicy" class="el-icon-search" @click="OpenPrivacyPolicy()" style="line-height: 39px; color: #409EFD; cursor: pointer"></i>
-              <i v-if="PrivacyPolicy" class="el-icon-check" style="line-height: 39px; color: #409EFD"></i>
-              <el-button type="text" @click="OpenPrivacyPolicy()" style="margin-left: 10px">隐私政策</el-button>
-            </el-row>
-          </el-col>
-        </el-row>
-        <el-row style="margin: 20px 0px">
-          <el-button type="primary" @click="register()" :disabled="!UserAgreement || !PrivacyPolicy">注册新用户</el-button>
-        </el-row>
-      </el-col>
-      <el-col :span="12" style="padding-top: 12vh">
-        <img src="@/assets/login.png" width="350vh" height="350vh"/>
-      </el-col>
-    </el-row>
+          />
+        </el-form-item>
+
+        <div class="usr-float-bottom">
+          <div class="usr-txt">
+            <i class="el-icon-question"></i>已有帐号？<el-button @click="switchLogin" type="text">点此登录</el-button>
+          </div>
+          <div class="usr-txt">
+            <el-checkbox v-model="form.ackUserAgreement"/>
+            已完整阅读并同意 <el-button @click="()=>window.open('/Agreement', '_blank')" type="text" icon="el-icon-search">用户协议</el-button> 和 <el-button @click="()=>window.open('/privacyPolicy', '_blank')" type="text" icon="el-icon-search">隐私条款</el-button>
+          </div>
+          <el-button
+              :class="isRegistering ? 'usr-logging' : ''" :loading="isRegistering"
+              @click="register"
+              type="info"
+              class="usr-login usr-btn"
+          >注册</el-button>
+        </div>
+      </div>
+    </el-form>
   </el-dialog>
 </template>
 
 <script>
 import vueImgVerify from "@/common/components/vue-img-verify.vue";
-import axios from 'axios'
 import {commonAjax} from "@/common/utils/ajax";
-import {Message } from 'element-ui'
-import md5 from 'js-md5';
+import loginFormMixin from '@/layout/components/loginFormMixin';
+
 export default {
-  components: { vueImgVerify },
-  data(){
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
-      } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs[this.formName].validateField('checkPass');
-        }
-        callback();
-      }
-    };
-    var validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'));
-      } else if (value !== this.ruleForm.password) {
-        callback(new Error('两次输入密码不一致!'));
-      } else {
-        callback();
-      }
-    };
-    var validateImgCode =(rule,value,callback) =>{
-      if (value.toUpperCase() !== this.imgCodeOrigin.toUpperCase()) {
-        callback(new Error('图片验证码错误！'));
-      }else{
-        callback()
-      }
-    }
-    // var validatePhoneCode =(rule,value,callback) =>{
-    //   if (value !== this.phoneCodeOrigin) {
-    //     callback(new Error('手机验证码错误！'));
-    //   }else{
-    //     callback()
-    //   }
-    // }
-    var validateEmailCode =(rule,value,callback) =>{
-      console.log('md5', md5(value));
-      if (md5(value) !== this.emailCodeOrigin) {
-        callback(new Error('邮箱验证码错误！'));
-      }else{
-        callback()
-      }
-    }
-    var validateInviteCode =(rule,value,callback) =>{
-      if (value !== 'luna') {
-        callback(new Error('邀请码错误!'));
-      }else{
-        callback()
-      }
-    }
-    var validateGroupname =(rule,value,callback) =>{
-      if (this.ruleForm.type=='group' && !value) {
-        callback(new Error('请输入组织名称!'));
-      }else{
-        callback()
-      }
-    }
+  name: 'register',
+  components: {
+    vueImgVerify,
+  },
+  mixins: [loginFormMixin],
+  data() {
     return {
-      // 用户政策和隐私协议
-      UserAgreement: false,
-      PrivacyPolicy: false,
-      // UserAgreement: true,
-      // PrivacyPolicy: true,
-      // 对应的检测
-      UserAgreementTracer: "",
-      PrivacyPolicyTracer: "",
-      visible:false,
-      imgCodeOrigin:"",
-      phoneCodeOrigin:'',
-      emailCodeOrigin:'',
-      disabled:false,
-      phoneCode:"",
-      valiBtn:'获取验证码',
-      formName:'registerForm',
-      getPhoneCodeUrl:'https://send-message-service-166-production.env.bdaa.pro/v1',
-      ruleForm: {
+      isRegistering: false,
+      form: {
         username: '',
         password: '',
-        email: '',
+        checkPass: '',
+        mail: '',
+        mailCode: '',
+        verifyCode: '',
+        imgCode: '',
         phone: '',
-        inviteCode:'',
-        // username: 'yutingh',
-        // password: 'hyt123456',
-        // email: 'yutingh@mail.ustc.edu.cn',
-        // phone: '19916935265',
-        // inviteCode:'luna',
-        type:'user'
+        inviteCode: '',
+        ackUserAgreement: true,
+        groupName: '',
+        type: 'user', // `user` and `group`
       },
-      rules: {
-        username:[
-          { required: true, message: "请输入用户名", trigger: "blur" },
-        ],
-        password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { validator: validatePass, trigger: 'blur' }
-        ],
-        checkPass: [
-          { required: true, message: "请再次输入密码", trigger: "blur" },
-          { validator: validatePass2, trigger: ['blur', 'change'] }
-        ],
-        email: [
-          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] },
-        ],
-        phone: [
-          { required: true, message: "请输入手机号码", trigger: "blur" },
-          { min: 11, max: 11, message: "请输入11位手机号码", trigger: "blur" },
-          {
-            pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[01235678]|18[0-9]|19[89])\d{8}$/,
-            message: "请输入正确的手机号码"
+      formRules: {
+        username: [this.ruleGenerator('请输入用户名')],
+        mail: [this.ruleGenerator('请输入邮箱地址'), {
+          type: 'email',
+          trigger: ['blur', 'change'],
+          message: '请输入格式正确的邮箱地址'
+        },],
+        mailVerifyCode: [this.ruleGenerator('请输入邮箱验证码'), this.mailCodeValidator()],
+        password: [this.ruleGenerator('请输入密码')],
+        checkPass: [this.ruleGenerator('请输入之前输入的密码'), this.passValidator()],
+        phone: [this.ruleGenerator('请输入手机号码'), this.phoneValidator()],
+        verifyCode: [this.ruleGenerator('请输入图形验证码'), this.codeValidator()],
+        groupName: [{
+          validator: (rule, value, callback) => {
+            if (this.form.type === 'group' && !this.form.groupName) {
+              callback(new Error('请输入组织名称'));
+            }
+            callback();
           }
-        ],
-        inviteCode: [
-          { required: true, message: "请输入邀请码", trigger: "blur" },
-          { validator: validateInviteCode, trigger: ['blur'] }
-        ],
-        imgCode: [
-          { required: true, message: '请输入图形验证码', trigger: 'blur' },
-          { validator: validateImgCode, trigger: ['blur'] }
-        ],
-        emailCode:[
-          { required: true, message: '请输入邮箱验证码', trigger: 'blur' },
-          { validator: validateEmailCode, trigger: ['blur'] }
-          // { required: false, message: '请输入手机验证码', trigger: 'blur' },
-          // { validator: validatePhoneCode, trigger: ['blur'] }
-        ],
-        type:[
-          { required: true, message: '请选择用户类型', trigger: 'blur' },
-        ],
-        groupname:[
-          { validator: validateGroupname, trigger: ['blur'] }
-        ]
+        }],
+        inviteCode: [this.ruleGenerator('请输入邀请码'), {
+          validator: (rule, value, callback) => {
+            if (this.form.inviteCode !== 'luna') {
+              callback(new Error('邀请码错误'));
+            }
+            callback();
+          },
+          trigger: ['blur'],
+        }],
       }
-    }
+    };
   },
-  watch:{
-    visible(newVal){
-      if(!newVal){
-        this.$refs[this.formName].resetFields();
-      }
-      this.visible = newVal;
-    },
-    PrivacyPolicy(newVal){
-      if(newVal){
-        clearInterval(this.CheckPrivacyPolicy())
-      }
-    }
-  },
-  computed:{
-
-  },
-  beforeDestroy(){
-    window.localStorage.removeItem("UserAgreement");
-    window.localStorage.removeItem("PrivacyPolicy");
-  },
-  mounted(){
-    window.localStorage.removeItem("UserAgreement");
-    window.localStorage.removeItem("PrivacyPolicy");
-    // this.phoneCodeOrigin = this.getRandomCode(4)
-    // this.emailCodeOrigin = this.getRandomCode(6)
-  },
-  methods:{
-    // 用户协议
-    OpenUserAgreement(){
-      let routeData = this.$router.resolve({ path: '/Agreement' });
-      window.open(routeData.href, '_blank');
-      this.UserAgreementTracer = setInterval(this.CheckUserAgreement, 1000)
-    },
-    CheckUserAgreement(){
-      if(window.localStorage.getItem("UserAgreement")){
-        this.UserAgreement = true;
-        clearInterval(this.UserAgreementTracer)
-      }
-    },
-    // 隐私政策
-    OpenPrivacyPolicy(){
-      let routeData = this.$router.resolve({ path: '/privacyPolicy' });
-      window.open(routeData.href, '_blank');
-      this.PrivacyPolicyTracer = setInterval(this.CheckPrivacyPolicy, 1000)
-    },
-    CheckPrivacyPolicy(){
-      if(window.localStorage.getItem("PrivacyPolicy")){
-        this.PrivacyPolicy = true;
-        clearInterval(this.PrivacyPolicyTracer)
-      }
-    },
-    show(){
-      this.visible=true
+  methods: {
+    show() {
+      this.visible=true;
       setTimeout(()=>{
-        this.$refs.vueImgVerify.handleDraw();},
-      1)
+        try {
+          this.$refs.vueImgVerify.handleDraw();
+          this.$refs.username.focus();
+        } catch (e) {
+          return;
+        }
+          },
+  250);
+
+      if (!window.enterRegCallback) {
+        window.enterRegCallback = (e) => {
+          if (e.code === 'Enter') {
+            this.register();
+          }
+        }
+        document.addEventListener('keydown', window.enterRegCallback);
+      }
+    },
+    switchLogin() {
+      this.$emit('login_show');
+    },
+    async sendMailCode() {
+      let isError = false;
+      this.$refs.userRegister.validateField(['mail', 'verifyCode', 'inviteCode'], (err) => {
+          if (err !== '') {
+            isError = true;
+          }
+      });
+      if (isError) {
+        this.$message.error('请在完成验证码与邀请码，并检查格式后尝试发送邮箱验证码');
+        return;
+      }
+
+      this.tackCoolDown();
+      let data;
+      try {
+        data = await commonAjax(this.backendIP + '/api/send_email_code', {
+          'dest_email': this.form.mail,
+        });
+      } catch (e) {
+        this.$message.error('验证码发送失败，请稍后再试');
+      }
+      this.mailCodeValid.emailCodeOrigin = data.code;
+    },
+    toggleUser(type = 'user') {
+      this.form.type = type;
     },
     hide(){
-      this.visible=false
-    },
-    sendEmailCode(){
-      let validateList = [];
-      this.$refs[this.formName].validateField(['email','imgCode','inviteCode'], (err) =>{
-          validateList.push(err)
-      })
-      if (validateList.every((err) => err === '')) {
-        this.tackBtn();   //验证码倒数60秒
-        commonAjax(this.backendIP + "/api/send_email_code",{'dest_email':this.ruleForm.email}).then((data)=>{
-          this.emailCodeOrigin = data.code
-        }).catch((err)=>{
-          console.log(err);
-          Message({
-            message: '验证码发送失败！',
-            type: 'error',
-            duration: 5 * 1000
-          })
-        })
+      if (window.enterRegCallback) {
+        document.removeEventListener('keydown', window.enterRegCallback);
+        window.enterRegCallback = null;
       }
+      this.visible = false;
     },
-    getPhoneCode(){
-      let validateList = [];
-      this.$refs[this.formName].validateField(['phone','imgCode','inviteCode'], (err) =>{
-          validateList.push(err)
-      })
-      if (validateList.every((err) => err === '')) {
-        this.tackBtn();   //验证码倒数60秒
-        this.phoneCodeOrigin=this.getRandomCode(4)
-        let fd ={
-          'phoneNumber':['+86'+this.ruleForm.phone],
-          'code':[this.phoneCodeOrigin]
-        }
-        axios.post(this.getPhoneCodeUrl,
-          JSON.stringify(fd),
-        )
-        .then( res => {
-            if (res.status==200) {
-              console.log('发送成功');
+    async register() {
+      await this.$refs.userRegister.validate(valid => {
+        if (valid) {
+          if (!this.form.ackUserAgreement) {
+            this.$message.error('请先阅读并同意用户协议与隐私条款');
+            const fd = {
+              username: this.form.username,
+              password: this.form.password,
+              phone: this.form.phone,
+              email: this.form.mail,
+              type: this.form.type,
+              groupname: this.form.groupName,
+            };
+            let data;
+            try {
+              data = commonAjax(this.backendIP + "/api/register", fd);
+              this.$store.dispatch('user/setUserData', {
+                token: data.access_token,
+                name: this.form.username,
+              });
+              this.$router.go();
+              this.hide();
+            } catch (e) {
+              let msg = '注册失败，请稍后重试';
+              if (e.status === '403') {
+                msg = '用户名，手机号或邮箱已被注册';
+              } else if (e.status === '401') {
+                msg = '请检查是否有漏填写表带';
+              } else if (e.status === '402') {
+                msg = '请填写组织名称';
+              }
+              this.$message.error(msg);
             }
-        })
-      }
-    },
-    getRandomCode(count=6){
-      const arr=['0','1','2','3','4','5','6','7','8','9']
-      var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
-        while (i-- > min) {
-            index = Math.floor((i + 1) * Math.random());
-            temp = shuffled[index];
-            shuffled[index] = shuffled[i];
-            shuffled[i] = temp;
-        }
-        return shuffled.slice(min).join("")
-    },
-    tackBtn(){       //验证码倒数60秒
-      let time = 60;
-      let timer = setInterval(() => {
-          if(time == 0){
-              clearInterval(timer);
-              this.valiBtn = '获取验证码';
-              this.disabled = false;
-          }else{
-              this.disabled = true;
-              this.valiBtn = time + '秒后重试';
-              time--;
           }
-      }, 1000);
-    },
-    register() {
-      window.localStorage.removeItem("UserAgreement")
-      window.localStorage.removeItem("PrivacyPolicy")
-      this.$refs[this.formName].validate((valid) => {
-        if (!valid) {
-          return false;
         }
-        let fd={
-          username:this.ruleForm.username,
-          password:this.ruleForm.password,
-          phone:this.ruleForm.phone,
-          email:this.ruleForm.email,
-          type:this.ruleForm.type,
-          groupname:this.ruleForm.groupname,
-        }
-        commonAjax(this.backendIP + "/api/register",fd).then((data)=>{
-          console.log(data);
-          let userInfo={
-            token:data.access_token,
-            name:this.ruleForm.username,
-          }
-          this.$store.dispatch('user/setUserData', userInfo).then(() => {
-            this.$router.go()
-            this.visible = false;
-          })
-        }).catch((err)=>{
-          let msg = '注册失败'
-          if(err.status =='403'){
-              msg = '用户名、手机号或邮箱已被注册！'
-          }else if (err.status =='401') {
-              msg = '需填写用户名、密码、手机号、用户类型！'
-          }else if(err.status =='402'){
-              msg = '需填写组织名称！'
-          }
-          Message({
-            message: msg,
-            type: 'error',
-            duration: 5 * 1000
-          })
-        })
       });
-    },
-    getimgCodeOrigin(code){
-      this.imgCodeOrigin = code;
     },
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
+$card-max-width: 1000px;
+$form-gap: 18px;
+@import "form";
+
+.usr-form {
+  display: flex;
+
+  &-left, &-right {
+    position: relative;
+    flex: 1;
+  }
+
+  &-left {
+    margin-right: 16px;
+  }
+
+  &-right {
+    margin-left: 16px;
+  }
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    padding-bottom: 160px;
+    position: relative;
+
+    &-left, &-right {
+      margin-left: 0;
+      margin-right: 0;
+      position: static;
+    }
+  }
+}
+
+.usr-float-bottom {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
+.usr-txt {
+  font-size: 16px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+
+  >button {
+    font-size: 16px!important;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  ::v-deep .el-checkbox {
+    margin-right: 4px!important;
+  }
+
+  >i {
+    margin-right: 5px;
+  }
+}
+
+.usr-tooltip {
+  margin-left: 5px;
+}
 </style>

@@ -1,6 +1,6 @@
 <template>
-    <div 
-        style="min-height: 600px" 
+    <div
+        style="min-height: 600px"
         ref="PaperAnalyseInfo"
         v-loading="loading"
         element-loading-text="文档生成中，请等待..."
@@ -43,7 +43,7 @@
     <!-- QB即Question_Bundle，指题包 -->
     <el-dialog
         :visible.sync="Question_Bundle_Analyse"
-        :title="'第' + Get_Question_Bundle_Index(this.Question_Bundle_Index) + '大题分析'" 
+        :title="'第' + Get_Question_Bundle_Index(this.Question_Bundle_Index) + '大题分析'"
         width="80%"
         @close="Part_Expand_QB = [false, false];"
         :modal-append-to-body="false"
@@ -206,9 +206,9 @@
         <QuestionAnalyse :Ques="analyseData"></QuestionAnalyse>
     </el-dialog>
     <!-- 单题替换页面 -->
-    <el-dialog 
+    <el-dialog
         :visible.sync="Combine_Replace_Question"
-        title="试题替换" 
+        title="试题替换"
         width="1192px"
         v-loading="Question_Loading"
         element-loading-text="检索替换试题中，请等待..."
@@ -226,7 +226,7 @@
                     </el-input>
                 </el-row>
                 <el-row type="flex" justify="start">
-                    <el-tree 
+                    <el-tree
                         :data="TreeData"
                         check-strictly
                         node-key="id"
@@ -250,21 +250,21 @@
                             <label>难度：</label>
                         </el-row>
                     </el-col>
-                    <el-col 
-                        :span="3" 
+                    <el-col
+                        :span="3"
                         v-for="(Difficulty, Difficulty_Index) in Difficulty_List"
                         :key="'Question_Difficulty_' + Difficulty_Index">
                         <div
                             align="center"
-                            :class="filterButtonStyle('Question', 'Difficulty', Difficulty)" 
+                            :class="filterButtonStyle('Question', 'Difficulty', Difficulty)"
                             @click="difficulty_Change('Question', Difficulty)">
                             {{Difficulty}}
                         </div>
                     </el-col>
                 </el-row>
-                <el-row 
-                    type="flex" 
-                    justify="start" 
+                <el-row
+                    type="flex"
+                    justify="start"
                     v-show="filterKPTree_Question.Difficulty == '自定义'"
                     style="margin-bottom: 15px; height: 30px; line-height: 30px;">
                     <el-col :span="6" style="margin-top: 5px;">
@@ -294,13 +294,13 @@
                             <label>题库：</label>
                         </el-row>
                     </el-col>
-                    <el-col 
-                        :span="3" 
+                    <el-col
+                        :span="3"
                         v-for="(Database, Database_Index) in Database_List"
                         :key="'Question_Database_' + Database_Index">
                         <div
                             align="center"
-                            :class="filterButtonStyle('Question', 'Database', Database.name)" 
+                            :class="filterButtonStyle('Question', 'Database', Database.name)"
                             @click="database_Change('Question', Database.name)">
                             {{Database.nick || Database.name}}
                         </div>
@@ -308,34 +308,34 @@
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-bottom: 10px">
                     <label>已选择的知识点：</label>
-                    <el-button 
-                        type="text" 
+                    <el-button
+                        type="text"
                         v-if="Combine_Replace_Question_Info.knowledgePointInfos.Label.length > 30"
                         @click="filterKPTree_Question.Expand = !filterKPTree_Question.Expand">
                         {{filterKPTree_Question.Expand ? "收起过多" : "展开全部"}}知识点</el-button>
                 </el-row>
-                <el-row 
-                    type="flex" 
-                    justify="center" 
-                    v-for="KP_Row_Index in 
-                        (Math.ceil(Combine_Replace_Question_Info.knowledgePointInfos.Label.length/6) <= 5 ? 
-                        Math.ceil(Combine_Replace_Question_Info.knowledgePointInfos.Label.length/6) : 
-                        filterKPTree_Question.Expand ? 
-                            Math.ceil(Combine_Replace_Question_Info.knowledgePointInfos.Label.length/6) : 
+                <el-row
+                    type="flex"
+                    justify="center"
+                    v-for="KP_Row_Index in
+                        (Math.ceil(Combine_Replace_Question_Info.knowledgePointInfos.Label.length/6) <= 5 ?
+                        Math.ceil(Combine_Replace_Question_Info.knowledgePointInfos.Label.length/6) :
+                        filterKPTree_Question.Expand ?
+                            Math.ceil(Combine_Replace_Question_Info.knowledgePointInfos.Label.length/6) :
                             5)"
                     :key="'Replacing_Question_KP_Row_' + KP_Row_Index"
                     style="margin-bottom: 10px;">
-                    <el-col 
-                        :span="4" 
-                        v-for="Col_Index in 6" 
+                    <el-col
+                        :span="4"
+                        v-for="Col_Index in 6"
                         :key="'Replacing_Question_KP_Row_' + KP_Row_Index + '_Col_' + Col_Index">
-                        <el-tooltip 
+                        <el-tooltip
                             v-if="(KP_Row_Index - 1) * 6 + Col_Index - 1 < Combine_Replace_Question_Info.knowledgePointInfos.Label.length"
-                            effect="dark" 
-                            :content="Combine_Replace_Question_Info.knowledgePointInfos.Label[(KP_Row_Index - 1) * 6 + Col_Index - 1] 
+                            effect="dark"
+                            :content="Combine_Replace_Question_Info.knowledgePointInfos.Label[(KP_Row_Index - 1) * 6 + Col_Index - 1]
                             + ' - ' + (Combine_Replace_Question_Info.knowledgePointInfos.Layer[(KP_Row_Index - 1) * 6 + Col_Index - 1] + 1) + '级知识点'"
                             placement="top">
-                            <div 
+                            <div
                                 align="center"
                                 class="KU_Button"
                                 :style="Get_Different_Level_Color(Combine_Replace_Question_Info.knowledgePointInfos.Layer[(KP_Row_Index - 1) * 6 + Col_Index - 1])"
@@ -344,10 +344,10 @@
                                 <i class="el-icon-delete" style="margin-left: 10px; font-size: 20px"></i>
                             </div>
                         </el-tooltip>
-                        <div 
-                            v-else 
+                        <div
+                            v-else
                             style="width: 100%; height: 30px; line-height: 30px">
-                            
+
                         </div>
                     </el-col>
                 </el-row>
@@ -368,7 +368,7 @@
             <Mathdown style="width:700px" :content="Option" :name="'Replacing_Option_' + Option_Index"></Mathdown>
         </el-row>
         <el-divider v-if="Replace_Question_List.length > 0"></el-divider>
-        <el-row 
+        <el-row
             class="Replace_Question_Aim"
             v-for="(Question, Question_Index) in Replace_Question_List"
             :key="'Replacing_Question_Aim_' + Question_Index"
@@ -388,9 +388,9 @@
         </el-row>
     </el-dialog>
     <!-- 题包替换页面 -->
-    <el-dialog 
+    <el-dialog
         :visible.sync="Combine_Replace_Bundle"
-        title="题包替换" 
+        title="题包替换"
         width="1192px"
         v-loading="Bundle_Loading"
         element-loading-text="检索替换题包中，请等待..."
@@ -408,7 +408,7 @@
                     </el-input>
                 </el-row>
                 <el-row type="flex" justify="start">
-                    <el-tree 
+                    <el-tree
                         :data="TreeData"
                         check-strictly
                         node-key="id"
@@ -432,21 +432,21 @@
                             <label>难度：</label>
                         </el-row>
                     </el-col>
-                    <el-col 
-                        :span="3" 
+                    <el-col
+                        :span="3"
                         v-for="(Difficulty, Difficulty_Index) in Difficulty_List"
                         :key="'Bundle_Difficulty_' + Difficulty_Index">
                         <div
                             align="center"
-                            :class="filterButtonStyle('Bundle', 'Difficulty', Difficulty)" 
+                            :class="filterButtonStyle('Bundle', 'Difficulty', Difficulty)"
                             @click="difficulty_Change('Bundle', Difficulty)">
                             {{Difficulty}}
                         </div>
                     </el-col>
                 </el-row>
-                <el-row 
-                    type="flex" 
-                    justify="start" 
+                <el-row
+                    type="flex"
+                    justify="start"
                     v-show="filterKPTree_Bundle.Difficulty == '自定义'"
                     style="margin-bottom: 15px; height: 30px; line-height: 30px;">
                     <el-col :span="6" style="margin-top: 5px;">
@@ -476,13 +476,13 @@
                             <label>题库：</label>
                         </el-row>
                     </el-col>
-                    <el-col 
-                        :span="3" 
+                    <el-col
+                        :span="3"
                         v-for="(Database, Database_Index) in Database_List"
                         :key="'Bundle_Database_' + Database_Index">
                         <div
                             align="center"
-                            :class="filterButtonStyle('Bundle', 'Database', Database.name)" 
+                            :class="filterButtonStyle('Bundle', 'Database', Database.name)"
                             @click="database_Change('Bundle', Database.name)">
                             {{Database.nick || Database.name}}
                         </div>
@@ -490,34 +490,34 @@
                 </el-row>
                 <el-row type="flex" justify="start" style="margin-bottom: 10px">
                     <label>已选择的知识点：</label>
-                    <el-button 
-                        type="text" 
+                    <el-button
+                        type="text"
                         v-if="Combine_Replace_Bundle_Info.knowledgePointInfos.Label.length > 30"
                         @click="filterKPTree_Bundle.Expand = !filterKPTree_Bundle.Expand">
                         {{filterKPTree_Bundle.Expand ? "收起过多" : "展开全部"}}知识点</el-button>
                 </el-row>
-                <el-row 
-                    type="flex" 
+                <el-row
+                    type="flex"
                     justify="center"
-                    v-for="KP_Row_Index in 
-                        (Math.ceil(Combine_Replace_Bundle_Info.knowledgePointInfos.Label.length/6) <= 5 ? 
-                        Math.ceil(Combine_Replace_Bundle_Info.knowledgePointInfos.Label.length/6) : 
-                        filterKPTree_Bundle.Expand ? 
-                            Math.ceil(Combine_Replace_Bundle_Info.knowledgePointInfos.Label.length/6) : 
+                    v-for="KP_Row_Index in
+                        (Math.ceil(Combine_Replace_Bundle_Info.knowledgePointInfos.Label.length/6) <= 5 ?
+                        Math.ceil(Combine_Replace_Bundle_Info.knowledgePointInfos.Label.length/6) :
+                        filterKPTree_Bundle.Expand ?
+                            Math.ceil(Combine_Replace_Bundle_Info.knowledgePointInfos.Label.length/6) :
                             5)"
                     :key="'Replacing_Bundle_KP_Row_' + KP_Row_Index"
                     style="margin-bottom: 10px;">
-                    <el-col 
-                        :span="4" 
-                        v-for="Col_Index in 6" 
+                    <el-col
+                        :span="4"
+                        v-for="Col_Index in 6"
                         :key="'Replacing_Bundle_KP_Row_' + KP_Row_Index + '_Col_' + Col_Index">
-                        <el-tooltip 
+                        <el-tooltip
                             v-if="(KP_Row_Index - 1) * 6 + Col_Index - 1 < Combine_Replace_Bundle_Info.knowledgePointInfos.Label.length"
-                            effect="dark" 
-                            :content="Combine_Replace_Bundle_Info.knowledgePointInfos.Label[(KP_Row_Index - 1) * 6 + Col_Index - 1] 
+                            effect="dark"
+                            :content="Combine_Replace_Bundle_Info.knowledgePointInfos.Label[(KP_Row_Index - 1) * 6 + Col_Index - 1]
                             + ' - ' + (Combine_Replace_Bundle_Info.knowledgePointInfos.Layer[(KP_Row_Index - 1) * 6 + Col_Index - 1] + 1) + '级知识点'"
                             placement="top">
-                            <div 
+                            <div
                                 align="center"
                                 class="KU_Button"
                                 :style="Get_Different_Level_Color(Combine_Replace_Bundle_Info.knowledgePointInfos.Layer[(KP_Row_Index - 1) * 6 + Col_Index - 1])"
@@ -526,10 +526,10 @@
                                 <i class="el-icon-delete" style="margin-left: 10px; font-size: 20px"></i>
                             </div>
                         </el-tooltip>
-                        <div 
-                            v-else 
+                        <div
+                            v-else
                             style="width: 100%; height: 30px; line-height: 30px">
-                            
+
                         </div>
                     </el-col>
                 </el-row>
@@ -539,7 +539,7 @@
             <el-button @click="Search_Replace_Bundle()" type="primary">根据当前条件检索替换用题目</el-button>
         </el-row>
         <el-divider></el-divider>
-        <el-row 
+        <el-row
             class="Replace_Question_Aim"
             v-for="(Question, Question_Index) in Replace_Bundle_List.sub_question"
             :key="'Replacing_Bundle_Aim_' + Question_Index"
@@ -558,9 +558,9 @@
                 </el-row>
             </el-col>
         </el-row>
-        <el-row 
-            type="flex" 
-            justify="center" 
+        <el-row
+            type="flex"
+            justify="center"
             style="margin-top: 10px"
             v-if="Replace_Bundle_List_All.length > 0">
             <el-button type="primary" @click="Replace_Bundle_With_It()">用这组题替换</el-button>
@@ -578,13 +578,13 @@
         </el-row>
     </el-dialog>
     <!-- 替换前后对比页面 -->
-    <el-dialog 
+    <el-dialog
         :visible.sync="Combine_Replace_Compare"
-        title="当前替换状况对比" 
+        title="当前替换状况对比"
         width="1192px"
         :modal-append-to-body="false"
         :close-on-click-modal="true">
-        <el-row 
+        <el-row
             v-for="(Bundle, Bundle_Index) in Update_Combine_Paper"
             :key="'Replacing_Result_Bundle_' + Bundle_Index"
             style="margin-bottom: 25px">
@@ -593,24 +593,24 @@
                     <label style="margin-right: 30px">第{{Bundle_Index + 1}}大题：{{Bundle.type}} —— 当前状态：{{Bundle_Updated_Check(Bundle)}}</label>
                     <el-button type="text" :disabled="Bundle_Updated_Check(Bundle) == '暂无被替换的题目'" style="margin-top: -10px" @click="Reset_To_Origin(Bundle_Index)">将此题包重置为原题包</el-button>
                 </el-row>
-                <el-row 
+                <el-row
                     v-for="(Question, Question_Index) in Bundle.sub_question"
                     :key="'Replacing_Result_Bundle_' + Bundle_Index + '_Question_' + Question_Index"
                     style="margin-bottom: 10px;">
                     <el-col>
-                        <div 
+                        <div
                             class="Before_Replace_Question"
                             v-if="Question.update">
-                            <el-row 
-                                type="flex" 
+                            <el-row
+                                type="flex"
                                 justify="start">
-                                <Mathdown 
-                                    :content="Backup_Combine_Paper[Bundle_Index].sub_question[Question_Index].stem" 
+                                <Mathdown
+                                    :content="Backup_Combine_Paper[Bundle_Index].sub_question[Question_Index].stem"
                                     :name="'Replacing_Results_Backup_' + Bundle_Index + '_' + Question_Index"></Mathdown>
                             </el-row>
                             <el-row
-                                v-for="(Option, Option_Index) in Backup_Combine_Paper[Bundle_Index].sub_question[Question_Index].options" 
-                                :key="'Backup_' + Bundle_Index + '_Option_'+ Option_Index + '_Of_' + Question_Index" 
+                                v-for="(Option, Option_Index) in Backup_Combine_Paper[Bundle_Index].sub_question[Question_Index].options"
+                                :key="'Backup_' + Bundle_Index + '_Option_'+ Option_Index + '_Of_' + Question_Index"
                                 style="line-height: 40px" type="flex" justify="start">
                                 <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
                                 <Mathdown style="width:700px" :content="Option" :name="'Backup_' + Bundle_Index + '_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
@@ -619,23 +619,23 @@
                         <el-row v-if="Question.update" type="flex" justify="center">
                             <i class="el-icon-arrow-down" style="font-size: 30px; opacity: 0.7; color: #409EFF; margin: 10px; font-weight: bold; margin-right: 30px"></i>
                             <el-tooltip content="还原为初始题目" placement="right">
-                                <i 
-                                    class="el-icon-delete" 
+                                <i
+                                    class="el-icon-delete"
                                     @click="Reset_To_Origin(Bundle_Index, Question_Index)"
                                     style="font-size: 30px; opacity: 0.7; color: #409EFF; margin: 10px; font-weight: bold; cursor: pointer"></i>
                             </el-tooltip>
                         </el-row>
                         <div :class="Question.update ? 'After_Replace_Question': 'None_Replace_Question'">
                             <el-row
-                                type="flex" 
+                                type="flex"
                                 justify="start">
-                                <Mathdown 
-                                    :content="Question.stem" 
+                                <Mathdown
+                                    :content="Question.stem"
                                     :name="'Replacing_Results_Update_' + Bundle_Index + '_' + Question_Index"></Mathdown>
                             </el-row>
                             <el-row
-                                v-for="(Option, Option_Index) in Question.options" 
-                                :key="'Update_' + Bundle_Index + '_Option_'+ Option_Index + '_Of_' + Question_Index" 
+                                v-for="(Option, Option_Index) in Question.options"
+                                :key="'Update_' + Bundle_Index + '_Option_'+ Option_Index + '_Of_' + Question_Index"
                                 style="line-height: 40px" type="flex" justify="start">
                                 <span style="line-height: 40px">{{Get_Option_Label(Option_Index)}}：</span>
                                 <Mathdown style="width:700px" :content="Option" :name="'Update_' + Bundle_Index + '_' + Question_Index + '_Option_' + Option_Index"></Mathdown>
@@ -702,7 +702,7 @@
                 <el-col :span="5">{{Reduce_Length(Paper_Json.difficulty_statistics.min)}}</el-col>
             </el-row>
             <!-- 第二项 -->
-            <el-row 
+            <el-row
                 v-if="Paper_Json.discrimination_statistics != ''"
                 style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; padding-bottom: 5px; border-bottom: 1px solid silver;">
                 <el-col :span="4">区分度</el-col>
@@ -713,7 +713,7 @@
             </el-row>
             <!-- 第三项 -->
             <el-row
-                v-if="Paper_Json.reliability_statistics != ''" 
+                v-if="Paper_Json.reliability_statistics != ''"
                 style="width: 67vw; margin-left: 16.5vw; margin-top: 5px; margin-bottom: 5vh; padding-bottom: 5px; border-bottom: 1px solid silver">
                 <el-col :span="4">信度</el-col>
                 <el-col :span="5">{{Reduce_Length(Paper_Json.reliability_statistics.mean)}}</el-col>
@@ -866,8 +866,8 @@
                 </el-row>
             </el-row>
             <!-- 双向细目表分析 -->
-            <el-row 
-                :class="Paper_Total_Analyse_Hidden(2)" 
+            <el-row
+                :class="Paper_Total_Analyse_Hidden(2)"
                 style="margin-bottom: 30px"
                 v-loading="Question_Analysing"
                 element-loading-text="正在加载分析报告..."
@@ -1029,9 +1029,9 @@
                     </el-col>
                     <el-col :span="12">
                         <el-row type="flex" justify="end">
-                            <el-button 
-                                type="primary" 
-                                size="small" 
+                            <el-button
+                                type="primary"
+                                size="small"
                                 style="margin-right: 30px;"
                                 v-show="Combine_Paper_Changing"
                                 @click="Get_Replace_Bundle(Sub_Index)">
@@ -1044,10 +1044,10 @@
                     </el-col>
                 </el-row>
                 <el-row type="flex" justify="start" style="margin: 0px 16.5vw 10px 16.5vw">
-                    <PaperAnalysePQRoot 
-                        @Report="Question_Report_Show" 
-                        :PackedQues="Sub_Ques" 
-                        :Index="Sub_Index" 
+                    <PaperAnalysePQRoot
+                        @Report="Question_Report_Show"
+                        :PackedQues="Sub_Ques"
+                        :Index="Sub_Index"
                         :Combine_Update_Bundle_Index="Combine_Paper_Changing ? Sub_Index : -1"
                         @Replace_Aim="Get_Replace_Aim"
                         style="width: 100%"></PaperAnalysePQRoot>
@@ -1059,16 +1059,16 @@
         </el-row>
     </div>
     <el-row type="flex" justify="center" style="margin-bottom: 50px">
-        <el-button 
-            type="success" 
-            plain 
-            @click="Report_Download()" 
+        <el-button
+            type="success"
+            plain
+            @click="Report_Download()"
             :disabled="Remaining > 0">
             下载分析报告
             <span v-if="Remaining > 0"> - {{Remaining}} 秒</span>
         </el-button>
         <el-button type="success" plain @click="PaperAnalyseSwitch()">分析其他试卷</el-button>
-    </el-row>  
+    </el-row>
     </div>
 </template>
 <script>
@@ -1476,7 +1476,7 @@ export default {
             let RA = this.Replace_Position;
 
             // this.Combine_Replace_Bundle_Info.difficulty = ['全部', '自定义'].indexOf(this.filterKPTree_Bundle.Difficulty) != -1 ?
-            //     this.Difficulty_List.indexOf(this.filterKPTree_Bundle.Difficulty) * 0.2 - 0.1 : this.filterKPTree_Bundle.Difficulty == '全部' ? 
+            //     this.Difficulty_List.indexOf(this.filterKPTree_Bundle.Difficulty) * 0.2 - 0.1 : this.filterKPTree_Bundle.Difficulty == '全部' ?
             //         this.Combine_Replace_Bundle_Info.difficulty : (this.filterKPTree_Bundle.Difficulty_Range[0] + this.filterKPTree_Bundle.Difficulty_Range[1])/2;
 
             // this.Combine_Replace_Bundle_Info.update = true;
@@ -1510,7 +1510,7 @@ export default {
                         return this.TreeData[Layer_0].children[Layer_1].id
                     }
                     for(let Layer_2 = 0; Layer_2 < this.TreeData[Layer_0].children[Layer_1].children.length; Layer_2++){
-                        if(Label == this.TreeData[Layer_0].children[Layer_1].children[Layer_2].label && 
+                        if(Label == this.TreeData[Layer_0].children[Layer_1].children[Layer_2].label &&
                             Layer == this.TreeData[Layer_0].children[Layer_1].children[Layer_2].level){
                                 return this.TreeData[Layer_0].children[Layer_1].children[Layer_2].id
                         }
@@ -1526,7 +1526,7 @@ export default {
             this.Jump_To_Top('Replacing_Bundle_Aim_0')
         },
         Search_Replace_Bundle(){
-            
+
             this.Bundle_Loading = true;
 
             let Param = {}
@@ -1658,7 +1658,7 @@ export default {
             .then((data)=>{
                 this.Replace_Question_List = data.results
                 this.Question_Loading = false;
-                
+
             }).catch(() => {
                 this.$message.error("服务器过忙，请稍后再试。")
                 this.Question_Loading = false;
@@ -1915,7 +1915,7 @@ export default {
             this.Replace_Position = Replace_Info.Bundle_Index + " " + Replace_Info.Question_Index
             let Difficulty_Gap = [0, 0.2, 0.4, 0.6, 0.8, 1]
             for(let i = 0; i < 5; i++){
-                if( this.Combine_Replace_Question_Info.difficulty > Difficulty_Gap[i] && 
+                if( this.Combine_Replace_Question_Info.difficulty > Difficulty_Gap[i] &&
                     this.Combine_Replace_Question_Info.difficulty <= Difficulty_Gap[i + 1]){
                         this.filterKPTree_Question.Difficulty = this.Difficulty_List[i+1]
                         break;
@@ -1934,7 +1934,7 @@ export default {
             this.Replace_Position = Index
             let Difficulty_Gap = [0, 0.2, 0.4, 0.6, 0.8, 1]
             for(let i = 0; i < 5; i++){
-                if( this.Combine_Replace_Bundle_Info.difficulty > Difficulty_Gap[i] && 
+                if( this.Combine_Replace_Bundle_Info.difficulty > Difficulty_Gap[i] &&
                     this.Combine_Replace_Bundle_Info.difficulty <= Difficulty_Gap[i + 1]){
                         this.filterKPTree_Bundle.Difficulty = this.Difficulty_List[i+1]
                         break;
@@ -2121,7 +2121,7 @@ export default {
             // // this.PDF_Download("Paper_Similarity");
             // // this.PDF_Download("Paper_Detail");
             // this.PDF_Download("PaperAnalyseInfo");
-            
+
         },
         // 下载PDF格式的分析报告
         PDF_Download(part){
@@ -2170,7 +2170,7 @@ export default {
                         return
                     }
                 )
-            }, 1)     
+            }, 1)
         },
         // 处理对话框内应当显示的内容
         Change_Dialog_Info(Sub_Index, Dialog_Label)
@@ -2212,7 +2212,7 @@ export default {
                 this.QB_KnowledgePair_Name_List.push(Temp_Pair_Max_Name_2)
                 this.QB_KnowledgePair_List.push(Temp_Pair_Max_Count_2)
             }
-            
+
             this.Question_Bundle_Analyse = true;
 
             setTimeout(() => {
@@ -2289,7 +2289,7 @@ export default {
             }else if(this.KnowledgePair_Name_List.length == 2){
                 return "，其次为 " + this.KnowledgePair_Name_List[1].replace(/::/, " 和 ") + "。"
             }else if(this.KnowledgePair_Name_List.length > 2){
-                return "，其次为 " + this.KnowledgePair_Name_List[1].replace(/::/, " 和 ") 
+                return "，其次为 " + this.KnowledgePair_Name_List[1].replace(/::/, " 和 ")
                     + " 与 " + this.KnowledgePair_Name_List[2].replace(/::/, " 和 ") + "。"
             }
         },
@@ -2304,7 +2304,7 @@ export default {
             }else if(this.QB_KnowledgePair_Name_List.length == 2){
                 return "，其次为 " + this.QB_KnowledgePair_Name_List[1].replace(/::/, " 和 ") + "。"
             }else if(this.QB_KnowledgePair_Name_List.length > 2){
-                return "，其次为 " + this.QB_KnowledgePair_Name_List[1].replace(/::/, " 和 ") 
+                return "，其次为 " + this.QB_KnowledgePair_Name_List[1].replace(/::/, " 和 ")
                     + " 与 " + this.QB_KnowledgePair_Name_List[2].replace(/::/, " 和 ") + "。"
             }
         },
@@ -2461,7 +2461,7 @@ export default {
                     text: "各大题指标变化趋势",
                     x: "center",
                     y: "top",
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
@@ -2477,7 +2477,7 @@ export default {
                             show: true
                         }
                     },
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 14,
                         fontStyle: 'normal',
                         align: 'left'
@@ -2490,7 +2490,7 @@ export default {
                     x: "right",
                     y: "top",
                     padding: [5,30,40,5],
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 14,
                         fontStyle: 'normal',
                     },
@@ -2526,8 +2526,8 @@ export default {
                         }
                     },
                     nameTextStyle:{
-                        color:"black", 
-                        fontSize:14,  
+                        color:"black",
+                        fontSize:14,
                         padding:[30, 35, 15, 10]
                     }
                 }
@@ -2584,7 +2584,7 @@ export default {
                     text: "大题指标变化趋势",
                     x: "center",
                     y: "top",
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
@@ -2600,7 +2600,7 @@ export default {
                             show: true
                         }
                     },
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 14,
                         fontStyle: 'normal',
                         align: 'left'
@@ -2613,7 +2613,7 @@ export default {
                     x: "right",
                     y: "top",
                     padding: [5,30,40,5],
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 14,
                         fontStyle: 'normal',
                     },
@@ -2649,8 +2649,8 @@ export default {
                         }
                     },
                     nameTextStyle:{
-                        color:"black", 
-                        fontSize:14,  
+                        color:"black",
+                        fontSize:14,
                         padding:[30, 35, 15, 10]
                     }
                 }
@@ -2712,7 +2712,7 @@ export default {
                     text: "各难度区间分值图",
                     x: "center",
                     y: "top",
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
@@ -2724,7 +2724,7 @@ export default {
                         name: '难度区间',
                         type: 'pie',
                         radius: ['40%', '80%'],
-                        center: ["50%", "55%"], 
+                        center: ["50%", "55%"],
                         avoidLabelOverlap: false,
                         label: {
                             show: false,
@@ -2756,7 +2756,7 @@ export default {
                 }
                 option.series[0].data.push(
                     {
-                        value: this.Paper_Json.difficulty_area_score[i], 
+                        value: this.Paper_Json.difficulty_area_score[i],
                         name: "0." + i + "-" + name_End
                     }
                 )
@@ -2764,7 +2764,7 @@ export default {
 
             myChart.setOption(option);
             window.addEventListener('resize',function() {myChart.resize()});
-            
+
             setTimeout(() => {
                 this.Chart_Base_Dict.Difficulty.Diff_Gap = myChart.getDataURL();
             }
@@ -2782,7 +2782,7 @@ export default {
                     text: "卷内难度波动",
                     x: "center",
                     y: "top",
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
@@ -2791,7 +2791,7 @@ export default {
                 },
                 tooltip: {
                     trigger: 'axis',
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 14,
                         fontStyle: 'normal',
                         align: 'left'
@@ -2827,7 +2827,7 @@ export default {
             myChart.setOption(option);
             window.addEventListener('resize',function() {myChart.resize()});
 
-            
+
             setTimeout(() => {
                 this.Chart_Base_Dict.Difficulty.Diff_Wave = myChart.getDataURL();
             }
@@ -2850,7 +2850,7 @@ export default {
                     text: "知识点平均难度",
                     x: "center",
                     y: "top",
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
@@ -2866,7 +2866,7 @@ export default {
                             show: true
                         }
                     },
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 14,
                         fontStyle: 'normal',
                         align: 'left'
@@ -2879,7 +2879,7 @@ export default {
                     x: "right",
                     y: "top",
                     padding: [5,30,40,5],
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 14,
                         fontStyle: 'normal',
                     },
@@ -2915,8 +2915,8 @@ export default {
                             }
                         },
                         nameTextStyle:{
-                            color:"black", 
-                            fontSize:14,  
+                            color:"black",
+                            fontSize:14,
                             padding:[30, 35, 15, 10]
                         }
                     }
@@ -2941,7 +2941,7 @@ export default {
             //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
             window.addEventListener('resize',function() {myChart.resize()});
 
-            
+
             setTimeout(() => {
                 this.Chart_Base_Dict.KU.Average_Diff = myChart.getDataURL();
             }
@@ -2969,7 +2969,7 @@ export default {
                     text: "各知识点平均分值图",
                     x: "center",
                     y: "top",
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
@@ -2981,7 +2981,7 @@ export default {
                         name: '分值与比例',
                         type: 'pie',
                         radius: ['30%', '65%'],
-                        center: ["50%", "55%"], 
+                        center: ["50%", "55%"],
                         avoidLabelOverlap: false,
                         label: {
                             show: true,
@@ -3012,7 +3012,7 @@ export default {
             for(var i = 0; i < this.KnowledgeScore_Name_List.length; i++){
                 option.series[0].data.push(
                     {
-                        value: this.KnowledgeScore_List[i], 
+                        value: this.KnowledgeScore_List[i],
                         name: this.KnowledgeScore_Name_List[i]
                     }
                 )
@@ -3042,7 +3042,7 @@ export default {
                     text: "知识点对共现关系图",
                     x: "center",
                     y: "top",
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
@@ -3061,7 +3061,7 @@ export default {
                     x: "right",
                     y: "top",
                     padding: [5,30,70,5],
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 14,
                         fontStyle: 'normal',
                     },
@@ -3133,7 +3133,7 @@ export default {
             //建议加上以下这一行代码，不加的效果图如下（当浏览器窗口缩小的时候）。超过了div的界限（红色边框）
             window.addEventListener('resize',function() {myChart.resize()});
 
-            
+
             setTimeout(() => {
                 this.Chart_Base_Dict.KU.KU_Pair = myChart.getDataURL()
             }
@@ -3156,7 +3156,7 @@ export default {
                     text: "知识点平均难度",
                     x: "center",
                     y: "top",
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
@@ -3172,7 +3172,7 @@ export default {
                             show: true
                         }
                     },
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 14,
                         fontStyle: 'normal',
                         align: 'left'
@@ -3185,7 +3185,7 @@ export default {
                     x: "right",
                     y: "top",
                     padding: [5,30,40,5],
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 14,
                         fontStyle: 'normal',
                     },
@@ -3221,8 +3221,8 @@ export default {
                             }
                         },
                         nameTextStyle:{
-                            color:"black", 
-                            fontSize:14,  
+                            color:"black",
+                            fontSize:14,
                             padding:[30, 35, 15, 10]
                         }
                     }
@@ -3269,7 +3269,7 @@ export default {
                     text: "各知识点平均分值图",
                     x: "center",
                     y: "top",
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
@@ -3281,7 +3281,7 @@ export default {
                         name: '分值与比例',
                         type: 'pie',
                         radius: ['30%', '65%'],
-                        center: ["50%", "55%"], 
+                        center: ["50%", "55%"],
                         avoidLabelOverlap: false,
                         label: {
                             show: true,
@@ -3312,7 +3312,7 @@ export default {
             for(var i = 0; i < this.QB_KnowledgeScore_Name_List.length; i++){
                 option.series[0].data.push(
                     {
-                        value: this.QB_KnowledgeScore_List[i], 
+                        value: this.QB_KnowledgeScore_List[i],
                         name: this.QB_KnowledgeScore_Name_List[i]
                     }
                 )
@@ -3338,7 +3338,7 @@ export default {
                     text: "知识点对共现关系图",
                     x: "center",
                     y: "top",
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
@@ -3357,7 +3357,7 @@ export default {
                     x: "right",
                     y: "top",
                     padding: [5,30,70,5],
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 14,
                         fontStyle: 'normal',
                     },
@@ -3446,7 +3446,7 @@ export default {
                     text: "各题型所占数量与比例",
                     x: "center",
                     y: "top",
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
@@ -3535,12 +3535,12 @@ export default {
             }
 
             let Liberal_Option_1 = {
-            
+
                 title: {
                     text: "一级知识点覆盖状态图",
                     x: "left",
                     y: "top",
-                    textStyle: { 
+                    textStyle: {
                         fontSize: 16,
                         fontStyle: 'normal',
                         fontWeight: 'bold',
@@ -3580,7 +3580,7 @@ export default {
                 this.Chart_Base_Dict.KU.Cover = Line_Chart_1.getDataURL();
             }
             , 4000)
-            
+
         },
         // 覆盖率的计算
         Get_Cover_Ratio(){
@@ -3600,9 +3600,9 @@ export default {
 
             // let Pos = R.indexOf(".");
             // R = R.substring(0, Pos + 3) + "%";
-            let R = parseInt(Have_List.length * 100 / Check_List.length)+ "%"
+            const pct = Have_List.length * 100 / Check_List.length;
 
-            return R
+            return `${pct < 100 ? pct : 100}%`;
         },
         // 初始化数据的方法，不要动，放到最下面就得了
         // 千把来行着实太长了，展开了翻起来都费劲
@@ -3741,9 +3741,9 @@ export default {
 }
 // 调整区块显示条
 .Part_Row_Style_Collapse{
-    border-left: 15px solid #409EFD; 
-    background: 	#F8FBFF; 
-    width: 70%; 
+    border-left: 15px solid #409EFD;
+    background: 	#F8FBFF;
+    width: 70%;
     margin: 5px 15% 20px 15%;
     padding-left: 30px;
     font-size: 1.5rem;
@@ -3753,9 +3753,9 @@ export default {
     cursor: pointer;
 }
 .Part_Row_Style_Expand{
-    border-left: 15px solid #409EFD; 
-    background: 	white; 
-    width: 70%; 
+    border-left: 15px solid #409EFD;
+    background: 	white;
+    width: 70%;
     margin: 5px 15% 20px 15%;
     padding-left: 30px;
     font-size: 1.5rem;
@@ -3766,53 +3766,53 @@ export default {
 }
 // 调整试卷总体条形图外框
 .Paper_Total_Bar{
-    border-radius: 10px; 
-    width: 67vw; 
-    height:300px; 
-    padding-top: 20px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
+    border-radius: 10px;
+    width: 67vw;
+    height:300px;
+    padding-top: 20px;
+    margin-left: calc(100vw * 0.165);
+    border: 3px solid #EEF5FE;
     margin-bottom: 40px;
 }
 // 调整大题总体条形图外框
 .QB_Total_Bar{
-    border-radius: 10px; 
+    border-radius: 10px;
     width: calc(100vw * 0.67 * 0.8);
-    height:300px; 
-    padding-top: 20px; 
-    margin-left: calc(100vw * 0.14 * 0.8); 
-    border: 3px solid #EEF5FE; 
+    height:300px;
+    padding-top: 20px;
+    margin-left: calc(100vw * 0.14 * 0.8);
+    border: 3px solid #EEF5FE;
     margin-bottom: 20px;
 }
 .Total_Type_Pie_Chart{
-    border-radius: 10px; 
-    width: 67vw; 
-    height:300px; 
-    padding-top: 20px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
+    border-radius: 10px;
+    width: 67vw;
+    height:300px;
+    padding-top: 20px;
+    margin-left: calc(100vw * 0.165);
+    border: 3px solid #EEF5FE;
     margin-bottom: 40px;
 }
 // 整体难度分析
 .Paper_Total_Difficult_Analyse{
     margin-top: 30px;
-    border-radius: 10px; 
-    width: 67vw; 
-    height:350px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
+    border-radius: 10px;
+    width: 67vw;
+    height:350px;
+    padding-top: 10px;
+    margin-left: calc(100vw * 0.165);
+    border: 3px solid #EEF5FE;
     background: #EEF5FE;
     margin-bottom: 40px;
 }
 .Paper_Total_Difficult_Analyse_Line{
     margin-top: 30px;
-    border-radius: 10px; 
-    width: 67vw; 
-    height:350px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
+    border-radius: 10px;
+    width: 67vw;
+    height:350px;
+    padding-top: 10px;
+    margin-left: calc(100vw * 0.165);
+    border: 3px solid #EEF5FE;
     background: transparent;
     margin-bottom: 40px;
 }
@@ -3820,84 +3820,84 @@ export default {
 // 知识点难度分析
 .Paper_Knowledge_Difficult_Analyse{
     margin-top: 30px;
-    border-radius: 10px; 
-    width: 67vw; 
-    height:350px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
+    border-radius: 10px;
+    width: 67vw;
+    height:350px;
+    padding-top: 10px;
+    margin-left: calc(100vw * 0.165);
+    border: 3px solid #EEF5FE;
     background: #EEF5FE;
     margin-bottom: 40px;
 }
 // 知识点覆盖率，暂时是个占位符
 .Paper_Knowledge_Cover{
     margin-top: 30px;
-    border-radius: 10px; 
-    width: 67vw; 
-    height:600px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
+    border-radius: 10px;
+    width: 67vw;
+    height:600px;
+    padding-top: 10px;
+    margin-left: calc(100vw * 0.165);
+    border: 3px solid #EEF5FE;
     background: #EEF5FE;
     margin-bottom: 40px;
 }
 // 知识点对的出现情况
 .Paper_Knowledge_Pair{
     margin-top: 30px;
-    border-radius: 10px; 
-    width: 67vw; 
-    height:550px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
+    border-radius: 10px;
+    width: 67vw;
+    height:550px;
+    padding-top: 10px;
+    margin-left: calc(100vw * 0.165);
+    border: 3px solid #EEF5FE;
     background: #EEF5FE;
     margin-bottom: 40px;
 }
 // 知识点分数分析
 .Paper_Knowledge_Score_Analyse{
     margin-top: 30px;
-    border-radius: 10px; 
-    width: 67vw; 
-    height:400px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.165);  
-    border: 3px solid #EEF5FE; 
+    border-radius: 10px;
+    width: 67vw;
+    height:400px;
+    padding-top: 10px;
+    margin-left: calc(100vw * 0.165);
+    border: 3px solid #EEF5FE;
     background: #EEF5FE;
     margin-bottom: 40px;
 }
 // 题包知识点难度分析
 .QB_Knowledge_Difficult_Analyse{
     margin-top: 30px;
-    border-radius: 10px; 
+    border-radius: 10px;
     width: calc(100vw * 0.67 * 0.8);
-    height:350px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.14 * 0.8);  
-    border: 3px solid #EEF5FE; 
+    height:350px;
+    padding-top: 10px;
+    margin-left: calc(100vw * 0.14 * 0.8);
+    border: 3px solid #EEF5FE;
     background: #EEF5FE;
     margin-bottom: 40px;
 }
 // 题包知识点对的出现情况
 .QB_Knowledge_Pair{
     margin-top: 30px;
-    border-radius: 10px; 
+    border-radius: 10px;
     width: calc(100vw * 0.67 * 0.8);
-    height:550px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.14 * 0.8); 
-    border: 3px solid #EEF5FE; 
+    height:550px;
+    padding-top: 10px;
+    margin-left: calc(100vw * 0.14 * 0.8);
+    border: 3px solid #EEF5FE;
     background: #EEF5FE;
     margin-bottom: 40px;
 }
 // 题包知识点分数分析
 .QB_Knowledge_Score_Analyse{
     margin-top: 30px;
-    border-radius: 10px; 
+    border-radius: 10px;
     width: calc(100vw * 0.67 * 0.8);
-    height:400px; 
-    padding-top: 10px; 
-    margin-left: calc(100vw * 0.14 * 0.8); 
-    border: 3px solid #EEF5FE; 
+    height:400px;
+    padding-top: 10px;
+    margin-left: calc(100vw * 0.14 * 0.8);
+    border: 3px solid #EEF5FE;
     background: #EEF5FE;
     margin-bottom: 40px;
 }
@@ -3956,7 +3956,7 @@ export default {
     border: 1px solid #409EFF;
     color: #409EFF;
     border-radius: 30px;
-    margin-left: 8px; 
+    margin-left: 8px;
     margin-right: 8px;
     box-sizing: border-box;
     cursor: pointer;
@@ -3968,7 +3968,7 @@ export default {
     border: 1px solid #409EFF;
     color: white;
     border-radius: 30px;
-    margin-left: 8px; 
+    margin-left: 8px;
     margin-right: 8px;
     box-sizing: border-box;
     background: #409EFF;
