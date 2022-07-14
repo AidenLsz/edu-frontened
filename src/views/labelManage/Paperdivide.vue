@@ -338,7 +338,7 @@ export default {
       const eleLink = document.createElement('a');
       eleLink.download = 'data.json';
       eleLink.style.display = 'none';
-      const blob = new Blob([JSON.stringify(submitForm)]);
+      const blob = new Blob([JSON.stringify(submitForm, null, 4)]);
       eleLink.href = URL.createObjectURL(blob);
       document.body.appendChild(eleLink);
       eleLink.click();

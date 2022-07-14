@@ -2,7 +2,7 @@
   <el-dialog
       class="usr-card"
       :visible="visible"
-      top="10vh"
+      top="8vh"
       @close="hide"
   >
     <h2 class="usr-title">
@@ -288,38 +288,39 @@ export default {
       this.visible = false;
     },
     async register() {
-      await this.$refs.userRegister.validate(valid => {
+      await this.$refs.userRegister.validate(async (valid) => {
         if (valid) {
           if (!this.form.ackUserAgreement) {
             this.$message.error('请先阅读并同意用户协议与隐私条款');
-            const fd = {
-              username: this.form.username,
-              password: this.form.password,
-              phone: this.form.phone,
-              email: this.form.mail,
-              type: this.form.type,
-              groupname: this.form.groupName,
-            };
-            let data;
-            try {
-              data = commonAjax(this.backendIP + "/api/register", fd);
-              this.$store.dispatch('user/setUserData', {
-                token: data.access_token,
-                name: this.form.username,
-              });
-              this.$router.go();
-              this.hide();
-            } catch (e) {
-              let msg = '注册失败，请稍后重试';
-              if (e.status === '403') {
-                msg = '用户名，手机号或邮箱已被注册';
-              } else if (e.status === '401') {
-                msg = '请检查是否有漏填写表带';
-              } else if (e.status === '402') {
-                msg = '请填写组织名称';
-              }
-              this.$message.error(msg);
+            return;
+          }
+          const fd = {
+            username: this.form.username,
+            password: this.form.password,
+            phone: this.form.phone,
+            email: this.form.mail,
+            type: this.form.type,
+            groupname: this.form.groupName,
+          };
+          let data;
+          try {
+            data = await commonAjax(this.backendIP + "/api/register", fd);
+            await this.$store.dispatch('user/setUserData', {
+              token: data.access_token,
+              name: this.form.username,
+            });
+            this.$router.go();
+            this.hide();
+          } catch (e) {
+            let msg = '注册失败，请稍后重试';
+            if (e.status === '403') {
+              msg = '用户名，手机号或邮箱已被注册';
+            } else if (e.status === '401') {
+              msg = '请检查是否有漏填写表带';
+            } else if (e.status === '402') {
+              msg = '请填写组织名称';
             }
+            this.$message.error(msg);
           }
         }
       });
@@ -330,7 +331,7 @@ export default {
 
 <style scoped lang="scss">
 $card-max-width: 1000px;
-$form-gap: 18px;
+$form-gap: 16px;
 @import "form";
 
 .usr-form {

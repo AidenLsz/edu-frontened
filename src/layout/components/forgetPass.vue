@@ -230,7 +230,7 @@ export default {
       let data;
       try {
         data = await commonAjax(this.backendIP + '/api/send_email_code', {
-          'dest_email': this.form.mail,
+          dest_email: this.form.mail,
         });
       } catch (e) {
         this.$message.error('验证码发送失败，请稍后再试');
@@ -238,7 +238,7 @@ export default {
       this.mailCodeValid.emailCodeOrigin = data.code;
     },
     async verify() {
-      this.$refs.userForgetPass.validate(async (valid) => {
+      await this.$refs.userForgetPass.validate(async (valid) => {
         if (valid) {
           let data;
           try {
@@ -248,15 +248,16 @@ export default {
             });
           } catch (e) {
             this.$message.error('用户名或邮箱错误')
+            return;
           }
           this.access_token = data.access_token;
           this.resetPassVisible = true;
           this.verifyVisible = false;
         }
-      })
+      });
     },
     resetPass() {
-      this.resetPassForm.validate(async (valid) => {
+      this.$refs.userForgetPassReset.validate(async (valid) => {
         if (valid) {
           try {
             commonAjax(`${this.backendIP}/api/reset_password`, {
