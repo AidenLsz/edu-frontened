@@ -58,7 +58,6 @@ export default {
 <style lang="scss" scoped>
   .divide {
     opacity: 0;
-    transition: .15s;
 
     &__number {
       cursor: pointer;
@@ -84,6 +83,8 @@ export default {
       width: 100%;
       cursor: pointer;
       padding: 6px 0;
+      padding-top: 0;
+      transition: border-bottom-color .15s;
 
       &:hover {
         border-color: rgb(64, 158, 255);
@@ -91,7 +92,6 @@ export default {
     }
 
     &.active {
-      padding-top: 6px;
       padding-bottom: 6px;
       opacity: 1;
 

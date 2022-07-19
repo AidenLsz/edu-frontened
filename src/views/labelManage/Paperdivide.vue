@@ -194,7 +194,7 @@ export default {
           // 把每个大段里面的每个小内容抽出来，单独塞到List里面
           for (let k = 0; k < Para.length; k++) {
             processList.push(Para[k]);
-            if (i !== paper.length - 1) {
+            if (i !== paper.length) {
               question = {
                 questionSideID: -1,
                 questionID: -1,
