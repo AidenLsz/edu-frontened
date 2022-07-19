@@ -194,7 +194,7 @@ export default {
           // 把每个大段里面的每个小内容抽出来，单独塞到List里面
           for (let k = 0; k < Para.length; k++) {
             processList.push(Para[k]);
-            if (i !== paper.length - 1) {
+            if (i !== paper.length) {
               question = {
                 questionSideID: -1,
                 questionID: -1,
@@ -338,7 +338,7 @@ export default {
       const eleLink = document.createElement('a');
       eleLink.download = 'data.json';
       eleLink.style.display = 'none';
-      const blob = new Blob([JSON.stringify(submitForm)]);
+      const blob = new Blob([JSON.stringify(submitForm, null, 4)]);
       eleLink.href = URL.createObjectURL(blob);
       document.body.appendChild(eleLink);
       eleLink.click();

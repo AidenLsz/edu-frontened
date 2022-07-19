@@ -510,7 +510,9 @@
                 >
               </div>
               <div
-                class="NarbarItem">
+                class="NarbarItem"
+                v-show="!$store.state.user.name"
+              >
                 <el-button type="text" @click="register_show" class="navbar"
                   >注册</el-button
                 >

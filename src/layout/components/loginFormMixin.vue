@@ -56,8 +56,7 @@ export default {
     },
     phoneValidator() {
       return {
-        pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[01235678]|18[0-9]|19[89])\d{8}$/,
-        message: "请输入正确的手机号码"
+        pattern: /^1[3-9]\d{9}$/,
       }
     },
     codeValidator() {
