@@ -2101,13 +2101,17 @@ export default {
           计算题: {
             list: [],
             desc: ""
-          }
+          },
+          综合题: {
+            list: [],
+            desc: "",
+          },
         }
 
         //debug
         // console.log(this.Question_Bundle.length);
 
-        let Type_List = ['单选题', '多选题', '判断题', '填空题', '简答题', '计算题']
+        let Type_List = ['单选题', '多选题', '判断题', '填空题', '简答题', '计算题', '综合题']
         for(let j = 0; j < Type_List.length; j++){
           let Count = 1;
           for(let i = 0; i < this.Question_Bundle.length; i++){
@@ -2168,7 +2172,7 @@ export default {
                 answer_list: []
               }
               Temp_Result_Dict[Result[i].type].list.push(Item)
-            }else if(['简答题', '计算题'].indexOf(Result[i].type) != -1){
+            }else if(['简答题', '计算题'].indexOf(Result[i].type) !== -1){
                 let Item = {
                   score: Result[i].subquestions.length > 0 ? Result[i].subquestions.length * 5 : 0,
                   stem: Result[i].stem,
@@ -2186,11 +2190,104 @@ export default {
                   answer_list: []
               }
               for(let j = 0; j < Result[i].subquestions.length; j++){
-                Item.sub_questions.push(Result[i].subquestions[j])
-                Item.sub_questions_image.push([])
-                Item.sub_questions_score.push(5)
+                Item.sub_questions.push(Result[i].subquestions[j]);
+                Item.sub_questions_image.push([]);
+                Item.sub_questions_score.push(5);
               }
               Temp_Result_Dict[Result[i].type].list.push(Item)
+            } else if (['综合题'].indexOf(Result[i].type) !== -1) {
+              let AllItem = {
+                analysis: Result[i].analysis,
+                analysis_image: [],
+                answer: Result[i].answer,
+                answer_image: [],
+                score: Result[i].score,
+                stem: Result[i].stem,
+                stem_image: [],
+              };
+              const sub_questions = [];
+              for (let k = 0; k < Result[i].subquestions.length; k++) {
+                const sub_question = Result[i].subquestions[k];
+                if (['单选题', '多选题', '判断题'].indexOf(sub_question.sub_type) !== -1) {
+
+                  let Item = {
+                    score: sub_question.sub_score,
+                    stem: sub_question.sub_stem,
+                    stem_image: [],
+                    options: [],
+                    options_image: [],
+                    answer: '',
+                    answer_image: [],
+                    analysis: '',
+                    analysis_image: [],
+                    // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                    sub_questions: [],
+                    sub_questions_image: [],
+                    sub_questions_score: [],
+                    type: sub_question.sub_type,
+                    answer_list: []
+                  }
+                  for(let j = 0; j < sub_question.sub_options.length; j++){
+                    Item.options.push(sub_question.sub_options[j])
+                    Item.options_image.push([])
+                  }
+                  sub_questions.push(Item)
+                }  else if (['简答题', '计算题'].indexOf(sub_question.sub_type) !== -1) {
+
+                  let Item = {
+                    score: sub_question.sub_score,
+                    stem: sub_question.sub_stem,
+                    stem_image: [],
+                    options: [],
+                    options_image: [],
+                    answer: '',
+                    answer_image: [],
+                    analysis: '',
+                    analysis_image: [],
+                    // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                    sub_questions: [],
+                    sub_questions_image: [],
+                    sub_questions_score: [],
+                    type: sub_question.sub_type,
+                    answer_list: []
+                  }
+                  if (sub_question.subquestions) {
+                    for(let j = 0; j < sub_question.subquestions.length; j++){
+                      Item.sub_questions.push(sub_question.subquestions[j]);
+                      Item.sub_questions_image.push([]);
+                      Item.sub_questions_score.push(5);
+                    }
+                  }
+                  for(let j = 0; j < sub_question.sub_options.length; j++){
+                    Item.options.push(sub_question.sub_options[j]);
+                    Item.options_image.push([]);
+                  }
+                  sub_questions.push(Item)
+                } else if (['填空题'].indexOf(sub_question.sub_type) !== -1) {
+                  let Item = {
+                    score: sub_question.sub_score,
+                    stem: sub_question.sub_stem,
+                    stem_image: [],
+                    options: [],
+                    options_image: [],
+                    answer: '',
+                    answer_image: [],
+                    analysis: '',
+                    analysis_image: [],
+                    // 这三条在填空和选择中用不到，但是可以在简答和计算中用，这里写上一个，防止读到空值，算是一种格式统一
+                    sub_questions: [],
+                    sub_questions_image: [],
+                    sub_questions_score: [],
+                    answer_list: []
+                  }
+                  sub_questions.push(Item)
+                }
+
+              }
+
+              AllItem.sub_questions = sub_questions;
+              Temp_Result_Dict[Result[i].type].list.push(AllItem)
+
             }
           }
 
@@ -2215,7 +2312,8 @@ export default {
           this.Using_Part = "Input"
 
         }).catch(
-          ()=>{
+          (e)=>{
+            console.log(e)
             this.$message.error("解析出现异常，请重试。")
           }
         )
@@ -2704,7 +2802,7 @@ export default {
         this.Wrong_Char_Info = ""
         this.Wrong_Char_Dialog = false
 
-        if(this.Type != '综合题'){
+        if(this.Type !== '综合题'){
 
             // 名称格式修正一下
             let Question = JSON.parse(Ques);
@@ -2861,7 +2959,7 @@ export default {
             let Question = JSON.parse(Ques);
 
             // 必填项检测
-            if(Question.stem.length == 0){
+            if(Question.stem.length === 0){
                 this.Wrong_Char_Info = "题干项尚未填写。"
                 this.Wrong_Char_Dialog = true
                 return
@@ -3282,22 +3380,22 @@ export default {
       Submit(){
 
         this.Title = this.Title.replace(/^\s*|\s*$/g,"");
-        if(this.Title == ""){
+        if(this.Title === ""){
           this.$message.error("尚未填写试卷标题或仅有空格，请重新填写。")
           return
         }
 
         let Upload_Json = {
-          title: this.Title != "" ? this.Title : "未命名试卷",
+          title: this.Title !== "" ? this.Title : "未命名试卷",
           desc: "",
           Question_list: []
         }
         for(let i = 0; i < this.Question_Bundle.length; i++){
           let Question_Item = {
             desc : this.Question_Bundle[i].desc,
-            type : ['单选题', '多选题', '判断题'].indexOf(this.Question_Bundle[i].type) != -1 ?
-                      '选择题' : ['简答题', '计算题'].indexOf(this.Question_Bundle[i].type) != -1 ?
-                        '解答题' : this.Question_Bundle[i].type == '填空题' ? '填空题' : '综合题',
+            type : ['单选题', '多选题', '判断题'].indexOf(this.Question_Bundle[i].type) !== -1 ?
+                      '选择题' : ['简答题', '计算题'].indexOf(this.Question_Bundle[i].type) !== -1 ?
+                        '解答题' : this.Question_Bundle[i].type === '填空题' ? '填空题' : '综合题',
             material : "",
             questions : []
           }
@@ -3321,9 +3419,14 @@ export default {
           'questionInput': true
         }
 
-        commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
-          this.$message.success("入库完成")
-          this.Uploading = false;
+        commonAjax(this.backendIP + '/api/mathUpload', Param).then((res)=>{
+          if (res.data.msg && res.data.msg.includes('rejected')) {
+            this.$message.error('库中已有重复试题，拒绝入库');
+            this.Uploading = false;
+          } else {
+            this.$message.success("入库完成");
+            this.Uploading = false;
+          }
         }).catch(
           ()=>{
             this.$message.error("入库失败")
@@ -3731,13 +3834,13 @@ export default {
 
             Temp_Result = Temp_Doc
 
-        }else if(['简答题', '计算题'].indexOf(Type) != -1){
+        } else if(['简答题', '计算题'].indexOf(Type) !== -1) {
 
 
             let Temp_Doc = {
                 desc: Ques.stem,
                 desc_image: Ques.stem_image,
-                type: "大题",
+                type: Type,
                 score: parseFloat(Ques.score + ""),
                 subquestions: [],
                 answer: Ques.answer,
@@ -3786,20 +3889,39 @@ export default {
         Temp_Doc.score = parseFloat(Ques.score + "");
 
         for(let i = 0; i < Ques.sub_questions.length; i++){
-            let Item = {
-                type: Ques.sub_questions[i].type,
-                score: parseFloat(Ques.sub_questions[i].score + ""),
-                stem: Ques.sub_questions[i].stem,
-                stem_image: Ques.sub_questions[i].stem_image,
-                options: Ques.options,
-                options_image: Ques.options_image,
-                answer: Ques.sub_questions[i].answer,
-                answer_image: Ques.sub_questions[i].answer_image,
-                analysis: Ques.sub_questions[i].analysis,
-                analysis_image: Ques.sub_questions[i].analysis_image
+          const type = Ques.sub_questions[i].type;
+          let Item = {
+            type,
+            score: parseFloat(Ques.sub_questions[i].score + ""),
+            stem: Ques.sub_questions[i].stem,
+            stem_image: Ques.sub_questions[i].stem_image,
+            options: Ques.sub_questions[i].options,
+            options_image: Ques.sub_questions[i].options_image,
+            answer: Ques.sub_questions[i].answer,
+            answer_image: Ques.sub_questions[i].answer_image,
+            analysis: Ques.sub_questions[i].analysis,
+            analysis_image: Ques.sub_questions[i].analysis_image
+          }
+          if (['简答题', '计算题'].indexOf(type) !== -1) {
+            const nested_items = [];
+            for(let j = 0; j < Ques.sub_questions.length; j++){
+              let It = {
+                type,
+                score: parseFloat(Ques.sub_questions[i].sub_questions_score[j] + ""),
+                stem: Ques.sub_questions[i].sub_questions[j],
+                stem_image: Ques.sub_questions[i].sub_questions_image[j],
+                options: [],
+                options_image: [],
+                answer: "",
+                answer_image: [],
+                analysis: "",
+                analysis_image: []
+              }
+              nested_items.push(It);
             }
-
-          Temp_Doc.subquestions.push(Item)
+            Item.subquestions = nested_items;
+          }
+          Temp_Doc.subquestions.push(Item);
         }
 
         Temp_Doc.answer = Ques.answer;

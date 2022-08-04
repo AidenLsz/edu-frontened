@@ -152,6 +152,7 @@ export default {
 #scrollbar-thumb {
 	z-index: 20;
 	transition: 150ms ease;
+  min-height: 70px;
 	/*transition-delay: 25ms;*/
 	transition-property: height, width;
 	outline: none;
