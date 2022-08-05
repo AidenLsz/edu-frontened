@@ -630,105 +630,124 @@ export default {
     },
     // 将基础题转化为可以入库的格式的部分
     Submit_Normal_Ques(Ques){
+      const Type = this.Type;
 
-        var Temp_Result = ""
+      var Temp_Result = ""
 
-        if(['单选题', '多选题', '判断题', '填空题'].indexOf(this.Type) != -1){
+      if(['单选题', '多选题', '判断题', '填空题'].indexOf(Type) != -1){
 
-            let Temp_Doc = {
-                type: this.Type,
-                stem: Ques.stem,
-                stem_image: Ques.stem_image,
-                score: parseFloat(Ques.score + ""),
-                options: Ques.options,
-                options_image: Ques.options_image,
-                answer: Ques.answer,
-                answer_image: Ques.answer_image,
-                analysis: Ques.analysis,
-                analysis_image: Ques.analysis_image
-            }
-
-            Temp_Result = Temp_Doc
-
-        }else if(['简答题', '计算题'].indexOf(this.Type) != -1){
-
-
-            let Temp_Doc = {
-                desc: Ques.stem,
-                desc_image: Ques.stem_image,
-                type: "大题",
-                score: parseFloat(Ques.score + ""),
-                subquestions: [],
-                answer: Ques.answer,
-                answer_image: Ques.answer_image,
-                analysis: Ques.analysis,
-                analysis_image: Ques.analysis_image
-            }
-
-
-            for(let i = 0; i < Ques.sub_questions.length; i++){
-                let Item = {
-                    type: this.Type,
-                    score: parseFloat(Ques.sub_questions_score[i] + ""),
-                    stem: Ques.sub_questions[i],
-                    stem_image: Ques.sub_questions_image[i],
-                    options: [],
-                    options_image: [],
-                    answer: "",
-                    answer_image: [],
-                    analysis: "",
-                    analysis_image: []
-                }
-                Temp_Doc.subquestions.push(Item)
-            }
-            Temp_Result = Temp_Doc
-        }
-        this.Submit_Do(Temp_Result)
-    },
-    // 将综合题转化为可以入库的格式的部分
-    Submit_Mix_Ques(Ques){
         let Temp_Doc = {
-            desc: "",
-            desc_image: [],
-            type: "大题",
-            score: 0,
-            subquestions: [],
+          type: Type,
+          stem: Ques.stem,
+          stem_image: Ques.stem_image,
+          score: parseFloat(Ques.score + ""),
+          options: Ques.options,
+          options_image: Ques.options_image,
+          answer: Ques.answer,
+          answer_image: Ques.answer_image,
+          analysis: Ques.analysis,
+          analysis_image: Ques.analysis_image
+        }
+
+        Temp_Result = Temp_Doc
+
+      } else if(['简答题', '计算题'].indexOf(Type) !== -1) {
+
+
+        let Temp_Doc = {
+          desc: Ques.stem,
+          desc_image: Ques.stem_image,
+          type: Type,
+          score: parseFloat(Ques.score + ""),
+          subquestions: [],
+          answer: Ques.answer,
+          answer_image: Ques.answer_image,
+          analysis: Ques.analysis,
+          analysis_image: Ques.analysis_image
+        }
+
+
+        for(let i = 0; i < Ques.sub_questions.length; i++){
+          let Item = {
+            type: Type,
+            score: parseFloat(Ques.sub_questions_score[i] + ""),
+            stem: Ques.sub_questions[i],
+            stem_image: Ques.sub_questions_image[i],
+            options: [],
+            options_image: [],
             answer: "",
             answer_image: [],
             analysis: "",
             analysis_image: []
-        }
-
-        Temp_Doc.desc = Ques.stem;
-        Temp_Doc.desc_image = Ques.stem_image;
-
-        Temp_Doc.score = parseFloat(Ques.score + "");
-
-        for(let i = 0; i < Ques.sub_questions.length; i++){
-            let Item = {
-                type: Ques.sub_questions[i].type,
-                score: parseFloat(Ques.sub_questions[i].score + ""),
-                stem: Ques.sub_questions[i].stem,
-                stem_image: Ques.sub_questions[i].stem_image,
-                options: Ques.options,
-                options_image: Ques.options_image,
-                answer: Ques.sub_questions[i].answer,
-                answer_image: Ques.sub_questions[i].answer_image,
-                analysis: Ques.sub_questions[i].analysis,
-                analysis_image: Ques.sub_questions[i].analysis_image
-            }
-
+          }
           Temp_Doc.subquestions.push(Item)
         }
+        Temp_Result = Temp_Doc
+      }
+      return Temp_Result
+    },
+    // 将综合题转化为可以入库的格式的部分
+    Submit_Mix_Ques(Ques){
+      let Temp_Doc = {
+        desc: "",
+        desc_image: [],
+        type: "大题",
+        score: 0,
+        subquestions: [],
+        answer: "",
+        answer_image: [],
+        analysis: "",
+        analysis_image: []
+      }
 
-        Temp_Doc.answer = Ques.answer;
-        Temp_Doc.answer_image = Ques.answer_image;
+      Temp_Doc.desc = Ques.stem;
+      Temp_Doc.desc_image = Ques.stem_image;
 
-        Temp_Doc.analysis = Ques.analysis;
-        Temp_Doc.analysis_image = Ques.analysis_image;
+      Temp_Doc.score = parseFloat(Ques.score + "");
 
-        this.Submit_Do(Temp_Doc)
+      for(let i = 0; i < Ques.sub_questions.length; i++){
+        const type = Ques.sub_questions[i].type;
+        let Item = {
+          type,
+          score: parseFloat(Ques.sub_questions[i].score + ""),
+          stem: Ques.sub_questions[i].stem,
+          stem_image: Ques.sub_questions[i].stem_image,
+          options: Ques.sub_questions[i].options,
+          options_image: Ques.sub_questions[i].options_image,
+          answer: Ques.sub_questions[i].answer,
+          answer_image: Ques.sub_questions[i].answer_image,
+          analysis: Ques.sub_questions[i].analysis,
+          analysis_image: Ques.sub_questions[i].analysis_image
+        }
+        if (['简答题', '计算题'].indexOf(type) !== -1) {
+          const nested_items = [];
+          for(let j = 0; j < Ques.sub_questions.length; j++){
+            let It = {
+              type,
+              score: parseFloat(Ques.sub_questions[i].sub_questions_score[j] + ""),
+              stem: Ques.sub_questions[i].sub_questions[j],
+              stem_image: Ques.sub_questions[i].sub_questions_image[j],
+              options: [],
+              options_image: [],
+              answer: "",
+              answer_image: [],
+              analysis: "",
+              analysis_image: []
+            }
+            nested_items.push(It);
+          }
+          Item.subquestions = nested_items;
+        }
+        Temp_Doc.subquestions.push(Item);
+      }
 
+      Temp_Doc.answer = Ques.answer;
+      Temp_Doc.answer_image = Ques.answer_image;
+
+      Temp_Doc.analysis = Ques.analysis;
+      Temp_Doc.analysis_image = Ques.analysis_image;
+
+      return Temp_Doc
     },
     Submit_Do(Submit_JSON){
         let Param = {
@@ -744,9 +763,14 @@ export default {
             'ig_ID':this.Item_Group
         }
 
-        commonAjax(this.backendIP + '/api/mathUpload', Param).then(()=>{
+        commonAjax(this.backendIP + '/api/mathUpload', Param).then((res)=>{
+          if (res.data && res.data.msg && res.data.msg.includes('rejected')) {
+            this.$message.success("库中已有重复试题，拒绝入库");
+            this.Uploading = false;
+          } else {
             this.$message.success("入库完成")
             this.Uploading = false;
+          }
         }).catch(
             ()=>{
                 this.$message.error("入库失败")

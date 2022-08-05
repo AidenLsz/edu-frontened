@@ -3420,7 +3420,7 @@ export default {
         }
 
         commonAjax(this.backendIP + '/api/mathUpload', Param).then((res)=>{
-          if (res.data.msg && res.data.msg.includes('rejected')) {
+          if (res.data && res.data.msg && res.data.msg.includes('rejected')) {
             this.$message.error('库中已有重复试题，拒绝入库');
             this.Uploading = false;
           } else {
