@@ -235,9 +235,9 @@ export default {
       // 跳转至整卷录入页面
       toPaper(){
         let _path = "/"
-        if(this.$route.path.indexOf("itas")||this.$route.path.indexOf("eems")){
-          _path = this.$route.path.toLowerCase().replace(this.$route.name.toLowerCase(), "")
-        }
+        // if(this.$route.path.indexOf("itas")||this.$route.path.indexOf("eems")){
+        //   _path = this.$route.path.toLowerCase().replace(this.$route.name.toLowerCase(), "")
+        // }
         this.$router.push({path: _path + "inputPaper"})
       },
       // 返回按钮样式
@@ -684,14 +684,14 @@ export default {
         }
         Temp_Result = Temp_Doc
       }
-      return Temp_Result
+      this.Submit_Do(Temp_Result);
     },
     // 将综合题转化为可以入库的格式的部分
     Submit_Mix_Ques(Ques){
       let Temp_Doc = {
         desc: "",
         desc_image: [],
-        type: "大题",
+        type: Ques.Type,
         score: 0,
         subquestions: [],
         answer: "",
@@ -707,19 +707,20 @@ export default {
 
       for(let i = 0; i < Ques.sub_questions.length; i++){
         const type = Ques.sub_questions[i].type;
-        let Item = {
-          type,
-          score: parseFloat(Ques.sub_questions[i].score + ""),
-          stem: Ques.sub_questions[i].stem,
-          stem_image: Ques.sub_questions[i].stem_image,
-          options: Ques.sub_questions[i].options,
-          options_image: Ques.sub_questions[i].options_image,
-          answer: Ques.sub_questions[i].answer,
-          answer_image: Ques.sub_questions[i].answer_image,
-          analysis: Ques.sub_questions[i].analysis,
-          analysis_image: Ques.sub_questions[i].analysis_image
-        }
+        let Item = null;
         if (['简答题', '计算题'].indexOf(type) !== -1) {
+          Item = {
+            type,
+            score: parseFloat(Ques.sub_questions[i].score + ""),
+            desc: Ques.sub_questions[i].stem,
+            stem_image: Ques.sub_questions[i].stem_image,
+            options: Ques.sub_questions[i].options,
+            options_image: Ques.sub_questions[i].options_image,
+            answer: Ques.sub_questions[i].answer,
+            answer_image: Ques.sub_questions[i].answer_image,
+            analysis: Ques.sub_questions[i].analysis,
+            analysis_image: Ques.sub_questions[i].analysis_image
+          };
           const nested_items = [];
           for(let j = 0; j < Ques.sub_questions.length; j++){
             let It = {
@@ -737,6 +738,19 @@ export default {
             nested_items.push(It);
           }
           Item.subquestions = nested_items;
+        } else {
+          Item = {
+            type,
+            score: parseFloat(Ques.sub_questions[i].score + ""),
+            stem: Ques.sub_questions[i].stem,
+            stem_image: Ques.sub_questions[i].stem_image,
+            options: Ques.sub_questions[i].options,
+            options_image: Ques.sub_questions[i].options_image,
+            answer: Ques.sub_questions[i].answer,
+            answer_image: Ques.sub_questions[i].answer_image,
+            analysis: Ques.sub_questions[i].analysis,
+            analysis_image: Ques.sub_questions[i].analysis_image
+          }
         }
         Temp_Doc.subquestions.push(Item);
       }
@@ -746,8 +760,7 @@ export default {
 
       Temp_Doc.analysis = Ques.analysis;
       Temp_Doc.analysis_image = Ques.analysis_image;
-
-      return Temp_Doc
+      this.Submit_Do(Temp_Doc);
     },
     Submit_Do(Submit_JSON){
         let Param = {

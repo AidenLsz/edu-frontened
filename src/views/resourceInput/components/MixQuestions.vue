@@ -1460,12 +1460,12 @@ export default {
             for(let i = 0; i < this.Question.sub_questions.length; i++){
                 let Item = this.Question.sub_questions[i];
                 if(Item.sub_questions_score.length == 0){
-                    Score = Score + parseInt(Item.score)
+                    Score = Score + parseFloat(Item.score)
                 }else{
                     let S_Score = 0;
                     for(let j = 0; j < Item.sub_questions_score.length; j++){
-                        Score = Score + parseInt(Item.sub_questions_score[j])
-                        S_Score = S_Score + parseInt(Item.sub_questions_score[j])
+                        Score = Score + parseFloat(Item.sub_questions_score[j])
+                        S_Score = S_Score + parseFloat(Item.sub_questions_score[j])
                     }
                     this.Question.sub_questions[i].score = S_Score
                 }
