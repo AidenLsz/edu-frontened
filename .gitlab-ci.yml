@@ -36,7 +36,7 @@ test:
 
 review:
   stage: review
-  image: registry.git.bdaa.pro:4567/yxonic/bdaa-deploy-image:v3.0.2
+  image: registry.git.bdaa.pro:4567/yxonic/bdaa-deploy-image:v3.9.2
   before_script:
   # - helm repo add stable http://mirror.azure.cn/kubernetes/charts
   - helm repo add stable https://burdenbear.github.io/kube-charts-mirror/
@@ -67,7 +67,7 @@ review:
     auto_stop_in: 1 week
 stop_review:
   stage: review
-  image: registry.git.bdaa.pro:4567/yxonic/bdaa-deploy-image:v3.0.2
+  image: registry.git.bdaa.pro:4567/yxonic/bdaa-deploy-image:v3.9.2
   script: helm uninstall $KUBE_NAMESPACE || true
   when: manual
   variables:
