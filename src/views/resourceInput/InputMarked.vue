@@ -777,7 +777,7 @@ export default {
         }
 
         commonAjax(this.backendIP + '/api/mathUpload', Param).then((res)=>{
-          if (res.data && res.data.msg && res.data.msg.includes('rejected')) {
+          if (res && res.msg && res.msg.includes('rejected')) {
             this.$message.success("库中已有重复试题，拒绝入库");
             this.Uploading = false;
           } else {
