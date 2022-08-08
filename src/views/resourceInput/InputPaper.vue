@@ -3420,7 +3420,8 @@ export default {
         }
 
         commonAjax(this.backendIP + '/api/mathUpload', Param).then((res)=>{
-          if (res.data && res.data.msg && res.data.msg.includes('rejected')) {
+          console.log(res)
+          if (res && res.msg && res.msg.includes('rejected')) {
             this.$message.error('库中已有重复试题，拒绝入库');
             this.Uploading = false;
           } else {
@@ -3872,9 +3873,9 @@ export default {
     // 将综合题转化为可以入库的格式的部分
     Submit_Mix_Ques(Ques){
         let Temp_Doc = {
+            type: "综合题",
             desc: "",
             desc_image: [],
-            type: Ques.Type,
             score: 0,
             subquestions: [],
             answer: "",
@@ -3896,7 +3897,7 @@ export default {
               type,
               score: parseFloat(Ques.sub_questions[i].score + ""),
               desc: Ques.sub_questions[i].stem,
-              stem_image: Ques.sub_questions[i].stem_image,
+              desc_image: Ques.sub_questions[i].stem_image,
               options: Ques.sub_questions[i].options,
               options_image: Ques.sub_questions[i].options_image,
               answer: Ques.sub_questions[i].answer,

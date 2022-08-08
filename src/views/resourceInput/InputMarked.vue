@@ -713,7 +713,7 @@ export default {
             type,
             score: parseFloat(Ques.sub_questions[i].score + ""),
             desc: Ques.sub_questions[i].stem,
-            stem_image: Ques.sub_questions[i].stem_image,
+            desc_image: Ques.sub_questions[i].stem_image,
             options: Ques.sub_questions[i].options,
             options_image: Ques.sub_questions[i].options_image,
             answer: Ques.sub_questions[i].answer,
