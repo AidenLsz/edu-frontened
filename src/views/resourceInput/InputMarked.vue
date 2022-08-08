@@ -691,7 +691,7 @@ export default {
       let Temp_Doc = {
         desc: "",
         desc_image: [],
-        type: Ques.Type,
+        type: "综合题",
         score: 0,
         subquestions: [],
         answer: "",
@@ -778,7 +778,7 @@ export default {
 
         commonAjax(this.backendIP + '/api/mathUpload', Param).then((res)=>{
           if (res && res.msg && res.msg.includes('rejected')) {
-            this.$message.success("库中已有重复试题，拒绝入库");
+            this.$message.error("库中已有重复试题，拒绝入库");
             this.Uploading = false;
           } else {
             this.$message.success("入库完成")
