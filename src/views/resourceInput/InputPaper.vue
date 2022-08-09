@@ -2236,7 +2236,7 @@ export default {
 
                   let Item = {
                     score: sub_question.sub_score,
-                    desc: sub_question.sub_stem,
+                    stem: sub_question.sub_stem,
                     stem_image: [],
                     options: [],
                     options_image: [],
@@ -3402,6 +3402,9 @@ export default {
           for(let j = 0; j < this.Question_Bundle[i].list.length; j++){
             let Item = this.Question_Bundle[i].list[j];
             let Result = this.Submit_Format_Fix(JSON.stringify(Item), this.Question_Bundle[i].type)
+            if (!Result) {
+              return;
+            }
             Question_Item.questions.push(Result)
           }
           Upload_Json.Question_list.push(Question_Item)
@@ -3502,6 +3505,7 @@ export default {
                 this.Wrong_Char_Dialog = true;
                 return
             }
+
 
             // 内容检测
             for(let i = 0; i < Question.options.length; i++){
