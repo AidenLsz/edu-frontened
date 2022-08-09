@@ -16,25 +16,25 @@
         <el-row type="flex" justify="start" class="topBar">
             <!-- 编辑和预览 -->
             <el-col :span="1" :offset="1">
-                <el-row 
-                    type="flex" 
-                    justify="center" 
-                    style="height: 40px; line-height: 40px; cursor: pointer;" 
+                <el-row
+                    type="flex"
+                    justify="center"
+                    style="height: 40px; line-height: 40px; cursor: pointer;"
                     :class="Get_Focus_Function('Editing')"
                     @click.native="Focus_Function = 'Editing'">编辑
-                    <input 
-                        type="file" 
-                        style="display: none" 
-                        accept=".jpg, .jpeg, .png" 
+                    <input
+                        type="file"
+                        style="display: none"
+                        accept=".jpg, .jpeg, .png"
                         multiple="false"
                         id="PictureInput"/>
                 </el-row>
             </el-col>
             <el-col :span="1">
-                <el-row 
-                    type="flex" 
-                    justify="center" 
-                    style="height: 40px; line-height: 40px; cursor: pointer; margin-left: 20px" 
+                <el-row
+                    type="flex"
+                    justify="center"
+                    style="height: 40px; line-height: 40px; cursor: pointer; margin-left: 20px"
                     :class="Get_Focus_Function('PreView')"
                     @click.native="Focus_Function = 'PreView'">
                     预览
@@ -123,11 +123,11 @@
                 </el-col>
                 <el-col :span="20" :offset="1">
                     <el-row type="flex" justify="start">
-                        <el-input 
-                            @focus="Get_Focus('Answer_Stem')" 
-                            id="Answer_Stem" 
-                            type="textarea" 
-                            v-model="Question.stem" 
+                        <el-input
+                            @focus="Get_Focus('Answer_Stem')"
+                            id="Answer_Stem"
+                            type="textarea"
+                            v-model="Question.stem"
                             resize="none" :rows="6"
                             placeholder="请填写题干内容（必填）"></el-input>
                     </el-row>
@@ -141,32 +141,32 @@
                     </el-row>
                 </el-col>
                 <el-col :span="21" :offset="1">
-                    <el-row 
-                        type="flex" 
+                    <el-row
+                        type="flex"
                         justify="start"
                         v-for="Answer_Stem_Pic_Row_Index in Math.ceil(Question.stem_image.length/12)"
                         :key="'Answer_Stem_Pic_Row_' + Answer_Stem_Pic_Row_Index">
-                        <el-col 
+                        <el-col
                             :span="2"
                             v-for="Answer_Stem_Pic_Col_Index in 12"
                             :key="'Answer_Stem_Pic_Row_' + Answer_Stem_Pic_Row_Index + 'Col_' + Answer_Stem_Pic_Col_Index">
-                            <el-row 
-                                type="flex" 
-                                justify="start" 
+                            <el-row
+                                type="flex"
+                                justify="start"
                                 v-if="(Answer_Stem_Pic_Row_Index - 1) * 12 + Answer_Stem_Pic_Col_Index - 1 < Question.stem_image.length"
                                 >
-                                <el-popover 
+                                <el-popover
                                     :ref="'Answer_Stem_Pic_Row_' + Answer_Stem_Pic_Row_Index + 'Col_' + Answer_Stem_Pic_Col_Index + '_Pop'"
-                                    placement="top" 
-                                    width="200" 
+                                    placement="top"
+                                    width="200"
                                     trigger="hover">
                                     <el-row type="flex" justify="center">
                                         <img width="160" :src="Get_Picture_Src('stem_image', Answer_Stem_Pic_Row_Index, Answer_Stem_Pic_Col_Index)">
                                     </el-row>
                                     <el-row type="flex" justify="center">
-                                        <el-button 
-                                            type="danger" 
-                                            size="small" 
+                                        <el-button
+                                            type="danger"
+                                            size="small"
                                             @click="Del_Picture_Src('stem_image', Answer_Stem_Pic_Row_Index, Answer_Stem_Pic_Col_Index)"
                                             style="margin-top: 10px">
                                             删除此图片<i class="el-icon-delete" style="margin-left: 10px; font-size: 14px"></i>
@@ -183,7 +183,7 @@
             </el-row>
             <!-- 第三行，小题，整体算作一个大行吧 -->
             <el-row
-                v-for="(Sub_Question, Sub_Questions_Index) in Question.sub_questions" 
+                v-for="(Sub_Question, Sub_Questions_Index) in Question.sub_questions"
                 :key="'Answer_Sub_Questions_' + Sub_Questions_Index" style="margin-bottom: 20px;">
                 <!-- 纵向排列，因为实际上每个小题分为三部分 -->
                 <el-col>
@@ -196,7 +196,7 @@
                         </el-col>
                         <el-col :span="3" :offset="1">
                             <el-row type="flex" justify="start">
-                                <el-input-number v-model="Question.sub_questions_score[Sub_Questions_Index]" placeholder="" :min="1" :max="40"></el-input-number>
+                                <el-input-number v-model="Question.sub_questions_score[Sub_Questions_Index]" placeholder="" :min="1" :step=".5" :max="40"></el-input-number>
                             </el-row>
                         </el-col>
                         <el-col :span="1">
@@ -214,11 +214,11 @@
                         </el-col>
                         <el-col :span="14" :offset="1">
                             <el-row type="flex" justify="start">
-                                <el-input 
-                                    @focus="Get_Focus('Answer_Sub_Questions_' + Sub_Questions_Index)" 
-                                    :id="'Answer_Sub_Questions_' + Sub_Questions_Index" 
-                                    type="textarea" 
-                                    v-model="Question.sub_questions[Sub_Questions_Index]" 
+                                <el-input
+                                    @focus="Get_Focus('Answer_Sub_Questions_' + Sub_Questions_Index)"
+                                    :id="'Answer_Sub_Questions_' + Sub_Questions_Index"
+                                    type="textarea"
+                                    v-model="Question.sub_questions[Sub_Questions_Index]"
                                     resize="none" :rows="6"
                                     placeholder="请填写题干内容（必填）"></el-input>
                             </el-row>
@@ -240,35 +240,35 @@
                             </el-row>
                         </el-col>
                         <el-col :span="21" :offset="1">
-                            <el-row 
-                                type="flex" 
+                            <el-row
+                                type="flex"
                                 justify="start"
                                 v-for="Answer_Sub_Questions_Pic_Row_Index in Math.ceil(Question.sub_questions_image[Sub_Questions_Index].length/12)"
                                 :key="'Answer_Sub_Questions_' + Sub_Questions_Index + '_Pic_Row_' + Answer_Sub_Questions_Pic_Row_Index">
-                                <el-col 
+                                <el-col
                                     :span="2"
                                     v-for="Answer_Sub_Questions_Pic_Col_Index in 12"
-                                    :key="'Answer_Sub_Questions_' + Sub_Questions_Index 
-                                            + '_Pic_Row_' + Answer_Sub_Questions_Pic_Row_Index 
+                                    :key="'Answer_Sub_Questions_' + Sub_Questions_Index
+                                            + '_Pic_Row_' + Answer_Sub_Questions_Pic_Row_Index
                                             + '_Col_' + Answer_Sub_Questions_Pic_Col_Index">
-                                    <el-row 
-                                        type="flex" 
-                                        justify="start" 
-                                        v-if="(Answer_Sub_Questions_Pic_Row_Index - 1) * 12 + Answer_Sub_Questions_Pic_Col_Index - 1 
+                                    <el-row
+                                        type="flex"
+                                        justify="start"
+                                        v-if="(Answer_Sub_Questions_Pic_Row_Index - 1) * 12 + Answer_Sub_Questions_Pic_Col_Index - 1
                                             < Question.sub_questions_image[Sub_Questions_Index].length"
                                         >
-                                        <el-popover 
+                                        <el-popover
                                             :ref="'Answer_Sub_Questions_' + Sub_Questions_Index + '_Pic_Row_' + Answer_Sub_Questions_Pic_Row_Index + '_Col_' + Answer_Sub_Questions_Pic_Col_Index + '_Pop'"
-                                            placement="top" 
-                                            width="200" 
+                                            placement="top"
+                                            width="200"
                                             trigger="hover">
                                             <el-row type="flex" justify="center">
                                                 <img width="160" :src="Get_Picture_Src('sub_questions_image ' + Sub_Questions_Index , Answer_Sub_Questions_Pic_Row_Index, Answer_Sub_Questions_Pic_Col_Index)">
                                             </el-row>
                                             <el-row type="flex" justify="center">
-                                                <el-button 
-                                                    type="danger" 
-                                                    size="small" 
+                                                <el-button
+                                                    type="danger"
+                                                    size="small"
                                                     @click="Del_Picture_Src('sub_questions_image ' + Sub_Questions_Index , Answer_Sub_Questions_Pic_Row_Index, Answer_Sub_Questions_Pic_Col_Index)"
                                                     style="margin-top: 10px">
                                                     删除此图片<i class="el-icon-delete" style="margin-left: 10px; font-size: 14px"></i>
@@ -294,11 +294,11 @@
                 </el-col>
                 <el-col :span="20" :offset="1">
                     <el-row type="flex" justify="start">
-                        <el-input 
-                            @focus="Get_Focus('Answer_Answer')" 
-                            id="Answer_Answer" 
-                            type="textarea" 
-                            v-model="Question.answer" 
+                        <el-input
+                            @focus="Get_Focus('Answer_Answer')"
+                            id="Answer_Answer"
+                            type="textarea"
+                            v-model="Question.answer"
                             resize="none" :rows="6"
                             placeholder="请填写答案内容（可选）"></el-input>
                     </el-row>
@@ -312,32 +312,32 @@
                     </el-row>
                 </el-col>
                 <el-col :span="21" :offset="1">
-                    <el-row 
-                        type="flex" 
+                    <el-row
+                        type="flex"
                         justify="start"
                         v-for="Answer_Answer_Pic_Row_Index in Math.ceil(Question.answer_image.length/12)"
                         :key="'Answer_Answer_Pic_Row_' + Answer_Answer_Pic_Row_Index">
-                        <el-col 
+                        <el-col
                             :span="2"
                             v-for="Answer_Answer_Pic_Col_Index in 12"
                             :key="'Answer_Answer_Pic_Row_' + Answer_Answer_Pic_Row_Index + '_Col_' + Answer_Answer_Pic_Col_Index">
-                            <el-row 
-                                type="flex" 
-                                justify="start" 
+                            <el-row
+                                type="flex"
+                                justify="start"
                                 v-if="(Answer_Answer_Pic_Row_Index - 1) * 12 + Answer_Answer_Pic_Col_Index - 1 < Question.answer_image.length"
                                 >
-                                <el-popover 
+                                <el-popover
                                     :ref="'Answer_Answer_Pic_Row_' + Answer_Answer_Pic_Row_Index + '_Col_' + Answer_Answer_Pic_Col_Index + '_Pop'"
-                                    placement="top" 
-                                    width="200" 
+                                    placement="top"
+                                    width="200"
                                     trigger="hover">
                                     <el-row type="flex" justify="center">
                                         <img width="160" :src="Get_Picture_Src('answer_image', Answer_Answer_Pic_Row_Index, Answer_Answer_Pic_Col_Index)">
                                     </el-row>
                                     <el-row type="flex" justify="center">
-                                        <el-button 
-                                            type="danger" 
-                                            size="small" 
+                                        <el-button
+                                            type="danger"
+                                            size="small"
                                             @click="Del_Picture_Src('answer_image', Answer_Answer_Pic_Row_Index, Answer_Answer_Pic_Col_Index)"
                                             style="margin-top: 10px">
                                             删除此图片<i class="el-icon-delete" style="margin-left: 10px; font-size: 14px"></i>
@@ -361,11 +361,11 @@
                 </el-col>
                 <el-col :span="20" :offset="1">
                     <el-row type="flex" justify="start">
-                        <el-input 
-                            @focus="Get_Focus('Answer_Analysis')" 
+                        <el-input
+                            @focus="Get_Focus('Answer_Analysis')"
                             id="Answer_Analysis"
-                            type="textarea" 
-                            v-model="Question.analysis" 
+                            type="textarea"
+                            v-model="Question.analysis"
                             resize="none" :rows="6"
                             placeholder="请输入解析内容（可选）"></el-input>
                     </el-row>
@@ -379,32 +379,32 @@
                     </el-row>
                 </el-col>
                 <el-col :span="21" :offset="1">
-                    <el-row 
-                        type="flex" 
+                    <el-row
+                        type="flex"
                         justify="start"
                         v-for="Answer_Analysis_Pic_Row_Index in Math.ceil(Question.analysis_image.length/12)"
                         :key="'Answer_Analysis_Pic_Row_' + Answer_Analysis_Pic_Row_Index">
-                        <el-col 
+                        <el-col
                             :span="2"
                             v-for="Answer_Analysis_Pic_Col_Index in 12"
                             :key="'Answer_Analysis_Pic_Row_' + Answer_Analysis_Pic_Row_Index + 'Col_' + Answer_Analysis_Pic_Col_Index">
-                            <el-row 
-                                type="flex" 
-                                justify="start" 
+                            <el-row
+                                type="flex"
+                                justify="start"
                                 v-if="(Answer_Analysis_Pic_Row_Index - 1) * 12 + Answer_Analysis_Pic_Col_Index - 1 < Question.analysis_image.length"
                                 >
-                                <el-popover 
+                                <el-popover
                                     :ref="'Answer_Analysis_Pic_Row_' + Answer_Analysis_Pic_Row_Index + 'Col_' + Answer_Analysis_Pic_Col_Index + '_Pop'"
-                                    placement="top" 
-                                    width="200" 
+                                    placement="top"
+                                    width="200"
                                     trigger="hover">
                                     <el-row type="flex" justify="center">
                                         <img width="160" :src="Get_Picture_Src('analysis_image', Answer_Analysis_Pic_Row_Index, Answer_Analysis_Pic_Col_Index)">
                                     </el-row>
                                     <el-row type="flex" justify="center">
-                                        <el-button 
-                                            type="danger" 
-                                            size="small" 
+                                        <el-button
+                                            type="danger"
+                                            size="small"
                                             @click="Del_Picture_Src('analysis_image', Answer_Analysis_Pic_Row_Index, Answer_Analysis_Pic_Col_Index)"
                                             style="margin-top: 10px">
                                             删除此图片<i class="el-icon-delete" style="margin-left: 10px; font-size: 14px"></i>
@@ -427,10 +427,10 @@
                 </el-col>
                 <el-col :span="18" :offset="1">
                     <el-row type="flex" justify="start">
-                        <el-input 
-                            @focus="Get_Focus('Opt_Paste')" 
-                            type="textarea" 
-                            v-model="Paste_Analysis" 
+                        <el-input
+                            @focus="Get_Focus('Opt_Paste')"
+                            type="textarea"
+                            v-model="Paste_Analysis"
                             resize="none" :rows="6"></el-input>
                     </el-row>
                 </el-col>
@@ -459,31 +459,31 @@
             <!-- 题干的配图部分 -->
             <el-row type="flex" justify="end" v-show="Question.stem_image.length > 0">
                 <el-col :span="22">
-                    <el-row 
-                        type="flex" 
-                        justify="start" 
+                    <el-row
+                        type="flex"
+                        justify="start"
                         v-for="Pre_Answer_Stem_Pic_Row_Index in Math.ceil(Question.stem_image.length/12)"
                         :key="'Pre_Answer_Stem_' + Pre_Answer_Stem_Pic_Row_Index"
                         style="margin-bottom: 10px">
-                        <el-col 
-                            :span="2" 
-                            v-for="Pre_Answer_Stem_Pic_Col_Index in 12" 
+                        <el-col
+                            :span="2"
+                            v-for="Pre_Answer_Stem_Pic_Col_Index in 12"
                             :key="'Pre_Answer_Stem_' + Pre_Answer_Stem_Pic_Row_Index + '_' + Pre_Answer_Stem_Pic_Col_Index">
-                            <el-row 
-                                type="flex" 
-                                justify="center" 
+                            <el-row
+                                type="flex"
+                                justify="center"
                                 v-if="(Pre_Answer_Stem_Pic_Row_Index - 1) * 12 + Pre_Answer_Stem_Pic_Col_Index - 1 < Question.stem_image.length"
                                 >
-                                <img height="60" :src="Get_Picture_Src('stem_image', Pre_Answer_Stem_Pic_Row_Index, Pre_Answer_Stem_Pic_Col_Index)">   
+                                <img height="60" :src="Get_Picture_Src('stem_image', Pre_Answer_Stem_Pic_Row_Index, Pre_Answer_Stem_Pic_Col_Index)">
                             </el-row>
                         </el-col>
                     </el-row>
                 </el-col>
             </el-row>
             <!-- 小题部分 -->
-            <el-row 
-                type="flex" 
-                justify="start" 
+            <el-row
+                type="flex"
+                justify="start"
                 v-for="(Sub_Question, Sub_Questions_Index) in Question.sub_questions" :key="'Pre_Answer_Sub_Questions_' + Sub_Questions_Index"
                 style="margin-bottom: 10px;">
                 <el-col>
@@ -507,18 +507,18 @@
                             </el-row>
                         </el-col>
                         <el-col :span="22">
-                            <el-row 
-                                type="flex" 
+                            <el-row
+                                type="flex"
                                 justify="start"
                                 v-for="Pre_Answer_Sub_Questions_Pic_Row_Index in Math.ceil(Question.sub_questions_image[Sub_Questions_Index].length/12)"
                                 :key="'Pre_Answer_Sub_Questions_' + Sub_Questions_Index + '_Pic_Row_' + Pre_Answer_Sub_Questions_Pic_Row_Index">
-                                <el-col 
+                                <el-col
                                     :span="2"
                                     v-for="Pre_Answer_Sub_Questions_Pic_Col_Index in 12"
                                     :key="'Pre_Answer_Sub_Questions_' + Sub_Questions_Index + '_Pic_Row_' + Pre_Answer_Sub_Questions_Pic_Row_Index + '_Col_' + Pre_Answer_Sub_Questions_Pic_Col_Index">
-                                    <el-row 
-                                        type="flex" 
-                                        justify="center" 
+                                    <el-row
+                                        type="flex"
+                                        justify="center"
                                         v-if="(Pre_Answer_Sub_Questions_Pic_Row_Index - 1) * 12 + Pre_Answer_Sub_Questions_Pic_Col_Index - 1 < Question.sub_questions_image[Sub_Questions_Index].length"
                                         >
                                         <img height="60" :src="Get_Picture_Src('sub_questions_image ' + Sub_Questions_Index , Pre_Answer_Sub_Questions_Pic_Row_Index, Pre_Answer_Sub_Questions_Pic_Col_Index)">
@@ -546,28 +546,28 @@
             <!-- 答案配图 -->
             <el-row type="flex" justify="end" v-show="Question.answer_image.length > 0">
                 <el-col :span="22">
-                    <el-row 
-                        type="flex" 
-                        justify="start" 
+                    <el-row
+                        type="flex"
+                        justify="start"
                         v-for="Pre_Answer_Answer_Pic_Row_Index in Math.ceil(Question.answer_image.length/12)"
                         :key="'Pre_Answer_Answer_' + Pre_Answer_Answer_Pic_Row_Index"
                         style="margin-bottom: 10px;">
-                        <el-col 
-                            :span="2" 
-                            v-for="Pre_Answer_Answer_Pic_Col_Index in 12" 
+                        <el-col
+                            :span="2"
+                            v-for="Pre_Answer_Answer_Pic_Col_Index in 12"
                             :key="'Pre_Answer_Answer_' + Pre_Answer_Answer_Pic_Row_Index + '_' + Pre_Answer_Answer_Pic_Col_Index">
-                            <el-row 
-                                type="flex" 
-                                justify="center" 
+                            <el-row
+                                type="flex"
+                                justify="center"
                                 v-if="(Pre_Answer_Answer_Pic_Row_Index - 1) * 12 + Pre_Answer_Answer_Pic_Col_Index - 1 < Question.answer_image.length"
                                 >
-                                <img height="60" :src="Get_Picture_Src('answer_image', Pre_Answer_Answer_Pic_Row_Index, Pre_Answer_Answer_Pic_Col_Index)">   
+                                <img height="60" :src="Get_Picture_Src('answer_image', Pre_Answer_Answer_Pic_Row_Index, Pre_Answer_Answer_Pic_Col_Index)">
                             </el-row>
                         </el-col>
                     </el-row>
                 </el-col>
             </el-row>
-            
+
             <!-- 解析部分 -->
             <el-row type="flex" justify="start" style="margin-bottom: 10px;" v-show="Question.analysis_image.length > 0 || Question.analysis.length > 0">
                 <el-col :span="2">
@@ -584,21 +584,21 @@
             <!-- 解析部分配图 -->
             <el-row type="flex" justify="end" v-show="Question.analysis_image.length > 0">
                 <el-col :span="22">
-                    <el-row 
-                        type="flex" 
-                        justify="start" 
+                    <el-row
+                        type="flex"
+                        justify="start"
                         v-for="Pre_Answer_Analysis_Pic_Row_Index in Math.ceil(Question.analysis_image.length/12)"
                         :key="'Pre_Answer_Analysis_' + Pre_Answer_Analysis_Pic_Row_Index">
-                        <el-col 
-                            :span="2" 
-                            v-for="Pre_Answer_Analysis_Pic_Col_Index in 12" 
+                        <el-col
+                            :span="2"
+                            v-for="Pre_Answer_Analysis_Pic_Col_Index in 12"
                             :key="'Pre_Answer_Analysis_' + Pre_Answer_Analysis_Pic_Row_Index + '_' + Pre_Answer_Analysis_Pic_Col_Index">
-                            <el-row 
-                                type="flex" 
-                                justify="center" 
+                            <el-row
+                                type="flex"
+                                justify="center"
                                 v-if="(Pre_Answer_Analysis_Pic_Row_Index - 1) * 12 + Pre_Answer_Analysis_Pic_Col_Index - 1 < Question.analysis_image.length"
                                 >
-                                <img height="60" :src="Get_Picture_Src('analysis_image', Pre_Answer_Analysis_Pic_Row_Index, Pre_Answer_Analysis_Pic_Col_Index)">   
+                                <img height="60" :src="Get_Picture_Src('analysis_image', Pre_Answer_Analysis_Pic_Row_Index, Pre_Answer_Analysis_Pic_Col_Index)">
                             </el-row>
                         </el-col>
                     </el-row>
@@ -624,7 +624,7 @@ export default {
     props: {
         detailType: {
             type: String,
-            default: "简答题" 
+            default: "简答题"
         }
     },
     destroyed(){
@@ -758,7 +758,7 @@ export default {
 
         // 小题删除
         Sub_Questions_Delete(Sub_Questions_Index){
-            
+
             if(this.Question.sub_questions.length <= 1){
                 this.$message.error("请保留至少一道小题。")
                 return
@@ -780,32 +780,32 @@ export default {
             let Aim = this.Focusing_Input.split(" ")
             if(Aim.length == 1){
                 if(this.Text_Start == this.Text_End){
-                    this.Question[Aim[0]] = 
-                        this.Question[Aim[0]].substring(0, this.Text_Start) 
-                        + "(        )" 
+                    this.Question[Aim[0]] =
+                        this.Question[Aim[0]].substring(0, this.Text_Start)
+                        + "(        )"
                         + this.Question[Aim[0]].substring(this.Text_Start, this.Question[Aim[0]].length)
                 }else{
-                    this.Question[Aim[0]] = 
-                        this.Question[Aim[0]].substring(0, this.Text_Start) 
-                        + "(" 
-                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End) 
-                        + ")" 
+                    this.Question[Aim[0]] =
+                        this.Question[Aim[0]].substring(0, this.Text_Start)
+                        + "("
+                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End)
+                        + ")"
                         + this.Question[Aim[0]].substring(this.Text_End, this.Question[Aim[0]].length)
                 }
             }else{
                 if(this.Text_Start == this.Text_End){
                     this.Question[Aim[0]].splice(
-                        parseInt(Aim[1]), 
-                        1, 
-                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start) 
-                        + "(        )" 
+                        parseInt(Aim[1]),
+                        1,
+                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start)
+                        + "(        )"
                         + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_End, this.Question[Aim[0]][parseInt(Aim[1])].length))
                 }else{
-                    this.Question[Aim[0]].splice(parseInt(Aim[1]), 1, 
-                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start) 
-                        + "(" 
-                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_Start, this.Text_End) 
-                        + ")" 
+                    this.Question[Aim[0]].splice(parseInt(Aim[1]), 1,
+                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start)
+                        + "("
+                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_Start, this.Text_End)
+                        + ")"
                         + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_End, this.Question[Aim[0]][parseInt(Aim[1])].length))
                 }
             }
@@ -815,28 +815,28 @@ export default {
             let Aim = this.Focusing_Input.split(" ")
             if(Aim.length == 1){
                 if(this.Text_Start == this.Text_End){
-                    this.Question[Aim[0]] = 
-                        this.Question[Aim[0]].substring(0, this.Text_Start) 
-                        + "________" 
+                    this.Question[Aim[0]] =
+                        this.Question[Aim[0]].substring(0, this.Text_Start)
+                        + "________"
                         + this.Question[Aim[0]].substring(this.Text_Start, this.Question[Aim[0]].length)
                 }else{
-                    this.Question[Aim[0]] = 
-                        this.Question[Aim[0]].substring(0, this.Text_Start) 
-                        + "________"  
+                    this.Question[Aim[0]] =
+                        this.Question[Aim[0]].substring(0, this.Text_Start)
+                        + "________"
                         + this.Question[Aim[0]].substring(this.Text_End, this.Question[Aim[0]].length)
                 }
             }else{
                 if(this.Text_Start == this.Text_End){
                     this.Question[Aim[0]].splice(
-                        parseInt(Aim[1]), 
-                        1, 
-                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start) 
+                        parseInt(Aim[1]),
+                        1,
+                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start)
                         + "________"
                         + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_End, this.Question[Aim[0]][parseInt(Aim[1])].length))
                 }else{
-                    this.Question[Aim[0]].splice(parseInt(Aim[1]), 1, 
-                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start) 
-                        + "________" 
+                    this.Question[Aim[0]].splice(parseInt(Aim[1]), 1,
+                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start)
+                        + "________"
                         + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_End, this.Question[Aim[0]][parseInt(Aim[1])].length))
                 }
             }
@@ -848,22 +848,22 @@ export default {
                 if(this.Text_Start == this.Text_End){
                     return
                 }else{
-                    this.Question[Aim[0]] = 
-                        this.Question[Aim[0]].substring(0, this.Text_Start) 
-                        + "<b>" 
-                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End) 
-                        + "</b>" 
+                    this.Question[Aim[0]] =
+                        this.Question[Aim[0]].substring(0, this.Text_Start)
+                        + "<b>"
+                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End)
+                        + "</b>"
                         + this.Question[Aim[0]].substring(this.Text_End, this.Question[Aim[0]].length)
                 }
             }else{
                 if(this.Text_Start == this.Text_End){
-                    return    
+                    return
                 }else{
-                    this.Question[Aim[0]].splice(parseInt(Aim[1]), 1, 
-                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start) 
-                        + "<b>" 
-                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_Start, this.Text_End) 
-                        + "</b>" 
+                    this.Question[Aim[0]].splice(parseInt(Aim[1]), 1,
+                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start)
+                        + "<b>"
+                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_Start, this.Text_End)
+                        + "</b>"
                         + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_End, this.Question[Aim[0]][parseInt(Aim[1])].length))
                 }
             }
@@ -875,22 +875,22 @@ export default {
                 if(this.Text_Start == this.Text_End){
                     return
                 }else{
-                    this.Question[Aim[0]] = 
-                        this.Question[Aim[0]].substring(0, this.Text_Start) 
-                        + "<i>" 
-                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End) 
-                        + "</i>" 
+                    this.Question[Aim[0]] =
+                        this.Question[Aim[0]].substring(0, this.Text_Start)
+                        + "<i>"
+                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End)
+                        + "</i>"
                         + this.Question[Aim[0]].substring(this.Text_End, this.Question[Aim[0]].length)
                 }
             }else{
                 if(this.Text_Start == this.Text_End){
-                    return    
+                    return
                 }else{
-                    this.Question[Aim[0]].splice(parseInt(Aim[1]), 1, 
-                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start) 
-                        + "<i>" 
-                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_Start, this.Text_End) 
-                        + "</i>" 
+                    this.Question[Aim[0]].splice(parseInt(Aim[1]), 1,
+                        this.Question[Aim[0]][parseInt(Aim[1])].substring(0, this.Text_Start)
+                        + "<i>"
+                        + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_Start, this.Text_End)
+                        + "</i>"
                         + this.Question[Aim[0]][parseInt(Aim[1])].substring(this.Text_End, this.Question[Aim[0]][parseInt(Aim[1])].length))
                 }
             }
@@ -992,13 +992,13 @@ export default {
                     _this.Question[Place][parseInt(Aim[1])].push(File_Result);
                     _this.Picture_Loading = false
                 }
-                
+
             }).catch(function(){
             // 报错了就打印错误
                 _this.$message.error("图片读取错误，请重试")
                 _this.Picture_Loading = false
             })
-            
+
         },
         // 上传图片
         Insert_Picture(){
@@ -1082,8 +1082,8 @@ export default {
                         this.$message.error("解析出现异常，请重试。")
                     }
                 ).finally(()=>{
-                    
-                }) 
+
+                })
             })
         },
         Paste_Extract(Question_Info){
@@ -1147,9 +1147,9 @@ export default {
 }
 /* 提供给上升，下降等功能按钮的样式 */
 .optionButton{
-    border: 2px solid #409EFF; 
-    border-radius: 50%; 
-    width: 25px; 
+    border: 2px solid #409EFF;
+    border-radius: 50%;
+    width: 25px;
     height: 25px;
     line-height: 25px;
     margin-top: 5px;
@@ -1160,7 +1160,7 @@ export default {
 }
 .optionButton:hover{
     color: MediumTurquoise;
-    border: 2px solid MediumTurquoise; 
+    border: 2px solid MediumTurquoise;
 }
 
 /* 用于试题内容简单编辑的按钮 */

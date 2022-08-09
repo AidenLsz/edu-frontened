@@ -16,25 +16,25 @@
         <el-row type="flex" justify="start" class="topBar">
             <!-- 编辑和预览 -->
             <el-col :span="1" :offset="1">
-                <el-row 
-                    type="flex" 
-                    justify="center" 
-                    style="height: 40px; line-height: 40px; cursor: pointer;" 
+                <el-row
+                    type="flex"
+                    justify="center"
+                    style="height: 40px; line-height: 40px; cursor: pointer;"
                     :class="Get_Focus_Function('Editing')"
                     @click.native="Focus_Function = 'Editing'">编辑
-                    <input 
-                        type="file" 
-                        style="display: none" 
-                        accept=".jpg, .jpeg, .png" 
+                    <input
+                        type="file"
+                        style="display: none"
+                        accept=".jpg, .jpeg, .png"
                         multiple="false"
                         id="PictureInput"/>
                 </el-row>
             </el-col>
             <el-col :span="1">
-                <el-row 
-                    type="flex" 
-                    justify="center" 
-                    style="height: 40px; line-height: 40px; cursor: pointer; margin-left: 20px" 
+                <el-row
+                    type="flex"
+                    justify="center"
+                    style="height: 40px; line-height: 40px; cursor: pointer; margin-left: 20px"
                     :class="Get_Focus_Function('PreView')"
                     @click.native="Focus_Function = 'PreView'">
                     预览
@@ -110,7 +110,7 @@
                 </el-col>
                 <el-col :span="3">
                     <el-row type="flex" justify="start">
-                        <el-input-number v-model="Unit_Score" placeholder="" :min="1" :max="40"></el-input-number>
+                        <el-input-number v-model="Unit_Score" placeholder="" :step=".5" :min="1" :max="40"></el-input-number>
                     </el-row>
                 </el-col>
                 <el-col :span="2">
@@ -133,11 +133,11 @@
                 </el-col>
                 <el-col :span="20" :offset="1">
                     <el-row type="flex" justify="start">
-                        <el-input 
-                            @focus="Get_Focus('Mix_Stem')" 
-                            id="Mix_Stem" 
-                            type="textarea" 
-                            v-model="Question.stem" 
+                        <el-input
+                            @focus="Get_Focus('Mix_Stem')"
+                            id="Mix_Stem"
+                            type="textarea"
+                            v-model="Question.stem"
                             resize="none" :rows="6"
                             placeholder="请填写题干内容（必填）"></el-input>
                     </el-row>
@@ -151,32 +151,32 @@
                     </el-row>
                 </el-col>
                 <el-col :span="21" :offset="1">
-                    <el-row 
-                        type="flex" 
+                    <el-row
+                        type="flex"
                         justify="start"
                         v-for="Stem_Pic_Row_Index in Math.ceil(Question.stem_image.length/12)"
                         :key="'Stem_Pic_Row_' + Stem_Pic_Row_Index">
-                        <el-col 
+                        <el-col
                             :span="2"
                             v-for="Stem_Pic_Col_Index in 12"
                             :key="'Stem_Pic_Row_' + Stem_Pic_Row_Index + 'Col_' + Stem_Pic_Col_Index">
-                            <el-row 
-                                type="flex" 
-                                justify="start" 
+                            <el-row
+                                type="flex"
+                                justify="start"
                                 v-if="(Stem_Pic_Row_Index - 1) * 12 + Stem_Pic_Col_Index - 1 < Question.stem_image.length"
                                 >
-                                <el-popover 
+                                <el-popover
                                     :ref="'Stem_Pic_Row_' + Stem_Pic_Row_Index + 'Col_' + Stem_Pic_Col_Index + '_Pop'"
-                                    placement="top" 
-                                    width="200" 
+                                    placement="top"
+                                    width="200"
                                     trigger="hover">
                                     <el-row type="flex" justify="center">
                                         <img width="160" :src="Get_Picture_Src('stem_image', Stem_Pic_Row_Index, Stem_Pic_Col_Index)">
                                     </el-row>
                                     <el-row type="flex" justify="center">
-                                        <el-button 
-                                            type="danger" 
-                                            size="small" 
+                                        <el-button
+                                            type="danger"
+                                            size="small"
                                             @click="Del_Picture_Src('stem_image', Stem_Pic_Row_Index, Stem_Pic_Col_Index)"
                                             style="margin-top: 10px">
                                             删除此图片<i class="el-icon-delete" style="margin-left: 10px; font-size: 14px"></i>
@@ -195,7 +195,7 @@
             <el-row style="margin-bottom: 20px; border-top: 2px solid #ccc">
                 <el-col>
                     <!-- 开始进行每道小题的遍历 -->
-                    <el-row 
+                    <el-row
                         type="flex" justify="start"
                         v-for="(Big_Sub_Question, Big_Sub_Question_Index) in Question.sub_questions"
                         :key="'Big_Sub_Question_' + Big_Sub_Question_Index"
@@ -216,10 +216,10 @@
                                         <el-input v-model="Question.sub_questions[Big_Sub_Question_Index].score" placeholder="" readonly></el-input>
                                     </el-row>
                                     <el-row type="flex" justify="start" v-show="['简答题', '计算题'].indexOf(Big_Sub_Question.type) == -1">
-                                        <el-input-number 
+                                        <el-input-number
                                             @change="Update_Total_Score()"
-                                            v-model="Question.sub_questions[Big_Sub_Question_Index].score" 
-                                            placeholder="" :min="1" :max="30"></el-input-number>
+                                            v-model="Question.sub_questions[Big_Sub_Question_Index].score"
+                                            placeholder="" :min="1" :step=".5" :max="30"></el-input-number>
                                     </el-row>
                                 </el-col>
                                 <el-col :span="2" :offset="1">
@@ -229,9 +229,9 @@
                                 </el-col>
                                 <el-col :span="3">
                                     <el-row type="flex" justify="start">
-                                        <el-select 
+                                        <el-select
                                             @change="Big_Sub_Question_Type_Change(Big_Sub_Question_Index)"
-                                            v-model="Question.sub_questions[Big_Sub_Question_Index].type" 
+                                            v-model="Question.sub_questions[Big_Sub_Question_Index].type"
                                             placeholder="请选择当前小题题型">
                                             <el-option
                                                 v-for="Type in ['单选题', '多选题', '判断题', '填空题', '简答题', '计算题']"
@@ -242,8 +242,8 @@
                                 </el-col>
                                 <el-col :span="1" :offset="2">
                                     <el-row type="flex" justify="center">
-                                        <el-button 
-                                            type="text" 
+                                        <el-button
+                                            type="text"
                                             :disabled="Big_Sub_Question_Index == 0"
                                             @click="Big_Sub_Question_Up(Big_Sub_Question_Index)">
                                             <i class="el-icon-top" style="font-size: 20px; margin-top: -3px"></i>
@@ -252,8 +252,8 @@
                                 </el-col>
                                 <el-col :span="1">
                                     <el-row type="flex" justify="center">
-                                        <el-button 
-                                            type="text" 
+                                        <el-button
+                                            type="text"
                                             :disabled="Big_Sub_Question_Index == Question.sub_questions.length - 1"
                                             @click="Big_Sub_Question_Down(Big_Sub_Question_Index)">
                                             <i class="el-icon-bottom" style="font-size: 20px; margin-top: -3px"></i>
@@ -262,8 +262,8 @@
                                 </el-col>
                                 <el-col :span="1">
                                     <el-row type="flex" justify="center">
-                                        <el-button 
-                                            type="text" 
+                                        <el-button
+                                            type="text"
                                             :disabled="Question.sub_questions.length <= 1"
                                             @click="Big_Sub_Question_Delete(Big_Sub_Question_Index)">
                                             <i class="el-icon-close" style="font-size: 20px; margin-top: -3px"></i>
@@ -272,8 +272,8 @@
                                 </el-col>
                                 <el-col :span="1">
                                     <el-row type="flex" justify="center">
-                                        <el-button 
-                                            type="text" 
+                                        <el-button
+                                            type="text"
                                             v-if="Big_Sub_Question_Index == Question.sub_questions.length - 1"
                                             @click="Big_Sub_Question_Add()">
                                             <i class="el-icon-plus" style="font-size: 20px; margin-top: -3px"></i>
@@ -282,14 +282,14 @@
                                 </el-col>
                                 <el-col :span="5">
                                     <el-row type="flex" justify="end">
-                                        <el-button 
+                                        <el-button
                                             v-if="Question.sub_questions[Big_Sub_Question_Index].expand"
                                             type="primary"
                                             @click="Expand_Change(Big_Sub_Question_Index)">
                                             展开
                                         </el-button>
-                                        <el-button 
-                                            v-else 
+                                        <el-button
+                                            v-else
                                             type="primary"
                                             @click="Expand_Change(Big_Sub_Question_Index)">
                                             折叠
@@ -298,9 +298,9 @@
                                 </el-col>
                             </el-row>
                             <!-- 题干 -->
-                            <el-row 
-                                type="flex" 
-                                justify="start" 
+                            <el-row
+                                type="flex"
+                                justify="start"
                                 style="margin-top: 10px; margin-bottom: 10px">
                                 <el-col :span="2">
                                     <el-row type="flex" justify="end" style="font-weight: bold; height: 40px; line-height: 40px">
@@ -310,7 +310,7 @@
                                 <el-col :span="17" :offset="1">
                                     <el-row type="flex" justify="start">
                                         <el-input
-                                            @focus="Get_Focus('Mix_Stem_' + Big_Sub_Question_Index)" 
+                                            @focus="Get_Focus('Mix_Stem_' + Big_Sub_Question_Index)"
                                             :id="'Mix_Stem_' + Big_Sub_Question_Index"
                                             v-model="Question.sub_questions[Big_Sub_Question_Index].stem"
                                             placeholder="请填写此小题题干内容（必填）"></el-input>
@@ -325,32 +325,32 @@
                                     </el-row>
                                 </el-col>
                                 <el-col :span="21" :offset="1">
-                                    <el-row 
-                                        type="flex" 
+                                    <el-row
+                                        type="flex"
                                         justify="start"
                                         v-for="B_SQ_Stem_Pic_Row_Index in Math.ceil(Question.sub_questions[Big_Sub_Question_Index].stem_image.length/12)"
                                         :key="'B_SQ_Stem_Pic_Row_' + B_SQ_Stem_Pic_Row_Index">
-                                        <el-col 
+                                        <el-col
                                             :span="2"
                                             v-for="B_SQ_Stem_Pic_Col_Index in 12"
                                             :key="'B_SQ_Stem_Pic_Row_' + B_SQ_Stem_Pic_Row_Index + 'Col_' + B_SQ_Stem_Pic_Col_Index">
-                                            <el-row 
-                                                type="flex" 
-                                                justify="start" 
+                                            <el-row
+                                                type="flex"
+                                                justify="start"
                                                 v-if="(B_SQ_Stem_Pic_Row_Index - 1) * 12 + B_SQ_Stem_Pic_Col_Index - 1 < Question.sub_questions[Big_Sub_Question_Index].stem_image.length"
                                                 >
-                                                <el-popover 
+                                                <el-popover
                                                     :ref="'B_SQ_Stem_Pic_Row_' + B_SQ_Stem_Pic_Row_Index + 'Col_' + B_SQ_Stem_Pic_Col_Index + '_Pop'"
-                                                    placement="top" 
-                                                    width="200" 
+                                                    placement="top"
+                                                    width="200"
                                                     trigger="hover">
                                                     <el-row type="flex" justify="center">
                                                         <img width="160" :src="Get_Picture_Src('stem_image ' + Big_Sub_Question_Index , B_SQ_Stem_Pic_Row_Index, B_SQ_Stem_Pic_Col_Index)">
                                                     </el-row>
                                                     <el-row type="flex" justify="center">
-                                                        <el-button 
-                                                            type="danger" 
-                                                            size="small" 
+                                                        <el-button
+                                                            type="danger"
+                                                            size="small"
                                                             @click="Del_Picture_Src('stem_image ' + Big_Sub_Question_Index, B_SQ_Stem_Pic_Row_Index, B_SQ_Stem_Pic_Col_Index)"
                                                             style="margin-top: 10px">
                                                             删除此图片<i class="el-icon-delete" style="margin-left: 10px; font-size: 14px"></i>
@@ -367,19 +367,19 @@
                             </el-row>
                             <!-- 单选，多选，判断的选项区域和配图区域 -->
                             <!-- 每行两个 -->
-                            <el-row 
+                            <el-row
                                 v-show="!Big_Sub_Question.expand"
                                 type="flex" justify="start"
                                 v-for="Option_Row in Math.ceil(Question.sub_questions[Big_Sub_Question_Index].options.length / 2)"
                                 :key="'Big_Sub_Question_' + Big_Sub_Question_Index + '_Option_Row_' + Option_Row"
                                 style="margin-top: 10px;">
-                                <el-col 
-                                    v-for="Option_Col in 2" 
+                                <el-col
+                                    v-for="Option_Col in 2"
                                     :key="'Big_Sub_Question_' + Big_Sub_Question_Index + '_Option_Row_' + Option_Row + '_Col_' + Option_Col"
                                     :span="12">
                                     <div v-if="(Option_Row - 1)  * 2 + Option_Col - 1 < Question.sub_questions[Big_Sub_Question_Index].options.length">
                                         <!-- 选项 -->
-                                        <el-row 
+                                        <el-row
                                             type="flex"
                                             justify="start"
                                             v-if="(Option_Row - 1) * 2 + Option_Col - 1 < Question.sub_questions[Big_Sub_Question_Index].options.length">
@@ -389,9 +389,9 @@
                                                 </el-row>
                                             </el-col>
                                             <el-col :span="14">
-                                                <el-input 
+                                                <el-input
                                                     :placeholder="'请填写选项' + String.fromCharCode(65 + ((Option_Row - 1) * 2 + Option_Col - 1)) + '（必填）'"
-                                                    @focus="Get_Focus('Mix_Options_' + Big_Sub_Question_Index + '_' + ((Option_Row - 1) * 2 + Option_Col - 1))" 
+                                                    @focus="Get_Focus('Mix_Options_' + Big_Sub_Question_Index + '_' + ((Option_Row - 1) * 2 + Option_Col - 1))"
                                                     :id="'Mix_Options_' + Big_Sub_Question_Index + '_' + ((Option_Row - 1) * 2 + Option_Col - 1)"
                                                     v-model="Question.sub_questions[Big_Sub_Question_Index].options[(Option_Row - 1) * 2 + Option_Col - 1]">
 
@@ -399,7 +399,7 @@
                                             </el-col>
                                             <el-col :span="2">
                                                 <el-row type="flex" justify="center">
-                                                    <el-button 
+                                                    <el-button
                                                         type="text"
                                                         @click="Option_Delete(Big_Sub_Question_Index, (Option_Row - 1) * 2 + Option_Col - 1)"
                                                         >
@@ -408,11 +408,11 @@
                                                 </el-row>
                                             </el-col>
                                             <el-col :span="2">
-                                                <el-row 
-                                                    type="flex" 
-                                                    justify="center" 
+                                                <el-row
+                                                    type="flex"
+                                                    justify="center"
                                                     v-if="(Option_Row - 1) * 2 + Option_Col - 1 == Question.sub_questions[Big_Sub_Question_Index].options.length - 1">
-                                                    <el-button 
+                                                    <el-button
                                                         type="text"
                                                         @click="Option_Add(Big_Sub_Question_Index)">
                                                         <i class="el-icon-plus" style="font-size: 20px; margin-top: -4px"></i>
@@ -423,13 +423,13 @@
                                     </div>
                                     <div v-if="(Option_Row - 1)  * 2 + Option_Col - 1 < Question.sub_questions[Big_Sub_Question_Index].options.length">
                                         <!-- 配图 -->
-                                        <el-row 
-                                            type="flex" 
+                                        <el-row
+                                            type="flex"
                                             justify="start"
                                             style="margin-top: 10px"
                                             v-for="B_SQ_Pic_Row_Index in Math.ceil(Question.sub_questions[Big_Sub_Question_Index].options_image[(Option_Row - 1) * 2 + Option_Col - 1].length/4)"
-                                            :key="'B_SQ_' + Big_Sub_Question_Index 
-                                                    + '_Option_' + ((Option_Row - 1) * 2 + Option_Col - 1) 
+                                            :key="'B_SQ_' + Big_Sub_Question_Index
+                                                    + '_Option_' + ((Option_Row - 1) * 2 + Option_Col - 1)
                                                     + '_Pic_Row_' + B_SQ_Pic_Row_Index">
                                             <el-row style="width: 100%">
                                                 <el-col :span="2" :offset="Option_Col == 1 ? 4 : 0">
@@ -438,40 +438,40 @@
                                                     </el-row>
                                                 </el-col>
                                                 <el-col :span="16">
-                                                    <el-row 
+                                                    <el-row
                                                         type="flex" justify="start">
-                                                        <el-col 
+                                                        <el-col
                                                             :span="5"
                                                             v-for="B_SQ_Pic_Col_Index in 4"
-                                                            :key="'B_SQ_' + Big_Sub_Question_Index 
-                                                                + '_Option_' + ((Option_Row - 1) * 2 + Option_Col - 1) 
-                                                                + '_Pic_Row_' + B_SQ_Pic_Row_Index 
+                                                            :key="'B_SQ_' + Big_Sub_Question_Index
+                                                                + '_Option_' + ((Option_Row - 1) * 2 + Option_Col - 1)
+                                                                + '_Pic_Row_' + B_SQ_Pic_Row_Index
                                                                 + '_Col_' + B_SQ_Pic_Col_Index">
-                                                            <el-row 
-                                                                type="flex" 
+                                                            <el-row
+                                                                type="flex"
                                                                 justify="start"
-                                                                v-if="(B_SQ_Pic_Row_Index - 1) * 4 + B_SQ_Pic_Col_Index - 1 
+                                                                v-if="(B_SQ_Pic_Row_Index - 1) * 4 + B_SQ_Pic_Col_Index - 1
                                                                     < Question.sub_questions[Big_Sub_Question_Index].options_image[(Option_Row - 1) * 2 + Option_Col - 1].length"
                                                                 >
-                                                                <el-popover 
-                                                                    :ref="'B_SQ_' + Big_Sub_Question_Index 
-                                                                        + '_Options_' + ((Option_Row - 1) * 2 + Option_Col - 1) 
-                                                                        + '_Pic_Row_' + B_SQ_Pic_Row_Index 
-                                                                        + '_Col_' + B_SQ_Pic_Col_Index 
+                                                                <el-popover
+                                                                    :ref="'B_SQ_' + Big_Sub_Question_Index
+                                                                        + '_Options_' + ((Option_Row - 1) * 2 + Option_Col - 1)
+                                                                        + '_Pic_Row_' + B_SQ_Pic_Row_Index
+                                                                        + '_Col_' + B_SQ_Pic_Col_Index
                                                                         + '_Pop'"
-                                                                    placement="top" 
-                                                                    width="200" 
+                                                                    placement="top"
+                                                                    width="200"
                                                                     trigger="hover">
                                                                     <el-row type="flex" justify="center">
-                                                                        <img width="160" :src="Get_Picture_Src('options_image ' + Big_Sub_Question_Index + ' ' + ((Option_Row - 1) * 2 + Option_Col - 1) 
+                                                                        <img width="160" :src="Get_Picture_Src('options_image ' + Big_Sub_Question_Index + ' ' + ((Option_Row - 1) * 2 + Option_Col - 1)
                                                                                                                 , B_SQ_Pic_Row_Index
                                                                                                                 , B_SQ_Pic_Col_Index)">
                                                                     </el-row>
                                                                     <el-row type="flex" justify="center">
-                                                                        <el-button 
-                                                                            type="danger" 
-                                                                            size="small" 
-                                                                            @click="Del_Picture_Src('options_image ' + Big_Sub_Question_Index + ' ' + ((Option_Row - 1) * 2 + Option_Col - 1) 
+                                                                        <el-button
+                                                                            type="danger"
+                                                                            size="small"
+                                                                            @click="Del_Picture_Src('options_image ' + Big_Sub_Question_Index + ' ' + ((Option_Row - 1) * 2 + Option_Col - 1)
                                                                                                     , B_SQ_Pic_Row_Index
                                                                                                     , B_SQ_Pic_Col_Index)"
                                                                             style="margin-top: 10px">
@@ -493,7 +493,7 @@
                             </el-row>
                             <!-- 简答，计算的小题和配图区域 -->
                             <!-- 每行一个 -->
-                            <el-row 
+                            <el-row
                                 v-show="!Big_Sub_Question.expand"
                                 type="flex" justify="start"
                                 v-for="(Small_Sub_Question, Small_Sub_Question_Index) in Question.sub_questions[Big_Sub_Question_Index].sub_questions"
@@ -509,9 +509,9 @@
                                         <el-col :span="3" :offset="1">
                                             <el-row type="flex" justify="center" style="height: 65px; padding-top: 13px;">
                                                 <el-input-number
-                                                    v-model="Question.sub_questions[Big_Sub_Question_Index].sub_questions_score[Small_Sub_Question_Index]" 
-                                                    @change="Update_Total_Score()" 
-                                                    :min="1" :max="20">
+                                                    v-model="Question.sub_questions[Big_Sub_Question_Index].sub_questions_score[Small_Sub_Question_Index]"
+                                                    @change="Update_Total_Score()"
+                                                    :min="1" :max="20" :step=".5">
                                                 </el-input-number>
                                             </el-row>
                                         </el-col>
@@ -522,20 +522,20 @@
                                         </el-col>
                                         <el-col :span="13">
                                             <el-input
-                                                @focus="Get_Focus('Mix_SQ_' + Big_Sub_Question_Index + '_' + Small_Sub_Question_Index)" 
-                                                :id="'Mix_SQ_' + Big_Sub_Question_Index + '_' + Small_Sub_Question_Index" 
+                                                @focus="Get_Focus('Mix_SQ_' + Big_Sub_Question_Index + '_' + Small_Sub_Question_Index)"
+                                                :id="'Mix_SQ_' + Big_Sub_Question_Index + '_' + Small_Sub_Question_Index"
                                                 type="textarea"
                                                 resize="none" :rows="3"
                                                 placeholder="请填写此小题的对应题目内容（必填）"
                                                 v-model="Question.sub_questions[Big_Sub_Question_Index].sub_questions[Small_Sub_Question_Index]"></el-input>
                                         </el-col>
                                         <el-col :span="1">
-                                            <el-row 
-                                                type="flex" 
-                                                justify="center" 
+                                            <el-row
+                                                type="flex"
+                                                justify="center"
                                                 v-if="Small_Sub_Question_Index != 0 || Question.sub_questions[Big_Sub_Question_Index].sub_questions.length > 1"
                                                 style="height: 65px; line-height: 65px; font-weight: bold; padding-top: 12px">
-                                                <el-button 
+                                                <el-button
                                                     type="text"
                                                     @click="Small_Sub_Questions_Delete(Big_Sub_Question_Index, Small_Sub_Question_Index)"
                                                     >
@@ -544,12 +544,12 @@
                                             </el-row>
                                         </el-col>
                                         <el-col :span="1">
-                                            <el-row 
-                                                type="flex" 
-                                                justify="start" 
+                                            <el-row
+                                                type="flex"
+                                                justify="start"
                                                 v-if="Small_Sub_Question_Index == Question.sub_questions[Big_Sub_Question_Index].sub_questions.length - 1"
                                                 style="height: 65px; line-height: 65px; font-weight: bold; padding-top: 12px">
-                                                <el-button 
+                                                <el-button
                                                     type="text"
                                                     @click="Small_Sub_Questions_Add(Big_Sub_Question_Index)">
                                                     <i class="el-icon-plus" style="font-size: 20px; margin-top: -4px"></i>
@@ -558,8 +558,8 @@
                                         </el-col>
                                     </el-row>
                                     <!-- 配图 -->
-                                    <el-row 
-                                        v-if="Question.sub_questions[Big_Sub_Question_Index].sub_questions_image[Small_Sub_Question_Index].length > 0" 
+                                    <el-row
+                                        v-if="Question.sub_questions[Big_Sub_Question_Index].sub_questions_image[Small_Sub_Question_Index].length > 0"
                                         style="margin-top: 10px;">
                                         <el-col :span="2">
                                             <el-row type="flex" justify="end" style="font-weight: bold; height: 30px; line-height: 30px">
@@ -567,32 +567,32 @@
                                             </el-row>
                                         </el-col>
                                         <el-col :span="17" :offset="1">
-                                            <el-row 
-                                                type="flex" 
+                                            <el-row
+                                                type="flex"
                                                 justify="start"
                                                 v-for="B_SQ_S_SQ_Pic_Row_Index in Math.ceil(Question.sub_questions[Big_Sub_Question_Index].sub_questions_image[Small_Sub_Question_Index].length/12)"
                                                 :key="'B_SQ_S_SQ_Pic_Row_' + B_SQ_S_SQ_Pic_Row_Index">
-                                                <el-col 
+                                                <el-col
                                                     :span="2"
                                                     v-for="B_SQ_S_SQ_Pic_Col_Index in 12"
                                                     :key="'B_SQ_S_SQ_Pic_Row_' + B_SQ_S_SQ_Pic_Row_Index + 'Col_' + B_SQ_S_SQ_Pic_Col_Index">
-                                                    <el-row 
-                                                        type="flex" 
-                                                        justify="start" 
+                                                    <el-row
+                                                        type="flex"
+                                                        justify="start"
                                                         v-if="(B_SQ_S_SQ_Pic_Row_Index - 1) * 12 + B_SQ_S_SQ_Pic_Col_Index - 1 < Question.sub_questions[Big_Sub_Question_Index].sub_questions_image[Small_Sub_Question_Index].length"
                                                         >
-                                                        <el-popover 
+                                                        <el-popover
                                                             :ref="'B_SQ_S_SQ_Pic_Row_' + B_SQ_S_SQ_Pic_Row_Index + 'Col_' + B_SQ_S_SQ_Pic_Col_Index + '_Pop'"
-                                                            placement="top" 
-                                                            width="200" 
+                                                            placement="top"
+                                                            width="200"
                                                             trigger="hover">
                                                             <el-row type="flex" justify="center">
                                                                 <img width="160" :src="Get_Picture_Src('sub_questions_image ' + Big_Sub_Question_Index + ' ' + Small_Sub_Question_Index , B_SQ_S_SQ_Pic_Row_Index, B_SQ_S_SQ_Pic_Col_Index)">
                                                             </el-row>
                                                             <el-row type="flex" justify="center">
-                                                                <el-button 
-                                                                    type="danger" 
-                                                                    size="small" 
+                                                                <el-button
+                                                                    type="danger"
+                                                                    size="small"
                                                                     @click="Del_Picture_Src('sub_questions_image ' + Big_Sub_Question_Index + ' ' + Small_Sub_Question_Index, B_SQ_S_SQ_Pic_Row_Index, B_SQ_S_SQ_Pic_Col_Index)"
                                                                     style="margin-top: 10px">
                                                                     删除此图片<i class="el-icon-delete" style="margin-left: 10px; font-size: 14px"></i>
@@ -611,7 +611,7 @@
                             </el-row>
 
                             <!-- 答案区域 - 单选，多选，判断 -->
-                            <el-row 
+                            <el-row
                                 v-show="!Big_Sub_Question.expand"
                                 type="flex"
                                 justify="start"
@@ -625,30 +625,30 @@
                                 <el-col :span="21" v-if="['单选题', '判断题'].indexOf(Big_Sub_Question.type) != -1" :offset="1">
                                     <el-row type="flex" justify="start">
                                         <el-select v-model="Question.sub_questions[Big_Sub_Question_Index].answer" placeholder="请选择正确答案（可选）">
-                                            <el-option 
-                                                v-for="Option_Index in Question.sub_questions[Big_Sub_Question_Index].options.length" 
+                                            <el-option
+                                                v-for="Option_Index in Question.sub_questions[Big_Sub_Question_Index].options.length"
                                                 :key="'B_SQ_' + Big_Sub_Question_Index + '_Answer_' + Option_Index"
-                                                :label="Get_Option_Label(Option_Index - 1)" 
+                                                :label="Get_Option_Label(Option_Index - 1)"
                                                 :value="Get_Option_Label(Option_Index - 1)"></el-option>
                                         </el-select>
                                     </el-row>
                                 </el-col>
                                 <el-col :span="21" v-if="['多选题'].indexOf(Big_Sub_Question.type) != -1" :offset="1">
                                     <el-row type="flex" justify="start" style="height: 40px; line-height: 40px">
-                                        <el-checkbox-group 
+                                        <el-checkbox-group
                                             @change="Multi_Option_Answer_Make(Big_Sub_Question_Index)"
                                             v-model="Question.sub_questions[Big_Sub_Question_Index].answer_list">
-                                            <el-checkbox 
-                                                v-for="Option_Index in Question.sub_questions[Big_Sub_Question_Index].options.length" 
+                                            <el-checkbox
+                                                v-for="Option_Index in Question.sub_questions[Big_Sub_Question_Index].options.length"
                                                 :key="'B_SQ_' + Big_Sub_Question_Index + '_Answer_' + Option_Index"
-                                                :label="Get_Option_Label(Option_Index - 1)" 
+                                                :label="Get_Option_Label(Option_Index - 1)"
                                                 :value="Get_Option_Label(Option_Index - 1)"></el-checkbox>
                                         </el-checkbox-group>
                                     </el-row>
                                 </el-col>
                             </el-row>
                             <!-- 答案区域 - 填空，简答，计算 -->
-                            <el-row 
+                            <el-row
                                 v-show="!Big_Sub_Question.expand"
                                 type="flex"
                                 justify="start"
@@ -662,8 +662,8 @@
                                 <el-col :span="17" :offset="1">
                                     <el-row type="flex" justify="start">
                                         <el-input
-                                            @focus="Get_Focus('Mix_Answer_' + Big_Sub_Question_Index)" 
-                                            :id="'Mix_Answer_' + Big_Sub_Question_Index" 
+                                            @focus="Get_Focus('Mix_Answer_' + Big_Sub_Question_Index)"
+                                            :id="'Mix_Answer_' + Big_Sub_Question_Index"
                                             type="textarea"
                                             resize="none" :rows="3"
                                             placeholder="请填写此小题的答案内容（可选）"
@@ -679,32 +679,32 @@
                                     </el-row>
                                 </el-col>
                                 <el-col :span="21" :offset="1">
-                                    <el-row 
-                                        type="flex" 
+                                    <el-row
+                                        type="flex"
                                         justify="start"
                                         v-for="B_SQ_Answer_Pic_Row_Index in Math.ceil(Question.sub_questions[Big_Sub_Question_Index].answer_image.length/12)"
                                         :key="'B_SQ_Answer_Pic_Row_' + B_SQ_Answer_Pic_Row_Index">
-                                        <el-col 
+                                        <el-col
                                             :span="2"
                                             v-for="B_SQ_Answer_Pic_Col_Index in 12"
                                             :key="'B_SQ_Answer_Pic_Row_' + B_SQ_Answer_Pic_Row_Index + 'Col_' + B_SQ_Answer_Pic_Col_Index">
-                                            <el-row 
-                                                type="flex" 
-                                                justify="start" 
+                                            <el-row
+                                                type="flex"
+                                                justify="start"
                                                 v-if="(B_SQ_Answer_Pic_Row_Index - 1) * 12 + B_SQ_Answer_Pic_Col_Index - 1 < Question.sub_questions[Big_Sub_Question_Index].answer_image.length"
                                                 >
-                                                <el-popover 
+                                                <el-popover
                                                     :ref="'B_SQ_Answer_Pic_Row_' + B_SQ_Answer_Pic_Row_Index + 'Col_' + B_SQ_Answer_Pic_Col_Index + '_Pop'"
-                                                    placement="top" 
-                                                    width="200" 
+                                                    placement="top"
+                                                    width="200"
                                                     trigger="hover">
                                                     <el-row type="flex" justify="center">
                                                         <img width="160" :src="Get_Picture_Src('answer_image ' + Big_Sub_Question_Index , B_SQ_Answer_Pic_Row_Index, B_SQ_Answer_Pic_Col_Index)">
                                                     </el-row>
                                                     <el-row type="flex" justify="center">
-                                                        <el-button 
-                                                            type="danger" 
-                                                            size="small" 
+                                                        <el-button
+                                                            type="danger"
+                                                            size="small"
                                                             @click="Del_Picture_Src('answer_image ' + Big_Sub_Question_Index, B_SQ_Answer_Pic_Row_Index, B_SQ_Answer_Pic_Col_Index)"
                                                             style="margin-top: 10px">
                                                             删除此图片<i class="el-icon-delete" style="margin-left: 10px; font-size: 14px"></i>
@@ -720,7 +720,7 @@
                                 </el-col>
                             </el-row>
                             <!-- 解析区域 -->
-                            <el-row 
+                            <el-row
                                 v-show="!Big_Sub_Question.expand"
                                 type="flex"
                                 justify="start"
@@ -733,8 +733,8 @@
                                 <el-col :span="17" :offset="1">
                                     <el-row type="flex" justify="start">
                                         <el-input
-                                            @focus="Get_Focus('Mix_Analysis_' + Big_Sub_Question_Index)" 
-                                            :id="'Mix_Analysis_' + Big_Sub_Question_Index" 
+                                            @focus="Get_Focus('Mix_Analysis_' + Big_Sub_Question_Index)"
+                                            :id="'Mix_Analysis_' + Big_Sub_Question_Index"
                                             type="textarea"
                                             resize="none" :rows="3"
                                             placeholder="请填写此小题的解析内容（可选）"
@@ -750,32 +750,32 @@
                                     </el-row>
                                 </el-col>
                                 <el-col :span="21" :offset="1">
-                                    <el-row 
-                                        type="flex" 
+                                    <el-row
+                                        type="flex"
                                         justify="start"
                                         v-for="B_SQ_Analysis_Pic_Row_Index in Math.ceil(Question.sub_questions[Big_Sub_Question_Index].analysis_image.length/12)"
                                         :key="'B_SQ_Analysis_Pic_Row_' + B_SQ_Analysis_Pic_Row_Index">
-                                        <el-col 
+                                        <el-col
                                             :span="2"
                                             v-for="B_SQ_Analysis_Pic_Col_Index in 12"
                                             :key="'B_SQ_Analysis_Pic_Row_' + B_SQ_Analysis_Pic_Row_Index + 'Col_' + B_SQ_Analysis_Pic_Col_Index">
-                                            <el-row 
-                                                type="flex" 
-                                                justify="start" 
+                                            <el-row
+                                                type="flex"
+                                                justify="start"
                                                 v-if="(B_SQ_Analysis_Pic_Row_Index - 1) * 12 + B_SQ_Analysis_Pic_Col_Index - 1 < Question.sub_questions[Big_Sub_Question_Index].analysis_image.length"
                                                 >
-                                                <el-popover 
+                                                <el-popover
                                                     :ref="'B_SQ_Analysis_Pic_Row_' + B_SQ_Analysis_Pic_Row_Index + 'Col_' + B_SQ_Analysis_Pic_Col_Index + '_Pop'"
-                                                    placement="top" 
-                                                    width="200" 
+                                                    placement="top"
+                                                    width="200"
                                                     trigger="hover">
                                                     <el-row type="flex" justify="center">
                                                         <img width="160" :src="Get_Picture_Src('analysis_image ' + Big_Sub_Question_Index , B_SQ_Analysis_Pic_Row_Index, B_SQ_Analysis_Pic_Col_Index)">
                                                     </el-row>
                                                     <el-row type="flex" justify="center">
-                                                        <el-button 
-                                                            type="danger" 
-                                                            size="small" 
+                                                        <el-button
+                                                            type="danger"
+                                                            size="small"
                                                             @click="Del_Picture_Src('analysis_image ' + Big_Sub_Question_Index, B_SQ_Analysis_Pic_Row_Index, B_SQ_Analysis_Pic_Col_Index)"
                                                             style="margin-top: 10px">
                                                             删除此图片<i class="el-icon-delete" style="margin-left: 10px; font-size: 14px"></i>
@@ -803,11 +803,11 @@
                 </el-col>
                 <el-col :span="20" :offset="1">
                     <el-row type="flex" justify="start">
-                        <el-input 
-                            @focus="Get_Focus('Mix_Answer')" 
-                            id="Mix_Answer" 
-                            type="textarea" 
-                            v-model="Question.answer" 
+                        <el-input
+                            @focus="Get_Focus('Mix_Answer')"
+                            id="Mix_Answer"
+                            type="textarea"
+                            v-model="Question.answer"
                             resize="none" :rows="6"
                             placeholder="请填写答案内容（可选）"></el-input>
                     </el-row>
@@ -821,32 +821,32 @@
                     </el-row>
                 </el-col>
                 <el-col :span="21" :offset="1">
-                    <el-row 
-                        type="flex" 
+                    <el-row
+                        type="flex"
                         justify="start"
                         v-for="Answer_Pic_Row_Index in Math.ceil(Question.answer_image.length/12)"
                         :key="'Answer_Pic_Row_' + Answer_Pic_Row_Index">
-                        <el-col 
+                        <el-col
                             :span="2"
                             v-for="Answer_Pic_Col_Index in 12"
                             :key="'Answer_Pic_Row_' + Answer_Pic_Row_Index + 'Col_' + Answer_Pic_Col_Index">
-                            <el-row 
-                                type="flex" 
-                                justify="start" 
+                            <el-row
+                                type="flex"
+                                justify="start"
                                 v-if="(Answer_Pic_Row_Index - 1) * 12 + Answer_Pic_Col_Index - 1 < Question.answer_image.length"
                                 >
-                                <el-popover 
+                                <el-popover
                                     :ref="'Answer_Pic_Row_' + Answer_Pic_Row_Index + 'Col_' + Answer_Pic_Col_Index + '_Pop'"
-                                    placement="top" 
-                                    width="200" 
+                                    placement="top"
+                                    width="200"
                                     trigger="hover">
                                     <el-row type="flex" justify="center">
                                         <img width="160" :src="Get_Picture_Src('answer_image', Answer_Pic_Row_Index, Answer_Pic_Col_Index)">
                                     </el-row>
                                     <el-row type="flex" justify="center">
-                                        <el-button 
-                                            type="danger" 
-                                            size="small" 
+                                        <el-button
+                                            type="danger"
+                                            size="small"
                                             @click="Del_Picture_Src('answer_image', Answer_Pic_Row_Index, Answer_Pic_Col_Index)"
                                             style="margin-top: 10px">
                                             删除此图片<i class="el-icon-delete" style="margin-left: 10px; font-size: 14px"></i>
@@ -870,11 +870,11 @@
                 </el-col>
                 <el-col :span="20" :offset="1">
                     <el-row type="flex" justify="start">
-                        <el-input 
-                            @focus="Get_Focus('Mix_Analysis')" 
+                        <el-input
+                            @focus="Get_Focus('Mix_Analysis')"
                             id="Mix_Analysis"
-                            type="textarea" 
-                            v-model="Question.analysis" 
+                            type="textarea"
+                            v-model="Question.analysis"
                             resize="none" :rows="6"
                             placeholder="请填写解析内容（可选）"></el-input>
                     </el-row>
@@ -888,32 +888,32 @@
                     </el-row>
                 </el-col>
                 <el-col :span="21" :offset="1">
-                    <el-row 
-                        type="flex" 
+                    <el-row
+                        type="flex"
                         justify="start"
                         v-for="Analysis_Pic_Row_Index in Math.ceil(Question.analysis_image.length/12)"
                         :key="'Analysis_Pic_Row_' + Analysis_Pic_Row_Index">
-                        <el-col 
+                        <el-col
                             :span="2"
                             v-for="Analysis_Pic_Col_Index in 12"
                             :key="'Analysis_Pic_Row_' + Analysis_Pic_Row_Index + 'Col_' + Analysis_Pic_Col_Index">
-                            <el-row 
-                                type="flex" 
-                                justify="start" 
+                            <el-row
+                                type="flex"
+                                justify="start"
                                 v-if="(Analysis_Pic_Row_Index - 1) * 12 + Analysis_Pic_Col_Index - 1 < Question.analysis_image.length"
                                 >
-                                <el-popover 
+                                <el-popover
                                     :ref="'Analysis_Pic_Row_' + Analysis_Pic_Row_Index + 'Col_' + Analysis_Pic_Col_Index + '_Pop'"
-                                    placement="top" 
-                                    width="200" 
+                                    placement="top"
+                                    width="200"
                                     trigger="hover">
                                     <el-row type="flex" justify="center">
                                         <img width="160" :src="Get_Picture_Src('analysis_image', Analysis_Pic_Row_Index, Analysis_Pic_Col_Index)">
                                     </el-row>
                                     <el-row type="flex" justify="center">
-                                        <el-button 
-                                            type="danger" 
-                                            size="small" 
+                                        <el-button
+                                            type="danger"
+                                            size="small"
                                             @click="Del_Picture_Src('analysis_image', Analysis_Pic_Row_Index, Analysis_Pic_Col_Index)"
                                             style="margin-top: 10px">
                                             删除此图片<i class="el-icon-delete" style="margin-left: 10px; font-size: 14px"></i>
@@ -928,7 +928,7 @@
                     </el-row>
                 </el-col>
             </el-row>
-            
+
             <el-row type="flex" justify="start" style="margin-top: 10px; margin-bottom: 20px;">
                 <el-col :span="2">
                     <el-row type="flex" justify="end" style="font-weight: bold; height: 130px; line-height: 130px">
@@ -937,10 +937,10 @@
                 </el-col>
                 <el-col :span="18" :offset="1">
                     <el-row type="flex" justify="start">
-                        <el-input 
-                            @focus="Get_Focus('Opt_Paste')" 
-                            type="textarea" 
-                            v-model="Paste_Analysis" 
+                        <el-input
+                            @focus="Get_Focus('Opt_Paste')"
+                            type="textarea"
+                            v-model="Paste_Analysis"
                             resize="none" :rows="6"></el-input>
                     </el-row>
                 </el-col>
@@ -950,9 +950,9 @@
                     </el-row>
                 </el-col>
             </el-row>
-            
+
         </div>
-        
+
         <!-- 以下部分是预览那一块的部分 -->
         <div v-show="Focus_Function == 'PreView'" style="margin-left: 5vw; margin-right: 5vw; padding-top: 30px; padding-bottom: 30px">
             <!-- 题干部分 -->
@@ -971,22 +971,22 @@
             <!-- 题干的配图部分 -->
             <el-row type="flex" justify="end" style="margin-bottom: 10px" v-show="Question.stem_image.length > 0">
                 <el-col :span="22">
-                    <el-row 
-                        type="flex" 
-                        justify="start" 
+                    <el-row
+                        type="flex"
+                        justify="start"
                         v-for="Stem_Pic_Row_Index in Math.ceil(Question.stem_image.length/12)"
                         :key="'Pre_Mix_Stem_' + Stem_Pic_Row_Index"
                         style="margin-bottom: 10px">
-                        <el-col 
-                            :span="2" 
-                            v-for="Stem_Pic_Col_Index in 12" 
+                        <el-col
+                            :span="2"
+                            v-for="Stem_Pic_Col_Index in 12"
                             :key="'Pre_Mix_Stem_' + Stem_Pic_Row_Index + '_' + Stem_Pic_Col_Index">
-                            <el-row 
-                                type="flex" 
-                                justify="center" 
+                            <el-row
+                                type="flex"
+                                justify="center"
                                 v-if="(Stem_Pic_Row_Index - 1) * 12 + Stem_Pic_Col_Index - 1 < Question.stem_image.length"
                                 >
-                                <img height="60" :src="Get_Picture_Src('stem_image', Stem_Pic_Row_Index, Stem_Pic_Col_Index)">   
+                                <img height="60" :src="Get_Picture_Src('stem_image', Stem_Pic_Row_Index, Stem_Pic_Col_Index)">
                             </el-row>
                         </el-col>
                     </el-row>
@@ -994,7 +994,7 @@
             </el-row>
 
             <!-- 小题部分 -->
-            <el-row 
+            <el-row
                 type="flex"
                 justify="end"
                 v-for="(Big_Sub_Question, Big_Sub_Question_Index) in Question.sub_questions"
@@ -1003,12 +1003,12 @@
                 <!-- 退一格 -->
                 <el-col :span="22">
                     <!-- 题干 -->
-                    <el-row 
-                        type="flex" 
-                        justify="start" 
+                    <el-row
+                        type="flex"
+                        justify="start"
                         :style="
-                            ['单选题', '多选题', '判断题', '简答题', '计算题'].indexOf(Question.sub_questions[Big_Sub_Question_Index].type) != -1 
-                            ? 'margin-bottom: 10px' 
+                            ['单选题', '多选题', '判断题', '简答题', '计算题'].indexOf(Question.sub_questions[Big_Sub_Question_Index].type) != -1
+                            ? 'margin-bottom: 10px'
                             : ''">
                         <el-col :span="2">
                             <el-row type="flex" justify="start" style="font-weight: bold;">
@@ -1022,9 +1022,9 @@
                         </el-col>
                     </el-row>
                     <!-- 题干配图 -->
-                    <el-row 
-                        type="flex" 
-                        justify="start" 
+                    <el-row
+                        type="flex"
+                        justify="start"
                         style="margin-top: 5px; margin-bottom: 5px"
                         v-show="Question.sub_questions[Big_Sub_Question_Index].stem_image.length > 0">
                         <el-col :span="2">
@@ -1033,19 +1033,19 @@
                             </el-row>
                         </el-col>
                         <el-col :span="22">
-                            <el-row 
-                                type="flex" 
+                            <el-row
+                                type="flex"
                                 justify="start"
                                 style="margin-top: 5px; margin-bottom: 5px"
                                 v-for="Pre_Mix_Stem_Pic_Row_Index in Math.ceil(Question.sub_questions[Big_Sub_Question_Index].stem_image.length/12)"
                                 :key="'Pre_Mix_Stem_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Stem_Pic_Row_Index">
-                                <el-col 
+                                <el-col
                                     :span="2"
                                     v-for="Pre_Mix_Stem_Pic_Col_Index in 12"
                                     :key="'Pre_Mix_Stem_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Stem_Pic_Row_Index + 'Col_' + Pre_Mix_Stem_Pic_Col_Index">
-                                    <el-row 
-                                        type="flex" 
-                                        justify="center" 
+                                    <el-row
+                                        type="flex"
+                                        justify="center"
                                         v-if="(Pre_Mix_Stem_Pic_Row_Index - 1) * 12 + Pre_Mix_Stem_Pic_Col_Index - 1 < Question.sub_questions[Big_Sub_Question_Index].stem_image.length"
                                         >
                                         <img height="60" :src="Get_Picture_Src('stem_image ' + Big_Sub_Question_Index , Pre_Mix_Stem_Pic_Row_Index, Pre_Mix_Stem_Pic_Col_Index)">
@@ -1055,7 +1055,7 @@
                         </el-col>
                     </el-row>
                     <!-- 选择题的选项部分 -->
-                    <el-row 
+                    <el-row
                         type="flex"
                         justify="start"
                         style="margin-top: 5px; margin-bottom: 5px"
@@ -1079,19 +1079,19 @@
                             <!-- 选项配图的部分 -->
                             <el-row type="flex" justify="end" v-show="Big_Sub_Question.options_image[Pre_Option_Index].length > 0">
                                 <el-col :span="22">
-                                    <el-row 
-                                        type="flex" 
+                                    <el-row
+                                        type="flex"
                                         justify="start"
                                         style="margin-top: 5px; margin-bottom: 5px"
                                         v-for="Pre_Mix_Opt_Pic_Row_Index in Math.ceil(Big_Sub_Question.options_image[Pre_Option_Index].length/12)"
                                         :key="'Pre_Mix_B_SQ_' + Big_Sub_Question_Index  + '_Options_' + Pre_Option_Index + '_Pic_Row_' + Pre_Mix_Opt_Pic_Row_Index">
-                                        <el-col 
+                                        <el-col
                                             :span="2"
                                             v-for="Pre_Mix_Opt_Pic_Col_Index in 12"
                                             :key="'Pre_Mix_B_SQ_' + Big_Sub_Question_Index  + '_Options_' + Pre_Option_Index + '_Pic_Row_' + Pre_Mix_Opt_Pic_Row_Index + 'Col_' + Pre_Mix_Opt_Pic_Col_Index">
-                                            <el-row 
-                                                type="flex" 
-                                                justify="center" 
+                                            <el-row
+                                                type="flex"
+                                                justify="center"
                                                 v-if="(Pre_Mix_Opt_Pic_Row_Index - 1) * 12 + Pre_Mix_Opt_Pic_Col_Index - 1 < Big_Sub_Question.options_image[Pre_Option_Index].length"
                                                 >
                                                 <img height="60" :src="Get_Picture_Src('options_image ' + Big_Sub_Question_Index + ' ' + Pre_Option_Index , Pre_Mix_Opt_Pic_Row_Index, Pre_Mix_Opt_Pic_Col_Index)">
@@ -1103,7 +1103,7 @@
                         </el-col>
                     </el-row>
                     <!-- 简答题，计算题的部分 - 小题 -->
-                    <el-row 
+                    <el-row
                         type="flex"
                         justify="start"
                         style="margin-top: 5px; margin-bottom: 5px"
@@ -1127,18 +1127,18 @@
                             <!-- 选项配图的部分 -->
                             <el-row type="flex" justify="end" v-show="Big_Sub_Question.sub_questions_image[Pre_Small_Sub_Question_Index].length > 0">
                                 <el-col :span="22">
-                                    <el-row 
-                                        type="flex" 
+                                    <el-row
+                                        type="flex"
                                         justify="start"
                                         v-for="Pre_Mix_S_SQ_Pic_Row_Index in Math.ceil(Big_Sub_Question.sub_questions_image[Pre_Small_Sub_Question_Index].length/12)"
                                         :key="'Pre_Mix_B_SQ_' + Big_Sub_Question_Index  + '_S_SQ_' + Pre_Small_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_S_SQ_Pic_Row_Index">
-                                        <el-col 
+                                        <el-col
                                             :span="2"
                                             v-for="Pre_Mix_S_SQ_Pic_Col_Index in 12"
                                             :key="'Pre_Mix_B_SQ_' + Big_Sub_Question_Index  + '_S_SQ_' + Pre_Small_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_S_SQ_Pic_Row_Index + 'Col_' + Pre_Mix_S_SQ_Pic_Col_Index">
-                                            <el-row 
-                                                type="flex" 
-                                                justify="center" 
+                                            <el-row
+                                                type="flex"
+                                                justify="center"
                                                 v-if="(Pre_Mix_S_SQ_Pic_Row_Index - 1) * 12 + Pre_Mix_S_SQ_Pic_Col_Index - 1 < Big_Sub_Question.sub_questions_image[Pre_Small_Sub_Question_Index].length"
                                                 >
                                                 <img height="60" :src="Get_Picture_Src('sub_questions_image ' + Big_Sub_Question_Index + ' ' + Pre_Small_Sub_Question_Index , Pre_Mix_S_SQ_Pic_Row_Index, Pre_Mix_S_SQ_Pic_Col_Index)">
@@ -1150,9 +1150,9 @@
                         </el-col>
                     </el-row>
                     <!-- 答案 -->
-                    <el-row 
-                        type="flex" 
-                        justify="start" 
+                    <el-row
+                        type="flex"
+                        justify="start"
                         style="margin-top: 5px; margin-bottom: 5px"
                         v-show="Question.sub_questions[Big_Sub_Question_Index].answer.length > 0">
                         <el-col :span="2">
@@ -1167,9 +1167,9 @@
                         </el-col>
                     </el-row>
                     <!-- 答案配图 -->
-                    <el-row 
-                        type="flex" 
-                        justify="start" 
+                    <el-row
+                        type="flex"
+                        justify="start"
                         style="margin-top: 5px; margin-bottom: 5px"
                         v-show="Question.sub_questions[Big_Sub_Question_Index].answer_image.length > 0">
                         <el-col :span="2">
@@ -1178,18 +1178,18 @@
                             </el-row>
                         </el-col>
                         <el-col :span="22">
-                            <el-row 
-                                type="flex" 
+                            <el-row
+                                type="flex"
                                 justify="start"
                                 v-for="Pre_Mix_Answer_Pic_Row_Index in Math.ceil(Question.sub_questions[Big_Sub_Question_Index].answer_image.length/12)"
                                 :key="'Pre_Mix_Answer_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Answer_Pic_Row_Index">
-                                <el-col 
+                                <el-col
                                     :span="2"
                                     v-for="Pre_Mix_Answer_Pic_Col_Index in 12"
                                     :key="'Pre_Mix_Answer_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Answer_Pic_Row_Index + 'Col_' + Pre_Mix_Answer_Pic_Col_Index">
-                                    <el-row 
-                                        type="flex" 
-                                        justify="center" 
+                                    <el-row
+                                        type="flex"
+                                        justify="center"
                                         v-if="(Pre_Mix_Answer_Pic_Row_Index - 1) * 12 + Pre_Mix_Answer_Pic_Col_Index - 1 < Question.sub_questions[Big_Sub_Question_Index].answer_image.length"
                                         >
                                         <img height="60" :src="Get_Picture_Src('answer_image ' + Big_Sub_Question_Index , Pre_Mix_Answer_Pic_Row_Index, Pre_Mix_Answer_Pic_Col_Index)">
@@ -1199,9 +1199,9 @@
                         </el-col>
                     </el-row>
                     <!-- 解析 -->
-                    <el-row 
-                        type="flex" 
-                        justify="start" 
+                    <el-row
+                        type="flex"
+                        justify="start"
                         style="margin-top: 5px; margin-bottom: 5px"
                         v-show="Question.sub_questions[Big_Sub_Question_Index].analysis.length > 0">
                         <el-col :span="2">
@@ -1216,9 +1216,9 @@
                         </el-col>
                     </el-row>
                     <!-- 解析配图 -->
-                    <el-row 
-                        type="flex" 
-                        justify="start" 
+                    <el-row
+                        type="flex"
+                        justify="start"
                         style="margin-top: 5px; margin-bottom: 5px"
                         v-show="Question.sub_questions[Big_Sub_Question_Index].analysis_image.length > 0">
                         <el-col :span="2">
@@ -1227,18 +1227,18 @@
                             </el-row>
                         </el-col>
                         <el-col :span="22">
-                            <el-row 
-                                type="flex" 
+                            <el-row
+                                type="flex"
                                 justify="start"
                                 v-for="Pre_Mix_Analysis_Pic_Row_Index in Math.ceil(Question.sub_questions[Big_Sub_Question_Index].analysis_image.length/12)"
                                 :key="'Pre_Mix_Analysis_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Analysis_Pic_Row_Index">
-                                <el-col 
+                                <el-col
                                     :span="2"
                                     v-for="Pre_Mix_Analysis_Pic_Col_Index in 12"
                                     :key="'Pre_Mix_Analysis_' + Big_Sub_Question_Index + '_Pic_Row_' + Pre_Mix_Analysis_Pic_Row_Index + 'Col_' + Pre_Mix_Analysis_Pic_Col_Index">
-                                    <el-row 
-                                        type="flex" 
-                                        justify="center" 
+                                    <el-row
+                                        type="flex"
+                                        justify="center"
                                         v-if="(Pre_Mix_Analysis_Pic_Row_Index - 1) * 12 + Pre_Mix_Analysis_Pic_Col_Index - 1 < Question.sub_questions[Big_Sub_Question_Index].analysis_image.length"
                                         >
                                         <img height="60" :src="Get_Picture_Src('analysis_image ' + Big_Sub_Question_Index , Pre_Mix_Analysis_Pic_Row_Index, Pre_Mix_Analysis_Pic_Col_Index)">
@@ -1249,13 +1249,13 @@
                     </el-row>
                 </el-col>
             </el-row>
-            
+
 
             <!-- 答案部分 -->
-            <el-row 
-                type="flex" 
-                justify="start" 
-                style="margin-top: 10px; margin-bottom: 10px" 
+            <el-row
+                type="flex"
+                justify="start"
+                style="margin-top: 10px; margin-bottom: 10px"
                 v-show="Question.answer_image.length > 0 || Question.answer.length > 0">
                 <el-col :span="2">
                     <el-row type="flex" justify="end" style="font-weight: bold;">
@@ -1269,38 +1269,38 @@
                 </el-col>
             </el-row>
             <!-- 答案配图 -->
-            <el-row 
-                type="flex" 
-                justify="end" 
+            <el-row
+                type="flex"
+                justify="end"
                 style="margin-top: 10px; margin-bottom: 10px"
                 v-show="Question.answer_image.length > 0">
                 <el-col :span="22">
-                    <el-row 
-                        type="flex" 
-                        justify="start" 
+                    <el-row
+                        type="flex"
+                        justify="start"
                         v-for="Answer_Pic_Row_Index in Math.ceil(Question.answer_image.length/12)"
                         :key="'Pre_Mix_Answer' + Answer_Pic_Row_Index"
                         style="margin-bottom: 10px;">
-                        <el-col 
-                            :span="2" 
-                            v-for="Answer_Pic_Col_Index in 12" 
+                        <el-col
+                            :span="2"
+                            v-for="Answer_Pic_Col_Index in 12"
                             :key="'Pre_Mix_Answer' + Answer_Pic_Row_Index + '_' + Answer_Pic_Col_Index">
-                            <el-row 
-                                type="flex" 
-                                justify="center" 
+                            <el-row
+                                type="flex"
+                                justify="center"
                                 v-if="(Answer_Pic_Row_Index - 1) * 12 + Answer_Pic_Col_Index - 1 < Question.answer_image.length"
                                 >
-                                <img height="60" :src="Get_Picture_Src('answer_image', Answer_Pic_Row_Index, Answer_Pic_Col_Index)">   
+                                <img height="60" :src="Get_Picture_Src('answer_image', Answer_Pic_Row_Index, Answer_Pic_Col_Index)">
                             </el-row>
                         </el-col>
                     </el-row>
                 </el-col>
             </el-row>
-            
+
             <!-- 解析部分 -->
-            <el-row 
-                type="flex" 
-                justify="start" 
+            <el-row
+                type="flex"
+                justify="start"
                 style="margin-top: 10px; margin-bottom: 10px"
                 v-show="Question.analysis_image.length > 0 || Question.analysis.length > 0">
                 <el-col :span="2">
@@ -1315,27 +1315,27 @@
                 </el-col>
             </el-row>
             <!-- 解析部分配图 -->
-            <el-row 
-                type="flex" 
-                justify="end" 
+            <el-row
+                type="flex"
+                justify="end"
                 style="margin-top: 10px; margin-bottom: 10px"
                 v-show="Question.analysis_image.length > 0">
                 <el-col :span="22">
-                    <el-row 
-                        type="flex" 
-                        justify="start" 
+                    <el-row
+                        type="flex"
+                        justify="start"
                         v-for="Analysis_Pic_Row_Index in Math.ceil(Question.analysis_image.length/12)"
                         :key="'Pre_Mix_Analysis_' + Analysis_Pic_Row_Index">
-                        <el-col 
-                            :span="2" 
-                            v-for="Analysis_Pic_Col_Index in 12" 
+                        <el-col
+                            :span="2"
+                            v-for="Analysis_Pic_Col_Index in 12"
                             :key="'Pre_Mix_Analysis_' + Analysis_Pic_Row_Index + '_' + Analysis_Pic_Col_Index">
-                            <el-row 
-                                type="flex" 
-                                justify="center" 
+                            <el-row
+                                type="flex"
+                                justify="center"
                                 v-if="(Analysis_Pic_Row_Index - 1) * 12 + Analysis_Pic_Col_Index - 1 < Question.analysis_image.length"
                                 >
-                                <img height="60" :src="Get_Picture_Src('analysis_image', Analysis_Pic_Row_Index, Analysis_Pic_Col_Index)">   
+                                <img height="60" :src="Get_Picture_Src('analysis_image', Analysis_Pic_Row_Index, Analysis_Pic_Col_Index)">
                             </el-row>
                         </el-col>
                     </el-row>
@@ -1361,7 +1361,7 @@ export default {
     props: {
         detailType: {
             type: String,
-            default: "综合题" 
+            default: "综合题"
         }
     },
     destroyed(){
@@ -1451,7 +1451,7 @@ export default {
         },
         // 切换折叠模式
         Expand_Change(Big_Sub_Question_Index){
-            this.Question.sub_questions[Big_Sub_Question_Index].expand = 
+            this.Question.sub_questions[Big_Sub_Question_Index].expand =
                 !this.Question.sub_questions[Big_Sub_Question_Index].expand
         },
         // 分数统计
@@ -1460,12 +1460,12 @@ export default {
             for(let i = 0; i < this.Question.sub_questions.length; i++){
                 let Item = this.Question.sub_questions[i];
                 if(Item.sub_questions_score.length == 0){
-                    Score = Score + parseInt(Item.score)
+                    Score = Score + parseFloat(Item.score)
                 }else{
                     let S_Score = 0;
                     for(let j = 0; j < Item.sub_questions_score.length; j++){
-                        Score = Score + parseInt(Item.sub_questions_score[j])
-                        S_Score = S_Score + parseInt(Item.sub_questions_score[j])
+                        Score = Score + parseFloat(Item.sub_questions_score[j])
+                        S_Score = S_Score + parseFloat(Item.sub_questions_score[j])
                     }
                     this.Question.sub_questions[i].score = S_Score
                 }
@@ -1476,7 +1476,7 @@ export default {
         Big_Sub_Question_Type_Change(Big_Sub_Question_Index){
 
             let Item = JSON.parse(JSON.stringify(this.Question.sub_questions[Big_Sub_Question_Index]))
-            
+
             Item.stem = ""
             Item.stem_image = []
 
@@ -1568,30 +1568,30 @@ export default {
             let Aim = this.Focusing_Input.split(" ")
             if(Aim.length == 1){
                 if(this.Text_Start == this.Text_End){
-                    this.Question[Aim[0]] = 
-                        this.Question[Aim[0]].substring(0, this.Text_Start) 
-                        + "(        )" 
+                    this.Question[Aim[0]] =
+                        this.Question[Aim[0]].substring(0, this.Text_Start)
+                        + "(        )"
                         + this.Question[Aim[0]].substring(this.Text_Start, this.Question[Aim[0]].length)
                 }else{
-                    this.Question[Aim[0]] = 
-                        this.Question[Aim[0]].substring(0, this.Text_Start) 
-                        + "(" 
-                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End) 
-                        + ")" 
+                    this.Question[Aim[0]] =
+                        this.Question[Aim[0]].substring(0, this.Text_Start)
+                        + "("
+                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End)
+                        + ")"
                         + this.Question[Aim[0]].substring(this.Text_End, this.Question[Aim[0]].length)
                 }
             }else if(Aim.length == 2){
                 if(this.Text_Start == this.Text_End){
-                    this.Question.sub_questions[Aim[1]][Aim[0]] = 
-                        this.Question.sub_questions[Aim[1]][Aim[0]].substring(0, this.Text_Start) 
-                        + "(        )" 
+                    this.Question.sub_questions[Aim[1]][Aim[0]] =
+                        this.Question.sub_questions[Aim[1]][Aim[0]].substring(0, this.Text_Start)
+                        + "(        )"
                         + this.Question.sub_questions[Aim[1]][Aim[0]].substring(this.Text_Start, this.Question.sub_questions[Aim[1]][Aim[0]].length)
                 }else{
-                    this.Question.sub_questions[Aim[1]][Aim[0]] = 
-                        this.Question.sub_questions[Aim[1]][Aim[0]].substring(0, this.Text_Start) 
-                        + "(" 
-                        + this.Question.sub_questions[Aim[1]][Aim[0]].substring(this.Text_Start, this.Text_End) 
-                        + ")" 
+                    this.Question.sub_questions[Aim[1]][Aim[0]] =
+                        this.Question.sub_questions[Aim[1]][Aim[0]].substring(0, this.Text_Start)
+                        + "("
+                        + this.Question.sub_questions[Aim[1]][Aim[0]].substring(this.Text_Start, this.Text_End)
+                        + ")"
                         + this.Question.sub_questions[Aim[1]][Aim[0]].substring(this.Text_End, this.Question.sub_questions[Aim[1]][Aim[0]].length)
                 }
             }else if(Aim.length == 3){
@@ -1601,16 +1601,16 @@ export default {
                 // Aim[2]: Small_Sub_Questions_Index
                 let Text = JSON.parse(JSON.stringify(this.Question.sub_questions[Aim[1]][Aim[0]][Aim[2]]))
                 if(this.Text_Start == this.Text_End){
-                    Text = 
-                        Text.substring(0, this.Text_Start) 
-                        + "(        )" 
+                    Text =
+                        Text.substring(0, this.Text_Start)
+                        + "(        )"
                         + Text.substring(this.Text_Start, this.Question.sub_questions[Aim[1]][Aim[0]].length)
                 }else{
-                    Text = 
-                        Text.substring(0, this.Text_Start) 
-                        + "(" 
-                        + Text.substring(this.Text_Start, this.Text_End) 
-                        + ")" 
+                    Text =
+                        Text.substring(0, this.Text_Start)
+                        + "("
+                        + Text.substring(this.Text_Start, this.Text_End)
+                        + ")"
                         + Text.substring(this.Text_End, Text.length)
                 }
                 this.Question.sub_questions[Aim[1]][Aim[0]].splice(Aim[2], 1, Text)
@@ -1621,26 +1621,26 @@ export default {
             let Aim = this.Focusing_Input.split(" ")
             if(Aim.length == 1){
                 if(this.Text_Start == this.Text_End){
-                    this.Question[Aim[0]] = 
-                        this.Question[Aim[0]].substring(0, this.Text_Start) 
-                        + "________" 
+                    this.Question[Aim[0]] =
+                        this.Question[Aim[0]].substring(0, this.Text_Start)
+                        + "________"
                         + this.Question[Aim[0]].substring(this.Text_Start, this.Question[Aim[0]].length)
                 }else{
-                    this.Question[Aim[0]] = 
-                        this.Question[Aim[0]].substring(0, this.Text_Start) 
-                        + "________"  
+                    this.Question[Aim[0]] =
+                        this.Question[Aim[0]].substring(0, this.Text_Start)
+                        + "________"
                         + this.Question[Aim[0]].substring(this.Text_End, this.Question[Aim[0]].length)
                 }
             }else if(Aim.length == 2){
                 if(this.Text_Start == this.Text_End){
-                    this.Question.sub_questions[Aim[1]][Aim[0]] = 
-                        this.Question.sub_questions[Aim[1]][Aim[0]].substring(0, this.Text_Start) 
-                        + "________" 
+                    this.Question.sub_questions[Aim[1]][Aim[0]] =
+                        this.Question.sub_questions[Aim[1]][Aim[0]].substring(0, this.Text_Start)
+                        + "________"
                         + this.Question.sub_questions[Aim[1]][Aim[0]].substring(this.Text_Start, this.Question.sub_questions[Aim[1]][Aim[0]].length)
                 }else{
-                    this.Question.sub_questions[Aim[1]][Aim[0]] = 
-                        this.Question.sub_questions[Aim[1]][Aim[0]].substring(0, this.Text_Start) 
-                        + "________"  
+                    this.Question.sub_questions[Aim[1]][Aim[0]] =
+                        this.Question.sub_questions[Aim[1]][Aim[0]].substring(0, this.Text_Start)
+                        + "________"
                         + this.Question.sub_questions[Aim[1]][Aim[0]].substring(this.Text_End, this.Question.sub_questions[Aim[1]][Aim[0]].length)
                 }
             }else if(Aim.length == 3){
@@ -1650,14 +1650,14 @@ export default {
                 // Aim[2]: Small_Sub_Questions_Index
                 let Text = JSON.parse(JSON.stringify(this.Question.sub_questions[Aim[1]][Aim[0]][Aim[2]]))
                 if(this.Text_Start == this.Text_End){
-                    Text = 
-                        Text.substring(0, this.Text_Start) 
-                        + "________" 
+                    Text =
+                        Text.substring(0, this.Text_Start)
+                        + "________"
                         + Text.substring(this.Text_Start, this.Question.sub_questions[Aim[1]][Aim[0]].length)
                 }else{
-                    Text = 
-                        Text.substring(0, this.Text_Start) 
-                        + "________" 
+                    Text =
+                        Text.substring(0, this.Text_Start)
+                        + "________"
                         + Text.substring(this.Text_End, Text.length)
                 }
                 this.Question.sub_questions[Aim[1]][Aim[0]].splice(Aim[2], 1, Text)
@@ -1670,22 +1670,22 @@ export default {
                 if(this.Text_Start == this.Text_End){
                     return
                 }else{
-                    this.Question[Aim[0]] = 
-                        this.Question[Aim[0]].substring(0, this.Text_Start) 
-                        + "<b>" 
-                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End) 
-                        + "</b>" 
+                    this.Question[Aim[0]] =
+                        this.Question[Aim[0]].substring(0, this.Text_Start)
+                        + "<b>"
+                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End)
+                        + "</b>"
                         + this.Question[Aim[0]].substring(this.Text_End, this.Question[Aim[0]].length)
                 }
             }else if(Aim.length == 2){
                 if(this.Text_Start == this.Text_End){
-                    return    
+                    return
                 }else{
-                    this.Question.sub_questions[Aim[1]][Aim[0]] = 
-                        this.Question.sub_questions[Aim[1]][Aim[0]].substring(0, this.Text_Start) 
-                        + "<b>" 
-                        + this.Question.sub_questions[Aim[1]][Aim[0]].substring(this.Text_Start, this.Text_End) 
-                        + "</b>" 
+                    this.Question.sub_questions[Aim[1]][Aim[0]] =
+                        this.Question.sub_questions[Aim[1]][Aim[0]].substring(0, this.Text_Start)
+                        + "<b>"
+                        + this.Question.sub_questions[Aim[1]][Aim[0]].substring(this.Text_Start, this.Text_End)
+                        + "</b>"
                         + this.Question.sub_questions[Aim[1]][Aim[0]].substring(this.Text_End, this.Question.sub_questions[Aim[1]][Aim[0]].length)
                 }
             }else if(Aim.length == 3){
@@ -1697,11 +1697,11 @@ export default {
                 if(this.Text_Start == this.Text_End){
                     return
                 }else{
-                    Text = 
-                        Text.substring(0, this.Text_Start) 
-                        + "<b>" 
-                        + Text.substring(this.Text_Start, this.Text_End) 
-                        + "</b>" 
+                    Text =
+                        Text.substring(0, this.Text_Start)
+                        + "<b>"
+                        + Text.substring(this.Text_Start, this.Text_End)
+                        + "</b>"
                         + Text.substring(this.Text_End, Text.length)
                 }
                 this.Question.sub_questions[Aim[1]][Aim[0]].splice(Aim[2], 1, Text)
@@ -1714,22 +1714,22 @@ export default {
                 if(this.Text_Start == this.Text_End){
                     return
                 }else{
-                    this.Question[Aim[0]] = 
-                        this.Question[Aim[0]].substring(0, this.Text_Start) 
-                        + "<i>" 
-                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End) 
-                        + "</i>" 
+                    this.Question[Aim[0]] =
+                        this.Question[Aim[0]].substring(0, this.Text_Start)
+                        + "<i>"
+                        + this.Question[Aim[0]].substring(this.Text_Start, this.Text_End)
+                        + "</i>"
                         + this.Question[Aim[0]].substring(this.Text_End, this.Question[Aim[0]].length)
                 }
             }else if(Aim.length == 2){
                 if(this.Text_Start == this.Text_End){
-                    return    
+                    return
                 }else{
-                    this.Question.sub_questions[Aim[1]][Aim[0]] = 
-                        this.Question.sub_questions[Aim[1]][Aim[0]].substring(0, this.Text_Start) 
-                        + "<i>" 
-                        + this.Question.sub_questions[Aim[1]][Aim[0]].substring(this.Text_Start, this.Text_End) 
-                        + "</i>" 
+                    this.Question.sub_questions[Aim[1]][Aim[0]] =
+                        this.Question.sub_questions[Aim[1]][Aim[0]].substring(0, this.Text_Start)
+                        + "<i>"
+                        + this.Question.sub_questions[Aim[1]][Aim[0]].substring(this.Text_Start, this.Text_End)
+                        + "</i>"
                         + this.Question.sub_questions[Aim[1]][Aim[0]].substring(this.Text_End, this.Question.sub_questions[Aim[1]][Aim[0]].length)
                 }
             }else if(Aim.length == 3){
@@ -1741,11 +1741,11 @@ export default {
                 if(this.Text_Start == this.Text_End){
                     return
                 }else{
-                    Text = 
-                        Text.substring(0, this.Text_Start) 
-                        + "<i>" 
-                        + Text.substring(this.Text_Start, this.Text_End) 
-                        + "</i>" 
+                    Text =
+                        Text.substring(0, this.Text_Start)
+                        + "<i>"
+                        + Text.substring(this.Text_Start, this.Text_End)
+                        + "</i>"
                         + Text.substring(this.Text_End, Text.length)
                 }
                 this.Question.sub_questions[Aim[1]][Aim[0]].splice(Aim[2], 1, Text)
@@ -1771,7 +1771,7 @@ export default {
         // Pic_Row_Index, Pic_Col_Index -> 通过行列坐标计算对应图片
         Get_Picture_Src(position, Stem_Pic_Row_Index, Stem_Pic_Col_Index){
             let Pos_Info = position.split(" ")
-            
+
             if(Pos_Info.length == 1){
                 let Index = (Stem_Pic_Row_Index - 1) * 12 + Stem_Pic_Col_Index - 1
                 return this.Question[Pos_Info[0]][Index]
@@ -1901,13 +1901,13 @@ export default {
                     _this.Question.sub_questions[Aim[1]][Place][Aim[2]].push(File_Result);
                     _this.Picture_Loading = false
                 }
-                
+
             }).catch(function(){
             // 报错了就打印错误
                 _this.$message.error("图片读取错误，请重试")
                 _this.Picture_Loading = false
             })
-            
+
         },
         // 上传图片
         Insert_Picture(){
@@ -1920,7 +1920,7 @@ export default {
         },
         // 选项删除
         Option_Delete(Big_Sub_Question_Index, Index){
-            
+
             let Item = JSON.parse(JSON.stringify(this.Question.sub_questions[Big_Sub_Question_Index]))
             if(Item.options.length <= 2){
                 this.$message.warning("请至少保留两个选项。")
@@ -1930,7 +1930,7 @@ export default {
                 Item.options_image.splice(Index, 1);
             }
             this.Question.sub_questions.splice(Big_Sub_Question_Index, 1, Item)
-            
+
         },
         // 选项增加
         Option_Add(Big_Sub_Question_Index){
@@ -2000,7 +2000,7 @@ export default {
         },
         // 返回选项ABCD...
         Get_Option_Label(Option_Index){
-            return String.fromCharCode(65 + Option_Index) 
+            return String.fromCharCode(65 + Option_Index)
         },
         // 根据当前选择编辑或预览提供样式
         Get_Focus_Function(FuncName){
@@ -2092,8 +2092,8 @@ export default {
                         this.$message.error("解析出现异常，请重试。")
                     }
                 ).finally(()=>{
-                    
-                }) 
+
+                })
             })
         },
         Paste_Extract(Question_Info){
@@ -2171,9 +2171,9 @@ export default {
 }
 /* 提供给上升，下降等功能按钮的样式 */
 .optionButton{
-    border: 2px solid #409EFF; 
-    border-radius: 50%; 
-    width: 25px; 
+    border: 2px solid #409EFF;
+    border-radius: 50%;
+    width: 25px;
     height: 25px;
     line-height: 25px;
     margin-top: 5px;
@@ -2184,7 +2184,7 @@ export default {
 }
 .optionButton:hover{
     color: MediumTurquoise;
-    border: 2px solid MediumTurquoise; 
+    border: 2px solid MediumTurquoise;
 }
 
 /* 用于试题内容简单编辑的按钮 */
