@@ -82,14 +82,12 @@
         </el-col>
         <el-col :span="21">
             <el-row type="flex" justify="start">
-                <el-select v-model="Item_Group" placeholder="请选择题库">
-                <el-option
-                    v-for="(item,i) in Item_Group_List"
-                    :key="i"
-                    :label="item.val"
-                    :value="item.key">
-                </el-option>
-                </el-select>
+                <el-input
+                    @input="(value)=> {
+                      window.localStorage.setItem('ig_ID_marked_cache', value)}"
+                    v-model="Item_Group"
+                    placeholder="请输入试题库 id">
+                </el-input>
             </el-row>
         </el-col>
     </el-row>
@@ -141,6 +139,7 @@ export default {
     return {
         // 用于显示最终录入科目的变量
         Subject: "数学",
+        window,
         // 用于显示最终录入学段的变量
         Period: "高中",
         // 用于确定当前显示的题目类型的变量
@@ -200,6 +199,10 @@ export default {
       this.Get_User_UUID();
       this.To_Top();
       this.Get_Item_Group_List();
+      const ig_ID_cache = window.localStorage.getItem('ig_ID_marked_cache');
+      if (ig_ID_cache) {
+        this.Item_Group = ig_ID_cache;
+      }
   },
   methods:{
         To_Top(){
