@@ -167,7 +167,24 @@
               </el-row>
           </el-col>
         </el-row>
-        <!-- 学段选择 -->
+        <el-divider></el-divider>
+        <el-row type="flex" justify="start" style="margin-top: -1vh; margin-bottom: -1vh">
+          <el-col :span="3">
+            <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; font-size: 18px">
+              <label>题库</label>
+            </el-row>
+          </el-col>
+          <el-col :span="20" :offset="1">
+            <el-row type="flex" justify="start" style="width: 100%">
+              <el-input
+                  v-model="Item_Group"
+                  @input="(value) => {
+                    window.localStorage.setItem('ig_ID_paper_cache', value)}"
+                  placeholder="请输入试题库 id"
+              ></el-input>
+            </el-row>
+          </el-col>
+        </el-row>
         <el-row type="flex" justify="start" style="margin-top: 7vh; margin-bottom: -1vh">
           <el-col :span="4">
             <el-row type="flex" justify="start">
@@ -1617,6 +1634,9 @@ export default {
     return {
       // 将要添加的题包类型
       Add_Bundle_Type: "单选题",
+      window,
+      Item_Group: '',
+      Item_Group_List: [],
       // 正在使用的组件
       Using_Part: "Input",
       // 试卷标题
@@ -1963,6 +1983,10 @@ export default {
       this.Get_User_UUID();
       this.Init_File_Selector();
       this.To_Top();
+      const ig_ID_cache = window.localStorage.getItem('ig_ID_paper_cache');
+      if (ig_ID_cache) {
+        this.Item_Group = ig_ID_cache;
+      }
   },
   methods:{
     To_Top(){
@@ -3417,7 +3441,7 @@ export default {
                           "subject": this.Subject,
                           "period": this.Period,
                           "questions": JSON.stringify(Upload_Json),
-                          "ig_ID": "0",
+                          "ig_ID": this.Item_Group,
                         }, null, 4),
           'questionInput': true
         }
