@@ -2,7 +2,7 @@
 
 <template>
   <div style="border-radius: 10px; background: white">
-    <el-row style="padding-top: 5%; margin-left: 2%; width: 96%; border-bottom: 2px dashed #ccc; padding-bottom: 5px;" justify="center">
+    <el-row style="padding-top: 3%; margin-left: 2%; width: 96%; border-bottom: 2px dashed #ccc; padding-bottom: 5px;" justify="center">
         <label>{{Paper_Info.title}}</label>
     </el-row>
     <el-row style="text-align: left; padding-left: 30px; background: white; padding-top: 15px; border-radius: 10px">

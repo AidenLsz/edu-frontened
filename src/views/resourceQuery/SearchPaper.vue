@@ -289,12 +289,12 @@
         </el-row>
         <div class="sp-left_container">
         <el-row>
-          <el-col>
+          <el-col style="margin-top: 35%">
             <div
                 v-for="(Paper_Info, Paper_Info_Index) in Paper_Info_List"
                 :style="Get_Card_Background()"
                 :key="'Question_' + Paper_Info_Index">
-              <el-row>
+              <el-row style="padding-bottom: 75%">
                 <div
                     :id="'Question_' + Paper_Info_Index"
                     style="height: 10px; width: 10px; background:transparent;position: relative; margin-top: -192px">
@@ -305,7 +305,7 @@
                 <div
                     :style="Get_Card_Margin(Paper_Info_Index)"
                 >
-                  <el-row style="width: 100%; height: 9vh; background: transparent; opacity: 0; z-index: -1; border-top: 1px solid red">
+                  <el-row style="width: 100%; height: 1%; background: transparent; opacity: 0; z-index: -1; border-top: 1px solid red;margin-bottom: -16%;">
 
                   </el-row>
                   <el-row class="Question_Card" style="background: white">
@@ -851,7 +851,7 @@ export default {
             let Style_Row_1 = '-128px auto 128px auto'
             let Style = {
                 'margin': Question_Index == this.Paper_Info_List.length - 1 ? Style_Row_0 : Style_Row_1,
-                'min-width': '500px'
+                'min-width': '500px',
             }
             return Style
         },
