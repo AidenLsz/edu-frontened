@@ -2,7 +2,7 @@
 
 <template>
   <div style="border-radius: 10px; background: white">
-    <el-row style="padding-top: 15px; margin-left: 2%; width: 96%; border-bottom: 2px dashed #ccc; padding-bottom: 5px;" justify="center">
+    <el-row style="padding-top: 5%; margin-left: 2%; width: 96%; border-bottom: 2px dashed #ccc; padding-bottom: 5px;" justify="center">
         <label>{{Paper_Info.title}}</label>
     </el-row>
     <el-row style="text-align: left; padding-left: 30px; background: white; padding-top: 15px; border-radius: 10px">
@@ -41,15 +41,17 @@
                 <div
                     align="left" 
                     class="Detail_Line_Infos">
-                    <span class="Extra_Info_Item">
-                        所属题库：{{Paper_Info.Ques.database}}
+                    <span class="Extra_Info_Item"  style="background-color:#E9E8FA; margin-right:10px ">
+                        {{Paper_Info.Ques.period}}
                     </span>
-                    <span class="Extra_Info_Item">
-                        学科：{{Paper_Info.Ques.subject}}
+                    <span class="Extra_Info_Item" style="background-color:#FAE8EC; margin-right:10px ">
+                        {{Paper_Info.Ques.subject}}
                     </span>
-                    <span class="Extra_Info_Item">
-                        学段：{{Paper_Info.Ques.period}}
+                    <span class="Extra_Info_Item" style="background-color:#FAF3E8; margin-right:10px ">
+                        {{Paper_Info.Ques.database}}
                     </span>
+
+
                 </div>
         </div>
         <div
@@ -132,12 +134,12 @@ export default {
     height: 44px;
     display: inline-block;
 }
-.Extra_Info_Item{
+.Extra_Info_Item_phase{
     margin-left: 15px;
 }
 .Detail_Line_Infos{
     position: relative;
-    display: inline-block;
+    display: flex;
     right: 0px;
     width: 100%;
 }

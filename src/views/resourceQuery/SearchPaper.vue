@@ -126,58 +126,20 @@
             <instruction
                 ref="instruction"
             />
+      <div class="sp-container">
         <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
-            <el-col>
-                <!-- 面包屑行 -->
-                <el-row
-                    class="Padding_Width"
-                    type="flex"
-                    ref="BreadCrumb_Line"
-                    justify="start">
-                    <el-breadcrumb separator-class="el-icon-arrow-right">
-                      <el-breadcrumb-item :to="{ path: $store.getters.systemType==2?'/itas':'/' }">
-                            首页
-                        </el-breadcrumb-item>
-                        <el-breadcrumb-item>
-                            试卷检索
-                            <span @click="openInstructionDialog" style="cursor:pointer;">
-                                <i class="el-icon-question"></i>
-                            </span>
-                        </el-breadcrumb-item>
-                    </el-breadcrumb>
+          <el-col>
+            <div class="Background_Round">
 
-                </el-row>
-                <!-- 页面标题行 -->
-                <el-row
-                    class="Padding_Width"
-                    type="flex"
-                    justify="start"
-                    style="margin-top: 2vh;">
-                    <span style="font-size: 4rem">试卷检索</span>
-                </el-row>
-                <div class="Background_Round">
-
-                </div>
-                <!-- 功能区 -->
-                <el-row class="Padding_Width">
-                    <el-col :span="16" style="min-height: 320px;">
-                        <!-- 不同功能 -->
-                        <!-- 学段检索 -->
-                        <el-row type="flex" justify="start" class="Filter_Line">
-                            <span class="Filter_Label">学段</span>
-                            <div class="Filter_Item_Shadow">
-                                <span
-                                    v-for="(Period_Item, Period_Item_Index) in All_Options.Period" :key="'Filter_Period_' + Period_Item_Index"
-                                    :class="Focus_Filter('Period', Period_Item)"
-                                    :style="Filter_Item('Period', Period_Item_Index, Period_Item)"
-                                    @click="Filter_Change('Period', Period_Item)">
-                                    {{Period_Item}}
-                                </span>
-                            </div>
-                        </el-row>
-                        <el-row type="flex" justify="start" class="Filter_Line">
-                            <span class="Filter_Label">学科</span>
-                            <div class="Filter_Item_Shadow">
+            </div>
+            <!-- 功能区 -->
+            <el-row class="Padding_Width">
+              <el-col :span="16" style="min-height: 320px;">
+                <!-- 不同功能 -->
+                <!--学科检索-->
+                <el-row type="flex" justify="start" class="Filter_Line">
+                  <span class="Filter_Label">学科</span>
+                  <div class="Filter_Item_Shadow">
                                 <span
                                     v-for="(Subject_Item, Subject_Item_Index) in All_Options.Subject" :key="'Filter_Subject_' + Subject_Item_Index"
                                     :class="Focus_Filter('Subject', Subject_Item)"
@@ -185,12 +147,25 @@
                                     @click="Filter_Change('Subject', Subject_Item)">
                                     {{Subject_Item}}
                                 </span>
-                            </div>
-                        </el-row>
-<!--                      搜索方式-->
-                      <el-row type="flex" justify="start" class="Filter_Line">
-                        <span class="Filter_Label">搜索方式</span>
-                        <div class="Filter_Item_Shadow">
+                  </div>
+                </el-row>
+                <!-- 学段检索 -->
+                <el-row type="flex" justify="start" class="Filter_Line">
+                  <span class="Filter_Label">学段</span>
+                  <div class="Filter_Item_Shadow">
+                                <span
+                                    v-for="(Period_Item, Period_Item_Index) in All_Options.Period" :key="'Filter_Period_' + Period_Item_Index"
+                                    :class="Focus_Filter('Period', Period_Item)"
+                                    :style="Filter_Item('Period', Period_Item_Index, Period_Item)"
+                                    @click="Filter_Change('Period', Period_Item)">
+                                    {{Period_Item}}
+                                </span>
+                  </div>
+                </el-row>
+                <!--                      搜索方式-->
+                <el-row type="flex" justify="start" class="Filter_Line">
+                  <span class="Filter_Label">搜索方式</span>
+                  <div class="Filter_Item_Shadow">
                                 <span
                                     v-for="(searchMethod_Item, searchMethod_Item_Index) in All_Options.searchMethod" :key="'Filter_search_' + searchMethod_Item_Index"
                                     :class="Focus_Filter('searchMethod', searchMethod_Item)"
@@ -198,11 +173,11 @@
                                     @click="Filter_Change('searchMethod', searchMethod_Item)">
                                     {{searchMethod_Item}}
                                 </span>
-                        </div>
-                      </el-row>
-                        <el-row type="flex" justify="start" class="Filter_Line">
-                            <span class="Filter_Label">题库</span>
-                            <div class="Filter_Item_Shadow">
+                  </div>
+                </el-row>
+                <el-row type="flex" justify="start" class="Filter_Line">
+                  <span class="Filter_Label">题库</span>
+                  <div class="Filter_Item_Shadow">
                                 <span
                                     v-for="(Database_Item, Database_Item_Index) in All_Options.Database" :key="'Filter_Database_' + Database_Item_Index"
                                     :class="Focus_Filter('Database', Database_Item.nick)"
@@ -210,153 +185,157 @@
                                     @click="Filter_Change('Database', Database_Item.nick)">
                                     {{Database_Item.nick}}
                                 </span>
-                            </div>
-                        </el-row>
-                        <el-row type="flex" justify="start" class="Filter_Line">
-                            <span class="Filter_Label">检索框</span>
-                            <el-input
-                                v-model="Search_Content"
-                                :disabled="Search_Extra == 'ImgSearch'"
-                                @keyup.enter.native="Search_Do()"
-                                placeholder="请输入想要检索的试题文字内容"
-                                style="width: 630px;"
-                                class="Search_Input"></el-input>
-                        </el-row>
-                        <el-row type="flex" justify="start" class="Filter_Line" style="margin-top: 3vh">
-                            <span class="Filter_Label"></span>
-                            <!-- 开始检索的按钮 -->
-                            <el-button
-                                type="primary"
-                                style="margin-right: 16px; border-radius: 10px;"
-                                class="Search_Button"
-                                @click="Search_Do()">
-                                <i class="el-icon-search" style="margin-right: 4px"></i>开始检索
-                            </el-button>
-                            <!-- 打开输入助手的按钮 -->
-                            <el-button
-                                style="margin-right: 16px; border-radius: 10px;"
-                                @click="Complex_Input_Dialog = true">
-                                <span style="margin-right: 4px">&Sigma;</span>输入助手
-                            </el-button>
-                            <!-- 切换知识点过滤检索或者文件检索的按钮 -->
-                            <el-switch
-                                style="display: block; margin-top: 9px; margin-left: 10px;"
-                                v-model="Search_Extra"
-                                @change="Change_Search_Extra"
-                                active-color="#409EFF"
-                                inactive-color="#13ce66"
-                                active-text="图片检索模式"
-                                active-value="ImgSearch"
-                                inactive-text="纯文字检索模式"
-                                inactive-value="KnowledgePoint">
-                            </el-switch>
-                                <!-- <el-button
-                                    style="border-radius: 10px;"
-                                    @click="Change_Search_Extra()">
-                                    <i class="el-icon-location" style="margin-right: 4px"></i>
-                                    {{Search_Extra == 'ImgSearch' ? '文件搜题' : '纯文字检索'}}模式
-                                </el-button> -->
-                        </el-row>
-                    </el-col>
-                    <el-col :span="7" :offset="1" style="height: 320px;" v-show="Search_Extra == 'ImgSearch'">
-                        <input
-                            type='file'
-                            id="ImgInput"
-                            ref="ImgInput"
-                            :multiple="false"
-                            @change="File_Upload_Input($event)"
-                            accept='.jpg, .jpeg, .png'
-                            style="display: none"/>
-                        <div
-                            id="ImgSearchArea"
-                            v-show="Img_All == ''"
-                            @click="Img_Upload()"
-                            class="ImgSearchArea"
-                            style="cursor: pointer;">
-                            <el-row style="margin-top: 20%">
-                                <i class="el-icon-upload" style="font-size: 60px"></i><br/>
-                                <span style="font-size: 18px; margin-top: 5px; margin-bottom: 5px; display: inline-block">点击或粘贴以上传</span><br/>
-                                <span>支持JPG，JPEG，PNG图片</span>
-                            </el-row>
-                        </div>
-                        <div
-                            v-show="Img_All != ''"
-                            class="ImgSearchArea"
-                            style="">
-                            <el-image
-                                style="width: 100%; height: 100%"
-                                :src="Img_Cut"
-                                fit="contain"></el-image>
-                        </div>
-                        <el-row type="flex" justify="center" style="margin-top: 20px">
-                            <el-button type="danger" style="margin-right: 25px; border-radius: 10px" @click="Img_Clear()"><i class="el-icon-close" style="margin-right: 4px"></i>清空内容</el-button>
-                            <el-button type="primary" style="border-radius: 10px; background: #539DD9" @click="Img_Reset()"><i class="el-icon-refresh" style="margin-right: 4px"></i>重新编辑</el-button>
-                        </el-row>
-                    </el-col>
+                  </div>
                 </el-row>
-                <el-row
-                    v-if="Paper_Info_List.length == 0"
-                    style="height: 200px; line-height: 200px; width: 100%; font-weight: bold; font-size: 24px; color: #ccc"
-                    type="flex" justify="center">
-                    暂无检索结果
+                <el-row type="flex" justify="start" class="Filter_Line">
+                  <span class="Filter_Label">检索框</span>
+                  <el-input
+                      v-model="Search_Content"
+                      :disabled="Search_Extra == 'ImgSearch'"
+                      @keyup.enter.native="Search_Do()"
+                      placeholder="请输入想要检索的试题文字内容"
+                      style="width: 630px;"
+                      class="Search_Input"></el-input>
                 </el-row>
-                <el-row
-                    v-else
-                    style="height: 128px; line-height: 40px; width: 100%; padding-top: 20px;"
-                    type="flex"
-                    justify="center">
-                    <i
-                        class="el-icon-d-arrow-left"
-                        @click="Jump_To('Question_0')"
-                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.5; cursor: pointer; z-index: 1;"></i>
+                <el-row type="flex" justify="start" class="Filter_Line" style="margin-top: 3vh">
+                  <span class="Filter_Label"></span>
+                  <!-- 开始检索的按钮 -->
+                  <el-button
+                      type="primary"
+                      style="margin-right: 16px; border-radius: 10px;"
+                      class="Search_Button"
+                      @click="Search_Do()">
+                    <i class="el-icon-search" style="margin-right: 4px"></i>开始检索
+                  </el-button>
+                  <!-- 打开输入助手的按钮 -->
+                  <el-button
+                      style="margin-right: 16px;margin-left: 0px; border-radius: 10px;"
+                      @click="Complex_Input_Dialog = true">
+                    <span style="margin-right: 4px">&Sigma;</span>输入助手
+                  </el-button>
+                  <!-- 切换知识点过滤检索或者文件检索的按钮 -->
+                  <el-switch
+                      style="display: block; margin-top: 9px; margin-left: 10px;"
+                      v-model="Search_Extra"
+                      @change="Change_Search_Extra"
+                      active-color="#409EFF"
+                      inactive-color="#13ce66"
+                      active-text="图片检索模式"
+                      active-value="ImgSearch"
+                      inactive-text="纯文字检索模式"
+                      inactive-value="KnowledgePoint">
+                  </el-switch>
+                  <!-- <el-button
+                      style="border-radius: 10px;"
+                      @click="Change_Search_Extra()">
+                      <i class="el-icon-location" style="margin-right: 4px"></i>
+                      {{Search_Extra == 'ImgSearch' ? '文件搜题' : '纯文字检索'}}模式
+                  </el-button> -->
                 </el-row>
-            </el-col>
-        </el-row>
-        <el-row>
-            <el-col>
+              </el-col>
+              <el-col :span="7" :offset="1" style="height: 320px;" v-show="Search_Extra == 'ImgSearch'">
+                <input
+                    type='file'
+                    id="ImgInput"
+                    ref="ImgInput"
+                    :multiple="false"
+                    @change="File_Upload_Input($event)"
+                    accept='.jpg, .jpeg, .png'
+                    style="display: none"/>
                 <div
-                    v-for="(Paper_Info, Paper_Info_Index) in Paper_Info_List"
-                    :style="Get_Card_Background(Paper_Info_Index)"
-                    :key="'Question_' + Paper_Info_Index">
-                    <el-row>
-                        <div
-                            :id="'Question_' + Paper_Info_Index"
-                            style="height: 10px; width: 10px; background: transparent;position: relative; margin-top: -192px">
-
-                        </div>
-                    </el-row>
-                    <el-row>
-                        <div
-                            :style="Get_Card_Margin(Paper_Info_Index)"
-                            >
-                            <el-row style="width: 100%; height: 64px; background: transparent; opacity: 0; z-index: -1; border-top: 1px solid red">
-
-                            </el-row>
-                            <el-row class="Question_Card" style="background: white">
-                                <SearchPaperItem
-                                    :Paper_Info="Paper_Info"
-                                    :Paper_Info_Index="Paper_Info_Index"
-                                    @Paper_Detail="Paper_Detail"
-                                    @Paper_Analyse="Paper_Analyse"
-                                    ></SearchPaperItem>
-                            </el-row>
-                        </div>
-                    </el-row>
+                    id="ImgSearchArea"
+                    v-show="Img_All == ''"
+                    @click="Img_Upload()"
+                    class="ImgSearchArea"
+                    style="cursor: pointer;">
+                  <el-row style="margin-top: 20%">
+                    <i class="el-icon-upload" style="font-size: 60px"></i><br/>
+                    <span style="font-size: 18px; margin-top: 5px; margin-bottom: 5px; display: inline-block">点击或粘贴以上传</span><br/>
+                    <span>支持JPG，JPEG，PNG图片</span>
+                  </el-row>
                 </div>
-            </el-col>
+                <div
+                    v-show="Img_All != ''"
+                    class="ImgSearchArea"
+                    style="">
+                  <el-image
+                      style="width: 100%; height: 100%"
+                      :src="Img_Cut"
+                      fit="contain"></el-image>
+                </div>
+                <el-row type="flex" justify="center" style="margin-top: 20px">
+                  <el-button type="danger" style="margin-right: 25px; border-radius: 10px" @click="Img_Clear()"><i class="el-icon-close" style="margin-right: 4px"></i>清空内容</el-button>
+                  <el-button type="primary" style="border-radius: 10px; background: #539DD9" @click="Img_Reset()"><i class="el-icon-refresh" style="margin-right: 4px"></i>重新编辑</el-button>
+                </el-row>
+              </el-col>
+            </el-row>
+            <el-row
+                v-if="Paper_Info_List.length == 0"
+                style="height: 200px; line-height: 200px; width: 100%; font-weight: bold; font-size: 24px; color: #ccc"
+                type="flex" justify="center">
+              暂无检索结果
+            </el-row>
+            <el-row
+                v-else
+                style="height: 128px; line-height: 40px; width: 100%; padding-top: 20px;"
+                type="flex"
+                justify="center">
+              <i
+                  class="el-icon-d-arrow-left"
+                  @click="Jump_To('Question_0')"
+                  style="font-size: 40px; transform: rotate(270deg); opacity: 0.5; cursor: pointer; z-index: 1;"></i>
+            </el-row>
+          </el-col>
+        </el-row>
+        <div class="sp-left_container">
+        <el-row>
+          <el-col>
+            <div
+                v-for="(Paper_Info, Paper_Info_Index) in Paper_Info_List"
+                :style="Get_Card_Background()"
+                :key="'Question_' + Paper_Info_Index">
+              <el-row>
+                <div
+                    :id="'Question_' + Paper_Info_Index"
+                    style="height: 10px; width: 10px; background:transparent;position: relative; margin-top: -192px">
+
+                </div>
+              </el-row>
+              <el-row>
+                <div
+                    :style="Get_Card_Margin(Paper_Info_Index)"
+                >
+                  <el-row style="width: 100%; height: 9vh; background: transparent; opacity: 0; z-index: -1; border-top: 1px solid red">
+
+                  </el-row>
+                  <el-row class="Question_Card" style="background: white">
+                    <SearchPaperItem
+                        :Paper_Info="Paper_Info"
+                        :Paper_Info_Index="Paper_Info_Index"
+                        @Paper_Detail="Paper_Detail"
+                        @Paper_Analyse="Paper_Analyse"
+                    ></SearchPaperItem>
+                  </el-row>
+                </div>
+              </el-row>
+            </div>
+          </el-col>
         </el-row>
         <el-row
             v-if="Paper_Info_List.length != 0"
             id="Page_Seg"
             style="padding-top: 20px; padding-bottom: 20px; background: transparent">
-            <el-pagination
-                @current-change="Page_Index_Change"
-                :current-page.sync="Page_Index"
-                :page-size="Page_Length"
-                layout="total, prev, pager, next"
-                :total="Total_Count">
-            </el-pagination>
+          <el-pagination
+              @current-change="Page_Index_Change"
+              :current-page.sync="Page_Index"
+              :page-size="Page_Length"
+              layout="total, prev, pager, next"
+              :total="Total_Count">
+          </el-pagination>
         </el-row>
+          </div>
+      </div>
+
     </div>
 </template>
 
@@ -527,126 +506,8 @@ export default {
         },
         // 控制筛选项的样式显示
         // 参数分别是筛选项所属的属性，筛选项对应的索引值
-        Filter_Item(Part, Index, Item){
+        Filter_Item(Part){
             let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '105px': '70px'
-            let BORDER_LEFT = ""
-            let BORDER_RIGHT = ""
-            if(Part == 'Semantic'){
-                if(this.Chosen_Options[Part] != Item){
-                    if(Index == 0){
-                        BORDER_RIGHT = "none"
-                    }else{
-                        BORDER_LEFT = "none"
-                    }
-                }
-            }else if(Part != 'Database'){
-                if(this.Chosen_Options[Part].indexOf(Item) == -1){
-                    if(Index > 0 && Index < this.All_Options[Part].length - 1){
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) == -1){
-                            BORDER_RIGHT = "1px solid #ccc"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) != -1){
-                            BORDER_RIGHT = "none"
-                        }
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) == -1){
-                            BORDER_LEFT = "none"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) != -1){
-                            BORDER_LEFT = "none"
-                        }
-                    }else if(Index == 0){
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) == -1){
-                            BORDER_RIGHT = "1px solid #ccc"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) != -1){
-                            BORDER_RIGHT = "none"
-                        }
-                    }else if(Index == this.All_Options[Part].length - 1){
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) == -1){
-                            BORDER_LEFT = "none"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) != -1){
-                            BORDER_LEFT = "none"
-                        }
-                    }
-                }else{
-                    if(Index > 0 && Index < this.All_Options[Part].length - 1){
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) == -1){
-                            BORDER_RIGHT = "1px solid #409EFF"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) != -1){
-                            BORDER_RIGHT = "1px solid #409EFF"
-                        }
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) == -1){
-                            BORDER_LEFT = "1px solid #409EFF"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) != -1){
-                            BORDER_LEFT = "none"
-                        }
-                    }else if(Index == 0){
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) == -1){
-                            BORDER_RIGHT = "1px solid #409EFF"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) != -1){
-                            BORDER_RIGHT = "1px solid #409EFF"
-                        }
-                    }else if(Index == this.All_Options[Part].length - 1){
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) == -1){
-                            BORDER_LEFT = "1px solid #409EFF"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) != -1){
-                            BORDER_LEFT = "none"
-                        }
-                    }
-                }
-            }
-            else if(Part == 'Database'){
-                if(this.Chosen_Options.Database.indexOf(Item) == -1){
-                    if(Index > 0 && Index < this.All_Options.Database.length - 1){
-                        if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) == -1){
-                            BORDER_RIGHT = "1px solid #ccc"
-                        }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) != -1){
-                            BORDER_RIGHT = "none"
-                        }
-                        if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) == -1){
-                            BORDER_LEFT = "none"
-                        }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) != -1){
-                            BORDER_LEFT = "none"
-                        }
-                    }else if(Index == 0){
-                        if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) == -1){
-                            BORDER_RIGHT = "1px solid #ccc"
-                        }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) != -1){
-                            BORDER_RIGHT = "none"
-                        }
-                    }else if(Index == this.All_Options.Database.length - 1){
-                        if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) == -1){
-                            BORDER_LEFT = "none"
-                        }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) != -1){
-                            BORDER_LEFT = "none"
-                        }
-                    }
-                }else{
-                    if(this.All_Options.Database.length > 1){
-                        if(Index > 0 && Index < this.All_Options.Database.length - 1){
-                            if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) == -1){
-                                BORDER_RIGHT = "1px solid #409EFF"
-                            }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) != -1){
-                                BORDER_RIGHT = "0.5px solid #409EFF"
-                            }
-                            if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) == -1){
-                                BORDER_LEFT = "1px solid #409EFF"
-                            }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) != -1){
-                                BORDER_LEFT = "0.5px solid #409EFF"
-                            }
-                        }else if(Index == 0){
-                            if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) == -1){
-                                BORDER_RIGHT = "1px solid #409EFF"
-                            }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) != -1){
-                                BORDER_RIGHT = "1px solid #409EFF"
-                            }
-                        }else if(Index == this.All_Options.Database.length - 1){
-                            if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) == -1){
-                                BORDER_LEFT = "1px solid #409EFF"
-                            }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) != -1){
-                                BORDER_LEFT = "none"
-                            }
-                        }
-                    }
-                }
-            }
             return {
                 "width": WIDTH,
                 "height": "40px",
@@ -656,12 +517,13 @@ export default {
                 "box-sizing": "border-box",
                 "background": "white",
                 "cursor": "pointer",
-                "border-left": BORDER_LEFT,
-                "border-right": BORDER_RIGHT,
-                "border-top-left-radius": Index == 0 ? "10px" : "0px",
-                "border-bottom-left-radius": Index == 0 ? "10px" : "0px",
-                "border-top-right-radius": Index == this.All_Options[Part].length - 1 ? "10px" : "0px",
-                "border-bottom-right-radius": Index == this.All_Options[Part].length - 1 ? "10px" : "0px"
+                "border-top-left-radius":"10px",
+                "border-bottom-left-radius":"10px",
+                "border-top-right-radius": "10px",
+                "border-bottom-right-radius": "10px",
+                "margin-right":"10px",
+                "margin-top":"10px",
+                "background-color":"#EDEFF2"
             }
         },
         // 样式筛选器，对比这个属性的这一项是否在Chosen_Options内，来对应不同的显示
@@ -977,10 +839,10 @@ export default {
             this.Complex_Input_Dialog = false;
             this.Search_Content = val
         },
-        Get_Card_Background(Question_Index){
+        Get_Card_Background(){
             let Style = {
-                'background': Question_Index % 2 == 0 ? '#F0F5FB' : 'white',
-                'width': "100%",
+                'background':'white',
+                'width': "55%",
             }
             return Style
         },
@@ -989,7 +851,7 @@ export default {
             let Style_Row_1 = '-128px auto 128px auto'
             let Style = {
                 'margin': Question_Index == this.Paper_Info_List.length - 1 ? Style_Row_0 : Style_Row_1,
-                'width': '1344px'
+                'min-width': '500px'
             }
             return Style
         },
@@ -1085,9 +947,20 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.sp-left_container{
+  flex-grow:3;
+  max-width: 24%;
+}
+.sp-container{
+  display:flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
 .Filter_Line{
+    display: flex;
+    flex-direction: column;
     margin: 24px 0;
-    min-width: 720px;
+    min-width: 28vw;
 }
 
 .Filter_Label{
@@ -1121,6 +994,8 @@ export default {
     border-radius: 10px;
     border: 1px solid rgba($color: #000, $alpha: 0.14);
     box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.06);
+    display:flex;
+    width:30vw;
 }
 
 .Jump_Bar{
@@ -1170,7 +1045,7 @@ export default {
 
 .Question_Card{
     box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
-    width: 1168px;
+    min-width: 55vw;
     margin: 0 auto;
     border-radius: 10px;
     opacity: 0.95;
@@ -1189,7 +1064,10 @@ export default {
 
 .Filter_Item_Shadow{
     border-radius: 10px;
-    box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.06);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .Padding_Width{
@@ -1198,13 +1076,12 @@ export default {
 }
 
 .Main_Background{
-    width: 100%;
-    min-width: 1362px;
-    padding: 0 calc((100% - 1344px - 18px)/2);
+    max-width: 40vw;
     overflow-x: hidden;
     margin-top: -70px;
     padding-bottom: 64px;
     margin-bottom: 64px;
+  flex-grow: 1;
 }
 
 .Search_Button{
