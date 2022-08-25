@@ -141,7 +141,7 @@
             <instruction
                 ref="instruction"
             />
-      <div class="sp-container">
+      <div class="sq-container">
         <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
             <el-col>
                 <div class="Background_Round">
@@ -344,7 +344,7 @@
                 </el-row>
             </el-col>
         </el-row>
-        <div class="sp-container-left">
+        <div class="sq-container-left">
         <el-row>
             <el-col style="margin-top: 35%">
                 <div
@@ -620,149 +620,6 @@ export default {
         // 参数分别是筛选项所属的属性，筛选项对应的索引值
         Filter_Item(Part){
             let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '105px': '70px'
-            // let BORDER_LEFT = ""
-            // let BORDER_RIGHT = ""
-            // if(Part == 'Semantic'){
-            //     if(this.Chosen_Options[Part] != Item){
-            //         if(Index == 0){
-            //             BORDER_RIGHT = "none"
-            //         }else{
-            //             BORDER_LEFT = "none"
-            //         }
-            //     }
-            // }else if(Part == 'Difficulty'){
-            //     if(this.Chosen_Options.Difficulty != Item){
-            //         if(Index > 0 && Index < this.All_Options.Difficulty.length - 1){
-            //             if(this.Chosen_Options.Difficulty == this.All_Options.Difficulty[Index + 1]){
-            //                 BORDER_RIGHT = "none"
-            //                 BORDER_LEFT = "none"
-            //             }else if(this.Chosen_Options.Difficulty == this.All_Options.Difficulty[Index - 1]){
-            //                 BORDER_LEFT = "none"
-            //                 BORDER_RIGHT = "1px solid #ccc"
-            //             }else{
-            //                 BORDER_LEFT = "none"
-            //                 BORDER_RIGHT = "1px solid #ccc"
-            //             }
-            //         }else{
-            //             if(Index == 0 && this.Chosen_Options.Difficulty == this.All_Options.Difficulty[1]){
-            //                 BORDER_RIGHT = "none"
-            //             }else if(Index == 0){
-            //                 BORDER_RIGHT = "1px solid #ccc"
-            //             }else if(Index == this.All_Options.Difficulty.length - 1 && this.Chosen_Options.Difficulty == this.All_Options.Difficulty[this.All_Options.Difficulty.length - 2]){
-            //                 BORDER_LEFT = "none"
-            //             }else if(Index == this.All_Options.Difficulty.length - 1){
-            //                 BORDER_LEFT = "none"
-            //             }
-            //         }
-            //     }
-            // }else if(Part != 'Database'){
-            //     if(this.Chosen_Options[Part].indexOf(Item) == -1){
-            //         if(Index > 0 && Index < this.All_Options[Part].length - 1){
-            //             if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) == -1){
-            //                 BORDER_RIGHT = "1px solid #ccc"
-            //             }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) != -1){
-            //                 BORDER_RIGHT = "none"
-            //             }
-            //             if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) == -1){
-            //                 BORDER_LEFT = "none"
-            //             }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) != -1){
-            //                 BORDER_LEFT = "none"
-            //             }
-            //         }else if(Index == 0){
-            //             if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) == -1){
-            //                 BORDER_RIGHT = "1px solid #ccc"
-            //             }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) != -1){
-            //                 BORDER_RIGHT = "none"
-            //             }
-            //         }else if(Index == this.All_Options[Part].length - 1){
-            //             if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) == -1){
-            //                 BORDER_LEFT = "none"
-            //             }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) != -1){
-            //                 BORDER_LEFT = "none"
-            //             }
-            //         }
-            //     }else{
-            //         if(Index > 0 && Index < this.All_Options[Part].length - 1){
-            //             if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) == -1){
-            //                 BORDER_RIGHT = "1px solid #409EFF"
-            //             }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) != -1){
-            //                 BORDER_RIGHT = "1px solid #409EFF"
-            //             }
-            //             if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) == -1){
-            //                 BORDER_LEFT = "1px solid #409EFF"
-            //             }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) != -1){
-            //                 BORDER_LEFT = "none"
-            //             }
-            //         }else if(Index == 0){
-            //             if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) == -1){
-            //                 BORDER_RIGHT = "1px solid #409EFF"
-            //             }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) != -1){
-            //                 BORDER_RIGHT = "1px solid #409EFF"
-            //             }
-            //         }else if(Index == this.All_Options[Part].length - 1){
-            //             if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) == -1){
-            //                 BORDER_LEFT = "1px solid #409EFF"
-            //             }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) != -1){
-            //                 BORDER_LEFT = "none"
-            //             }
-            //         }
-            //     }
-            // }
-            // else if(Part == 'Database'){
-            //     if(this.Chosen_Options.Database.indexOf(Item) == -1){
-            //         if(Index > 0 && Index < this.All_Options.Database.length - 1){
-            //             if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) == -1){
-            //                 BORDER_RIGHT = "1px solid #ccc"
-            //             }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) != -1){
-            //                 BORDER_RIGHT = "none"
-            //             }
-            //             if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) == -1){
-            //                 BORDER_LEFT = "none"
-            //             }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) != -1){
-            //                 BORDER_LEFT = "none"
-            //             }
-            //         }else if(Index == 0){
-            //             if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) == -1){
-            //                 BORDER_RIGHT = "1px solid #ccc"
-            //             }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) != -1){
-            //                 BORDER_RIGHT = "none"
-            //             }
-            //         }else if(Index == this.All_Options.Database.length - 1){
-            //             if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) == -1){
-            //                 BORDER_LEFT = "none"
-            //             }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) != -1){
-            //                 BORDER_LEFT = "none"
-            //             }
-            //         }
-            //     }else{
-            //         if(this.All_Options.Database.length > 1){
-            //             if(Index > 0 && Index < this.All_Options.Database.length - 1){
-            //                 if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) == -1){
-            //                     BORDER_RIGHT = "1px solid #409EFF"
-            //                 }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) != -1){
-            //                     BORDER_RIGHT = "0.5px solid #409EFF"
-            //                 }
-            //                 if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) == -1){
-            //                     BORDER_LEFT = "1px solid #409EFF"
-            //                 }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) != -1){
-            //                     BORDER_LEFT = "0.5px solid #409EFF"
-            //                 }
-            //             }else if(Index == 0){
-            //                 if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) == -1){
-            //                     BORDER_RIGHT = "1px solid #409EFF"
-            //                 }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) != -1){
-            //                     BORDER_RIGHT = "1px solid #409EFF"
-            //                 }
-            //             }else if(Index == this.All_Options.Database.length - 1){
-            //                 if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) == -1){
-            //                     BORDER_LEFT = "1px solid #409EFF"
-            //                 }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) != -1){
-            //                     BORDER_LEFT = "none"
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
             return {
                 "width": WIDTH,
                 "height": "40px",
@@ -772,15 +629,12 @@ export default {
                 "box-sizing": "border-box",
                 "background": "white",
                 "cursor": "pointer",
-                // "border-left": BORDER_LEFT,
-                // "border-right": BORDER_RIGHT,
                 "border-top-left-radius":"10px",
                 "border-bottom-left-radius":"10px",
                 "border-top-right-radius": "10px",
                 "border-bottom-right-radius": "10px",
                 "margin-right":"10px",
                 "margin-top":"10px",
-                // "background-color":"#EDEFF2"
             }
         },
         // 样式筛选器，对比这个属性的这一项是否在Chosen_Options内，来对应不同的显示
@@ -1182,13 +1036,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.sp-container{
+.sq-container{
   display:flex;
   flex-direction: row-reverse;
   justify-content: space-between;
 }
 
-.sp-container-left{
+.sq-container-left{
   flex-grow:3;
   max-width: 24%;
 }
