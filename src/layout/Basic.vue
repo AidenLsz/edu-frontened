@@ -1162,6 +1162,7 @@ html, body {
 .Normal_Navbar{
   width: 100vw;
   padding: 0 32px;
+
 }
 
 @media screen and (max-width: 768px) {
