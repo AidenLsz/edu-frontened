@@ -47,19 +47,19 @@
                 <div
                     align="right"
                     class="Detail_Line_Infos">
-                    <span class="Extra_Info_Item">
+                    <span class="Extra_Info_Item" style="margin-right:10px">
                         地区：{{Question.area}}
                     </span>
-                    <span class="Extra_Info_Item">
+                    <span class="Extra_Info_Item" style="margin-right:10px">
                         真题情况：{{Question.pastpaper}}
                     </span>
-                    <span class="Extra_Info_Item">
+                    <span class="Extra_Info_Item" style="margin-right:10px">
                         所属题库：{{Question.database}}
                     </span>
-                    <span class="Extra_Info_Item">
+                    <span class="Extra_Info_Item" style="margin-right:10px">
                         学科：{{Question.subject}}
                     </span>
-                    <span class="Extra_Info_Item">
+                    <span class="Extra_Info_Item" style="margin-right:10px">
                         学段：{{Question.period}}
                     </span>
                 </div>
@@ -147,7 +147,6 @@ export default {
 .Detail_Line_Left{
     display: inline-block;
     width: calc(100% - 148px);
-    margin-right: 16px;
 }
 .Detail_Line_Right{
     width: 132px;
@@ -163,9 +162,9 @@ export default {
 }
 .Detail_Line_Infos{
     position: relative;
-    display: inline-block;
+    display: flex;
     right: 0px;
-    width: calc(100% - 130px);
+    width: 100%;
 }
 
 .Search_Button{
