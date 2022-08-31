@@ -206,19 +206,19 @@
                     <span style="color: Gainsboro">知识体系</span>
                   </div>
                 </el-collapse-item>
-                <el-collapse-item name="查询" title="查询">
-                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/exercise')">
-                    <span style="color: black">试题检索</span>
+                <el-collapse-item name="搜索整合" title="搜索整合">
+                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/luna-search')">
+                    <span style="color: black">搜索整合</span>
                   </div>
-                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/searchPaper')">
-                    <span style="color: black">试卷检索</span>
-                  </div>
-                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/ku')">
-                    <span style="color: black">知识单元检索</span>
-                  </div>
-                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/resources')">
-                    <span style="color: black">学习资源检索</span>
-                  </div>
+<!--                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/searchPaper')">-->
+<!--                    <span style="color: black">试卷检索</span>-->
+<!--                  </div>-->
+<!--                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/ku')">-->
+<!--                    <span style="color: black">知识单元检索</span>-->
+<!--                  </div>-->
+<!--                  <div align="left" class="Navbar_Drawer_Sub" @click="Router_Trans('/resources')">-->
+<!--                    <span style="color: black">学习资源检索</span>-->
+<!--                  </div>-->
                 </el-collapse-item>
                 <el-collapse-item name="分析" title="分析">
                   <div align="left" class="Navbar_Drawer_Sub">
@@ -385,26 +385,30 @@
                         ><span style="color: Gainsboro">知识体系</span>
                       </el-menu-item>
                   </el-submenu>
-                    <el-submenu index="2">
-                      <template slot="title"
-                        ><span style="color: black">查询</span></template
-                      >
-                      <el-menu-item index="2-1" @click="Router_Trans('/exercise')">
-                        <span style="color: black">试题检索</span>
-                      </el-menu-item>
+<!--                    <el-submenu index="2">-->
+<!--                      <span style="color: black">查询</span>-->
+                    <el-menu-item index="2"  @click="Router_Trans('/luna-search')">
+                      <span style="color: black"> 搜索整合 </span>
+                    </el-menu-item>
+<!--                      <template slot="title">-->
+<!--                        <span style="color: black">查询</span>-->
+<!--                      </template>-->
+<!--                      <el-menu-item index="2-1" @click="Router_Trans('/exercise')">-->
+<!--                        <span style="color: black">试题检索</span>-->
+<!--                      </el-menu-item>-->
 
-                      <el-menu-item index="2-2" @click="Router_Trans('/searchPaper')">
-                        <span style="color: black">试卷检索</span>
-                      </el-menu-item>
+<!--                      <el-menu-item index="2-2" @click="Router_Trans('/searchPaper')">-->
+<!--                        <span style="color: black">试卷检索</span>-->
+<!--                      </el-menu-item>-->
 
-                      <el-menu-item index="2-3" @click="Router_Trans('/ku')">
-                        <span style="color: black">知识单元检索</span>
-                      </el-menu-item>
+<!--                      <el-menu-item index="2-3" @click="Router_Trans('/ku')">-->
+<!--                        <span style="color: black">知识单元检索</span>-->
+<!--                      </el-menu-item>-->
 
-                      <el-menu-item index="2-4" @click="Router_Trans('/resources')">
-                        <span style="color: black">学习资源检索</span>
-                      </el-menu-item>
-                    </el-submenu>
+<!--                      <el-menu-item index="2-4" @click="Router_Trans('/resources')">-->
+<!--                        <span style="color: black">学习资源检索</span>-->
+<!--                      </el-menu-item>-->
+<!--                    </el-submenu>-->
                     <el-submenu index="3">
                       <template slot="title"
                         ><span style="color: black">分析</span></template

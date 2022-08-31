@@ -81,6 +81,11 @@ const visitorRouter=[
     component: () => import("@/views/paperCombine/AnswerCard"),
   },
   {
+    path: "luna-search",
+    name: "visitor/luna-search",
+    component:()=> import("@/views/resourceQuery/Index"),
+  },
+  {
     path: "/exercise",
     name: "visitor/Exercise",
     component: () => import("@/views/resourceQuery/Exercise/index.vue"),
