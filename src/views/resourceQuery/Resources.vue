@@ -30,37 +30,11 @@
         <instruction
             ref="instruction"
         />
+        <div class="RS_container">
         <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
-            <el-col>
-                <!-- 面包屑行 -->
-                <el-row
-                    class="Padding_Width"
-                    type="flex"
-                    ref="BreadCrumb_Line"
-                    justify="start">
-                    <el-breadcrumb separator-class="el-icon-arrow-right">
-                        <el-breadcrumb-item>
-                            首页
-                        </el-breadcrumb-item>
-                        <el-breadcrumb-item>
-                            查询
-                            <span @click="openInstructionDialog" style="cursor:pointer;">
-                                <i class="el-icon-question"></i>
-                            </span>
-                        </el-breadcrumb-item>
-                    </el-breadcrumb>
-                </el-row>
-                <!-- 页面标题行 -->
-                <el-row
-                    class="Padding_Width"
-                    type="flex"
-                    justify="start"
-                    style="margin-top: 2vh;">
-                    <span style="font-size: 4rem" class="Label_Shadow">资源检索</span>
-                </el-row>
-                <div class="Background_Round">
 
-                </div>
+              <div class="RS_left_container">
+
                 <!-- 功能区 -->
                 <el-row class="Padding_Width">
                     <el-col style="min-height: 320px; padding-left: 30px;">
@@ -130,90 +104,40 @@
                         </el-row>
                     </el-col>
                 </el-row>
+
                 <el-row
                     v-if="Resource_Info_List.length == 0"
                     style="height: 200px; line-height: 200px; width: 100%; font-weight: bold; font-size: 24px; color: #ccc"
                     type="flex" justify="center">
                     暂无检索结果
                 </el-row>
-                <el-row
-                    v-else
-                    id="Resources"
-                    style="line-height: 40px; width: 100%; padding-top: 20px; margin-top: 40px;"
-                    type="flex"
-                    justify="center">
-                    <i
-                        class="el-icon-d-arrow-left"
-                        @click="Jump_To('Resources')"
-                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.5; cursor: pointer; z-index: 1;"></i>
-                </el-row>
-            </el-col>
+              </div>
+
+
         </el-row>
         <div v-if="Resource_Info_List.length != 0">
             <el-row
                 type="flex"
                 justify="center"
                 class="Padding_Width"
-                style="width: 100%; min-width: 1362px; font-size: 16px;" >
-                <div align="center">
-                    <div class="Table_Label" style="width: 60px" align="center">
-                        序号
-                    </div>
-                    <div class="Table_Label" style="width: 80px" align="center">
-                        学科
-                    </div>
-                    <div class="Table_Label" style="width: 100px" align="center">
-                        学段/年级
-                    </div>
-                    <div class="Table_Label" style="width: 100px" align="center">
-                        资源类型
-                    </div>
-                    <div class="Table_Label" style="width: 120px" align="center">
-                        出版社
-                    </div>
-                    <div class="Table_Label" style="width: 466px" align="center">
-                        资源名称
-                    </div>
-                    <div class="Table_Label" style="width: 100px" align="center">
-                        存入日期
-                    </div>
-                    <div class="Table_Label" style="width: 160px" align="center">
-                        获取
-                    </div>
-                </div>
-            </el-row>
-            <el-row
-                type="flex"
-                justify="center"
-                class="Padding_Width"
-                style="width: 100%; min-width: 1362px;"
+                style="width: 100%;"
                 v-for="Resource_Info_Index in 10"
                 :key="'Resource_Info_' + Resource_Info_Index">
-                <div align="center" :style="Resource_Info_Index % 2 == 0 ? '' : 'background: #F4F7FC'">
-                    <div class="Resource_Label" style="width: 60px" align="center">
-                        {{Resource_Info_Index + (Page_Index - 1) * 10}}
-                    </div>
-                    <div class="Resource_Label" style="width: 80px" align="center">
-                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].subject}}
-                    </div>
-                    <div class="Resource_Label" style="width: 100px" align="center">
-                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].period}}
-                    </div>
-                    <div class="Resource_Label" style="width: 100px" align="center">
+                <div align="center" :style="Resource_Info_Index % 2 == 0 ? '' : 'background: #F4F7FC'" class="RS_card">
+                  <div class="Resource_Label">
+                    {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].subject}}
+                      {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].publisher}}
+                      {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].period}}
+                      {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].name}}
+                  </div>
+                  <div class="RS_card_btm">
+                  <div class="Resource_Label" style="width: 100px" >
                         {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].type}}
-                    </div>
-                    <div class="Resource_Label" style="width: 120px" align="center">
-                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].publisher}}
-                    </div>
-                    <div class="Resource_Label Resource_Name" style="width: 466px" align="center">
-                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].name}}
-                    </div>
-                    <div class="Resource_Label" style="width: 100px" align="center">
-                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].date}}
-                    </div>
-                    <div class="Resource_Label" style="width: 160px" align="center">
+                  </div>
+                    <div class="Resource_Label" style="width: 160px">
                         <el-button style="display: none" type="success" size="mini" @click="Resource_Preview(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">预览</el-button>
                         <el-button type="primary" size="mini" @click="Resource_Download(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">下载</el-button>
+                    </div>
                     </div>
                 </div>
             </el-row>
@@ -228,6 +152,7 @@
                     :total="Total_Count">
                 </el-pagination>
             </el-row>
+        </div>
         </div>
     </div>
 
@@ -323,77 +248,25 @@ export default {
         },
         // 控制筛选项的样式显示
         // 参数分别是筛选项所属的属性，筛选项对应的索引值
-        Filter_Item(Part, Index, Item){
+        Filter_Item(){
             let WIDTH = '80px'
-            let BORDER_LEFT = ""
-            let BORDER_RIGHT = ""
-            if(this.Chosen_Options[Part].indexOf(Item) == -1){
-                if(Index > 0 && Index < this.All_Options[Part].length - 1){
-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) == -1){
-                        BORDER_RIGHT = "1px solid #ccc"
-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) != -1){
-                        BORDER_RIGHT = "none"
-                    }
-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) == -1){
-                        BORDER_LEFT = "none"
-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) != -1){
-                        BORDER_LEFT = "none"
-                    }
-                }else if(Index == 0){
-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) == -1){
-                        BORDER_RIGHT = "1px solid #ccc"
-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) != -1){
-                        BORDER_RIGHT = "none"
-                    }
-                }else if(Index == this.All_Options[Part].length - 1){
-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) == -1){
-                        BORDER_LEFT = "none"
-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) != -1){
-                        BORDER_LEFT = "none"
-                    }
-                }
-            }else{
-                if(Index > 0 && Index < this.All_Options[Part].length - 1){
-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) == -1){
-                        BORDER_RIGHT = "1px solid #409EFF"
-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) != -1){
-                        BORDER_RIGHT = "1px solid #409EFF"
-                    }
-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) == -1){
-                        BORDER_LEFT = "1px solid #409EFF"
-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) != -1){
-                        BORDER_LEFT = "none"
-                    }
-                }else if(Index == 0){
-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) == -1){
-                        BORDER_RIGHT = "1px solid #409EFF"
-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) != -1){
-                        BORDER_RIGHT = "1px solid #409EFF"
-                    }
-                }else if(Index == this.All_Options[Part].length - 1){
-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) == -1){
-                        BORDER_LEFT = "1px solid #409EFF"
-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) != -1){
-                        BORDER_LEFT = "none"
-                    }
-                }
-            }
-            return {
-                "width": WIDTH,
-                "height": "40px",
-                "line-height": "40px",
-                "text-align": "center",
-                "display": "inline-block",
-                "box-sizing": "border-box",
-                "background": "white",
-                "cursor": "pointer",
-                "border-left": BORDER_LEFT,
-                "border-right": BORDER_RIGHT,
-                "border-top-left-radius": Index == 0 ? "10px" : "0px",
-                "border-bottom-left-radius": Index == 0 ? "10px" : "0px",
-                "border-top-right-radius": Index == this.All_Options[Part].length - 1 ? "10px" : "0px",
-                "border-bottom-right-radius": Index == this.All_Options[Part].length - 1 ? "10px" : "0px"
-            }
+          return {
+            "width": WIDTH,
+            "height": "40px",
+            "line-height": "40px",
+            "text-align": "center",
+            "display": "inline-block",
+            "box-sizing": "border-box",
+            "background": "white",
+            "cursor": "pointer",
+            "border-top-left-radius":"10px",
+            "border-bottom-left-radius":"10px",
+            "border-top-right-radius": "10px",
+            "border-bottom-right-radius": "10px",
+            "margin-right":"10px",
+            "margin-top":"10px",
+            "background-color":"#EDEFF2"
+          }
         },
         // 样式筛选器，对比这个属性的这一项是否在Chosen_Options内，来对应不同的显示
         // 主要用于hover样式，来做成按钮的效果
@@ -554,9 +427,27 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.RS_card_btm{
+  display: flex;
+  flex-direction:row;
+
+
+}
+.RS_card{
+  display: flex;
+  flex-direction: column;
+  width:23vw;
+}
+.RS_container{
+  display:flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
 .Filter_Line{
-    margin: 24px 0;
-    min-width: 720px;
+  display: flex;
+  flex-direction: column;
+  margin: 24px 0;
+  min-width: 28vw;
 }
 
 .Filter_Label{
@@ -638,8 +529,11 @@ export default {
 }
 
 .Filter_Item_Shadow{
-    border-radius: 10px;
-    box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.06);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 .Padding_Width{
@@ -654,7 +548,6 @@ export default {
 .Main_Background{
     width: 100%;
     min-width: 1362px;
-    padding: 0 calc((100% - 1344px - 18px)/2);
     overflow: hidden;
     margin-top: -70px;
     margin-bottom: 64px;
@@ -681,6 +574,7 @@ export default {
     height: 60px;
     color: black;
     line-height: 60px;
+    text-align: left;
 }
 
 .Resource_Name{

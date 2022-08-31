@@ -288,9 +288,6 @@
         </el-row>
         <div class="sp-left_container">
         <el-row>
-          <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
-          <div class="fa fa-search"
-               style="position: relative; right: 10vw;top:4.7vh"></div>
           <el-input
               v-model="Search_Content"
               :disabled="Search_Extra == 'ImgSearch'"
@@ -298,6 +295,7 @@
               placeholder="请输入想要检索的试题文字内容"
               style="width: 55vw"
               class="Search_Input"
+              prefix-icon="el-icon-search"
               suffix-icon="el-icon-camera">
           </el-input>
           <el-tabs v-model="activeName"
@@ -309,8 +307,8 @@
             <el-tab-pane label="教材教辅" name="fourth"></el-tab-pane>
           </el-tabs>
           <span style="margin-left: -40vw;
-          font-family:Source Han Sans CN;
-          font-weight: 500">搜索结果</span>
+          font-family:”Source Han Sans CN“;
+          font-weight: 600">搜索结果</span>
           <el-col style="margin-top: 38%">
             <div
                 v-for="(Paper_Info, Paper_Info_Index) in Paper_Info_List"
