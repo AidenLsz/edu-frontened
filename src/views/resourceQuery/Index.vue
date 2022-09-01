@@ -27,9 +27,9 @@
       </el-row>
       <el-row type="flex" justify="center">
         <div class="choose-card" v-for="(item,index) in source_options" :key="index"
-             :class="{'active':selected.indexOf(item)!=-1}" @click="active(index,item)">
+             :style="{'active':selected.indexOf(item)!=-1}" @click="active(index,item)">
           <div class="sourceButton">
-            <span class="word-style">{{item.name}}</span>
+            <span>{{item.name}}</span>
           </div>
         </div>
         <div class="choose-card">
@@ -209,6 +209,28 @@ export default {
   border-radius: 1000px;
   background: #F2F3F7;
   cursor: pointer;
+  font-family: Sarasa-Gothic-SC-Semibold;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  z-index: 0
+}
+.sourceButton_selected{
+  margin-left: 16px;
+  height: 42px;
+  display: inline-block;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 6px 16px;
+  border-radius: 1000px;
+  background: #608DE8;
+  cursor: pointer;
+  font-family: Sarasa-Gothic-SC-Semibold;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #FFFFFF;
   z-index: 0
 }
 .advance_filter{
