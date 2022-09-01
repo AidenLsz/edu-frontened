@@ -7,9 +7,30 @@
     element-loading-text="正在读取知识点网络，请稍后..."
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.28)">
-    <div id="Top_Nav" class="Top_Nav">
+    <div class="SearchInputDIV">
+      <el-input
+          prefix-icon="el-icon-search"
+          placeholder="请输入知识单元名称"
+          class="SearchInput"
+          v-model="ku_name"
+          type="text"
+          @keyup.enter.native="Search_KU_Info(ku_name)"
+          suffix-icon="el-icon-camera">
 
+      </el-input>
+      <el-tabs v-model="activeName"
+               @tab-click="handleClick"
+               style="width: 23vw;position: relative;right: 1.9vw;">
+        <el-tab-pane label="知识点" name="first"></el-tab-pane>
+        <el-tab-pane label="试题" name="second"></el-tab-pane>
+        <el-tab-pane label="试卷" name="third"></el-tab-pane>
+        <el-tab-pane label="教材教辅" name="fourth"></el-tab-pane>
+      </el-tabs>
+      <div class="KU_result">最匹配结果</div>
     </div>
+    <div id="Top_Nav" class="Top_Nav">
+    </div>
+
     <!-- <el-dialog
         :visible.sync="simpleInput"
         title="LUNA输入助手"
@@ -18,8 +39,9 @@
         :close-on-click-modal="false">
       <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="content"></ComplexInput>
     </el-dialog> -->
-
-    <el-row justify="start" type="flex" style="margin: 0;">
+    <div class="KU_container">
+<div class="KU_right_container">
+    <!--<el-row justify="start" type="flex" style="margin: 0;">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: $store.getters.systemType==2?'/itas':'/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item v-if="$store.getters.systemType==2">
@@ -35,17 +57,8 @@
           </span>
         </el-breadcrumb-item>
       </el-breadcrumb>
-    </el-row>
+    </el-row>-->
     <instruction ref="instruction"/>
-    <!-- 页面标题行 -->
-    <el-row
-        type="flex"
-        class="KU_Title"
-        justify="start"
-        style="margin-top: 12px; margin-bottom: 30px; margin-left: -4px;">
-        <span>知识单元检索</span>
-    </el-row>
-
     <!-- 学科行 -->
     <el-row type="flex" justify="start" style="margin-bottom: 18px; font-size: 18px;">
       <label>学科</label>
@@ -76,6 +89,7 @@
       </div>
     </div>
 
+
     <!-- 搜索框行 -->
     <el-row id="Search_Bar" type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;">
       <label>检索</label>
@@ -93,15 +107,9 @@
         <span>检索</span>
       </div>
     </el-row>
-
+</div>
+<div class="KU_left_container">
     <!-- 搜索结果行 -->
-    <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 8px;" v-show="Search_KU">
-      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">相关度最高的结果</label>
-      <el-button type="text" @click="Transition_Show = !Transition_Show" style="color: #4A4B56">
-        <i class="el-icon-caret-right" :style="Get_Rotate_Triangle(Transition_Show)"></i>
-        <label style="cursor: pointer">{{Transition_Show ? "仅看相关度最高的结果" : "查看更多结果"}}</label>
-      </el-button>
-    </el-row>
     <el-row
       v-show="Search_KU"
       type="flex"
@@ -111,9 +119,6 @@
       <KnowledgePointCard @Search_This_KU="Search_KU_Do" :KnowledgePoint="KU_Search_List[0]">
 
       </KnowledgePointCard>
-    </el-row>
-    <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 16px;" v-show="Transition_Show">
-      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">更多结果</label>
     </el-row>
     <el-row type="flex" justify="start" style="margin: 0;">
       <transition name="el-zoom-in-top">
@@ -148,10 +153,12 @@
             @current-change="Page_Index_Change"
             :current-page.sync="Page_Index"
             :page-size="5"
-            layout="total, prev, pager, next"
+            style="display: flex; margin-left:-2.2%"
+            layout="prev, pager, next"
             :total="50">
         </el-pagination>
     </el-row>
+
     <!-- 相关搜索
     <el-row class="ConnectSearch" v-if="similar_nodes.length" style="">
       <el-row style="margin-left: -1330px;font-size: 14px;">相关搜索</el-row>
@@ -183,6 +190,7 @@
         </div>
       </el-row>
     </div>
+
     <el-row>
       <div class="KU_Detail_Aim" id="KU_Detail"></div>
     </el-row>
@@ -257,9 +265,8 @@
 
 
     </el-row>
-    <el-row v-show="!Search_Result" style="height: 300px; width: 100%;">
-      <label style="font-size: 24px; margin-top: 60px; color: #ccc">{{Search_KU ? "点击按钮查看详情信息" : "尚未检索知识点"}}</label>
-    </el-row>
+</div>
+      </div>
   </div>
 </template>
 
@@ -416,6 +423,10 @@ export default {
     }
   },
   methods: {
+    handleClick(){
+      if(this.activeName=="first"){
+        this.Search_KU_Info(this.ku_name);}
+    },
     Page_Index_Change(){
       document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
       this.Transition_Show = true;
@@ -933,6 +944,28 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+.KU_result{
+  padding-right: 49vw;
+  margin-left: -4.3vw;
+  font-family: Source Han Sans CN;
+  font-weight: 600;
+}
+.KU_right_container{
+  max-width: 26vw;
+  margin-top: -6.9vh;
+}
+.KU_left_container{
+  max-width: 55vw;
+}
+
+.KU_container{
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  margin-left:-2.2%;
+  margin-right: 2%;
+}
 .instruction{
    max-width:300px;
    p{
@@ -1165,9 +1198,11 @@ export default {
   box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
   border-radius: 10px;
   -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
+  margin-left: -3.9vw;
+  border-radius: 50px;
 }
 .SearchInputDIV{
-  width: 684px;
+  width: 55vw;
 }
 .SearchInput ::v-deep .el-input__inner {
   border: 0;
@@ -1220,7 +1255,7 @@ export default {
   color: black;
   cursor: pointer;
   /* capsule */
-  background: #FFFFFF;
+  background: #F2F3F7;
   border: 1px solid #D4D4D4;
   box-sizing: border-box;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
@@ -1304,10 +1339,6 @@ export default {
     padding: 0 88px;
     margin: 0;
   }
-
-  .SearchInputDIV{
-    width: calc(100% - 120px)
-  }
 }
 
 @media screen and (max-width: 768px){
@@ -1317,9 +1348,7 @@ export default {
     margin: 0;
   }
 
-  .SearchInputDIV{
-    width: calc(100% - 120px)
-  }
+
 }
 
 .KU_Detail_Aim{

@@ -6,8 +6,6 @@
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.28)">
         <div id="Top_Nav" class="Top_Nav">
-
-    </div>
         <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
         <div class="Jump_Bar">
             <el-row
@@ -420,6 +418,7 @@
             <el-button type="primary" @click="Doc_Upload_Input">确 定</el-button>
           </span>
         </el-dialog>
+    </div>
     </div>
 </template>
 

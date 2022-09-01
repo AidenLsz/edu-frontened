@@ -6,8 +6,7 @@
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.28)">
         <div id="Filter" class="Top_Nav">
-
-    </div>
+        </div>
         <LunaProgress
             v-if="Paper_Analysing"
             :Bar_Type="'time'"
@@ -126,12 +125,12 @@
             <instruction
                 ref="instruction"
             />
-      <div class="sp-container">
+      <div class="sp-container" style="padding-right: 3vw;padding-left: 5vw">
         <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
           <el-col>
-            <div class="Background_Round">
+         <!--   <div class="Background_Round">
 
-            </div>
+            </div>     -->
             <!-- 功能区 -->
             <el-row class="Padding_Width">
               <el-col :span="16" style="min-height: 320px;">
@@ -289,11 +288,33 @@
         </el-row>
         <div class="sp-left_container">
         <el-row>
-          <el-col style="margin-top: 35%">
+          <el-input
+              v-model="Search_Content"
+              :disabled="Search_Extra == 'ImgSearch'"
+              @keyup.enter.native="Search_Do()"
+              placeholder="请输入想要检索的试题文字内容"
+              style="width: 55vw"
+              class="Search_Input"
+              prefix-icon="el-icon-search"
+              suffix-icon="el-icon-camera">
+          </el-input>
+          <el-tabs v-model="activeName"
+                   @tab-click="handleClick"
+                   style="width:23vw;padding-left:0.4vw">
+            <el-tab-pane label="知识点" name="first"></el-tab-pane>
+            <el-tab-pane label="试题" name="second"></el-tab-pane>
+            <el-tab-pane label="试卷" name="third"></el-tab-pane>
+            <el-tab-pane label="教材教辅" name="fourth"></el-tab-pane>
+          </el-tabs>
+          <span style="margin-left: -40vw;
+          font-family:”Source Han Sans CN“;
+          font-weight: 600">搜索结果</span>
+          <el-col style="margin-top: 38%">
             <div
                 v-for="(Paper_Info, Paper_Info_Index) in Paper_Info_List"
                 :style="Get_Card_Background()"
                 :key="'Question_' + Paper_Info_Index">
+
               <el-row style="padding-bottom: 75%">
                 <div
                     :id="'Question_' + Paper_Info_Index"
@@ -424,7 +445,7 @@ export default {
         // 正在获取分析报告的进度条显示变量和显示文字
         Paper_Analysing: false,
         Paper_Analysing_Text: "",
-        Paper_Analysing_Over_Time: false
+        Paper_Analysing_Over_Time: false,
     };
   },
   destroyed(){
@@ -473,6 +494,12 @@ export default {
 
   },
   methods: {
+      handleClick(){
+        if(this.activeName=="third"){
+          this.Search_Do();}
+
+
+      },
       To_Top(){
           document.getElementById("Filter").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
       },
@@ -991,11 +1018,13 @@ export default {
 }
 
 .Search_Input ::v-deep .el-input__inner{
-    border-radius: 10px;
+    border-radius: 50px;
     border: 1px solid rgba($color: #000, $alpha: 0.14);
     box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.06);
     display:flex;
-    width:30vw;
+    width:55vw;
+    padding-left: 3vw;
+    background-color: transparent;
 }
 
 .Jump_Bar{
@@ -1073,6 +1102,7 @@ export default {
 .Padding_Width{
     padding-right: 88px;
     padding-left: 88px;
+    padding-top: 6.5vh;
 }
 
 .Main_Background{
