@@ -47,6 +47,9 @@
         </div>
 
       </el-row>
+      <el-row type="flex" justify="center" style="margin-top: 20px; font-size: 18px;">
+        <label>学科</label>
+      </el-row>
     </section>
   </div>
 </template>
@@ -112,7 +115,7 @@ export default {
 .main_area {
   min-width: 768px;
   height: 900px;
-  padding-top: 180px;
+  padding-top: 100px;
   left: 80px;
   text-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.12);
 }
