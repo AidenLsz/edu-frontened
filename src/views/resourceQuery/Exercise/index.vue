@@ -141,38 +141,10 @@
             <instruction
                 ref="instruction"
             />
+      <div class="sq-container">
         <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
             <el-col>
-                <!-- 面包屑行 -->
-                <el-row
-                    class="Padding_Width"
-                    type="flex"
-                    ref="BreadCrumb_Line"
-                    justify="start"
-                    id="Filter">
-                    <el-breadcrumb separator-class="el-icon-arrow-right">
-                        <el-breadcrumb-item>
-                            首页
-                        </el-breadcrumb-item>
-                        <el-breadcrumb-item>
-                            试题检索
-                            <span @click="openInstructionDialog" style="cursor:pointer;">
-                                <i class="el-icon-question"></i>
-                            </span>
-                        </el-breadcrumb-item>
-                    </el-breadcrumb>
-
-                </el-row>
-                <!-- 页面标题行 -->
-                <el-row
-                    class="Padding_Width"
-                    type="flex"
-                    justify="start"
-                    style="margin-top: 2vh;">
-                    <span style="font-size: 4rem">试题检索</span>
-                </el-row>
                 <div class="Background_Round">
-
                 </div>
                 <!-- 功能区 -->
                 <el-row
@@ -372,14 +344,15 @@
                 </el-row>
             </el-col>
         </el-row>
+        <div class="sq-container-left">
         <el-row>
-            <el-col>
-                <div 
+            <el-col style="margin-top: 35%">
+                <div
                     v-for="(Question, Question_Index) in Question_List"
                     :style="Get_Card_Background(Question_Index)"
                     :key="'Question_' + Question_Index">
-                    <el-row>
-                        <div 
+                    <el-row style="padding-bottom: 75%">
+                        <div
                             :id="'Question_' + Question_Index"
                             style="height: 10px; width: 10px; background: transparent;position: relative; margin-top: -192px">
 
@@ -389,7 +362,7 @@
                         <div
                             :style="Get_Card_Margin(Question_Index)"
                             >
-                            <el-row style="width: 100%; height: 64px; background: transparent; opacity: 0; z-index: -1; border-top: 1px solid red">
+                            <el-row style="width: 100%; height: 1%; background: transparent; opacity: 0; z-index: -1; border-top: 1px solid red;margin-bottom: -16%;">
 
                             </el-row>
                             <el-row class="Question_Card" style="background: white">
@@ -416,6 +389,8 @@
                 :total="Total_Count">
             </el-pagination>
         </el-row>
+        </div>
+      </div>
         <CutFile ref='cutFile' @search="handleSearch" @File_Cut_End="File_Cut_End"/>
         <el-dialog
           title="选择学科"
@@ -643,151 +618,8 @@ export default {
         },
         // 控制筛选项的样式显示
         // 参数分别是筛选项所属的属性，筛选项对应的索引值
-        Filter_Item(Part, Index, Item){
+        Filter_Item(Part){
             let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '105px': '70px'
-            let BORDER_LEFT = ""
-            let BORDER_RIGHT = ""
-            if(Part == 'Semantic'){
-                if(this.Chosen_Options[Part] != Item){
-                    if(Index == 0){
-                        BORDER_RIGHT = "none"
-                    }else{
-                        BORDER_LEFT = "none"
-                    }
-                }
-            }else if(Part == 'Difficulty'){
-                if(this.Chosen_Options.Difficulty != Item){
-                    if(Index > 0 && Index < this.All_Options.Difficulty.length - 1){
-                        if(this.Chosen_Options.Difficulty == this.All_Options.Difficulty[Index + 1]){
-                            BORDER_RIGHT = "none"
-                            BORDER_LEFT = "none"
-                        }else if(this.Chosen_Options.Difficulty == this.All_Options.Difficulty[Index - 1]){
-                            BORDER_LEFT = "none"
-                            BORDER_RIGHT = "1px solid #ccc"
-                        }else{
-                            BORDER_LEFT = "none"
-                            BORDER_RIGHT = "1px solid #ccc"
-                        }
-                    }else{
-                        if(Index == 0 && this.Chosen_Options.Difficulty == this.All_Options.Difficulty[1]){
-                            BORDER_RIGHT = "none"
-                        }else if(Index == 0){
-                            BORDER_RIGHT = "1px solid #ccc"
-                        }else if(Index == this.All_Options.Difficulty.length - 1 && this.Chosen_Options.Difficulty == this.All_Options.Difficulty[this.All_Options.Difficulty.length - 2]){
-                            BORDER_LEFT = "none"
-                        }else if(Index == this.All_Options.Difficulty.length - 1){
-                            BORDER_LEFT = "none"
-                        }
-                    }
-                }
-            }else if(Part != 'Database'){
-                if(this.Chosen_Options[Part].indexOf(Item) == -1){
-                    if(Index > 0 && Index < this.All_Options[Part].length - 1){
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) == -1){
-                            BORDER_RIGHT = "1px solid #ccc"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) != -1){
-                            BORDER_RIGHT = "none"
-                        }
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) == -1){
-                            BORDER_LEFT = "none"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) != -1){
-                            BORDER_LEFT = "none"
-                        }
-                    }else if(Index == 0){
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) == -1){
-                            BORDER_RIGHT = "1px solid #ccc"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) != -1){
-                            BORDER_RIGHT = "none"
-                        }
-                    }else if(Index == this.All_Options[Part].length - 1){
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) == -1){
-                            BORDER_LEFT = "none"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) != -1){
-                            BORDER_LEFT = "none"
-                        }
-                    }
-                }else{
-                    if(Index > 0 && Index < this.All_Options[Part].length - 1){
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) == -1){
-                            BORDER_RIGHT = "1px solid #409EFF"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) != -1){
-                            BORDER_RIGHT = "1px solid #409EFF"
-                        }
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) == -1){
-                            BORDER_LEFT = "1px solid #409EFF"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) != -1){
-                            BORDER_LEFT = "none"
-                        }
-                    }else if(Index == 0){
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) == -1){
-                            BORDER_RIGHT = "1px solid #409EFF"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) != -1){
-                            BORDER_RIGHT = "1px solid #409EFF"
-                        }
-                    }else if(Index == this.All_Options[Part].length - 1){
-                        if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) == -1){
-                            BORDER_LEFT = "1px solid #409EFF"
-                        }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) != -1){
-                            BORDER_LEFT = "none"
-                        }
-                    }
-                }
-            }
-            else if(Part == 'Database'){
-                if(this.Chosen_Options.Database.indexOf(Item) == -1){
-                    if(Index > 0 && Index < this.All_Options.Database.length - 1){
-                        if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) == -1){
-                            BORDER_RIGHT = "1px solid #ccc"
-                        }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) != -1){
-                            BORDER_RIGHT = "none"
-                        }
-                        if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) == -1){
-                            BORDER_LEFT = "none"
-                        }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) != -1){
-                            BORDER_LEFT = "none"
-                        }
-                    }else if(Index == 0){
-                        if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) == -1){
-                            BORDER_RIGHT = "1px solid #ccc"
-                        }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) != -1){
-                            BORDER_RIGHT = "none"
-                        }
-                    }else if(Index == this.All_Options.Database.length - 1){
-                        if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) == -1){
-                            BORDER_LEFT = "none"
-                        }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) != -1){
-                            BORDER_LEFT = "none"
-                        }
-                    }
-                }else{
-                    if(this.All_Options.Database.length > 1){
-                        if(Index > 0 && Index < this.All_Options.Database.length - 1){
-                            if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) == -1){
-                                BORDER_RIGHT = "1px solid #409EFF"
-                            }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index + 1].nick) != -1){
-                                BORDER_RIGHT = "0.5px solid #409EFF"
-                            }
-                            if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) == -1){
-                                BORDER_LEFT = "1px solid #409EFF"
-                            }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[Index - 1].nick) != -1){
-                                BORDER_LEFT = "0.5px solid #409EFF"
-                            }
-                        }else if(Index == 0){
-                            if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) == -1){
-                                BORDER_RIGHT = "1px solid #409EFF"
-                            }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[1].nick) != -1){
-                                BORDER_RIGHT = "1px solid #409EFF"
-                            }
-                        }else if(Index == this.All_Options.Database.length - 1){
-                            if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) == -1){
-                                BORDER_LEFT = "1px solid #409EFF"
-                            }else if(this.Chosen_Options.Database.indexOf(this.All_Options.Database[this.All_Options.Database.length - 2].nick) != -1){
-                                BORDER_LEFT = "none"
-                            }
-                        }
-                    }
-                }
-            }
             return {
                 "width": WIDTH,
                 "height": "40px",
@@ -797,12 +629,12 @@ export default {
                 "box-sizing": "border-box",
                 "background": "white",
                 "cursor": "pointer",
-                "border-left": BORDER_LEFT,
-                "border-right": BORDER_RIGHT,
-                "border-top-left-radius": Index == 0 ? "10px" : "0px",
-                "border-bottom-left-radius": Index == 0 ? "10px" : "0px",
-                "border-top-right-radius": Index == this.All_Options[Part].length - 1 ? "10px" : "0px",
-                "border-bottom-right-radius": Index == this.All_Options[Part].length - 1 ? "10px" : "0px"
+                "border-top-left-radius":"10px",
+                "border-bottom-left-radius":"10px",
+                "border-top-right-radius": "10px",
+                "border-bottom-right-radius": "10px",
+                "margin-right":"10px",
+                "margin-top":"10px",
             }
         },
         // 样式筛选器，对比这个属性的这一项是否在Chosen_Options内，来对应不同的显示
@@ -1093,7 +925,7 @@ export default {
                 "type": this.Chosen_Options.Type,
                 "difficulty": Difficulty,
                 "semantic": this.Chosen_Options.Semantic == "精确匹配" ? 0 : 1
-            }) 
+            })
 
             Param.data = Data
 
@@ -1176,10 +1008,10 @@ export default {
             this.Complex_Input_Dialog = false;
             this.Search_Content = val
         },
-        Get_Card_Background(Question_Index){
+        Get_Card_Background(){
             let Style = {
-                'background': Question_Index % 2 == 0 ? '#F0F5FB' : 'white',
-                'width': "100%",
+                'background': 'white',
+                'width': "55%",
             }
             return Style
         },
@@ -1188,7 +1020,7 @@ export default {
             let Style_Row_1 = '-128px auto 128px auto'
             let Style = {
                 'margin': Question_Index == this.Question_List.length - 1 ? Style_Row_0 : Style_Row_1,
-                'width': '1344px'
+                'min-width': '500px'
             }
             return Style
         },
@@ -1204,9 +1036,23 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.sq-container{
+  display:flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+
+.sq-container-left{
+  flex-grow:3;
+  max-width: 24%;
+}
+
 .Filter_Line{
-    margin: 24px 0;
-    min-width: 720px;
+  display: flex;
+  flex-direction: column;
+  margin: 24px 0;
+  min-width: 28vw;
+
 }
 
 .Filter_Label{
@@ -1240,6 +1086,9 @@ export default {
     border-radius: 10px;
     border: 1px solid rgba($color: #000, $alpha: 0.14);
     box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.06);
+    display:flex;
+    width:30vw;
+
 }
 
 .Jump_Bar{
@@ -1289,7 +1138,7 @@ export default {
 
 .Question_Card{
     box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
-    width: 1168px;
+    min-width: 60vw;
     margin: 0 auto;
     border-radius: 10px;
     opacity: 0.95;
@@ -1307,7 +1156,10 @@ export default {
 
 .Filter_Item_Shadow{
     border-radius: 10px;
-    box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.06);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .Padding_Width{
@@ -1320,13 +1172,12 @@ export default {
     // background-size: 100% auto;
     // background-position: right;
     // background-repeat: no-repeat;
-    width: 100%;
-    min-width: 1362px;
-    padding: 0 calc((100% - 1344px - 18px)/2);
+    max-width: 40vw;
     overflow-x: hidden;
     margin-top: -70px;
     padding-bottom: 64px;
     margin-bottom: 64px;
+    flex-grow:1;
 }
 
 .Search_Button{
