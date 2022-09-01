@@ -26,15 +26,23 @@
         </div>
       </el-row>
       <el-row type="flex" justify="center">
-        <div class="choose-card" v-for="(item,index) in source_options" :key="index"
-             :style="{'active':selected.indexOf(item)!=-1}" @click="active(index,item)">
-          <div class="sourceButton">
+        <div class="choose-card" v-for="(item,index) in source_options" :key="index">
+          <div :class="{'focusType':leftColorDisplay == index}" @click="Type_Change(index);icon_show(index)" class="sourceButton">
+            <img class="icon-check"
+                 v-show="isShow[index]"
+                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAALCAYAAACgR9dcAAAABHNCSVQICAgIfAhkiAAAAGdJREFUKJGd0LENgDAMRFEKSjangC1Agh1IwQ5Mc/9o0hAFEePWet+Suy44tntJC3CFIbABlrT+gsBuu4/g5ReUNFeh7UPS2ABP28NjCaT8gCkE8+UBOMvAJ3wLNMNaIASLQAJSC7wB0qrRhSGbalQAAAAASUVORK5CYII=">
             <span>{{item.name}}</span>
           </div>
         </div>
         <div class="choose-card">
-          <div class="advance_filter">
-            <img class="filter-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAYAAADwikbvAAAABHNCSVQICAgIfAhkiAAAASNJREFUKJG10LFKQnEUx/Hv8X9HB4ceoMCh8cJ1SAj6N+ni0NAD+Ag9Sz1CbYJDS0IhkVDL1f9eY0FDgugdGtJfQzfQssyh33YO58M5HEuS5B4os34eI0lXZlYG7iR1VgkzqwE7QMe891GWZReS9oD9NE17P8EkSXaBrpldF4vFugHEcVxyzt0CG5Kq/X7/YQncBm6Al+l0Wg0hjAoAIYSRpEZ+1nkcx6V5mNdt4E1SI4QwAih8DuTbDoCyc67tvY8AvPeRc67Nx1MP568qzG9I07QnqQn4yWRyDDAej08AL6n59R8LOL/gFGhJquetGtDK+wv5hvNkK+pf8Z/yP9jMSpVKxa+NZ7PZGfAqqWtmm2vhwWBwORwOtyQdAc+SnpbNvQPTbX9bJ2hRdgAAAABJRU5ErkJggg==">
+          <div :class="{'advance_filter':!filter_choosen,'advance_filter_choosen':filter_choosen}"
+               @click="filter_change()"
+               @mouseenter="hover_button"
+               @mouseleave="hover_button"
+               class="sourceButton">
+            <img v-show="!filter_choosen" style="height: 13px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAYAAADwikbvAAAABHNCSVQICAgIfAhkiAAAASNJREFUKJG10LFKQnEUx/Hv8X9HB4ceoMCh8cJ1SAj6N+ni0NAD+Ag9Sz1CbYJDS0IhkVDL1f9eY0FDgugdGtJfQzfQssyh33YO58M5HEuS5B4os34eI0lXZlYG7iR1VgkzqwE7QMe891GWZReS9oD9NE17P8EkSXaBrpldF4vFugHEcVxyzt0CG5Kq/X7/YQncBm6Al+l0Wg0hjAoAIYSRpEZ+1nkcx6V5mNdt4E1SI4QwAih8DuTbDoCyc67tvY8AvPeRc67Nx1MP568qzG9I07QnqQn4yWRyDDAej08AL6n59R8LOL/gFGhJquetGtDK+wv5hvNkK+pf8Z/yP9jMSpVKxa+NZ7PZGfAqqWtmm2vhwWBwORwOtyQdAc+SnpbNvQPTbX9bJ2hRdgAAAABJRU5ErkJggg==">
+            <img v-show="filter_choosen"  style="height: 13px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAYAAADwikbvAAAABHNCSVQICAgIfAhkiAAAALpJREFUKJG1kjEKwkAQRV8kB8gRFFJ4BIsUdl7C3trT6AWsPIEQSOsNUqZRFGwtBItn4QpBkhgFf7V/579hht1IrYAh3+sQAztgAezD+ZNmwATYocZqrt7VrItSs5DL1fh1mailelHTFnAc6qWavBfTtmKt+amteX2s4jVWWKvosxbq3KdWwa+Dn3eCtQbb8ISolbptyg1a+OsH3wn30t/gRJ3+Am+AG1DQ8e8b4SiKcmAELIEzcGzKPQArwafPCdW7/AAAAABJRU5ErkJggg==">
+            <span v-show="isHover" style="margin-left: 5px">筛选</span>
           </div>
         </div>
 
@@ -49,26 +57,49 @@ export default {
   data() {
     return {
       source_options: [
-        {name:"知识点"},
-        {name:"试题"},
-        {name:"试卷"},
-        {name:"教辅教材"}
+        {name:"知识点",label:"知识点"},
+        {name:"试题",label:"试题"},
+        {name:"试卷",label:"试卷"},
+        {name:"教辅教材",label:"教辅教材"},
       ],
-      selected: [],
+      leftColorDisplay: 0, // 0为默认选择第一个，-1为不选择
+      isShow: [true,false,false,false],
+      filter_choosen:false,
+      isHover:false,
+      // iconIndex: 0,
     }
   },
   methods: {
-    active(index,item){
-      // this.selected.indexOf(item) 判断item下标是否为-1，
-      // 是-1则数组中匹配不到该数据，添加
-      // 不是-1则说明匹配到了，抹除
-      if (this.selected.indexOf(item) !== -1) {
-        this.selected.splice(this.selected.indexOf(item), 1); //取消
-      } else {
-        this.selected.push(item);//选中添加到数组里
+    Type_Change(index){
+      {
+        this.leftColorDisplay = index;
       }
-      console.log(JSON.parse(JSON.stringify(this.selected)));
-    }
+    },
+    icon_show(index){
+      this.isShow[index] = true;
+      let i = 0;
+      for(i=0;i<=3;i++){
+        if(i !== index){
+          this.isShow[i] = false
+        }
+      }
+    },
+    filter_change(){
+      this.filter_choosen = ! this.filter_choosen;
+    },
+    hover_button(){
+      this.isHover = ! this.isHover;
+    },
+    // setSortHover: function () {
+    //   // eslint-disable-next-line no-undef
+    //   $(".sort-item").hover(function(){
+    //     $(this).css("color","white");
+    //     $(this).addClass("skin-bg")
+    //   }, function(){
+    //     $(this).css("color","#333333");
+    //     $(this).removeClass("skin-bg")
+    //   });
+    // }
   },
 }
 </script>
@@ -185,18 +216,24 @@ export default {
   width: 24px;
   height: 20px;
 }
-.filter-icon{
-  left: 2.25px;
-  top: 3.38px;
-  width: 15px;
-  height: 13px;
-  /*border: 1.5px solid #333333;*/
-}
+/*.filter-icon{*/
+/*  left: 2.25px;*/
+/*  top: 3.38px;*/
+/*  width: 15px;*/
+/*  height: 13px;*/
+/*  !*border: 1.5px solid #333333;*!*/
+/*}*/
 .choose-card{
   margin-top: 40px;
   height: 42px;
   display: inline-block;
   padding: 0px;
+}
+/*选中时的对号*/
+.icon-check{
+  height: 10px;
+  /*width: 0;*/
+  margin-right: 5px;
 }
 .sourceButton{
   margin-left: 16px;
@@ -215,33 +252,53 @@ export default {
   letter-spacing: 0.05em;
   z-index: 0
 }
-.sourceButton_selected{
-  margin-left: 16px;
-  height: 42px;
-  display: inline-block;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 6px 16px;
-  border-radius: 1000px;
+.sourceButton.focusType{
   background: #608DE8;
-  cursor: pointer;
-  font-family: Sarasa-Gothic-SC-Semibold;
-  line-height: 30px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: #FFFFFF;
-  z-index: 0
+  color: white;
+  /*animation: showMsg 0.3s;*/
 }
+
+/*.sourceButton.unFocusType{*/
+/*  background: #F2F3F7;*/
+/*}*/
+/*.sourceButton:hover{*/
+/*  background: #E5EEFF;*/
+/*  border: 1px solid #F5FEFF;*/
+/*}*/
 .advance_filter{
   margin-left: 16px;
   height: 42px;
   display: inline-block;
   justify-content: center;
   align-items: center;
-  padding: 12px 16px;
+  padding: 6px 16px;
   border-radius: 1000px;
   background: #F2F3F7;
+  font-family: Sarasa-Gothic-SC-Semibold;
+  /*font-size: 18px;*/
+  font-weight: 600;
+  line-height: 30px;
+  letter-spacing: 0.05em;
+  color: #34363B;
+  z-index: 4
+}
+/*.advance_filter:hover{*/
+/*  */
+/*}*/
+.advance_filter_choosen{
+  margin-left: 16px;
+  height: 42px;
+  display: inline-block;
+  justify-content: center;
+  align-items: center;
+  /*padding:  16px;*/
+  border-radius: 1000px;
+  background: #608DE8;
+  font-family: Sarasa-Gothic-SC-Semibold;
+  font-weight: 600;
+  line-height: 30px;
+  letter-spacing: 0.05em;
+  color: #FFFFFF;
   z-index: 4
 }
 .word-style{
@@ -249,9 +306,6 @@ export default {
   line-height: 30px;
   font-weight: 600;
   letter-spacing: 0.05em;
-}
-.bgcolor{
-  background: #608DE8; ;
 }
 .Self_Search_Button{
   width: 100%;
