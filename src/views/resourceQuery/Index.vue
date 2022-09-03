@@ -16,8 +16,10 @@
         </div>
         <div class="Self_Input_Area_Middle" align="left">
           <input
+              v-model="Search_Content"
               class="Self_Input"
-              placeholder="三角函数"
+              placeholder=""
+              @keyup.enter="Router_Trans()"
               >
         </div>
         <div class="Self_Input_Area_camera" align="left">
@@ -248,10 +250,10 @@
             <span class="Filter_Label">学科</span>
             <div class="Filter_Item">
             <span
-                v-for="(Subject_Item, Subject_Item_Index) in Question_Options.Subject" :key="'Filter_Subject_' + Subject_Item_Index"
-                :class="Focus_Filter('Subject', Subject_Item)"
+                v-for="(Subject_Item, Subject_Item_Index) in Knowledge_Options.Subject" :key="'Filter_Subject_' + Subject_Item_Index"
+                :class="Focus_Filter_Knowledge('Subject', Subject_Item)"
                 :style="Filter_Item('Subject', Subject_Item_Index, Subject_Item)"
-                @click="Filter_Change('Subject', Subject_Item)">
+                @click="Filter_Change_Knowledge('Subject', Subject_Item)">
               {{Subject_Item}}
             </span>
             </div>
@@ -260,10 +262,10 @@
             <span class="Filter_Label">学段</span>
             <div class="Filter_Item">
             <span
-                v-for="(Period_Item, Period_Item_Index) in Question_Options.Period" :key="'Filter_Period_' + Period_Item_Index"
-                :class="Focus_Filter('Period', Period_Item)"
+                v-for="(Period_Item, Period_Item_Index) in Knowledge_Options.Period" :key="'Filter_Period_' + Period_Item_Index"
+                :class="Focus_Filter_Knowledge('Period', Period_Item)"
                 :style="Filter_Item('Period', Period_Item_Index, Period_Item)"
-                @click="Filter_Change('Period', Period_Item)"
+                @click="Filter_Change_Knowledge('Period', Period_Item)"
             >
               {{Period_Item}}
             </span>
@@ -276,6 +278,8 @@
 </template>
 
 <script>
+import {LRStrip} from "@/common/utils/strip";
+
 export default {
   name: "Index",
   data() {
@@ -338,6 +342,8 @@ export default {
         Subject:[],
         Period:[],
       },
+      Search_Content:"三角函数",
+      Difficulty_Value:[0,1],
       leftColorDisplay: 0, // 0为默认选择第一个，-1为不选择
       isShow: [true,false,false,false],
       filter_choosen:false,
@@ -417,9 +423,6 @@ export default {
         this.Paper_isShow=false;
         this.Textbooks_isShow=false;
       }
-      console.log(this.filter_choosen);
-      console.log(this.Knowledge_isShow);
-      console.log(this.Question_isShow);
     },
     hover_button() {
       this.isHover = !this.isHover;
@@ -549,26 +552,92 @@ export default {
         }
       }
     },
+    Focus_Filter_Knowledge(Part, Item) {
+      if (['Period', 'Subject', 'Type'].indexOf(Part) != -1) {
+        if (this.Knowledge_Chosen_Options[Part].indexOf(Item) == -1) {
+          return "Unchosen_Option"
+        } else {
+          return "Chosen_Option"
+        }
+      }
+    },
+    // 内容调整，控制选择项的内容
+    Filter_Change_Knowledge(Part, Item) {
+      if (['Period', 'Subject', 'Type'].indexOf(Part) != -1) {
+        if (this.Knowledge_Chosen_Options[Part].indexOf(Item) == -1) {
+          this.Knowledge_Chosen_Options[Part].push(Item)
+        } else {
+          this.Knowledge_Chosen_Options[Part].splice(this.Knowledge_Chosen_Options[Part].indexOf(Item), 1)
+        }
+      }
+    },
     Router_Trans(){
       if(this.isShow[0] == true){
-        setTimeout(()=>{
+        let Striped_Content = LRStrip(this.Search_Content)
+        if(Striped_Content == ""){
+          this.$message.info("请输入检索内容")
+          this.Search_Content = ""
+          return
+        }else{
+          this.Search_Content = Striped_Content
+        }
+        localStorage.setItem('Subject',this.Knowledge_Chosen_Options.Subject);
+        localStorage.setItem('Period',this.Knowledge_Chosen_Options.Period);
+          setTimeout(()=>{
           this.$router.push({
             path:'/ku'
           });
         }, 100)
       }else if(this.isShow[1] == true){
+        let Striped_Content = LRStrip(this.Search_Content)
+        if(Striped_Content == ""){
+          this.$message.info("请输入检索内容")
+          this.Search_Content = ""
+          return
+        }else{
+          this.Search_Content = Striped_Content
+        }
+        localStorage.setItem('Subject',this.Question_Chosen_Options.Subject);
+        localStorage.setItem('Period',this.Question_Chosen_Options.Period);
+        localStorage.setItem('Type',this.Question_Chosen_Options.Type);
+        localStorage.setItem('Database',this.Question_Chosen_Options.Database);
+        localStorage.setItem('Difficulty',this.Question_Chosen_Options.Difficulty);
         setTimeout(()=>{
           this.$router.push({
             path:'/exercise'
           });
         }, 100)
       }else if(this.isShow[2] == true){
+        let Striped_Content = LRStrip(this.Search_Content)
+        if(Striped_Content == ""){
+          this.$message.info("请输入检索内容")
+          this.Search_Content = ""
+          return
+        }else{
+          this.Search_Content = Striped_Content
+        }
+        localStorage.setItem('Subject',this.Paper_Chosen_Options.Subject);
+        localStorage.setItem('Period',this.Paper_Chosen_Options.Period);
+        localStorage.setItem('SearchMethod',this.Paper_Chosen_Options.searchMethod);
+        localStorage.setItem('Database',this.Paper_Chosen_Options.Database);
         setTimeout(()=>{
           this.$router.push({
             path:'/searchPaper'
           });
         }, 100)
       }else if(this.isShow[3] == true){
+        let Striped_Content = LRStrip(this.Search_Content)
+        if(Striped_Content == ""){
+          this.$message.info("请输入检索内容")
+          this.Search_Content = ""
+          return
+        }else{
+          this.Search_Content = Striped_Content
+        }
+        localStorage.setItem('Resource_period',this.Textbooks_Chosen_Options.Resource_Period);
+        localStorage.setItem('Resource_Type',this.Textbooks_Chosen_Options.Resource_Type);
+        localStorage.setItem('Resource_Subject_Part1',this.Textbooks_Chosen_Options.Resource_Subject_Part1);
+        localStorage.setItem('Resource_Subject_Part2',this.Textbooks_Chosen_Options.Resource_Subject_Part2);
         setTimeout(()=>{
           this.$router.push({
             path:'/resources'
@@ -612,7 +681,7 @@ export default {
   animation-duration: .1s;
 }
 .Search-Page-Word{
-  font-family: Sarasa-Gothic-SC-Semibold;
+  //font-family: Sarasa-Gothic-SC-Semibold;
   font-size: 32px;
   font-weight: 600;
   line-height: 56px;
@@ -682,6 +751,7 @@ export default {
   border: none;
   outline: none;
   height: 54px;
+  width: 540px;
   background: #F5F6F7;
   font-family: Sarasa-Gothic-SC-Semibold;
   font-size: 18px;
