@@ -20,14 +20,24 @@
               placeholder="三角函数"
               >
         </div>
-        <div class="Self_Input_Area_Right" align="right">
-          <img class="camera-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAABHNCSVQICAgIfAhkiAAAAexJREFUOI2tlD2LE0EYx3/P5TDZmG2yrUW6dBYzFqeckMLr7r6DheB1ovEg1hbhuAQ8bE7wW5zloaAnXuHuZ8gXWAhsYMISeCyciIbsxIh/GBiel//zOiME0Ol0GkmSfAL2Kkyu8zw/mEwm8yqOnVCAJEleB8gB9r1NJaRKYYzZE5EvAKr6MMuym230vwL0er3doiiGqnosIq01NuM0TV+uc7bWjoD+qlxVZyJyEcfxq1q73R6LyAsRubWG42ue54+n0+liXYB6vf652WweAHf+yPon14OyLJtijClEpKWq96vK3Ba+fd9UdSbWWgVI0zQ0j0MR6avqPS+6Ac6zLPtQ5bPkDW6RNxyKyCXQE5GWP49E5NJaO9zkHwxgjDkEBsBCVZ8752LnXAycAAtg4G0qsRtSikgfQFVPsix785tqZK0FOAOeAZWtClaw7Pl8Pn+/qnPOXfhr6CGGA4hUzv2vbTYN+TtAo9F4sqqIougYQFWDqx2cgaqORaQnImfW2ppz7p0nfwosN+g8xBGswO/5qU9kFEVREUVRAYy87DT0FjYGAEjTdKCqR6p6BcyAmapeqepRmqaDTf7BFq1UEsy0Cjs+K4wxwXXbBtbafX+dSdWX+58wrnW73Y9lWd4G7gLrvux/wQx4G8fx4Adr071MaxOQ/gAAAABJRU5ErkJggg==">
+        <div class="Self_Input_Area_camera" align="left">
+          <div class="camera-icon-container">
+            <img class="camera-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAABHNCSVQICAgIfAhkiAAAAexJREFUOI2tlD2LE0EYx3/P5TDZmG2yrUW6dBYzFqeckMLr7r6DheB1ovEg1hbhuAQ8bE7wW5zloaAnXuHuZ8gXWAhsYMISeCyciIbsxIh/GBiel//zOiME0Ol0GkmSfAL2Kkyu8zw/mEwm8yqOnVCAJEleB8gB9r1NJaRKYYzZE5EvAKr6MMuym230vwL0er3doiiGqnosIq01NuM0TV+uc7bWjoD+qlxVZyJyEcfxq1q73R6LyAsRubWG42ue54+n0+liXYB6vf652WweAHf+yPon14OyLJtijClEpKWq96vK3Ba+fd9UdSbWWgVI0zQ0j0MR6avqPS+6Ac6zLPtQ5bPkDW6RNxyKyCXQE5GWP49E5NJaO9zkHwxgjDkEBsBCVZ8752LnXAycAAtg4G0qsRtSikgfQFVPsix785tqZK0FOAOeAZWtClaw7Pl8Pn+/qnPOXfhr6CGGA4hUzv2vbTYN+TtAo9F4sqqIougYQFWDqx2cgaqORaQnImfW2ppz7p0nfwosN+g8xBGswO/5qU9kFEVREUVRAYy87DT0FjYGAEjTdKCqR6p6BcyAmapeqepRmqaDTf7BFq1UEsy0Cjs+K4wxwXXbBtbafX+dSdWX+58wrnW73Y9lWd4G7gLrvux/wQx4G8fx4Adr071MaxOQ/gAAAABJRU5ErkJggg==">
+          </div>
         </div>
+          <div class="Self_Input_Area_Button" align="right">
+            <button
+                class="Self_Search_Button"
+                @click="Router_Trans()"
+            >
+              检索
+            </button>
+          </div>
         </div>
       </el-row>
       <el-row type="flex" justify="center">
         <div class="choose-card" v-for="(item,index) in source_options" :key="index">
-          <div :class="{'focusType':leftColorDisplay == index}" @click="Type_Change(index);icon_show(index)" class="sourceButton">
+          <div :class="{'focusType':leftColorDisplay == index}" @click="Type_Change(index);icon_show(index);" class="sourceButton">
             <img class="icon-check"
                  v-show="isShow[index]"
                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAALCAYAAACgR9dcAAAABHNCSVQICAgIfAhkiAAAAGdJREFUKJGd0LENgDAMRFEKSjangC1Agh1IwQ5Mc/9o0hAFEePWet+Suy44tntJC3CFIbABlrT+gsBuu4/g5ReUNFeh7UPS2ABP28NjCaT8gCkE8+UBOMvAJ3wLNMNaIASLQAJSC7wB0qrRhSGbalQAAAAASUVORK5CYII=">
@@ -45,7 +55,6 @@
             <span v-show="isHover" style="margin-left: 5px">筛选</span>
           </div>
         </div>
-
       </el-row>
       <div class="Filter_main_container">
         <div class="row_container" v-show="Question_isShow">
@@ -340,27 +349,82 @@ export default {
     }
   },
   methods: {
-    Type_Change(index){
+    Type_Change(index) {
       {
         this.leftColorDisplay = index;
       }
     },
-    icon_show(index){
+    icon_show(index) {
       this.isShow[index] = true;
       let i = 0;
-      for(i=0;i<=3;i++){
-        if(i !== index){
+      for (i = 0; i <= 3; i++) {
+        if (i !== index) {
           this.isShow[i] = false
         }
       }
+      if(this.filter_choosen ==true && this.isShow[0]==true){
+        this.Knowledge_isShow = true;
+        this.Question_isShow=false;
+        this.Paper_isShow=false;
+        this.Textbooks_isShow=false;
+      }else if(this.filter_choosen==true && this.isShow[1]==true){
+        this.Knowledge_isShow = false;
+        this.Question_isShow=true;
+        this.Paper_isShow=false;
+        this.Textbooks_isShow=false;
+      }else if(this.filter_choosen==true && this.isShow[2]==true){
+        this.Knowledge_isShow = false;
+        this.Question_isShow=false;
+        this.Paper_isShow=true;
+        this.Textbooks_isShow=false;
+      }else if(this.filter_choosen==true && this.isShow[3]==true){
+        this.Knowledge_isShow = false;
+        this.Question_isShow=false;
+        this.Paper_isShow=false;
+        this.Textbooks_isShow=true;
+      }else{
+        this.Knowledge_isShow = false;
+        this.Question_isShow=false;
+        this.Paper_isShow=false;
+        this.Textbooks_isShow=false;
+      }
     },
-    filter_change(){
-      this.filter_choosen = ! this.filter_choosen;
+    filter_change() {
+      this.filter_choosen = !this.filter_choosen;
+      if(this.filter_choosen ==true && this.isShow[0]==true){
+        this.Knowledge_isShow = true;
+        this.Question_isShow=false;
+        this.Paper_isShow=false;
+        this.Textbooks_isShow=false;
+      }else if(this.filter_choosen==true && this.isShow[1]==true){
+        this.Knowledge_isShow = false;
+        this.Question_isShow=true;
+        this.Paper_isShow=false;
+        this.Textbooks_isShow=false;
+      }else if(this.filter_choosen==true && this.isShow[2]==true){
+        this.Knowledge_isShow = false;
+        this.Question_isShow=false;
+        this.Paper_isShow=true;
+        this.Textbooks_isShow=false;
+      }else if(this.filter_choosen==true && this.isShow[3]==true){
+        this.Knowledge_isShow = false;
+        this.Question_isShow=false;
+        this.Paper_isShow=false;
+        this.Textbooks_isShow=true;
+      }else{
+        this.Knowledge_isShow = false;
+        this.Question_isShow=false;
+        this.Paper_isShow=false;
+        this.Textbooks_isShow=false;
+      }
+      console.log(this.filter_choosen);
+      console.log(this.Knowledge_isShow);
+      console.log(this.Question_isShow);
     },
-    hover_button(){
-      this.isHover = ! this.isHover;
+    hover_button() {
+      this.isHover = !this.isHover;
     },
-    Filter_Item(){
+    Filter_Item() {
       return {
         "width": "65px",
         "height": "30px",
@@ -369,123 +433,150 @@ export default {
         "display": "inline-block",
         "box-sizing": "border-box",
         "cursor": "pointer",
-        "border-top-left-radius":"10px",
-        "border-bottom-left-radius":"10px",
+        "border-top-left-radius": "10px",
+        "border-bottom-left-radius": "10px",
         "border-top-right-radius": "10px",
         "border-bottom-right-radius": "10px",
-        "margin-right":"10px",
-        "margin-top":"8px",
+        "margin-right": "10px",
+        "margin-top": "8px",
       }
     },
     // 样式筛选器，对比这个属性的这一项是否在Chosen_Options内，来对应不同的显示
     // 主要用于hover样式，来做成按钮的效果
-    Focus_Filter(Part, Item){
-      if(['Period', 'Subject', 'Type'].indexOf(Part) != -1){
-        if(this.Question_Chosen_Options[Part].indexOf(Item) == -1){
+    Focus_Filter(Part, Item) {
+      if (['Period', 'Subject', 'Type'].indexOf(Part) != -1) {
+        if (this.Question_Chosen_Options[Part].indexOf(Item) == -1) {
           return "Unchosen_Option"
-        }else{
+        } else {
           return "Chosen_Option"
         }
-      }else if(Part == 'Difficulty' || Part == 'Semantic'){
-        if(this.Question_Chosen_Options[Part] != Item){
+      } else if (Part == 'Difficulty' || Part == 'Semantic') {
+        if (this.Question_Chosen_Options[Part] != Item) {
           return "Unchosen_Option"
-        }else{
+        } else {
           return "Chosen_Option"
         }
-      }else if(Part == 'Database'){
-        if(this.Question_Chosen_Options.Database.indexOf(Item) == -1){
+      } else if (Part == 'Database') {
+        if (this.Question_Chosen_Options.Database.indexOf(Item) == -1) {
           return "Unchosen_Option"
-        }else{
+        } else {
           return "Chosen_Option"
         }
       }
     },
     // 内容调整，控制选择项的内容
-    Filter_Change(Part, Item){
-      if(['Period', 'Subject', 'Type'].indexOf(Part) != -1){
-        if(this.Question_Chosen_Options[Part].indexOf(Item) == -1){
+    Filter_Change(Part, Item) {
+      if (['Period', 'Subject', 'Type'].indexOf(Part) != -1) {
+        if (this.Question_Chosen_Options[Part].indexOf(Item) == -1) {
           this.Question_Chosen_Options[Part].push(Item)
-        }else{
+        } else {
           this.Question_Chosen_Options[Part].splice(this.Question_Chosen_Options[Part].indexOf(Item), 1)
         }
-      }else if(Part == 'Difficulty' || Part == 'Semantic'){
+      } else if (Part == 'Difficulty' || Part == 'Semantic') {
         this.Question_Chosen_Options[Part] = Item;
-      }else if(Part == 'Database'){
-        if(this.Question_Chosen_Options[Part].indexOf(Item) == -1){
+      } else if (Part == 'Database') {
+        if (this.Question_Chosen_Options[Part].indexOf(Item) == -1) {
           this.Question_Chosen_Options[Part].push(Item)
-        }else{
+        } else {
           this.Question_Chosen_Options[Part].splice(this.Question_Chosen_Options[Part].indexOf(Item), 1)
         }
       }
     },
-    Focus_Filter_Textbooks(Part, Item){
-      if(this.Textbooks_Chosen_Options[Part].indexOf(Item) == -1){
+    Focus_Filter_Textbooks(Part, Item) {
+      if (this.Textbooks_Chosen_Options[Part].indexOf(Item) == -1) {
         return "Unchosen_Option"
-      }else{
+      } else {
         return "Chosen_Option"
       }
     },
     // 内容调整，控制选择项的内容
-    Filter_Change_Textbooks(Part, Item){
-      if(this.Textbooks_Chosen_Options[Part].indexOf(Item) == -1){
+    Filter_Change_Textbooks(Part, Item) {
+      if (this.Textbooks_Chosen_Options[Part].indexOf(Item) == -1) {
         this.Textbooks_Chosen_Options[Part].push(Item)
-      }else{
+      } else {
         this.Textbooks_Chosen_Options[Part].splice(this.Textbooks_Chosen_Options[Part].indexOf(Item), 1)
       }
     },
-    Focus_Filter_Paper(Part, Item){
-      if(['Period', 'Subject', 'Type'].indexOf(Part) != -1){
-        if(this.Paper_Chosen_Options[Part].indexOf(Item) == -1){
+    Focus_Filter_Paper(Part, Item) {
+      if (['Period', 'Subject', 'Type'].indexOf(Part) != -1) {
+        if (this.Paper_Chosen_Options[Part].indexOf(Item) == -1) {
           return "Unchosen_Option"
-        }else{
+        } else {
           return "Chosen_Option"
         }
-      }else if(Part == 'Difficulty' || Part == 'Semantic'){
-        if(this.Paper_Chosen_Options[Part] != Item){
+      } else if (Part == 'Difficulty' || Part == 'Semantic') {
+        if (this.Paper_Chosen_Options[Part] != Item) {
           return "Unchosen_Option"
-        }else{
+        } else {
           return "Chosen_Option"
         }
-      }else if(Part == 'Database'){
-        if(this.Paper_Chosen_Options.Database.indexOf(Item) == -1){
+      } else if (Part == 'Database') {
+        if (this.Paper_Chosen_Options.Database.indexOf(Item) == -1) {
           return "Unchosen_Option"
-        }else{
+        } else {
           return "Chosen_Option"
         }
-      }else if(Part === 'searchMethod'){
-        if(this.Paper_Chosen_Options.searchMethod.indexOf(Item) === -1){
+      } else if (Part === 'searchMethod') {
+        if (this.Paper_Chosen_Options.searchMethod.indexOf(Item) === -1) {
           return "Unchosen_Option"
-        }else{
+        } else {
           return "Chosen_Option"
         }
       }
     },
     // 内容调整，控制选择项的内容
-    Filter_Change_Paper(Part, Item){
-      if(['Period', 'Subject', 'Type'].indexOf(Part) != -1){
-        if(this.Paper_Chosen_Options[Part].indexOf(Item) == -1){
+    Filter_Change_Paper(Part, Item) {
+      if (['Period', 'Subject', 'Type'].indexOf(Part) != -1) {
+        if (this.Paper_Chosen_Options[Part].indexOf(Item) == -1) {
           this.Paper_Chosen_Options[Part].push(Item)
-        }else{
+        } else {
           this.Paper_Chosen_Options[Part].splice(this.Paper_Chosen_Options[Part].indexOf(Item), 1)
         }
-      }else if(Part == 'Difficulty' || Part == 'Semantic'){
+      } else if (Part == 'Difficulty' || Part == 'Semantic') {
         this.Paper_Chosen_Options[Part] = Item;
-      }else if(Part == 'Database'){
-        if(this.Paper_Chosen_Options[Part].indexOf(Item) == -1){
+      } else if (Part == 'Database') {
+        if (this.Paper_Chosen_Options[Part].indexOf(Item) == -1) {
           this.Paper_Chosen_Options[Part].push(Item)
-        }else{
+        } else {
           this.Paper_Chosen_Options[Part].splice(this.Paper_Chosen_Options[Part].indexOf(Item), 1)
         }
-      }else if(Part === 'searchMethod'){
-        if(this.Paper_Chosen_Options[Part].indexOf(Item) === -1){
+      } else if (Part === 'searchMethod') {
+        if (this.Paper_Chosen_Options[Part].indexOf(Item) === -1) {
           this.Paper_Chosen_Options[Part].pop()
           this.Paper_Chosen_Options[Part].push(Item)
-        }else{
+        } else {
           this.Paper_Chosen_Options[Part].splice(this.Paper_Chosen_Options[Part].indexOf(Item), 1)
         }
       }
     },
-  },
+    Router_Trans(){
+      if(this.isShow[0] == true){
+        setTimeout(()=>{
+          this.$router.push({
+            path:'/ku'
+          });
+        }, 100)
+      }else if(this.isShow[1] == true){
+        setTimeout(()=>{
+          this.$router.push({
+            path:'/exercise'
+          });
+        }, 100)
+      }else if(this.isShow[2] == true){
+        setTimeout(()=>{
+          this.$router.push({
+            path:'/searchPaper'
+          });
+        }, 100)
+      }else if(this.isShow[3] == true){
+        setTimeout(()=>{
+          this.$router.push({
+            path:'/resources'
+          });
+        }, 100)
+      }
+    }
+  }
 }
 </script>
 
@@ -539,7 +630,7 @@ export default {
   border-radius: 32px;
 }
 .Self_Input_Area_Left{
-  height: 64px;
+  height: 54px;
   width: 50px;
   background: #F5F6F7;
   border-radius: 32px 0px 0px 32px;
@@ -548,7 +639,7 @@ export default {
 }
 
 .Self_Input_Area_Middle{
-  height: 64px;
+  height: 54px;
   width: 540px;
   background: #F5F6F7;
   padding-left: 5px;
@@ -556,18 +647,41 @@ export default {
   vertical-align: top;
 }
 
-.Self_Input_Area_Right{
-  height: 64px;
-  width: 128px;
+.Self_Input_Area_camera{
+  height: 54px;
+  width: 24px;
   background: #F5F6F7;
   border-radius: 0px 32px 32px 0px;
   display: inline-block;
   vertical-align: top;
 }
+.Self_Input_Area_Button{
+  height: 54px;
+  width: 100px;
+  background: #F5F6F7;
+  border-radius: 0px 32px 32px 0px;
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 13px;
+}
+.Self_Search_Button{
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  background: linear-gradient(to right, #7BAFEE, #7786EB);
+  color: white;
+  font-size: 18px;
+  border: 3px solid white;
+  border-radius: 32px;
+}
+.Self_Search_Button:active{
+  transform: scale(0.95);
+  transition: all ease 300ms;
+}
 .Self_Input{
   border: none;
   outline: none;
-  height: 64px;
+  height: 54px;
   background: #F5F6F7;
   font-family: Sarasa-Gothic-SC-Semibold;
   font-size: 18px;
@@ -580,23 +694,23 @@ export default {
 }
 .search-icon{
   font-size: 20px;
-  margin-top: 23px;
+  margin-top:18px;
   margin-right: 23px;
   margin-left: 20px;
-  left: 2px;
-  top: 2px;
   width: 20px;
   height: 20px;
 }
 .camera-icon{
   font-size: 20px;
-  margin-top: 23px;
-  margin-right: 23px;
-  margin-left: 20px;
-  left: 0px;
-  top: 2px;
+  margin-top: 18px;
+  //margin-right: 23px;
   width: 24px;
   height: 20px;
+}
+.camera-icon-container{
+  width: 24px;
+  margin-right: 23px;
+  height: 100%;
 }
 .choose-card{
   margin-top: 40px;
@@ -719,21 +833,7 @@ export default {
   box-sizing: border-box;
   background: #608DE8;
 }
-.Self_Search_Button{
-  width: 100%;
-  height: 64px;
-  margin: 0px;
-  background: linear-gradient(to right, #7BAFEE, #7786EB);
-  color: white;
-  font-size: 20px;
-  border: 3px solid white;
-  border-radius: 32px;
-}
 
-.Self_Search_Button:active{
-  transform: scale(0.95);
-  transition: all ease 300ms;
-}
 .Top_Nav{
   position: relative;
   top: -90px;
