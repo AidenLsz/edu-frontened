@@ -1430,7 +1430,6 @@ a {
   font-size: 48px;
   filter: drop-shadow(1px 4px 4px rgba(0, 0, 0, 0.12));
 }
-
 .Self_Input{
   border: none;
   outline: none;

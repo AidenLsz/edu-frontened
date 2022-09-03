@@ -4,6 +4,11 @@ const router=[
     component:()=>import("@/views/Home_EEMS"),
   },
   {
+    path: "luna-search",
+    name: "eems/luna-search",
+    component:()=> import("@/views/resourceQuery/Index"),
+  },
+  {
     path: "exercise",
     name: "eems/Exercise",
     component:()=> import("@/views/resourceQuery/Exercise/index"),
