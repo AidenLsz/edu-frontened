@@ -607,6 +607,20 @@ export default {
       if (this.activeName == "second") {
         this.Search_Do();
       }
+      else if(this.activeName=="first"){
+        this.$router.push({
+          path:'/KU'
+        })}
+      else if(this.activeName=="third"){
+        this.$router.push({
+          path:'/SearchPaper'
+        })
+      }
+      else if(this.activeName=="fourth"){
+        this.$router.push({
+          path:'/Resources'
+        })
+      }
     },
     To_Top() {
       document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})

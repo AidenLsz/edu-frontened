@@ -416,6 +416,21 @@ export default {
     handleClick(){
       if(this.activeName=="first"){
         this.Search_KU_Info(this.ku_name);}
+
+      else if(this.activeName=="second"){
+        this.$router.push({
+          path:'/Exercise'
+        })
+      }
+      else if(this.activeName=="third"){
+        this.$router.push({
+          path:'/SearchPaper'
+        })}
+      else if(this.activeName=="fourth"){
+        this.$router.push({
+          path:'/Resources'
+        })
+      }
     },
     Page_Index_Change(){
       document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
