@@ -591,18 +591,31 @@ export default {
     ImgSearchArea.addEventListener('drop', this.onDrop, true);
     window.addEventListener('paste', this.Paste_Function);
     this.To_Top();
+
     setTimeout(() => {
       if (sessionStorage.getItem("ITAS_Content")) {
         this.Search_Content = sessionStorage.getItem("ITAS_Content");
         sessionStorage.removeItem("ITAS_Content")
         this.Search_Do()
       }
-    }, 100)
+    }, 100);
+
+    this.init_search();
   },
   updated() {
 
   },
   methods: {
+    init_search(){
+      this.Search_Content=localStorage.getItem('Content');
+      this.Filter_Change('Subject', localStorage.getItem('Subject'));
+      this.Filter_Change('Period', localStorage.getItem('Period'));
+      this.Filter_Change('Type', localStorage.getItem('Type'));
+      this.Filter_Change('Database', localStorage.getItem('Database').nick);
+      this.Filter_Change('Difficulty', localStorage.getItem('Difficulty'));
+      this.Search_Do();
+      localStorage.clear();
+    },
     handleClick() {
       if (this.activeName == "second") {
         this.Search_Do();
@@ -1203,6 +1216,7 @@ export default {
   text-align: center;
   background: white;
   box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
+  min-width: 27vw;
 }
 
 .Filter_Item_Shadow {
@@ -1217,6 +1231,8 @@ export default {
   padding-right: 88px;
   padding-left: 88px;
   margin-top: -11.3vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .Main_Background {

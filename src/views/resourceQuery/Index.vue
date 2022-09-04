@@ -581,6 +581,7 @@ export default {
         }else{
           this.Search_Content = Striped_Content
         }
+        localStorage.setItem('Content',this.Search_Content);
         localStorage.setItem('Subject',this.Knowledge_Chosen_Options.Subject);
         localStorage.setItem('Period',this.Knowledge_Chosen_Options.Period);
           setTimeout(()=>{
@@ -597,6 +598,7 @@ export default {
         }else{
           this.Search_Content = Striped_Content
         }
+        localStorage.setItem('Content',this.Search_Content);
         localStorage.setItem('Subject',this.Question_Chosen_Options.Subject);
         localStorage.setItem('Period',this.Question_Chosen_Options.Period);
         localStorage.setItem('Type',this.Question_Chosen_Options.Type);
@@ -616,6 +618,7 @@ export default {
         }else{
           this.Search_Content = Striped_Content
         }
+        localStorage.setItem('Content',this.Search_Content);
         localStorage.setItem('Subject',this.Paper_Chosen_Options.Subject);
         localStorage.setItem('Period',this.Paper_Chosen_Options.Period);
         localStorage.setItem('SearchMethod',this.Paper_Chosen_Options.searchMethod);
@@ -634,6 +637,7 @@ export default {
         }else{
           this.Search_Content = Striped_Content
         }
+        localStorage.setItem('Content',this.Search_Content);
         localStorage.setItem('Resource_period',this.Textbooks_Chosen_Options.Resource_Period);
         localStorage.setItem('Resource_Type',this.Textbooks_Chosen_Options.Resource_Type);
         localStorage.setItem('Resource_Subject_Part1',this.Textbooks_Chosen_Options.Resource_Subject_Part1);
