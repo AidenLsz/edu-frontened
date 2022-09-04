@@ -273,6 +273,21 @@ export default {
     handleClick(){
       if(this.activeName=="fourth"){
         this.Search_Do();}
+      else if(this.activeName=="first"){
+        this.$router.push({
+          path:'/KU'
+        })}
+
+      else if(this.activeName=="second"){
+        this.$router.push({
+          path:'/Exercise'
+        })
+      }
+      else if(this.activeName=="third"){
+        this.$router.push({
+          path:'/SearchPaper'
+        })
+      }
     },
       To_Top(){
           document.getElementById("Filter").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
