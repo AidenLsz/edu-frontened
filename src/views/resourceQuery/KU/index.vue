@@ -91,18 +91,8 @@
 
 
     <!-- 搜索框行 -->
-    <el-row id="Search_Bar" type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;">
-      <label>检索</label>
-    </el-row>
-    <el-row type="flex" justify="start" class="SearchArea">
-      <div class="SearchInputDIV">
-        <el-input
-          prefix-icon="el-icon-search"
-          placeholder="请输入知识单元名称"
-          class="SearchInput" v-model="ku_name" type="text" @keyup.enter.native="Search_KU_Info(ku_name)">
 
-        </el-input>
-      </div>
+    <el-row type="flex" justify="start" class="SearchArea">
       <div class="SearchButton" @click="Search_KU_Info(ku_name)">
         <span>检索</span>
       </div>

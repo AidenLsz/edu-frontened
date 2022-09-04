@@ -186,16 +186,6 @@
                                 </span>
                   </div>
                 </el-row>
-                <el-row type="flex" justify="start" class="Filter_Line">
-                  <span class="Filter_Label">检索框</span>
-                  <el-input
-                      v-model="Search_Content"
-                      :disabled="Search_Extra == 'ImgSearch'"
-                      @keyup.enter.native="Search_Do()"
-                      placeholder="请输入想要检索的试题文字内容"
-                      style="width: 630px;"
-                      class="Search_Input"></el-input>
-                </el-row>
                 <el-row type="flex" justify="start" class="Filter_Line" style="margin-top: 3vh">
                   <span class="Filter_Label"></span>
                   <!-- 开始检索的按钮 -->
@@ -988,6 +978,7 @@ export default {
     flex-direction: column;
     margin: 24px 0;
     min-width: 28vw;
+    margin-top:0.5vh;
 }
 
 .Filter_Label{

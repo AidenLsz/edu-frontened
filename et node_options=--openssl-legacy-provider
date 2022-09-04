@@ -1,0 +1,685 @@
+warning: LF will be replaced by CRLF in yarn.lock.
+The file will have its original line endings in your working directory
+[1mdiff --git a/src/layout/Basic.vue b/src/layout/Basic.vue[m
+[1mindex d60390f..f79c947 100644[m
+[1m--- a/src/layout/Basic.vue[m
+[1m+++ b/src/layout/Basic.vue[m
+[36m@@ -1162,6 +1162,7 @@[m [mhtml, body {[m
+ .Normal_Navbar{[m
+   width: 100vw;[m
+   padding: 0 32px;[m
+[32m+[m
+ }[m
+ [m
+ @media screen and (max-width: 768px) {[m
+[1mdiff --git a/src/views/resourceQuery/Exercise/index.vue b/src/views/resourceQuery/Exercise/index.vue[m
+[1mindex 0a609eb..2d018af 100644[m
+[1m--- a/src/views/resourceQuery/Exercise/index.vue[m
+[1m+++ b/src/views/resourceQuery/Exercise/index.vue[m
+[36m@@ -6,8 +6,6 @@[m
+         element-loading-spinner="el-icon-loading"[m
+         element-loading-background="rgba(0, 0, 0, 0.28)">[m
+         <div id="Top_Nav" class="Top_Nav">[m
+[31m-[m
+[31m-    </div>[m
+         <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->[m
+         <div class="Jump_Bar">[m
+             <el-row[m
+[36m@@ -421,6 +419,7 @@[m
+           </span>[m
+         </el-dialog>[m
+     </div>[m
+[32m+[m[32m    </div>[m
+ </template>[m
+ [m
+ <script>[m
+[1mdiff --git a/src/views/resourceQuery/KU/index.vue b/src/views/resourceQuery/KU/index.vue[m
+[1mindex 02c67ab..77a04ec 100755[m
+[1m--- a/src/views/resourceQuery/KU/index.vue[m
+[1m+++ b/src/views/resourceQuery/KU/index.vue[m
+[36m@@ -7,9 +7,30 @@[m
+     element-loading-text="正在读取知识点网络，请稍后..."[m
+     element-loading-spinner="el-icon-loading"[m
+     element-loading-background="rgba(0, 0, 0, 0.28)">[m
+[31m-    <div id="Top_Nav" class="Top_Nav">[m
+[32m+[m[32m    <div class="SearchInputDIV">[m
+[32m+[m[32m      <el-input[m
+[32m+[m[32m          prefix-icon="el-icon-search"[m
+[32m+[m[32m          placeholder="请输入知识单元名称"[m
+[32m+[m[32m          class="SearchInput"[m
+[32m+[m[32m          v-model="ku_name"[m
+[32m+[m[32m          type="text"[m
+[32m+[m[32m          @keyup.enter.native="Search_KU_Info(ku_name)"[m
+[32m+[m[32m          suffix-icon="el-icon-camera">[m
+ [m
+[32m+[m[32m      </el-input>[m
+[32m+[m[32m      <el-tabs v-model="activeName"[m
+[32m+[m[32m               @tab-click="handleClick"[m
+[32m+[m[32m               style="width: 23vw;position: relative;right: 1.9vw;">[m
+[32m+[m[32m        <el-tab-pane label="知识点" name="first"></el-tab-pane>[m
+[32m+[m[32m        <el-tab-pane label="试题" name="second"></el-tab-pane>[m
+[32m+[m[32m        <el-tab-pane label="试卷" name="third"></el-tab-pane>[m
+[32m+[m[32m        <el-tab-pane label="教材教辅" name="fourth"></el-tab-pane>[m
+[32m+[m[32m      </el-tabs>[m
+[32m+[m[32m      <div class="KU_result">最匹配结果</div>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m    <div id="Top_Nav" class="Top_Nav">[m
+     </div>[m
+[32m+[m
+     <!-- <el-dialog[m
+         :visible.sync="simpleInput"[m
+         title="LUNA输入助手"[m
+[36m@@ -18,8 +39,9 @@[m
+         :close-on-click-modal="false">[m
+       <ComplexInput @New_Content="Update_Complex_Input" :Get_Out_Content="content"></ComplexInput>[m
+     </el-dialog> -->[m
+[31m-[m
+[31m-    <el-row justify="start" type="flex" style="margin: 0;">[m
+[32m+[m[32m    <div class="KU_container">[m
+[32m+[m[32m<div class="KU_right_container">[m
+[32m+[m[32m    <!--<el-row justify="start" type="flex" style="margin: 0;">[m
+       <el-breadcrumb separator-class="el-icon-arrow-right">[m
+         <el-breadcrumb-item :to="{ path: $store.getters.systemType==2?'/itas':'/' }">首页</el-breadcrumb-item>[m
+         <el-breadcrumb-item v-if="$store.getters.systemType==2">[m
+[36m@@ -35,17 +57,8 @@[m
+           </span>[m
+         </el-breadcrumb-item>[m
+       </el-breadcrumb>[m
+[31m-    </el-row>[m
+[32m+[m[32m    </el-row>-->[m
+     <instruction ref="instruction"/>[m
+[31m-    <!-- 页面标题行 -->[m
+[31m-    <el-row[m
+[31m-        type="flex"[m
+[31m-        class="KU_Title"[m
+[31m-        justify="start"[m
+[31m-        style="margin-top: 12px; margin-bottom: 30px; margin-left: -4px;">[m
+[31m-        <span>知识单元检索</span>[m
+[31m-    </el-row>[m
+[31m-[m
+     <!-- 学科行 -->[m
+     <el-row type="flex" justify="start" style="margin-bottom: 18px; font-size: 18px;">[m
+       <label>学科</label>[m
+[36m@@ -76,6 +89,7 @@[m
+       </div>[m
+     </div>[m
+ [m
+[32m+[m
+     <!-- 搜索框行 -->[m
+     <el-row id="Search_Bar" type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;">[m
+       <label>检索</label>[m
+[36m@@ -93,15 +107,9 @@[m
+         <span>检索</span>[m
+       </div>[m
+     </el-row>[m
+[31m-[m
+[32m+[m[32m</div>[m
+[32m+[m[32m<div class="KU_left_container">[m
+     <!-- 搜索结果行 -->[m
+[31m-    <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 8px;" v-show="Search_KU">[m
+[31m-      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">相关度最高的结果</label>[m
+[31m-      <el-button type="text" @click="Transition_Show = !Transition_Show" style="color: #4A4B56">[m
+[31m-        <i class="el-icon-caret-right" :style="Get_Rotate_Triangle(Transition_Show)"></i>[m
+[31m-        <label style="cursor: pointer">{{Transition_Show ? "仅看相关度最高的结果" : "查看更多结果"}}</label>[m
+[31m-      </el-button>[m
+[31m-    </el-row>[m
+     <el-row[m
+       v-show="Search_KU"[m
+       type="flex"[m
+[36m@@ -112,9 +120,6 @@[m
+ [m
+       </KnowledgePointCard>[m
+     </el-row>[m
+[31m-    <el-row type="flex" justify="start" style="margin: 0; margin-bottom: 16px;" v-show="Transition_Show">[m
+[31m-      <label style="height: 40px; line-height: 40px; padding-top: 3px; margin-right: 30px; font-size: 18px;">更多结果</label>[m
+[31m-    </el-row>[m
+     <el-row type="flex" justify="start" style="margin: 0;">[m
+       <transition name="el-zoom-in-top">[m
+         <!-- 用于显示知识点的地方 -->[m
+[36m@@ -148,10 +153,12 @@[m
+             @current-change="Page_Index_Change"[m
+             :current-page.sync="Page_Index"[m
+             :page-size="5"[m
+[31m-            layout="total, prev, pager, next"[m
+[32m+[m[32m            style="display: flex; margin-left:-2.2%"[m
+[32m+[m[32m            layout="prev, pager, next"[m
+             :total="50">[m
+         </el-pagination>[m
+     </el-row>[m
+[32m+[m
+     <!-- 相关搜索[m
+     <el-row class="ConnectSearch" v-if="similar_nodes.length" style="">[m
+       <el-row style="margin-left: -1330px;font-size: 14px;">相关搜索</el-row>[m
+[36m@@ -183,6 +190,7 @@[m
+         </div>[m
+       </el-row>[m
+     </div>[m
+[32m+[m
+     <el-row>[m
+       <div class="KU_Detail_Aim" id="KU_Detail"></div>[m
+     </el-row>[m
+[36m@@ -257,9 +265,8 @@[m
+ [m
+ [m
+     </el-row>[m
+[31m-    <el-row v-show="!Search_Result" style="height: 300px; width: 100%;">[m
+[31m-      <label style="font-size: 24px; margin-top: 60px; color: #ccc">{{Search_KU ? "点击按钮查看详情信息" : "尚未检索知识点"}}</label>[m
+[31m-    </el-row>[m
+[32m+[m[32m</div>[m
+[32m+[m[32m      </div>[m
+   </div>[m
+ </template>[m
+ [m
+[36m@@ -416,6 +423,10 @@[m [mexport default {[m
+     }[m
+   },[m
+   methods: {[m
+[32m+[m[32m    handleClick(){[m
+[32m+[m[32m      if(this.activeName=="first"){[m
+[32m+[m[32m        this.Search_KU_Info(this.ku_name);}[m
+[32m+[m[32m    },[m
+     Page_Index_Change(){[m
+       document.getElementById("Search_Bar").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});[m
+       this.Transition_Show = true;[m
+[36m@@ -933,6 +944,28 @@[m [mexport default {[m
+ </script>[m
+ [m
+ <style scoped lang="scss">[m
+[32m+[m
+[32m+[m[32m.KU_result{[m
+[32m+[m[32m  padding-right: 49vw;[m
+[32m+[m[32m  margin-left: -4.3vw;[m
+[32m+[m[32m  font-family: Source Han Sans CN;[m
+[32m+[m[32m  font-weight: 600;[m
+[32m+[m[32m}[m
+[32m+[m[32m.KU_right_container{[m
+[32m+[m[32m  max-width: 26vw;[m
+[32m+[m[32m  margin-top: -6.9vh;[m
+[32m+[m[32m}[m
+[32m+[m[32m.KU_left_container{[m
+[32m+[m[32m  max-width: 55vw;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m.KU_container{[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  flex-direction: row-reverse;[m
+[32m+[m[32m  justify-content: space-between;[m
+[32m+[m[32m  margin-left:-2.2%;[m
+[32m+[m[32m  margin-right: 2%;[m
+[32m+[m[32m}[m
+ .instruction{[m
+    max-width:300px;[m
+    p{[m
+[36m@@ -1165,9 +1198,11 @@[m [mexport default {[m
+   box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);[m
+   border-radius: 10px;[m
+   -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);[m
+[32m+[m[32m  margin-left: -3.9vw;[m
+[32m+[m[32m  border-radius: 50px;[m
+ }[m
+ .SearchInputDIV{[m
+[31m-  width: 684px;[m
+[32m+[m[32m  width: 55vw;[m
+ }[m
+ .SearchInput ::v-deep .el-input__inner {[m
+   border: 0;[m
+[36m@@ -1220,7 +1255,7 @@[m [mexport default {[m
+   color: black;[m
+   cursor: pointer;[m
+   /* capsule */[m
+[31m-  background: #FFFFFF;[m
+[32m+[m[32m  background: #F2F3F7;[m
+   border: 1px solid #D4D4D4;[m
+   box-sizing: border-box;[m
+   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);[m
+[36m@@ -1304,10 +1339,6 @@[m [mexport default {[m
+     padding: 0 88px;[m
+     margin: 0;[m
+   }[m
+[31m-[m
+[31m-  .SearchInputDIV{[m
+[31m-    width: calc(100% - 120px)[m
+[31m-  }[m
+ }[m
+ [m
+ @media screen and (max-width: 768px){[m
+[36m@@ -1317,9 +1348,7 @@[m [mexport default {[m
+     margin: 0;[m
+   }[m
+ [m
+[31m-  .SearchInputDIV{[m
+[31m-    width: calc(100% - 120px)[m
+[31m-  }[m
+[32m+[m
+ }[m
+ [m
+ .KU_Detail_Aim{[m
+[1mdiff --git a/src/views/resourceQuery/Resources.vue b/src/views/resourceQuery/Resources.vue[m
+[1mindex a34d8ea..691a273 100644[m
+[1m--- a/src/views/resourceQuery/Resources.vue[m
+[1m+++ b/src/views/resourceQuery/Resources.vue[m
+[36m@@ -30,37 +30,11 @@[m
+         <instruction[m
+             ref="instruction"[m
+         />[m
+[32m+[m[32m        <div class="RS_container">[m[41m[m
+         <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">[m
+[31m-            <el-col>[m
+[31m-                <!-- 面包屑行 -->[m
+[31m-                <el-row[m
+[31m-                    class="Padding_Width"[m
+[31m-                    type="flex"[m
+[31m-                    ref="BreadCrumb_Line"[m
+[31m-                    justify="start">[m
+[31m-                    <el-breadcrumb separator-class="el-icon-arrow-right">[m
+[31m-                        <el-breadcrumb-item>[m
+[31m-                            首页[m
+[31m-                        </el-breadcrumb-item>[m
+[31m-                        <el-breadcrumb-item>[m
+[31m-                            查询[m
+[31m-                            <span @click="openInstructionDialog" style="cursor:pointer;">[m
+[31m-                                <i class="el-icon-question"></i>[m
+[31m-                            </span>[m
+[31m-                        </el-breadcrumb-item>[m
+[31m-                    </el-breadcrumb>[m
+[31m-                </el-row>[m
+[31m-                <!-- 页面标题行 -->[m
+[31m-                <el-row[m
+[31m-                    class="Padding_Width"[m
+[31m-                    type="flex"[m
+[31m-                    justify="start"[m
+[31m-                    style="margin-top: 2vh;">[m
+[31m-                    <span style="font-size: 4rem" class="Label_Shadow">资源检索</span>[m
+[31m-                </el-row>[m
+[31m-                <div class="Background_Round">[m
+ [m
+[31m-                </div>[m
+[32m+[m[32m              <div class="RS_left_container">[m[41m[m
+[32m+[m[41m[m
+                 <!-- 功能区 -->[m
+                 <el-row class="Padding_Width">[m
+                     <el-col style="min-height: 320px; padding-left: 30px;">[m
+[36m@@ -130,91 +104,41 @@[m
+                         </el-row>[m
+                     </el-col>[m
+                 </el-row>[m
+[32m+[m[41m[m
+                 <el-row[m
+                     v-if="Resource_Info_List.length == 0"[m
+                     style="height: 200px; line-height: 200px; width: 100%; font-weight: bold; font-size: 24px; color: #ccc"[m
+                     type="flex" justify="center">[m
+                     暂无检索结果[m
+                 </el-row>[m
+[31m-                <el-row[m
+[31m-                    v-else[m
+[31m-                    id="Resources"[m
+[31m-                    style="line-height: 40px; width: 100%; padding-top: 20px; margin-top: 40px;"[m
+[31m-                    type="flex"[m
+[31m-                    justify="center">[m
+[31m-                    <i[m
+[31m-                        class="el-icon-d-arrow-left"[m
+[31m-                        @click="Jump_To('Resources')"[m
+[31m-                        style="font-size: 40px; transform: rotate(270deg); opacity: 0.5; cursor: pointer; z-index: 1;"></i>[m
+[31m-                </el-row>[m
+[31m-            </el-col>[m
+[32m+[m[32m              </div>[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+         </el-row>[m
+         <div v-if="Resource_Info_List.length != 0">[m
+             <el-row[m
+                 type="flex"[m
+                 justify="center"[m
+                 class="Padding_Width"[m
+[31m-                style="width: 100%; min-width: 1362px; font-size: 16px;" >[m
+[31m-                <div align="center">[m
+[31m-                    <div class="Table_Label" style="width: 60px" align="center">[m
+[31m-                        序号[m
+[31m-                    </div>[m
+[31m-                    <div class="Table_Label" style="width: 80px" align="center">[m
+[31m-                        学科[m
+[31m-                    </div>[m
+[31m-                    <div class="Table_Label" style="width: 100px" align="center">[m
+[31m-                        学段/年级[m
+[31m-                    </div>[m
+[31m-                    <div class="Table_Label" style="width: 100px" align="center">[m
+[31m-                        资源类型[m
+[31m-                    </div>[m
+[31m-                    <div class="Table_Label" style="width: 120px" align="center">[m
+[31m-                        出版社[m
+[31m-                    </div>[m
+[31m-                    <div class="Table_Label" style="width: 466px" align="center">[m
+[31m-                        资源名称[m
+[31m-                    </div>[m
+[31m-                    <div class="Table_Label" style="width: 100px" align="center">[m
+[31m-                        存入日期[m
+[31m-                    </div>[m
+[31m-                    <div class="Table_Label" style="width: 160px" align="center">[m
+[31m-                        获取[m
+[31m-                    </div>[m
+[31m-                </div>[m
+[31m-            </el-row>[m
+[31m-            <el-row[m
+[31m-                type="flex"[m
+[31m-                justify="center"[m
+[31m-                class="Padding_Width"[m
+[31m-                style="width: 100%; min-width: 1362px;"[m
+[32m+[m[32m                style="width: 100%;"[m[41m[m
+                 v-for="Resource_Info_Index in 10"[m
+                 :key="'Resource_Info_' + Resource_Info_Index">[m
+[31m-                <div align="center" :style="Resource_Info_Index % 2 == 0 ? '' : 'background: #F4F7FC'">[m
+[31m-                    <div class="Resource_Label" style="width: 60px" align="center">[m
+[31m-                        {{Resource_Info_Index + (Page_Index - 1) * 10}}[m
+[31m-                    </div>[m
+[31m-                    <div class="Resource_Label" style="width: 80px" align="center">[m
+[31m-                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].subject}}[m
+[31m-                    </div>[m
+[31m-                    <div class="Resource_Label" style="width: 100px" align="center">[m
+[31m-                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].period}}[m
+[31m-                    </div>[m
+[31m-                    <div class="Resource_Label" style="width: 100px" align="center">[m
+[32m+[m[32m                <div align="center" :style="Resource_Info_Index % 2 == 0 ? '' : 'background: #F4F7FC'" class="RS_card">[m[41m[m
+[32m+[m[32m                  <div class="Resource_Label">[m[41m[m
+[32m+[m[32m                    {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].subject}}[m[41m[m
+[32m+[m[32m                      {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].publisher}}[m[41m[m
+[32m+[m[32m                      {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].period}}[m[41m[m
+[32m+[m[32m                      {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].name}}[m[41m[m
+[32m+[m[32m                  </div>[m[41m[m
+[32m+[m[32m                  <div class="RS_card_btm">[m[41m[m
+[32m+[m[32m                  <div class="Resource_Label" style="width: 100px" >[m[41m[m
+                         {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].type}}[m
+[31m-                    </div>[m
+[31m-                    <div class="Resource_Label" style="width: 120px" align="center">[m
+[31m-                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].publisher}}[m
+[31m-                    </div>[m
+[31m-                    <div class="Resource_Label Resource_Name" style="width: 466px" align="center">[m
+[31m-                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].name}}[m
+[31m-                    </div>[m
+[31m-                    <div class="Resource_Label" style="width: 100px" align="center">[m
+[31m-                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].date}}[m
+[31m-                    </div>[m
+[31m-                    <div class="Resource_Label" style="width: 160px" align="center">[m
+[32m+[m[32m                  </div>[m[41m[m
+[32m+[m[32m                    <div class="Resource_Label" style="width: 160px">[m[41m[m
+                         <el-button style="display: none" type="success" size="mini" @click="Resource_Preview(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">预览</el-button>[m
+                         <el-button type="primary" size="mini" @click="Resource_Download(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">下载</el-button>[m
+                     </div>[m
+[32m+[m[32m                    </div>[m[41m[m
+                 </div>[m
+             </el-row>[m
+             <el-row[m
+[36m@@ -229,6 +153,7 @@[m
+                 </el-pagination>[m
+             </el-row>[m
+         </div>[m
+[32m+[m[32m        </div>[m[41m[m
+     </div>[m
+ [m
+ </template>[m
+[36m@@ -323,77 +248,25 @@[m [mexport default {[m
+         },[m
+         // 控制筛选项的样式显示[m
+         // 参数分别是筛选项所属的属性，筛选项对应的索引值[m
+[31m-        Filter_Item(Part, Index, Item){[m
+[32m+[m[32m        Filter_Item(){[m[41m[m
+             let WIDTH = '80px'[m
+[31m-            let BORDER_LEFT = ""[m
+[31m-            let BORDER_RIGHT = ""[m
+[31m-            if(this.Chosen_Options[Part].indexOf(Item) == -1){[m
+[31m-                if(Index > 0 && Index < this.All_Options[Part].length - 1){[m
+[31m-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) == -1){[m
+[31m-                        BORDER_RIGHT = "1px solid #ccc"[m
+[31m-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) != -1){[m
+[31m-                        BORDER_RIGHT = "none"[m
+[31m-                    }[m
+[31m-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) == -1){[m
+[31m-                        BORDER_LEFT = "none"[m
+[31m-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) != -1){[m
+[31m-                        BORDER_LEFT = "none"[m
+[31m-                    }[m
+[31m-                }else if(Index == 0){[m
+[31m-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) == -1){[m
+[31m-                        BORDER_RIGHT = "1px solid #ccc"[m
+[31m-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) != -1){[m
+[31m-                        BORDER_RIGHT = "none"[m
+[31m-                    }[m
+[31m-                }else if(Index == this.All_Options[Part].length - 1){[m
+[31m-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) == -1){[m
+[31m-                        BORDER_LEFT = "none"[m
+[31m-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) != -1){[m
+[31m-                        BORDER_LEFT = "none"[m
+[31m-                    }[m
+[31m-                }[m
+[31m-            }else{[m
+[31m-                if(Index > 0 && Index < this.All_Options[Part].length - 1){[m
+[31m-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) == -1){[m
+[31m-                        BORDER_RIGHT = "1px solid #409EFF"[m
+[31m-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index + 1]) != -1){[m
+[31m-                        BORDER_RIGHT = "1px solid #409EFF"[m
+[31m-                    }[m
+[31m-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) == -1){[m
+[31m-                        BORDER_LEFT = "1px solid #409EFF"[m
+[31m-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][Index - 1]) != -1){[m
+[31m-                        BORDER_LEFT = "none"[m
+[31m-                    }[m
+[31m-                }else if(Index == 0){[m
+[31m-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) == -1){[m
+[31m-                        BORDER_RIGHT = "1px solid #409EFF"[m
+[31m-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][1]) != -1){[m
+[31m-                        BORDER_RIGHT = "1px solid #409EFF"[m
+[31m-                    }[m
+[31m-                }else if(Index == this.All_Options[Part].length - 1){[m
+[31m-                    if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) == -1){[m
+[31m-                        BORDER_LEFT = "1px solid #409EFF"[m
+[31m-                    }else if(this.Chosen_Options[Part].indexOf(this.All_Options[Part][this.All_Options[Part].length - 2]) != -1){[m
+[31m-                        BORDER_LEFT = "none"[m
+[31m-                    }[m
+[31m-                }[m
+[31m-            }[m
+[31m-            return {[m
+[31m-                "width": WIDTH,[m
+[31m-                "height": "40px",[m
+[31m-                "line-height": "40px",[m
+[31m-                "text-align": "center",[m
+[31m-                "display": "inline-block",[m
+[31m-                "box-sizing": "border-box",[m
+[31m-                "background": "white",[m
+[31m-                "cursor": "pointer",[m
+[31m-                "border-left": BORDER_LEFT,[m
+[31m-                "border-right": BORDER_RIGHT,[m
+[31m-                "border-top-left-radius": Index == 0 ? "10px" : "0px",[m
+[31m-                "border-bottom-left-radius": Index == 0 ? "10px" : "0px",[m
+[31m-                "border-top-right-radius": Index == this.All_Options[Part].length - 1 ? "10px" : "0px",[m
+[31m-                "border-bottom-right-radius": Index == this.All_Options[Part].length - 1 ? "10px" : "0px"[m
+[31m-            }[m
+[32m+[m[32m          return {[m[41m[m
+[32m+[m[32m            "width": WIDTH,[m[41m[m
+[32m+[m[32m            "height": "40px",[m[41m[m
+[32m+[m[32m            "line-height": "40px",[m[41m[m
+[32m+[m[32m            "text-align": "center",[m[41m[m
+[32m+[m[32m            "display": "inline-block",[m[41m[m
+[32m+[m[32m            "box-sizing": "border-box",[m[41m[m
+[32m+[m[32m            "background": "white",[m[41m[m
+[32m+[m[32m            "cursor": "pointer",[m[41m[m
+[32m+[m[32m            "border-top-left-radius":"10px",[m[41m[m
+[32m+[m[32m            "border-bottom-left-radius":"10px",[m[41m[m
+[32m+[m[32m            "border-top-right-radius": "10px",[m[41m[m
+[32m+[m[32m            "border-bottom-right-radius": "10px",[m[41m[m
+[32m+[m[32m            "margin-right":"10px",[m[41m[m
+[32m+[m[32m            "margin-top":"10px",[m[41m[m
+[32m+[m[32m            "background-color":"#EDEFF2"[m[41m[m
+[32m+[m[32m          }[m[41m[m
+         },[m
+         // 样式筛选器，对比这个属性的这一项是否在Chosen_Options内，来对应不同的显示[m
+         // 主要用于hover样式，来做成按钮的效果[m
+[36m@@ -554,9 +427,27 @@[m [mexport default {[m
+ [m
+ <!-- Add "scoped" attribute to limit CSS to this component only -->[m
+ <style scoped lang="scss">[m
+[32m+[m[32m.RS_card_btm{[m[41m[m
+[32m+[m[32m  display: flex;[m[41m[m
+[32m+[m[32m  flex-direction:row;[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m}[m[41m[m
+[32m+[m[32m.RS_card{[m[41m[m
+[32m+[m[32m  display: flex;[m[41m[m
+[32m+[m[32m  flex-direction: column;[m[41m[m
+[32m+[m[32m  width:23vw;[m[41m[m
+[32m+[m[32m}[m[41m[m
+[32m+[m[32m.RS_container{[m[41m[m
+[32m+[m[32m  display:flex;[m[41m[m
+[32m+[m[32m  flex-direction: row-reverse;[m[41m[m
+[32m+[m[32m  justify-content: space-between;[m[41m[m
+[32m+[m[32m}[m[41m[m
+ .Filter_Line{[m
+[31m-    margin: 24px 0;[m
+[31m-    min-width: 720px;[m
+[32m+[m[32m  display: flex;[m[41m[m
+[32m+[m[32m  flex-direction: column;[m[41m[m
+[32m+[m[32m  margin: 24px 0;[m[41m[m
+[32m+[m[32m  min-width: 28vw;[m[41m[m
+ }[m
+ [m
+ .Filter_Label{[m
+[36m@@ -638,8 +529,11 @@[m [mexport default {[m
+ }[m
+ [m
+ .Filter_Item_Shadow{[m
+[31m-    border-radius: 10px;[m
+[31m-    box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.06);[m
+[32m+[m[32m  border-radius: 10px;[m[41m[m
+[32m+[m[32m  display: flex;[m[41m[m
+[32m+[m[32m  flex-direction: row;[m[41m[m
+[32m+[m[32m  flex-wrap: wrap;[m[41m[m
+[32m+[m[32m  justify-content: flex-start;[m[41m[m
+ }[m
+ [m
+ .Padding_Width{[m
+[36m@@ -654,7 +548,6 @@[m [mexport default {[m
+ .Main_Background{[m
+     width: 100%;[m
+     min-width: 1362px;[m
+[31m-    padding: 0 calc((100% - 1344px - 18px)/2);[m
+     overflow: hidden;[m
+     margin-top: -70px;[m
+     margin-bottom: 64px;[m
+[36m@@ -681,6 +574,7 @@[m [mexport default {[m
+     height: 60px;[m
+     color: black;[m
+     line-height: 60px;[m
+[32m+[m[32m    text-align: left;[m[41m[m
+ }[m
+ [m
+ .Resource_Name{[m
+[1mdiff --git a/src/views/resourceQuery/SearchPaper.vue b/src/views/resourceQuery/SearchPaper.vue[m
+[1mindex def090e..e59e6ab 100644[m
+[1m--- a/src/views/resourceQuery/SearchPaper.vue[m
+[1m+++ b/src/views/resourceQuery/SearchPaper.vue[m
+[36m@@ -6,8 +6,7 @@[m
+         element-loading-spinner="el-icon-loading"[m
+         element-loading-background="rgba(0, 0, 0, 0.28)">[m
+         <div id="Filter" class="Top_Nav">[m
+[31m-[m
+[31m-    </div>[m
+[32m+[m[32m        </div>[m
+         <LunaProgress[m
+             v-if="Paper_Analysing"[m
+             :Bar_Type="'time'"[m
+[36m@@ -126,12 +125,12 @@[m
+             <instruction[m
+                 ref="instruction"[m
+             />[m
+[31m-      <div class="sp-container">[m
+[32m+[m[32m      <div class="sp-container" style="padding-right: 3vw;padding-left: 5vw">[m
+         <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">[m
+           <el-col>[m
+[31m-            <div class="Background_Round">[m
+[32m+[m[32m         <!--   <div class="Background_Round">[m
+ [m
+[31m-            </div>[m
+[32m+[m[32m            </div>     -->[m
+             <!-- 功能区 -->[m
+             <el-row class="Padding_Width">[m
+               <el-col :span="16" style="min-height: 320px;">[m
+[36m@@ -289,11 +288,33 @@[m
+         </el-row>[m
+         <div class="sp-left_container">[m
+         <el-row>[m
+[31m-          <el-col style="margin-top: 35%">[m
+[32m+[m[32m          <el-input[m
+[32m+[m[32m              v-model="Search_Content"[m
+[32m+[m[32m              :disabled="Search_Extra == 'ImgSearch'"[m
+[32m+[m[32m              @keyup.enter.native="Search_Do()"[m
+[32m+[m[32m              placeholder="请输入想要检索的试题文字内容"[m
+[32m+[m[32m              style="width: 55vw"[m
+[32m+[m[32m              class="Search_Input"[m
+[32m+[m[32m              prefix-icon="el-icon-search"[m
+[32m+[m[32m              suffix-icon="el-icon-camera">[m
+[32m+[m[32m          </el-input>[m
+[32m+[m[32m          <el-tabs v-model="activeName"[m
+[32m+[m[32m                   @tab-click="handleClick"[m
+[32m+[m[32m                   style="width:23vw;padding-left:0.4vw">[m
+[32m+[m[32m            <el-tab-pane label="知识点" name="first"></el-tab-pane>[m
+[32m+[m[32m            <el-tab-pane label="试题" name="second"></el-tab-pane>[m
+[32m+[m[32m            <el-tab-pane label="试卷" name="third"></el-tab-pane>[m
+[32m+[m[32m            <el-tab-pane label="教材教辅" name="fourth"></el-tab-pane>[m
+[32m+[m[32m          </el-tabs>[m
+[32m+[m[32m          <span style="margin-left: -40vw;[m
+[32m+[m[32m          font-family:”Source Han Sans CN“;[m
+[32m+[m[32m          font-weight: 600">搜索结果</span>[m
+[32m+[m[32m          <el-col style="margin-top: 38%">[m
+             <div[m
+                 v-for="(Paper_Info, Paper_Info_Index) in Paper_Info_List"[m
+                 :style="Get_Card_Background()"[m
+                 :key="'Question_' + Paper_Info_Index">[m
+[32m+[m
+               <el-row style="padding-bottom: 75%">[m
+                 <div[m
+                     :id="'Question_' + Paper_Info_Index"[m
+[36m@@ -424,7 +445,7 @@[m [mexport default {[m
+         // 正在获取分析报告的进度条显示变量和显示文字[m
+         Paper_Analysing: false,[m
+         Paper_Analysing_Text: "",[m
+[31m-        Paper_Analysing_Over_Time: false[m
+[32m+[m[32m        Paper_Analysing_Over_Time: false,[m
+     };[m
+   },[m
+   destroyed(){[m
+[36m@@ -473,6 +494,12 @@[m [mexport default {[m
+ [m
+   },[m
+   methods: {[m
+[32m+[m[32m      handleClick(){[m
+[32m+[m[32m        if(this.activeName=="third"){[m
+[32m+[m[32m          this.Search_Do();}[m
+[32m+[m
+[32m+[m
+[32m+[m[32m      },[m
+       To_Top(){[m
+           document.getElementById("Filter").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})[m
+       },[m
+[36m@@ -991,11 +1018,13 @@[m [mexport default {[m
+ }[m
+ [m
+ .Search_Input ::v-deep .el-input__inner{[m
+[31m-    border-radius: 10px;[m
+[32m+[m[32m    border-radius: 50px;[m
+     border: 1px solid rgba($color: #000, $alpha: 0.14);[m
+     box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.06);[m
+     display:flex;[m
+[31m-    width:30vw;[m
+[32m+[m[32m    width:55vw;[m
+[32m+[m[32m    padding-left: 3vw;[m
+[32m+[m[32m    background-color: transparent;[m
+ }[m
+ [m
+ .Jump_Bar{[m
+[36m@@ -1073,6 +1102,7 @@[m [mexport default {[m
+ .Padding_Width{[m
+     padding-right: 88px;[m
+     padding-left: 88px;[m
+[32m+[m[32m    padding-top: 6.5vh;[m
+ }[m
+ [m
+ .Main_Background{[m

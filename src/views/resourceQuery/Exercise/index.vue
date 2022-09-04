@@ -5,9 +5,28 @@
       :element-loading-text="Waiting_Text"
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.28)">
-    <div id="Top_Nav" class="Top_Nav">
-
+    <div class="EX_SearchInput">
+      <el-input
+          prefix-icon="el-icon-search"
+          v-model="Search_Content"
+          @keyup.enter.native="Search_Do()"
+          placeholder="请输入想要检索的资源关键字"
+          style="width: 55.1vw;"
+          class="Search_Input"
+          suffix-icon="el-icon-camera"
+      >
+      </el-input>
+      <el-tabs v-model="activeName"
+               @tab-click="handleClick"
+               style="width: 23vw;position: relative;right: 1.9vw;">
+        <el-tab-pane label="知识点" name="first"></el-tab-pane>
+        <el-tab-pane label="试题" name="second"></el-tab-pane>
+        <el-tab-pane label="试卷" name="third"></el-tab-pane>
+        <el-tab-pane label="教材教辅" name="fourth"></el-tab-pane>
+      </el-tabs>
+      <div class="EX_result">最匹配结果</div>
     </div>
+    <div id="Top_Nav" class="Top_Nav"></div>
     <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
     <div class="Jump_Bar">
       <el-row
@@ -20,7 +39,7 @@
           :key="'Jump_Item_' + i"
           class="Jump_Item"
           @click.native="Jump_To('Question_' + (i-1))">
-        {{i}}
+        {{ i }}
       </el-row>
       <el-row
           class="Jump_Item"
@@ -144,8 +163,6 @@
     <div class="sq-container">
       <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
         <el-col>
-          <div class="Background_Round">
-          </div>
           <!-- 功能区 -->
           <el-row
               class="Padding_Width"
@@ -157,11 +174,12 @@
                 <span class="Filter_Label">学段</span>
                 <div class="Filter_Item_Shadow">
                                 <span
-                                    v-for="(Period_Item, Period_Item_Index) in All_Options.Period" :key="'Filter_Period_' + Period_Item_Index"
+                                    v-for="(Period_Item, Period_Item_Index) in All_Options.Period"
+                                    :key="'Filter_Period_' + Period_Item_Index"
                                     :class="Focus_Filter('Period', Period_Item)"
                                     :style="Filter_Item('Period', Period_Item_Index, Period_Item)"
                                     @click="Filter_Change('Period', Period_Item)">
-                                    {{Period_Item}}
+                                    {{ Period_Item }}
                                 </span>
                 </div>
               </el-row>
@@ -169,11 +187,12 @@
                 <span class="Filter_Label">学科</span>
                 <div class="Filter_Item_Shadow">
                                 <span
-                                    v-for="(Subject_Item, Subject_Item_Index) in All_Options.Subject" :key="'Filter_Subject_' + Subject_Item_Index"
+                                    v-for="(Subject_Item, Subject_Item_Index) in All_Options.Subject"
+                                    :key="'Filter_Subject_' + Subject_Item_Index"
                                     :class="Focus_Filter('Subject', Subject_Item)"
                                     :style="Filter_Item('Subject', Subject_Item_Index, Subject_Item)"
                                     @click="Filter_Change('Subject', Subject_Item)">
-                                    {{Subject_Item}}
+                                    {{ Subject_Item }}
                                 </span>
                 </div>
               </el-row>
@@ -181,11 +200,12 @@
                 <span class="Filter_Label">题型</span>
                 <div class="Filter_Item_Shadow">
                                 <span
-                                    v-for="(Type_Item, Type_Item_Index) in All_Options.Type" :key="'Filter_Type_' + Type_Item_Index"
+                                    v-for="(Type_Item, Type_Item_Index) in All_Options.Type"
+                                    :key="'Filter_Type_' + Type_Item_Index"
                                     :class="Focus_Filter('Type', Type_Item)"
                                     :style="Filter_Item('Type', Type_Item_Index, Type_Item)"
                                     @click="Filter_Change('Type', Type_Item)">
-                                    {{Type_Item}}
+                                    {{ Type_Item }}
                                 </span>
                 </div>
               </el-row>
@@ -193,11 +213,12 @@
                 <span class="Filter_Label">难度</span>
                 <div class="Filter_Item_Shadow">
                                 <span
-                                    v-for="(Difficulty_Item, Difficulty_Item_Index) in All_Options.Difficulty" :key="'Filter_Difficulty_' + Difficulty_Item_Index"
+                                    v-for="(Difficulty_Item, Difficulty_Item_Index) in All_Options.Difficulty"
+                                    :key="'Filter_Difficulty_' + Difficulty_Item_Index"
                                     :class="Focus_Filter('Difficulty', Difficulty_Item)"
                                     :style="Filter_Item('Difficulty', Difficulty_Item_Index, Difficulty_Item)"
                                     @click="Filter_Change('Difficulty', Difficulty_Item)">
-                                    {{Difficulty_Item_Index != All_Options.Difficulty.length - 1 ? Difficulty_Item : Chosen_Options.Difficulty == '自定义' ? Difficulty_Value[0] + '~' + Difficulty_Value[1] : '自定义'}}
+                                    {{ Difficulty_Item_Index != All_Options.Difficulty.length - 1 ? Difficulty_Item : Chosen_Options.Difficulty == '自定义' ? Difficulty_Value[0] + '~' + Difficulty_Value[1] : '自定义' }}
                                 </span>
                 </div>
                 <el-slider
@@ -214,11 +235,12 @@
                 <span class="Filter_Label">题库</span>
                 <div class="Filter_Item_Shadow">
                                 <span
-                                    v-for="(Database_Item, Database_Item_Index) in All_Options.Database" :key="'Filter_Database_' + Database_Item_Index"
+                                    v-for="(Database_Item, Database_Item_Index) in All_Options.Database"
+                                    :key="'Filter_Database_' + Database_Item_Index"
                                     :class="Focus_Filter('Database', Database_Item.nick)"
                                     :style="Filter_Item('Database', Database_Item_Index, Database_Item.nick)"
                                     @click="Filter_Change('Database', Database_Item.nick)">
-                                    {{Database_Item.nick}}
+                                    {{ Database_Item.nick }}
                                 </span>
                 </div>
               </el-row>
@@ -226,23 +248,14 @@
                 <span class="Filter_Label">匹配方式</span>
                 <div class="Filter_Item_Shadow">
                                 <span
-                                    v-for="(Semantic_Item, Semantic_Item_Index) in All_Options.Semantic" :key="'Filter_Semantic_' + Semantic_Item_Index"
+                                    v-for="(Semantic_Item, Semantic_Item_Index) in All_Options.Semantic"
+                                    :key="'Filter_Semantic_' + Semantic_Item_Index"
                                     :class="Focus_Filter('Semantic', Semantic_Item)"
                                     :style="Filter_Item('Semantic', Semantic_Item_Index, Semantic_Item)"
                                     @click="Filter_Change('Semantic', Semantic_Item)">
-                                    {{Semantic_Item}}
+                                    {{ Semantic_Item }}
                                 </span>
                 </div>
-              </el-row>
-              <el-row type="flex" justify="start" class="Filter_Line">
-                <span class="Filter_Label">检索框</span>
-                <el-input
-                    v-model="Search_Content"
-                    :disabled="Search_Extra == 'ImgSearch'"
-                    @keyup.enter.native="Search_Do()"
-                    placeholder="请输入想要检索的试题文字内容"
-                    style="width: 630px;"
-                    class="Search_Input"></el-input>
               </el-row>
               <el-row type="flex" justify="start" class="Filter_Line" style="margin-top: 3vh">
                 <span class="Filter_Label"></span>
@@ -297,7 +310,8 @@
                   style="cursor: pointer;">
                 <el-row style="margin-top: 46%">
                   <i class="el-icon-upload" style="font-size: 60px"></i><br/>
-                  <span style="font-size: 18px; margin-top: 5px; margin-bottom: 5px; display: inline-block">点击或粘贴以上传</span><br/>
+                  <span
+                      style="font-size: 18px; margin-top: 5px; margin-bottom: 5px; display: inline-block">点击或粘贴以上传</span><br/>
                   <span>支持图片和word文档</span>
                 </el-row>
               </div>
@@ -311,18 +325,25 @@
                     fit="contain"></el-image>
               </div>
               <el-row type="flex" justify="center" style="margin-top: 20px">
-                <el-button type="danger" style="margin-right: 25px; border-radius: 10px" @click="Img_Clear()"><i class="el-icon-close" style="margin-right: 4px"></i>清空内容</el-button>
-                <el-button type="primary" style="border-radius: 10px; background: #539DD9" @click="Img_Reset()"><i class="el-icon-refresh" style="margin-right: 4px"></i>重新编辑</el-button>
+                <el-button type="danger" style="margin-right: 25px; border-radius: 10px" @click="Img_Clear()"><i
+                    class="el-icon-close" style="margin-right: 4px"></i>清空内容
+                </el-button>
+                <el-button type="primary" style="border-radius: 10px; background: #539DD9" @click="Img_Reset()"><i
+                    class="el-icon-refresh" style="margin-right: 4px"></i>重新编辑
+                </el-button>
               </el-row>
             </el-col>
-            <el-col :span="7" :offset="1" style="height: 430px; display: none" v-show="Search_Extra == 'KnowledgePoint'">
+            <el-col :span="7" :offset="1" style="height: 430px; display: none"
+                    v-show="Search_Extra == 'KnowledgePoint'">
               <div class="ImgSearchArea">
                 <el-row style="margin-top: 40%">
                   知识树的处理方案仍在商讨中...
                 </el-row>
               </div>
               <el-row type="flex" justify="center" style="margin-top: 20px">
-                <el-button type="danger" style="border-radius: 10px;"><i class="el-icon-close" style="margin-right: 10px;"></i>清空知识点</el-button>
+                <el-button type="danger" style="border-radius: 10px;"><i class="el-icon-close"
+                                                                         style="margin-right: 10px;"></i>清空知识点
+                </el-button>
               </el-row>
             </el-col>
           </el-row>
@@ -362,7 +383,8 @@
                 <div
                     :style="Get_Card_Margin(Question_Index)"
                 >
-                  <el-row style="width: 100%; height: 1%; background: transparent; opacity: 0; z-index: -1; border-top: 1px solid red;margin-bottom: -16%;">
+                  <el-row
+                      style="width: 100%; height: 1%; background: transparent; opacity: 0; z-index: -1; border-top: 1px solid red;margin-bottom: -16%;">
 
                   </el-row>
                   <el-row class="Question_Card" style="background: white">
@@ -421,6 +443,7 @@
           </span>
     </el-dialog>
   </div>
+
 </template>
 
 <script>
@@ -438,18 +461,18 @@ import {LRStrip} from '@/common/utils/strip'
 
 export default {
   name: "",
-  components:{
+  components: {
     SearchQuestionItem, QuestionAnalyse, ComplexInput, CutFile, Instruction
   },
   data() {
     return {
       // 全部选项，用于显示
-      All_Options:{
+      All_Options: {
         Period: ["小学", "初中", "高中", "大学", "成人"],
         Subject: ["语文", "数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理"],
         Type: ["单选题", "多选题", "判断题", "填空题", "计算题", "简答题", "其他"],
         Difficulty: ['容易', '较易', '中等', '较难', '困难', "自定义"],
-        Database: [{name:'public',nick:'公共题库'}],
+        Database: [{name: 'public', nick: '公共题库'}],
         Semantic: ["精确匹配", "语义匹配"]
       },
       // 选中的选项，用于显示样式的调整和检索的时候进行内容转换
@@ -485,7 +508,7 @@ export default {
       // 标记图片检索模式
       Img_Search_Type: 1,
       // 控制cropper控件的设置项
-      Cropper_Option:{
+      Cropper_Option: {
         img: "", // 裁剪图片的地址
         autoCrop: true, //是否默认生成截图框
         fixedBox: true, //固定截图框大小 不允许改变
@@ -498,7 +521,7 @@ export default {
       // 控制检索结果的题目数组
       Question_List: [],
       // 记录上次检索的时候所使用的信息
-      History_Chosen_Options:{
+      History_Chosen_Options: {
         Period: [],
         Subject: [],
         Type: [],
@@ -540,26 +563,26 @@ export default {
       Waiting_Text: "",
       // 输入助手的对话框
       Complex_Input_Dialog: false,
-      formData:'',
-      config:'',
-      confirmSubjectDialogVisible:false,
-      file:'',
-      paper_type:'语文',
+      formData: '',
+      config: '',
+      confirmSubjectDialogVisible: false,
+      file: '',
+      paper_type: '语文',
     };
   },
-  destroyed(){
+  destroyed() {
     let ImgSearchArea = document.getElementById('ImgSearchArea');
     ImgSearchArea.removeEventListener('dragenter', this.onDragIn, true);
     ImgSearchArea.removeEventListener('dragleave', this.onDragOut, true);
     ImgSearchArea.removeEventListener('drop', this.onDrop, true);
     window.removeEventListener('paste', this.Paste_Function)
   },
-  computed:{
-    multiExerciseMap(){
+  computed: {
+    multiExerciseMap() {
       return variable.multiExerciseMap
     }
   },
-  mounted(){
+  mounted() {
     this.InitDatabaseList()
     this.ImgInput = document.getElementById("ImgInput")
     let ImgSearchArea = document.getElementById('ImgSearchArea');
@@ -568,7 +591,7 @@ export default {
     ImgSearchArea.addEventListener('drop', this.onDrop, true);
     window.addEventListener('paste', this.Paste_Function);
     this.To_Top();
-    setTimeout(()=>{
+    setTimeout(() => {
       if (sessionStorage.getItem("ITAS_Content")) {
         this.Search_Content = sessionStorage.getItem("ITAS_Content");
         sessionStorage.removeItem("ITAS_Content")
@@ -580,24 +603,29 @@ export default {
 
   },
   methods: {
-    To_Top(){
+    handleClick() {
+      if (this.activeName == "second") {
+        this.Search_Do();
+      }
+    },
+    To_Top() {
       document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     },
-    openInstructionDialog(){
+    openInstructionDialog() {
       this.$refs.instruction.openDialog();
     },
     //试卷切分完成
-    File_Cut_End(){
+    File_Cut_End() {
       this.Waiting_Param = false;
       this.Waiting_Text = ""
     },
     // 粘贴事件
-    Paste_Function(e){
-      if(this.Search_Extra == 'ImgSearch'){
+    Paste_Function(e) {
+      if (this.Search_Extra == 'ImgSearch') {
         const _this = this;
         let Pic = e.clipboardData.items[0].getAsFile();
         // Promise方法避免异步操作
-        var promise = new Promise(function(resolve){
+        var promise = new Promise(function (resolve) {
           // 用文件读取来读取图片的base64格式代码
           var reader = new FileReader();
           reader.readAsDataURL(Pic);
@@ -605,12 +633,12 @@ export default {
             resolve(e.target.result);
           };
         });
-        promise.then(function(ImgData){
+        promise.then(function (ImgData) {
           _this.Img_All = ImgData
           _this.Cropper_Option.img = ImgData;
           _this.Img_Cut = ImgData
           _this.Cropper_Dialog = true;
-        }).catch(function(){
+        }).catch(function () {
           // 报错了就打印错误
           alert("您最新的粘贴对象不是图片内容。")
         })
@@ -618,8 +646,8 @@ export default {
     },
     // 控制筛选项的样式显示
     // 参数分别是筛选项所属的属性，筛选项对应的索引值
-    Filter_Item(Part){
-      let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '105px': '70px'
+    Filter_Item(Part) {
+      let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '105px' : '70px'
       return {
         "width": WIDTH,
         "height": "40px",
@@ -629,85 +657,85 @@ export default {
         "box-sizing": "border-box",
         "background": "white",
         "cursor": "pointer",
-        "border-top-left-radius":"10px",
-        "border-bottom-left-radius":"10px",
+        "border-top-left-radius": "10px",
+        "border-bottom-left-radius": "10px",
         "border-top-right-radius": "10px",
         "border-bottom-right-radius": "10px",
-        "margin-right":"10px",
-        "margin-top":"10px",
+        "margin-right": "10px",
+        "margin-top": "10px",
       }
     },
     // 样式筛选器，对比这个属性的这一项是否在Chosen_Options内，来对应不同的显示
     // 主要用于hover样式，来做成按钮的效果
-    Focus_Filter(Part, Item){
-      if(['Period', 'Subject', 'Type'].indexOf(Part) != -1){
-        if(this.Chosen_Options[Part].indexOf(Item) == -1){
+    Focus_Filter(Part, Item) {
+      if (['Period', 'Subject', 'Type'].indexOf(Part) != -1) {
+        if (this.Chosen_Options[Part].indexOf(Item) == -1) {
           return "Unchosen_Option"
-        }else{
+        } else {
           return "Chosen_Option"
         }
-      }else if(Part == 'Difficulty' || Part == 'Semantic'){
-        if(this.Chosen_Options[Part] != Item){
+      } else if (Part == 'Difficulty' || Part == 'Semantic') {
+        if (this.Chosen_Options[Part] != Item) {
           return "Unchosen_Option"
-        }else{
+        } else {
           return "Chosen_Option"
         }
-      }else if(Part == 'Database'){
-        if(this.Chosen_Options.Database.indexOf(Item) == -1){
+      } else if (Part == 'Database') {
+        if (this.Chosen_Options.Database.indexOf(Item) == -1) {
           return "Unchosen_Option"
-        }else{
+        } else {
           return "Chosen_Option"
         }
       }
     },
     // 内容调整，控制选择项的内容
-    Filter_Change(Part, Item){
-      if(['Period', 'Subject', 'Type'].indexOf(Part) != -1){
-        if(this.Chosen_Options[Part].indexOf(Item) == -1){
+    Filter_Change(Part, Item) {
+      if (['Period', 'Subject', 'Type'].indexOf(Part) != -1) {
+        if (this.Chosen_Options[Part].indexOf(Item) == -1) {
           this.Chosen_Options[Part].push(Item)
-        }else{
+        } else {
           this.Chosen_Options[Part].splice(this.Chosen_Options[Part].indexOf(Item), 1)
         }
-      }else if(Part == 'Difficulty' || Part == 'Semantic'){
+      } else if (Part == 'Difficulty' || Part == 'Semantic') {
         this.Chosen_Options[Part] = Item;
-      }else if(Part == 'Database'){
-        if(this.Chosen_Options[Part].indexOf(Item) == -1){
+      } else if (Part == 'Database') {
+        if (this.Chosen_Options[Part].indexOf(Item) == -1) {
           this.Chosen_Options[Part].push(Item)
-        }else{
+        } else {
           this.Chosen_Options[Part].splice(this.Chosen_Options[Part].indexOf(Item), 1)
         }
       }
     },
     // 老内容，检索用户可以使用的题库范围
-    InitDatabaseList(){
-      this.All_Options.Database = [{name:'public',nick:'公共题库'}]
+    InitDatabaseList() {
+      this.All_Options.Database = [{name: 'public', nick: '公共题库'}]
       this.Chosen_Options.Database = ['公共题库']
       //未登录时，不调用获取题库的端口
-      if(!this.$store.state.user.token){
-        return ;
+      if (!this.$store.state.user.token) {
+        return;
       }
-      commonAjax(this.backendIP+'/api/get_user_ig_name',
+      commonAjax(this.backendIP + '/api/get_user_ig_name',
           {
-            type:'Question',
-            action:'R',
+            type: 'Question',
+            action: 'R',
           }
-      ).then((res)=>{
-        let data=res.ig_name;
+      ).then((res) => {
+        let data = res.ig_name;
         for (var i = 0; i < data.length; i++) {
-          this.All_Options.Database.push({name:data[i], nick: "个人题库" + (data.length > 1 ? (i+1) + "" : "")})
+          this.All_Options.Database.push({name: data[i], nick: "个人题库" + (data.length > 1 ? (i + 1) + "" : "")})
         }
       })
     },
     // 通过点击区域来激活图片选择用的input组件
-    Img_Upload(){
+    Img_Upload() {
       this.ImgInput.click();
     },
-    File_Upload_Input(event){
+    File_Upload_Input(event) {
       if (/image\/\w+/.test(event.target.files[0].type)) {
         this.Img_Upload_Input(event)
-      }else {
+      } else {
         this.file = event.target.files[0]
-        this.confirmSubjectDialogVisible=true;
+        this.confirmSubjectDialogVisible = true;
         // this.Confirm_Paper_Type();
         // this.Doc_Upload_Input(event)
       }
@@ -715,10 +743,10 @@ export default {
     // Confirm_Paper_Type(){
     // },
     // 上传文件的方法
-    Doc_Upload_Input(){
+    Doc_Upload_Input() {
       this.Waiting_Param = true;
       this.Waiting_Text = "试卷切分中，请稍后..."
-      this.confirmSubjectDialogVisible=false
+      this.confirmSubjectDialogVisible = false
       // console.log(this.paper_type);
       this.formData = new FormData();
 
@@ -729,25 +757,25 @@ export default {
           "Content-Type": "multipart/form-data"
         }
       };
-      let res = variable.multiExerciseMap.filter((item)=>item.label==this.paper_type)
+      let res = variable.multiExerciseMap.filter((item) => item.label == this.paper_type)
       this.formData.append("paper_type", res[0].val);
       this.formData.append("data_format", '0');
       // 为了防止需要老版本的地方崩溃，先加了这个，以后用不到了再说
       this.formData.append("paper_Cut_New", true);
       this.$refs.cutFile.uploadAndCut(this.formData, this.config)
     },
-    handleSearch(ItemContent,Search_Type){
+    handleSearch(ItemContent, Search_Type) {
       this.Search_Extra = Search_Type
       if (Search_Type == 'ImgSearch') {
         this.Img_Cut = ItemContent
-      }else{
+      } else {
         this.Search_Content = ItemContent
       }
       this.Search_Do()
     },
     // 实际处理图片选择事件
-    Img_Upload_Input(event){
-      if(event.target.files){
+    Img_Upload_Input(event) {
+      if (event.target.files) {
         // 获取图片
         let Pic = event.target.files[0];
         // 获取this对象
@@ -755,7 +783,7 @@ export default {
         // 重置input组件
         this.$refs.ImgInput.value = "";
         // Promise方法避免异步操作
-        var promise = new Promise(function(resolve){
+        var promise = new Promise(function (resolve) {
           // 用文件读取来读取图片的base64格式代码
           var reader = new FileReader();
           reader.readAsDataURL(Pic);
@@ -763,35 +791,35 @@ export default {
             resolve(e.target.result);
           };
         });
-        promise.then(function(imageData){
+        promise.then(function (imageData) {
           // 用捕捉到的this对象来进行搜索
           _this.Cropper_Option.img = imageData;
           _this.Img_All = imageData;
           _this.Img_Cut = imageData;
           _this.Cropper_Dialog = true;
-        }).catch(function(){
+        }).catch(function () {
           // 报错了就打印错误
           // console.log(error)
         })
-      }else{
+      } else {
         return
       }
     },
     // 拖拽文件的多个相关方法，和以前的意思一样，只是换了变量的几个名字罢了
-    onDragIn (e) {
+    onDragIn(e) {
       e.preventDefault();
     },
-    onDragOut (e) {
+    onDragOut(e) {
       e.preventDefault();
     },
-    onDrop (e) {
+    onDrop(e) {
       e.preventDefault();
       this.imgPreview(e.dataTransfer.files);
       this.$refs.ImgInput.value = "";
       this.$refs.cropper.refresh();
     },
     //图片预览
-    imgPreview (files) {
+    imgPreview(files) {
       const _this = this;
       let read = new FileReader();
       read.readAsDataURL(files[0]);
@@ -819,21 +847,21 @@ export default {
       })
     },
     // 图片清理
-    Img_Clear(){
+    Img_Clear() {
       this.Img_Cut = ""
       this.Img_All = ""
       this.Chosen_Options.img = ""
       this.Cropper_Dialog = false
     },
     // 图片重置，用备份的图片重新替换切分图片和原有图片
-    Img_Reset(){
+    Img_Reset() {
       this.Chosen_Options.img = this.Img_All;
       this.Img_Cut = this.Img_All;
       this.Cropper_Dialog = true;
     },
     // 获取知识树的方法
     // 获取知识树
-    Init(){
+    Init() {
 
       let config = {
         headers: {
@@ -850,7 +878,7 @@ export default {
 
       this.$http
           .post(this.backendIP + "/api/getKnowledgeSystem", param, config)
-          .then(function(data) {
+          .then(function (data) {
             this.TreeData = data.body.knowledge_system
             this.$refs.tree.setCheckedKeys([])
             this.waiting = false;
@@ -858,10 +886,10 @@ export default {
     },
     // 切换检索类型，如果是文字，则图片内容部分自动清空，如果是图片，则文字部分内容自动清空
     // 紧接着是各种属性值的重置
-    Change_Search_Extra(val){
-      if(val == 'ImgSearch'){
+    Change_Search_Extra(val) {
+      if (val == 'ImgSearch') {
         this.Search_Content = ""
-      }else{
+      } else {
         this.Img_Clear()
       }
       this.History_Chosen_Options = {
@@ -878,20 +906,20 @@ export default {
       this.Page_Index = 1
     },
     // 检索用的方法
-    Search_Do(){
+    Search_Do() {
 
       this.Page_Index_Change_Check()
 
       let Param = {}
-      if(this.Search_Extra == 'ImgSearch'){
+      if (this.Search_Extra == 'ImgSearch') {
         Param.pic = this.Img_Cut
-      }else{
+      } else {
         let Striped_Content = LRStrip(this.Search_Content)
-        if(Striped_Content == ""){
+        if (Striped_Content == "") {
           this.$message.info("请输入内容")
           this.Search_Content = ""
           return
-        }else{
+        } else {
           this.Search_Content = Striped_Content
         }
       }
@@ -900,16 +928,16 @@ export default {
       this.Waiting_Text = "正在搜索试题..."
 
       let Difficulty = []
-      if(this.Chosen_Options.Difficulty != '自定义'){
+      if (this.Chosen_Options.Difficulty != '自定义') {
         Difficulty = [variable.Difficulty[this.Chosen_Options.Difficulty].min, variable.Difficulty[this.Chosen_Options.Difficulty].max]
-      }else{
+      } else {
         Difficulty = [this.Difficulty_Value[0], this.Difficulty_Value[1]]
       }
 
       let Database = []
-      for(let i = 0; i < this.Chosen_Options.Database.length; i++){
-        for(let j = 0; j < this.All_Options.Database.length; j++){
-          if(this.Chosen_Options.Database[i] == this.All_Options.Database[j].nick){
+      for (let i = 0; i < this.Chosen_Options.Database.length; i++) {
+        for (let j = 0; j < this.All_Options.Database.length; j++) {
+          if (this.Chosen_Options.Database[i] == this.All_Options.Database[j].nick) {
             Database.push(this.All_Options.Database[j].name)
           }
         }
@@ -929,26 +957,30 @@ export default {
 
       Param.data = Data
 
-      commonAjax(this.backendIP+'/api/search', Param)
-          .then((data)=>{
-            if(data.results.length > 0){
+      commonAjax(this.backendIP + '/api/search', Param)
+          .then((data) => {
+            if (data.results.length > 0) {
               this.Total_Count = data.totalLength
               this.Page_Length = 5
               this.Question_List = [];
-              for(let i = 0; i < data.results.length; i++){
+              for (let i = 0; i < data.results.length; i++) {
                 this.Question_List.push(data.results[i])
               }
-              setTimeout(()=>{
-                document.getElementById('Question_0').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+              setTimeout(() => {
+                document.getElementById('Question_0').scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                  inline: "nearest"
+                })
               }, 100)
-            }else{
+            } else {
               this.$message.warning("没有找到符合的结果，请尝试修改选项。")
               this.Jump_To('Filter');
             }
-          }).catch(()=>{
+          }).catch(() => {
         this.$message.error("服务器好像开小差了，请稍后再试。")
         this.Jump_To('Filter');
-      }).finally(()=>{
+      }).finally(() => {
         this.Waiting_Param = false
         this.Waiting_Text = ""
       })
@@ -956,46 +988,46 @@ export default {
       return
     },
     // 滚动到顶部
-    Page_Index_Change(){
+    Page_Index_Change() {
       this.Search_Do()
     },
     // 检测是否需要把Page_Index页码调整为1
-    Page_Index_Change_Check(){
+    Page_Index_Change_Check() {
       let Flag = false
       let Keys = ["Period", "Subject", "Type", "Difficulty", "Database", "Semantic"]
-      for(let i = 0; i < Keys.length; i++){
+      for (let i = 0; i < Keys.length; i++) {
         let key = Keys[i]
-        if(JSON.stringify(this.History_Chosen_Options[key]) != JSON.stringify(this.Chosen_Options[key])){
+        if (JSON.stringify(this.History_Chosen_Options[key]) != JSON.stringify(this.Chosen_Options[key])) {
           Flag = true
           this.History_Chosen_Options[key] = JSON.parse(JSON.stringify(this.Chosen_Options[key]))
         }
       }
-      if(JSON.stringify(this.History_Chosen_Options.Img) != JSON.stringify(this.Img_Cut)){
+      if (JSON.stringify(this.History_Chosen_Options.Img) != JSON.stringify(this.Img_Cut)) {
         Flag = true;
         this.History_Chosen_Options.Img = JSON.parse(JSON.stringify(this.Img_Cut))
       }
-      if(JSON.stringify(this.History_Chosen_Options.Search_Content) != JSON.stringify(this.Search_Content)){
+      if (JSON.stringify(this.History_Chosen_Options.Search_Content) != JSON.stringify(this.Search_Content)) {
         Flag = true;
         this.History_Chosen_Options.Search_Content = JSON.parse(JSON.stringify(this.Search_Content))
       }
-      if(Flag){
+      if (Flag) {
         this.Page_Index = 1
       }
     },
     // 跳转到某个组件的位置
-    Jump_To(Part){
+    Jump_To(Part) {
       document.getElementById(Part).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     },
-    Check_Question_Analysis(Info){
+    Check_Question_Analysis(Info) {
       this.Waiting_Param = true;
       this.Waiting_Text = "正在检索分析报告..."
       let Ques_Info = JSON.parse(Info)
-      commonAjax(this.backendIP+'/api/questionAnalyse',
+      commonAjax(this.backendIP + '/api/questionAnalyse',
           {
             databasename: Ques_Info.Database == '公开题库' ? 'public' : Ques_Info.Database,
             ID: Ques_Info.ID
           }
-      ).then((data)=>{
+      ).then((data) => {
         this.Question_Analyse_Info = data.que_dic
         this.Question_Analyse_Dialog = true
         this.Refresh = !this.Refresh
@@ -1004,18 +1036,18 @@ export default {
       })
     },
     // 更新富文本输入框内容
-    Update_Complex_Input(val){
+    Update_Complex_Input(val) {
       this.Complex_Input_Dialog = false;
       this.Search_Content = val
     },
-    Get_Card_Background(){
+    Get_Card_Background() {
       let Style = {
         'background': 'white',
         'width': "55%",
       }
       return Style
     },
-    Get_Card_Margin(Question_Index){
+    Get_Card_Margin(Question_Index) {
       let Style_Row_0 = '-128px auto 64px auto'
       let Style_Row_1 = '-128px auto 128px auto'
       let Style = {
@@ -1025,7 +1057,7 @@ export default {
       return Style
     },
     // 展开后回到此题的初始位置
-    Expand_Aim(val){
+    Expand_Aim(val) {
       let Aim = JSON.parse(val).Aim;
       this.Jump_To(Aim)
     }
@@ -1036,18 +1068,31 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.sq-container{
-  display:flex;
+.EX_SearchInput {
+  width: 55vw;
+  padding-left: 7vw;
+}
+
+.EX_result {
+  padding-right: 41.5vw;
+  margin-left: -5.1vw;
+  font-family: Source Han Sans CN;
+  font-weight: 600;
+  margin-bottom: -5vh;
+}
+
+.sq-container {
+  display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
 }
 
-.sq-container-left{
-  flex-grow:3;
+.sq-container-left {
+  flex-grow: 3;
   max-width: 24%;
 }
 
-.Filter_Line{
+.Filter_Line {
   display: flex;
   flex-direction: column;
   margin: 24px 0;
@@ -1055,7 +1100,7 @@ export default {
 
 }
 
-.Filter_Label{
+.Filter_Label {
   width: 90px;
   font-size: 18px;
   font-weight: bold;
@@ -1064,34 +1109,47 @@ export default {
   text-align: left;
 }
 
-.Unchosen_Option{
+.Unchosen_Option {
   color: #333;
   border: 1px solid #ccc;
   box-sizing: border-box;
 }
 
-.Unchosen_Option:hover{
+.Unchosen_Option:hover {
   color: rgba($color: #409EFF, $alpha: 0.6);
   // border: 1px solid rgba($color: #409EFF, $alpha: 0.6);
   box-sizing: border-box;
 }
 
-.Chosen_Option{
+.Chosen_Option {
   color: #409EFF;
   border: 1px solid #409EFF;
   box-sizing: border-box;
 }
 
-.Search_Input ::v-deep .el-input__inner{
+.Search_Input {
+  font-size: 16px;
+  line-height: 46px;
+  height: 46px;
+  background: #FFFFFF;
+  border: 1px solid #D4D4D4;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
   border-radius: 10px;
-  border: 1px solid rgba($color: #000, $alpha: 0.14);
-  box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.06);
-  display:flex;
-  width:30vw;
+  -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
+  margin-left: -2vw;
+  border-radius: 50px;
+  margin-top: 5vh;
+}
+
+.Search_Input ::v-deep .el-input__inner {
+  border: 0;
+  border-radius: 0px;
+  background: transparent;
 
 }
 
-.Jump_Bar{
+.Jump_Bar {
   position: absolute;
   right: 45px;
   bottom: 20px;
@@ -1099,7 +1157,7 @@ export default {
   min-height: 40px;
 }
 
-.Jump_Item{
+.Jump_Item {
   width: 36px;
   height: 36px;
   line-height: 36px;
@@ -1113,38 +1171,17 @@ export default {
   font-size: 16px;
 }
 
-.Background_Round{
-  position: absolute;
-  overflow: hidden;
-  width: 1200px;
-  height: 1200px;
-  margin-left: calc((100% - 1344px - 16px)/2);
-  left: 505px;
-  top: -51%;
-  border-radius: 50%;
-  background: linear-gradient( 180deg, rgba(#D9E9FE, 0%), rgba(#C8E0FF, 100%));
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.06);
-  z-index: -1;
-}
 
-.Background_Round_Position{
-  position: absolute;
-  right: 0px;
-  width: 850px;
-  background: transparent;
-  overflow: hidden;
-  z-index: -1;
-}
-
-.Question_Card{
+.Question_Card {
   box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
   min-width: 60vw;
   margin: 0 auto;
   border-radius: 10px;
   opacity: 0.95;
+  margin-left: 5vw;
 }
 
-.ImgSearchArea{
+.ImgSearchArea {
   width: 100%;
   height: 452px;
   border: 1px solid #ccc;
@@ -1154,7 +1191,7 @@ export default {
   box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
 }
 
-.Filter_Item_Shadow{
+.Filter_Item_Shadow {
   border-radius: 10px;
   display: flex;
   flex-direction: row;
@@ -1162,12 +1199,13 @@ export default {
   justify-content: flex-start;
 }
 
-.Padding_Width{
+.Padding_Width {
   padding-right: 88px;
   padding-left: 88px;
+  margin-top: -11.3vh;
 }
 
-.Main_Background{
+.Main_Background {
   // background: url('./NewSearchQues_Background.jpg');
   // background-size: 100% auto;
   // background-position: right;
@@ -1177,19 +1215,19 @@ export default {
   margin-top: -70px;
   padding-bottom: 64px;
   margin-bottom: 64px;
-  flex-grow:1;
+  flex-grow: 1;
 }
 
-.Search_Button{
+.Search_Button {
   background: #539DD9;
   transition-duration: 300ms;
 }
 
-.Search_Button:hover{
+.Search_Button:hover {
   background: #4484B8;
 }
 
-.Top_Nav{
+.Top_Nav {
   position: relative;
   top: -90px;
   width: 10px;
@@ -1197,4 +1235,3 @@ export default {
   background: transparent;
 }
 </style>
-
