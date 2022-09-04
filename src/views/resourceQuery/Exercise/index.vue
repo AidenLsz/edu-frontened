@@ -5,7 +5,28 @@
         :element-loading-text="Waiting_Text"
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.28)">
-        <div id="Top_Nav" class="Top_Nav">
+      <div class="EX_SearchInput">
+        <el-input
+            prefix-icon="el-icon-search"
+            v-model="Search_Content"
+            @keyup.enter.native="Search_Do()"
+            placeholder="请输入想要检索的资源关键字"
+            style="width: 55.1vw;"
+            class="Search_Input"
+            suffix-icon="el-icon-camera"
+        >
+        </el-input>
+        <el-tabs v-model="activeName"
+                 @tab-click="handleClick"
+                 style="width: 23vw;position: relative;right: 1.9vw;">
+          <el-tab-pane label="知识点" name="first"></el-tab-pane>
+          <el-tab-pane label="试题" name="second"></el-tab-pane>
+          <el-tab-pane label="试卷" name="third"></el-tab-pane>
+          <el-tab-pane label="教材教辅" name="fourth"></el-tab-pane>
+        </el-tabs>
+        <div class="EX_result">最匹配结果</div>
+      </div>
+        <div id="Top_Nav" class="Top_Nav"></div>
         <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
         <div class="Jump_Bar">
             <el-row
@@ -142,8 +163,6 @@
       <div class="sq-container">
         <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
             <el-col>
-                <div class="Background_Round">
-                </div>
                 <!-- 功能区 -->
                 <el-row
                     class="Padding_Width"
@@ -231,16 +250,6 @@
                                     {{Semantic_Item}}
                                 </span>
                             </div>
-                        </el-row>
-                        <el-row type="flex" justify="start" class="Filter_Line">
-                            <span class="Filter_Label">检索框</span>
-                            <el-input
-                                v-model="Search_Content"
-                                :disabled="Search_Extra == 'ImgSearch'"
-                                @keyup.enter.native="Search_Do()"
-                                placeholder="请输入想要检索的试题文字内容"
-                                style="width: 630px;"
-                                class="Search_Input"></el-input>
                         </el-row>
                         <el-row type="flex" justify="start" class="Filter_Line" style="margin-top: 3vh">
                             <span class="Filter_Label"></span>
@@ -419,7 +428,7 @@
           </span>
         </el-dialog>
     </div>
-    </div>
+
 </template>
 
 <script>
@@ -579,6 +588,10 @@ export default {
 
   },
   methods: {
+    handleClick(){
+      if(this.activeName=="second"){
+        this.Search_Do();}
+    },
       To_Top(){
           document.getElementById("Top_Nav").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
       },
@@ -1035,6 +1048,17 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.EX_SearchInput{
+  width: 55vw;
+  padding-left: 7vw;
+}
+.EX_result{
+  padding-right: 41.5vw;
+  margin-left: -5.1vw;
+  font-family: Source Han Sans CN;
+  font-weight: 600;
+  margin-bottom: -5vh;
+}
 .sq-container{
   display:flex;
   flex-direction: row-reverse;
@@ -1080,13 +1104,24 @@ export default {
     border: 1px solid #409EFF;
     box-sizing: border-box;
 }
-
+.Search_Input{
+  font-size: 16px;
+  line-height: 46px;
+  height: 46px;
+  background: #FFFFFF;
+  border: 1px solid #D4D4D4;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
+  margin-left: -2vw;
+  border-radius: 50px;
+  margin-top:5vh;
+}
 .Search_Input ::v-deep .el-input__inner{
-    border-radius: 10px;
-    border: 1px solid rgba($color: #000, $alpha: 0.14);
-    box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.06);
-    display:flex;
-    width:30vw;
+  border: 0;
+  border-radius: 0px;
+  background: transparent;
 
 }
 
@@ -1112,28 +1147,6 @@ export default {
     font-size: 16px;
 }
 
-.Background_Round{
-    position: absolute;
-    overflow: hidden;
-    width: 1200px;
-    height: 1200px;
-    margin-left: calc((100% - 1344px - 16px)/2);
-    left: 505px;
-    top: -51%;
-    border-radius: 50%;
-    background: linear-gradient( 180deg, rgba(#D9E9FE, 0%), rgba(#C8E0FF, 100%));
-    box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.06);
-    z-index: -1;
-}
-
-.Background_Round_Position{
-    position: absolute;
-    right: 0px;
-    width: 850px;
-    background: transparent;
-    overflow: hidden;
-    z-index: -1;
-}
 
 .Question_Card{
     box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
@@ -1141,6 +1154,7 @@ export default {
     margin: 0 auto;
     border-radius: 10px;
     opacity: 0.95;
+  margin-left: 5vw;
 }
 
 .ImgSearchArea{
@@ -1164,6 +1178,7 @@ export default {
 .Padding_Width{
     padding-right: 88px;
     padding-left: 88px;
+    margin-top: -11.3vh;
 }
 
 .Main_Background{

@@ -37,19 +37,19 @@
     <el-row class="Detail_Line">
         <div
             class="Detail_Line_Left" 
-            style="line-height: 44px; padding: 0px 16px 0px 16px; border-radius: 10px; background: #F8F8F8">
+            style="line-height: 44px; padding: 0px 16px 0px 16px; border-radius: 10px;">
                 <div
                     align="left" 
                     class="Detail_Line_Infos">
-                    <span class="Extra_Info_Item"  style="background-color:#E9E8FA; margin-right:10px ">
+                    <div class="SP_period"  style="background-color:#E9E8FA; margin-right:10px ">
                         {{Paper_Info.Ques.period}}
-                    </span>
-                    <span class="Extra_Info_Item" style="background-color:#FAE8EC; margin-right:10px ">
+                    </div>
+                    <div class="SP_subject" style="background-color:#FAE8EC; margin-right:10px ">
                         {{Paper_Info.Ques.subject}}
-                    </span>
-                    <span class="Extra_Info_Item" style="background-color:#FAF3E8; margin-right:10px ">
+                    </div>
+                    <div class="SP_database" style="background-color:#FAF3E8; margin-right:10px ">
                         {{Paper_Info.Ques.database}}
-                    </span>
+                    </div>
 
 
                 </div>
@@ -122,6 +122,71 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.SP_period{
+  position: static;
+  left: 0px;
+  top: 0px;
+  width: 64px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #E9E8FA;
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.16);
+  font-family: SourceHanSansCN-Regular;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 22px;
+  letter-spacing: 0px;
+  color: #38377D;
+  z-index: 0;
+
+}
+
+.SP_subject{
+  position: static;
+  left: 80px;
+  top: 0px;
+  width: 64px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #FAE8EC;
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.16);
+  font-family: SourceHanSansCN-Regular;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 22px;
+  letter-spacing: 0px;
+  color: #7D3745;
+  z-index: 0
+}
+.SP_database{
+  position: static;
+  left: 160px;
+  top: 0px;
+  width: 96px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #FAF3E8;
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.16);
+  font-family: SourceHanSansCN-Regular;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 22px;
+  letter-spacing: 0px;
+  color: #7D6237;
+  z-index: 0
+}
 .Detail_Line{
     padding: 6px 16px 16px 16px;
 }

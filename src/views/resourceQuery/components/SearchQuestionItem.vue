@@ -33,37 +33,36 @@
         </el-col>
     </el-row>
     <el-row class="Detail_Line">
-        <div
-            class="Detail_Line_Left"
-            style="line-height: 44px; padding: 0px 16px 0px 16px; border-radius: 10px; background: #F8F8F8">
-                <div
-                    align="left"
-                    class="Detail_Line_Expand">
-                    <el-button type="text" @click="Expand = !Expand; Expand_Aim()" style="height: 44px;">
-                        <i :class=" Expand ? 'el-icon-d-arrow-right' : 'el-icon-d-arrow-left'" style="margin-right: 2px; transform: rotate(270deg);"></i>
-                        {{Expand ? '隐藏' : '查看'}}答案和解析
-                    </el-button>
-                </div>
                 <div
                     align="right"
                     class="Detail_Line_Infos">
-                    <span class="Extra_Info_Item" style="margin-right:10px">
-                        地区：{{Question.area}}
-                    </span>
-                    <span class="Extra_Info_Item" style="margin-right:10px">
-                        真题情况：{{Question.pastpaper}}
-                    </span>
-                    <span class="Extra_Info_Item" style="margin-right:10px">
-                        所属题库：{{Question.database}}
-                    </span>
-                    <span class="Extra_Info_Item" style="margin-right:10px">
-                        学科：{{Question.subject}}
-                    </span>
-                    <span class="Extra_Info_Item" style="margin-right:10px">
-                        学段：{{Question.period}}
-                    </span>
+              <div class="SQ_subject" style="margin-right:10px">
+                        {{Question.subject}}
+                    </div>
+                  <div class="SQ_period" style="margin-right:10px">
+                    {{Question.period}}
+
+                  </div>
+                    <div class="SQ_pastpaper" style="margin-right:10px">
+                        {{Question.pastpaper}}
+                    </div>
+                    <div class="SQ_database" style="margin-right:10px">
+                        {{Question.database}}
+                    </div>
+
+
                 </div>
-        </div>
+      <div
+          align="left"
+          class="Detail_Line_Expand">
+        <el-button :class=" Expand ? 'SQ_expanded' : 'SQ_unexpanded'"
+                   type="text"
+                   @click="Expand = !Expand; Expand_Aim();"
+                   style="height: 44px;">
+          <i :class="Expand?'el-icon-arrow-up':'el-icon-document'"></i>
+          {{Expand ? '收起' : '答案与解析'}}
+        </el-button>
+      </div>
         <div
             class="Detail_Line_Right">
             <el-button
@@ -141,13 +140,131 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.SQ_period{
+  position: static;
+  left: 76px;
+  top: 0px;
+  width: 64px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #E9E8FA;
+
+  /* 标签下阴影 */
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.16);
+  font-family: Sarasa-Gothic-SC-Regular;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 22px;
+  letter-spacing: 0px;
+  color: #38377D;
+  z-index: 0
+}
+
+.SQ_subject{
+  position: static;
+  left: 0px;
+  top: 0px;
+  width: 64px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #EDF4FA;
+
+  /* 标签下阴影 */
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.16);
+  z-index: 0;
+  font-family:Sarasa-Gothic-SC-Regular;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 22px;
+  letter-spacing: 0px;
+  color: #36587C;
+
+}
+
+.SQ_pastpaper{
+  position: static;
+  left: 152px;
+  top: 0px;
+  width: 100px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #FAE8EC;
+
+  /* 标签下阴影 */
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.16);
+  font-family: SourceHanSansCN-Regular;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 22px;
+  letter-spacing: 0px;
+  color: #7D3745;
+  z-index: 0
+}
+.SQ_database{
+  position: static;
+  left: 228px;
+  top: 0px;
+  width: 150px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #FAF3E8;
+
+  /* 标签下阴影 */
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.16);
+  font-family: Sarasa-Gothic-SC-Regular;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 22px;
+  letter-spacing: 0px;
+  color: #7D6237;
+  z-index: 0
+}
+.SQ_expanded{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #F0F8FC;
+  box-sizing: border-box;
+  border: 1px solid #2E7CA3;
+  z-index: 1
+}
+.SQ_unexpanded{
+  position: static;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background: #F0F8FC;
+  box-sizing: border-box;
+  border: 1px solid #2E7CA3;
+  z-index: 1
+}
+
 .Detail_Line{
     padding: 6px 16px 16px 16px;
+    display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
-.Detail_Line_Left{
-    display: inline-block;
-    width: calc(100% - 148px);
-}
+
 .Detail_Line_Right{
     width: 132px;
     height: 44px;
@@ -165,6 +282,7 @@ export default {
     display: flex;
     right: 0px;
     width: 100%;
+  align-items: center;
 }
 
 .Search_Button{

@@ -4,6 +4,27 @@
         v-loading="Waiting_Param"
         :element-loading-text="Waiting_Text"
         element-loading-spinner="el-icon-loading">
+      <div class="RS_SearchInput">
+        <el-input
+            prefix-icon="el-icon-search"
+            v-model="Search_Content"
+            @keyup.enter.native="Search_Do()"
+            placeholder="请输入想要检索的资源关键字"
+            style="width: 55.1vw;"
+            class="Search_Input"
+            suffix-icon="el-icon-camera"
+        >
+        </el-input>
+        <el-tabs v-model="activeName"
+                 @tab-click="handleClick"
+                 style="width: 23vw;position: relative;right: 1.9vw;">
+          <el-tab-pane label="知识点" name="first"></el-tab-pane>
+          <el-tab-pane label="试题" name="second"></el-tab-pane>
+          <el-tab-pane label="试卷" name="third"></el-tab-pane>
+          <el-tab-pane label="教材教辅" name="fourth"></el-tab-pane>
+        </el-tabs>
+        <div class="RS_result">最匹配结果</div>
+      </div>
         <div id="Filter" class="Top_Nav">
 
         </div>
@@ -37,9 +58,43 @@
 
                 <!-- 功能区 -->
                 <el-row class="Padding_Width">
-                    <el-col style="min-height: 320px; padding-left: 30px;">
+                    <el-col style="padding-left: 82vw;margin-top:-14.3vh;width:80%">
                         <!-- 不同功能 -->
                         <!-- 学段检索 -->
+                        <el-row type="flex" justify="start" class="Filter_Line">
+                        <span class="Filter_Label">学科</span>
+                        <div>
+                          <div class="Filter_Item_Shadow">
+                                <div
+                                    v-for="(Resource_Subject_Item, Resource_Subject_Item_Index) in All_Options.Resource_Subject_Part1" :key="'Filter_Resource_Subject_Part1_' + Resource_Subject_Item_Index"
+                                    :class="Focus_Filter('Resource_Subject_Part1', Resource_Subject_Item)"
+                                    :style="Filter_Item('Resource_Subject_Part1', Resource_Subject_Item_Index, Resource_Subject_Item)"
+                                    @click="Filter_Change('Resource_Subject_Part1', Resource_Subject_Item)">
+                                    {{Resource_Subject_Item}}
+                                </div>
+                            <div
+                                v-for="(Resource_Subject_Item, Resource_Subject_Item_Index) in All_Options.Resource_Subject_Part2" :key="'Filter_Resource_Subject_Part2_' + Resource_Subject_Item_Index"
+                                :class="Focus_Filter('Resource_Subject_Part2', Resource_Subject_Item)"
+                                :style="Filter_Item('Resource_Subject_Part2', Resource_Subject_Item_Index, Resource_Subject_Item)"
+                                @click="Filter_Change('Resource_Subject_Part2', Resource_Subject_Item)">
+                                    {{Resource_Subject_Item}}
+                                </div>
+                          </div>
+
+                        </div>
+                      </el-row>
+                      <el-row type="flex" justify="start" class="Filter_Line">
+                        <span class="Filter_Label">适用年级</span>
+                        <div class="Filter_Item_Shadow">
+                                <span
+                                    v-for="(Resource_Period_Item, Resource_Period_Item_Index) in All_Options.Resource_Period" :key="'Filter_Resource_Period_' + Resource_Period_Item_Index"
+                                    :class="Focus_Filter('Resource_Period', Resource_Period_Item)"
+                                    :style="Filter_Item('Resource_Period', Resource_Period_Item_Index, Resource_Period_Item)"
+                                    @click="Filter_Change('Resource_Period', Resource_Period_Item)">
+                                    {{Resource_Period_Item}}
+                                </span>
+                        </div>
+                      </el-row>
                         <el-row type="flex" justify="start" class="Filter_Line">
                             <span class="Filter_Label">资源类型</span>
                             <div class="Filter_Item_Shadow">
@@ -52,48 +107,15 @@
                                 </span>
                             </div>
                         </el-row>
-                        <el-row type="flex" justify="start" class="Filter_Line">
-                            <span class="Filter_Label">适用年级</span>
-                            <div class="Filter_Item_Shadow">
-                                <span
-                                    v-for="(Resource_Period_Item, Resource_Period_Item_Index) in All_Options.Resource_Period" :key="'Filter_Resource_Period_' + Resource_Period_Item_Index"
-                                    :class="Focus_Filter('Resource_Period', Resource_Period_Item)"
-                                    :style="Filter_Item('Resource_Period', Resource_Period_Item_Index, Resource_Period_Item)"
-                                    @click="Filter_Change('Resource_Period', Resource_Period_Item)">
-                                    {{Resource_Period_Item}}
-                                </span>
-                            </div>
-                        </el-row>
-                        <el-row type="flex" justify="start" class="Filter_Line">
-                            <span class="Filter_Label">学科分类</span>
-                            <div>
-                            <div class="Filter_Item_Shadow">
-                                <span
-                                    v-for="(Resource_Subject_Item, Resource_Subject_Item_Index) in All_Options.Resource_Subject_Part1" :key="'Filter_Resource_Subject_Part1_' + Resource_Subject_Item_Index"
-                                    :class="Focus_Filter('Resource_Subject_Part1', Resource_Subject_Item)"
-                                    :style="Filter_Item('Resource_Subject_Part1', Resource_Subject_Item_Index, Resource_Subject_Item)"
-                                    @click="Filter_Change('Resource_Subject_Part1', Resource_Subject_Item)">
-                                    {{Resource_Subject_Item}}
-                                </span>
-                            </div>
-                            <div class="Filter_Item_Shadow" style="margin-top: 26px;">
-                                <span
-                                    v-for="(Resource_Subject_Item, Resource_Subject_Item_Index) in All_Options.Resource_Subject_Part2" :key="'Filter_Resource_Subject_Part2_' + Resource_Subject_Item_Index"
-                                    :class="Focus_Filter('Resource_Subject_Part2', Resource_Subject_Item)"
-                                    :style="Filter_Item('Resource_Subject_Part2', Resource_Subject_Item_Index, Resource_Subject_Item)"
-                                    @click="Filter_Change('Resource_Subject_Part2', Resource_Subject_Item)">
-                                    {{Resource_Subject_Item}}
-                                </span>
-                            </div>
-                            </div>
-                        </el-row>
+
+
                         <el-row type="flex" justify="start" class="Filter_Line" style="margin-top: 36px;">
-                            <el-input
-                                v-model="Search_Content"
-                                @keyup.enter.native="Search_Do()"
-                                placeholder="请输入想要检索的资源关键字"
-                                style="width: 760px;"
-                                class="Search_Input"></el-input>
+                          <el-input
+                              v-model="Search_Content"
+                              @keyup.enter.native="Search_Do()"
+                              placeholder="请输入想要检索的资源关键字"
+                              style="width: 760px;"
+                              class="Search_Input"></el-input>
                             <!-- 开始检索的按钮 -->
                             <el-button
                                 type=""
@@ -120,10 +142,10 @@
                 type="flex"
                 justify="center"
                 class="Padding_Width"
-                style="width: 100%;"
+                style="width: 100%;padding-bottom: 5vh"
                 v-for="Resource_Info_Index in 10"
                 :key="'Resource_Info_' + Resource_Info_Index">
-                <div align="center" :style="Resource_Info_Index % 2 == 0 ? '' : 'background: #F4F7FC'" class="RS_card">
+                <div style="background-image:linear-gradient(to right,#FAFAFC,#F7F8FA)" class="RS_card">
                   <div class="Resource_Label">
                     {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].subject}}
                       {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].publisher}}
@@ -131,24 +153,32 @@
                       {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].name}}
                   </div>
                   <div class="RS_card_btm">
-                  <div class="Resource_Label" style="width: 100px" >
-                        {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].type}}
+                  <div class="RS_period" style="width: 100px" >
+                    {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].period}}
                   </div>
+                    <div class="RS_type" style="width: 100px" >
+                      {{Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1].type}}
+                    </div>
                     <div class="Resource_Label" style="width: 160px">
                         <el-button style="display: none" type="success" size="mini" @click="Resource_Preview(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">预览</el-button>
-                        <el-button type="primary" size="mini" @click="Resource_Download(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">下载</el-button>
+                        <el-button style="margin-left:25vw"
+                                   type="primary"
+                                   size="mini"
+                                   icon="el-icon-download"
+                                   @click="Resource_Download(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">
+                          下载</el-button>
                     </div>
                     </div>
                 </div>
             </el-row>
             <el-row
                 id="Page_Seg"
-                style="padding-top: 20px; padding-bottom: 20px; background: transparent">
+                style="padding-top: 20px; padding-right:24vw;padding-bottom: 20px; background: transparent">
                 <el-pagination
                     @current-change="Page_Index_Change"
                     :current-page.sync="Page_Index"
                     :page-size="Page_Length"
-                    layout="total, prev, pager, next"
+                    layout="prev, pager, next"
                     :total="Total_Count">
                 </el-pagination>
             </el-row>
@@ -240,6 +270,10 @@ export default {
 
   },
   methods: {
+    handleClick(){
+      if(this.activeName=="fourth"){
+        this.Search_Do();}
+    },
       To_Top(){
           document.getElementById("Filter").scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
       },
@@ -427,16 +461,77 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.RS_period{
+  position: static;
+  left: 80px;
+  top: 0px;
+  width: 80px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #FAE8EC;
+
+  /* 标签下阴影 */
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.16);
+  font-family: Sarasa-Gothic-SC-Regular;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 22px;
+  letter-spacing: 0px;
+  color: #7D3745;
+  z-index: 0;
+}
+.RS_type{
+  position: static;
+  left: 176px;
+  top: 0px;
+  width: 64px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #E8FAEF;
+  margin: 0px 40px;
+  /* 标签下阴影 */
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.16);
+  font-family: Sarasa-Gothic-SC-Regular;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 22px;
+  letter-spacing: 0px;
+  color: #377D53;
+  z-index: 0;
+
+}
+
+.RS_SearchInput{
+  width: 55vw;
+  padding-left: 7vw;
+}
+.RS_result{
+  padding-right: 41.5vw;
+  margin-left: -5.1vw;
+  font-family: Source Han Sans CN;
+  font-weight: 600;
+}
+
 .RS_card_btm{
   display: flex;
   flex-direction:row;
+  align-items: baseline;
 
 
 }
 .RS_card{
   display: flex;
   flex-direction: column;
-  width:23vw;
+  width: 55vw;
+  margin-left: -1vw;
 }
 .RS_container{
   display:flex;
@@ -448,6 +543,7 @@ export default {
   flex-direction: column;
   margin: 24px 0;
   min-width: 28vw;
+  margin-top: 2.5vh;
 }
 
 .Filter_Label{
@@ -476,11 +572,26 @@ export default {
     border: 1px solid #409EFF;
     box-sizing: border-box;
 }
+.Search_Input{
+  font-size: 16px;
+  line-height: 46px;
+  height: 46px;
+  background: #FFFFFF;
+  border: 1px solid #D4D4D4;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
+  margin-left: -2vw;
+  border-radius: 50px;
+  margin-top:5vh;
 
+
+}
 .Search_Input ::v-deep .el-input__inner{
-    border-radius: 10px;
-    border: 1px solid rgba($color: #000, $alpha: 0.14);
-    box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.06);
+  border: 0;
+  border-radius: 0px;
+  background: transparent;
 }
 
 .Jump_Bar{
@@ -537,8 +648,7 @@ export default {
 }
 
 .Padding_Width{
-    padding-right: 88px;
-    padding-left: 88px;
+    padding-left: 6vw;
 }
 
 .Label_Shadow{
@@ -547,10 +657,10 @@ export default {
 
 .Main_Background{
     width: 100%;
-    min-width: 1362px;
     overflow: hidden;
     margin-top: -70px;
     margin-bottom: 64px;
+    margin-left:-60vw;
 }
 
 .Top_Nav{

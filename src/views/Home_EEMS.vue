@@ -7,16 +7,16 @@
     <section class="slider-bg" >
       <div class="sys-name">
         <img src="@/assets/bdaa.png" alt="Logo"  />
-        <span class="text">
+        <div class="text">
           智慧考试管理系统
-        </span>
+        </div>
       </div>
     </section>
 
     <!-- about-area -->
     <section class="about-area">
       <el-row>
-        <el-col :span="4" :offset="5">
+        <el-col :div="4" :offset="5">
           <el-divider></el-divider>
         </el-col>
         <el-col :span="6">
