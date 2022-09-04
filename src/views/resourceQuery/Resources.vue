@@ -265,11 +265,26 @@ export default {
   },
   mounted(){
     this.To_Top();
+    this.init_search();
   },
   updated() {
 
   },
   methods: {
+
+    init_search(){
+      if(localStorage.getItem('Resource_Subject_Part1')!='')
+      {this.Filter_Change('Resource_Subject_Part1',localStorage.getItem('Resource_Subject_Part1'));}
+      if(localStorage.getItem('Resource_Subject_Part2')!='')
+      {this.Filter_Change('Resource_Subject_Part2',localStorage.getItem('Resource_Subject_Part2'));}
+      if(localStorage.getItem('Resource_Type')!=''){
+      this.Filter_Change('Resource_Type',localStorage.getItem('Resource_Type'));}
+      if(localStorage.getItem('Resource_period')!=''){
+      this.Filter_Change('Resource_Period',localStorage.getItem('Resource_period'));}
+      this.Search_Content=localStorage.getItem('Content');
+      this.Search_Do();
+     // localStorage.clear();
+    },
     handleClick(){
       if(this.activeName=="fourth"){
         this.Search_Do();}

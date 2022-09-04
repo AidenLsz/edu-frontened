@@ -302,7 +302,7 @@ export default {
       activeName:"presuc",
       content:"",
       // ku_name: "函数",
-      ku_name: "",
+      ku_name:"",
       ku_type: "kp2.0",
       fullEl: document.getElementById(this.activeName+'_container'),
       isFullscreen: false,
@@ -400,6 +400,8 @@ export default {
       this.History_Graph = JSON.parse(localStorage.getItem('KU_History_Graph'));
     }
     this.To_Top();
+    this.init_search();
+
   },
   beforeDestroy() {
     this.destroyFullScreen()
@@ -413,6 +415,15 @@ export default {
     }
   },
   methods: {
+    init_search(){
+      if(localStorage.getItem('Subject')!=''){
+      this.Change_Subject_List(localStorage.getItem('Subject'));}
+      if(localStorage.getItem('Period')!=''){
+      this.Change_Period_List(localStorage.getItem('Period'));}
+      this.ku_name=localStorage.getItem('Content');
+      this.Search_KU_Info(this.ku_name);
+      localStorage.clear();
+    },
     handleClick(){
       if(this.activeName=="first"){
         this.Search_KU_Info(this.ku_name);}
