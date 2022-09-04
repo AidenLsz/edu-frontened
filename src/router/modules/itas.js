@@ -3,6 +3,11 @@ const router=[
     path: '',
     component:()=>import("@/views/Home_ITAS"),
 },
+  {
+    path: "luna-search",
+    name: "itas/luna-search",
+    component:()=> import("@/views/resourceQuery/Index"),
+  },
 {
     path: "exercise",
     name: "itas/Exercise",
