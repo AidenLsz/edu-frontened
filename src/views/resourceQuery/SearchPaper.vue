@@ -378,10 +378,10 @@ export default {
         },
         // 选中的选项，用于显示样式的调整和检索的时候进行内容转换
         Chosen_Options: {
-            Period: ["高中"],
-            Subject: ["数学"],
-            Database: ['公共题库'],
-            searchMethod: ['试卷内容']
+            Period: [],
+            Subject: [],
+            Database: [],
+            searchMethod: []
         },
         // 换页时使用的变量
         Page_Index: 1,
@@ -461,26 +461,26 @@ export default {
     this.init_search();
     this.Get_User_UUID();
 
-    //   this.Init_File_Selector();
-    //   this.Search_Do();
-    //   this.To_Top();
+       this.Init_File_Selector();
+       this.Search_Do();
+       this.To_Top();
 
-    //   this.InitDatabaseList()
-    //   this.ImgInput = document.getElementById("ImgInput")
+       this.InitDatabaseList()
+       this.ImgInput = document.getElementById("ImgInput")
 
-    //   let ImgSearchArea = document.getElementById('ImgSearchArea');
-    //   ImgSearchArea.addEventListener('dragenter', this.onDragIn, true);
-    //   ImgSearchArea.addEventListener('dragleave', this.onDragOut, true);
-    //   ImgSearchArea.addEventListener('drop', this.onDrop, true);
-    //   window.addEventListener('paste', this.Paste_Function);
-    //   this.To_Top();
-    //   setTimeout(()=>{
-    //     if (sessionStorage.getItem("ITAS_Content")) {
-    //       this.Search_Content = sessionStorage.getItem("ITAS_Content");
-    //       sessionStorage.removeItem("ITAS_Content")
-    //       this.Search_Do()
-    //     }
-    //   }, 100);
+       let ImgSearchArea = document.getElementById('ImgSearchArea');
+       ImgSearchArea.addEventListener('dragenter', this.onDragIn, true);
+       ImgSearchArea.addEventListener('dragleave', this.onDragOut, true);
+       ImgSearchArea.addEventListener('drop', this.onDrop, true);
+       window.addEventListener('paste', this.Paste_Function);
+       this.To_Top();
+       setTimeout(()=>{
+         if (sessionStorage.getItem("ITAS_Content")) {
+           this.Search_Content = sessionStorage.getItem("ITAS_Content");
+           sessionStorage.removeItem("ITAS_Content")
+           this.Search_Do()
+         }
+      }, 100);
 
 
 
@@ -494,10 +494,17 @@ export default {
   methods: {
       init_search(){
         this.Search_Content=localStorage.getItem('Content');
-        this.Filter_Change('Subject', localStorage.getItem('Subject'));
-        this.Filter_Change('Period', localStorage.getItem('Period'));
-        this.Filter_Change('SearchMethod', localStorage.getItem('SearchMethod'));
-        this.Filter_Change('Database', localStorage.getItem('Database').nick);
+        let Chosen_Content=eval("("+localStorage.getItem('chosen_Content')+")");
+        console.log(Chosen_Content.Subject[0]);
+        console.log(Chosen_Content.Database[0]);
+        for(var i=0; i<Chosen_Content.Subject.length;i=i+1){
+        this.Filter_Change('Subject',Chosen_Content.Subject[i]);}
+        for( i=0; i<Chosen_Content.Period.length;i=i+1){
+        this.Filter_Change('Period', Chosen_Content.Period[i]);}
+        if(Chosen_Content.searchMethod.length!==0){
+        this.Filter_Change('searchMethod',Chosen_Content.searchMethod[0]);}
+        if(Chosen_Content.Database.length!==0){
+        this.Filter_Change('Database',Chosen_Content.Database[0]);}
         this.Search_Do();
         localStorage.clear();
       },

@@ -477,11 +477,11 @@ export default {
       },
       // 选中的选项，用于显示样式的调整和检索的时候进行内容转换
       Chosen_Options: {
-        Period: ["高中"],
-        Subject: ["数学"],
-        Type: ["单选题"],
+        Period: [],
+        Subject: [],
+        Type: [],
         Difficulty: "中等",
-        Database: ['公共题库'],
+        Database: [],
         Semantic: "精确匹配"
       },
       // 换页时使用的变量
@@ -608,13 +608,25 @@ export default {
   methods: {
     init_search(){
       this.Search_Content=localStorage.getItem('Content');
-      this.Filter_Change('Subject', localStorage.getItem('Subject'));
-      this.Filter_Change('Period', localStorage.getItem('Period'));
-      this.Filter_Change('Type', localStorage.getItem('Type'));
-      this.Filter_Change('Database', localStorage.getItem('Database').nick);
-      this.Filter_Change('Difficulty', localStorage.getItem('Difficulty'));
+      let Chosen_Content=eval("("+localStorage.getItem('chosen_Content')+")");
+
+      for(var i=0; i<Chosen_Content.Subject.length;i=i+1){
+        this.Filter_Change('Subject',Chosen_Content.Subject[i]);
+      }
+      for( i=0; i<Chosen_Content.Period.length;i=i+1){
+      this.Filter_Change('Period', Chosen_Content.Period[i]);}
+      if(Chosen_Content.Database.length!=0){
+      this.Filter_Change('Database',Chosen_Content.Database[0].nick);}
+      for( i=0; i<Chosen_Content.Type.length;i=i+1){
+      this.Filter_Change('Type',Chosen_Content.Type[i]);}
+      if(Chosen_Content.Difficulty!=null){
+      this.Filter_Change('Difficulty',Chosen_Content.Difficulty);}
+      if(Chosen_Content.Semantic!=null){
+      this.Filter_Change('Semantic',Chosen_Content.Semantic);}
       this.Search_Do();
       localStorage.clear();
+
+
     },
     handleClick() {
       if (this.activeName == "second") {

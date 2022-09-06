@@ -273,17 +273,24 @@ export default {
   methods: {
 
     init_search(){
-      if(localStorage.getItem('Resource_Subject_Part1')!='')
-      {this.Filter_Change('Resource_Subject_Part1',localStorage.getItem('Resource_Subject_Part1'));}
-      if(localStorage.getItem('Resource_Subject_Part2')!='')
-      {this.Filter_Change('Resource_Subject_Part2',localStorage.getItem('Resource_Subject_Part2'));}
-      if(localStorage.getItem('Resource_Type')!=''){
-      this.Filter_Change('Resource_Type',localStorage.getItem('Resource_Type'));}
-      if(localStorage.getItem('Resource_period')!=''){
-      this.Filter_Change('Resource_Period',localStorage.getItem('Resource_period'));}
       this.Search_Content=localStorage.getItem('Content');
+      let Chosen_Content=eval("("+localStorage.getItem('chosen_Content')+")");
+      console.log(Chosen_Content.Resource_Subject_Part1);
+      for(var i=0; i<Chosen_Content.Resource_Subject_Part1.length;i=i+1){
+
+        this.Filter_Change('Resource_Subject_Part1',Chosen_Content.Resource_Subject_Part1[i]);
+      }
+      for( i=0; i<Chosen_Content.Resource_Subject_Part2.length;i=i+1){
+        this.Filter_Change('Resource_Subject_Part2', Chosen_Content.Resource_Subject_Part2[i]);}
+
+      for( i=0; i<Chosen_Content.Resource_Type.length;i=i+1){
+        this.Filter_Change('Resource_Type',Chosen_Content.Resource_Type[i]);}
+      for( i=0; i<Chosen_Content.Resource_Period.length;i=i+1){
+        this.Filter_Change('Resource_Period',Chosen_Content.Resource_Period[i]);}
+
+
       this.Search_Do();
-     // localStorage.clear();
+      localStorage.clear();
     },
     handleClick(){
       if(this.activeName=="fourth"){
@@ -573,7 +580,7 @@ export default {
   flex-direction: column;
   margin: 24px 0;
   min-width: 28vw;
-  margin-top: 2.5vh;
+  margin-top: 3.5vh;
 }
 
 .Filter_Label{

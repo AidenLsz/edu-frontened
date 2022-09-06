@@ -416,11 +416,15 @@ export default {
   },
   methods: {
     init_search(){
-      if(localStorage.getItem('Subject')!=''){
-      this.Change_Subject_List(localStorage.getItem('Subject'));}
-      if(localStorage.getItem('Period')!=''){
-      this.Change_Period_List(localStorage.getItem('Period'));}
       this.ku_name=localStorage.getItem('Content');
+      let Chosen_Content=eval("("+localStorage.getItem('chosen_Content')+")");
+    //  console.log(Chosen_Content.Subject);
+      for(var i=0; i<Chosen_Content.Subject.length;i=i+1){
+        this.Change_Subject_List(Chosen_Content.Subject[i]);
+      }
+      for( i=0; i<Chosen_Content.Period.length;i=i+1){
+      this.Change_Period_List(Chosen_Content.Period[i]);}
+
       this.Search_KU_Info(this.ku_name);
       localStorage.clear();
     },
