@@ -452,30 +452,38 @@ export default {
   },
   mounted(){
 
+
     if(!this.$store.state.user.name || this.$store.state.user.name.length == 0){
       this.$message.error("您尚未登录，请登录后使用录入功能。")
       this.$router.push("/")
       return
     }
+    this.init_search();
     this.Get_User_UUID();
-    this.Init_File_Selector();
-    this.To_Top();
 
-    this.InitDatabaseList()
-    this.ImgInput = document.getElementById("ImgInput")
-    let ImgSearchArea = document.getElementById('ImgSearchArea');
-    ImgSearchArea.addEventListener('dragenter', this.onDragIn, true);
-    ImgSearchArea.addEventListener('dragleave', this.onDragOut, true);
-    ImgSearchArea.addEventListener('drop', this.onDrop, true);
-    window.addEventListener('paste', this.Paste_Function);
-    this.To_Top();
-    setTimeout(()=>{
-        if (sessionStorage.getItem("ITAS_Content")) {
-            this.Search_Content = sessionStorage.getItem("ITAS_Content");
-            sessionStorage.removeItem("ITAS_Content")
-            this.Search_Do()
-        }
-    }, 100)
+    //   this.Init_File_Selector();
+    //   this.Search_Do();
+    //   this.To_Top();
+
+    //   this.InitDatabaseList()
+    //   this.ImgInput = document.getElementById("ImgInput")
+
+    //   let ImgSearchArea = document.getElementById('ImgSearchArea');
+    //   ImgSearchArea.addEventListener('dragenter', this.onDragIn, true);
+    //   ImgSearchArea.addEventListener('dragleave', this.onDragOut, true);
+    //   ImgSearchArea.addEventListener('drop', this.onDrop, true);
+    //   window.addEventListener('paste', this.Paste_Function);
+    //   this.To_Top();
+    //   setTimeout(()=>{
+    //     if (sessionStorage.getItem("ITAS_Content")) {
+    //       this.Search_Content = sessionStorage.getItem("ITAS_Content");
+    //       sessionStorage.removeItem("ITAS_Content")
+    //       this.Search_Do()
+    //     }
+    //   }, 100);
+
+
+
   },
   watch:{
 
@@ -484,6 +492,15 @@ export default {
 
   },
   methods: {
+      init_search(){
+        this.Search_Content=localStorage.getItem('Content');
+        this.Filter_Change('Subject', localStorage.getItem('Subject'));
+        this.Filter_Change('Period', localStorage.getItem('Period'));
+        this.Filter_Change('SearchMethod', localStorage.getItem('SearchMethod'));
+        this.Filter_Change('Database', localStorage.getItem('Database').nick);
+        this.Search_Do();
+        localStorage.clear();
+      },
       handleClick(){
         if(this.activeName=="third"){
           this.Search_Do();}
