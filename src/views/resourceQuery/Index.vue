@@ -12,7 +12,7 @@
       <el-row type="flex" justify="center">
         <div class="Search_Area">
         <div class="Self_Input_Area_Left" align="left">
-          <img class="search-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAe9JREFUOI2llK9uG0EQh7/Z+8MiGRpWakBIQUGZwUUqcs93CywVlBTEzC8QkIeo1CrApIFRFenOjVxSqWaxlD5AQSMFHigIKfLppsBrdxM5btwMmpvZ/e43OzsrrLE8z18Cr4EEaLtwBUyB07Isv67bByD+R6/X2zPGHDvQJpuq6mA8Hv+8mzBLJ03TjjHmwsEqVT0yxjyL43gnjuMdEXmuqkdOaSIil2madtYqdMougBZwJiIHRVHcrJNmrW01TfNRRHLgRlVf+EpDAFdmCzgry7K/qVb3I5tlWSEiuYiMgP1Vya4BCVCJyMEmmG/GmLfALyCx1iarOItuoqof7ivzPqWq+s7tfeMDE4AgCIqHwjyV5869pbANEIbh9bbAKIqWzVje1b/X5jGmqqEPrADqun6yLWg+n+8CiMi1D5wCNE2T/4eyV86d+cBT5w+tta2HwtzaoVN4sgK6QZ8CbVUdbaFuxKIZs6Iopst46JIDEbkE+nmefxKRwabRc7C+U3fo51evTZqmnSAIPgMtVa1E5L0x5jwMwyuAuq6fNk2TqupQRNoe48d8Pt+fTCbVLSBAlmW7bjaTf1Q8E5FDVT0G9nyorFttrU3cOCUszjZ0V2MmIifLM+t2u+0oir750LXAbewO9PujgR70i6r+/gMy8ssS6oH9AwAAAABJRU5ErkJggg==">
+          <img class="search-icon" src="@/assets/search.svg">
         </div>
         <div class="Self_Input_Area_Middle" align="left">
           <input
@@ -24,7 +24,7 @@
         </div>
         <div class="Self_Input_Area_camera" align="left">
           <div class="camera-icon-container">
-            <img class="camera-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAABHNCSVQICAgIfAhkiAAAAexJREFUOI2tlD2LE0EYx3/P5TDZmG2yrUW6dBYzFqeckMLr7r6DheB1ovEg1hbhuAQ8bE7wW5zloaAnXuHuZ8gXWAhsYMISeCyciIbsxIh/GBiel//zOiME0Ol0GkmSfAL2Kkyu8zw/mEwm8yqOnVCAJEleB8gB9r1NJaRKYYzZE5EvAKr6MMuym230vwL0er3doiiGqnosIq01NuM0TV+uc7bWjoD+qlxVZyJyEcfxq1q73R6LyAsRubWG42ue54+n0+liXYB6vf652WweAHf+yPon14OyLJtijClEpKWq96vK3Ba+fd9UdSbWWgVI0zQ0j0MR6avqPS+6Ac6zLPtQ5bPkDW6RNxyKyCXQE5GWP49E5NJaO9zkHwxgjDkEBsBCVZ8752LnXAycAAtg4G0qsRtSikgfQFVPsix785tqZK0FOAOeAZWtClaw7Pl8Pn+/qnPOXfhr6CGGA4hUzv2vbTYN+TtAo9F4sqqIougYQFWDqx2cgaqORaQnImfW2ppz7p0nfwosN+g8xBGswO/5qU9kFEVREUVRAYy87DT0FjYGAEjTdKCqR6p6BcyAmapeqepRmqaDTf7BFq1UEsy0Cjs+K4wxwXXbBtbafX+dSdWX+58wrnW73Y9lWd4G7gLrvux/wQx4G8fx4Adr071MaxOQ/gAAAABJRU5ErkJggg==">
+            <img class="camera-icon" src="@/assets/camera2.svg">
           </div>
         </div>
           <div class="Self_Input_Area_Button" align="right">
@@ -42,7 +42,7 @@
           <div :class="{'focusType':leftColorDisplay == index}" @click="Type_Change(index);icon_show(index);" class="sourceButton">
             <img class="icon-check"
                  v-show="isShow[index]"
-                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAALCAYAAACgR9dcAAAABHNCSVQICAgIfAhkiAAAAGdJREFUKJGd0LENgDAMRFEKSjangC1Agh1IwQ5Mc/9o0hAFEePWet+Suy44tntJC3CFIbABlrT+gsBuu4/g5ReUNFeh7UPS2ABP28NjCaT8gCkE8+UBOMvAJ3wLNMNaIASLQAJSC7wB0qrRhSGbalQAAAAASUVORK5CYII=">
+                 src="@/assets/iconCheck.svg">
             <span>{{item.name}}</span>
           </div>
         </div>
@@ -52,14 +52,15 @@
                @mouseenter="hover_button"
                @mouseleave="hover_button"
                class="sourceButton">
-            <img v-show="!filter_choosen" style="height: 13px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAYAAADwikbvAAAABHNCSVQICAgIfAhkiAAAASNJREFUKJG10LFKQnEUx/Hv8X9HB4ceoMCh8cJ1SAj6N+ni0NAD+Ag9Sz1CbYJDS0IhkVDL1f9eY0FDgugdGtJfQzfQssyh33YO58M5HEuS5B4os34eI0lXZlYG7iR1VgkzqwE7QMe891GWZReS9oD9NE17P8EkSXaBrpldF4vFugHEcVxyzt0CG5Kq/X7/YQncBm6Al+l0Wg0hjAoAIYSRpEZ+1nkcx6V5mNdt4E1SI4QwAih8DuTbDoCyc67tvY8AvPeRc67Nx1MP568qzG9I07QnqQn4yWRyDDAej08AL6n59R8LOL/gFGhJquetGtDK+wv5hvNkK+pf8Z/yP9jMSpVKxa+NZ7PZGfAqqWtmm2vhwWBwORwOtyQdAc+SnpbNvQPTbX9bJ2hRdgAAAABJRU5ErkJggg==">
-            <img v-show="filter_choosen"  style="height: 13px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAYAAADwikbvAAAABHNCSVQICAgIfAhkiAAAALpJREFUKJG1kjEKwkAQRV8kB8gRFFJ4BIsUdl7C3trT6AWsPIEQSOsNUqZRFGwtBItn4QpBkhgFf7V/579hht1IrYAh3+sQAztgAezD+ZNmwATYocZqrt7VrItSs5DL1fh1mailelHTFnAc6qWavBfTtmKt+amteX2s4jVWWKvosxbq3KdWwa+Dn3eCtQbb8ISolbptyg1a+OsH3wn30t/gRJ3+Am+AG1DQ8e8b4SiKcmAELIEzcGzKPQArwafPCdW7/AAAAABJRU5ErkJggg==">
-            <span v-show="isHover" style="margin-left: 5px">筛选</span>
+            <img v-show="!filter_choosen" style="height: 13px" src="@/assets/filterUnchosen.svg">
+            <img v-show="filter_choosen" style="height: 13px" src="@/assets/filterChosen.svg">
+            <span v-show="isHover || filter_choosen" style="margin-left: 5px">筛选</span>
           </div>
         </div>
       </el-row>
-      <div class="Filter_main_container">
-        <div class="row_container" v-show="Question_isShow">
+      <div class="filter_border_container" v-show="Question_isShow || Textbooks_isShow ||  Paper_isShow ||Knowledge_isShow"></div>
+        <div class="Filter_main_container">
+          <div class="row_container" v-show="Question_isShow">
            <el-row type="flex" justify="start" class="Filter_Line">
           <span class="Filter_Label">学科</span>
           <div class="Filter_Item">
@@ -143,7 +144,7 @@
              </div>
            </el-row>
         </div>
-        <div class="row_container" v-show="Textbooks_isShow">
+          <div class="row_container" v-show="Textbooks_isShow">
           <el-row type="flex" justify="start" class="Filter_Line">
             <span class="Filter_Label">适用年级</span>
             <div class="Filter_Item">
@@ -194,7 +195,7 @@
             </div>
           </el-row>
         </div>
-        <div class="row_container" v-show="Paper_isShow">
+          <div class="row_container" v-show="Paper_isShow">
           <el-row type="flex" justify="start" class="Filter_Line">
             <span class="Filter_Label">学科</span>
             <div class="Filter_Item">
@@ -245,7 +246,7 @@
             </div>
           </el-row>
         </div>
-        <div class="row_container" v-show="Knowledge_isShow">
+          <div class="row_container" v-show="Knowledge_isShow">
           <el-row type="flex" justify="start" class="Filter_Line">
             <span class="Filter_Label">学科</span>
             <div class="Filter_Item">
@@ -272,7 +273,7 @@
             </div>
           </el-row>
         </div>
-      </div>
+        </div>
     </section>
   </div>
 </template>
@@ -431,8 +432,8 @@ export default {
     Filter_Item() {
       return {
         "width": "65px",
-        "height": "30px",
-        "line-height": "30px",
+        "height": "40px",
+        "line-height": "40px",
         "text-align": "center",
         "display": "inline-block",
         "box-sizing": "border-box",
@@ -845,6 +846,18 @@ export default {
   color: #FFFFFF;
   z-index: 4
 }
+.filter_border_container{
+  width:1280px;
+  height:2px;
+  display: inline-block;
+  margin-top: 40px;
+  //border-width: 2px 0px 0px 0px;
+  //border-style: dashed;
+  //border-color: rgba(221, 221, 221, 0.99);
+  background-image: linear-gradient(to right, rgba(221, 221, 221, 0.98) 0%, rgba(221, 221, 221, 0.99) 60%, transparent 50%);
+  background-size: 25px 20px;
+  background-repeat: repeat-x;
+}
 .Filter_main_container{
   width:640px;
   display: inline-block;
@@ -883,20 +896,19 @@ export default {
 }
 .Unchosen_Option{
   color: #333;
-  border: 1px solid #ccc;
+  //border: 1px solid #ccc;
   box-sizing: border-box;
   background: #F2F3F7;
 }
 
 .Unchosen_Option:hover{
   color: rgba($color: #409EFF, $alpha: 0.6);
-// border: 1px solid rgba($color: #409EFF, $alpha: 0.6);
   box-sizing: border-box;
 }
 
 .Chosen_Option{
   color: #FFFFFF;
-  border: 1px solid #409EFF;
+  //border: 1px solid #409EFF;
   box-sizing: border-box;
   background: #608DE8;
 }
