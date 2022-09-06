@@ -582,7 +582,7 @@ export default {
         } else {
           this.Search_Content = Striped_Content
         }
-        localStorage.setItem('ku', JSON.stringify(this.Knowledge_Chosen_Options));
+        localStorage.setItem('chosen_Content', JSON.stringify(this.Knowledge_Chosen_Options));
         setTimeout(() => {
           this.$router.push({
             path: '/ku'
@@ -597,7 +597,7 @@ export default {
         } else {
           this.Search_Content = Striped_Content
         }
-        localStorage.setItem('exercise', JSON.stringify(this.Question_Chosen_Options));
+        localStorage.setItem('chosen_Content', JSON.stringify(this.Question_Chosen_Options));
         setTimeout(() => {
           this.$router.push({
             path: '/exercise'
@@ -612,7 +612,7 @@ export default {
         } else {
           this.Search_Content = Striped_Content
         }
-        localStorage.setItem('searchPaper', JSON.stringify(this.Paper_Chosen_Options));
+        localStorage.setItem('chosen_Content', JSON.stringify(this.Paper_Chosen_Options));
         setTimeout(() => {
           this.$router.push({
             path: '/searchPaper'
@@ -627,7 +627,7 @@ export default {
         } else {
           this.Search_Content = Striped_Content
         }
-        localStorage.setItem('resources', JSON.stringify(this.Textbooks_Chosen_Options));
+        localStorage.setItem('chosen_Content', JSON.stringify(this.Textbooks_Chosen_Options));
         setTimeout(() => {
           this.$router.push({
             path: '/resources'
