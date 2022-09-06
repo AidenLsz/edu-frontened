@@ -1,6 +1,6 @@
 <template>
   <div class="Normal_Home_Page">
-    <section class="main_area" >
+    <section id="mainArea" >
       <el-row type="flex" justify="center" >
         <div style="display: inline-block">
           <img src="@/assets/LUNA-HOMEPAGE-LOGO.png" class="Home-Page-Icon" draggable="false" >
@@ -18,7 +18,7 @@
           <input
               v-model="Search_Content"
               class="Self_Input"
-              placeholder=""
+              placeholder="三角函数"
               @keyup.enter="Router_Trans()"
               >
         </div>
@@ -48,7 +48,7 @@
         </div>
         <div class="choose-card">
           <div :class="{'advance_filter':!filter_choosen,'advance_filter_choosen':filter_choosen}"
-               @click="filter_change()"
+               @click="filter_change();page_move_up()"
                @mouseenter="hover_button"
                @mouseleave="hover_button"
                class="sourceButton">
@@ -285,18 +285,18 @@ export default {
   data() {
     return {
       source_options: [
-        {name:"知识点",label:"知识点"},
-        {name:"试题",label:"试题"},
-        {name:"试卷",label:"试卷"},
-        {name:"教辅教材",label:"教辅教材"},
+        {name: "知识点", label: "知识点"},
+        {name: "试题", label: "试题"},
+        {name: "试卷", label: "试卷"},
+        {name: "教辅教材", label: "教辅教材"},
       ],
       // 试题选项
-      Question_Options:{
+      Question_Options: {
         Period: ["小学", "初中", "高中", "大学", "成人"],
         Subject: ["语文", "数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理"],
         Type: ["单选题", "多选题", "判断题", "填空题", "计算题", "简答题", "其他"],
         Difficulty: ['容易', '较易', '中等', '较难', '困难', "自定义"],
-        Database: [{name:'public',nick:'公共题库'}],
+        Database: [{name: 'public', nick: '公共题库'}],
         Semantic: ["精确匹配", "语义匹配"]
       },
       // 试题选中的选项，用于显示样式的调整和检索的时候进行内容转换
@@ -309,7 +309,7 @@ export default {
         Semantic: "精确匹配"
       },
       // 教辅教材选项
-      Textbooks_Options:{
+      Textbooks_Options: {
         Resource_Type: ["教材", "课件", "教案", "学案", "其他"],
         Resource_Period: ["一年级", "二年级", "三年级", "四年级", "五年级", "六年级", "七年级", "八年级", "九年级"],
         Resource_Subject_Part1: ["语文", "数学", "英语", "物理", "化学", "生物", "地理", "历史", "政治", "书法"],
@@ -322,10 +322,10 @@ export default {
         Resource_Subject_Part2: []
       },
       // 试卷筛选的选项
-      Paper_Options:{
+      Paper_Options: {
         Period: ["小学", "初中", "高中", "大学", "成人"],
         Subject: ["语文", "数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理"],
-        Database: [{name:'public',nick:'公共题库'}],
+        Database: [{name: 'public', nick: '公共题库'}],
         searchMethod: ['试卷内容', '试卷题目']
       },
       Paper_Chosen_Options: {
@@ -334,24 +334,25 @@ export default {
         Database: ['公共题库'],
         searchMethod: ['试卷内容']
       },
-      Knowledge_Options:{
+      Knowledge_Options: {
         Subject: ["语文", "数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理"],
         Period: ["小学", "初中", "高中", "大学", "成人"],
       },
-      Knowledge_Chosen_Options:{
-        Subject:[],
-        Period:[],
+      Knowledge_Chosen_Options: {
+        Subject: [],
+        Period: [],
       },
-      Search_Content:"三角函数",
-      Difficulty_Value:[0,1],
+      Search_Content: "",
+      Difficulty_Value: [0, 1],
       leftColorDisplay: 0, // 0为默认选择第一个，-1为不选择
-      isShow: [true,false,false,false],
-      filter_choosen:false,
-      isHover:false,
-      Knowledge_isShow:false,
-      Question_isShow:false,
-      Paper_isShow:false,
-      Textbooks_isShow:false,
+      isShow: [true, false, false, false],
+      filter_choosen: false,
+      isHover: false,
+      Knowledge_isShow: false,
+      Question_isShow: false,
+      Paper_isShow: false,
+      Textbooks_isShow: false,
+      moveUpFlag: false,
     }
   },
   methods: {
@@ -368,60 +369,60 @@ export default {
           this.isShow[i] = false
         }
       }
-      if(this.filter_choosen ==true && this.isShow[0]==true){
+      if (this.filter_choosen == true && this.isShow[0] == true) {
         this.Knowledge_isShow = true;
-        this.Question_isShow=false;
-        this.Paper_isShow=false;
-        this.Textbooks_isShow=false;
-      }else if(this.filter_choosen==true && this.isShow[1]==true){
+        this.Question_isShow = false;
+        this.Paper_isShow = false;
+        this.Textbooks_isShow = false;
+      } else if (this.filter_choosen == true && this.isShow[1] == true) {
         this.Knowledge_isShow = false;
-        this.Question_isShow=true;
-        this.Paper_isShow=false;
-        this.Textbooks_isShow=false;
-      }else if(this.filter_choosen==true && this.isShow[2]==true){
+        this.Question_isShow = true;
+        this.Paper_isShow = false;
+        this.Textbooks_isShow = false;
+      } else if (this.filter_choosen == true && this.isShow[2] == true) {
         this.Knowledge_isShow = false;
-        this.Question_isShow=false;
-        this.Paper_isShow=true;
-        this.Textbooks_isShow=false;
-      }else if(this.filter_choosen==true && this.isShow[3]==true){
+        this.Question_isShow = false;
+        this.Paper_isShow = true;
+        this.Textbooks_isShow = false;
+      } else if (this.filter_choosen == true && this.isShow[3] == true) {
         this.Knowledge_isShow = false;
-        this.Question_isShow=false;
-        this.Paper_isShow=false;
-        this.Textbooks_isShow=true;
-      }else{
+        this.Question_isShow = false;
+        this.Paper_isShow = false;
+        this.Textbooks_isShow = true;
+      } else {
         this.Knowledge_isShow = false;
-        this.Question_isShow=false;
-        this.Paper_isShow=false;
-        this.Textbooks_isShow=false;
+        this.Question_isShow = false;
+        this.Paper_isShow = false;
+        this.Textbooks_isShow = false;
       }
     },
     filter_change() {
       this.filter_choosen = !this.filter_choosen;
-      if(this.filter_choosen ==true && this.isShow[0]==true){
+      if (this.filter_choosen == true && this.isShow[0] == true) {
         this.Knowledge_isShow = true;
-        this.Question_isShow=false;
-        this.Paper_isShow=false;
-        this.Textbooks_isShow=false;
-      }else if(this.filter_choosen==true && this.isShow[1]==true){
+        this.Question_isShow = false;
+        this.Paper_isShow = false;
+        this.Textbooks_isShow = false;
+      } else if (this.filter_choosen == true && this.isShow[1] == true) {
         this.Knowledge_isShow = false;
-        this.Question_isShow=true;
-        this.Paper_isShow=false;
-        this.Textbooks_isShow=false;
-      }else if(this.filter_choosen==true && this.isShow[2]==true){
+        this.Question_isShow = true;
+        this.Paper_isShow = false;
+        this.Textbooks_isShow = false;
+      } else if (this.filter_choosen == true && this.isShow[2] == true) {
         this.Knowledge_isShow = false;
-        this.Question_isShow=false;
-        this.Paper_isShow=true;
-        this.Textbooks_isShow=false;
-      }else if(this.filter_choosen==true && this.isShow[3]==true){
+        this.Question_isShow = false;
+        this.Paper_isShow = true;
+        this.Textbooks_isShow = false;
+      } else if (this.filter_choosen == true && this.isShow[3] == true) {
         this.Knowledge_isShow = false;
-        this.Question_isShow=false;
-        this.Paper_isShow=false;
-        this.Textbooks_isShow=true;
-      }else{
+        this.Question_isShow = false;
+        this.Paper_isShow = false;
+        this.Textbooks_isShow = true;
+      } else {
         this.Knowledge_isShow = false;
-        this.Question_isShow=false;
-        this.Paper_isShow=false;
-        this.Textbooks_isShow=false;
+        this.Question_isShow = false;
+        this.Paper_isShow = false;
+        this.Textbooks_isShow = false;
       }
     },
     hover_button() {
@@ -571,82 +572,74 @@ export default {
         }
       }
     },
-    Router_Trans(){
-      if(this.isShow[0] == true){
+    Router_Trans() {
+      if (this.isShow[0] == true) {
         let Striped_Content = LRStrip(this.Search_Content)
-        if(Striped_Content == ""){
+        if (Striped_Content == "") {
           this.$message.info("请输入检索内容")
           this.Search_Content = ""
           return
-        }else{
+        } else {
           this.Search_Content = Striped_Content
         }
-        localStorage.setItem('Content',this.Search_Content);
-        localStorage.setItem('Subject',this.Knowledge_Chosen_Options.Subject);
-        localStorage.setItem('Period',this.Knowledge_Chosen_Options.Period);
-          setTimeout(()=>{
+        localStorage.setItem('chosen_Content', JSON.stringify(this.Knowledge_Chosen_Options));
+        setTimeout(() => {
           this.$router.push({
-            path:'/ku'
+            path: '/ku'
           });
         }, 100)
-      }else if(this.isShow[1] == true){
+      } else if (this.isShow[1] == true) {
         let Striped_Content = LRStrip(this.Search_Content)
-        if(Striped_Content == ""){
+        if (Striped_Content == "") {
           this.$message.info("请输入检索内容")
           this.Search_Content = ""
           return
-        }else{
+        } else {
           this.Search_Content = Striped_Content
         }
-        localStorage.setItem('Content',this.Search_Content);
-        localStorage.setItem('Subject',this.Question_Chosen_Options.Subject);
-        localStorage.setItem('Period',this.Question_Chosen_Options.Period);
-        localStorage.setItem('Type',this.Question_Chosen_Options.Type);
-        localStorage.setItem('Database',this.Question_Chosen_Options.Database);
-        localStorage.setItem('Difficulty',this.Question_Chosen_Options.Difficulty);
-        setTimeout(()=>{
+        localStorage.setItem('chosen_Content', JSON.stringify(this.Question_Chosen_Options));
+        setTimeout(() => {
           this.$router.push({
-            path:'/exercise'
+            path: '/exercise'
           });
         }, 100)
-      }else if(this.isShow[2] == true){
+      } else if (this.isShow[2] == true) {
         let Striped_Content = LRStrip(this.Search_Content)
-        if(Striped_Content == ""){
+        if (Striped_Content == "") {
           this.$message.info("请输入检索内容")
           this.Search_Content = ""
           return
-        }else{
+        } else {
           this.Search_Content = Striped_Content
         }
-        localStorage.setItem('Content',this.Search_Content);
-        localStorage.setItem('Subject',this.Paper_Chosen_Options.Subject);
-        localStorage.setItem('Period',this.Paper_Chosen_Options.Period);
-        localStorage.setItem('SearchMethod',this.Paper_Chosen_Options.searchMethod);
-        localStorage.setItem('Database',this.Paper_Chosen_Options.Database);
-        setTimeout(()=>{
+        localStorage.setItem('chosen_Content', JSON.stringify(this.Paper_Chosen_Options));
+        setTimeout(() => {
           this.$router.push({
-            path:'/searchPaper'
+            path: '/searchPaper'
           });
         }, 100)
-      }else if(this.isShow[3] == true){
+      } else if (this.isShow[3] == true) {
         let Striped_Content = LRStrip(this.Search_Content)
-        if(Striped_Content == ""){
+        if (Striped_Content == "") {
           this.$message.info("请输入检索内容")
           this.Search_Content = ""
           return
-        }else{
+        } else {
           this.Search_Content = Striped_Content
         }
-        localStorage.setItem('Content',this.Search_Content);
-        localStorage.setItem('Resource_period',this.Textbooks_Chosen_Options.Resource_Period);
-        localStorage.setItem('Resource_Type',this.Textbooks_Chosen_Options.Resource_Type);
-        localStorage.setItem('Resource_Subject_Part1',this.Textbooks_Chosen_Options.Resource_Subject_Part1);
-        localStorage.setItem('Resource_Subject_Part2',this.Textbooks_Chosen_Options.Resource_Subject_Part2);
-        setTimeout(()=>{
+        localStorage.setItem('chosen_Content', JSON.stringify(this.Textbooks_Chosen_Options));
+        setTimeout(() => {
           this.$router.push({
-            path:'/resources'
+            path: '/resources'
           });
         }, 100)
+      }
+    },
+    page_move_up() {
+      if (this.filter_choosen) {
+        document.getElementById("mainArea").style.marginTop = '100px'
+      } else {
+        document.getElementById("mainArea").style.marginTop = '180px'
       }
     }
   }
@@ -658,14 +651,14 @@ export default {
     /*height: 100%;*/
     /*width: 100%;*/
 }
-.main_area {
+#mainArea{
   min-width: 768px;
   height: 900px;
-  padding-top: 100px;
-  left: 80px;
+  margin-top: 180px;
   text-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.12);
+  transition: margin-top .5s;
 }
-.main_area::before {
+.mainArea:before {
   content: "";
   position: absolute;
   left: 0;
