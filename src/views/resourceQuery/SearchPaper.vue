@@ -495,8 +495,6 @@ export default {
       init_search(){
         this.Search_Content=localStorage.getItem('Content');
         let Chosen_Content=eval("("+localStorage.getItem('chosen_Content')+")");
-        console.log(Chosen_Content.Subject[0]);
-        console.log(Chosen_Content.Database[0]);
         for(var i=0; i<Chosen_Content.Subject.length;i=i+1){
         this.Filter_Change('Subject',Chosen_Content.Subject[i]);}
         for( i=0; i<Chosen_Content.Period.length;i=i+1){
@@ -571,7 +569,7 @@ export default {
                 "text-align": "center",
                 "display": "inline-block",
                 "box-sizing": "border-box",
-                "background": "white",
+
                 "cursor": "pointer",
                 "border-top-left-radius":"10px",
                 "border-bottom-left-radius":"10px",
@@ -579,7 +577,7 @@ export default {
                 "border-bottom-right-radius": "10px",
                 "margin-right":"10px",
                 "margin-top":"10px",
-                "background-color":"#EDEFF2"
+
             }
         },
         // 样式筛选器，对比这个属性的这一项是否在Chosen_Options内，来对应不同的显示
@@ -1030,9 +1028,16 @@ export default {
 }
 
 .Unchosen_Option{
-    color: #333;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
+  background-color:#F2F3F7;
+  border-radius: 10px;
+  box-sizing: border-box;
+  font-family: Sarasa-Gothic-SC-Regular;
+  font-weight: normal;
+  line-height: 30px;
+  letter-spacing: 0.03em;
+  color: #4A5160;
+  z-index: 0
+
 }
 
 .Unchosen_Option:hover{
@@ -1042,9 +1047,15 @@ export default {
 }
 
 .Chosen_Option{
-    color: #409EFF;
-    border: 1px solid #409EFF;
+    background-color: #608DE8;
+    border-radius: 10px;
     box-sizing: border-box;
+  font-family: Sarasa-Gothic-SC-Regular;
+  font-weight: normal;
+  line-height: 30px;
+  letter-spacing: 0.03em;
+  color: #FFFFFF;
+  z-index: 0
 }
 
 .Search_Input ::v-deep .el-input__inner{

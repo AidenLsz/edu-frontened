@@ -1242,12 +1242,14 @@ export default {
 }
 
 .SearchArea{
-  width: 100%
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  width: 115%
 }
 
 .SearchButton{
   display: block;
-  margin-left: 12px;
   width: 120px;
   height: 46px;
   line-height: 46px;
@@ -1269,46 +1271,49 @@ export default {
   display: inline-block;
   margin-right: 12px;
   margin-bottom: 12px;
-  width: 80px;
-  height: 46px;
-  line-height: 46px;
-  color: black;
+  width: 65px;
+  height: 42px;
+  line-height: 42px;
+  color: #4A5160;
   cursor: pointer;
   /* capsule */
   background: #F2F3F7;
-  border: 1px solid #D4D4D4;
   box-sizing: border-box;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
   border-radius: 10px;
   transition-duration: 200ms;
+  font-family: Sarasa-Gothic-SC-Regular;
+  font-size: 16px;
+  font-weight: normal;
 }
 
 .Unchosen_Filter:hover{
-  border: 1px solid #B3B3B3;
-  color: #295D99;
-  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.12);
+  color: rgba($color: #409EFF, $alpha: 0.6);
+  // border: 1px solid rgba($color: #409EFF, $alpha: 0.6);
+  box-sizing: border-box;
 }
 
 .Chosen_Filter{
   display: inline-block;
   margin-right: 12px;
-  width: 80px;
-  height: 46px;
-  line-height: 46px;
+  width: 65px;
+  height: 42px;
+  line-height: 42px;
   margin-bottom: 12px;
   color: white;
   cursor: pointer;
   /* capsule */
-  background: linear-gradient(90deg, #65A1E6 0%, #3E89E0 100%);
+  background: #608DE8;
   box-sizing: border-box;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
   border-radius: 10px;
   transition-duration: 200ms;
+  font-family: Sarasa-Gothic-SC-Regular;
+  font-size: 16px;
+  font-weight: normal;
 }
 
-.Chosen_Filter:hover{
-  background: linear-gradient(90deg, #3777BF 0%, #1863BA 100%);
-}
+
 
 .Relation_Title{
   font-family: Noto Sans SC;

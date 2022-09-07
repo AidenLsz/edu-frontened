@@ -18,7 +18,7 @@
       </el-input>
       <el-tabs v-model="activeName"
                @tab-click="handleClick"
-               style="width: 23vw;position: relative;right: 1.9vw;">
+               style="width: 23vw;position: relative;right: 1.9vw;margin-left: -0.12vw">
         <el-tab-pane label="知识点" name="first"></el-tab-pane>
         <el-tab-pane label="试题" name="second"></el-tab-pane>
         <el-tab-pane label="试卷" name="third"></el-tab-pane>
@@ -238,6 +238,7 @@
                                     v-for="(Database_Item, Database_Item_Index) in All_Options.Database"
                                     :key="'Filter_Database_' + Database_Item_Index"
                                     :class="Focus_Filter('Database', Database_Item.nick)"
+                                    class="Filter_Wider"
                                     :style="Filter_Item('Database', Database_Item_Index, Database_Item.nick)"
                                     @click="Filter_Change('Database', Database_Item.nick)">
                                     {{ Database_Item.nick }}
@@ -269,7 +270,7 @@
                 </el-button>
                 <!-- 打开输入助手的按钮 -->
                 <el-button
-                    style="margin-right: 16px; border-radius: 10px;"
+                    style="margin-right: 16px; border-radius: 10px;margin-left: 0px"
                     @click="Complex_Input_Dialog = true">
                   <span style="margin-right: 4px">&Sigma;</span>输入助手
                 </el-button>
@@ -367,7 +368,7 @@
       </el-row>
       <div class="sq-container-left">
         <el-row>
-          <el-col style="margin-top: 35%">
+          <el-col style="margin-top: 36.8%">
             <div
                 v-for="(Question, Question_Index) in Question_List"
                 :style="Get_Card_Background(Question_Index)"
@@ -686,21 +687,20 @@ export default {
     // 控制筛选项的样式显示
     // 参数分别是筛选项所属的属性，筛选项对应的索引值
     Filter_Item(Part) {
-      let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '105px' : '70px'
-      return {
-        "width": WIDTH,
-        "height": "40px",
-        "line-height": "40px",
+        let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '98px': '65px'
+     return{
+       "width":WIDTH,
+        "height": "42px",
+        "line-height": "42px",
         "text-align": "center",
         "display": "inline-block",
         "box-sizing": "border-box",
-        "background": "white",
         "cursor": "pointer",
         "border-top-left-radius": "10px",
         "border-bottom-left-radius": "10px",
         "border-top-right-radius": "10px",
         "border-bottom-right-radius": "10px",
-        "margin-right": "10px",
+        "margin-right": "12.5px",
         "margin-top": "10px",
       }
     },
@@ -1107,6 +1107,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+
+
 .EX_SearchInput {
   width: 55vw;
   padding-left: 7vw;
@@ -1134,7 +1136,7 @@ export default {
 .Filter_Line {
   display: flex;
   flex-direction: column;
-  margin: 24px 0;
+  margin: 21.8px 0;
   min-width: 28vw;
 
 }
@@ -1149,9 +1151,17 @@ export default {
 }
 
 .Unchosen_Option {
-  color: #333;
-  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #F2F3F7;
   box-sizing: border-box;
+  font-family: Sarasa-Gothic-SC-Regular;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 30px;
+  letter-spacing: 0.03em;
+  color: #4A5160;
+  z-index: 0
+
 }
 
 .Unchosen_Option:hover {
@@ -1161,9 +1171,16 @@ export default {
 }
 
 .Chosen_Option {
-  color: #409EFF;
-  border: 1px solid #409EFF;
+  border-radius: 10px;
+  background-color: #608DE8;
   box-sizing: border-box;
+  font-family: Sarasa-Gothic-SC-Regular;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 30px;
+  letter-spacing: 0.03em;
+  color: #FFFFFF;
+  z-index: 0
 }
 
 .Search_Input {
@@ -1176,9 +1193,9 @@ export default {
   box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
   border-radius: 10px;
   -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
-  margin-left: -2vw;
+  margin-left: -2.1vw;
   border-radius: 50px;
-  margin-top: 5vh;
+  margin-top: 4.95vh;
 }
 
 .Search_Input ::v-deep .el-input__inner {
@@ -1213,7 +1230,7 @@ export default {
 
 .Question_Card {
   box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
-  min-width: 60vw;
+  min-width: 55vw;
   margin: 0 auto;
   border-radius: 10px;
   opacity: 0.95;
@@ -1241,8 +1258,8 @@ export default {
 
 .Padding_Width {
   padding-right: 88px;
-  padding-left: 88px;
-  margin-top: -11.3vh;
+  padding-left: 69px;
+  margin-top: -9.45vh;
   display: flex;
   flex-direction: column;
 }

@@ -328,7 +328,6 @@ export default {
             "text-align": "center",
             "display": "inline-block",
             "box-sizing": "border-box",
-            "background": "white",
             "cursor": "pointer",
             "border-top-left-radius":"10px",
             "border-bottom-left-radius":"10px",
@@ -336,7 +335,6 @@ export default {
             "border-bottom-right-radius": "10px",
             "margin-right":"10px",
             "margin-top":"10px",
-            "background-color":"#EDEFF2"
           }
         },
         // 样式筛选器，对比这个属性的这一项是否在Chosen_Options内，来对应不同的显示
@@ -593,9 +591,16 @@ export default {
 }
 
 .Unchosen_Option{
-    color: #333;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
+  border-radius: 10px;
+  background: #F2F3F7;
+  box-sizing: border-box;
+  font-family: Sarasa-Gothic-SC-Regular;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 30px;
+  letter-spacing: 0.03em;
+  color: #4A5160;
+  z-index: 0
 }
 
 .Unchosen_Option:hover{
@@ -605,9 +610,16 @@ export default {
 }
 
 .Chosen_Option{
-    color: #409EFF;
-    border: 1px solid #409EFF;
-    box-sizing: border-box;
+  border-radius: 10px;
+  background: #608DE8;
+  box-sizing: border-box;
+  font-family: Sarasa-Gothic-SC-Regular;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 30px;
+  letter-spacing: 0.03em;
+  color: #4A5160;
+  z-index: 0
 }
 .Search_Input{
   font-size: 16px;
