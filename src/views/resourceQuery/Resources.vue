@@ -10,20 +10,20 @@
             v-model="Search_Content"
             @keyup.enter.native="Search_Do()"
             placeholder="请输入想要检索的资源关键字"
-            style="width: 55.1vw;"
+            style="width: 55vw;"
             class="Search_Input"
             suffix-icon="el-icon-camera"
         >
         </el-input>
         <el-tabs v-model="activeName"
                  @tab-click="handleClick"
-                 style="width: 23vw;position: relative;right: 1.9vw;">
+                 style="width: 23vw;position: relative;right: 2.05vw;">
           <el-tab-pane label="知识点" name="first"></el-tab-pane>
           <el-tab-pane label="试题" name="second"></el-tab-pane>
           <el-tab-pane label="试卷" name="third"></el-tab-pane>
           <el-tab-pane label="教材教辅" name="fourth"></el-tab-pane>
         </el-tabs>
-        <div class="RS_result">最匹配结果</div>
+        <div class="RS_result">搜索结果</div>
       </div>
         <div id="Filter" class="Top_Nav">
 
@@ -58,7 +58,7 @@
 
                 <!-- 功能区 -->
                 <el-row class="Padding_Width">
-                    <el-col style="padding-left: 82vw;margin-top:-14.3vh;width:80%">
+                    <el-col style="padding-left: 59.4vw;margin-top:-14.3vh;width:80%">
                         <!-- 不同功能 -->
                         <!-- 学段检索 -->
                         <el-row type="flex" justify="start" class="Filter_Line">
@@ -110,12 +110,6 @@
 
 
                         <el-row type="flex" justify="start" class="Filter_Line" style="margin-top: 36px;">
-                          <el-input
-                              v-model="Search_Content"
-                              @keyup.enter.native="Search_Do()"
-                              placeholder="请输入想要检索的资源关键字"
-                              style="width: 760px;"
-                              class="Search_Input"></el-input>
                             <!-- 开始检索的按钮 -->
                             <el-button
                                 type=""
@@ -161,7 +155,12 @@
                     </div>
                     <div class="Resource_Label" style="width: 160px">
                         <el-button style="display: none" type="success" size="mini" @click="Resource_Preview(Resource_Info_List[(Page_Index - 1) * 10 + Resource_Info_Index - 1])">预览</el-button>
-                        <el-button style="margin-left:25vw"
+                        <el-button style="margin-left:23vw;height: 7vh;width:7vw;background: linear-gradient(90deg, #7299E7 0%, #727EE8 100%);font-family: AlibabaPuHuiTi_2_55_Regular;
+font-size: 16px;
+font-weight: normal;
+line-height: 22px;
+letter-spacing: 0px;
+color: #FFFFFF;"
                                    type="primary"
                                    size="mini"
                                    icon="el-icon-download"
@@ -264,7 +263,7 @@ export default {
     }
   },
   mounted(){
-    this.To_Top();
+  //  this.To_Top();
     this.init_search();
   },
   updated() {
@@ -320,21 +319,21 @@ export default {
         // 控制筛选项的样式显示
         // 参数分别是筛选项所属的属性，筛选项对应的索引值
         Filter_Item(){
-            let WIDTH = '80px'
+            let WIDTH = '65px'
           return {
-            "width": WIDTH,
-            "height": "40px",
-            "line-height": "40px",
+            "width":WIDTH,
+            "height": "42px",
+            "line-height": "42px",
             "text-align": "center",
             "display": "inline-block",
             "box-sizing": "border-box",
             "cursor": "pointer",
-            "border-top-left-radius":"10px",
-            "border-bottom-left-radius":"10px",
+            "border-top-left-radius": "10px",
+            "border-bottom-left-radius": "10px",
             "border-top-right-radius": "10px",
             "border-bottom-right-radius": "10px",
-            "margin-right":"10px",
-            "margin-top":"10px",
+            "margin-right": "12px",
+            "margin-top": "12px",
           }
         },
         // 样式筛选器，对比这个属性的这一项是否在Chosen_Options内，来对应不同的显示
@@ -508,6 +507,7 @@ export default {
   padding: 8px 16px;
   border-radius: 6px;
   background: #FAE8EC;
+  margin-left: 2vw;
 
   /* 标签下阴影 */
   box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.16);
@@ -549,7 +549,7 @@ export default {
   padding-left: 7vw;
 }
 .RS_result{
-  padding-right: 41.5vw;
+  padding-right: 42.7vw;
   margin-left: -5.1vw;
   font-family: Source Han Sans CN;
   font-weight: 600;
@@ -578,7 +578,7 @@ export default {
   flex-direction: column;
   margin: 24px 0;
   min-width: 28vw;
-  margin-top: 3.5vh;
+  margin-top: 3vh;
 }
 
 .Filter_Label{
@@ -611,14 +611,16 @@ export default {
 
 .Chosen_Option{
   border-radius: 10px;
-  background: #608DE8;
+  border-radius: 10px;
+  background-color: #608DE8;
   box-sizing: border-box;
+  transition-duration: 200ms;
   font-family: Sarasa-Gothic-SC-Regular;
-  font-size: 16px;
   font-weight: normal;
+  font-size: 16px;
   line-height: 30px;
   letter-spacing: 0.03em;
-  color: #4A5160;
+  color: #FFFFFF;
   z-index: 0
 }
 .Search_Input{
@@ -631,9 +633,9 @@ export default {
   box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
   border-radius: 10px;
   -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
-  margin-left: -2vw;
+  margin-left: -2.08vw;
   border-radius: 50px;
-  margin-top:5vh;
+  margin-top:4.9vh;
 
 
 }

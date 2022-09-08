@@ -60,10 +60,10 @@
     </el-row>-->
     <instruction ref="instruction"/>
     <!-- 学科行 -->
-    <el-row type="flex" justify="start" style="margin-bottom: 18px; font-size: 18px;">
+    <el-row type="flex" justify="start" style="margin-top:-0.2vh;margin-bottom:1vh;font-size: 18px;">
       <label>学科</label>
     </el-row>
-    <div class="SearchArea" align="left" style="margin-bottom: 20px;">
+    <div class="SearchArea" align="left" >
       <div
         v-for="(Subject, Subject_Index) in Subject_List_All"
         :key="'Subject_' + Subject_Index"
@@ -75,7 +75,7 @@
     </div>
 
     <!-- 学段行 -->
-    <el-row type="flex" justify="start" style="margin-bottom: 12px; font-size: 18px;">
+    <el-row type="flex" justify="start" style="margin-top: 5vh; font-size: 18px;">
       <label>学段</label>
     </el-row>
     <div class="SearchArea" align="left" style="margin-bottom: 20px;">
@@ -967,7 +967,7 @@ export default {
 
 .KU_result{
   padding-right: 49vw;
-  margin-left: -4.3vw;
+  margin-left: -4.4vw;
   font-family: Source Han Sans CN;
   font-weight: 600;
 }
@@ -1268,23 +1268,30 @@ export default {
 }
 
 .Unchosen_Filter{
-  display: inline-block;
-  margin-right: 12px;
-  margin-bottom: 12px;
-  width: 65px;
+  width:65px;
   height: 42px;
-  line-height: 42px;
-  color: #4A5160;
-  cursor: pointer;
-  /* capsule */
-  background: #F2F3F7;
+
+  text-align: center;
+  display: inline-block;
   box-sizing: border-box;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  margin-right: 12px;
+  margin-top: 12px;
   border-radius: 10px;
-  transition-duration: 200ms;
+  background: #F2F3F7;
   font-family: Sarasa-Gothic-SC-Regular;
   font-size: 16px;
   font-weight: normal;
+  line-height: 42px;
+  letter-spacing: 0.03em;
+  color: #4A5160;
+  z-index: 0
+
+
 }
 
 .Unchosen_Filter:hover{
@@ -1294,23 +1301,29 @@ export default {
 }
 
 .Chosen_Filter{
-  display: inline-block;
-  margin-right: 12px;
-  width: 65px;
+  width:65px;
   height: 42px;
   line-height: 42px;
-  margin-bottom: 12px;
-  color: white;
-  cursor: pointer;
-  /* capsule */
-  background: #608DE8;
+  text-align: center;
+  display: inline-block;
   box-sizing: border-box;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  margin-right: 12px;
+  margin-top: 12px;
   border-radius: 10px;
+  background-color: #608DE8;
   transition-duration: 200ms;
   font-family: Sarasa-Gothic-SC-Regular;
-  font-size: 16px;
   font-weight: normal;
+  font-size: 16px;
+  line-height: 42px;
+  letter-spacing: 0.03em;
+  color: #FFFFFF;
+  z-index: 0
 }
 
 

@@ -72,9 +72,10 @@
             size="medium"
             type="primary"
             class="Search_Button"
-            style="height: 44px; border-radius: 10px; width: 132px"
-            @click="Check_Analyse(Question.id, Question.database)">
-          查看分析报告
+            style="height: 44px; border-radius: 10px; width: 130px"
+            @click="Check_Analyse(Question.id, Question.database)"
+            icon="el-icon-s-marketing">
+          分析报告
         </el-button>
       </div>
     </el-row>
@@ -285,6 +286,7 @@ export default {
 .Detail_Line_Expand {
   display: inline-block;
   width: 130px;
+  margin-right: 10px;
 }
 
 .Detail_Line_Infos {

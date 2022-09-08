@@ -68,8 +68,9 @@
                 size="medium"
                 type="primary"
                 class="Search_Button"
-                style="height: 44px; border-radius: 10px; width: 132px" @click="Paper_Analyse(Paper_Info.id)">
-                查看分析报告
+                style="height: 44px; border-radius: 10px; width: 132px" @click="Paper_Analyse(Paper_Info.id)"
+                icon="el-icon-s-marketing">
+                分析报告
             </el-button>
         </div>
     </el-row>

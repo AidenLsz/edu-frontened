@@ -126,7 +126,7 @@
                 ref="instruction"
             />
       <div class="sp-container" style="padding-right: 3vw;padding-left: 5vw">
-        <el-row type="flex" justify="center" style="padding-top: 90px" class="Main_Background">
+        <el-row type="flex" justify="center" style="padding-top: 113px" class="Main_Background">
           <el-col>
          <!--   <div class="Background_Round">
 
@@ -283,23 +283,22 @@
               :disabled="Search_Extra == 'ImgSearch'"
               @keyup.enter.native="Search_Do()"
               placeholder="请输入想要检索的试题文字内容"
-              style="width: 55vw"
               class="Search_Input"
               prefix-icon="el-icon-search"
               suffix-icon="el-icon-camera">
           </el-input>
           <el-tabs v-model="activeName"
                    @tab-click="handleClick"
-                   style="width:23vw;padding-left:0.4vw">
+                   style="width:23vw;padding-left:-0.3vw;margin-left: -0.03vw">
             <el-tab-pane label="知识点" name="first"></el-tab-pane>
             <el-tab-pane label="试题" name="second"></el-tab-pane>
             <el-tab-pane label="试卷" name="third"></el-tab-pane>
             <el-tab-pane label="教材教辅" name="fourth"></el-tab-pane>
           </el-tabs>
-          <span style="margin-left: -40vw;
+          <span style="margin-left: -39.97vw;
           font-family:”Source Han Sans CN“;
           font-weight: 600">搜索结果</span>
-          <el-col style="margin-top: 38%">
+          <el-col style="margin-top: 42%">
             <div
                 v-for="(Paper_Info, Paper_Info_Index) in Paper_Info_List"
                 :style="Get_Card_Background()"
@@ -463,7 +462,7 @@ export default {
 
        this.Init_File_Selector();
        this.Search_Do();
-       this.To_Top();
+ //      this.To_Top();
 
        this.InitDatabaseList()
        this.ImgInput = document.getElementById("ImgInput")
@@ -473,7 +472,7 @@ export default {
        ImgSearchArea.addEventListener('dragleave', this.onDragOut, true);
        ImgSearchArea.addEventListener('drop', this.onDrop, true);
        window.addEventListener('paste', this.Paste_Function);
-       this.To_Top();
+     //  this.To_Top();
        setTimeout(()=>{
          if (sessionStorage.getItem("ITAS_Content")) {
            this.Search_Content = sessionStorage.getItem("ITAS_Content");
@@ -561,22 +560,21 @@ export default {
         // 控制筛选项的样式显示
         // 参数分别是筛选项所属的属性，筛选项对应的索引值
         Filter_Item(Part){
-            let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '105px': '70px'
+            let WIDTH = ['Database', 'Semantic','searchMethod'].indexOf(Part) != -1 ? '98px': '65px'
             return {
-                "width": WIDTH,
-                "height": "40px",
-                "line-height": "40px",
-                "text-align": "center",
-                "display": "inline-block",
-                "box-sizing": "border-box",
-
-                "cursor": "pointer",
-                "border-top-left-radius":"10px",
-                "border-bottom-left-radius":"10px",
-                "border-top-right-radius": "10px",
-                "border-bottom-right-radius": "10px",
-                "margin-right":"10px",
-                "margin-top":"10px",
+              "width":WIDTH,
+              "height": "42px",
+              "line-height": "42px",
+              "text-align": "center",
+              "display": "inline-block",
+              "box-sizing": "border-box",
+              "cursor": "pointer",
+              "border-top-left-radius": "10px",
+              "border-bottom-left-radius": "10px",
+              "border-top-right-radius": "10px",
+              "border-bottom-right-radius": "10px",
+              "margin-right": "12px",
+              "margin-top": "12px",
 
             }
         },
@@ -840,9 +838,9 @@ export default {
                     }
                     this.Total_Count = data.totalLength;
                     console.log(this.Paper_Info_List)
-                    setTimeout(()=>{
-                        document.getElementById('Question_0').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
-                    }, 100)
+                 //   setTimeout(()=>{
+                   //     document.getElementById('Question_0').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+                  //  }, 100)
                 }else{
                     this.$message.warning("没有找到符合的结果，请尝试修改选项。")
                     this.Jump_To('Filter');
@@ -1001,6 +999,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.Search_Input ::v-deep .el-input__inner {
+  border: 0;
+  border-radius: 0px;
+  background: transparent;
+
+}
 .sp-left_container{
   flex-grow:3;
   max-width: 24%;
@@ -1015,7 +1019,7 @@ export default {
     flex-direction: column;
     margin: 24px 0;
     min-width: 28vw;
-    margin-top:0.5vh;
+    margin-top:2.05vh;
 }
 
 .Filter_Label{
@@ -1028,10 +1032,11 @@ export default {
 }
 
 .Unchosen_Option{
-  background-color:#F2F3F7;
   border-radius: 10px;
+  background: #F2F3F7;
   box-sizing: border-box;
   font-family: Sarasa-Gothic-SC-Regular;
+  font-size: 16px;
   font-weight: normal;
   line-height: 30px;
   letter-spacing: 0.03em;
@@ -1047,25 +1052,34 @@ export default {
 }
 
 .Chosen_Option{
-    background-color: #608DE8;
-    border-radius: 10px;
-    box-sizing: border-box;
+  border-radius: 10px;
+  background-color: #608DE8;
+  box-sizing: border-box;
+  transition-duration: 200ms;
   font-family: Sarasa-Gothic-SC-Regular;
   font-weight: normal;
+  font-size: 16px;
   line-height: 30px;
   letter-spacing: 0.03em;
   color: #FFFFFF;
   z-index: 0
 }
 
-.Search_Input ::v-deep .el-input__inner{
-    border-radius: 50px;
-    border: 1px solid rgba($color: #000, $alpha: 0.14);
-    box-shadow: 0px 4px 12px rgba($color: #000, $alpha: 0.06);
-    display:flex;
-    width:55vw;
-    padding-left: 3vw;
-    background-color: transparent;
+.Search_Input{
+  font-size: 16px;
+  line-height: 46px;
+  height: 46px;
+  background: #FFFFFF;
+  border: 1px solid #D4D4D4;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
+  margin-left: -0.08vw;
+  padding-right: 0.3vw;
+  border-radius: 50px;
+  width:55vw;
+  margin-top: 3.4vh;
 }
 
 .Jump_Bar{
@@ -1144,6 +1158,7 @@ export default {
     padding-right: 88px;
     padding-left: 88px;
     padding-top: 6.5vh;
+    margin-left: 1.5vw;
 }
 
 .Main_Background{

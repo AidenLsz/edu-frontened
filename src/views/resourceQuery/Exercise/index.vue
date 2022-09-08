@@ -11,7 +11,7 @@
           v-model="Search_Content"
           @keyup.enter.native="Search_Do()"
           placeholder="请输入想要检索的资源关键字"
-          style="width: 55.1vw;"
+          style="width: 55vw;"
           class="Search_Input"
           suffix-icon="el-icon-camera"
       >
@@ -24,7 +24,7 @@
         <el-tab-pane label="试卷" name="third"></el-tab-pane>
         <el-tab-pane label="教材教辅" name="fourth"></el-tab-pane>
       </el-tabs>
-      <div class="EX_result">最匹配结果</div>
+      <div class="EX_result">搜索结果</div>
     </div>
     <div id="Top_Nav" class="Top_Nav"></div>
     <!-- 我们写一个完全固定定死的右下角的变栏来跳转 -->
@@ -700,8 +700,8 @@ export default {
         "border-bottom-left-radius": "10px",
         "border-top-right-radius": "10px",
         "border-bottom-right-radius": "10px",
-        "margin-right": "12.5px",
-        "margin-top": "10px",
+        "margin-right": "12px",
+        "margin-top": "12px",
       }
     },
     // 样式筛选器，对比这个属性的这一项是否在Chosen_Options内，来对应不同的显示
@@ -1116,7 +1116,7 @@ export default {
 
 .EX_result {
   padding-right: 41.5vw;
-  margin-left: -5.1vw;
+  margin-left: -6.3vw;
   font-family: Source Han Sans CN;
   font-weight: 600;
   margin-bottom: -5vh;
@@ -1174,6 +1174,7 @@ export default {
   border-radius: 10px;
   background-color: #608DE8;
   box-sizing: border-box;
+  transition-duration: 200ms;
   font-family: Sarasa-Gothic-SC-Regular;
   font-weight: normal;
   font-size: 16px;
@@ -1193,7 +1194,7 @@ export default {
   box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
   border-radius: 10px;
   -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
-  margin-left: -2.1vw;
+  margin-left: -2.08vw;
   border-radius: 50px;
   margin-top: 4.95vh;
 }
@@ -1259,7 +1260,7 @@ export default {
 .Padding_Width {
   padding-right: 88px;
   padding-left: 69px;
-  margin-top: -9.45vh;
+  margin-top: -9.6vh;
   display: flex;
   flex-direction: column;
 }
