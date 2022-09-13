@@ -2,7 +2,7 @@
 <template>
   <div
     class="ku"
-    style="padding-top: 32px; overflow: auto"
+    style="padding-top: 32px; overflow: auto;width:88.89vw"
     v-loading="loading"
     element-loading-text="正在读取知识点网络，请稍后..."
     element-loading-spinner="el-icon-loading"
@@ -20,7 +20,7 @@
       </el-input>
       <el-tabs v-model="activeName"
                @tab-click="handleClick"
-               style="width: 23vw;position: relative;right: 1.9vw;">
+               style="width: 23vw;position: relative;">
         <el-tab-pane label="知识点" name="first"></el-tab-pane>
         <el-tab-pane label="试题" name="second"></el-tab-pane>
         <el-tab-pane label="试卷" name="third"></el-tab-pane>
@@ -256,6 +256,7 @@
 
     </el-row>
 </div>
+
       </div>
   </div>
 </template>
@@ -967,24 +968,25 @@ export default {
 
 .KU_result{
   padding-right: 49vw;
-  margin-left: -4.4vw;
+  float:left;
   font-family: Source Han Sans CN;
   font-weight: 600;
 }
 .KU_right_container{
-  max-width: 26vw;
+  max-width: 18vw;
   margin-top: -6.9vh;
+  margin-right: 9.3vw;
+  padding-right: 1vw;
 }
 .KU_left_container{
-  max-width: 55vw;
+  max-width: 55.14vw;
 }
 
 .KU_container{
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
-  margin-left:-2.2%;
-  margin-right: 2%;
+  padding-bottom: 100vh;
 }
 .instruction{
    max-width:300px;
@@ -1007,7 +1009,6 @@ export default {
 }
 .ku {
   width: 1344px;
-  padding: 0 88px;
   margin: 0 auto;
 }
 .ku h6 {
@@ -1218,11 +1219,11 @@ export default {
   box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
   border-radius: 10px;
   -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
-  margin-left: -3.9vw;
   border-radius: 50px;
+  margin-top: 1.5vh;
 }
 .SearchInputDIV{
-  width: 55vw;
+  width: 55.14vw;
 }
 .SearchInput ::v-deep .el-input__inner {
   border: 0;
@@ -1268,8 +1269,8 @@ export default {
 }
 
 .Unchosen_Filter{
-  width:65px;
-  height: 42px;
+  width:3.39vw;
+  height: 3.89vh;
 
   text-align: center;
   display: inline-block;
@@ -1286,7 +1287,7 @@ export default {
   font-family: Sarasa-Gothic-SC-Regular;
   font-size: 16px;
   font-weight: normal;
-  line-height: 42px;
+  line-height: 3.89vh;
   letter-spacing: 0.03em;
   color: #4A5160;
   z-index: 0
@@ -1301,9 +1302,9 @@ export default {
 }
 
 .Chosen_Filter{
-  width:65px;
-  height: 42px;
-  line-height: 42px;
+  width:3.39vw;
+  height: 3.89vh;
+  line-height: 3.89vh;
   text-align: center;
   display: inline-block;
   box-sizing: border-box;
@@ -1320,7 +1321,6 @@ export default {
   font-family: Sarasa-Gothic-SC-Regular;
   font-weight: normal;
   font-size: 16px;
-  line-height: 42px;
   letter-spacing: 0.03em;
   color: #FFFFFF;
   z-index: 0
@@ -1374,7 +1374,6 @@ export default {
 @media screen and (min-width: 768px) and (max-width: 1344px) {
   .ku{
     width: 100%;
-    padding: 0 88px;
     margin: 0;
   }
 }

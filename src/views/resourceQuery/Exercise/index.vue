@@ -3,6 +3,7 @@
       id="Page"
       v-loading.fullscreen.lock="Waiting_Param"
       :element-loading-text="Waiting_Text"
+      style="width:88.89vw;margin:0px auto;"
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.28)">
     <div class="EX_SearchInput">
@@ -11,14 +12,13 @@
           v-model="Search_Content"
           @keyup.enter.native="Search_Do()"
           placeholder="请输入想要检索的资源关键字"
-          style="width: 55vw;"
           class="Search_Input"
           suffix-icon="el-icon-camera"
       >
       </el-input>
       <el-tabs v-model="activeName"
                @tab-click="handleClick"
-               style="width: 23vw;position: relative;right: 1.9vw;margin-left: -0.12vw">
+               style="width: 23vw;position: relative;">
         <el-tab-pane label="知识点" name="first"></el-tab-pane>
         <el-tab-pane label="试题" name="second"></el-tab-pane>
         <el-tab-pane label="试卷" name="third"></el-tab-pane>
@@ -166,8 +166,8 @@
           <!-- 功能区 -->
           <el-row
               class="Padding_Width"
-              style="margin-bottom: 20px">
-            <el-col :span="16" style="min-height: 400px;">
+        >
+            <el-col :span="16" style="min-height: 400px;width:100%">
               <!-- 不同功能 -->
               <!-- 学段检索 -->
               <el-row type="flex" justify="start" class="Filter_Line">
@@ -687,11 +687,11 @@ export default {
     // 控制筛选项的样式显示
     // 参数分别是筛选项所属的属性，筛选项对应的索引值
     Filter_Item(Part) {
-        let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '98px': '65px'
+        let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '5.11vw': '3.39vw'
      return{
        "width":WIDTH,
-        "height": "42px",
-        "line-height": "42px",
+        "height": "3.89vh",
+        "line-height": "3.89vh",
         "text-align": "center",
         "display": "inline-block",
         "box-sizing": "border-box",
@@ -1110,16 +1110,15 @@ export default {
 
 
 .EX_SearchInput {
-  width: 55vw;
-  padding-left: 7vw;
+  width: 55.14vw;
+
 }
 
 .EX_result {
-  padding-right: 41.5vw;
-  margin-left: -6.3vw;
   font-family: Source Han Sans CN;
   font-weight: 600;
   margin-bottom: -5vh;
+  float: left;
 }
 
 .sq-container {
@@ -1137,7 +1136,6 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 21.8px 0;
-  min-width: 28vw;
 
 }
 
@@ -1151,13 +1149,15 @@ export default {
 }
 
 .Unchosen_Option {
+  width:3.39vw;
+  height: 3.89vh;
   border-radius: 10px;
   background: #F2F3F7;
   box-sizing: border-box;
   font-family: Sarasa-Gothic-SC-Regular;
   font-size: 16px;
   font-weight: normal;
-  line-height: 30px;
+  line-height:3.89vh;
   letter-spacing: 0.03em;
   color: #4A5160;
   z-index: 0
@@ -1171,6 +1171,9 @@ export default {
 }
 
 .Chosen_Option {
+  width:3.39vw;
+  height: 3.89vh;
+  line-height:3.89vh;
   border-radius: 10px;
   background-color: #608DE8;
   box-sizing: border-box;
@@ -1194,7 +1197,6 @@ export default {
   box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
   border-radius: 10px;
   -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
-  margin-left: -2.08vw;
   border-radius: 50px;
   margin-top: 4.95vh;
 }
@@ -1258,9 +1260,9 @@ export default {
 }
 
 .Padding_Width {
-  padding-right: 88px;
-  padding-left: 69px;
+  max-width: 18vw;
   margin-top: -9.6vh;
+  margin-right: 9.3vw;
   display: flex;
   flex-direction: column;
 }
@@ -1270,7 +1272,7 @@ export default {
   // background-size: 100% auto;
   // background-position: right;
   // background-repeat: no-repeat;
-  max-width: 40vw;
+  max-width: 27.3vw;
   overflow-x: hidden;
   margin-top: -70px;
   padding-bottom: 64px;
