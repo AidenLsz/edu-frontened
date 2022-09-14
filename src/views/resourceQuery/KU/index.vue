@@ -20,7 +20,7 @@
       </el-input>
       <el-tabs v-model="activeName"
                @tab-click="handleClick"
-               style="width: 23vw;position: relative;">
+               style="width: 300px;position: relative;">
         <el-tab-pane label="知识点" name="first"></el-tab-pane>
         <el-tab-pane label="试题" name="second"></el-tab-pane>
         <el-tab-pane label="试卷" name="third"></el-tab-pane>
@@ -60,7 +60,7 @@
     </el-row>-->
     <instruction ref="instruction"/>
     <!-- 学科行 -->
-    <el-row type="flex" justify="start" style="margin-top:-0.2vh;margin-bottom:1vh;font-size: 18px;">
+    <el-row type="flex" justify="start" style="margin-top:-2.16px;margin-bottom:5px;font-size: 18px;">
       <label>学科</label>
     </el-row>
     <div class="SearchArea" align="left" >
@@ -75,7 +75,7 @@
     </div>
 
     <!-- 学段行 -->
-    <el-row type="flex" justify="start" style="margin-top: 5vh; font-size: 18px;">
+    <el-row type="flex" justify="start" style="margin-top: 54px; font-size: 18px;">
       <label>学段</label>
     </el-row>
     <div class="SearchArea" align="left" style="margin-bottom: 20px;">
@@ -967,20 +967,19 @@ export default {
 <style scoped lang="scss">
 
 .KU_result{
-  padding-right: 49vw;
-  float:left;
+  float: left;
   font-family: Source Han Sans CN;
   font-weight: 600;
 }
 .KU_right_container{
   max-width: 18vw;
-  margin-top: -2.5vh;
-  margin-right: 9.3vw;
-  padding-right: 1vw;
+  margin-top: -17px;
+  margin-right: 179px;
+
 }
 .KU_left_container{
   max-width: 55.14vw;
-  padding-top: 2.4vh;
+  padding-top: 25.92px;
 }
 
 .KU_container{
@@ -988,7 +987,7 @@ export default {
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
-  padding-bottom: 16.5vh;
+  padding-bottom: 400px;
   width: inherit;
 }
 .instruction{
@@ -1040,9 +1039,9 @@ export default {
 }
 .ConnectSearch{
   position:relative;
-  padding-top: 5vh;
-  margin-left: 5vw;
-  margin-right: 5vw;
+  padding-top: 54px;
+  margin-left: 96px;
+  margin-right: 96px;
 }
 .panel-btn{
   position: absolute;
@@ -1052,7 +1051,7 @@ export default {
   color: #bbb;
 }
 #openBtn{
-  top:5vh;
+  top:54px;
   // left:15px;
 }
 #closeBtn{
@@ -1223,7 +1222,7 @@ export default {
   border-radius: 10px;
   -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
   border-radius: 50px;
-  margin-top: 1.5vh;
+  margin-top: 16.2px;
 }
 .SearchInputDIV{
   width: 55.14vw;
@@ -1272,8 +1271,8 @@ export default {
 }
 
 .Unchosen_Filter{
-  width:3.39vw;
-  height: 3.89vh;
+  width:65px;
+  height: 42px;
 
   text-align: center;
   display: inline-block;
@@ -1290,7 +1289,7 @@ export default {
   font-family: Sarasa-Gothic-SC-Regular;
   font-size: 16px;
   font-weight: normal;
-  line-height: 3.89vh;
+  line-height: 42px;
   letter-spacing: 0.03em;
   color: #4A5160;
   z-index: 0
@@ -1305,9 +1304,9 @@ export default {
 }
 
 .Chosen_Filter{
-  width:3.39vw;
-  height: 3.89vh;
-  line-height: 3.89vh;
+  width:65px;
+  height: 42px;
+  line-height: 42px;
   text-align: center;
   display: inline-block;
   box-sizing: border-box;

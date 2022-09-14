@@ -18,7 +18,7 @@
       </el-input>
       <el-tabs v-model="activeName"
                @tab-click="handleClick"
-               style="width: 23vw;position: relative;">
+               style="width: 300px;position: relative;">
         <el-tab-pane label="知识点" name="first"></el-tab-pane>
         <el-tab-pane label="试题" name="second"></el-tab-pane>
         <el-tab-pane label="试卷" name="third"></el-tab-pane>
@@ -85,8 +85,8 @@
         width="80%"
         :modal-append-to-body="false"
         :close-on-click-modal="false">
-      <el-row type="flex" justify="start" style="margin-left: 2.4vw; margin-bottom: 20px">
-        <label style="margin-right: 3vw; margin-top: -0.3vh;">图片检索模式：</label>
+      <el-row type="flex" justify="start" style="margin-left: 46px; margin-bottom: 20px">
+        <label style="margin-right: 59px; margin-top: -5.88px;">图片检索模式：</label>
         <el-radio-group v-model="Img_Search_Type">
           <el-radio :label="0" disabled>图例检索</el-radio>
           <el-radio :label="1">内容识别</el-radio>
@@ -96,7 +96,7 @@
         <el-col :span="24">
           <el-row type="flex" justify="center">
             <VueCropper
-                style="width: 100%; height: 400px; margin-left: 2.4vw; margin-right: 2.4vw"
+                style="width: 100%; height: 400px; margin-left: 47px; margin-right: 47px"
                 ref="cropper"
                 :img="Cropper_Option.img"
                 :autoCrop="Cropper_Option.autoCrop"
@@ -167,7 +167,7 @@
           <el-row
               class="Padding_Width"
         >
-            <el-col :span="16" style="min-height: 400px;width:100%">
+            <el-col :span="16" style="min-height: 400px;width:115%">
               <!-- 不同功能 -->
               <!-- 学段检索 -->
               <el-row type="flex" justify="start" class="Filter_Line">
@@ -258,25 +258,26 @@
                                 </span>
                 </div>
               </el-row>
-              <el-row type="flex" justify="start" class="Filter_Line" style="margin-top: 3vh">
-                <span class="Filter_Label"></span>
+              <el-row type="flex" justify="start" class="Filter_Line" style="margin-top: 32.4px">
+                <div class="EX_SearchItem">
                 <!-- 开始检索的按钮 -->
                 <el-button
                     type="primary"
-                    style="margin-right: 16px; border-radius: 10px;"
+                    style="width: 120px;height: 46px; border-radius: 10px;"
                     class="Search_Button"
                     @click="Search_Do()">
                   <i class="el-icon-search" style="margin-right: 4px"></i>开始检索
                 </el-button>
                 <!-- 打开输入助手的按钮 -->
                 <el-button
-                    style="margin-right: 16px; border-radius: 10px;margin-left: 0px"
+                    style="width: 120px;height: 46px; border-radius: 10px;margin-left: 0px"
                     @click="Complex_Input_Dialog = true">
                   <span style="margin-right: 4px">&Sigma;</span>输入助手
                 </el-button>
                 <!-- 切换知识点过滤检索或者文件检索的按钮 -->
+                  </div>
                 <el-switch
-                    style="display: block; margin-top: 9px; margin-left: 10px;"
+                    style="margin-top: 9px;margin-left: 8px"
                     v-model="Search_Extra"
                     @change="Change_Search_Extra"
                     active-color="#409EFF"
@@ -350,20 +351,11 @@
           </el-row>
           <el-row
               v-if="Question_List.length == 0"
-              style="height: 200px; line-height: 200px; width: 100%; font-weight: bold; font-size: 24px; color: #ccc"
+              style="height: 200px; line-height: 200px; width: 100%; font-weight: bold; font-size: 24px; color: #ccc;padding-right:173px"
               type="flex" justify="center">
             暂无检索结果
           </el-row>
-          <el-row
-              v-else
-              style="height: 128px; line-height: 40px; width: 100%; padding-top: 20px;"
-              type="flex"
-              justify="center">
-            <i
-                class="el-icon-d-arrow-left"
-                @click="Jump_To('Question_0')"
-                style="font-size: 40px; transform: rotate(270deg); opacity: 0.5; cursor: pointer; z-index: 1;"></i>
-          </el-row>
+
         </el-col>
       </el-row>
       <div class="sq-container-left">
@@ -419,7 +411,7 @@
         title="选择学科"
         :visible.sync="confirmSubjectDialogVisible"
         width="800px">
-      <el-row type="flex" justify="start" style="margin-bottom: -1vh">
+      <el-row type="flex" justify="start" style="margin-bottom: -10.8px">
         <el-col style="margin-left:80px;width:280px;">
           <el-row type="flex" justify="start" style="height: 40px; line-height: 40px; font-size: 18px">
             <label>请选择文件对应的学科:</label>
@@ -685,11 +677,11 @@ export default {
     // 控制筛选项的样式显示
     // 参数分别是筛选项所属的属性，筛选项对应的索引值
     Filter_Item(Part) {
-        let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '5.11vw': '3.39vw'
+        let WIDTH = ['Database', 'Semantic'].indexOf(Part) != -1 ? '100px': '65px'
      return{
        "width":WIDTH,
-        "height": "3.89vh",
-        "line-height": "3.89vh",
+        "height": "42px",
+        "line-height": "42px",
         "text-align": "center",
         "display": "inline-block",
         "box-sizing": "border-box",
@@ -1105,6 +1097,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.EX_SearchItem{
+  display: flex;
+  justify-content: flex-start;
+}
 
 
 .EX_SearchInput {
@@ -1115,7 +1111,7 @@ export default {
 .EX_result {
   font-family: Source Han Sans CN;
   font-weight: 600;
-  margin-bottom: -5vh;
+  margin-bottom: -54px;
   float: left;
 }
 
@@ -1144,18 +1140,19 @@ export default {
   height: 40px;
   line-height: 40px;
   text-align: left;
+  margin-bottom:-2px ;
 }
 
 .Unchosen_Option {
-  width:3.39vw;
-  height: 3.89vh;
+  width:65px;
+  height: 42px;
   border-radius: 10px;
   background: #F2F3F7;
   box-sizing: border-box;
   font-family: Sarasa-Gothic-SC-Regular;
   font-size: 16px;
   font-weight: normal;
-  line-height:3.89vh;
+  line-height:42px;
   letter-spacing: 0.03em;
   color: #4A5160;
   z-index: 0
@@ -1169,9 +1166,9 @@ export default {
 }
 
 .Chosen_Option {
-  width:3.39vw;
-  height: 3.89vh;
-  line-height:3.89vh;
+  width:65px;
+  height: 42px;
+  line-height:42px;
   border-radius: 10px;
   background-color: #608DE8;
   box-sizing: border-box;
@@ -1196,7 +1193,7 @@ export default {
   border-radius: 10px;
   -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
   border-radius: 50px;
-  margin-top: 4.95vh;
+  margin-top: 48px;
 }
 
 .Search_Input ::v-deep .el-input__inner {
@@ -1232,7 +1229,7 @@ export default {
 .Question_Card {
   box-shadow: 0px 6px 24px rgba($color: #000, $alpha: 0.12);
   min-width: 55vw;
-  margin: 0 auto;
+  margin: -60px auto;
   border-radius: 10px;
   opacity: 0.95;
 }
@@ -1258,10 +1255,11 @@ export default {
 
 .Padding_Width {
   max-width: 18vw;
-  margin-top: -9.6vh;
-  margin-right: 9.3vw;
+  margin-top: -103.68px;
+  margin-right: 179px;
   display: flex;
   flex-direction: column;
+
 }
 
 .Main_Background {
@@ -1271,7 +1269,7 @@ export default {
   // background-repeat: no-repeat;
   max-width: 27.3vw;
   overflow-x: hidden;
-  margin-top: -4.7vh;
+  margin-top: -24px;
   padding-bottom: 64px;
   margin-bottom: 64px;
   flex-grow: 1;
@@ -1280,6 +1278,7 @@ export default {
 .Search_Button {
   background: #539DD9;
   transition-duration: 300ms;
+  margin-right: 20px;
 }
 
 .Search_Button:hover {
