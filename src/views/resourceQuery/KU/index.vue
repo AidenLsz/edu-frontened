@@ -2,7 +2,7 @@
 <template>
   <div
     class="ku"
-    style="padding-top: 32px; overflow: auto;width:88.89vw"
+    style="overflow: auto;width:88.89vw"
     v-loading="loading"
     element-loading-text="正在读取知识点网络，请稍后..."
     element-loading-spinner="el-icon-loading"
@@ -20,7 +20,7 @@
       </el-input>
       <el-tabs v-model="activeName"
                @tab-click="handleClick"
-               style="width: 300px;position: relative;">
+               style="margin-top:15px;padding-left:20px;width: 300px;position: relative;">
         <el-tab-pane label="知识点" name="first"></el-tab-pane>
         <el-tab-pane label="试题" name="second"></el-tab-pane>
         <el-tab-pane label="试卷" name="third"></el-tab-pane>
@@ -978,6 +978,7 @@ export default {
 
 }
 .KU_left_container{
+  width: 100%;
   max-width: 55.14vw;
   padding-top: 25.92px;
 }
@@ -1225,7 +1226,7 @@ export default {
   margin-top: 16.2px;
 }
 .SearchInputDIV{
-  width: 55.14vw;
+  width: 40vw;
 }
 .SearchInput ::v-deep .el-input__inner {
   border: 0;

@@ -18,7 +18,7 @@
       </el-input>
       <el-tabs v-model="activeName"
                @tab-click="handleClick"
-               style="width: 300px;position: relative;">
+               style="margin-top:15px;padding-left:20px;width: 300px;position: relative;">
         <el-tab-pane label="知识点" name="first"></el-tab-pane>
         <el-tab-pane label="试题" name="second"></el-tab-pane>
         <el-tab-pane label="试卷" name="third"></el-tab-pane>
@@ -1104,7 +1104,7 @@ export default {
 
 
 .EX_SearchInput {
-  width: 55.14vw;
+  width: 40vw;
 
 }
 
@@ -1193,7 +1193,7 @@ export default {
   border-radius: 10px;
   -webkit-box-shadow: 0px 2px 8px rgba(151, 151, 151, 0.06);
   border-radius: 50px;
-  margin-top: 48px;
+  margin-top: 16px;
 }
 
 .Search_Input ::v-deep .el-input__inner {
