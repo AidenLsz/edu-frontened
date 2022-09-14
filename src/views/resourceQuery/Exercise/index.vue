@@ -360,12 +360,12 @@
       </el-row>
       <div class="sq-container-left">
         <el-row>
-          <el-col style="margin-top: 17%">
+          <el-col style="margin-top: 69.625px">
             <div
                 v-for="(Question, Question_Index) in Question_List"
                 :style="Get_Card_Background(Question_Index)"
                 :key="'Question_' + Question_Index">
-              <el-row style="padding-bottom: 75%">
+              <el-row style="padding-bottom: 168.938px">
                 <div
                     :id="'Question_' + Question_Index"
                     style="height: 10px; width: 10px; background: transparent;position: relative; margin-top: -192px">
@@ -377,7 +377,7 @@
                     :style="Get_Card_Margin(Question_Index)"
                 >
                   <el-row
-                      style="width: 100%; height: 1%; background: transparent; opacity: 0; z-index: -1; border-top: 1px solid red;margin-bottom: -16%;">
+                      style="width: 100%; height: 8.2px; background: transparent; opacity: 0; z-index: -1; border-top: 1px solid red;margin-bottom: -80px;">
 
                   </el-row>
                   <el-row class="Question_Card" style="background: white">

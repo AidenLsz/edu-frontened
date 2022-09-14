@@ -274,9 +274,10 @@ export default {
 }
 
 .Detail_Line_Right {
-  width: 132px;
+  width: 200px;
   height: 44px;
   display: inline-block;
+  overflow: hidden;
 }
 
 .Extra_Info_Item {
@@ -287,6 +288,7 @@ export default {
   display: inline-block;
   width: 130px;
   margin-right: 10px;
+  overflow: hidden;
 }
 
 .Detail_Line_Infos {
