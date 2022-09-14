@@ -492,6 +492,7 @@ export default {
   },
   methods: {
       init_search(){
+        this.activeName="third";
         this.Search_Content=localStorage.getItem('Content');
         let Chosen_Content=eval("("+localStorage.getItem('chosen_Content')+")");
         for(var i=0; i<Chosen_Content.Subject.length;i=i+1){
@@ -506,9 +507,8 @@ export default {
         localStorage.clear();
       },
       handleClick(){
-        if(this.activeName=="third"){
-          this.Search_Do();}
-        else if(this.activeName=="first"){
+
+        if(this.activeName=="first"){
           this.$router.push({
             path:'/KU'
           })}

@@ -417,6 +417,7 @@ export default {
   },
   methods: {
     init_search(){
+      this.activeName="first";
       this.ku_name=localStorage.getItem('Content');
       let Chosen_Content=eval("("+localStorage.getItem('chosen_Content')+")");
     //  console.log(Chosen_Content.Subject);
@@ -430,12 +431,11 @@ export default {
       localStorage.clear();
     },
     handleClick(){
-      if(this.activeName=="first"){
-        this.Search_KU_Info(this.ku_name);}
 
-      else if(this.activeName=="second"){
+      if(this.activeName=="second"){
         this.$router.push({
           path:'/Exercise'
+
         })
       }
       else if(this.activeName=="third"){
@@ -974,19 +974,22 @@ export default {
 }
 .KU_right_container{
   max-width: 18vw;
-  margin-top: -6.9vh;
+  margin-top: -2.5vh;
   margin-right: 9.3vw;
   padding-right: 1vw;
 }
 .KU_left_container{
   max-width: 55.14vw;
+  padding-top: 2.4vh;
 }
 
 .KU_container{
+
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
-  padding-bottom: 100vh;
+  padding-bottom: 16.5vh;
+  width: inherit;
 }
 .instruction{
    max-width:300px;

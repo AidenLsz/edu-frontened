@@ -368,7 +368,7 @@
       </el-row>
       <div class="sq-container-left">
         <el-row>
-          <el-col style="margin-top: 36.8%">
+          <el-col style="margin-top: 17%">
             <div
                 v-for="(Question, Question_Index) in Question_List"
                 :style="Get_Card_Background(Question_Index)"
@@ -608,6 +608,7 @@ export default {
   },
   methods: {
     init_search(){
+      this.activeName="second";
       this.Search_Content=localStorage.getItem('Content');
       let Chosen_Content=eval("("+localStorage.getItem('chosen_Content')+")");
 
@@ -630,10 +631,7 @@ export default {
 
     },
     handleClick() {
-      if (this.activeName == "second") {
-        this.Search_Do();
-      }
-      else if(this.activeName=="first"){
+     if(this.activeName=="first"){
         this.$router.push({
           path:'/KU'
         })}
@@ -1237,7 +1235,6 @@ export default {
   margin: 0 auto;
   border-radius: 10px;
   opacity: 0.95;
-  margin-left: 5vw;
 }
 
 .ImgSearchArea {
@@ -1274,7 +1271,7 @@ export default {
   // background-repeat: no-repeat;
   max-width: 27.3vw;
   overflow-x: hidden;
-  margin-top: -70px;
+  margin-top: -4.7vh;
   padding-bottom: 64px;
   margin-bottom: 64px;
   flex-grow: 1;

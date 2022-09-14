@@ -272,6 +272,7 @@ export default {
   methods: {
 
     init_search(){
+      this.activeName="fourth";
       this.Search_Content=localStorage.getItem('Content');
       let Chosen_Content=eval("("+localStorage.getItem('chosen_Content')+")");
       console.log(Chosen_Content.Resource_Subject_Part1);
@@ -292,9 +293,8 @@ export default {
       localStorage.clear();
     },
     handleClick(){
-      if(this.activeName=="fourth"){
-        this.Search_Do();}
-      else if(this.activeName=="first"){
+
+      if(this.activeName=="first"){
         this.$router.push({
           path:'/KU'
         })}
